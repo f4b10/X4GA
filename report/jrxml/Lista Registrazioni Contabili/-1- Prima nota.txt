@@ -1,0 +1,5 @@
+Per ogni registrazione vengono riportati i dati essenziali:
+   - causale
+   - estremi dell'eventuale documento
+   - sottoconti coinvolti con relativi importi
+   - annotazioni di riga

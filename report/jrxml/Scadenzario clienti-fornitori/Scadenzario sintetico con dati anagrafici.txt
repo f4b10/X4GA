@@ -1,0 +1,2 @@
+Scandenzario completo di importo, pareggiamenti e saldo.
+Ogni anagrafica è corredata dei dati anagrafici e dei principali contatti.

@@ -1,0 +1,1 @@
+Scandenzario completo di importo, pareggiamenti e saldo.  Le anagrafiche vengono raggruppate e totalizzate per zona di appartenenza, e riportano i dati anagrafici e i principali contatti.

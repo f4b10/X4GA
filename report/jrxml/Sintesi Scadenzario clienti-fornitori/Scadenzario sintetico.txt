@@ -1,0 +1,2 @@
+Scadenzario riepilogativo della situazione partite clienti/fornitori.
+Per ogni anagrafica vengono riportati: saldo globale, saldo scaduto, a scadere, ammontare degli insoluti in essere e pagati.

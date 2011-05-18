@@ -1,0 +1,6 @@
+Per ogni registrazione vengono riportati i seguenti dati:
+   - causale ed estremi dell'eventuale documento
+   - sottoconti coinvolti con relativi importi ed annotazioni di riga
+   - dettaglio aliquote per le registrazioni con iva
+   - entrate/uscite di cassa e banca
+Alla fine del report è  inoltre presente il riepilogo dei registri iva coinvolti nelle registrazioni stampate.

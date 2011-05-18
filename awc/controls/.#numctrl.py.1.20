@@ -1,0 +1,137 @@
+#!/bin/env python
+# -*- coding: iso-8859-1 -*-
+# ------------------------------------------------------------------------------
+# Name:         awc/controls/numctrl.py
+# Author:       jFabio
+# Created:      2004/10/18
+# ------------------------------------------------------------------------------
+
+import wx
+import wx.lib.masked as masked
+import wx.calendar
+from datetime import date
+
+import awc.controls.mixin as cmix
+import awc.controls.windows as aw
+
+
+class NumCtrl(masked.numctrl.NumCtrl, cmix.TextCtrlMixin):
+    """
+    Wrapper per wx.lib.masked.numctrl.NumCtrl
+    SetValue(None) => SetValue(0)
+    """
+    def __init__ (
+                self, parent, id=-1, value = 0,
+                pos = wx.DefaultPosition, size = wx.DefaultSize,
+                style = wx.TE_PROCESS_TAB, validator = wx.DefaultValidator,
+                name = "masked.num",
+                **kwargs ):
+        
+        kwargs["groupChar"] = "."
+        kwargs["decimalChar"] = ","
+        kwargs["invalidBackgroundColour"] = "red"
+        
+        self.hasfocus = False
+        self.is_too_big = False
+        
+        cmix.TextCtrlMixin.__init__(self)
+        masked.numctrl.NumCtrl.__init__(self, parent, id, value, pos, size,\
+                                        style, validator, name, **kwargs)
+        
+        self.Bind(wx.EVT_SET_FOCUS,  self._OnFocusGained)
+        self.Bind(wx.EVT_KILL_FOCUS, self._OnFocusLost)
+        if wx.Platform == '__WXMSW__':
+            self.Bind(wx.EVT_PAINT, self.OnPaint)
+    
+    def OnPaint(self, event):
+        if self.IsEnabled():
+            wx.TextCtrl.OnPaint(self, event)
+        else:
+            self.PaintDisabled(self._curValue)
+        event.Skip()
+    
+    def SetEditable(self, e=True, set_enable=True):
+        masked.numctrl.NumCtrl.SetEditable(self, e)
+        if set_enable:
+            self.Enable(e, set_editable=False)
+    
+#    def Enable(self, e=True):
+#        e = e and not self.readonly and self.IsEditable()
+#        masked.numctrl.NumCtrl.Enable(self, e)
+#        masked.numctrl.NumCtrl.Refresh(self)
+    
+    def Disable(self):
+        self.Enable(False)
+    
+    def Enable(self, e=True, set_editable=True):
+        if set_editable:
+            self.SetEditable(e, set_enable=False)
+        self.AdjustBackgroundColor(focused=self.hasfocus)
+    
+    def IsEnabled(self):
+        return not self.readonly
+    
+    def SetValue( self, n ):
+        if n is None:
+            n = 0
+        try:
+            out = masked.numctrl.NumCtrl.SetValue(self, n)
+            self.is_too_big = False
+        except ValueError, e:
+            aw.awu.MsgDialog(self.GetParent(), "Il valore è troppo grande per essere editato: sono permesse al massimo %d cifre intere.\nIl valore sarà azzerato.\n(%s)" % (self._integerWidth, self.GetName()), "Valore non editabile", style=wx.ICON_ERROR)
+            masked.numctrl.NumCtrl.SetValue(self, 0)
+            self.is_too_big = True
+            out = False
+        return out
+    
+    def IsTooBig(self):
+        return self.is_too_big
+    
+    def _OnChar(self, event):
+        """
+        Impostando la maschera numerica all'italiana, con la virgola come
+        separatore decimale, ci si aspetta obbligatoriamente il tasto 'virgola'
+        per andare nella parte decimale della maschera. Essendo comodo l'uso
+        del tasto 'punto' per fare la stessa cosa, cambio le carte all'evento
+        per simulare la pressione del tasto 'virgola' quando premo il tasto 'punto'
+        """
+        if event.GetKeyCode() in (46, 395):
+            event.GetKeyCode = lambda *x: 44
+        return masked.numctrl.NumCtrl._OnChar(self, event)
+    
+    def OnTextChange( self, event ):
+        if self.notifyChanges:
+            masked.numctrl.NumCtrl.OnTextChange(self, event)
+        event.Skip()
+    
+    def SetBackgroundColour(self, *args, **kwargs):
+        masked.numctrl.NumCtrl.SetBackgroundColour(self, *args, **kwargs)
+    
+    def _applyFormatting(self, *args, **kwargs):
+        masked.numctrl.NumCtrl._applyFormatting(self)
+        self.AdjustBackgroundColor(self.FindFocus() == self and self.IsEditable())
+        self._Refresh()
+
+    def _OnFocusGained(self, event):
+        #if self.TestEnableOnFocus(event.GetWindow()):
+            #return
+        wx.CallAfter(lambda: self.SetSelection(0, len(self._mask)))
+        self.hasfocus = True
+        self.AdjustBackgroundColor(self.IsEditable())
+        aw.SetFocusedControl(self)
+        event.Skip()
+    
+    def _OnFocusLost(self, event):
+        self.hasfocus = False
+        self.AdjustBackgroundColor(False)
+        event.Skip()
+    
+    #def Enable(self, e=True):
+        #cmix.ControlsMixin.Enable(self, e)
+        #self.SetEditable(e)
+    
+    #def Disable(self):
+        #self.Enable(False)
+    
+    #def IsEnabled(self):
+        #return cmix.ControlsMixin.IsEnabled(self)

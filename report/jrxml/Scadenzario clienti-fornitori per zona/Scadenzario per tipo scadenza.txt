@@ -1,0 +1,1 @@
+Saldi suddivisi per tipologia di pagamento ed evidenziazione degli insoluti.  Le anagrafiche vengono raggruppate e totalizzate per zona di appartenenza.

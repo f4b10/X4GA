@@ -1,0 +1,54 @@
+X4GA
+====
+X4GA è l'acronimo di "X4 Gestione Aziendale"
+
+Immagini utilizzate
+===================
+Tutte le immagini utilizzate (loghi, bottoni, ecc) sono encodate in vari script
+di nome images.py
+La cartella tools contiene:
+encode_images.py, script che consente di rigenerare i files images.py
+imgsource, cartella contenente le immagini sorgenti.
+
+
+Database
+========
+X4GA si basa al momento su MySQL 5.x
+L'utente/password utilizzati in X4 sono utenti specifici suoi (tabella x4.utenti)
+Ovviamente per stabilire il collegamento al database, la workstation deve essere
+impostata con il relativo username/password di MySQL.
+Prima di avviare per la prima volta X4, quindi, occorre creare l'utente MySQL
+mediante i suoi tool di amministrazione.  L'utente creato può essere utilizzato
+per ogni workstation in rete, oppure, a discrezione, è possibile associare ogni
+workstation al relativo utente MySQL.  I permessi in X4 sono infatti gestiti 
+sulla base dei suoi utenti, non di quelli effettivi del database.
+
+I passi da seguire per il primo avviamento sono quindi:
+
+1) Installare MySQL 5.x
+2) Creare in MySQL l'utente con cui la workstation colloquierà con MySQL
+3) Avviare X4
+4) Alla presentazione del setup workstation, inserire negli appositi campi il
+   nome utente e la password così come creati in MySQL
+
+Al momento della scrittura di questo documento, non è presente la creazione
+automatica dell'azienda da cui partire per installarne di nuove: la creazione
+di una nuova azienda presuppone l'acquisizione di determinate informazioni da
+un'azienda già esistente.
+Per sopperire facilmente a questo problema, è sufficiente creare una nuova 
+azienda assegnandole il codice 'azibase' ed il nome database 'x4_azibase',
+senza acquisire nulla da alcuna azienda; una volta creata, sarà possibile
+effettuare un ripristino di backup dal file azibase.adb presente nella
+cartella 'docs' (Strumenti/Backup Explorer).
+
+ORM
+===
+La gestione dei dati, effettuata da MySQL, è gestita tramite classi ORM derivate
+dal package stormdb.
+Le parti più antiche del codice (gestioni anagrafiche, dataentry contabili) non
+fanno (ancora) uso di tali classi, per cui al momento sono radicate su mysql.
+Esse soffrono anche di un brutto mix di logica e interfaccia wx.
+Uno dei prossimi obiettivi è proprio quello di razionalizzare queste parti,
+facendole appoggiare sulle classi orm opportune.
+Tali adeguamenti consentiranno l'apertura del sistema verso altri motori sql,
+in primis PostgreSQL.

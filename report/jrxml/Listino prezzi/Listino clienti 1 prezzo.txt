@@ -1,0 +1,1 @@
+Listino contenente codice, descrizione, extradescrizione e un solo prezzo a scelta.

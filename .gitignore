@@ -1,0 +1,8 @@
+#Programs
+*.pyc
+*.pyd
+
+#Images
+*.psd
+*.xcf
+

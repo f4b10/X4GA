@@ -1,0 +1,1 @@
+Scheda riassuntiva dei prodotti venduti al cliente: per ogni prodotto vengono evidenziate la quantità fatturata totale e le condizioni applicate nell'ultima vendita.
