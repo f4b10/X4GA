@@ -56,28 +56,6 @@ if hasattr(sys, 'frozen'):
 stdmod = 10
 modmod = 0
 
-#import mx.DateTime
-#d = mx.DateTime.now()
-#if d.month == 12:
-#    if 11 <= d.day <= 25:
-#        import images
-#        for prefix in 'Splash X4'.split():
-#            for name in 'Bitmap,Data,Image'.split(','):
-#                setattr(images, 'get%sLogo%s' % (prefix, name), 
-#                        getattr(images, 'get%sLogoNatale%s' % (prefix, name)))
-#    elif d.day > 25:
-#        import images
-#        for prefix in 'Splash X4'.split():
-#            for name in 'Bitmap,Data,Image'.split(','):
-#                setattr(images, 'get%sLogo%s' % (prefix, name), 
-#                        getattr(images, 'get%sLogoBrindisi%s' % (prefix, name)))
-#elif d.month == 1 and d.day <= 6:
-#    import images
-#    for prefix in 'Splash X4'.split():
-#        for name in 'Bitmap,Data,Image'.split(','):
-#            setattr(images, 'get%sLogo%s' % (prefix, name), 
-#                    getattr(images, 'get%sLogoBefana%s' % (prefix, name)))
-
 import wx
 import awc.wxinit
 

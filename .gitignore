@@ -6,3 +6,6 @@
 *.psd
 *.xcf
 
+/.settings
+/.pydevproject
+/.project

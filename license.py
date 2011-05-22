@@ -1,7 +1,7 @@
 #!/bin/env python
 # -*- coding: iso-8859-1 -*-
 # ------------------------------------------------------------------------------
-# Name:         licenses.py
+# Name:         _version.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
 # Copyright:    (C) 2011 Astra S.r.l. C.so Cavallotti, 122 18038 Sanremo (IM)
 # ------------------------------------------------------------------------------
@@ -21,182 +21,7 @@
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
 
-import os
-from reportlab.tools.docco.rl_doc_utils import setStory, getStory, defaultPageSize
-from reportlab.tools.docco.rltemplate import BaseDocTemplate, PageTemplate, Paragraph, Frame
-from reportlab.lib.utils import open_and_read, _RL_DIR
-import reportlab.pdfgen.canvas as canvas
-
-class LicenseTemplate(BaseDocTemplate):
-    
-    def _startBuild(self, filename=None, canvasmaker=canvas.Canvas):
-        self._calc()
-        self.canv = canvasmaker(filename or self.filename,
-                                pagesize=self.pagesize,
-                                invariant=self.invariant,
-                                pageCompression=self.pageCompression)
-        
-        self.canv.setAuthor(self.author)
-        self.canv.setTitle(self.title)
-        self.canv.setSubject(self.subject)
-        self.canv.setKeywords(self.keywords)
-        
-        if self._onPage:
-            self.canv.setPageCallBack(self._onPage)
-        self.handle_documentBegin()
-    
-    def afterInit(self):
-        self.addPageTemplates(OneColumnTemplate('Normal', self.pagesize))
-        
-        #just playing
-        self.title = "Contratto di Licenza d'Uso"
-        self.author = "Astra S.r.l."
-        self.chapter = "(No chapter yet)"
-        self.chapterNo = 1 #unique keys
-        self.sectionNo = 1 # unique keys
-    
-    def beforeDocument(self):
-        self.canv.showOutline()
-    
-    def afterFlowable(self, flowable):
-        """Detect Level 1 and 2 headings, build outline,
-        and track chapter title."""
-        if isinstance(flowable, Paragraph):
-            style = flowable.style.name
-            if style == 'Title':
-                self.title = flowable.getPlainText()
-            elif style == 'Heading1':
-                self.chapter = flowable.getPlainText()
-                key = 'ch%d' % self.chapterNo
-                self.canv.bookmarkPage(key)
-                self.canv.addOutlineEntry(flowable.getPlainText(),
-                                            key, 0, 0)
-                self.chapterNo = self.chapterNo + 1
-                self.sectionNo = 1
-            elif style == 'Heading2':
-                self.section = flowable.text
-                key = 'ch%ds%d' % (self.chapterNo, self.sectionNo)
-                self.canv.bookmarkPage(key)
-                self.canv.addOutlineEntry(flowable.getPlainText(),
-                                             key, 1, 0)
-                self.sectionNo = self.sectionNo + 1
-
-
-# ------------------------------------------------------------------------------
-
-
-MARGIN_TOP =    16
-MARGIN_BOTTOM = 16
-MARGIN_LEFT =   16
-MARGIN_RIGHT =  16
-
-class OneColumnTemplate(PageTemplate):
-    def __init__(self, id, pageSize=defaultPageSize):
-        self.pageWidth = pageSize[0]
-        self.pageHeight = pageSize[1]
-        frame1 = Frame(MARGIN_LEFT,
-                       MARGIN_RIGHT,
-                       self.pageWidth - (MARGIN_LEFT+MARGIN_RIGHT),
-                       self.pageHeight - (MARGIN_TOP+MARGIN_BOTTOM),
-                       id='normal')
-        PageTemplate.__init__(self, id, [frame1])  # note lack of onPage
-
-    #def afterDrawPage(self, canvas, doc):
-        #y = self.pageHeight - 50
-        #canvas.saveState()
-        #canvas.setFont('Times-Roman', 10)
-        #canvas.drawString(inch, y+8, doc.title)
-        #canvas.drawRightString(self.pageWidth - inch, y+8, doc.chapter)
-        #canvas.line(inch, y, self.pageWidth - inch, y)
-        #canvas.drawCentredString(doc.pagesize[0] / 2, 0.75*inch, 'Page %d' % canvas.getPageNumber())
-        #canvas.restoreState()
-
-
-# ------------------------------------------------------------------------------
-
-
-def run(module, pagesize=None, verbose=0, outDir=None):
-    doc, story = getContent(module, pagesize, verbose)
-    doc.build(story)
-    destfn = doc.filename
-    if verbose: print 'Saved "%s"' % destfn
-    os.startfile(destfn)
-
-
-# ------------------------------------------------------------------------------
-
-
-def resetCounters():
-    from reportlab.lib.sequencer import getSequencer
-    counters = getSequencer()._counters
-    for c in counters:
-        counters[c].reset()
-
-
-# ------------------------------------------------------------------------------
-
-
-def getContent(module, pagesize=None, verbose=0, outDir=None):
-    assert module in 'license_cl license.si'.split()
-    destfn = 'docs/%s.pdf' % module
-    resetCounters()
-    doc = LicenseTemplate(destfn, 
-                          pagesize=pagesize or defaultPageSize,
-                          leftMargin=MARGIN_LEFT,
-                          rightMargin=MARGIN_RIGHT,
-                          topMargin=MARGIN_TOP,
-                          bottomMargin=MARGIN_BOTTOM)
-    setStory()
-    #__import__(module) #py2exe si beve i moduli usati con __import__
-    if module == 'license_cl':
-        import license_cl
-    else:
-        raise Exception, "Modulo errato"
-    #if verbose: print 'Built story contains %d flowables...' % len(story)
-    return doc, getStory()
-
-
-# ------------------------------------------------------------------------------
-
-
-def getTextContent(module, pagesize=None, verbose=0, outDir=None):
-    destfn = ''
-    resetCounters()
-    doc = LicenseTemplate(destfn, 
-                          pagesize=pagesize or defaultPageSize,
-                          leftMargin=MARGIN_LEFT,
-                          rightMargin=MARGIN_RIGHT,
-                          topMargin=MARGIN_TOP,
-                          bottomMargin=MARGIN_BOTTOM)
-    setStory()
-    __import__(module)
-    text = ''
-    chapter = 0
-    for s in getStory():
-        if hasattr(s, 'text'):
-            if s.text:
-                p = s.text
-                if s.style.name == 'Heading1':
-                    chapter += 1
-                    if chapter > 18:
-                        break
-                    p = p.replace('<seq id="Chapter"/>', str(chapter))
-                    p = '\n%s\n%s\n' % (p, '='*len(p))
-                text += '%s\n' % p
-    return text
-
-
-# ------------------------------------------------------------------------------
-
-
-def getLicenseOwner():
-    return ""
-
-
-# ------------------------------------------------------------------------------
-
-
-def getOssOwner():
+def getOwner():
     return """
 Copyright 2011 Astra S.r.l.
 
@@ -208,13 +33,15 @@ the Free Software Foundation, either version 3 of the License, or
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details."""
+GNU General Public License for more details.
+
+Author contact: Fabio Cassini <fabio.cassini@gmail.com>"""
 
 
 # ------------------------------------------------------------------------------
 
 
-def getOssLicense():
+def getLicense():
     return """
                     GNU AFFERO GENERAL PUBLIC LICENSE
                        Version 3, 19 November 2007
@@ -835,36 +662,3 @@ Program, unless a warranty or assumption of liability accompanies a
 copy of the Program in return for a fee.
 
                      END OF TERMS AND CONDITIONS"""
-
-
-# ------------------------------------------------------------------------------
-
-
-if __name__=="__main__":
-    
-    def main():
-        
-        import sys
-        
-        verbose = '-s' not in sys.argv
-        if not verbose: sys.argv.remove('-s')
-        timing = '-timing' in sys.argv
-        if timing: sys.argv.remove('-timing')
-        prof = '-prof' in sys.argv
-        if prof: sys.argv.remove('-prof')
-        
-        if len(sys.argv) > 1:
-            try:
-                pagesize = (w,h) = eval(sys.argv[1])
-            except:
-                print 'Expected page size in argument 1', sys.argv[1]
-                raise
-            if verbose:
-                print 'set page size to',sys.argv[1]
-        else:
-            pagesize = None
-        
-        for name in 'license_cl'.split():
-            run(name, pagesize, verbose, '.')
-    
-    main()
