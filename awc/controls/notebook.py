@@ -38,7 +38,7 @@ class Notebook(wx.Notebook, mixin.ContainersMixin):
         self.Bind(wx.EVT_LEFT_DOWN, self.OnClick)
     
     def OnPageChanged(self, event):
-        if wx.Platform == '__WXMSW__':
+        if event.GetOldSelection() > -1:
             afocus.SetFirstFocus(self.GetPage(event.GetSelection()))
         event.Skip()
     
