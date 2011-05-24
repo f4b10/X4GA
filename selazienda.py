@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         selazienda.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -141,8 +141,8 @@ class SelAziendaPanel(aw.Panel):
     nome utente
     data di elaborazione
     
-    Il Dialog di selezione Ë modale, e ritorna:
-    ID_SELECTED se Ë avvenuta correttamente la selezione azienda e l'autenticazione
+    Il Dialog di selezione √® modale, e ritorna:
+    ID_SELECTED se √® avvenuta correttamente la selezione azienda e l'autenticazione
     ID_QUIT     altrimenti
     """
     
@@ -393,7 +393,7 @@ class SelAziendaPanel(aw.Panel):
         ctrUser = self.FindWindowById(ID_USER)
         ctrPswd = self.FindWindowById(ID_PSWD)
         if len(ctrPswd.GetValue())==0:
-            ErrMsg("La password Ë obbligatoria")
+            ErrMsg("La password √® obbligatoria")
             return 0
         
         username = ctrUser.GetValue()
@@ -461,7 +461,7 @@ class SelAziendaPanel(aw.Panel):
             #conn.close()
             
         except MySQLdb.Error, e:
-            errMessage = "Non Ë possibile accedere al database\n\n%s: %s" \
+            errMessage = "Non √® possibile accedere al database\n\n%s: %s" \
             % (e.args[0], e.args[1])
             aw.awu.MsgDialog(self, message=errMessage, style=wx.ICON_EXCLAMATION)            
             lEsito=False
@@ -614,10 +614,10 @@ class SelAziendaPanel(aw.Panel):
                 if e.args[0] == 1049:
                     style = wx.ICON_QUESTION|wx.YES_NO|wx.YES_DEFAULT
                     if aw.awu.MsgDialog(self,
-                                        """Il database delle aziende non Ë """
+                                        """Il database delle aziende non √® """
                                         """stato trovato.\n"""
-                                        """Se questo Ë il primo avvio di X4 """
-                                        """dell'installazione, Ë possibile """
+                                        """Se questo √® il primo avvio di X4 """
+                                        """dell'installazione, √® possibile """
                                         """creare tale database ora.\n"""
                                         """Vuoi creare ora il database """
                                         """delle aziende?""",
@@ -627,7 +627,7 @@ class SelAziendaPanel(aw.Panel):
                 if e.args[0] == 1045:
                     aw.awu.MsgDialog(self, "Non sei stato riconosciuto. Verifica le tue credenziali.")
                 else:
-                    msg = "Non Ë possibile accedere al database delle aziende:\n%s" % repr(e.args)
+                    msg = "Non √® possibile accedere al database delle aziende:\n%s" % repr(e.args)
                     if aw.awu.MsgDialog(self, "%s\n\nVuoi riprovare ?" % msg,
                                         caption = "X4 :: Errore di accesso",
                                         style = wx.YES_NO|wx.ICON_EXCLAMATION) == wx.ID_YES:
@@ -930,7 +930,7 @@ VALUES
     ( 30, "CH", "CH", "SVIZZERA",        "SWISS",          0, 1),
     (999, "ZZ", "ZZ", "ZZ-INDEFINITO-",  "ZZ-UNDEFINED-",  0, 0)""")
         
-        aw.awu.MsgDialog(self, """Il database delle aziende Ë stato creato.\n"""
+        aw.awu.MsgDialog(self, """Il database delle aziende √® stato creato.\n"""
                          """E' stato creato l'utente '%s', privo di password."""
                          % utente)
         
@@ -972,7 +972,7 @@ VALUES
         except MySQLdb.Error, e:
             dlg = wx.MessageDialog(
             parent=None,
-            message = "Non Ë possibile accedere al database delle aziende.\n\n%s: %s\n\nVuoi riprovare ?"
+            message = "Non √® possibile accedere al database delle aziende.\n\n%s: %s\n\nVuoi riprovare ?"
             % (e.args[0], e.args[1]),
             caption = "X4 :: Errore di accesso",
             style = wx.OK )
@@ -1014,7 +1014,7 @@ class AziendaSetup(aw.Dialog):
     relativo.  E' possibile acquisire una azienda Mirage esistente tramite l'apposito
     bottone.
     
-    Il Dialog Ë modale; i possibili valori di ritorno sono:::
+    Il Dialog √® modale; i possibili valori di ritorno sono:::
     
         True   in caso di creazione database terminato correttamente (azienda creata)
         False  altrimenti
@@ -1118,7 +1118,7 @@ class AziendaSetup(aw.Dialog):
         return mirAzi is not None
     
     def UpdateCreationLabel(self):
-        label1 = 'Confermando, verr‡ '
+        label1 = 'Confermando, verr√† '
         label2 = ''
         if self._mirfrom:
             label1 += 'acquisita l\'azienda %s di Mirage' % self._mircode
@@ -1183,11 +1183,11 @@ class AziendaSetup(aw.Dialog):
                                  (nomedb,))
                     rs = curs.fetchone()
                     if rs:
-                        errMessage = "Esiste gi‡ un'azienda con %s: \n%s" % (desc, rs[0])
+                        errMessage = "Esiste gi√† un'azienda con %s: \n%s" % (desc, rs[0])
                         break
                 
                 except MySQLdb.Error, e:
-                    errMessage = "Non Ë possibile creare il database\n\n%s: %s" % (e.args[0], e.args[1])
+                    errMessage = "Non √® possibile creare il database\n\n%s: %s" % (e.args[0], e.args[1])
             
             if errMessage is None:
                 droponerr = False
@@ -1231,7 +1231,7 @@ class AziendaSetup(aw.Dialog):
                         retVal = True
                 
                 except MySQLdb.Error, e:
-                    dlg = wx.MessageDialog(parent=None, message = "Non Ë possibile accedere al database\n\n%s: %s" % (e.args[0], e.args[1]),
+                    dlg = wx.MessageDialog(parent=None, message = "Non √® possibile accedere al database\n\n%s: %s" % (e.args[0], e.args[1]),
                     caption = "X4 :: Errore di accesso",
                     style = wx.CANCEL|wx.ICON_EXCLAMATION )
                     dlg.ShowModal()

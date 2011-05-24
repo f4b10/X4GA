@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         anag/pdcrel.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -123,7 +123,7 @@ class _PdcRelPanel(ga.AnagPanel,\
     """
     Classe specializzata nel mantenere relazionate le tabelle anagrafiche 
     di clienti, fornitori, banche con i relativi sottoconti nella tabella 
-    del piano dei conti di contabilit‡.
+    del piano dei conti di contabilit√†.
     """
     
     _ctrcod = None
@@ -134,10 +134,10 @@ class _PdcRelPanel(ga.AnagPanel,\
     def __init__(self, *args, **kwargs):
         
         assert type(self.tabanag) in (str, unicode),\
-               """Il nome della tabella anagrafica non Ë definito"""
+               """Il nome della tabella anagrafica non √® definito"""
         
         assert type(self.pdctipo) in (str, unicode),\
-               """Il tipo di anagrafica non Ë definito"""
+               """Il tipo di anagrafica non √® definito"""
         
         ga.AnagPanel.__init__(self, *args, **kwargs)
         
@@ -211,10 +211,10 @@ class _PdcRelPanel(ga.AnagPanel,\
             if err: msg = "descrizione"
         if err:
             MsgDialog(self,\
-"""Non sar‡ possibile inserire nuovi elementi poichÈ manca la """\
+"""Non sar√† possibile inserire nuovi elementi poich√© manca la """\
 """definizione del controllo di tipo '%s'.""" % msg )
         
-        #se c'Ë un solo record, il controllo della descrizione Ë inspiegabilmente
+        #se c'√® un solo record, il controllo della descrizione √® inspiegabilmente
         #scrollato a destra troncando a video la parte iniziale; settando il focus
         #tale comportamento errato non ha luogo
         #viva le gui :(
@@ -372,9 +372,9 @@ class _PdcRelPanel(ga.AnagPanel,\
 
     #def TestForDeletion( self ):
         #"""
-        #Metodo per la verifica della cancellabilit‡ di un elemento.
+        #Metodo per la verifica della cancellabilit√† di un elemento.
         
-        #@todo: controlli per integrit‡ referenziale sulle movimentazioni.
+        #@todo: controlli per integrit√† referenziale sulle movimentazioni.
         #"""
         #out = False
         #if ga.AnagPanel.TestForDeletion(self):
@@ -588,7 +588,7 @@ class GrigliaPrezziGrid(dbglib.DbGridColoriAlternati):
                 gri.MoveRow(row)
                 if gri.id is not None:
                     if not gri.id in gri._info.deletedRecords:
-                        #riga gi‡ esistente, marco per cancellazione da db
+                        #riga gi√† esistente, marco per cancellazione da db
                         gri._info.deletedRecords.append(gri.id)
                 #elimino riga da dbgrid
                 self.DeleteRows(row)
@@ -866,7 +866,7 @@ class DatiBancariMixin(object):
             return self.FindWindowByName('ban_%s'%col)
         
         if cn(tipo).GetValue():
-            if aw.awu.MsgDialog(self, "Il codice %s Ë gi‡ compilato, vuoi ricalcolarlo ?" % str(tipo).upper(), style=wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT) != wx.ID_YES:
+            if aw.awu.MsgDialog(self, "Il codice %s √® gi√† compilato, vuoi ricalcolarlo ?" % str(tipo).upper(), style=wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT) != wx.ID_YES:
                 return
         
         xban = ''
@@ -1037,7 +1037,7 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
                     if not ctrcf.Controlla():
                         err = ctrcf.GetStatus()
             elif ctr == 2:
-                #controllo univocit‡
+                #controllo univocit√†
                 db = adb.DbTable(self.tabanag, 'anag', writable=False)
                 db.AddJoin(bt.TABNAME_PDC, 'pdc', idLeft='id', idRight='id')
                 db.Reset()
@@ -1052,7 +1052,7 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
                         if not db.IsEmpty():
                             if err:
                                 err += '\n'
-                            err = '%s Ë gi‡ presente su:\n' % des
+                            err = '%s √® gi√† presente su:\n' % des
                             err += '\n'.join(['%s %s' % (db.pdc.codice,
                                                          db.pdc.descriz)])
             if err:
@@ -1711,7 +1711,7 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
                              (RSDES_DESCRIZ, "descrizione"),\
                              (RSDES_INDIR,   "indirizzo"),\
                              (RSDES_CAP,     "CAP"),\
-                             (RSDES_CITTA,   "citt‡"),\
+                             (RSDES_CITTA,   "citt√†"),\
                              (RSDES_PROV,    "prov.")):
                 value = self.rsdes[row][col]
                 if type(value) != str or len(value.strip()) == 0:
@@ -1770,7 +1770,7 @@ class CliForSearchResultsGrid(ga.SearchResultsGrid):
             (325, (cn('pdc_descriz'),    "Ragione sociale", _STR, True )),
             (180, (cn('anag_indirizzo'), "Indirizzo",       _STR, True )),
             ( 50, (cn('anag_cap'),       "CAP",             _STR, True )),
-            (140, (cn('anag_citta'),     "Citt‡",           _STR, True )),
+            (140, (cn('anag_citta'),     "Citt√†",           _STR, True )),
             ( 30, (cn('anag_prov'),      "Pr.",             _STR, True )),
             ( 80, (cn('anag_piva'),      "P.IVA",           _STR, True )),
             (110, (cn('anag_codfisc'),   "Cod.Fiscale",     _STR, True )),

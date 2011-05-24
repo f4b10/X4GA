@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         xframe.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -237,7 +237,7 @@ class XFrame(wx.Frame):
                 """E' possibile impostare questa workstation in modo che effettui\n"""\
                 """automaticamente il controllo della presenza di nuove versioni\n"""\
                 """all'avvio.\n\n"""\
-                """Desideri attivare questa possibilit‡?"""
+                """Desideri attivare questa possibilit√†?"""
                 r = aw.awu.MsgDialog(self, msg, 'Aggornamenti automatici', 
                                      style=wx.ICON_QUESTION|wx.YES_NO|wx.YES_DEFAULT)
                 if r == wx.ID_YES:
@@ -594,7 +594,7 @@ class XFrame(wx.Frame):
             #menu generazione movimenti di chiusura/apertura
             item = menubar.FindItemById(ID_CHIUSCONT_GENMOV)
             if pe.GetMovimentiGenerati():
-                #movimenti gi‡ generati, disabilito voce generazione
+                #movimenti gi√† generati, disabilito voce generazione
                 item.GetMenu().Enable(ID_CHIUSCONT_GENMOV, False)
             else:
                 #movimenti non acora generati, disabilito voce chiusura
@@ -627,16 +627,16 @@ class XFrame(wx.Frame):
         #inizio sequenza di controlli per rimozioni menu in base ai permessi dell'utente
         datute = Env.Azienda.Login.userdata
         
-        #controllo permessi contabilit‡: tolgo tendina se non posso inserire, interrogare, gestire
+        #controllo permessi contabilit√†: tolgo tendina se non posso inserire, interrogare, gestire
         try:
             if datute.can_contabins != 1 and datute.can_contabint != 1 and datute.can_contabges != 1:
-                n = menubar.FindMenu('Contabilit‡')
+                n = menubar.FindMenu('Contabilit√†')
                 if n >= 0:
                     menubar.Remove(n)
         except Exception, e:
             pass
         
-        #controllo permesso contabilit‡: interrogazioni
+        #controllo permesso contabilit√†: interrogazioni
         try:
             if datute.can_contabint != 1:
                 item = menubar.FindItemById(ID_MENUCONTINT)
@@ -645,7 +645,7 @@ class XFrame(wx.Frame):
         except Exception, e:
             pass
         
-        #controllo permesso contabilit‡: stampe fiscali ed iva
+        #controllo permesso contabilit√†: stampe fiscali ed iva
         try:
             if datute.can_contabfis != 1:
                 for cid in (ID_MENUSTAFIS, ID_MENUIVA):
@@ -655,7 +655,7 @@ class XFrame(wx.Frame):
         except Exception, e:
             pass
         
-        #controllo permesso contabilit‡: bilanci
+        #controllo permesso contabilit√†: bilanci
         try:
             if datute.can_contabbil != 1:
                 for cid in (ID_MENUBIL, ID_BILRICL, ID_BILCEE):
@@ -665,7 +665,7 @@ class XFrame(wx.Frame):
         except Exception, e:
             pass
         
-        #controllo permesso contabilit‡: gestione
+        #controllo permesso contabilit√†: gestione
         try:
             if datute.can_contabges != 1:
                 item = menubar.FindItemById(ID_MENUCONTGES)
@@ -674,7 +674,7 @@ class XFrame(wx.Frame):
         except Exception, e:
             pass
         
-        #controllo permesso contabilit‡: scadenzari
+        #controllo permesso contabilit√†: scadenzari
         try:
             if datute.can_contabsca != 1:
                 n = menubar.FindMenu('Scadenzari')
@@ -683,7 +683,7 @@ class XFrame(wx.Frame):
         except Exception, e:
             pass
         
-        #controllo permesso contabilit‡: effetti
+        #controllo permesso contabilit√†: effetti
         try:
             if datute.can_contabeff != 1:
                 n = menubar.FindMenu('Effetti')
@@ -746,7 +746,7 @@ class XFrame(wx.Frame):
         except Exception, e:
             pass
         
-        #controllo permesso setup: contabilit‡
+        #controllo permesso setup: contabilit√†
         try:
             if datute.can_setupcontab != 1:
                 item = menubar.FindItemById(ID_MENUSETUP_CONTAB)
@@ -791,7 +791,7 @@ class XFrame(wx.Frame):
         except Exception, e:
             pass
         
-        #controllo permesso chiusure: contabilit‡
+        #controllo permesso chiusure: contabilit√†
         try:
             if datute.can_contabchi != 1:
                 for cid in (ID_MENUCHIUSCONTAB, ID_MENUCHIUSIVA):
@@ -815,7 +815,7 @@ class XFrame(wx.Frame):
             if datute.can_backupdata != 1 and datute.can_restoredata != 1:
                 while True:
                     #inspiegabilmente, tolta la voce di backup, essa permane.
-                    #forse perchÈ l'ultima voce della tendina? boh misteri wx
+                    #forse perch√© l'ultima voce della tendina? boh misteri wx
                     item = menubar.FindItemById(ID_BACKUPEXPLORER)
                     if item:
                         item.GetMenu().Remove(ID_BACKUPEXPLORER)
@@ -842,7 +842,7 @@ class XFrame(wx.Frame):
                 submenu = item.GetSubMenu()
                 if submenu:
                     if not CleanMenu(submenu):
-                        #il sottomenu Ë vuoto, elimino la relativa voce
+                        #il sottomenu √® vuoto, elimino la relativa voce
                         item.GetMenu().Delete(item.GetId())
                         
             return len(menu.GetMenuItems()) > 0
@@ -1413,7 +1413,7 @@ class XFrame(wx.Frame):
             from contab.dataentry_i_s import ContabFrameTipo_I_S as RegContabFrameIva_S
             self.LaunchFrame(RegContabFrameIva_S)
         else:
-            awu.MsgDialog(None, message="Manca setup contabilit‡ ordinaria/semplificata")
+            awu.MsgDialog(None, message="Manca setup contabilit√† ordinaria/semplificata")
 
     def OnDataEntryContabSaldaConto(self, event):
         from contab.dataentry_sc import ContabFrameTipo_SC as RegContabFrameSC

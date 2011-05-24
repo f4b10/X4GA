@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         awc/controls/notebook.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -62,7 +62,7 @@ class Notebook(wx.Notebook, mixin.ContainersMixin):
         page.Fit()
         pw, ph = page.GetSize()
         cw, ch = self.GetClientSize()
-        #aggiungo dei punti poiché SetClientSize fa esattamente come SetSize :(
+        #aggiungo dei punti poichÃ© SetClientSize fa esattamente come SetSize :(
         ns1 = (max(pw+8, cw), max(ph+24, ch))
         #inoltre cambio size 2 volte se no la pagina aggiunta potrebbe essere
         #disegnata con dimensioni errate (hey sizers do you do your job or not)

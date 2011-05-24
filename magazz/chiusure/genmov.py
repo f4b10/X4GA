@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         magazz/chiusure/genmov.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -198,7 +198,7 @@ class GeneraMovimentiPanel(wx.Panel):
             return self.FindWindowByName(x)
         riep = self.gridriep.dbriep
         if not riep.TestMagazzini():
-            aw.awu.MsgDialog(self, "Sottoconto non definito su uno o più magazzini.\nControllare la configurazione dei magazzini.",
+            aw.awu.MsgDialog(self, "Sottoconto non definito su uno o piÃ¹ magazzini.\nControllare la configurazione dei magazzini.",
                              style=wx.ICON_ERROR)
             return False
         datdoc, numdoc, tipval = map(lambda x: cn(x).GetValue(), 

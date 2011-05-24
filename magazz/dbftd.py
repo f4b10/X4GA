@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         magazz/dbftd.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -395,7 +395,7 @@ class FtDif(adb.DbTable):
             else:
                 idmag = d.id_magazz
             
-            #test necessit‡ di nuovo documento
+            #test necessit√† di nuovo documento
             if idmag != lastmag or d.id_pdc != lastpdc or \
                (sepmp and d.id_modpag != lastmp) or \
                (sepdest and d.id_destin != lastdest):

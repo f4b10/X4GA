@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         contab/__init__.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -93,7 +93,7 @@ def _GetRegConClass(id_reg, w_tipo):
     """
     Ritorna il Frame (se w_tipo=0) o il Dialog (se w_tipo=1) della registrazione
     contabile congruente con la registrazione passata mediante id.
-    Il Frame/Dialog è da instaziare.
+    Il Frame/Dialog Ã¨ da instaziare.
     """
     cls = None
     reg = adb.DbTable(bt.TABNAME_CONTAB_H,  'reg', writable=False)
@@ -141,7 +141,7 @@ def _GetInterrPdcClass(id_tipo, w_tipo):
     """
     Ritorna il Frame (se w_tipo=0) o il Dialog (se w_tipo=1) di interrogazione
     anagrafica congruente con il tipo di sottoconto passato.
-    Il Frame/Dialog è da instaziare.
+    Il Frame/Dialog Ã¨ da instaziare.
     """
     cls = None
     tipibase = "ABCFD"

@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         cfg/tabsetup.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -746,7 +746,7 @@ WHERE id_stato IS NULL""" % locals())
                 if mancanti:
                     msg =\
                     """Durante l\'adeguamento dello stato dei clienti/fornitori,\n"""\
-                    """non Ë stato possibile riconoscere lo stato di alcune anagrafiche:\n\n"""
+                    """non √® stato possibile riconoscere lo stato di alcune anagrafiche:\n\n"""
                     msg += ', '.join(mancanti)+'\n\n'
                     msg +=\
                     """Tali anagrafiche sono state impostate con stato INDEFINITO."""
@@ -763,7 +763,7 @@ SET modo=IF(perciva>0, "I",
                 """denominato 'modo', che indica se le cifre assogettate all'aliquota\n"""\
                 """sono da considerarsi imponibili iva, non imponibili, esenti o fuori\n"""\
                 """campo di applicazione.\n"""\
-                """Tale informazione Ë stata inizializzata in questa fase di adeguamento\n"""\
+                """Tale informazione √® stata inizializzata in questa fase di adeguamento\n"""\
                 """delle strutture dati, ma si consiglia di verificare, per ogni aliquota\n"""\
                 """presente, la correttezza del menzionato 'modo'."""  
                 aw.awu.MsgDialog(self, msg, style=wx.ICON_INFORMATION)
@@ -1007,9 +1007,9 @@ class AdeguaPanel(aw.Panel):
         for d in dif:
             field = d[0]
             if   d[1] == ADEG_MISSINGTABLE:
-                diff = "Tabella mancante, verr‡ creata"
+                diff = "Tabella mancante, verr√† creata"
             elif d[1] == ADEG_MISSINGFIELD:
-                diff = "Colonna non presente, verr‡ aggiunta"
+                diff = "Colonna non presente, verr√† aggiunta"
             elif d[1] == ADEG_WRONGTYPE:
                 diff = "Tipologia di colonna diversa dal previsto"
             elif d[1] == ADEG_WRONGLENGHT:
@@ -1139,7 +1139,7 @@ class AdeguaPanel(aw.Panel):
                 else:
                     action = "l'adeguamento di struttura"
                 aw.awu.MsgDialog(self, 
-                                 """Si Ë verificato un problema durante """
+                                 """Si √® verificato un problema durante """
                                  """%s della tabella %s:\n%s"""\
                                  % (action, tab, db.dbError.description))
                 #self.GetParent().EndModal(2)

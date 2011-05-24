@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         awc/controls/numctrl.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -110,7 +110,7 @@ class NumCtrl(masked.numctrl.NumCtrl, cmix.TextCtrlMixin):
             out = masked.numctrl.NumCtrl.SetValue(self, n)
             self.is_too_big = False
         except ValueError, e:
-            aw.awu.MsgDialog(self.GetParent(), "Il valore Ë troppo grande per essere editato: sono permesse al massimo %d cifre intere.\nIl valore sar‡ azzerato.\n(%s)" % (self._integerWidth, self.GetName()), "Valore non editabile", style=wx.ICON_ERROR)
+            aw.awu.MsgDialog(self.GetParent(), "Il valore √® troppo grande per essere editato: sono permesse al massimo %d cifre intere.\nIl valore sar√† azzerato.\n(%s)" % (self._integerWidth, self.GetName()), "Valore non editabile", style=wx.ICON_ERROR)
             masked.numctrl.NumCtrl.SetValue(self, 0)
             self.is_too_big = True
             out = False

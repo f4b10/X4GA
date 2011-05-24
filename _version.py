@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         _version.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -25,4 +25,4 @@ apptype = "community"
 appType = "Community Edition"
 appinfo = "(C) Copyright 2011 by Astra S.r.l. - All rights reserved."
 appinfo += " "*4
-appinfo += "Build realizzata in collaborazione con la comunita'."
+appinfo += "Build realizzata in collaborazione con la comunità."

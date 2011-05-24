@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         magazz/barcodes.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -62,7 +62,7 @@ class EtichetteProdottiGrid(dbglib.DbGridColoriAlternati):
             (200, (cn(pro, "descriz"),  "Descrizione",  _STR, True)),
             (200, (cn(pro, "descetic"), "Su etichetta", _STR, True)),
             (100, (cn(pro, "barcode"),  "BarCode",      _STR, True)),
-            ( 40, (cn(pro, "qtaetic"),  "Qt‡",          _NUM, True)),
+            ( 40, (cn(pro, "qtaetic"),  "Qt√†",          _NUM, True)),
         )                                           
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
@@ -143,8 +143,8 @@ class EtichetteProdottiGrid(dbglib.DbGridColoriAlternati):
         row, col = event.GetRow(), event.GetCol()
         self.SetGridCursor(row, col)
         voci = []
-        voci.append(("Azzera quantit‡", self.OnResetRows, True))
-        voci.append(("Setta quantit‡=1", self.OnSetOneRows, True))
+        voci.append(("Azzera quantit√†", self.OnResetRows, True))
+        voci.append(("Setta quantit√†=1", self.OnSetOneRows, True))
         menu = wx.Menu()
         for text, func, enab in voci:
             id = wx.NewId()

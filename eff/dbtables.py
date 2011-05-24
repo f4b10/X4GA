@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         eff/dbtables.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -63,7 +63,7 @@ class Eff(dbc.Pcf):
             dbc.bt.TABNAME_BANCF,   "bap", idLeft="id_effbap", idRight="id",\
             join=adb.JOIN_LEFT)
         
-        #la seguente dbtable è slegata dai dati di questa classe
+        #la seguente dbtable Ã¨ slegata dai dati di questa classe
         #viene usata in fase di stampa effetti per accedere ai dati della
         #banca emittente (pdcban e seguenti hanno senso solo *dopo* l'emissione)
         pdcbanem = adb.DbTable(bt.TABNAME_PDC, 'pdc', writable=False)

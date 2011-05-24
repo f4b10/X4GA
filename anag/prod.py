@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         anag/prod.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -211,7 +211,7 @@ class GrigliaPrezziCliForGrid(dbglib.DbGridColoriAlternati):
         elif self.clifor == "F":
             cde = bt.MAGCDEGRIF
         else:
-            raise Exception, "Impossibile determinare se la griglia Ë per i clienti o per i fornitori"
+            raise Exception, "Impossibile determinare se la griglia √® per i clienti o per i fornitori"
         if cde:
             self.COL_EXTCOD = b(( 80, (cn(gri, "ext_codice"),  "Codice Ext.",      _STR, False)))
             self.COL_EXTDES = b((200, (cn(gri, "ext_descriz"), "Descrizione Ext.", _STR, False)))
@@ -334,7 +334,7 @@ class GrigliaPrezziCliForGrid(dbglib.DbGridColoriAlternati):
                 gri.MoveRow(row)
                 if gri.id is not None:
                     if not gri.id in gri._info.deletedRecords:
-                        #riga gi‡ esistente, marco per cancellazione da db
+                        #riga gi√† esistente, marco per cancellazione da db
                         gri._info.deletedRecords.append(gri.id)
                 #elimino riga da dbgrid
                 self.DeleteRows(row)
@@ -1011,7 +1011,7 @@ class ProdPanel(ga.AnagPanel):
         bc = cn('barcode')
         if bc.GetValue():
             awu.MsgDialog(self, message=\
-                          """Il barcode Ë gi‡ presente, il calcolo di un """
+                          """Il barcode √® gi√† presente, il calcolo di un """
                           """nuovo codice a barre avviene solo in assenza di """
                           """un valore codificato.""")
             return
@@ -1204,7 +1204,7 @@ class ProdPanel(ga.AnagPanel):
         dat = None
         if bt.MAGDATLIS and not new:
             if lis.data != Env.Azienda.Login.dataElab:
-                x = aw.awu.MsgDialog(self, "Vuoi ricalcolare il listino pi˘ recente (alla data del %s)?\n(Se rispondi 'No', verr‡ creato un nuovo listino in data odierna)" % pro.dita(lis.data), style=wx.ICON_QUESTION|wx.YES_NO|wx.CANCEL|wx.NO_DEFAULT)
+                x = aw.awu.MsgDialog(self, "Vuoi ricalcolare il listino pi√π recente (alla data del %s)?\n(Se rispondi 'No', verr√† creato un nuovo listino in data odierna)" % pro.dita(lis.data), style=wx.ICON_QUESTION|wx.YES_NO|wx.CANCEL|wx.NO_DEFAULT)
                 if x == wx.ID_CANCEL:
                     return
                 elif x == wx.ID_NO:
@@ -1242,10 +1242,10 @@ class ProdPanel(ga.AnagPanel):
 
     def UpdateDataControls(self, *args, **kwargs):
         #tolgo il filtro dal conto di bilancio
-        #poichÈ il filtro presente Ë stato impostato *prima* di aggiornare i
+        #poich√© il filtro presente √® stato impostato *prima* di aggiornare i
         #controlli con i valori di questo record, quindi se il mastro del
         #record attuale differisce da quello del record precedente, il filtro
-        #impostato sul conto Ë *errato*
+        #impostato sul conto √® *errato*
         self.FindWindowByName('id_gruart').SetFilter(None)
         ga.AnagPanel.UpdateDataControls(self, *args, **kwargs)
         if self.giacmaggrid:

@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         xapp.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -187,7 +187,7 @@ class XApp(wx.App):
             elif checkv:
                 msg =\
                     """La versione delle tabelle di questa """\
-                    """azienda (%s) non Ë compatibile con la """\
+                    """azienda (%s) non √® compatibile con la """\
                     """versione attuale del programma (%s).\n"""\
                     """Per proseguire occorre adeguare le """\
                     """strutture necessarie."""\
@@ -195,15 +195,15 @@ class XApp(wx.App):
             elif checkm:
                 msg =\
                     """La versione delle tabelle di questa """\
-                    """azienda (%s) non Ë compatibile con la """\
+                    """azienda (%s) non √® compatibile con la """\
                     """mod attuale del programma (%s).\n"""\
                     """Per proseguire occorre adeguare le """\
                     """strutture necessarie."""\
                     % (azidbmod, ver.__modversion__,)
             elif checkp:
                 msg =\
-                    """La versione delle tabelle di questa azienda non Ë """\
-                    """compatibile con la versione di uno o pi˘ plugin.\n"""\
+                    """La versione delle tabelle di questa azienda non √® """\
+                    """compatibile con la versione di uno o pi√π plugin.\n"""\
                     """Per proseguire occorre adeguare le strutture """\
                     """necessarie."""
             msg +=\
@@ -221,15 +221,15 @@ class XApp(wx.App):
             else:
                 if force:
                     msg =\
-                        """Non Ë possibile memorizzare queste impostazioni """\
+                        """Non √® possibile memorizzare queste impostazioni """\
                         """senza procedere al controllo di struttura """\
                         """delle tabelle dell'azienda"""
                 else:
                     msg =\
                         """Le versioni sono incompatibili, non """\
-                        """sar‡ possibile operare su questa """\
+                        """sar√† possibile operare su questa """\
                         """azienda fino a quando la struttura del """\
-                        """database non risulter‡ allineata alla """\
+                        """database non risulter√† allineata alla """\
                         """corrente versione di programma %s"""\
                         % Env.__version__
                     if bt.__min_compat_mod__:
@@ -241,7 +241,7 @@ class XApp(wx.App):
         if version_problems:
             msg =\
             """Attenzione!!!\n\n"""\
-            """C'Ë qualcosa di non aggiornato nel software che usi:\n\n"""
+            """C'√® qualcosa di non aggiornato nel software che usi:\n\n"""
             for name, verprg, verdb in version_problems:
                 msg += "%s: v. software in uso=%s, database aggiornato a v.%s\n" % (name, verprg, verdb)
             msg +=\
@@ -374,7 +374,7 @@ class XApp(wx.App):
         
         if request:
             def restart():
-                awu.MsgDialog(None, "Il programma verr‡ riavviato per rendere effettive le modifiche",
+                awu.MsgDialog(None, "Il programma verr√† riavviato per rendere effettive le modifiche",
                               style=wx.ICON_INFORMATION)
                 os.execl(sys.argv[0])
             wx.CallAfter(restart)

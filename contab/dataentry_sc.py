@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         contab/dataentry_sc.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -909,15 +909,15 @@ class ContabPanelTipo_SC(ctb.ContabPanel):
                 if self._cfg_pcfimp == '2':
                     #la causale lavora sul pareggiamento della partita:
                     if self._cfg_pcfsgn == '+':
-                        #è un incasso, prendo il saldo
+                        #Ã¨ un incasso, prendo il saldo
                         sca[RSSCA_IMPORTO] = pcf[RSPCF_IMPSALDO]
                     elif self._cfg_pcfins == '1':
-                        #è un insoluto, prendo l'importo di origine
+                        #Ã¨ un insoluto, prendo l'importo di origine
                         sca[RSSCA_IMPORTO] = pcf[RSPCF_IMPTOT]
                 elif self._cfg_pcfimp == '1':
                     #la causale lavora sull'importo della partita:
                     if self._cfg_pcfsgn == '+':
-                        #è un pagamento di nota credito, prendo il valore 
+                        #Ã¨ un pagamento di nota credito, prendo il valore 
                         #assoluto del saldo 
                         sca[RSSCA_IMPORTO] = abs(pcf[RSPCF_IMPSALDO])
                 sca[RSSCA_IMPTOT] =   pcf[RSPCF_IMPTOT]
@@ -980,7 +980,7 @@ class ContabPanelTipo_SC(ctb.ContabPanel):
         if col == 1:
             editor = self._grid_dav.GetCellEditor(row, col)
             assert isinstance(editor, dbgred.DataLinkCellEditor),\
-                   "L'editor della colonna %d non è DataLinkCellEditor" % col
+                   "L'editor della colonna %d non Ã¨ DataLinkCellEditor" % col
             if editor._tc:
                 if row == 0:
                     idtip = self._cfg_pdctippa_id
@@ -1346,7 +1346,7 @@ LEFT JOIN %s AS mpa ON pcf.id_modpag=mpa.id
 
 class SelRowPa(aw.Dialog):
     """
-    Dialog per la selezione del sottoconto di partita, nonché degli
+    Dialog per la selezione del sottoconto di partita, nonchÃ© degli
     eventuali sottoconti di contropartita preferiti, definiti nella causale
     e/o nel sottoconto di partita stesso.
     """

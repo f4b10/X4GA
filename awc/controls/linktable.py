@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         awc/controls/linktable.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -360,7 +360,7 @@ class LinkTable(wx.Control,\
     
     def SetTips(self):
         tt = """Digitare %(cd1)s. Per cercare mediante iniziali, digitarle e premere il tasto 
-freccia gi˘ per ottenere l'elenco delle voci che iniziano con il testo digitato.
+freccia gi√π per ottenere l'elenco delle voci che iniziano con il testo digitato.
 Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'interno del%(cd2)s.
 (Doppio-click) Visualizza tutte le voci a prescindere dal testo digitato.
 (F3) Azzera la selezione attiva"""
@@ -1192,7 +1192,7 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
     def SetFilterLinks(self, filterlinks):
         """
         LinkTables aggiuntivi per filtro.
-        In C{filterlinks} ogni elemento Ë una tupla costituita da::
+        In C{filterlinks} ogni elemento √® una tupla costituita da::
             - descrizione filtro per label
             - nome tabella da agganciare (la primary key deve essere 'id')
             - nome colonna sul LinkTable principale con cui relazionare
@@ -1372,10 +1372,10 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
     
     def SetObligatory( self, obblig = True ):
         """
-        Imposta l'obbligatoriet‡ del controllo; settando a C{True}, la 
-        validazione sar‡ soddisfatta solo se Ë presente un id significativo.
+        Imposta l'obbligatoriet√† del controllo; settando a C{True}, la 
+        validazione sar√† soddisfatta solo se √® presente un id significativo.
         
-        @param obblig: Obbligatoriet‡ del controllo
+        @param obblig: Obbligatoriet√† del controllo
         @type obblig: bool
         """
         self.obligatory = obblig

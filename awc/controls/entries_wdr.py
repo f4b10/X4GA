@@ -42,7 +42,7 @@ def PhoneEntryFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
     item1 = TextCtrl_LC( parent, ID_ADDRESS, "", wx.DefaultPosition, wx.DefaultSize, wx.TE_PROCESS_TAB )
-    item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 0 )
+    item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item2 = SquaredFlatBitmapButton(parent, ID_ACTION, images.getPhone20Bitmap())
     item0.Add( item2, 0, wx.ALIGN_CENTER_VERTICAL, 5 )

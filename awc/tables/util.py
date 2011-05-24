@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         awc/tables/util.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -94,7 +94,7 @@ def CheckRefIntegrity(parent, db_curs, db_constr, rec_id):
 class RefIntegrityDialog(wx.Dialog):
     """
     Dialogo per la visualizzazione degli elementi in conflitto con la cancellazione
-    per legami di integrit‡ referenziale.
+    per legami di integrit√† referenziale.
     """
     
     ref = ()

@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         contab/chiusure/chiudieserc.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -80,7 +80,7 @@ class ChiusuraContabilePanel(wx.Panel):
         else:
             o = self.ChiudiNormale()
         if o:
-            aw.awu.MsgDialog(self, "La chiusura è stata eseguita", style=wx.ICON_INFORMATION)
+            aw.awu.MsgDialog(self, "La chiusura Ã¨ stata eseguita", style=wx.ICON_INFORMATION)
         return o
     
     def ChiudiNormale(self):

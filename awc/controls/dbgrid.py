@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         awc/controls/dbgrid.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -779,7 +779,7 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
 
     def SetEditableColumns(self, edcol):
         """
-        Imposta le colonne che Ë possibile modificare
+        Imposta le colonne che √® possibile modificare
         
         @param edcol: lista colonne da editare
         @type edcol: list/tuple
@@ -910,7 +910,7 @@ class LinkTabAttr(object):
         
         Aggiunge un filtro basato su LinkTable.
         
-        @param label: descrizione del filtro. Sar‡ perceduto da 
+        @param label: descrizione del filtro. Sar√† perceduto da 
                       "Filtra in base a:"
         @type table: str
         @param table: nome tabella relazionata sulla colonna
@@ -920,7 +920,7 @@ class LinkTabAttr(object):
         @param cardclass: classe per la manutenzione/inserimento
         @param filter: espressione sql del filtro da applicare
         @type filter: str
-        @param startvalue: valore iniziale da attribuire al LinkTable; puÚ
+        @param startvalue: valore iniziale da attribuire al LinkTable; pu√≤
 essere sia l'id dell'elemento da impostare, sia il suo codice
         """
         self._filterlinks.append( [ label,
@@ -983,19 +983,19 @@ class DbGridTable(gridlib.PyGridTableBase):
         Imposta il recordset che deve riempire la griglia.
         Si basa essenzialmente su un recordset generalmente ottenuto come
         risultato di una query SQL ed ua struttura di mapping tra colonne 
-        del recordset e colonne della griglia; Ë possibile specificare anche
+        del recordset e colonne della griglia; √® possibile specificare anche
         la struttura descrittiva del recordset, generalmente ottenuta dal
         membro C{description} dell'oggetto C{cursore} del database.
         
-        C{rs} Ë il recordset (nrec-tuple di ncol-tuple)
-        C{colmap} Ë la struttura di mapping tra recordset e colonne da
-        gestire nella griglia; ogni elemento della tupla Ë una tupla
+        C{rs} √® il recordset (nrec-tuple di ncol-tuple)
+        C{colmap} √® la struttura di mapping tra recordset e colonne da
+        gestire nella griglia; ogni elemento della tupla √® una tupla
         che contiene il numero della colonna del recordset e la relativa
         intestazione.
-        Per le colonne di tipo non stringa, Ë possibile specificarne
-        il tipo come terzo elemento della tupla; per i tipi numerici Ë
+        Per le colonne di tipo non stringa, √® possibile specificarne
+        il tipo come terzo elemento della tupla; per i tipi numerici √®
         possibile specificare il numero di cifre intere e per i tipi
-        'float' Ë necessario indicare il numero delle cifre decimali.
+        'float' √® necessario indicare il numero delle cifre decimali.
         
         @param rs: recordset con i valori che riepiono la griglia
         @type rs: tuple
@@ -1130,7 +1130,7 @@ class DbGridTable(gridlib.PyGridTableBase):
         Richiamo callback per editazione cella avvenuta.
         Se C{mode} = 1, viene valutato il callback prima dell'aggiornamento
         della cella ed essa viene aggiornata solo se il ritorno dal
-        callback non Ë C{False}.
+        callback non √® C{False}.
         Se C{mode} = 2, viene valutato il callback dopo l'aggiornamento
         della cella.
         """
@@ -1167,7 +1167,7 @@ class DbGridTable(gridlib.PyGridTableBase):
             self.ResetView()
         if setval:
             if self.canInsert and row == len(self.data):
-                #testo la necessit‡ di chiamare il callback per l'aggiunta
+                #testo la necessit√† di chiamare il callback per l'aggiunta
                 #di una riga alla tabella
                 if self.newRowCB is None:
                     setval = False
@@ -1514,7 +1514,7 @@ class DbGridTable(gridlib.PyGridTableBase):
             except Exception, e:
                 if e.args[0] == 1155:
                     msg =\
-                        """Il file CVS Ë stato generato, ma il sistema non """\
+                        """Il file CVS √® stato generato, ma il sistema non """\
                         """conosce l'applicazione da utilizzare per aprirlo.\n\n"""
                     msg += tmpname
                 else:

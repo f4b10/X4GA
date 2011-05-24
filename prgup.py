@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         prgup.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -502,7 +502,7 @@ class ProgramUpdatePanel(aw.Panel):
         if self.runexe:
             #installato head, lancio setup scaricato
             if msgbox(self, message=\
-                      """Il setup della nuova versione Ë stato scaricato e """\
+                      """Il setup della nuova versione √® stato scaricato e """\
                       """pronto all'uso. Vuoi eseguire l'aggiornamento ora ?""",
                       style=wx.ICON_QUESTION|wx.YES_NO|wx.YES_DEFAULT) == wx.ID_YES:
                 os.execl(self.runexe)
@@ -510,7 +510,7 @@ class ProgramUpdatePanel(aw.Panel):
                #"""Riavviare il programma per rendere effettive le modifiche""",
                #style=wx.ICON_INFORMATION)
         msgbox(None, 
-               "Il programma verr‡ riavviato per rendere effettive le modifiche",
+               "Il programma verr√† riavviato per rendere effettive le modifiche",
                style=wx.ICON_INFORMATION)
         os.execl(sys.argv[0])
 

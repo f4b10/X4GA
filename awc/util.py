@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         awc/util.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -48,7 +48,7 @@ def mese(n):
 
 def iif(cond, val1, val2):
     """
-    Espressione condizionale: se il primo argomento è vero, viene restituito 
+    Espressione condizionale: se il primo argomento Ã¨ vero, viene restituito 
     il secondo; altrimenti il terzo.
     
     @param cond: espressione logica in base alla quale scegliere il valore
@@ -69,7 +69,7 @@ def iif(cond, val1, val2):
 def GetNamedChildrens(container, names=None, Test=None):
     """
     Esamina tutta la discendenza di figli di C{container} e ritorna una
-    lista dei controlli.  Se C{names} è definito vengono esaminati solo
+    lista dei controlli.  Se C{names} Ã¨ definito vengono esaminati solo
     i controlli i cui nomi siano compresi in tale lista.
     
     @param container: contenitore da esaminare
@@ -136,8 +136,8 @@ def EnableControls(parent, enable):
 def DictNamedChildrens( container, names = None ):
     """
     Esamina tutta la discendenza di figli di C{container} e ritorna un
-    dizionario nel quale la chiave è il nome del controllo ed il valore
-    è il controllo stesso.  Se C{names} è definito vengono esaminati solo
+    dizionario nel quale la chiave Ã¨ il nome del controllo ed il valore
+    Ã¨ il controllo stesso.  Se C{names} Ã¨ definito vengono esaminati solo
     i controlli i cui nomi siano compresi in tale lista.
     
     @param container: contenitore da esaminare
@@ -226,7 +226,7 @@ def MsgDialogDbError( window, err,
     if message:
         message += "\n\n"
     message +=\
-"""Durante l'elaborazione dei dati, si è verificato un problema; il """\
+"""Durante l'elaborazione dei dati, si Ã¨ verificato un problema; il """\
 """database server ha riscontrato l'errore #%d: %s""" % ( errcode, errmsg )
     
     return MsgDialog(window, message = message)
@@ -255,7 +255,7 @@ def ListSearch( l, srcf):
     for i in range(len(l)):
         if srcf(l[i]):
             return i
-    raise IndexError, "Il valore specificato da %s non è stato trovato"\
+    raise IndexError, "Il valore specificato da %s non Ã¨ stato trovato"\
                       % srcf
 
 

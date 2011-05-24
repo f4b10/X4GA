@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         cfg/cfgmagazz.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -136,7 +136,7 @@ class CfgDocMov(adb.DbTable):
                          "aggordcli", #Flag +/- aggiornamento ord.cliente
                          "aggordfor", #Flag +/- aggiornamento ord.fornitore
                          "aggfornit", #Flag aggiornamento fornitore
-                         "askvalori", #Flag richiesta quantit‡
+                         "askvalori", #Flag richiesta quantit√†
                          "mancosto",  #Management costo riga
                          "id_pdc",    #ID Sottoconto per collegam. contabile
                          "stadesc",   #Descrizione in stampa

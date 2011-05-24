@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         report/multielement.py
 # Author:       Marcello Montaldo <marcello.montaldo@gmail.com>
@@ -349,7 +349,7 @@ class group:
     @type groupExpression: String
     @cvar valoreAttuale: valore attuale dell'espressione di rottura
     @cvar valorePrecedente: valore precedente dell'espressione di rottura
-    @cvar stampatoHeader: indica se l'intestazione del gruppo Ë gi‡ stata stampata
+    @cvar stampatoHeader: indica se l'intestazione del gruppo √® gi√† stata stampata
     @type stampatoHeader: bool
     
     
@@ -415,7 +415,7 @@ class group:
     
     def check_rottura(self, oCanvas):
         """
-        Verifica se si Ë in presenza di rottura di gruppo (B{True}) o meno (B{False})
+        Verifica se si √® in presenza di rottura di gruppo (B{True}) o meno (B{False})
         @return: 
             - B{True} se rottura di gruppo
             - B{False} viceversa
@@ -439,7 +439,7 @@ class group:
         Nel caso non venga fornito alcun parametro il metodo restituisce lo
         stato della variabile (True/False), in caso contrario provvede a settarla
         secondo quanto fornito come parametro.
-        @return: B{True} se Ë necessario provvedere alla stampa dell'intestazione del gruppo, {False} in caso contario
+        @return: B{True} se √® necessario provvedere alla stampa dell'intestazione del gruppo, {False} in caso contario
         @rtype: bool
         """
         return self.oGroupHeader.isToPrint(lSet)
@@ -451,7 +451,7 @@ class group:
         Nel caso non venga fornito alcun parametro il metodo restituisce lo
         stato della variabile (True/False), in caso contrario provvede a settarla
         secondo quanto fornito come parametro.
-        @return: B{True} se Ë necessario provvedere alla stampa del piede del gruppo, B{False} in caso contario
+        @return: B{True} se √® necessario provvedere alla stampa del piede del gruppo, B{False} in caso contario
         @rtype: bool
         """
         self.oGroupFooter.isToPrint(lStampa)
@@ -461,7 +461,7 @@ class group:
         Il metodo ispeziona e setta la variabile che controlla l'alternanza di stampa
         dell'intestazione e del piede. Ogni volta che viene stampata l'intestazione del gruppo 
         la variabile viene impostata a B{True} mentre ad ogni stampa del piede del gruppo viene impostata a B{False}.
-        @return: B{True} se risulta essere gi‡ stato stampata l'intestazione del gruppo, B{False} in caso contrario
+        @return: B{True} se risulta essere gi√† stato stampata l'intestazione del gruppo, B{False} in caso contrario
         @rtype: bool
         """
         return self.oGroupHeader.isWaitingFooter(lSet)
@@ -492,7 +492,7 @@ class genericBand:
     @type daStampare: bool
     @cvar altezza: indica l'altezza dell'elemento del report (B{banda}) espressa in pixel.
     @type altezza: int
-    @cvar dDefinizione_Banda: definizione dettagliata degli elementi che compaiono nella (B{banda} cosÏ come sono definiti nel file in  formato XML che definisce il report.
+    @cvar dDefinizione_Banda: definizione dettagliata degli elementi che compaiono nella (B{banda} cos√¨ come sono definiti nel file in  formato XML che definisce il report.
     @type dDefinizione_Banda: dizionario
     '''
     oCanvas=None
@@ -567,7 +567,7 @@ class genericBand:
         Nel caso non venga fornito alcun parametro isToPrint() restituisce lo
         stato della variabile (True/False), in caso contrario provvede a settarla
         secondo quanto fornito come parametro.
-        @return: B{True} se Ë necessario provvedere alla stampa, {False} in caso contario
+        @return: B{True} se √® necessario provvedere alla stampa, {False} in caso contario
         @rtype: bool
         """
         if lSet<>None:
@@ -633,7 +633,7 @@ class groupHeader(genericBand):
     @type nomeGruppo: string
     @cvar needResetVariable: indica se all'atto della stampa delle instestazione di gruppo deve essere avviata la procedura che resetta le variabili utente secondo quanto spefcificato del file XML.
     @type needResetVariable: bool
-    @cvar waitFooter: indica se l'intestazione gruppo sia gi‡ stata stampata e pertanto se sia in attesa che venga stampato l'eventuale piede gruppo.
+    @cvar waitFooter: indica se l'intestazione gruppo sia gi√† stata stampata e pertanto se sia in attesa che venga stampato l'eventuale piede gruppo.
     @type waitFooter: bool
     """
     nomeGruppo=None
@@ -656,7 +656,7 @@ class groupHeader(genericBand):
         Il metodo ispeziona e setta la variabile che controlla l'alternanza di stampa
         dell'intestazione e del piede. Ogni volta che viene stampata l'intestazione del gruppo 
         la variabile viene impostata a B{True} mentre ad ogni stampa del piede del gruppo viene impostata a B{False}.
-        @return: B{True} se risulta essere gi‡ stato stampata l'intestazione del gruppo, B{False} in caso contrario
+        @return: B{True} se risulta essere gi√† stato stampata l'intestazione del gruppo, B{False} in caso contrario
         @rtype: bool
         """
         if lSet<>None:
@@ -667,8 +667,8 @@ class groupHeader(genericBand):
     def output(self, oCanvas):
         """
         Stampa Intestazione Gruppo dopo:
-        - aver provveduto ad impostare a B{True} la variabile B{self.waitFooter} ad indicare che vi Ë una intestazione di 
-        gruppo I{"aperta"} che dovr‡ essere successivamente I{"chiusa"} con la stampa del piede gruppo.
+        - aver provveduto ad impostare a B{True} la variabile B{self.waitFooter} ad indicare che vi √® una intestazione di 
+        gruppo I{"aperta"} che dovr√† essere successivamente I{"chiusa"} con la stampa del piede gruppo.
         - avere provveduto a resettare le variabili utente se richiesto da L{needResetVariable}
         Il metodo overrides quello della classe padre B{genericBand} unicamente al fine di 
         provvede all'esecuzione delle succitate funzioni e quindi richiama in modo espilito il metodo del padre.
@@ -700,7 +700,7 @@ class groupHeader(genericBand):
 class groupFooter(genericBand):
     '''
     La classe si fa carico di estrarre dalla definizione del report
-    la definizione del piË di Gruppo GROUP FOOTER
+    la definizione del pi√® di Gruppo GROUP FOOTER
     '''
 
     def __init__(self, dDefinizione_report, oCanvas, nomeGruppo=None):
@@ -749,7 +749,7 @@ class pageHeader(genericBand):
 class pageFooter(genericBand):
     """
     La classe si fa carico di estrarre dalla definizione del report
-    la definizione del piË pagina PAGE FOOTER
+    la definizione del pi√® pagina PAGE FOOTER
     """
     
     def __init__(self, dDefinizione_report, oCanvas):
@@ -760,7 +760,7 @@ class pageFooter(genericBand):
      
     def output(self, oCanvas):
         """
-        Stampa PiË Pagina.
+        Stampa Pi√® Pagina.
         """
         return genericBand.output(self,oCanvas, oCanvas.get_bottomMargin()+self.get_altezza())
      

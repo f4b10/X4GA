@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         awc/layout/gestanag.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -426,7 +426,7 @@ class AnagPanel(aw.Panel):
         
         father = awc.util.GetParentFrame(self)
         
-        #l'intero panel Ë controllato da un flexgrid sizer verticale
+        #l'intero panel √® controllato da un flexgrid sizer verticale
         sizer = wx.FlexGridSizer( 0, 1, 0, 0 )
         sizer.AddGrowableCol( 0 )
         sizer.AddGrowableRow( 1 )
@@ -819,7 +819,7 @@ class AnagPanel(aw.Panel):
     def InitSearchFilters(self, fltwin):
         """
         Inizializza i controlli nel pannello dei filtri di ricerca.
-        I valori sono recuperati dal dizionario ::_valfilters, che Ë
+        I valori sono recuperati dal dizionario ::_valfilters, che √®
         aggiornato in fase di conferma del pannello dei filtri 'fltwin'
         """
         for ctrl in aw.awu.GetAllChildrens(fltwin):
@@ -1079,7 +1079,7 @@ class AnagPanel(aw.Panel):
         Inizializza i controlli relativi ai filtri di ricerca.
         I valori dei filtri sono impostati in __init__ ed aggiornati in fase
         di conferma del frame di impostazione filtri ricerca.
-        Se il controllo relativo Ë sdoppiato x permettere i limiti da/a,
+        Se il controllo relativo √® sdoppiato x permettere i limiti da/a,
         viene considerato il controllo del limite 'da'
         """
         cn = lambda x: self.FindWindowByName(x)
@@ -1111,7 +1111,7 @@ class AnagPanel(aw.Panel):
     
     def TestForDeletion( self ):
         """
-        Metodo per la verifica della cancellabilit‡ di un elemento.
+        Metodo per la verifica della cancellabilit√† di un elemento.
         """
         return CheckRefIntegrity( self,
                                   self.db_curs, 
@@ -1266,7 +1266,7 @@ class AnagPanel(aw.Panel):
                     msg = "La descrizione immessa"
                 else:
                     msg = "La chiave"
-                msg += """ esiste gi‡.  Modificare tale informazione per """\
+                msg += """ esiste gi√†.  Modificare tale informazione per """\
                        """poter memorizzare."""
                 MsgDialog(self, msg)
             else:
@@ -1311,7 +1311,7 @@ class AnagPanel(aw.Panel):
     def UpdateDataControls( self, recno=None, activatechanges=True ):
         """
         Aggiorna i controlli a video con i valori del record indicato.
-        In caso di inserimento, il numero del record Ë C{NEW_RECORD}
+        In caso di inserimento, il numero del record √® C{NEW_RECORD}
         
         @param recno: numero del record da associare ai controlli
         @type recno: int
@@ -1689,8 +1689,8 @@ class AnagPanel(aw.Panel):
     def SetDbConnection( self, db_conn ):
         """
         Imposta la connessione al database.
-        L'oggetto Ë automaticamente impostato in base al valore di
-        L{Azienda.DB.connection}, questa funzione non Ë solitamente necessaria.
+        L'oggetto √® automaticamente impostato in base al valore di
+        L{Azienda.DB.connection}, questa funzione non √® solitamente necessaria.
         
         @param db_conn: connessione al database
         @type db_conn: mysql db connection
@@ -1751,7 +1751,7 @@ class AnagPanel(aw.Panel):
  
     def SetDbConstraints( self, db_constraints ):
         """
-        Imposta le condizioni per il controllo dell'integrit‡ referenziale
+        Imposta le condizioni per il controllo dell'integrit√† referenziale
         della tabella, nel caso in cui tale controllo non sia effettuato dal
         db server.
         
@@ -1968,7 +1968,7 @@ class _AnagMixin(object):
     
     def FixTimerProblem(self):
         #fix Timer su wx.2.8.11: se non lo stoppo, l'applicaizone va in crash :-(
-        #TODO: verificare quando Ë stato risolto il problema nella libreria wx
+        #TODO: verificare quando √® stato risolto il problema nella libreria wx
         c = self.FindWindowByName('_attach_autotext')
         if c:
             c.Stop()

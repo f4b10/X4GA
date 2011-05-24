@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         awc/controls/windows.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -237,7 +237,7 @@ class mixin(ContainersMixin):
     
     def HelpBuilder_RunEditor(self, obj, edit=False):
         if not self.HelpBuilder_IsObjectValidName(obj):
-            awu.MsgDialog(self, "Il nome dell'elemento non è valido, in quanto generico (%s)" % obj.GetName())
+            awu.MsgDialog(self, "Il nome dell'elemento non Ã¨ valido, in quanto generico (%s)" % obj.GetName())
             return
         self.HelpBuilder_LoadObjectHelp(obj, init=True)
         filename = self.HelpBuilder_GetFileName(obj)
@@ -260,7 +260,7 @@ class mixin(ContainersMixin):
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <style media="all" type="text/css">@import "style.css";</style>
-<meta content="text/html; charset=ISO-8859-1"
+<meta content="text/html; charset=UTF-8"
 http-equiv="content-type" />
 <title>Manuale X4</title>
 </head>
@@ -529,12 +529,12 @@ class Dialog(wx.Dialog, mixin):
 class AcceleratorKey(object):
     
     key = None         #tasto scorciatoia (lettera)
-    control_id = None  #id del controllo (bottone) di cui il tasto è scorciatoia
+    control_id = None  #id del controllo (bottone) di cui il tasto Ã¨ scorciatoia
     use_alt = False    #uso del tasto con il modificatore "Alt"
     use_ctrl = False   #uso del tasto con il modificatore "Ctrl"
     use_shift = False  #uso del tasto con il modificatore "Shift"
-    label = None       #etichetta da rimpiazzare sul controllo (bottone) di cui il tasto è scorciatoia
-    description = None #descrizione funzionalità, per tooltip e menu acceleratori attivi
+    label = None       #etichetta da rimpiazzare sul controllo (bottone) di cui il tasto Ã¨ scorciatoia
+    description = None #descrizione funzionalitÃ , per tooltip e menu acceleratori attivi
     
     def __init__(self, key, control, label=None, description=None, use_alt=True, use_ctrl=False, use_shift=False):
         if hasattr(control, 'GetId'):

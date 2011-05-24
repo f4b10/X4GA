@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         stormdb/db.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -844,7 +844,7 @@ class DB(object):
                 if tab_name is None:
                     RaiseXmlErrorNoTable()
                 elif structure_reading:
-                    RaiseXmlError('Inizio struttura gi‡ definito')
+                    RaiseXmlError('Inizio struttura gi√† definito')
                 elif content_reading:
                     RaiseXmlError('Inizio struttura durante la lettura del contenuto')
                 
@@ -976,7 +976,7 @@ class DB(object):
                 elif structure_reading:
                     RaiseXmlError('Inizio contenuto durante la lettura della struttura')
                 elif content_reading:
-                    RaiseXmlError('Inizio contenuto gi‡ definito')
+                    RaiseXmlError('Inizio contenuto gi√† definito')
                 
                 content_reading = True
                 

@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         contab/scad.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -66,7 +66,7 @@ class Scadenze(object):
         
         @param datestart: data di partenza (data documento)
         @type datestart: date
-        @param id_modpag: id modalit‡ di pagamento
+        @param id_modpag: id modalit√† di pagamento
         @type id_modpag: int
         @param impot: importo totale (tot. documento)
         
@@ -155,7 +155,7 @@ class Scadenze(object):
         
         @param datestart: data di partenza (data documento)
         @type datestart: date
-        @param id_modpag: id modalit‡ di pagamento
+        @param id_modpag: id modalit√† di pagamento
         @type id_modpag: int
         @param imptot: importo totale (tot. documento)
         @type imptot: float
@@ -197,11 +197,11 @@ class Scadenze(object):
                 if self.mp_finemese == 1:
                     dscad += dscad.GetDaysInMonth() - dscad.day
                 
-                #determino se la mp Ë una riba
+                #determino se la mp √® una riba
                 if self.mp_tipo == "R":
                     riba = 1
                 
-                #determino se la mp Ë un contrassegno
+                #determino se la mp √® un contrassegno
                 if self.mp_contrass:
                     cass = 1
                 
@@ -234,7 +234,7 @@ class Scadenze(object):
                         round(scad[len(scad)-1][1]+(imptot-total), NDEC)
             
         elif id_modpag is None:
-            #se la mod.pag. Ë vuota, genera cmq una scadenza in data documento
+            #se la mod.pag. √® vuota, genera cmq una scadenza in data documento
             #o data elaborazione se data doc. vuota (che non dovrebbe accadere)
             dscad = datestart
             if dscad is None:

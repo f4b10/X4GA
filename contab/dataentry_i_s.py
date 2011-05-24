@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         contab/dataentry_i_s.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -48,7 +48,7 @@ RSDIS_ISOMAGG =    l+11
 
 class ContabPanelTipo_I_S(ContabPanelTipo_I_O):
     """
-    Panel Dataentry registrazioni iva per contabilit‡ semplif.
+    Panel Dataentry registrazioni iva per contabilit√† semplif.
     """
     
     def __init__(self, *args, **kwargs):
@@ -248,7 +248,7 @@ class ContabPanelTipo_I_S(ContabPanelTipo_I_O):
         self.aliqdef_des = aliq_des
         
 #        if self.aliqdef_id:
-#            #metto l'aliquota di default sulle eventuali righe di costo gi‡ presenti
+#            #metto l'aliquota di default sulle eventuali righe di costo gi√† presenti
 #            #(eventualmente inserite dalla prescelta dei conti di costo all'atto
 #            #della creazione di una nuova regisrtrazione)
 #            for n, rb in enumerate(self.regrsb):
@@ -576,7 +576,7 @@ class ContabPanelTipo_I_S(ContabPanelTipo_I_O):
         if col == 1:
             editor = self._grid_dav.GetCellEditor(row, col)
             assert isinstance(editor, dbgred.DataLinkCellEditor),\
-                   "L'editor della colonna %d non Ë DataLinkCellEditor" % col
+                   "L'editor della colonna %d non √® DataLinkCellEditor" % col
             if editor._tc:
                 if row == 0:
                     idtip = self._cfg_pdctippa_id
@@ -771,7 +771,7 @@ class ContabPanelTipo_I_S(ContabPanelTipo_I_O):
                 
             elif col == ctb.RSDET_ALIQ_cod:
                 #modificata aliquota iva, ricalcolo tutto dall'imponibile
-                #se il calcolo Ë disattivato lo riattivo
+                #se il calcolo √® disattivato lo riattivo
                 imponib, imposta, ttivato, indeduc =\
                   self.CalcolaIVA(id_aliq,
                                   imponib = imponib,
@@ -1002,7 +1002,7 @@ LEFT JOIN %s AS pdn ON row.id_pdcind=pdn.id
 
 class ContabFrameTipo_I_S(ctb.ContabFrame):
     """
-    Frame Dataentry registrazioni iva per contabilit‡ semplif.
+    Frame Dataentry registrazioni iva per contabilit√† semplif.
     """
     def __init__(self, *args, **kwargs):
         if not kwargs.has_key('title') and len(args) < 3:
@@ -1018,7 +1018,7 @@ class ContabFrameTipo_I_S(ctb.ContabFrame):
 
 class ContabDialogTipo_I_S(ctb.ContabDialog):
     """
-    Dialog Dataentry registrazioni iva per contabilit‡ semplif.
+    Dialog Dataentry registrazioni iva per contabilit√† semplif.
     """
     def __init__(self, *args, **kwargs):
         if not kwargs.has_key('title') and len(args) < 3:

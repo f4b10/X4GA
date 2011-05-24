@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         cfg/cfgautomat.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -42,12 +42,12 @@ class CfgAutomat(object):
     """
     Lettura e caricamento automatismi.  BaseClass per automatismi specifici
     derivati.
-    La variabile di classe C{_autoKeys} è un dizionario; vedere il metodo
+    La variabile di classe C{_autoKeys} Ã¨ un dizionario; vedere il metodo
     L{CfgAutomat.ReadAutomat}
     """
     def __init__(self, db_curs):
         """
-        Costruttore.  Passare il cursore di database che verrà
+        Costruttore.  Passare il cursore di database che verrÃ 
         utilizzato per accedere alla tabella degli automatismi.
         """
         object.__init__(self)
@@ -57,19 +57,19 @@ class CfgAutomat(object):
     def ReadAutomat(self):
         """
         Lettura automatismi definiti in C{self._autoKeys}.
-        C{self._autoKeys} è un dizionario, contenente come chiave il codice
+        C{self._autoKeys} Ã¨ un dizionario, contenente come chiave il codice
         dell'automatismo e come valore il flag (C{True/False}) che indica
-        se l'automatismo è obbligatorio o meno.
+        se l'automatismo Ã¨ obbligatorio o meno.
         Se tutte le chiavi obbligatorie presenti nel dizionario sono
         presenti nella tabella degli automatismi, esse verranno caricate
         insieme alle chiavi facoltative nel dizionario locale della classe,
         originando anche, per ogni automatismo (obbligatorio o meno),
-        una variabile di istanza, denominata C{_auto_xxx}, dove C{xxx} è
+        una variabile di istanza, denominata C{_auto_xxx}, dove C{xxx} Ã¨
         il nome della chiave.::
             
             self._Auto_AddKeys({"test": False}) => self._auto_test
             
-        Il contenuto di tale variabile è prelevato dalla tabella degli
+        Il contenuto di tale variabile Ã¨ prelevato dalla tabella degli
         automatismi::
         
             self._Auto_AddKeys({"test": True}) => self._auto_test

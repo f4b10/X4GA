@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         contab/dataentry_c.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -69,7 +69,7 @@ FRAME_TITLE = "Registrazioni contabili"
 class ContabPanelTipo_C(ctb.ContabPanel,
                         GeneraPartiteMixin):
     """
-    Data entry di contabilit‡: registrazioni composte
+    Data entry di contabilit√†: registrazioni composte
     """
     
     def __init__(self, *args, **kwargs):
@@ -243,7 +243,7 @@ class ContabPanelTipo_C(ctb.ContabPanel,
     
     def UpdateModPag(self):
         """
-        Aggiorna la modalit‡ di pagamento in base al sottoconto della riga 1
+        Aggiorna la modalit√† di pagamento in base al sottoconto della riga 1
         """
         GeneraPartiteMixin.UpdateModPag(self, totimposta=0)
     
@@ -429,7 +429,7 @@ class ContabPanelTipo_C(ctb.ContabPanel,
         if col == 1:
             editor = self._grid_dav.GetCellEditor(row, col)
             assert isinstance(editor, dbgred.DataLinkCellEditor),\
-                   "L'editor della colonna %d non Ë DataLinkCellEditor" % col
+                   "L'editor della colonna %d non √® DataLinkCellEditor" % col
             if editor._tc:
                 if row == 0:
                     idtip = self._cfg_pdctippa_id

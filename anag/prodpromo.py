@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         anag/prodpromo.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -228,7 +228,7 @@ class ProdPromoGrid(dbglib.DbGridColoriAlternati):
                     prm.MoveRow(row)
                     if prm.id is not None:
                         if not prm.id in prm._info.deletedRecords:
-                            #riga gi‡ esistente, marco per cancellazione da db
+                            #riga gi√† esistente, marco per cancellazione da db
                             prm._info.deletedRecords.append(prm.id)
                     #elimino riga da dbgrid
                     self.DeleteRows(row)

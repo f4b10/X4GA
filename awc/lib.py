@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         awc/lib.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -130,7 +130,7 @@ class ControllaCodFisc(object):
             out = self.CFISC_MANCA
             
         elif (len(cf) == 11) and re.match('^[0-9]+$', cf):
-            #è una partita iva
+            #Ã¨ una partita iva
             ctrpi = ControllaPIVA(cf)
             out = ctrpi.Analizza()
             

@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         magazz/ftdif.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -269,7 +269,7 @@ class GridMovRag(dbglib.DbGrid):
             ( 90, (cn(pro, 'codice'),  "Cod.",         _STR, True)),
             (280, (cn(mov, 'descriz'), "Descrizione",  _STR, True)),
             ( 20, (cn(mov, 'um'),      "U.M.",         _STR, True)),
-            ( 90, (cn(mov, 'qta'),     "Qtà",          _FLQ, True)),
+            ( 90, (cn(mov, 'qta'),     "QtÃ ",          _FLQ, True)),
             (100, (cn(mov, 'prezzo'),  "Prezzo",       _FLP, True)),
             ( 40, (cn(mov, 'sconto1'), "Sc.%1",        _FLS, True)),
             ( 40, (cn(mov, 'sconto2'), "Sc.%2",        _FLS, True)),
@@ -566,7 +566,7 @@ class FtDifPanel(aw.Panel):
             elif nmin>nmax:
                 err = 'I numeri dei documenti da raggruppare sono incongruenti'
             elif ddoc<dmin:
-                err = 'Il documento da generare non può essere antecedente a quelli da raggruppare'
+                err = 'Il documento da generare non puÃ² essere antecedente a quelli da raggruppare'
         if not err:
             cando = True
             if ddoc.year != dmax.year:

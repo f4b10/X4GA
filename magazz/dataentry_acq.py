@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         magazz/dataentry_acq.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -270,7 +270,7 @@ class AcqDocGrid(dbglib.DbGrid):
             ( -1, (cn(mov, 'qta'),          "Qta orig.",   _QTA, True )),\
             ( -1, (cn(mov, 'total_qtaeva'), "Evaso",       _QTA, True )),\
             ( -1, (   -1,                   "Residuo",     _QTA, True )),\
-            ( -1, (cn(mov, 'qtaacq'),       "Quantità",    _QTA, True )),\
+            ( -1, (cn(mov, 'qtaacq'),       "QuantitÃ ",    _QTA, True )),\
             ( -1, (cn(mov, 'prezzo'),       "Prezzo",      _PRE, True )),\
             ( -1, (cn(mov, 'sconto1'),      "Sc.%1",       _SCO, True )),\
             ( -1, (cn(mov, 'sconto2'),      "Sc.%2",       _SCO, True )),\
@@ -423,7 +423,7 @@ class AcqDocGrid(dbglib.DbGrid):
                 event.SetId( event.m_id )
                 wx.PostEvent(GetParentFrame(self), event)
             else:
-                msg = """Quantità non valida"""
+                msg = """QuantitÃ  non valida"""
             mov.acquis = value>0
             
         elif field == 'prezzo':

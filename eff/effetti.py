@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         eff/effetti.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -790,7 +790,7 @@ class EmiEffettiPanel(wx.Panel):
         if noem:
             msg =\
                 """ATTENZIONE\n\nGli effetti selezionati non sono stati emessi, confermi comunque la loro contabilizzazione?\n"""\
-                """Procedendo, essi verranno contabilizzati ma non sar‡ possibile produrre il file da trasmettere alla banca,\n"""\
+                """Procedendo, essi verranno contabilizzati ma non sar√† possibile produrre il file da trasmettere alla banca,\n"""\
                 """se non con una successiva operazione di estrazione e filtro.\n\n"""\
                 """Confermi la contabilizzazione senza emissione?"""
             if awu.MsgDialog(self, message=msg, style=wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT) != wx.ID_YES:
@@ -798,7 +798,7 @@ class EmiEffettiPanel(wx.Panel):
         
         if s0:
             msg =\
-                """ATTENZIONE\n\nCi sono partite con saldo a zero o negativo, la loro contabilizzazione porter‡\n"""\
+                """ATTENZIONE\n\nCi sono partite con saldo a zero o negativo, la loro contabilizzazione porter√†\n"""\
                 """ad un saldo negativo pari all'importo del relativo effetto.\n\n"""\
                 """Si consiglia di contabilizzare solo effetti relativi a partite con saldo utile all'emissione,\n"""\
                 """ovvero togliendo dalle selezioni il flag relativo alle partite saldate e rieffettuando l'estrazione.\n"""\
@@ -850,7 +850,7 @@ class EmiEffettiPanel(wx.Panel):
                     if pcf.Get(eff.id):
                         #la registrazione contabile aggiorna la partita che
                         #sto lavorando come effetto; adeguo importo e pareggiam.
-                        #dell'effetto cosÏ come risulta dopo tale aggiornamento
+                        #dell'effetto cos√¨ come risulta dopo tale aggiornamento
                         eff.imptot = pcf.imptot
                         eff.imppar = pcf.imppar
                 else:

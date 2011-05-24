@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         contab/dataentry.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -88,7 +88,7 @@ class ContabPanel(aw.Panel,\
                   auto.CfgAutomat,\
                   progr.CfgProgr ):
     """
-    Data entry di contabilit‡.
+    Data entry di contabilit√†.
     """
     
     def __init__(self, *args, **kwargs):
@@ -267,7 +267,7 @@ class ContabPanel(aw.Panel,\
                     self.SetRegStatus(STATUS_SELCAUS)
         else:
             MsgDialog(self,\
-"""Non Ë possibile confermare la registrazione in quanto risulta """\
+"""Non √® possibile confermare la registrazione in quanto risulta """\
 """squadrata.  Eliminare la squadratura e riprovare.""")
     
     def OnRegModify(self, event):
@@ -296,7 +296,7 @@ class ContabPanel(aw.Panel,\
     def OnRegDelete(self, event):
         action = MsgDialog(self,\
 """Sei sicuro di voler cancellare la registrazione ?  Confermando, la """\
-"""registrazione non sar‡ pi˘ recuperabile in alcun modo.  """\
+"""registrazione non sar√† pi√π recuperabile in alcun modo.  """\
 """Confermi l'operazione di eliminazione ?""",\
                   style = wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT)
         if action == wx.ID_YES:
@@ -608,7 +608,7 @@ class ContabPanel(aw.Panel,\
                 self._cfg_regiva_des = self.reg_regiva_des
                 out = True
             else:
-                MsgDialog(self, "La registrazione #%d non Ë stata trovata."\
+                MsgDialog(self, "La registrazione #%d non √® stata trovata."\
                           % idreg)
         return out
 
@@ -647,14 +647,14 @@ class ContabPanel(aw.Panel,\
         dr = self.controls['datreg'].GetValue()
         if not dr:
             #test data registrazione
-            msg = "La data di registrazione Ë obbligatoria"
+            msg = "La data di registrazione √® obbligatoria"
             gvalid = False
         
         if gvalid:
             #test data chiusura
             if self._progr_ccg_aggcon_date:
                 if dr<=self._progr_ccg_aggcon_date:
-                    msg = "La data di registrazione Ë antecendente l'ultima chiusura contabile"
+                    msg = "La data di registrazione √® antecendente l'ultima chiusura contabile"
                     gvalid = False
         
         if gvalid:
@@ -662,7 +662,7 @@ class ContabPanel(aw.Panel,\
             ec = self.dbese.GetEsercizioInCorso()
             ie, fe = self.dbese.GetEsercizioDates()
             if dr<ie:
-                msg = "La data di registrazione Ë antecedente l'esercizio in corso"
+                msg = "La data di registrazione √® antecedente l'esercizio in corso"
                 gvalid = False
             else:
                 e = ec#self.dbese.GetEsercizioDaData(dr)
@@ -688,9 +688,9 @@ class ContabPanel(aw.Panel,\
             dm = self.dbprom.GetDataMastri(self.reg_esercizio)
             msg = None
             if dg is not None and self.reg_datreg<dg:
-                msg = "La data di registrazione Ë antecedente l'ultima stampa definitiva del giornale"
+                msg = "La data di registrazione √® antecedente l'ultima stampa definitiva del giornale"
             elif dm is not None and self.reg_datreg<dm:
-                msg = "La data di registrazione Ë antecedente l'ultima stampa definitiva dei mastri"
+                msg = "La data di registrazione √® antecedente l'ultima stampa definitiva dei mastri"
             if msg:
                 gvalid = False
         
@@ -700,9 +700,9 @@ class ContabPanel(aw.Panel,\
                 msg = None
                 dd = self.controls["datdoc"].GetValue()
                 if dd is None:
-                    msg = "La data documento Ë obbligatoria"
+                    msg = "La data documento √® obbligatoria"
                 elif dd > dr:
-                    msg = "La data documento non puÚ essere successiva a quella di registrazione"
+                    msg = "La data documento non pu√≤ essere successiva a quella di registrazione"
                 elif dd.year<dr.year:
                     msg = "La data documento si riferisce ad un altro anno rispetto alla data di registrazione.\nConfermi la sua esattezza?"
                     stl = wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT
@@ -710,7 +710,7 @@ class ContabPanel(aw.Panel,\
                     gvalid = False
         
         if gvalid:
-            #test validit‡ recordset dare/avere
+            #test validit√† recordset dare/avere
             td = ta = 0
             rs = self.regrsb
             msg = None
@@ -740,13 +740,13 @@ class ContabPanel(aw.Panel,\
                 gvalid = False
         
         if gvalid and rs:
-            #test validit‡ segno contabile su riga partita
+            #test validit√† segno contabile su riga partita
             if (self._cfg_pasegno or ' ') in 'DA':
                 s = self._cfg_pasegno
                 if s == "D" and rs[0][RSDET_IMPAVERE] or s == "A" and rs[0][RSDET_IMPDARE]:
                     msg =\
-                        """La causale Ë impostata con segno %s sulla riga della partita,\n"""\
-                        """mentre l'importo di %s Ë stato inserito dalla parte opposta.\n"""\
+                        """La causale √® impostata con segno %s sulla riga della partita,\n"""\
+                        """mentre l'importo di %s √® stato inserito dalla parte opposta.\n"""\
                         % (["DARE","AVERE"]["DA".index(s)], 
                            self.dbese.sepnvi(rs[0][RSDET_IMPDARE] or rs[0][RSDET_IMPAVERE]))
                     if self._cfg_camsegr1:
@@ -762,7 +762,7 @@ class ContabPanel(aw.Panel,\
                         stl = wx.ICON_ERROR
         
         if gvalid:
-            #test validit‡ sui singoli controlli
+            #test validit√† sui singoli controlli
             for name, ctr in self.controls.iteritems():
                 if isinstance(ctr, wx.Window):
                     valid = ctr.Validate()
@@ -771,7 +771,7 @@ class ContabPanel(aw.Panel,\
                         msg =\
                             """Sono presenti valori non validi.  Correggere le parti """\
                             """evidenziate per continuare.\n"""\
-                            """La registrazione non Ë stata salvata."""
+                            """La registrazione non √® stata salvata."""
                         gvalid = False
         
         if not gvalid and msg is not None:
@@ -1134,7 +1134,7 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
         #self.controls["numiva"].Enable(enable and\
             #self._cfg_regiva_id is not None)
         
-        #il reg.iva puÚ essere variabile come da cfg.causale
+        #il reg.iva pu√≤ essere variabile come da cfg.causale
         self.controls["id_regiva"].Enable(enable and self._cfg_tipo in 'IE' and\
                                           (self._cfg_regiva_dyn == 1 or self.reg_regiva_id is None))
         
@@ -1165,7 +1165,7 @@ class _ContabMixin(object):
     
     def FixTimerProblem(self):
         #fix Timer su wx.2.8.11: se non lo stoppo, l'applicaizone va in crash :-(
-        #TODO: verificare quando Ë stato risolto il problema nella libreria wx
+        #TODO: verificare quando √® stato risolto il problema nella libreria wx
         c = self.FindWindowByName('autonotes')
         if c:
             c.Stop()

@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         contab/dataentry_i.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -162,7 +162,7 @@ class GeneraPartiteMixin(scad.Scadenze):
     
     def UpdateModPag(self, totimposta=0):
         """
-        Aggiorna la modalit‡ di pagamento in base al sottoconto della riga 1
+        Aggiorna la modalit√† di pagamento in base al sottoconto della riga 1
         """
         if self._cfg_pcf != '1':
             return
@@ -231,7 +231,7 @@ class GeneraPartiteMixin(scad.Scadenze):
                                     None,      #RSDET_NOTE
                                     0])        #RSDET_RIGAPI
             else:
-                #modifica cli/for su riga gi‡ esistente
+                #modifica cli/for su riga gi√† esistente
                 cvn = lambda x: dlgPa.FindWindowByName('_pdcpa_%s' % x).GetValue()
                 r = self.regrsb[0]
                 r[ctb.RSDET_PDCPA_ID] = self.id_pdcpa
@@ -679,10 +679,10 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
                         ivalib.IVA,\
                         GeneraPartiteMixin):
     """
-    Data entry di contabilit‡: registrazioni con iva.
-    La classe non Ë direttamente istanziabile in quanto il data entry
-    varia a seconda se l'azienda Ë in contabilitÚ ordinaria o semplificata.
-    Il data entry Ë realizzato dalle sottoclassi::
+    Data entry di contabilit√†: registrazioni con iva.
+    La classe non √® direttamente istanziabile in quanto il data entry
+    varia a seconda se l'azienda √® in contabilit√≤ ordinaria o semplificata.
+    Il data entry √® realizzato dalle sottoclassi::
         ContabPanelTipo_I_O x contab.ordinaria
         ContabPanelTipo_I_S x contab.semplificata
         ContabPanelTipo_E   x registrazioni di sola iva.
@@ -795,9 +795,9 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
                 rei.Get(self.reg_regiva_id)
                 msg = None
                 if rei.lastprtdat is not None and self.reg_datreg<rei.lastprtdat:
-                    msg = "La data di registrazione Ë antecedente l'ultima stampa definitiva del registro Iva"
+                    msg = "La data di registrazione √® antecedente l'ultima stampa definitiva del registro Iva"
                 elif (rei.lastprtnum or 0)>0 and rei.lastprtdat.year == self.reg_datreg.year and self.reg_numiva<rei.lastprtnum:
-                    msg = "Il numero di protocollo Iva Ë inferiore all'ultimo protocollo stampato in definitivo sul registro."
+                    msg = "Il numero di protocollo Iva √® inferiore all'ultimo protocollo stampato in definitivo sul registro."
             if msg:
                 awu.MsgDialog(self, msg, style=wx.ICON_ERROR)
                 out = False
@@ -1204,7 +1204,7 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
         if not self.reg_numiva:
             if ri.Get(self.reg_regiva_id) and ri.OneRow():
                 if ri.noprot:
-                    if aw.awu.MsgDialog(self, "La registrazione dovr‡ essere protocollata successivamente, confermi?", style=wx.ICON_QUESTION|wx.YES_NO|wx.YES_DEFAULT) == wx.ID_YES:
+                    if aw.awu.MsgDialog(self, "La registrazione dovr√† essere protocollata successivamente, confermi?", style=wx.ICON_QUESTION|wx.YES_NO|wx.YES_DEFAULT) == wx.ID_YES:
                         self.reg_numiva = None
                         return out
         if numiva is None: numiva = self.reg_numiva
@@ -1234,7 +1234,7 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
             rs = self.db_curs.fetchone()
             if rs:
                 err =\
-"""Il protocollo n.%s Ë gi‡ stato attribuito alla registrazione """\
+"""Il protocollo n.%s √® gi√† stato attribuito alla registrazione """\
 """#%d del %s:\n\n%s""" % ( self.reg_numiva,\
                             int(rs[0]),\
                             rs[1].Format().split()[0],\
@@ -1245,7 +1245,7 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
                     err += " del %s" % rs[4].Format().split()[0]
                 if rs[5]:
                     err += ", di %s" % rs[5]
-                #test possibilit‡ di forzare il protocollo doppio, nel caso
+                #test possibilit√† di forzare il protocollo doppio, nel caso
                 #in cui il numero documento sia diverso dalla reg. del
                 #protocollo esistente.
                 ndoc = self.controls['numdoc'].GetValue()
@@ -1260,7 +1260,7 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
                         forcereq = True
             else:
                 #determinazione numero/data prot. precedente e successivo
-                #per controllo buchi numerazione e continuit‡ delle date
+                #per controllo buchi numerazione e continuit√† delle date
                 dprec = nprec = dnext = nnext = None
                 n = 0
                 filt = ""
@@ -1324,7 +1324,7 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
                     else:
                         err = """La """
                     err +=\
-"""data di registrazione non puÚ essere inferiore al %s, data di """\
+"""data di registrazione non pu√≤ essere inferiore al %s, data di """\
 """registrazione del precedente protocollo n.%d""" % ( dprec.Format()[:10],\
                                                        nprec )
                 
@@ -1334,7 +1334,7 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
                     else:
                         err = """La """
                     err +=\
-"""data di registrazione non puÚ essere superiore al %s, data di """\
+"""data di registrazione non pu√≤ essere superiore al %s, data di """\
 """registrazione del successivo protocollo n.%d""" % ( dnext.Format()[:10],\
                                                        nnext )
                 
@@ -1354,7 +1354,7 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
     
     def CheckDocumento(self):
         """
-        Controllo che non ci sia gi‡ una registrazione dello stesso tipo,
+        Controllo che non ci sia gi√† una registrazione dello stesso tipo,
         facente capo allo stesso cliente/fornitore e con lo stesso numero di 
         documento nell'anno della data documento.
         Se lo trovo, segnalo e chiedo conferma.
@@ -1377,7 +1377,7 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
         if src.IsEmpty():
             return True
         msg = \
-            """Esiste gi‡ una registrazione su questo registro IVA,\n"""\
+            """Esiste gi√† una registrazione su questo registro IVA,\n"""\
             """facente capo alla stessa anagrafica e con lo stesso\n"""\
             """numero di documento:\n\n"""
         msg += """%s %s n.%s del %s,\nregistrato il %s,\n%s %s\n\n"""\
@@ -1436,7 +1436,7 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
 
 class SelRowPa(wx.Dialog):
     """
-    Dialog per la selezione del sottoconto di partita, nonchÈ degli
+    Dialog per la selezione del sottoconto di partita, nonch√© degli
     eventuali sottoconti di contropartita preferiti, definiti nella causale
     e/o nel sottoconto di partita stesso.
     """

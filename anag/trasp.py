@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         anag/trasp.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>

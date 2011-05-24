@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         awc/wxinit.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -80,7 +80,7 @@ if wx.Platform == '__WXGTK__':
 #            pass
     
 #    #workaround classe Choice su GTK: pare che se, alla crezione,
-#    #il numero di voci Ë inferiore a 2, il cambio Font fallisce
+#    #il numero di voci √® inferiore a 2, il cambio Font fallisce
 #    #miseramente.
 #    GTK_Choice_Init_Original = wx.Choice.__init__
 #    def GTK_Choice_Init(self, parent, id, pos=wx.DefaultPosition, size=wx.DefaultSize,
@@ -118,7 +118,7 @@ if wx.Platform == '__WXGTK__':
         setattr(cls, '__init__', GetInitFunc())
 
 
-    #la ridefinizione di Bind serve, su gtk, a sopperire alla impossibilit‡
+    #la ridefinizione di Bind serve, su gtk, a sopperire alla impossibilit√†
     #di associare un acceleratore di tastiera ad un bottone
     _Button_Bind_Original_ = wx.Button.Bind
     def _Button_Bind(self, _EVT_TYPE, _func, *args, **kwargs):

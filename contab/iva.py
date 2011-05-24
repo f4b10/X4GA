@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         contab/iva.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -56,8 +56,8 @@ class IVA(object):
         """
         Calcolo dei imponibile, imposta e ivato a partire dal dato a
         disposizione.
-        L'id dell'aliquota è ovviamente indispensabile, mentre il calcolo
-        effettuato dipende da quale dato si ha a disposizione; si può
+        L'id dell'aliquota Ã¨ ovviamente indispensabile, mentre il calcolo
+        effettuato dipende da quale dato si ha a disposizione; si puÃ²
         partire da::
             imponib - per determinare imposta e ivato
             imposta - per determinare imponibile e ivato

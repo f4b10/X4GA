@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         contab/chiusure/sovrapp.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -64,7 +64,7 @@ class SovrapposizionePanel(aw.Panel):
         err = ''
         sa = self.dbese.GetSovrapposizione()
         if sa:
-            err = 'Sovrapposizione gi‡ attiva - Verificare chiusure'
+            err = 'Sovrapposizione gi√† attiva - Verificare chiusure'
         
         if err:
             cn('warning').SetLabel(err)

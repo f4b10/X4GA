@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         md5.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -21,7 +21,7 @@
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
 
-"""Compabilit‡ con il modulo md5, deprecato in Python 2.6
+"""Compabilit√† con il modulo md5, deprecato in Python 2.6
 """
 
 from hashlib import md5 as _h_md5

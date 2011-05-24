@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         magazz/pdcint.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -177,7 +177,7 @@ class PdcIntMagMovGrid(dbglib.DbGridColoriABlocchi):
             ( 35, (cn(tpm, "codice"),  "Mov.",         _STR, True)),
             (100, (cn(pro, "codice"),  "Cod.",         _STR, True)),
             (190, (cn(mov, "descriz"), "Descrizione.", _STR, True)),
-            ( 80, (cn(mov, "qta"),     "Quantit‡",     _QTA, True)),
+            ( 80, (cn(mov, "qta"),     "Quantit√†",     _QTA, True)),
             ( 90, (cn(mov, "prezzo"),  "Prezzo",       _PRZ, True)),
             ( 60, (cn(mov, "sconto1"), "Sc.%1",        _SCO, True)),
             ( 60, (cn(mov, "sconto2"), "Sc.%2",        _SCO, True)),
@@ -267,7 +267,7 @@ class PdcIntMagFtProdGrid(dbglib.DbGridColoriAlternati):
             (220, (cn(dbfat, "prod_descriz"), "Prodotto",     _STR, True)),
             ( 60, (cn(dbfat, "totqta"),       "Tot.Qta",      _QTA, True)),
             ( 80, (cn(dbfat, "lastdat"),      "Ultima vend.", _DAT, True)),
-            ( 60, (cn(dbfat, 'lastqta'),      "Quantit‡",     _QTA, True)),
+            ( 60, (cn(dbfat, 'lastqta'),      "Quantit√†",     _QTA, True)),
             ( 70, (cn(dbfat, 'lastprz'),      "Prezzo",       _PRZ, True)),
             ( 40, (cn(dbfat, 'lastsco'),      "Sc.%",         _SCO, True)),
             ( 70, (cn(dbfat, 'lastscmq'),     "Sc.Mce",       _QTA, True)),

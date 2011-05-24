@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         cfg/cfgprogr.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -44,7 +44,7 @@ class CfgProgr(object):
     """
     def __init__(self, db_curs):
         """
-        Costruttore.  Passare l'oggetto cursore di database che verrà
+        Costruttore.  Passare l'oggetto cursore di database che verrÃ 
         utilizzato per accedere alla tabella degli automatismi.
         """
         object.__init__(self)
@@ -55,7 +55,7 @@ class CfgProgr(object):
         """
         Caricamento progressivi specificati in C{self.:_progrKeys}
         Per ogni elemento presente in C{self.:_progrKeys}, vengono
-        create una o più variabili di istanza, in base a quanto richiesto
+        create una o piÃ¹ variabili di istanza, in base a quanto richiesto
         nel tipo::
             self._Progr_AddKeys(("test",None,None))
             self.ReadProgr() => _progr_test_num  se tipo comprende TYPE_NUM
@@ -132,12 +132,12 @@ class CfgProgr(object):
         seguente struttura::
             - key
             - id
-            - insieme dei dati da caricare; uno o più fra i tipi:
+            - insieme dei dati da caricare; uno o piÃ¹ fra i tipi:
                 - TYPE_NUM
                 - TYPE_DATE
                 - TYPE_TOTAL1
                 - TYPE_TOTAL2
-        Nel caso occorrano più dati da caricare (ad esempio numero e data),
+        Nel caso occorrano piÃ¹ dati da caricare (ad esempio numero e data),
         tali tipi possono essere combinati tramite or::
             TYPE_NUM | TYPE_DATE
             

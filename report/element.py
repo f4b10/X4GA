@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         report/element.py
 # Author:       Marcello Montaldo <marcello.montaldo@gmail.com>
@@ -920,7 +920,7 @@ class immagine(rettangolo):
             name = e.evaluate(oCanvas)
             
         else:
-            #il nome del file Ë scritto direttamente nell'espressione dell'immagine
+            #il nome del file √® scritto direttamente nell'espressione dell'immagine
             #scarto la path definita e cerco l'immagine sotto le possibili path del
             #report 
             (imagePath, imageName) = os.path.split(n)
@@ -1253,9 +1253,9 @@ class staticText(elemento_Testuale):
     def set_newRect(self, oCanvas):
         """
         Il metodo si fa carico di calcolare, mantenendo fissa la larghezza della casella di testo,
-        quale debba essere l'altezza della stessa affinchË possa contenere l'intero testo senza
+        quale debba essere l'altezza della stessa affinch√® possa contenere l'intero testo senza
         che questi subisca alcun troncamento.
-        Il metodo viene richiamato per gli oggetti per cui Ë stata impostat a vero la propriet‡
+        Il metodo viene richiamato per gli oggetti per cui √® stata impostat a vero la propriet√†
         'Allunga se il testo cresce' (isStretchWithOverflow).
         """
         if self.rotation=="Left" or self.rotation=="Right":

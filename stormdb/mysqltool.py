@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         cfg/utenti.py
 # Author:       Marcello Montaldo <marcello.montaldo@gmail.com>

@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         awc/controls/entries.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -186,7 +186,7 @@ class PartitaIvaEntryCtrl(_EntryCtrlMixin):
                 r = awu.MsgDialog(self,\
                                   """Confermi la connessione al sito dell'"""
                                   """Agenzia delle Entrate per verificare le """
-                                  """date di inizio e fine attivit‡ dell'"""
+                                  """date di inizio e fine attivit√† dell'"""
                                   """azienda con questa Partita IVA?""",
                                   style=wx.ICON_QUESTION|wx.YES_NO|wx.YES_DEFAULT)
                 if r != wx.ID_YES:

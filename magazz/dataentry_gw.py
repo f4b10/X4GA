@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         magazz/dataentry_gw.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -83,8 +83,8 @@ class DEGW_DataEntryPanel(deo.MagazzPanel_O):
     
     def OnDocDelete(self, event):
         action = aw.awu.MsgDialog(self,\
-"""Sei sicuro di voler cancellare il documento?  Confermando, non sarà """\
-"""più recuperabile in alcun modo.  """\
+"""Sei sicuro di voler cancellare il documento?  Confermando, non sarÃ  """\
+"""piÃ¹ recuperabile in alcun modo.  """\
 """Confermi l'operazione di eliminazione ?""",\
                   style = wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT)
         if action == wx.ID_YES:

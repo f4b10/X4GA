@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         mx/DateTime.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -93,8 +93,8 @@ class _date(date, dtmix):
     
     def __add__(self, x):
         """
-        Aggiunge 'x' alla data; se x Ë di tipo numerico (int/float/long) viene
-        restituita la data maggiorata di 'x' giorni, altrimenti funzionalit‡
+        Aggiunge 'x' alla data; se x √® di tipo numerico (int/float/long) viene
+        restituita la data maggiorata di 'x' giorni, altrimenti funzionalit√†
         standard della somma di un datetime.date con altro (timdelta)
         """
         if isinstance(x, (int, float, long)):
@@ -104,8 +104,8 @@ class _date(date, dtmix):
     
     def __sub__(self, x):
         """
-        Sottrae 'x' dalla data; se x Ë di tipo numerico (int/float/long) viene
-        restituita la data defalcata di 'x' giorni, altrimenti funzionalit‡
+        Sottrae 'x' dalla data; se x √® di tipo numerico (int/float/long) viene
+        restituita la data defalcata di 'x' giorni, altrimenti funzionalit√†
         standard della sottrazioe da un datetime.date di altro (timdelta)
         """
         if isinstance(x, (int, float, long)):
@@ -170,8 +170,8 @@ class _datetime(dtime, dtmix):
     
     def __add__(self, x):
         """
-        Aggiunge 'x' alla data; se x Ë di tipo numerico (int/float/long) viene
-        restituita la data maggiorata di 'x' giorni, altrimenti funzionalit‡
+        Aggiunge 'x' alla data; se x √® di tipo numerico (int/float/long) viene
+        restituita la data maggiorata di 'x' giorni, altrimenti funzionalit√†
         standard della somma di un datetime.datetime con altro (timdelta)
         """
         if isinstance(x, (int, float, long)):
@@ -181,8 +181,8 @@ class _datetime(dtime, dtmix):
     
     def __sub__(self, x):
         """
-        Sottrae 'x' dalla data; se x Ë di tipo numerico (int/float/long) viene
-        restituita la data defalcata di 'x' giorni, altrimenti funzionalit‡
+        Sottrae 'x' dalla data; se x √® di tipo numerico (int/float/long) viene
+        restituita la data defalcata di 'x' giorni, altrimenti funzionalit√†
         standard della sottrazioe da un datetime.date di altro (timdelta)
         """
         if isinstance(x, (int, float, long)):

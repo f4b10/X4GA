@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         magazz/stagrip.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -79,7 +79,7 @@ class GrigliaPrezziAttualiGrid(stalis.ListiniAttualiGrid):
         elif self.clifor == "F":
             cde = bt.MAGCDEGRIF
         else:
-            raise Exception, "Impossibile determinare se la griglia Ë per i clienti o per i fornitori"
+            raise Exception, "Impossibile determinare se la griglia √® per i clienti o per i fornitori"
         if cde:
             a(( 80, (cc("grip_ext_codice"),  "Codice Ext.",      _STR, False)))
             a((200, (cc("grip_ext_descriz"), "Descrizione Ext.", _STR, False)))
@@ -324,7 +324,7 @@ class GrigliaPrezziAttualiPanel(stalis.ListiniAttualiPanel):
     def Validate(self):
         def cn(x):
             return self.FindWindowByName(x)
-        for name, msg in (('dataval', "Impostare la data di validit‡"),
+        for name, msg in (('dataval', "Impostare la data di validit√†"),
                           ('id_pdc', "Definire il sottoconto della griglia")):
             if not cn('dataval').GetValue():
                 awu.MsgDialog(self, msg, style=wx.ICON_ERROR)

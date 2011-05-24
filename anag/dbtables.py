@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         anag/dbtables.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -353,7 +353,7 @@ def GetPdcClass(id_tipo):
     """
     Ritorna il dbtable di gestione anagrafica congruente con il tipo di 
     sottoconto passato.
-    La DbTable è da istanziare.
+    La DbTable Ã¨ da istanziare.
     """
     cls = None
     tipibase = "ABDCF"

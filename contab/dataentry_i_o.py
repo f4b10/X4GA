@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         contab/dataentry_i_o.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -84,7 +84,7 @@ FRAME_TITLE = "Registrazione IVA"
 
 class ContabPanelTipo_I_O(ctbi.ContabPanelTipo_I):
     """
-    Panel Dataentry registrazioni iva per contabilit‡ ordinaria.
+    Panel Dataentry registrazioni iva per contabilit√† ordinaria.
     """
     
     def __init__(self, *args, **kwargs):
@@ -110,14 +110,14 @@ class ContabPanelTipo_I_O(ctbi.ContabPanelTipo_I):
     def OnEnableSezIva(self, event):
         if self.reg_nocalciva:
             msg =\
-                """Disabilitando la sezione IVA, questa sar‡ nuovamente pilotata in modo automatico\n"""\
+                """Disabilitando la sezione IVA, questa sar√† nuovamente pilotata in modo automatico\n"""\
                 """dalla sezione contabile.  Inoltre, eventuali differenze di arrotondamento dell'imposta\n"""\
                 """rispetto al documento cartaceo ricevuto non saranno modificabili, se non riattivando la\n"""\
                 """sezione IVA stessa."""
         else:
             msg =\
-                """Abilitando la sezione IVA essa sar‡ indipendente dalla sezione contabile;\n"""\
-                """ogni cambiamento in questa effettuato non avr‡ ripercussione nella sezione IVA stessa."""
+                """Abilitando la sezione IVA essa sar√† indipendente dalla sezione contabile;\n"""\
+                """ogni cambiamento in questa effettuato non avr√† ripercussione nella sezione IVA stessa."""
         msg += """\n\nConfermi l'operazione?"""
         if aw.awu.MsgDialog(self, msg, style=wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT) == wx.ID_YES:
             self.reg_nocalciva = 1 - (self.reg_nocalciva or 0)
@@ -688,7 +688,7 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
                     imponib, imposta, ttivato, indeduc =\
                       self.CalcolaIva_DaImposta(id_aliq, value, indeduc)
                     if not imponib:
-                        #aw.awu.MsgDialog(self, "Il calcolo della parte imponibile porta a zero, l'imposta digitata non Ë accettata")
+                        #aw.awu.MsgDialog(self, "Il calcolo della parte imponibile porta a zero, l'imposta digitata non √® accettata")
                         imponib = imposta = indeduc = ttivato = digiva = 0
                     value = digiva
                 
@@ -706,7 +706,7 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
                 
             elif col == RSIVA_iva_cod:
                 #modificata aliquota iva, ricalcolo tutto dall'imponibile
-                #se il calcolo Ë disattivato lo riattivo
+                #se il calcolo √® disattivato lo riattivo
                 imponib, imposta, ttivato, indeduc =\
                   self.CalcolaIVA(id_aliq,\
                                   imponib = imponib,\
@@ -750,7 +750,7 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
         self.aliqdef_des = aliq_des
         
 #        if self.aliqdef_id:
-#            #metto l'aliquota di default sulle eventuali righe di costo gi‡ presenti
+#            #metto l'aliquota di default sulle eventuali righe di costo gi√† presenti
 #            #(eventualmente inserite dalla prescelta dei conti di costo all'atto
 #            #della creazione di una nuova regisrtrazione)
 #            for n, rb in enumerate(self.regrsb):
@@ -1069,7 +1069,7 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
         if col == 1:
             editor = self._grid_dav.GetCellEditor(row, col)
             assert isinstance(editor, dbgred.DataLinkCellEditor),\
-                   "L'editor della colonna %d non Ë DataLinkCellEditor" % col
+                   "L'editor della colonna %d non √® DataLinkCellEditor" % col
             if editor._tc:
                 if row == 0:
                     idtip = self._cfg_pdctippa_id
@@ -1194,10 +1194,10 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
                         elif col == 7:
                             #editata cifra da scorp., mi sposto su:
                             if row<len(self.regrsb)-1:
-                                #riga successiva, se c'Ë
+                                #riga successiva, se c'√®
                                 row += 1
                                 if self.regrsb[row][ctb.RSDET_ALIQ_ID]:
-                                    #rimango su col. da scorp, l'aliq. Ë gi‡ presente
+                                    #rimango su col. da scorp, l'aliq. √® gi√† presente
                                     col = 7
                                 else:
                                     #colonna aliquota
@@ -1223,7 +1223,7 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
         #calcola/ricalcola tutta la sezione iva della registrazione
         rsb = self.regrsb
         rsi = self.regrsi
-        #elimino recordset iva, poichÈ lo devo ricostruire da zero
+        #elimino recordset iva, poich√© lo devo ricostruire da zero
         del rsi[:]
         #ciclo sul recordset d/a
         for row, rb in enumerate(rsb):
@@ -1248,7 +1248,7 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
                         pindid = rb[ctb.RSDET_PDCPA_ID]
                         pindcod = rb[ctb.RSDET_PDCPA_cod]
                         pinddes = rb[ctb.RSDET_PDCPA_des]
-                #Ë specificata l'aliquota sul costo/ricavo, la cerco nell'iva
+                #√® specificata l'aliquota sul costo/ricavo, la cerco nell'iva
                 found = False
                 for n, ri in enumerate(rsi):
                     if ri[RSIVA_ID_ALIQIVA] == aliqid and ri[RSIVA_ID_PDCIVA] == pivaid and ri[RSIVA_pdcind_id] == pindid:
@@ -1322,7 +1322,7 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
 
 class ContabFrameTipo_I_O(ctb.ContabFrame):
     """
-    Frame Dataentry registrazioni iva per contabilit‡ ordinaria.
+    Frame Dataentry registrazioni iva per contabilit√† ordinaria.
     """
     def __init__(self, *args, **kwargs):
         if not kwargs.has_key('title') and len(args) < 3:
@@ -1338,7 +1338,7 @@ class ContabFrameTipo_I_O(ctb.ContabFrame):
 
 class ContabDialogTipo_I_O(ctb.ContabDialog):
     """
-    Dialog Dataentry registrazioni iva per contabilit‡ ordinaria.
+    Dialog Dataentry registrazioni iva per contabilit√† ordinaria.
     """
     def __init__(self, *args, **kwargs):
         if not kwargs.has_key('title') and len(args) < 3:

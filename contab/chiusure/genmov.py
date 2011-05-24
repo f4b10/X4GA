@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         contab/chiusure/genmov.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -221,7 +221,7 @@ class GeneraMovimentiPanel(aw.Panel):
             aw.awu.MsgDialog(self, "Impostare l'esercizio per la determinazione dei saldi")
             return
         if self.dbese.GetMovimentiGenerati():
-            aw.awu.MsgDialog(self, "Movimenti di chiusura/apertura gi‡ generati")
+            aw.awu.MsgDialog(self, "Movimenti di chiusura/apertura gi√† generati")
             return
         sg = None
         err = False
@@ -277,7 +277,7 @@ class GeneraMovimentiPanel(aw.Panel):
         sq = False
         if not err:
             if self.dbslp.IsEmpty() and self.dbsle.IsEmpty():
-                msg = "Non Ë stato trovato alcun sottoconto da chiudere"
+                msg = "Non √® stato trovato alcun sottoconto da chiudere"
                 err = True
         if not err:
             tpa, tpp = tots['P']
@@ -385,7 +385,7 @@ class GeneraMovimentiPanel(aw.Panel):
             return
         
         r = aw.awu.MsgDialog(self,\
-                             """ATTENZIONE\n\nL'elaborazione Ë irreversibile, Ë """
+                             """ATTENZIONE\n\nL'elaborazione √® irreversibile, √® """
                              """consigliabile effettuare una copia di backup del database """
                              """prima di procedere.\n\n"""
                              """Confermi l'elaborazione?""",

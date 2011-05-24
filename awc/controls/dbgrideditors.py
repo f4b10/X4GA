@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         awc/controls/dbgrideditors.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -1158,10 +1158,10 @@ class FlatCheckBoxCellEditor(CheckBoxCellEditor):
         pass
     
     def OnKeyPressed(self, event):
-        # space deve invertire lo stato del checkbox, però
-        # da qui non si può intercettare il tasto premuto
+        # space deve invertire lo stato del checkbox, perÃ²
+        # da qui non si puÃ² intercettare il tasto premuto
         # avviene quindi il binding EVT_KEY a livello di chiamante (Grid.SetData)
-        # qui devo capire se il tasto è stato premuto in corrispondenza di una
+        # qui devo capire se il tasto Ã¨ stato premuto in corrispondenza di una
         # colonna che ha questa classe come editor, se si allora inverto lo 
         # stato del checkbox di questa classe
         if event.GetKeyCode() == wx.WXK_SPACE:

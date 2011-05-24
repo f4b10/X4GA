@@ -1,7 +1,7 @@
 #!/usr/bin/python2
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
-# Copyright (c) 2008-2011 Cédric Krier.
+# Copyright (c) 2008-2011 CÃ©dric Krier.
 # Copyright (c) 2008-2011 B2CK.
 # 
 # This program is free software: you can redistribute it and/or modify

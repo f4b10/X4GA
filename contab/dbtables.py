@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         contab/dbtables.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -62,7 +62,7 @@ class DbRegCon(adb.DbTable,\
        +--> config: setup causale
        +--> regiva: registro iva
        +--> valuta: valuta
-       +--> modpag: modalit‡ di pagamento del documento
+       +--> modpag: modalit√† di pagamento del documento
        |
        |---->> body: dettaglio righe contabili
        |          +--> pdcpa: sottoconto partita
@@ -365,7 +365,7 @@ class DbRegCon(adb.DbTable,\
             #aggiornamento partite
             for scad in self.scad:
                 if not scad.importo:
-                    #l'importo della scadenza Ë nullo, non aggiorno partita
+                    #l'importo della scadenza √® nullo, non aggiorno partita
                     continue
                 if scad.id_pcf is not None:
                     do = pcf.Get(scad.id_pcf) and pcf.RowsCount() == 1
@@ -533,7 +533,7 @@ class PdcSaldi(_PdcMovimMixin):
 class PdcMastro(_PdcMovimMixin):
     """
     DbTable specializzato nella determinazione del mastro contabile di ogni
-    sottoconto.  Eventuali selezioni vanno impostate su 'self.mastro', che Ë
+    sottoconto.  Eventuali selezioni vanno impostate su 'self.mastro', che √®
     il DbTable con i movimenti del mastro stesso.
     Struttura da '_PdcMovimMixin'
       +--> mastro - elenco movimenti del sottoconto
@@ -841,7 +841,7 @@ class PdcContabView(adb.DbTable):
 class PdcSintesiPartite(adb.DbTable):
     """
     Determina la situazione sintetica dei debiti/crediti relativi ad uno o
-    pi˘ clienti/fornitori.
+    pi√π clienti/fornitori.
     Vengono totalizzate le partite a seconda del tipo di mod.pag. associata
     alla partita (contanti/bonifici/riba) e se le partite sono flaggate come
     insolute o meno:
@@ -850,7 +850,7 @@ class PdcSintesiPartite(adb.DbTable):
     total_cont  e total_ins_cont
     total_riba  e total_ins_riba
     
-    Se la classe Ë istanziata passando un valore data alla kw 'today', tali
+    Se la classe √® istanziata passando un valore data alla kw 'today', tali
     variabili vengono ulteriormante suddivise:
     total_saldo_scaduto
     total_saldo_ascadere
@@ -928,7 +928,7 @@ class PdcSintesiPartite(adb.DbTable):
         self._AddPcfJoins(sintesi)
         
         #gruppo finto: volendo raggruppare x agente, usare questo gruppo
-        #Ë possibile ricorrere a ClearGroups per poi riscriverli, ma eventuali
+        #√® possibile ricorrere a ClearGroups per poi riscriverli, ma eventuali
         #dbgrid che sfruttino questa dbtables avrebbero problemi a puntare
         #correttamente le colonne; agendo su un gruppo (vero o finto che sia)
         #sempre presente, non si manifesta questo problema.
@@ -1035,7 +1035,7 @@ class PdcScadenzario(PdcSintesiPartite):
     Determina il mastro partite del sottoconto.
     
     N.B.
-    Vedi _PartiteMixin per le funzionalit‡ di filtro sulle partite.
+    Vedi _PartiteMixin per le funzionalit√† di filtro sulle partite.
     """
     def __init__(self, **kwargs):
         
@@ -1526,7 +1526,7 @@ class RegIva(adb.DbTable):
       _riepaliq (RiepAliq) totali x aliquota
       _lastpdat DateTime   data ultima stampa
       _lastppro int        ultimo protocollo stampato
-      pdc Ë anche disponibile come istanza della classe (=.bcf.pdc)
+      pdc √® anche disponibile come istanza della classe (=.bcf.pdc)
       _riepaliq (RiepIva) istanza riepilogo aliquote iva.
     Data la natura della classe, che per la totalizzazione delle aliquote
     si appoggia sulla classe RegIva della quale contiene una istanza, i limiti
@@ -1636,8 +1636,8 @@ class RegIva(adb.DbTable):
         #Clienti per vendite e corrispettivi, Fornitori per acquisti
         #Ci possono essere tuttavia alcuni tipi di registrazione che esulano da tale accoppiamento;
         #Ad esempio, le autofatture cee che vanno sul registro vendite ma riguardano i fornitori.
-        #In tali situazioni, il codice fiscale/partita iva non puÚ essere prelevato dalla tabella
-        #anagrafica linkata a pdc della registrazione, poichÈ il dato non Ë proprio presente.
+        #In tali situazioni, il codice fiscale/partita iva non pu√≤ essere prelevato dalla tabella
+        #anagrafica linkata a pdc della registrazione, poich√© il dato non √® proprio presente.
         #In tali casi verranno recuperati mediante ricerca apposita sul seguente DbTable interno: 
         self.dbpdc = adb.DbTable(bt.TABNAME_PDC, "pdc",    fields="id,codice,descriz")
         self.dbpdc.AddJoin(bt.TABNAME_CLIENTI,   "anacli", fields="id,codfisc,nazione,piva", idLeft='id', join=adb.JOIN_LEFT)
@@ -1650,7 +1650,7 @@ class RegIva(adb.DbTable):
         Imposta il tipo di stampa associata.  A seconda del tipo, vengono
         prese in considerazione diverse registrazioni iva:
         x tipo "P" o "D", registrazioni mai stampate
-        x tipo "R" solo registrazioni gi‡ stampate
+        x tipo "R" solo registrazioni gi√† stampate
         
         """
         if not tiposta in "PDR":
@@ -2150,7 +2150,7 @@ class LiqIva(adb.DbTable):
     opportunamente popolata dai dati del registro iva relativo; prima di 
     popolare la DbTable, occorre obbligatoriamente specificare:
         - il tipo di elaborazione provvisoria/definitiva tramite C{SetTipoLiq(t)}
-            dove t Ë "P" o "D"
+            dove t √® "P" o "D"
         - il periodo da considerare tramite C{SetLimits(da_data, a_data)}
     Esempio:
         e = RegIvaElenco()
@@ -2163,7 +2163,7 @@ class LiqIva(adb.DbTable):
     
     def __init__(self, periodic=None, *args, **kwargs):
         """
-        periodic Ë la periodicit‡ di liquidazione "M" o "T" 
+        periodic √® la periodicit√† di liquidazione "M" o "T" 
         Per default viene letto il flag dalla tabella cfgsetup in corrispondenza
         della chiave liqiva_periodic
         """
@@ -2281,7 +2281,7 @@ class LiqIva(adb.DbTable):
         """
         Imposta il tipo di elaborazione:
             "P" provvisoria - solo registrazioni non stampate su registro
-            "D" definitiva - solo registrazioni gi‡ stampate su registro
+            "D" definitiva - solo registrazioni gi√† stampate su registro
         """
         self._tipelab = tipo
     
@@ -2442,7 +2442,7 @@ class LiqIva(adb.DbTable):
             mt['docfin1'] = mt['docfin2'] = 0
         else:
             #il debito totale non supera il limite del versamento minimo di 25,82 (ex 50.000 lire)
-            #andr‡ riportato come debito del periodo precedente sulla liq.successiva
+            #andr√† riportato come debito del periodo precedente sulla liq.successiva
             mt['vertra1'] = 0
         #credito compensabile
         mt['ciciniz'] = cc['cricomdisp']
@@ -2556,7 +2556,7 @@ class RegIvaStatus(adb.DbTable):
         """
         Imposta i filtri sulle tabelle di progressivi per numero/data ultimo 
         inserimento e numero/data ultima stampa definitiav del registro.
-        L'anno Ë necessario poichÈ tali progressivazioni sono distinte per anno.
+        L'anno √® necessario poich√© tali progressivazioni sono distinte per anno.
         """
         for tab in ("ultins", "stareg"):
             self[tab].SetRelation("""regiva.id=%s.key_id AND """\
@@ -2571,7 +2571,7 @@ class AllegatiCliFor(_PdcMovimMixin):
     """
     Allegati clienti/fornitori.
     DbTable specializzato nella determinazione del mastro contabile di ogni
-    sottoconto.  Eventuali selezioni vanno impostate su 'self.mastro', che Ë
+    sottoconto.  Eventuali selezioni vanno impostate su 'self.mastro', che √®
     il DbTable con i movimenti del mastro stesso.
     Struttura da '_PdcMovimMixin'
     pdc
@@ -2700,14 +2700,14 @@ class PdcQuadPcfCont(adb.DbMem):
     scadenzario.
     Vengono estratti solo i sottoconti dei quali risulta differente il saldo
     contabile rispetto al saldo partite.
-    La situazione ideale Ë avere il recordset vuoto dopo il Retrieve...
+    La situazione ideale √® avere il recordset vuoto dopo il Retrieve...
     """
     
     def __init__(self):
         adb.DbMem.__init__(self, fields='pdc_id,tipana_tipo,pdc_codice,pdc_descriz,saldocont,saldopcf')
     
     def Retrieve(self, filter=None, par=None):
-        #todo: SubDbTable non Ë ancora in grado di gestire i join ad altre subselect
+        #todo: SubDbTable non √® ancora in grado di gestire i join ad altre subselect
         #mi appoggio per ora ad una dbtable di memoria, che viene riempita qui
         #dal recordset ottenuto mediante valutazione dell'epressione sql manuale
         if filter is None:

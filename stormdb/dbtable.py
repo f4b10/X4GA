@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         stormdb/dbtable.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -2796,9 +2796,9 @@ class DbTable(object):
     def JSONdump(self, prefix, fields, item=''):
         """
         fields rappresenta l'elenco dei campi da serializzare
-        vista la struttura della dbtable, tale elenco è strutturato come segue:
+        vista la struttura della dbtable, tale elenco Ã¨ strutturato come segue:
         lista/tupla di campi; ogni elemento e' a sua volta una lista/tupla di due
-        elementi: il primo è la dbtable di riferimento, il secondo è il nome
+        elementi: il primo Ã¨ la dbtable di riferimento, il secondo Ã¨ il nome
         del campo
         Si consideri, per esempio, la dbtable seguente:
         pdc = DbTable('pdc')

@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         erman.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -180,12 +180,12 @@ class X4ErrorPanel(wx.Panel):
         if not note:
             msg =\
             """ATTENZIONE!\n\n"""\
-            """Non Ë stata scritta alcuna nota circa l'errore che si sta inviando.\n"""\
+            """Non √® stata scritta alcuna nota circa l'errore che si sta inviando.\n"""\
             """In molti casi, la sola segnalazione di errore sprovvista di note esplicative\n"""\
-            """dell'operatore causa difficolt‡ di interpretazione e pone ostacoli alla sua\n"""\
+            """dell'operatore causa difficolt√† di interpretazione e pone ostacoli alla sua\n"""\
             """risoluzione.\n\n"""\
-            """Si consiglia di descrivere brevemente l'ambito in cui esso si Ë manifestato,\n"""\
-            """ovvero dove Ë successo l'errore ed in seguito a cosa.\n\n"""\
+            """Si consiglia di descrivere brevemente l'ambito in cui esso si √® manifestato,\n"""\
+            """ovvero dove √® successo l'errore ed in seguito a cosa.\n\n"""\
             """Confermi l'invio senza annotazioni?"""
             if aw.awu.MsgDialog(self, msg, "Richiesta di conferma dell'invio segnalazione", style=wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT) != wx.ID_YES:
                 return

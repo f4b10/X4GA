@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         magazz/stalis.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -174,7 +174,7 @@ class ListiniAttualiPanel(aw.Panel):
         def cn(x):
             return self.FindWindowByName(x)
         if bt.MAGDATLIS and not cn('dataval').GetValue():
-            awu.MsgDialog(self, "Impostare la data di validit‡", style=wx.ICON_ERROR)
+            awu.MsgDialog(self, "Impostare la data di validit√†", style=wx.ICON_ERROR)
             return False
         return True
     

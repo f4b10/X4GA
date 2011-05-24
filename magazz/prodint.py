@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         magazz/prodint.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -92,7 +92,7 @@ class _ProdInterrMixin(object):
         if   "movim" in stab.lower():
             #Selezionato il tab mastro
             if self.panmastro is None:
-                #non è ancora presente, lo creo al volo
+                #non Ã¨ ancora presente, lo creo al volo
                 wx.BeginBusyCursor()
                 self.Freeze()
                 try:
@@ -110,7 +110,7 @@ class _ProdInterrMixin(object):
         elif "evas" in stab.lower():
             #Selezionato il tab evasioni
             if self.panevas is None:
-                #non è ancora presente, lo creo al volo
+                #non Ã¨ ancora presente, lo creo al volo
                 wx.BeginBusyCursor()
                 try:
                     parent = nb.GetPage(ntab)
@@ -125,7 +125,7 @@ class _ProdInterrMixin(object):
         elif "progress" in stab.lower():
             #selezionato il tab progressivi
             if self.panprogr is None:
-                #non è ancora presente, lo creo al volo
+                #non Ã¨ ancora presente, lo creo al volo
                 wx.BeginBusyCursor()
                 try:
                     parent = nb.GetPage(ntab)
@@ -140,7 +140,7 @@ class _ProdInterrMixin(object):
         elif "statistic" in stab.lower():
             #selezionato il tab progressivi
             if self.panstat is None:
-                #non è ancora presente, lo creo al volo
+                #non Ã¨ ancora presente, lo creo al volo
                 wx.BeginBusyCursor()
                 try:
                     parent = nb.GetPage(ntab)

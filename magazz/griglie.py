@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         magazz/griglie.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -176,7 +176,7 @@ class GridGriglia(dbglib.DbGrid):
         elif self.clifor == "F":
             cde = bt.MAGCDEGRIF
         else:
-            raise Exception, "Impossibile determinare se la griglia Ë per i clienti o per i fornitori"
+            raise Exception, "Impossibile determinare se la griglia √® per i clienti o per i fornitori"
         if cde:
             self.COL_EXTCOD = b(( 80, (cn(gri, "ext_codice"),  "Codice Ext.",      _STR, False)))
             self.COL_EXTDES = b((200, (cn(gri, "ext_descriz"), "Descrizione Ext.", _STR, False)))
@@ -496,8 +496,8 @@ class GrigliaPanel(aw.Panel):
             aw.awu.ListSearch(self.dbgri.GetRecordset(), self.TestValori)
         except:
             if aw.awu.MsgDialog(self, message=\
-                                """Nessun Ë presente alcun prezzo: se si Ë """\
-                                """in modifica, l'intera griglia verr‡ """\
+                                """Nessun √® presente alcun prezzo: se si √® """\
+                                """in modifica, l'intera griglia verr√† """\
                                 """eliminata.\n\nConfermi?""",
                                 style=wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT) == wx.ID_NO:
                 out = False
@@ -516,8 +516,8 @@ class GrigliaPanel(aw.Panel):
                     gri.id_prod = gri.prod.id
                 if gri.data is None and bt.MAGDATGRIP:
                     gri.data = self.dataval
-                #faccio recepire alla dbtable che il record Ë da salvare poichÈ
-                #Ë stato modificato qualcosa direttamente dal dbgrid, senza
+                #faccio recepire alla dbtable che il record √® da salvare poich√©
+                #√® stato modificato qualcosa direttamente dal dbgrid, senza
                 #passare x l'attribuzione di variabile con __setattr__
                 if gri.id is not None and not gri.id in gri._info.modifiedRecords:
                     gri._info.modifiedRecords.append(gri.id)

@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         magazz/prodmas.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -71,7 +71,7 @@ class GridMov(maglib.GridMov):
             ( 35, (cn(tpd, "codice"),  "Cod.",         _STR, True)),
             (180, (cn(tpd, "descriz"), "Documento",    _STR, True)),
             ( 35, (cn(tpm, "codice"),  "Mov.",         _STR, True)),
-            (110, (cn(mov, "qta"),     "Qt‡",          _QTA, True)),
+            (110, (cn(mov, "qta"),     "Qt√†",          _QTA, True)),
             (100, (cn(mov, "prezzo"),  "Prezzo",       _PRE, True)),
             ( 45, (cn(mov, "sconto1"), "Sc.%1",        _SCO, True)),
             ( 45, (cn(mov, "sconto2"), "Sc.%2",        _SCO, True)),
@@ -265,7 +265,7 @@ class GridMovEva(maglib.GridMovEva):
             ( 35, (cn(tpm, "codice"),  "Mov.",         _STR, True)),
             ( 50, (cn(doc, "numdoc"),  "Num.",         _STR, True)),
             ( 80, (cn(doc, "datdoc"),  "Data doc.",    _DAT, True)),
-            ( 80, (cn(mov, "qta"),     "Qt‡",          _QTA, True)),
+            ( 80, (cn(mov, "qta"),     "Qt√†",          _QTA, True)),
             ( 80, (-1,                 "Evaso",        _QTA, True)),
             ( 80, (-2,                 "Residuo",      _QTA, True)),
             ( 80, (cn(mov, "prezzo"),  "Prezzo",       _PRE, True)),

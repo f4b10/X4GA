@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         contab/regiva.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -398,15 +398,15 @@ class RegIvaPanel(aw.Panel):
         
         tipi = {'P': ("Stampa Provvisoria",\
                       """Vengono estratte solo le registrazioni IVA non """
-                      """ancora stampate in modo definitivo.\nLa stampa puÚ """
+                      """ancora stampate in modo definitivo.\nLa stampa pu√≤ """
                       """essere fatta in qualsiasi momento."""),\
                 'D': ("Stampa Definitiva",\
                       """Vengono estratte solo le registrazioni IVA mai """
                       """stampate sul registro o stampate in modo """
-                      """provvisorio.\nLa stampa puÚ essere eseguita solo """
+                      """provvisorio.\nLa stampa pu√≤ essere eseguita solo """
                       """una volta"""),\
                 'R': ("Ristampa",\
-                      """Vengono estratte solo le registrazioni IVA gi‡ """
+                      """Vengono estratte solo le registrazioni IVA gi√† """
                       """stampate in modo definitivo""")}
         self.tipista = tipi
         
@@ -499,7 +499,7 @@ class RegIvaPanel(aw.Panel):
     def Stampa(self):
         reg = self.dbreg
         r = reg._riepaliq
-        #per compatilibit‡ alias tabelle con riep.iva fatto x lista mov.
+        #per compatilibit√† alias tabelle con riep.iva fatto x lista mov.
         r.reg.regiva = r.reg.rei
         r.aliqiva = r.iva
         if self.FindWindowById(wdr.ID_GRIDZONE).GetSelection() == 2:

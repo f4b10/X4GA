@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Version: 0.2.0
 #  - UTF-8 filenames are now allowed (Eli Golovinsky)<br/>

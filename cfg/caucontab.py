@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         cfg/caucontab.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -60,7 +60,7 @@ FRAME_TITLE = "Causali contabili"
 class MagRegIvaGrid(dbglib.DbGrid):
     """
     Griglia definizione registro iva della causale in base al magazzino
-    (x dataentry magazzino; x dataentry contab non Ë contemplata la codifica
+    (x dataentry magazzino; x dataentry contab non √® contemplata la codifica
     del magazzino, quindi in presenza di causale con registro dinamico viene
     semplicemente attivato il controllo di selezione del registro iva in
     testata registrazione.
@@ -204,7 +204,7 @@ class MagRegIvaDialog(aw.Dialog):
 
 class CauContabPanel(ga.AnagPanel):
     """
-    Gestione tabella Causali contabilit‡.
+    Gestione tabella Causali contabilit√†.
     """
     def __init__(self, *args, **kwargs):
         

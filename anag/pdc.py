@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         anag/pdc.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -255,10 +255,10 @@ class PdcPanel(ga.AnagPanel, _PdcRangeCode):
     
     def UpdateDataControls(self, *args, **kwargs):
         #tolgo il filtro dal conto di bilancio
-        #poiché il filtro presente è stato impostato *prima* di aggiornare i
+        #poichÃ© il filtro presente Ã¨ stato impostato *prima* di aggiornare i
         #controlli con i valori di questo record, quindi se il mastro del
         #record attuale differisce da quello del record precedente, il filtro
-        #impostato sul conto è *errato*
+        #impostato sul conto Ã¨ *errato*
         self.FindWindowByName('id_bilcon').SetFilter(None)
         ga.AnagPanel.UpdateDataControls(self, *args, **kwargs)
 

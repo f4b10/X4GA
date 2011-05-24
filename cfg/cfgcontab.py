@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         cfg/cfgcontab.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -129,7 +129,7 @@ class CfgCausale(object):
                      "regiva_tipo",  #Tipo registro IVA
                      "regiva_dyn",   #Reg.IVA dinamico
                      "numiva",       #Numero registro IVA
-                     "modpag",       #Modalit‡ di pagamento
+                     "modpag",       #Modalit√† di pagamento
                      "pcf",          #Gestione partite clienti/fornitori
                      "pcfscon",      #Gestione saldaconto
                      "pcfimp",       #Importo/paregg. per saldaconto

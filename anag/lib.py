@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         anag/lib.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -709,7 +709,7 @@ class LinkTableCliFor(_LinkTablePdcMixin, LinkTableHideSearchMixin):
                 ( -1, ( 2, "Descrizione", _STR, False)),
                 (200, ( 5, "Indirizzo",   _STR, False)),
                 ( 50, ( 6, "CAP",         _STR, False)),
-                (160, ( 7, "Citt‡",       _STR, False)),
+                (160, ( 7, "Citt√†",       _STR, False)),
                 ( 30, ( 8, "Pr.",         _STR, False)),
                 ( 90, ( 9, "P.IVA",       _STR, False)),
                 (130, (10, "Cod.Fiscale", _STR, False)),

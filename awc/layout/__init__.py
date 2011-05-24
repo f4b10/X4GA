@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         awc/layout/__init__.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>

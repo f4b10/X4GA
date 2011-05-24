@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         magazz/dataentry.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -126,7 +126,7 @@ class PdcProdHistoryGrid(dbglib.DbGrid):
             ( 80, (cn(doc, "datdoc"),  "Data doc.", _DAT, True)),
             ( 35, (cn(tpm, "codice"),  "Mov.",      _STR, True)),
             ( 35, (cn(mov, "um"),      "UM",        _STR, True)),
-            ( 80, (cn(mov, "qta"),     "Qt‡",       _QTA, True)),
+            ( 80, (cn(mov, "qta"),     "Qt√†",       _QTA, True)),
             ( 80, (cn(mov, "prezzo"),  "Prezzo",    _PRE, True)),
             ( 60, (cn(mov, "sconto1"), "Sc.%1",     _SCO, True)),
             ( 60, (cn(mov, "sconto2"), "Sc.%2",     _SCO, True)),
@@ -368,7 +368,7 @@ class MagazzPanel(aw.Panel,\
             Quando viene confermato il dialog modale della scheda anagrafica,
             provvede a resettare il campo id_pdc sul dbdoc onde far riaggiornare
             tutti i dati della testata dopo il loro eventuale cambiamento.
-            Questo avviene solo se il documento Ë in fase di inserimento,
+            Questo avviene solo se il documento √® in fase di inserimento,
             altrimenti id_pdc non viene resettato in quanto i dati della testata
             devono rimanere gli stessi anche se modificati su scheda anagrafica.
             """
@@ -389,7 +389,7 @@ class MagazzPanel(aw.Panel,\
         self.InitCausale()
         self.SetRegStatus(STATUS_SELCAUS)
         
-        #per grandezza minima della griglia, che altrimenti Ë settata come altezza completa 
+        #per grandezza minima della griglia, che altrimenti √® settata come altezza completa 
         #ed abilitando la zona dati del prodotto la griglia rimane troppo alta, 
         #nascondendo i bottoni sottostanti x nuova riga, elimina riga ecc.
         self.SetProdZoneSize(force_visible=True)
@@ -659,13 +659,13 @@ class MagazzPanel(aw.Panel,\
         cfg = doc.cfgdoc
         err = ""
         if   numdoc<0 or (numdoc == 0 and not doc.cfgdoc.pienum):
-            err = "Il numero documento Ë errato"
+            err = "Il numero documento √® errato"
         elif (numiva<0 or numiva == 0 and not doc.cfgdoc.pienum) and cfg.caucon.id_regiva is not None:
-            err = "Il numero di protocollo iva Ë errato"
+            err = "Il numero di protocollo iva √® errato"
         elif datreg is None:
-            err = "La data di registrazione Ë errata"
+            err = "La data di registrazione √® errata"
         elif datdoc is None:
-            err = "La data del documento Ë errata"
+            err = "La data del documento √® errata"
         else:
             filter, fparms = self.GetDocLoadFilter(frame)
             dbdoc = adb.DbTable(bt.TABNAME_MOVMAG_H, "doc")
@@ -685,7 +685,7 @@ class MagazzPanel(aw.Panel,\
                             valid = True
                 if exist and not valid:
                     err =\
-"""Numero gi‡ attribuito ad altro documento:\n%s del %s - %s %s"""\
+"""Numero gi√† attribuito ad altro documento:\n%s del %s - %s %s"""\
                         % (dbdoc.tipdoc.descriz,
                            dbdoc.dita(dbdoc.datdoc),
                            dbdoc.pdc.codice,
@@ -810,15 +810,15 @@ class MagazzPanel(aw.Panel,\
             if rb:
                 msg +=\
                     """.\n\nInoltre, sono presenti anche ricevute bancarie """\
-                    """gi‡ emesse: salvare nuovamente questo documento """\
-                    """comporter‡ la loro riemissione"""
+                    """gi√† emesse: salvare nuovamente questo documento """\
+                    """comporter√† la loro riemissione"""
             msg += ":\n\n%s\n\n" % '\n'.join(p)
             msg +=\
-                """Se si prosegue, sar‡ opportuno verificare la """\
+                """Se si prosegue, sar√† opportuno verificare la """\
                 """situazione dello scadenzario di questa anagrafica"""
             if rb:
                 msg +=\
-                    """, nonchÈ lo stato di emissione delle sue r.b."""
+                    """, nonch√© lo stato di emissione delle sue r.b."""
             msg += "\n\nConfermi la riapertura del documento?"
             style = wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT
             if MsgDialog(self, msg, style=style) != wx.ID_YES:
@@ -881,9 +881,9 @@ class MagazzPanel(aw.Panel,\
         if not err and (not dr or not dd):
             err = 'Definire la data di registrazione e la data del documento'
         if not err and dr<dd:
-            err = 'La data di registrazione non puÚ essere antecedente la data documento'
+            err = 'La data di registrazione non pu√≤ essere antecedente la data documento'
         if not err and dr.year > dl.year:
-            err = "L'anno della data di registrazione Ë successivo alla data di login"
+            err = "L'anno della data di registrazione √® successivo alla data di login"
         if not err:
             doc = self.dbdoc
             cfg = doc.cfgdoc
@@ -902,7 +902,7 @@ class MagazzPanel(aw.Panel,\
                         """contabili."""
                 elif dr<=ducc:
                     err =\
-                        """La data di registrazione Ë antecedente l'ultima\n"""\
+                        """La data di registrazione √® antecedente l'ultima\n"""\
                         """chiusura contabile."""
                 if not err and cfg.caucon.id_regiva is not None:
                     #controlli iva
@@ -920,22 +920,22 @@ class MagazzPanel(aw.Panel,\
 #                            """di liquidazione."""
                     elif dr<=duli:
                         err =\
-                            """La data di registrazione Ë antecedente l'ultima\n"""\
+                            """La data di registrazione √® antecedente l'ultima\n"""\
                             """liquidazione iva."""
                     if not err:
                         usri = cfg.caucon.regiva.lastprtdat #data ultima stampa reg.iva
                         if usri is not None and dr<=usri:
                             err =\
-                            """La data di registrazione Ë antecedente l'ultima\n"""\
+                            """La data di registrazione √® antecedente l'ultima\n"""\
                             """stampa del registro iva."""
         if not err and dr.year < Env.Azienda.Login.dataElab.year-1:
-            if MsgDialog(self, "L'anno della data di registrazione Ë troppo indietro rispetto alla data di login.\n\nConfermi l'operazione?", style=wx.ICON_WARNING|wx.YES_NO|wx.NO_DEFAULT) != wx.ID_YES:
+            if MsgDialog(self, "L'anno della data di registrazione √® troppo indietro rispetto alla data di login.\n\nConfermi l'operazione?", style=wx.ICON_WARNING|wx.YES_NO|wx.NO_DEFAULT) != wx.ID_YES:
                 out = False
         if not err and dd.year < Env.Azienda.Login.dataElab.year-1:
-            if MsgDialog(self, "L'anno della data documento Ë troppo indietro rispetto alla data di login.\n\nConfermi l'operazione?", style=wx.ICON_WARNING|wx.YES_NO|wx.NO_DEFAULT) != wx.ID_YES:
+            if MsgDialog(self, "L'anno della data documento √® troppo indietro rispetto alla data di login.\n\nConfermi l'operazione?", style=wx.ICON_WARNING|wx.YES_NO|wx.NO_DEFAULT) != wx.ID_YES:
                 out = False
         if not err and dd > Env.Azienda.Login.dataElab:
-            if MsgDialog(self, "La data del documento Ë successiva alla data di login.\n\nConfermi l'operazione?", style=wx.ICON_WARNING|wx.YES_NO|wx.NO_DEFAULT) != wx.ID_YES:
+            if MsgDialog(self, "La data del documento √® successiva alla data di login.\n\nConfermi l'operazione?", style=wx.ICON_WARNING|wx.YES_NO|wx.NO_DEFAULT) != wx.ID_YES:
                 out = False
         if err:
             aw.awu.MsgDialog(self, err, style=wx.ICON_ERROR)
@@ -960,11 +960,11 @@ class MagazzPanel(aw.Panel,\
     
     def TestCanModify(self):
         """
-        Verifica la possibilit‡ di mofidicare il documento.
-        Casi in cui la modifica non Ë possibile:
-            Se il documento Ë contabilizzato:
-                registrazione gi‡ stampata sul giornale
-                registrazione gi‡ stampata sul registro iva
+        Verifica la possibilit√† di mofidicare il documento.
+        Casi in cui la modifica non √® possibile:
+            Se il documento √® contabilizzato:
+                registrazione gi√† stampata sul giornale
+                registrazione gi√† stampata sul registro iva
                 data registrazione precedente l'ultima stampa definitiva del giornale
                 data registrazione precedente l'ultima stampa definitiva del registro iva
         """
@@ -974,16 +974,16 @@ class MagazzPanel(aw.Panel,\
         err = None
         if reg.id:
             if reg.st_giobol == 1:
-                err = 'Ë gi‡ stata stampata in definitivo sul giornale'
+                err = '√® gi√† stata stampata in definitivo sul giornale'
             elif reg.st_regiva == 1:
-                err = 'Ë gi‡ stata stampata in definitivo sul registro iva'
+                err = '√® gi√† stata stampata in definitivo sul registro iva'
             if not err:
                 p = adb.DbTable(bt.TABNAME_CFGPROGR, 'progr')
                 if p.Retrieve('progr.codice="ccg_giobol"') and doc.datreg<p.progrdate:
-                    err = "Ë antecedente l'ultima stampa definitiva del giornale"
+                    err = "√® antecedente l'ultima stampa definitiva del giornale"
             if not err:
                 if doc.datreg<reg.regiva.lastprtdat:
-                    err = "Ë antecedente l'ultima stampa definitiva del registro iva"
+                    err = "√® antecedente l'ultima stampa definitiva del registro iva"
             if err:
                 err = 'La registrazione contabile derivante da questo documento\n%s' % err
         if err:
@@ -1022,7 +1022,7 @@ class MagazzPanel(aw.Panel,\
                     msg =\
                         """L'anagrafica selezionata ha un listino diverso """\
                         """da quello attualmente in uso: applico il nuovo """\
-                        """listino alle righe gi‡ presenti?"""
+                        """listino alle righe gi√† presenti?"""
                     self.CheckVariaListino(msg)
             if doc.id_tiplist is not None:
                 self.oldlist = doc.id_tiplist
@@ -1038,11 +1038,11 @@ class MagazzPanel(aw.Panel,\
                 if ds.Retrieve(r'doc.id_tipdoc=%s AND doc.id_pdc=%s AND YEAR(doc.datdoc)=%s AND doc.numdoc=%s',
                                doc.id_tipdoc, doc.id_pdc, doc.datdoc.year, doc.numdoc):
                     if ds.OneRow():
-                        if MsgDialog(self, 'Attenzione!\n\nQuesto documento Ë gi‡ presente!\nVuoi richiamarlo?',
+                        if MsgDialog(self, 'Attenzione!\n\nQuesto documento √® gi√† presente!\nVuoi richiamarlo?',
                                      style=wx.ICON_QUESTION|wx.YES_NO|wx.YES_DEFAULT) == wx.ID_YES:
                             self.DocLoad(ds.id)
                             self.UpdateDocIdControls()
-                            MsgDialog(self, 'Il documento Ë stato richiamato, non lo stai inserendo',
+                            MsgDialog(self, 'Il documento √® stato richiamato, non lo stai inserendo',
                                       style=wx.ICON_INFORMATION)
                 del ds
         wx.CallAfter(self.TestModPagStatusAnag)
@@ -1382,7 +1382,7 @@ class MagazzPanel(aw.Panel,\
                     if s is not None:
                         s = self.controls['id_speinc'].GetValue()
                         aw.awu.MsgDialog(self, 
-                                         """Il cambio di madalit‡ di pagamento """
+                                         """Il cambio di madalit√† di pagamento """
                                          """comporta l'azzeramento della """
                                          """banca d'appoggio e delle spese """
                                          """di incasso.""",
@@ -1410,7 +1410,7 @@ class MagazzPanel(aw.Panel,\
         
         if name == 'id_tiplist':
             self.CheckVariaListino("""Applico il listino selezionato alle """
-                                   """righe gi‡ presenti?""")
+                                   """righe gi√† presenti?""")
             if value is not None:
                 self.oldlist = value
         
@@ -1653,7 +1653,7 @@ class MagazzPanel(aw.Panel,\
         else:
             err = ""
         if err:
-            MsgDialog(self, """Non Ë possibile confermare il documento: non puÚ avere il totale %s""" % err)
+            MsgDialog(self, """Non √® possibile confermare il documento: non pu√≤ avere il totale %s""" % err)
             return False
         if doc.regcon.config.tipo == "I":
             if (bt.TIPO_CONTAB == "O" and len(doc._info.totiva) == 0) or (bt.TIPO_CONTAB == "S" and len(doc._info.totpdc) == 0):
@@ -1665,7 +1665,7 @@ class MagazzPanel(aw.Panel,\
         elif doc.totimporto < 0 and doc.cfgdoc.totneg:
             err = "negativo"
         if err:
-            if MsgDialog(self, "Il totale documento Ë %s.\nConfermi l'operazione?" % err, 
+            if MsgDialog(self, "Il totale documento √® %s.\nConfermi l'operazione?" % err, 
                          style=wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT) != wx.ID_YES:
                 return False
         
@@ -1721,7 +1721,7 @@ class MagazzPanel(aw.Panel,\
             save = False
         
         if not save:
-            aw.awu.MsgDialog(self, 'Il documento non Ë stato salvato', style=wx.ICON_WARNING|wx.OK)
+            aw.awu.MsgDialog(self, 'Il documento non √® stato salvato', style=wx.ICON_WARNING|wx.OK)
             return False
         
         dispnum = False
@@ -1739,11 +1739,11 @@ class MagazzPanel(aw.Panel,\
         if saved:
             self.controls['butattach'].SetKey(doc.id, save=True)
             if dispnum:
-                msg = "Il documento Ë stato salvato con il numero %d" % doc.numdoc
+                msg = "Il documento √® stato salvato con il numero %d" % doc.numdoc
                 MsgDialog(self, msg)
         else:
             err =\
-                """Durante il salvataggio del documento, si Ë """\
+                """Durante il salvataggio del documento, si √® """\
                 """verificato un problema sul database:\n\n%s"""\
                 % repr(doc.GetError())
             MsgDialog(self, err)
@@ -1759,8 +1759,8 @@ class MagazzPanel(aw.Panel,\
 
     def OnDocDelete(self, event):
         action = MsgDialog(self,\
-"""Sei sicuro di voler cancellare il documento?  Confermando, non sar‡ """\
-"""pi˘ recuperabile in alcun modo.  """\
+"""Sei sicuro di voler cancellare il documento?  Confermando, non sar√† """\
+"""pi√π recuperabile in alcun modo.  """\
 """Confermi l'operazione di eliminazione ?""",\
                   style = wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT)
         if action == wx.ID_YES:
@@ -2448,7 +2448,7 @@ class MagazzPanel(aw.Panel,\
         else:
             if cfg.id_tdoctra is not None:
                 if doc.id_pdc == doc.magazz.magpdc.id:
-                    warn.SetLabel('Il magazzino non puÚ essere lo stesso di partenza')
+                    warn.SetLabel('Il magazzino non pu√≤ essere lo stesso di partenza')
                     valid = False
         self._headok = valid
         return valid
@@ -2979,7 +2979,7 @@ class _FrameDialogMixin(object):
     
     def FixTimerProblem(self):
         #fix Timer su wx.2.8.11: se non lo stoppo, l'applicaizone va in crash :-(
-        #TODO: verificare quando Ë stato risolto il problema nella libreria wx
+        #TODO: verificare quando √® stato risolto il problema nella libreria wx
         for name in 'autonotes_doc autonotes_cli'.split():
             c = self.FindWindowByName(name)
             if c:

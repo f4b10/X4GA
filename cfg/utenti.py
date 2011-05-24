@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         cfg/utenti.py
 # Author:       Marcello Montaldo <marcello.montaldo@gmail.com>
@@ -44,20 +44,20 @@ UTENTI_STRUCTURE = [["id",              "INT",       6, None, "ID Destinatario",
                     ["psw",             "VARCHAR",  41, None, "Password", None ],
                     ["datePsw",         "TIMESTAMP", 6, None, "Validita' dal", None ],
                     ["Amministratore",  "TINYINT1",  1, None, "Amministratore", None ],
-                    ["can_setupcontab", "TINYINT1",  1, None, "Flag permesso setup: contabilit‡", None ],
+                    ["can_setupcontab", "TINYINT1",  1, None, "Flag permesso setup: contabilit√†", None ],
                     ["can_setupmagazz", "TINYINT1",  1, None, "Flag permesso setup: magazzino", None ],
                     ["can_setupsetup",  "TINYINT1",  1, None, "Flag permesso setup: impostazioni", None ],
                     ["can_setupother",  "TINYINT1",  1, None, "Flag permesso setup: altro (da esterno)", None ],
                     ["can_setupoption", "TINYINT1",  1, None, "Flag permesso setup: opzioni", None ],
                     ["can_setupoptoth", "TINYINT1",  1, None, "Flag permesso setup: opzioni (da esterno)", None ],
-                    ["can_contabins",   "TINYINT1",  1, None, "Flag permesso contabilit‡: inserimento", None ],
-                    ["can_contabint",   "TINYINT1",  1, None, "Flag permesso contabilit‡: interrogazione", None ],
-                    ["can_contabges",   "TINYINT1",  1, None, "Flag permesso contabilit‡: gestione", None ],
-                    ["can_contabfis",   "TINYINT1",  1, None, "Flag permesso contabilit‡: stampe fiscali", None ],
-                    ["can_contabbil",   "TINYINT1",  1, None, "Flag permesso contabilit‡: bilanci", None ],
-                    ["can_contabsca",   "TINYINT1",  1, None, "Flag permesso contabilit‡: scadenzari", None ],
-                    ["can_contabeff",   "TINYINT1",  1, None, "Flag permesso contabilit‡: effetti", None ],
-                    ["can_contabchi",   "TINYINT1",  1, None, "Flag permesso contabilit‡: chiusure", None ],
+                    ["can_contabins",   "TINYINT1",  1, None, "Flag permesso contabilit√†: inserimento", None ],
+                    ["can_contabint",   "TINYINT1",  1, None, "Flag permesso contabilit√†: interrogazione", None ],
+                    ["can_contabges",   "TINYINT1",  1, None, "Flag permesso contabilit√†: gestione", None ],
+                    ["can_contabfis",   "TINYINT1",  1, None, "Flag permesso contabilit√†: stampe fiscali", None ],
+                    ["can_contabbil",   "TINYINT1",  1, None, "Flag permesso contabilit√†: bilanci", None ],
+                    ["can_contabsca",   "TINYINT1",  1, None, "Flag permesso contabilit√†: scadenzari", None ],
+                    ["can_contabeff",   "TINYINT1",  1, None, "Flag permesso contabilit√†: effetti", None ],
+                    ["can_contabchi",   "TINYINT1",  1, None, "Flag permesso contabilit√†: chiusure", None ],
                     ["can_magazzins",   "TINYINT1",  1, None, "Flag permesso magazzino: inserimento", None ],
                     ["can_magazzint",   "TINYINT1",  1, None, "Flag permesso magazzino: interrogazione", None ],
                     ["can_magazzdif",   "TINYINT1",  1, None, "Flag permesso magazzino: operazioni differite", None ],
@@ -208,8 +208,8 @@ class UtentiPanel(ga.AnagPanel):
             message = "Operazione non consentita.\n\n"+
             "Si sta cercando di eliminare l'unico utente che gode \n"+
             "del diritto di Amministratore.\n"+
-            "PoichË deve essere previsto almeno un utente con il ruolo\n"+
-            "di Amministratore, l'operazione Ë annullata.",
+            "Poich√® deve essere previsto almeno un utente con il ruolo\n"+
+            "di Amministratore, l'operazione √® annullata.",
             caption = "X4 :: Errore",
             style = wx.OK|wx.ICON_ERROR )
             dlg.ShowModal()
@@ -276,7 +276,7 @@ class UtentiPanel(ga.AnagPanel):
             parent=None,
             message = "Operazione non consentita.\n\n"+
             "Esiste gia' un utente con il codice o la descrizione specificata.\n"+
-            "PoichË la codifica degli utenti deve essere univoca, l'operazione Ë annullata.",
+            "Poich√® la codifica degli utenti deve essere univoca, l'operazione √® annullata.",
             caption = "X4 :: Errore",
             style = wx.OK|wx.ICON_ERROR )
             dlg.ShowModal()
@@ -292,8 +292,8 @@ class UtentiPanel(ga.AnagPanel):
                     message = "Operazione non consentita.\n\n"+
                     "Si sta cercando di rimuovere il diritto di Amministratore \n"+
                     "all'unico utente che gode di tale diritto.\n"+
-                    "PoichË deve essere previsto almeno un utente con il ruolo\n"+
-                    "di Amministratore, l'operazione Ë annullata.",
+                    "Poich√® deve essere previsto almeno un utente con il ruolo\n"+
+                    "di Amministratore, l'operazione √® annullata.",
                     caption = "X4 :: Errore",
                     style = wx.OK|wx.ICON_ERROR )
                     dlg.ShowModal()
@@ -310,7 +310,7 @@ class UtentiPanel(ga.AnagPanel):
         """
         Il metodo si fa carico di memorizzare i dati presentati a video, in particolare
         per l'utente identificato da self.db_recid e per ogni azienda presente in self.aziende
-        viene memorizzato un record nella tabella x4.diritti che indica se l'utente Ë abilitato
+        viene memorizzato un record nella tabella x4.diritti che indica se l'utente √® abilitato
         o meno ad operare sull'azienda.
         
         Prima di richiamare il metodo padre che provvede alla memorizzazione dei dati nel database

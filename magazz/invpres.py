@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         magazz/invpres.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -131,7 +131,7 @@ class BackordersGrid(dbglib.DbGridColoriAlternati):
                 ( 30, (cc(tpm, 'codice'),         "M.",         _STR, True)),
                 ( 50, (cc(pdc, 'codice'),         "Codice",     _STR, True)),
                 (240, (cc(pdc, 'descriz'),        "Anagrafica", _STR, True)),
-                ( 90, (cc(mov, 'qta'),            "Qt‡",        _QTA, True)),
+                ( 90, (cc(mov, 'qta'),            "Qt√†",        _QTA, True)),
                 ( 90, (cc(mov, 'total_evas_qta'), "Evaso",      _QTA, True)),
                 ( qw, (cc(mov, 'total_residuo'),  "Backorder",  _QTA, True)),]
         
@@ -303,7 +303,7 @@ class InventarioPresuntoBackordersElencoEvasioniGrid(dbglib.DbGridColoriAlternat
                 ( 50, (cc(doc, 'numdoc'),  "Num.",      _STR, True)),
                 ( 80, (cc(doc, 'datdoc'),  "Data doc.", _DAT, True)),
                 ( 30, (cc(tpm, 'codice'),  "M.",        _STR, True)),
-                ( 90, (cc(mov, 'qta'),     "Qt‡",       _QTA, True)),
+                ( 90, (cc(mov, 'qta'),     "Qt√†",       _QTA, True)),
                 ( 90, (cc(mov, 'prezzo'),  "Prezzo",    _VAL, True)),
                 ( 50, (cc(mov, 'sconto1'), "Sc.%1",     _SCO, True)),
                 ( 50, (cc(mov, 'sconto2'), "Sc.%2",     _SCO, True)),

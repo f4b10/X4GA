@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         magazz/listini.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -621,8 +621,8 @@ class ListiniGrid(dbglib.DbGridColoriAlternati):
         self.RemoveChild(d)
         if do and id_gruprez is None:
             msg =\
-                """E' stato confermato l'assegnamento del gruppo prezzi, ma questo non Ë stato definito.\n"""\
-                """Proseguendo, a tutti i prodotti selezionati verr‡ tolto il gruppo prezzi eventualmente presente.\n"""\
+                """E' stato confermato l'assegnamento del gruppo prezzi, ma questo non √® stato definito.\n"""\
+                """Proseguendo, a tutti i prodotti selezionati verr√† tolto il gruppo prezzi eventualmente presente.\n"""\
                 """Confermi l'eliminazione dei gruppi prezzi dalle schede prodotto?"""
             stl = wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT
             if aw.awu.MsgDialog(self, msg, style=stl) != wx.ID_YES:
@@ -1192,7 +1192,7 @@ class ListiniPanel(aw.Panel, aw.awu.LimitiFiltersMixin):
             return False
         sin = self.dbsin
         if sin.Locate(lambda s: s.data == newdat):
-            MsgBox(self, "La data esiste gi‡")
+            MsgBox(self, "La data esiste gi√†")
             return False
         out = False
         if MsgBox(self, message=\
@@ -1503,8 +1503,8 @@ class ListiniPanel(aw.Panel, aw.awu.LimitiFiltersMixin):
             #aw.awu.ListSearch(self.dblis.GetRecordset(), self.TestValori)
         #except:
             #if aw.awu.MsgDialog(self, message=\
-                                #"""Nessun Ë presente alcun prezzo: se si Ë """\
-                                #"""in modifica, l'intero listino verr‡ """\
+                                #"""Nessun √® presente alcun prezzo: se si √® """\
+                                #"""in modifica, l'intero listino verr√† """\
                                 #"""eliminato.\n\nConfermi?""",
                                 #style=wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT) == wx.ID_NO:
                 #out = False

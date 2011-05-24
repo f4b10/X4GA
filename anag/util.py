@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         anag/util.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -42,7 +42,7 @@ def _GetPdcClass(id_tipo, w_tipo):
     """
     Ritorna il Frame (se w_tipo=0) o il Dialog (se w_tipo=1) di gestione
     anagrafica congruente con il tipo di sottoconto passato.
-    Il Frame/Dialog è da instaziare.
+    Il Frame/Dialog Ã¨ da instaziare.
     """
     cls = None
     tipibase = "ABDCF"

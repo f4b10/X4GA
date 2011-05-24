@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         magazz/dbtables.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -88,7 +88,7 @@ class DocMag(adb.DbTable,\
        |       +--> caucon: setup causale contabile associata
        |               +--> regiva: registro iva
        +--> pdc: sottoconto del documento
-       +--> modpag: modalit‡ di pagamento del documento
+       +--> modpag: modalit√† di pagamento del documento
        +--> spese: tipo spese associate al documento
        |       +--> iva: aliquota iva sulle spese
        +--> agente: agente del documento
@@ -296,8 +296,8 @@ class DocMag(adb.DbTable,\
         i.acqdocacq = [] #altri doc. da segnare come acquisiti
         i.acqdocann = [] #altri doc. da annullare
         i.acqmovann = {} #movimenti di altri doc. da annullare
-        #la chiave del dizionario Ë l'id del documento contenente i movimenti
-        #da annullare; il valore Ë la lista degli id movimento da annullare
+        #la chiave del dizionario √® l'id del documento contenente i movimenti
+        #da annullare; il valore √® la lista degli id movimento da annullare
         i.tradocdel = [] #documenti generati da eliminare
         i.deleting = False
         i.displayonly = False #evita la ritotalizzazione nel caricamento
@@ -579,14 +579,14 @@ class DocMag(adb.DbTable,\
         #relativamente all'azienda (scheda prodotto) e al tipo di documento
         if sia != sid:
             if sia: 
-                #sul setup dell'azienda Ë indicato che il prezzo/costo Ë da 
-                #scoporare (Ë comprensivo di iva), mentre sul documento l'iva
+                #sul setup dell'azienda √® indicato che il prezzo/costo √® da 
+                #scoporare (√® comprensivo di iva), mentre sul documento l'iva
                 #deve essere aggiunta: il valore proposto va quindi scorporato
                 imponib, imposta, ivato, indeduc =\
                        self.CalcolaIVA(prod.id_aliqiva, ivato=prezzo)
                 prezzo = imponib
             else:
-                #sul setup dell'azienda Ë indicato che il prezzo/costo non Ë da 
+                #sul setup dell'azienda √® indicato che il prezzo/costo non √® da 
                 #scoporare (e' al netto di iva), mentre sul documento l'iva
                 #deve essere scorporata: il valore proposto va quindi aumentato
                 #dell'iva
@@ -595,7 +595,7 @@ class DocMag(adb.DbTable,\
                 prezzo = ivato
         
         #costo/prezzo su anagrafica ivato e documento da scorporare, ma in 
-        #testata Ë specificata un'aliquota di esenzione: il valore proposto
+        #testata √® specificata un'aliquota di esenzione: il valore proposto
         #va scorporato dall'iva che non deve essere calcolata
         if sia and sid:
             if self.ivadoc.id and not self.ivadoc.perciva:
@@ -1066,13 +1066,13 @@ class DocMag(adb.DbTable,\
     
     def GenDocTra(self):
         """
-        Genera il documento di trasferimento.  Il documento generato sar‡ una
+        Genera il documento di trasferimento.  Il documento generato sar√† una
         copia identica al documento di partenza, eccetto che per il sottoconto
         ed il magazzino: il documento di partenza deve essere configurato per
         operare su sottoconti di tipo magazzino; la scelta del sottoconto 
         determina anche il magazzino del documento da generare, come da
         configurazione della tabella magazzini.
-        La corrispondenza tra i tipi movimento Ë fatta mediante codice, quindi
+        La corrispondenza tra i tipi movimento √® fatta mediante codice, quindi
         occorre configurare entrambi i tipi documento utilizzando gli stessi
         codici per i movimenti.
         """
@@ -1212,7 +1212,7 @@ class DocMag(adb.DbTable,\
                     r.AddFilter('reg.id<>%s', self.regcon.id)
                 if r.Retrieve() and not r.IsEmpty():
                     out_flag = False
-                    out_desc = 'Protocollo IVA gi‡ impegnato:\n'\
+                    out_desc = 'Protocollo IVA gi√† impegnato:\n'\
                         +'%s n. %s del %s, prot. %s, anagr. %s - %s'\
                         % (r.caus.descriz, r.numdoc, r.dita(r.datdoc), r.numiva, r.mov.pdc.codice, r.mov.pdc.descriz)
         return (out_flag, out_desc)
@@ -1297,13 +1297,13 @@ class DocMag(adb.DbTable,\
         self.MakeTotals()
         if lisnul:
             msg = \
-                """Non Ë stato possibile applicare il nuovo listino """
+                """Non √® stato possibile applicare il nuovo listino """
             if len(lisnul) == 1:
                 msg += """al codice prodotto: """
             else:
                 msg += """ai seguenti codici prodotto:\n"""
             msg += '\n'.join(lisnul)
-            msg += """\npoichÈ mancante"""
+            msg += """\npoich√© mancante"""
             raise ListinoMancanteException, msg
     
     #def __setattr__(self, field, content, setChanged=True):
@@ -2381,9 +2381,9 @@ class DocMag(adb.DbTable,\
                         msg += """Tuttavia, manca il corpo del testo da inserire nel messaggio.\n"""
                     if not sender or not body:
                         msg += """Configurare opportunamente il sistema di invio documenti via email,\n"""\
-                        """nonchÈ l'eventuale testo specifico per questo tipo di documento,\n"""\
+                        """nonch√© l'eventuale testo specifico per questo tipo di documento,\n"""\
                         """nel relativo setup della causale.\n\n"""\
-                        """Il documento non sar‡ inviato: correggere le configurazioni e riprovare."""
+                        """Il documento non sar√† inviato: correggere le configurazioni e riprovare."""
                         sendem = False
                     sei.request = msg
                     sei.sendfrom = sender
@@ -2619,7 +2619,7 @@ class CtrFidoCliente(adb.DbTable):
         elif self.fido_maxpcf and self._pap>self.fido_maxpcf:
             out = 'Numero partite aperte %s' % evf
         elif self.fido_maxggs and self._ggs>self.fido_maxggs:
-            out = 'La partita aperta scaduta pi˘ vecchia Ë %s' % evf
+            out = 'La partita aperta scaduta pi√π vecchia √® %s' % evf
         self._ritardi.clear()
         self.dbpag.Retrieve('pcf.id_pdc=%s', idcli)
         for p in self.dbpag:
@@ -2637,9 +2637,9 @@ class CtrFidoCliente(adb.DbTable):
 class Movim(adb.DbTable):
     """
     DbTable movimenti, provvede i metodi per valutarne lo stato di
-    evasione.  Visto che Movim Ë utilizzato sia per il dettaglio dei 
+    evasione.  Visto che Movim √® utilizzato sia per il dettaglio dei 
     movimenti del prodotto che per il dettaglio dei movimenti che 
-    hanno evaso il singolo movimento del prodotto, Ë gestita 
+    hanno evaso il singolo movimento del prodotto, √® gestita 
     l'intera catena di evasione dei documenti:
     prod         => prodotto
     prod.mov     => movimento/i 'x' del prodotto
@@ -2689,7 +2689,7 @@ class Movim(adb.DbTable):
     
     def TotEvasQta(self):
         """
-        Restituisce il totale della quantit‡ evasa.
+        Restituisce il totale della quantit√† evasa.
         """
         try:
             q = self.eva._GetFieldIndex("qta")
@@ -2723,21 +2723,21 @@ class Movim(adb.DbTable):
     
     def EvasoTutto(self):
         """
-        Restituisce C{True} se la sommatoria delle quantit‡ dei
-        movimenti di evasione Ë pari alla quantit‡ di origine.
+        Restituisce C{True} se la sommatoria delle quantit√† dei
+        movimenti di evasione √® pari alla quantit√† di origine.
         """
         return self.TotEvasQta() == self.qta
     
     def EvasoParz(self):
         """
-        Restituisce C{True} se c'Ë almeno un movimento di evasione.
+        Restituisce C{True} se c'√® almeno un movimento di evasione.
         """
         return self.TotEvasQta() > 0
     
     def InEssere(self):
         """
         Restituisce C{True} se il movimento ed il relativo documento
-        non sono annullato e il movimento non Ë ancora interamente
+        non sono annullato e il movimento non √® ancora interamente
         evaso.
         """
         return not (self.f_ann == 1 or self.doc.f_ann == 1 or\
@@ -3083,10 +3083,10 @@ class _InventarioMixin(adb.DbTable):
         if out:
             perciva = round((self.aliqiva.perciva or 0)/100, 2)
             if not scorp and self._info.calciva:
-                #il valore Ë imponibile, e si vuole ivato: aggiungo iva
+                #il valore √® imponibile, e si vuole ivato: aggiungo iva
                 out = round(out*(1+perciva), 2)
             elif scorp and not self._info.calciva:
-                #il valore Ë ivato, e si vuole imponibile: scorporo iva
+                #il valore √® ivato, e si vuole imponibile: scorporo iva
                 out = round(out/(1+perciva), 2)
         
         self._info.valivati = scorp or self._info.calciva
@@ -3806,7 +3806,7 @@ class RiepMovAcquis(adb.DbTable):
       +:: total_qtaeva
     
     mov contiene, oltre a *tutti* i campi di movmag_b, anche:
-    - total_qtaeva, sommatoria delle quantit‡ che hanno evaso il movimento
+    - total_qtaeva, sommatoria delle quantit√† che hanno evaso il movimento
     """
     
     def __init__(self, writable=False):
@@ -4395,7 +4395,7 @@ class AcqListino(adb.DbMem):
         1) la prima colonna *deve* essere il codice, ma le restanti colonne
            non sono determinabili a priori (il costo, il prezzo ed i vari 
            listini possono essere presenti o meno)
-        2) il formato delle colonne costo/prezzo/listini puÚ essere stato
+        2) il formato delle colonne costo/prezzo/listini pu√≤ essere stato
            impostato nel foglio di calcolo come valori decimali, o come stringhe
            dotate di separatori delle migliaia, del simbolo dell'euro ecc.
         Questo metodo ripassa l'intero recordset e, per ogni riga:

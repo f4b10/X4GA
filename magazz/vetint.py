@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         magazz/vetint.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -147,7 +147,7 @@ class TraVetIntDocGrid(dbglib.DbGridColoriAlternati):
         self.COL_TOTDOC =    v((110, (cn(doc, "totimporto"), "Tot.Documento",      _IMP, True)))
         self.COL_spedind =   v((200, (0,                     "Indirizzo",          _STR, True)))
         self.COL_spedcap =   v(( 50, (0,                     "CAP",                _STR, True)))
-        self.COL_spedcit =   v((200, (0,                     "Citt‡",              _STR, True)))
+        self.COL_spedcit =   v((200, (0,                     "Citt√†",              _STR, True)))
         self.COL_spedprv =   v(( 40, (0,                     "Prov",               _STR, True)))
         self.COL_ID =        v((  1, (cn(doc, "id"),         "#doc",               _STR, True)))
         

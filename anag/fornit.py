@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         anag/fornit.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -188,10 +188,10 @@ class FornitPanel(pdcrel._CliForPanel):
                    lambda: db.anag.id_modpag,
                    lambda: 'Mod.Pagamento: %s %s' % (db.anag.modpag.codice, 
                                                      db.anag.modpag.descriz)),
-             #citt‡
+             #citt√†
              "c": ('anag.citta', 
                    lambda: db.anag.citta,
-                   lambda: 'Citt‡: %s' % db.anag.citta),
+                   lambda: 'Citt√†: %s' % db.anag.citta),
          }
         return r[rag]
 

@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         contab/bil.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -247,11 +247,11 @@ class _BilGrid(dbglib.DbGridColoriAlternati):
     
     def GetGridColumns(self):
         raise Exception,\
-              """Questa classe non Ë istanziabile"""
+              """Questa classe non √® istanziabile"""
     
 #    def AppendRow(self, *args, **kwargs):
 #        raise Exception,\
-#              """Questa classe non Ë istanziabile"""
+#              """Questa classe non √® istanziabile"""
 #    
     def UpdateGrid(self, pbar, **parms):
         for name, val in (('tipdet',    'S'),\
@@ -688,7 +688,7 @@ class _BilPanel(aw.Panel):
     
     def InitPanelBilancio(self):
         raise Exception,\
-              """Questa classe non Ë istanziabile"""
+              """Questa classe non √® istanziabile"""
 
     def OnUpdate(self, event):
         self.UpdateBil()
@@ -1647,7 +1647,7 @@ class BilCeeGrid(_BilGrid):
                     #sono su sezione '4' e voce successiva alla 'B';
                     #aggiungo la riga di differenza tra costi e ricavi
                     #prima di continuare con il resto del bilancio
-                    #(su cui sono gi‡ posizionato, oneri o altro)
+                    #(su cui sono gi√† posizionato, oneri o altro)
                     #differenza = A-B
                     if 'v4A' in tt and 'v4B' in tt:
                         _trd, _tra = tt['v4A']
@@ -1681,7 +1681,7 @@ class BilCeeGrid(_BilGrid):
                     #sono su sezione '4' e dettaglio successivo al '21';
                     #aggiungo la riga di risultato d'esercizio prima delle tasse
                     #prima di continuare con il resto del bilancio
-                    #(su cui sono gi‡ posizionato, tasse o altro)
+                    #(su cui sono gi√† posizionato, tasse o altro)
                     #risultato pretasse = (A-B)+C+D+E, al quale sottraggo 
                     #l'ammontare delle tasse (sub-dett. '4E    24 ')
                     dav_a = tt.get('v4A', (0,0))
@@ -1780,7 +1780,7 @@ class BilCeeGrid(_BilGrid):
             #sono a fine bilancio;
             #aggiungo la riga di risultato d'esercizio dopo le tasse
             #prima di continuare con il resto del bilancio
-            #(su cui sono gi‡ posizionato, tasse o altro)
+            #(su cui sono gi√† posizionato, tasse o altro)
             #risultato pretasse = (A-B)+C+D+E
             dav_a = tt.get('v4A', (0,0))
             dav_b = tt.get('v4B', (0,0))

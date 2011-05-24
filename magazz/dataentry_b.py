@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         magazz/dataentry_b.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -504,7 +504,7 @@ class GridBody(object):
             self.COL_NMCONF = a(( -1, [m.RSMOV_NMCONF, "Confez.",        _PZC, True]))
             self.COL_PZCONF = a(( -1, [m.RSMOV_PZCONF, "Pz.Conf.",       _PZC, True]))
         
-        self.COL_QTA =     a(( -1, [m.RSMOV_QTA,       "Quantit‡",       _QTA, True]))
+        self.COL_QTA =     a(( -1, [m.RSMOV_QTA,       "Quantit√†",       _QTA, True]))
         self.COL_PREZZO =  a(( -1, [m.RSMOV_PREZZO,    "Prezzo",         _PRE, True]))
         
         if (bt.MAGATTGRIP or bt.MAGATTGRIF) and bt.MAGAGGGRIP:
@@ -537,7 +537,7 @@ class GridBody(object):
     
     def GridBody_InsertNewColumn(self, columns, index_aftercol, cstru):
         columns.insert(index_aftercol+1, cstru)
-        #sposto a destra di una colonne tutte quelle gi‡ esistenti, a partire da quella inserita
+        #sposto a destra di una colonne tutte quelle gi√† esistenti, a partire da quella inserita
         #(il cui nome non esiste ancora sotto forma di COL_xxx: viene settato al ritorno di questa funzione)
         column_names = []
         for attr_name in dir(self):
@@ -1067,7 +1067,7 @@ class GridBody(object):
         mov = self.dbdoc.mov
         if 0 <= row < mov.RowsCount():
             # vista la frequenza con la quale viene richiamato questo metodo
-            # Ë meglio non ricorrere al posizionamnto sul recordset movimenti
+            # √® meglio non ricorrere al posizionamnto sul recordset movimenti
             # con conseguente aggiornamento delle variabili e sottotabelle;
             # determino quindi nel recordset principale moviomenti la posiz.
             # della colonna relativa ad 'askvalori' della sottotabella
@@ -1147,7 +1147,7 @@ class GridBody(object):
             prod = self.dbprod
             prod.Get(value)
             if not prod.IsUsableWithClasDoc(self.dbdoc.cfgdoc.clasdoc):
-                aw.awu.MsgDialog(self, "%s - %s\nIl prodotto non Ë utilizzabile in questo documento" % (prod.codice, prod.descriz), 
+                aw.awu.MsgDialog(self, "%s - %s\nIl prodotto non √® utilizzabile in questo documento" % (prod.codice, prod.descriz), 
                                  "Restrizioni sullo status (%s - %s)" % (prod.status.codice, prod.status.descriz), 
                                  style=wx.ICON_WARNING)
                 return False
@@ -1162,13 +1162,13 @@ class GridBody(object):
             grip.Retrieve()
             if grip.IsEmpty():
                 sp = getattr(anag, 'grpstop', None)
-                msg = "Il prodotto non Ë presente nella griglia dell'anagrafica"
+                msg = "Il prodotto non √® presente nella griglia dell'anagrafica"
                 if sp == 'G':
                     msg += ".\nImpossibile procedere"
                     aw.awu.MsgDialog(self, msg, style=wx.ICON_ERROR)
                     return False
                 elif sp == 'F':
-                    msg += ",tuttavia Ë possibile forzare il suo utilizzo.\n\nDesideri utilizzare questo prodotto?"
+                    msg += ",tuttavia √® possibile forzare il suo utilizzo.\n\nDesideri utilizzare questo prodotto?"
                     return aw.awu.MsgDialog(self, msg, style=wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT) == wx.ID_YES
         elif col == m.RSMOV_IMPORTO:
             doc = self.dbdoc
@@ -1177,7 +1177,7 @@ class GridBody(object):
                 a = dbm.PdcSituazioneAcconti()
                 a.GetForPdc(doc.id_pdc, mov.id_movacc, doc.id)
                 if abs(value)>a.acconto_disponib:
-                    aw.awu.MsgDialog(self, "L'acconto disponibile Ë di %s" % a.sepnvi(a.acconto_disponib), style=wx.ICON_ERROR)
+                    aw.awu.MsgDialog(self, "L'acconto disponibile √® di %s" % a.sepnvi(a.acconto_disponib), style=wx.ICON_ERROR)
                     return False
         return True
     
@@ -1195,9 +1195,9 @@ class GridBody(object):
                       *(100-(mov.sconto3 or 0))/100, bt.VALINT_DECIMALS)
             if len(str(abs(int(i)))) > bt.VALINT_INTEGERS:
                 msg =\
-                """Il valore dell'importo Ë troppo elevato,\n"""\
+                """Il valore dell'importo √® troppo elevato,\n"""\
                 """sono permesse al massimo %d cifre intere.\n"""\
-                """L'importo sar‡ azzerato.""" % bt.VALINT_INTEGERS
+                """L'importo sar√† azzerato.""" % bt.VALINT_INTEGERS
                 aw.awu.MsgDialog(self, msg, "Valore errato", style=wx.ICON_ERROR)
                 i = 0
             mov.importo = i
@@ -1319,7 +1319,7 @@ class GridBody(object):
                     if mov.qta:
                         mov.prezzo = value/(mov.qta*(100-(mov.sconto1 or 0))/100*(100-(mov.sconto2 or 0))/100*(100-(mov.sconto3 or 0))/100)
                 elif mov.config.modimpricalc == "Q":
-                    #da configurazione movimento, devo ricalcolare la quantit‡
+                    #da configurazione movimento, devo ricalcolare la quantit√†
                     if mov.prezzo:
                         mov.qta = value/(mov.prezzo*(100-(mov.sconto1 or 0))/100*(100-(mov.sconto2 or 0))/100*(100-(mov.sconto3 or 0))/100)
                 else:
@@ -1328,16 +1328,16 @@ class GridBody(object):
                         s = round(100-value*100/(mov.qta*mov.prezzo), 2)
                         if s >= 1000:
                             err =\
-                            """Il valore dello sconto Ë troppo grande (%.2f) e sar‡ azzerato.\n"""
+                            """Il valore dello sconto √® troppo grande (%.2f) e sar√† azzerato.\n"""
                         elif s <= -1000:
                             err =\
-                            """Il valore dello sconto Ë troppo piccolo (%.2f) e sar‡ azzerato.\n"""
+                            """Il valore dello sconto √® troppo piccolo (%.2f) e sar√† azzerato.\n"""
                         else:
                             err = None
                         if err:
                             err +=\
                             """Controllare l'esattezza dell'importo digitato,eventualmente\n"""\
-                            """correggere il prezzo o la quantit‡"""
+                            """correggere il prezzo o la quantit√†"""
                             s = 0
                         mov.sconto1 = s
                         mov.sconto2 = 0
@@ -1438,7 +1438,7 @@ class GridBody(object):
         if self.status != m.STATUS_EDITING:
             #workaround: quando ho inserito una fattura e cerco di inserire un
             #ddt, appenda confermo il numero doc. da inserire, viene richiamato
-            #EndEdit della colonna tipmov (non ho idea del perchÈ e da chi)
+            #EndEdit della colonna tipmov (non ho idea del perch√© e da chi)
             return False
         mov = self.dbdoc.mov
         mov.MoveNewRow()
@@ -1477,7 +1477,7 @@ class GridBody(object):
     def GridBodySetTipMovFilter(self):
         editor = self.gridbody.GetCellEditor(0, self.COL_codmov)
         assert isinstance(editor, dbgred.DataLinkCellEditor),\
-               "L'editor della colonna tipo movimento non Ë DataLinkCellEditor"
+               "L'editor della colonna tipo movimento non √® DataLinkCellEditor"
         do = True
         if editor._tc:
             if editor._tc.IsShown():
@@ -1574,7 +1574,7 @@ class GridBody(object):
                 mov.MoveRow(row)
                 if mov.id is not None:
                     if not mov.id in mov._info.deletedRecords:
-                        #riga gi‡ esistente, marco per cancellazione da db
+                        #riga gi√† esistente, marco per cancellazione da db
                         mov._info.deletedRecords.append(mov.id)
                 #elimino riga da dbgrid
                 self.gridbody.DeleteRows(row)

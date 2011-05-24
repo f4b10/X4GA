@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         report/__init__.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -219,7 +219,7 @@ class MultiReportStandardDialog(wx.Dialog):
             self.printername = printers.GetValue()
             if d[3] is not None:
                 prt = d[3]
-                msg = "Il report selezionato è impostato per essere stampato su '%s'\nUso tale stampante?" % prt
+                msg = "Il report selezionato Ã¨ impostato per essere stampato su '%s'\nUso tale stampante?" % prt
                 if awu.MsgDialog(self, msg, style=wx.ICON_QUESTION|wx.YES_NO|wx.YES_DEFAULT) == wx.ID_YES:
                     self.printername = prt
                     SetUpdateLastPrinter(False)

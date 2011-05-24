@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         awc/controls/attachments.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -277,7 +277,7 @@ class AttachmentButton(wx.Button):
     """
     Classe per la gestione degli allegati.
     
-    Da qui Ë possibile inserire, modificare, eliminare e richiamare allegati di
+    Da qui √® possibile inserire, modificare, eliminare e richiamare allegati di
     vario tipo.
     
     Gli allegati sono memorizzati sulla tabella 'allegati' e sono
@@ -327,20 +327,20 @@ class AttachmentButton(wx.Button):
         self._autoscan = None
         
         #_attlist contiene le informazioni degli allegati senza il campo blob
-        #che appesantisce la ricerca; Ë *sempre* allineato con il contenuto
+        #che appesantisce la ricerca; √® *sempre* allineato con il contenuto
         #della tabella allegati, anche dopo averne inserito di nuovi, la cui
-        #scrittura sulla tabella Ë differita rispetto al loro inserimento nel
+        #scrittura sulla tabella √® differita rispetto al loro inserimento nel
         #bottone - questo ne consente l'inserimento anche quando l'elemento a 
         #cui si riferiscono non ha ancora un proprio id.
         #ATTENZIONE
-        #per la memorizzazione di nuovi allegati Ë necessario richiamare
+        #per la memorizzazione di nuovi allegati √® necessario richiamare
         #l'apposito metodo Save - vedi specifiche
         self._attlist = AttachTableList(self._tabname)
         
         #_attmemo contiene *tutte* le informazioni dei soli allegati che si 
         #stanno inserendo - vedi considerazioni precedenti
         #ATTENZIONE
-        #per la memorizzazione di nuovi allegati Ë necessario richiamare
+        #per la memorizzazione di nuovi allegati √® necessario richiamare
         #l'apposito metodo Save - vedi specifiche
         self._attmemo = AttachTableMemo(self._tabname)
         
@@ -362,14 +362,14 @@ class AttachmentButton(wx.Button):
     def SetScope(self, scope):
         """
         Imposta lo 'scope' degli allegati, ovvero l'ambito nel quale la chiave
-        a cui si riferiscono ha significato; tipicamente Ë il nome della 
+        a cui si riferiscono ha significato; tipicamente √® il nome della 
         tabella sulla quale risiede il record a cui si riferiscono gli allegati.
         """
         self._attscope = scope
     
     def SetKey(self, key, save=False, delete=False):
         """
-        Imposta la chiave numerica di relazione degli allegati; tipicamente Ë
+        Imposta la chiave numerica di relazione degli allegati; tipicamente √®
         l'id del record della tabella indicata nello 'scope' (vedi SetScope)
         a cui si riferiscono gli allegati.
         """
@@ -657,7 +657,7 @@ class AttachmentButton(wx.Button):
                 else:
                     desc = "i %d allegati inseriti" % am.RowsCount()
                 awu.MsgDialog(self,\
-                              """Non Ë possibile memorizzare %s in quanto """\
+                              """Non √® possibile memorizzare %s in quanto """\
                               """manca l'identificativo a cui riferirli""",\
                               style=wx.ICON_ERROR)
                 out = False
@@ -1083,7 +1083,7 @@ class VoicePlayer:
 class AttachmentDetailsDialog(wx.Dialog, VoicePlayer):
     """
     Dialog per l'inserimento/modifica di un allegato.
-    Al momento Ë previsto solo l'inserimento; per la cancellazione vedi la
+    Al momento √® previsto solo l'inserimento; per la cancellazione vedi la
     classe per la manutenzione AttachmentsGridDialog.
     """
     def __init__(self, *args, **kwargs):
@@ -1183,7 +1183,7 @@ class AttachmentDetailsDialog(wx.Dialog, VoicePlayer):
 #                    awu.MsgDialog(\
 #                        self,\
 #                        """L'immagine acquisita pesa %s bytes,\n"""\
-#                        """il limite attuale Ë di %s."""\
+#                        """il limite attuale √® di %s."""\
 #                        % (locale.format("%d", len(self._stream), True),\
 #                           locale.format("%d", ATTACH_SIZEMAX, True)),\
 #                        style=wx.ICON_WARNING)
@@ -1210,7 +1210,7 @@ class AttachmentDetailsDialog(wx.Dialog, VoicePlayer):
     def CheckData(self, attach_type):
         """
         Verifica dati inseriti.
-        La descrizione Ë sempre richiesta e, coerentemente con il tipo di
+        La descrizione √® sempre richiesta e, coerentemente con il tipo di
         allegato selezionato, viene testata l'esistenza di:
             - ATTACH_TYPE_FILE: il nome del file da acquisire
             - ATTACH_TYPE_
@@ -1445,7 +1445,7 @@ class AttachmentDetailsDialog(wx.Dialog, VoicePlayer):
                     awu.MsgDialog(\
                         self,\
                         """L'immagine acquisita pesa %s bytes,\n"""\
-                        """il limite attuale Ë di %s."""\
+                        """il limite attuale √® di %s."""\
                         % (locale.format("%d", len(self._stream), True),\
                            locale.format("%d", ATTACH_SIZEMAX, True)),\
                         style=wx.ICON_WARNING)
@@ -1487,7 +1487,7 @@ class AttachmentsGrid(dbg.DbGridColoriAlternati):
     """
     Manutenzione allegati.
     Viene presentata una griglia con l'elenco degliallegati presenti e la 
-    possibilit‡ di eseguirli ed eliminarli.
+    possibilit√† di eseguirli ed eliminarli.
     """
     
     def __init__(self, father, parent, attscope, attkey, **kwargs):

@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         magazz/chiusure/consocos.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -79,9 +79,9 @@ class ConsolidamentoCostiPanel(wx.Panel):
         d = cn('datgiac').GetValue()
         err = None
         if not d:
-            err = 'La data di determinazione delle giacenze Ë obbligatoria'
+            err = 'La data di determinazione delle giacenze √® obbligatoria'
         elif d.year != y:
-            err = "L'anno della data di determinazione delle giacenze Ë diverso dall'anno digitato"
+            err = "L'anno della data di determinazione delle giacenze √® diverso dall'anno digitato"
         if err:
             msg = err
             stl = wx.ICON_ERROR
@@ -135,15 +135,15 @@ class ConsolidamentoCostiPanel(wx.Panel):
         m = ''
         y = cn('anno').GetValue()
         if not y:
-            m = "L'anno di riferimento Ë obbligatorio"
+            m = "L'anno di riferimento √® obbligatorio"
         elif y < 2000 or y > Env.Azienda.Login.dataElab.year:
-            m = "L'anno Ë errato"
+            m = "L'anno √® errato"
         else:
             cn('datgiac').SetValue(Env.DateTime.Date(y,12,31))
             coc = self.dbcoc
             n = coc.EsistonoCostiAnno(y)
             if n:
-                m = "Costi gi‡ esistenti per l'anno"
+                m = "Costi gi√† esistenti per l'anno"
         cn('warning').SetLabel(m)
         cn('btnstart').Enable(not bool(m))
     
@@ -154,9 +154,9 @@ class ConsolidamentoCostiPanel(wx.Panel):
         y = cn('annocanc').GetValue()
         ok = False
         if not y:
-            m = "L'anno di riferimento Ë obbligatorio"
+            m = "L'anno di riferimento √® obbligatorio"
         elif y < 2000 or y > Env.Azienda.Login.dataElab.year+1:
-            m = "L'anno Ë errato"
+            m = "L'anno √® errato"
         else:
             coc = self.dbcoc
             n = coc.EsistonoCostiAnno(y)

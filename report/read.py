@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         report/read.py
 # Author:       Marcello Montaldo <marcello.montaldo@gmail.com>
@@ -88,7 +88,7 @@ class iReportDef:
          
          I nodi presenti allo stesso livello che presentano identico nome sono
          riportati all'interno del dizionario con un nome univoco ottenuto
-         aggiungendo al nome stesso un contatore cosÏ se in xml si ha:
+         aggiungendo al nome stesso un contatore cos√¨ se in xml si ha:
              
                      <group ..............>
                          <.............>
@@ -216,7 +216,7 @@ class iReportDef:
         Il metodo si fa carico di estrarre dal dizionario ricevuto come input
         i soli elementi che non siano a loro volta dizionari (foglie del ramo).
         Pertanto, nell'ottica dei file xml, il metodo restituisce di fatto un
-        dizionario di tutte le propriet‡ di un particolare nodo
+        dizionario di tutte le propriet√† di un particolare nodo
         """
         dic={}
         for i in [e for e in dictionary if type(dictionary[e]) <> DictType]:

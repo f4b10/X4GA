@@ -1,10 +1,24 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         docs/install/ch3_workstation.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
-# Created:      2009/08/28
 # Copyright:    (C) 2011 Astra S.r.l. C.so Cavallotti, 122 18038 Sanremo (IM)
+# ------------------------------------------------------------------------------
+# This file is part of X4GA
+# 
+# X4GA is free software: you can redistribute it and/or modify
+# it under the terms of the Affero GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# X4GA is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
 
 from reportlab.tools.docco.rl_doc_utils import *
@@ -30,8 +44,8 @@ nextTemplate("Normal")
 heading1("Installazione di X4 Gestione Aziendale")
 disc("""
 X4 viene installato mediante l'esecuzione del relativo setup, file eseguibile 
-con nome nella forma 'x4setup-x.y.zz.exe', dove x.y.zz Ë la versione; quindi,
-ad esempio, l'avvio di x4setup-1.1.26.exe installer‡ la versione 1.1.26 di X4.
+con nome nella forma 'x4setup-x.y.zz.exe', dove x.y.zz √® la versione; quindi,
+ad esempio, l'avvio di x4setup-1.1.26.exe installer√† la versione 1.1.26 di X4.
 L'installazione avviene tramite una procedura guidata che provvede ad installare
 tutti i files necessari ed a configurare Windows per quanto riguarda i programmi
 installati.
@@ -41,21 +55,21 @@ heading2("Cartelle e files di configurazione")
 disc("""
 X4 non utilizza in alcun modo il Registry del sistema, se non per quanto 
 riguarda le informazioni di installazione/disinstallazione.
-La configurazione del software Ë realizzata mediante files di configurazione,
+La configurazione del software √® realizzata mediante files di configurazione,
 mentre la configurazione di ogni singola azienda gestita risiede su apposite
 tabelle del database specifico dell'azienda stessa.
 Vediamo in questo capitolo quali sono i files e le cartelle di configurazione
-della workstation (impostazioni relative al programma e le sue funzionalit‡,
+della workstation (impostazioni relative al programma e le sue funzionalit√†,
 quindi indipendenti dalla singola azienda).
 """)
 
 heading2("La cartella di configurazione")
 disc("""
-Il file di configurazione principale di X4 Ë config.ini, la cui 
-dislocazione sul sistema non Ë assoluta, ma funzione di alcune variabili.
+Il file di configurazione principale di X4 √® config.ini, la cui 
+dislocazione sul sistema non √® assoluta, ma funzione di alcune variabili.
 Normalmente, infatti, esso risiede sulla cartella di configurazione di tutti gli
 utenti, la quale, a seconda della versione di Windows utilizzata, si chiama ed 
-Ë posizionata in modo diverso sul disco:
+√® posizionata in modo diverso sul disco:
 """)
 disc("""
 Per Windows 2000 e Windows XP:
@@ -70,7 +84,7 @@ eg("""
 C:\\ProgramData\\X4 Gestione Aziendale
 """,after=0.1)
 disc("""
-Per verificare effettivamente quale cartella viene utilizzata, Ë possibile
+Per verificare effettivamente quale cartella viene utilizzata, √® possibile
 da un prompt dei comandi verificare la variabile di sistema 'allusersprofile' e
 vedere dove punta:
 set ALLUSERSPROFILE
@@ -80,15 +94,15 @@ essa punta alla cartella equivalente su tale sistema.
 """)
 
 disc("""
-La cartella di configurazione, ove serva, puÚ essere anche impostata a 
+La cartella di configurazione, ove serva, pu√≤ essere anche impostata a 
 piacimento, mediante l'impostazione della variabile di sistema X4_CONFIG_PATH
-Questa impostazione generalmente non Ë necessaria sull'installazione effettiva
-del cliente, ma Ë possibile utilizzarla sulla macchina del sistemista che deve
+Questa impostazione generalmente non √® necessaria sull'installazione effettiva
+del cliente, ma √® possibile utilizzarla sulla macchina del sistemista che deve
 avere in locale una copia dell'installazione del cliente per ovvi motivi di
 debug e/o assistenza.
 Il modo migliore di gestire molteplici installazioni di X4 su un singolo PC
-(nelle quali la parte eseguibile di X4 Ë costante, ma varia la configurazione 
-della workstation, la licenza d'uso e possibilmente anche personalizzazioni) Ë
+(nelle quali la parte eseguibile di X4 √® costante, ma varia la configurazione 
+della workstation, la licenza d'uso e possibilmente anche personalizzazioni) √®
 ricorrere a tale variabile prima di avviare X4; ad esempio:
 """)
 eg("""
@@ -111,7 +125,7 @@ disc("""
 avvia X4 indicando come cartella di confgurazione quella spcifica del 
 cliente Bianchi, che risiede su C:\\x4cfg\\bianchi.
 Al fine di agevolare l'avvio di molteplici installazioni mediante la semplice 
-apertura di determinate icone sul pc del sistemista, puÚ essere una soluzione
+apertura di determinate icone sul pc del sistemista, pu√≤ essere una soluzione
 il ricorso ad un file .bat che automatizzi queste impostazioni, con un contenuto
 simile al seguente file batch di esempio c:\\x4run.bat:
 """)
@@ -122,9 +136,9 @@ cd \\Programmi\\X4 Gestione Aziendale
 X4.exe
 """,after=0.1)
 disc("""
-Avendo cura di creare, sotto la cartella x4cfg (il nome Ë a piacimento, basti 
-impostare una cartella generale che conterr‡ tante sottocartelle quante sono le
-aziende gestite), una sottocartella che conterr‡ le informazioni di configurazione
+Avendo cura di creare, sotto la cartella x4cfg (il nome √® a piacimento, basti 
+impostare una cartella generale che conterr√† tante sottocartelle quante sono le
+aziende gestite), una sottocartella che conterr√† le informazioni di configurazione
 necessarie, e richiamando il batch con il nome della sottocartella in questione.
 Quindi l'avvio di X4 per un'azienda o l'altra coincide con l'esecuzione di:
 """)
@@ -142,14 +156,14 @@ per avviare X4 con le impostazioni del cliente Bianchi.
 """)
 
 disc("""
-Vista la variet‡ di percorsi possibili per la cartella di configurazione, ci si
-riferir‡ d'ora in avanti a tale cartella con il nome simbolico CONFIG_DIR.
+Vista la variet√† di percorsi possibili per la cartella di configurazione, ci si
+riferir√† d'ora in avanti a tale cartella con il nome simbolico CONFIG_DIR.
 """)
 
 
 heading2("I file di configurazione e personalizzazioni programma")
 disc("""
-Il file di configurazione principale di X4 Ë, come accennato, il file 
+Il file di configurazione principale di X4 √®, come accennato, il file 
 'config.ini', posizionato nella cartella di configurazione menzionata a cui 
 ci riferiamo ora con il nome di CONFIG_DIR.
 """)
@@ -175,11 +189,11 @@ cartella 'cust', contenente i moduli di personalizzazione del programma.
 """)
 list("""
 cartella 'plugin', contenente gli eventuali moduli plugin per estensione 
-delle funzionalit‡ del programma.
+delle funzionalit√† del programma.
 """)
 list("""
 cartella 'addon', contenente gli eventuali moduli addon per estensione 
-di determinate funzionalit‡ del programma.
+di determinate funzionalit√† del programma.
 """)
 
 
@@ -191,8 +205,8 @@ a corredo dell'installazione da condividere con tutti gli utenti X4.
 Lo scopo della prima cosa che il setup workstation chiede, ovvero la cosiddetta
 'cartella comune', e' proprio consentire l'accentramento in una unica 
 cartella di questo materiale, del quale parleremo nella prossima sezione.
-Tale cartella non Ë obbligatoria, per un motivo molto semplice: laddove essa non
-venga specificata, verr‡ assunta come corrispondente alla stessa cartella di 
+Tale cartella non √® obbligatoria, per un motivo molto semplice: laddove essa non
+venga specificata, verr√† assunta come corrispondente alla stessa cartella di 
 configurazione del pc, vedasi considerazioni precedenti a proposito di 
 CONFIG_DIR.
 """)
@@ -211,15 +225,15 @@ list("""
 definizioni di report personalizzati
 """)
 disc("""
-Vista la variet‡ di percorsi possibili per la cartella di comune, ci si
-riferir‡ d'ora in avanti a tale cartella con il nome simbolico COMMON_DIR.
+Vista la variet√† di percorsi possibili per la cartella di comune, ci si
+riferir√† d'ora in avanti a tale cartella con il nome simbolico COMMON_DIR.
 """)
 disc("""
 Nel setup della workstation sono richiesti anche i seguenti percorsi:
 """)
 restartList()
 list("""
-File per allegati.  Percorso che conterr‡ il materiale allegato alle 
+File per allegati.  Percorso che conterr√† il materiale allegato alle 
 informazioni del database mediante il bottone 'Allegati' presente nelle schede 
 anagrafiche e nelle principali maschere di dataentry.
 Se non specificato, come normalmente avviene, viene settata pari a:
@@ -228,12 +242,12 @@ eg("""
 COMMON_DIR\\attach_files
 """,after=0.1)
 list("""
-Report personalizzati.  Percorso che conterr‡ le definizioni di report 
+Report personalizzati.  Percorso che conterr√† le definizioni di report 
 personalizzati specifiche di ogni azienda; il percorso punta ad una cartella 
-generica, la quale conterr‡ una sottocartella specifica per ogni azienda per la
+generica, la quale conterr√† una sottocartella specifica per ogni azienda per la
 quale si vogliono rendere disponibili determinati report personalizzati.
 Il nome di ogni sottocartella relativa alla singola azienda deve essere nella
-forma: azienda_XXXXX, dove XXXX Ë il codice azienda in X4.
+forma: azienda_XXXXX, dove XXXX √® il codice azienda in X4.
 Se non specificato, come normalmente avviene, viene settata pari a:
 """)
 eg("""
@@ -268,7 +282,7 @@ eg("""
 ./report/pdf
 """,after=0.1)
 disc("""
-PuÚ risultare utile far puntare tale percorso ad una cartella diversa, 
+Pu√≤ risultare utile far puntare tale percorso ad una cartella diversa, 
 immediatamente consultabile dall'utente nel caso voglia riprendere a posteriori 
 una determinata stampa fatta; sono gestite le variabili di sistema 'userprofile' 
 e 'allusersprofile', che puntano rispettivamente alla cartella 'home' 
@@ -279,11 +293,11 @@ eg("""
 %userprofile%\\Documenti\\Stampe X4
 """,after=0.1)
 disc("""
-si otterr‡ la produzione delle stampe di X4 nella cartella 'Stampe X4' 
+si otterr√† la produzione delle stampe di X4 nella cartella 'Stampe X4' 
 posizionata nella cartella 'Documenti' dell'utente specifico.
 """)
 disc("""
-N.B.  La parte iniziale del percorso, './', sta ad indicare che il percorso Ë relativo
+N.B.  La parte iniziale del percorso, './', sta ad indicare che il percorso √® relativo
 alla dislocazione del programma eseguibile, normalmente installato nella 
 cartella:
 """)
@@ -300,7 +314,7 @@ heading2("Setup postazione")
 disc("""
 Ora che abbiamo chiarito i concetti relativi alle varie cartelle di 
 configurazione, vediamo quali informazioni richiede la maschera di 'Setup 
-postazione'.  Questa Ë suddivisa in alcuni blocchi, come di seguito evidenziato.
+postazione'.  Questa √® suddivisa in alcuni blocchi, come di seguito evidenziato.
 """)
 
 heading3("Sito installazione")
@@ -318,7 +332,7 @@ Cartella comune.  Vedi considerazioni su COMMON_DIR.
 heading3("Database")
 restartList()
 list("""
-Descrizione:  E' la descrizione che comparir‡ nella maschera di login ad ogni
+Descrizione:  E' la descrizione che comparir√† nella maschera di login ad ogni
 accesso, consente di descrivere umanamente il server a cui si sta cercando
 di accedere.
 """)
@@ -328,19 +342,19 @@ del database.
 """)
 list("""
 Porta: E' la porta TCP/IP alla quale richiedere l'accesso sul server.  Il valore
-di default della porta per MySQL Ë 3306.
+di default della porta per MySQL √® 3306.
 """)
 list("""
 Utente/Password: E' l'accoppiata nome utente e password dell'utente di MySQL che
-verr‡ utilizzata per stabilire la connessione.
+verr√† utilizzata per stabilire la connessione.
 """)
 list("""
 Bottone 'Test': Consente di verificare l'esattezza dei parametri di connessione
 al database; viene restituito un messaggio di avvenuta connessione o meno.
 """)
 disc("""
-Tramite il bottone 'Aggiungi Server' Ë possibile specificare altri insiemi di 
-configurazione database, nel caso in cui la macchina debba accedere a pi˘ di un 
+Tramite il bottone 'Aggiungi Server' √® possibile specificare altri insiemi di 
+configurazione database, nel caso in cui la macchina debba accedere a pi√π di un 
 server a seconda di determinate condizioni.
 """)
 
@@ -374,17 +388,17 @@ Windows come stampante predefinita per alcuni tipi di stampa diretta (etichette:
 indirizzi, codici a b arre, ecc.).
 """)
 list("""
-DDE: Attivando questa opzione, sar‡ possibile ottimizzare i meccanismi che 
+DDE: Attivando questa opzione, sar√† possibile ottimizzare i meccanismi che 
 governano la gestione dei files pdf una volta generati.
-La mancata spunta di questo parametro far‡ si che i pdf, una volta generati, 
+La mancata spunta di questo parametro far√† si che i pdf, una volta generati, 
 vengano dati in pasto al sistema operativo che li dovrebbe aprire esattamente 
-come accade quando si fa doppio click su un file pdf (qualsiasi lettore di pdf Ë
+come accade quando si fa doppio click su un file pdf (qualsiasi lettore di pdf √®
 consentito, non solo Acrobat).
 La spunta di questo parametro invece attiva il meccanismo DDE, il quale consente
 il colloquio tra X4 ed Adobe Reader (da versione 8 in poi) in modo tale da
 permettere sia l'anteprima classica nella finestra propria di Adobe, sia l'avvio
 della stampa automaticamente senza l'obbligo di passare dall'anteprima.
-In questo caso Ë possibile selezionare la stampante da usare ed il numero di 
+In questo caso √® possibile selezionare la stampante da usare ed il numero di 
 copie da stampare nel pannello di selezione report di X4. Attenzione che alcune
 caratteristiche di stampa in Adobe Reader, modificabili dall'utente, vengono
 memorizzate in Adobe in modo da riutilizzarle automaticamente nelle stampe
@@ -405,8 +419,8 @@ restartList()
 list("""
 Questa workstation dispone di un accesso permanente: spuntanto tale voce,
 nei punti di programma in cui deve essere stabilita una connessione verso
-qualche server web o comunque inerente la rete pubblica, non verr‡ richiesta 
-alcuna autorizzazione, mentre la mancanza di tale spunta attiver‡ tale richiesta 
+qualche server web o comunque inerente la rete pubblica, non verr√† richiesta 
+alcuna autorizzazione, mentre la mancanza di tale spunta attiver√† tale richiesta 
 ad ogni connessione.
 """)
 
@@ -416,14 +430,14 @@ list("""
 Tutte le griglie presenti nel programma sono esportabili in Excel o similare 
 mediante click destro su una intestazione di colonna qualsiasi e scelta nel menu
 contestuale della voce 'Esporta file CSV'.
-CSV Ë (o dovrebbe essere) un formato standard di interscambio dati: file di 
+CSV √® (o dovrebbe essere) un formato standard di interscambio dati: file di 
 testo con valori delimitati e separati, come dice l'acronimo stesso, dalla 
 virgola.
-Ovviamente in Windows lo standard Ë diverso, perchÈ normalmente in Excel la 
+Ovviamente in Windows lo standard √® diverso, perch√© normalmente in Excel la 
 separazione tra due informazioni avviene mediante l'utilizzo del carattere di
 punto e virgola invece che del carattere virgola.
-Qui Ë possibile agire su questo tipo di comportamento: spuntando la voce 
-'Esporta i valori come presentati nelle griglie' (scelta di default) verr‡ 
+Qui √® possibile agire su questo tipo di comportamento: spuntando la voce 
+'Esporta i valori come presentati nelle griglie' (scelta di default) verr√† 
 utilizzato, come da standard, il carattere virgola (opzione che va bene nel caso
 in cui sia installato OpenOffice invece di Microsoft Office).
 La mancata spunta di tale voce attiva le tre opzioni successive:
@@ -437,10 +451,10 @@ list("""
 Sulle griglie, il tasto TAB naviga su:
 Le celle della griglia = una volta che la griglia ha il focus della tastiera,
 questa consentira il passaggio al controllo successivo (esterno alla griglia)
-mediante Ctrl-Tab, poichÈ la pressione del tasto Tab provocher‡ la navigazione
+mediante Ctrl-Tab, poich√© la pressione del tasto Tab provocher√† la navigazione
 tra le celle della griglia stessa.
 I controlli adiacenti alla griglia = Il tasto Tab premuto all'interno della
-griglia provocher‡, contrariamente a prima, l'uscita dalla griglia stessa ed il
+griglia provocher√†, contrariamente a prima, l'uscita dalla griglia stessa ed il
 posizionamento del cursore nel controllo immediatamente successivo alla griglia.
 """)
 disc("""

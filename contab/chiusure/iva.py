@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         contab/chiusure/iva.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -68,7 +68,7 @@ class ChiusuraIVAPanel(aw.Panel):
         m = ''
         ok = False
         if year<YEAR_MIN:
-            m = "L'anno non può essere inferiore al %d" % YEAR_MIN
+            m = "L'anno non puÃ² essere inferiore al %d" % YEAR_MIN
         else:
             p = self.dbpliq
             try:
@@ -87,7 +87,7 @@ class ChiusuraIVAPanel(aw.Panel):
             else:
                 try:
                     p.GetUltimaLiquidazione(year)
-                    m = 'Progressivi già esistenti per il %d!' % year
+                    m = 'Progressivi giÃ  esistenti per il %d!' % year
                 except:
                     ok = True
         w = cn('warning')
@@ -104,7 +104,7 @@ class ChiusuraIVAPanel(aw.Panel):
             event.Skip()
     
     def GeneraRiporto(self):
-        if aw.awu.MsgDialog(self, "Confermi la generazione dei progressivi di liquidazione\ncosì come evidenziati?", style=wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT) == wx.ID_YES:
+        if aw.awu.MsgDialog(self, "Confermi la generazione dei progressivi di liquidazione\ncosÃ¬ come evidenziati?", style=wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT) == wx.ID_YES:
             try:
                 self.dbpliq.CreaProgressiviAnno(self.FindWindowByName('nuovoanno').GetValue())
                 return True

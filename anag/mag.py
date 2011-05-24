@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         anag/mag.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -56,7 +56,7 @@ FRAME_TITLE = "Magazzini"
 class GridCauRegIva(dbglib.DbGrid):
     """
     Griglia definizione registro iva della causale in base al magazzino
-    (x dataentry magazzino; x dataentry contab non è contemplata la codifica
+    (x dataentry magazzino; x dataentry contab non Ã¨ contemplata la codifica
     del magazzino, quindi in presenza di causale con registro dinamico viene
     semplicemente attivato il controllo di selezione del registro iva in
     testata registrazione.
@@ -237,7 +237,7 @@ class MagazzPanel(ga.AnagPanel):
         else:
             if diff:
                 awu.MsgDialog(self, message=\
-                              """Non c'è lo stesso registro su tutte le """\
+                              """Non c'Ã¨ lo stesso registro su tutte le """\
                               """causali, assicurarsi che sia corretto""", 
                               style=wx.ICON_WARNING)
             out = True

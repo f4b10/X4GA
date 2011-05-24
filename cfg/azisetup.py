@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         cfg/azisetup.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -177,7 +177,7 @@ class AziendaSetupPanel(_SetupPanel):
     def SetupRead(self):
         out = _SetupPanel.SetupRead(self)
         cn = self.FindWindowByName
-        cn('setup_consovges').SetValue(bt.CONSOVGES) #il flag è numerico, ma memorizzato in setup.flag che è carattere
+        cn('setup_consovges').SetValue(bt.CONSOVGES) #il flag Ã¨ numerico, ma memorizzato in setup.flag che Ã¨ carattere
         logo = os.path.join(self.GetLogoPath(), self.GetLogoFileName())
         if os.path.isfile(logo):
             cn('azienda_logo').display_image(logo)

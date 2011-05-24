@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         report/querystru.py
 # Author:       Marcello Montaldo <marcello.montaldo@gmail.com>
@@ -34,7 +34,7 @@ class QueryStru:
     def __init__(self, DbStru):
         """
         Riceve come parametro la struttura di tutti i campi che compaiono nella query. 
-        B{DbStru} Ë infatti costituita da una lista di elementi in cui ogni singolo elemento Ë 
+        B{DbStru} √® infatti costituita da una lista di elementi in cui ogni singolo elemento √® 
         a sua volta costituito da una lista contenente le caratteristiche del campo a cui si riferisce. 
         
         Le informazioni presenti in ogni singolo elemento della lista DbStru sono le seguenti:
@@ -118,7 +118,7 @@ class QueryStru:
     def get_IndexbyName(self, Name):
         '''
         Restituisce la posizione, nell'ambito della struttura,  in cui compare il 
-        campo con none Name. Nell'eventualit‡ che non fosse presente alcun campo
+        campo con none Name. Nell'eventualit√† che non fosse presente alcun campo
         con il nome specificato viene restituiro None.
         @param Name: Nome del campo ricercato
         @type Name: string

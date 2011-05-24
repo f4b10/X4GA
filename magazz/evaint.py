@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         magazz/evaint.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -77,7 +77,7 @@ class GridMov(maglib.GridMovEva):
             ( 35, (cn(tpm, "codice"),  "Mov.",         _STR, True)),
             ( 80, (cn(pro, "codice"),  "Codice",       _STR, True)),
             (190, (cn(mov, "descriz"), "Descrizione",  _STR, True)),
-            ( 80, (cn(mov, "qta"),     "Qt‡",          _QTA, True)),
+            ( 80, (cn(mov, "qta"),     "Qt√†",          _QTA, True)),
             ( 80, (-1,                 "Evaso",        _QTA, True)),
             ( 80, (-2,                 "Residuo",      _QTA, True)),
             ( 80, (cn(mov, "prezzo"),  "Prezzo",       _PRE, True)),
@@ -210,7 +210,7 @@ class VediEvasioniGrid(dbglib.DbGridColoriAlternati):
             ( 40, (cn(mov, "numriga"), "Riga",         _QTA, True)),
             ( 35, (cn(tpm, "codice"),  "Cod.",         _STR, True)),
             (110, (cn(tpm, "descriz"), "Movimento",    _STR, True)),
-            ( 80, (cn(mov, "qta"),     "Qt‡",          _QTA, True)),
+            ( 80, (cn(mov, "qta"),     "Qt√†",          _QTA, True)),
             ( 80, (cn(eva, "qta"),     "Evaso",        _QTA, True)),
             ( 80, (cn(mov, "prezzo"),  "Prezzo",       _PRE, True)),
             ( 45, (cn(mov, "sconto1"), "Sc.%1",        _SCO, True)),

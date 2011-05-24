@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         Env.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -578,7 +578,7 @@ def InitLicense(config):
 def StrImp(num, dec=None, sepm=True, zeroblank=False):
     """
     Converte un numero in una a stringa con separatori migliaia
-    Il numero di decimali per default Ë C{Azienda.BaseTab.VALINT_DECIMALS}
+    Il numero di decimali per default √® C{Azienda.BaseTab.VALINT_DECIMALS}
     """
     if dec is None:
         dec = Azienda.BaseTab.VALINT_DECIMALS
@@ -619,7 +619,7 @@ def StrDateTime(date):
 class Azienda(object):
     """
     Insieme di classi per la configurazione dell'azienda e la sua 
-    accessibilit‡ sul database.
+    accessibilit√† sul database.
     """
     firstTime = False
     config = None
@@ -689,7 +689,7 @@ class Azienda(object):
         Colori definiti::
             NORMAL_BACKGROUND - colore standard background controlli
             NOCALC_BACKGROUND - colore di background per elementi il cui 
-                                calcolo automatico Ë disabilitato
+                                calcolo automatico √® disabilitato
             
             Accesso:
                 Azienda.Colours.chiave_colore
@@ -825,7 +825,7 @@ class Azienda(object):
         Struttura tabelle
         -----------------
         C{BaseTab.tabelle} contiene i dati necessari alla gestione di tutte le
-        tabelle del package; Ë una tupla di tuple, in cui ogni elemento si
+        tabelle del package; √® una tupla di tuple, in cui ogni elemento si
         riferisce ad una singola tabella:
             
             - Nome  I{String}
@@ -835,8 +835,8 @@ class Azienda(object):
             - Constraints I{tuple}
             - Specifiche vocali I{dict}
             
-        Il terzo elemento Ë la tupla contenente la struttura della tabella,
-        in cui ogni elemento Ë una tupla costituita da:
+        Il terzo elemento √® la tupla contenente la struttura della tabella,
+        in cui ogni elemento √® una tupla costituita da:
             
             - Nome della colonna   I{String}
             - Larghezza  I{int}
@@ -849,20 +849,20 @@ class Azienda(object):
         -------------------------------------
         E' possibile accedere alla tupla delle tabelle indirizzando l'elemento
         tabella desiderato tramite la relativa costante di posizione nella tupla,
-        per ogni tabella definita come C{TABSETUP_TABLE_TABXX}, dove C{TABXX} Ë il
+        per ogni tabella definita come C{TABSETUP_TABLE_TABXX}, dove C{TABXX} √® il
         nome maiuscolo della tabella.
         
         Esempio:
         C{strutturaclienti = Azienda.BaseTab.tabelle[ TABSETUP_TABLE_CLIENTI ]}
         
-        In tale struttura Ë possibile accedere agli elementi tramite le costanti:::
+        In tale struttura √® possibile accedere agli elementi tramite le costanti:::
             TABSETUP_TABLENAME = 0
             TABSETUP_TABLEDESCRIPTION = 1
             TABSETUP_TABLESTRUCTURE = 2
             TABSETUP_TABLEINDEXES = 3
             TABSETUP_TABLECONSTRAINTS = 4
             
-        Nella struttura in C{TABSETUP_TABLESTRU} Ë possibile accedere agli elementi
+        Nella struttura in C{TABSETUP_TABLESTRU} √® possibile accedere agli elementi
         tramite le costanti:::
             TABSETUP_COLUMNNAME = 0
             TABSETUP_COLUMNTYPE = 1
@@ -885,7 +885,7 @@ class Azienda(object):
             TABNAME_AGENTI    agenti     Agenti                                TABSETUP_TABLE_AGENTI
             TABNAME_ZONE      zone       Zone geografiche                      TABSETUP_TABLE_ZONE
             TABNAME_VALUTE    valuet     Valute                                TABSETUP_TABLE_VALUTE
-            TABNAME_MODPAG    modpag     Modalit‡ di pagamento                 TABSETUP_TABLE_MODPAG
+            TABNAME_MODPAG    modpag     Modalit√† di pagamento                 TABSETUP_TABLE_MODPAG
             TABNAME_TRAVETT   travet     Vettori x trasporto merce             TABSETUP_TABLE_TRAVET
             TABNAME_SPEINC    speinc     Spese di incasso                      TABSETUP_TABLE_SPEINC
             TABNAME_REGIVA    regiva     Registri IVA                          TABSETUP_TABLE_REGIVA
@@ -929,7 +929,7 @@ class Azienda(object):
         OPTLNKCRDFOR = None  #inizializzazione focus su codice/descrizione in LinkTableFornit da scheda
         OPTLNKGRDFOR = None  #inizializzazione focus su codice/descrizione in LinkTableFornit da griglia
         
-        TIPO_CONTAB = None   #tipo di contabilit‡
+        TIPO_CONTAB = None   #tipo di contabilit√†
         
         CONSOVGES = None     #chiusure con sovrapposizione o no
         CONBILRICL = False   #flag gestione bilanci riclassificati
@@ -947,7 +947,7 @@ class Azienda(object):
         MAGQTA_INTEGERS = 10 #numero cifre intere prezzi
         
         MAGPRE_DECIMALS = 2  #numero decimali prezzi
-        MAGQTA_DECIMALS = 0  #numero decimali quantit‡
+        MAGQTA_DECIMALS = 0  #numero decimali quantit√†
         MAGEAN_PREFIX = '22' #prefisso per generazione codici ean
         MAGSCOCAT = 0        #flag gestione sconti per categoria
         MAGSCORPCOS = None   #flag scorporo iva da costo
@@ -975,8 +975,8 @@ class Azienda(object):
         MAGPROVATT = False   #flag gestione calcolo provvigioni
         MAGPROVCLI = False   #flag gestione provvigione su scheda cliente
         MAGPROVPRO = False   #flag gestione provvigione su scheda prodotto
-        MAGPROVMOV = " "     #flag ereditariet‡ provvigione su riga movimento
-        MAGPROVSEQ = "P"     #tipo ereditariet‡ provvigione su riga moviment C=Cliente, P=Prodotto
+        MAGPROVMOV = " "     #flag ereditariet√† provvigione su riga movimento
+        MAGPROVSEQ = "P"     #tipo ereditariet√† provvigione su riga moviment C=Cliente, P=Prodotto
         MAGDEMSENDFLAG = 0   #flag gestione email documenti
         MAGDEMSENDDESC = ""  #descrizione mittente email documenti
         MAGDEMSENDADDR = ""  #indirizzo posta elettroniva mittente email documenti
@@ -1083,7 +1083,7 @@ class Azienda(object):
                            2: ['valute', ['le', 'delle', 'dalle']]}
         
         TABNAME_MODPAG = "modpag"
-        TABDESC_MODPAG = "Modalit‡ di pagamento"
+        TABDESC_MODPAG = "Modalit√† di pagamento"
         TABSETUP_TABLE_MODPAG = numtab.next()
         TABSETUP_CONSTR_MODPAG = []
         TABVOICE_MODPAG = {1: ['mod.pagamento', ['la', 'una', 'della', 'dalla']],
@@ -1676,7 +1676,7 @@ class Azienda(object):
                 [ "tipo",       "CHAR",     1, None, "Tipo aliquota", None ],
                 [ "modo",       "CHAR",     1, None, "Modo applicazione iva (imponibile, non imponibile, esente, fuori campo)", None ],
                 [ "perciva",    "DECIMAL",  5,    2, "Perc.IVA", None ],
-                [ "percind",    "DECIMAL",  5,    2, "Perc.Indeducibilit‡", None ],
+                [ "percind",    "DECIMAL",  5,    2, "Perc.Indeducibilit√†", None ],
                 [ "pralcc1",    "TINYINT",  1, None, "Flag allegati clienti col.1", None ],
                 [ "pralcc2",    "TINYINT",  1, None, "Flag allegati clienti col.2", None ],
                 [ "pralcc3",    "TINYINT",  1, None, "Flag allegati clienti col.3", None ],
@@ -1695,7 +1695,7 @@ class Azienda(object):
                 [ "descriz",    "VARCHAR", 60, None, "Descrizione", None ],
                 [ "indirizzo",  "VARCHAR", 60, None, "Indirizzo", None ],
                 [ "cap",        "CHAR",     5, None, "CAP", None ],
-                [ "citta",      "VARCHAR", 60, None, "Citt‡", None ],
+                [ "citta",      "VARCHAR", 60, None, "Citt√†", None ],
                 [ "prov",       "CHAR",     2, None, "Provincia", None ],
                 [ "piva",       "CHAR",    20, None, "Partita IVA", None ],
                 [ "numtel",     "VARCHAR", 60, None, "Num. telefono", None ],
@@ -1743,7 +1743,7 @@ class Azienda(object):
                 [ "contrass",   "TINYINT",  1, None, "Flag contrassegno", None ],\
                 [ "askbanca",   "TINYINT",  1, None, "Flag richiesta banca", None ],\
                 [ "askspese",   "TINYINT",  1, None, "Flag richiesta spese", None ],\
-                [ "modocalc",   "CHAR",     1, None, "Modalit‡ di calcolo Sintetico/Dettagliato", None ],\
+                [ "modocalc",   "CHAR",     1, None, "Modalit√† di calcolo Sintetico/Dettagliato", None ],\
                 [ "tipoper",    "CHAR",     1, None, "Tipo periodi", None ],\
                 [ "finemese",   "TINYINT",  1, None, "Flag calcolo fine mese", None ],\
                 [ "numscad",    "INT",      2, None, "Numero di scadenze", None ],\
@@ -1771,7 +1771,7 @@ class Azienda(object):
                 [ "descriz",    "VARCHAR", 255, None, "Descrizione", None ], 
                 [ "indirizzo",  "VARCHAR",  60, None, "Indirizzo", None ],
                 [ "cap",        "CHAR",      8, None, "CAP", None ],
-                [ "citta",      "VARCHAR",  60, None, "Citt‡", None ],
+                [ "citta",      "VARCHAR",  60, None, "Citt√†", None ],
                 [ "prov",       "CHAR",      2, None, "Provincia", None ],
                 [ "codfisc",    "CHAR",     16, None, "Cod. fiscale", None ],
                 [ "nazione",    "CHAR",      4, None, "Nazione", None ],
@@ -1942,7 +1942,7 @@ class Azienda(object):
               [ [ "id",             "INT",    idw, None, "ID Cliente", None ],
                 [ "indirizzo",      "VARCHAR", 60, None, "Indirizzo", None ],
                 [ "cap",            "CHAR",     8, None, "CAP", None ],
-                [ "citta",          "VARCHAR", 60, None, "Citt‡", None ],
+                [ "citta",          "VARCHAR", 60, None, "Citt√†", None ],
                 [ "prov",           "CHAR",     2, None, "Provincia", None ],
                 [ "codfisc",        "CHAR",    16, None, "Cod. fiscale", None ],
                 [ "nazione",        "CHAR",     4, None, "Nazione", None ],
@@ -1967,7 +1967,7 @@ class Azienda(object):
                 [ "spddes",         "VARCHAR", 60, None, "Descriz. x spedizione documenti", None ],
                 [ "spdind",         "VARCHAR", 60, None, "Indirizzo x spedizione documenti", None ],
                 [ "spdcap",         "CHAR",     5, None, "CAP x spedizione documenti", None ],
-                [ "spdcit",         "VARCHAR", 60, None, "Citt‡ x spedizione documenti", None ],
+                [ "spdcit",         "VARCHAR", 60, None, "Citt√† x spedizione documenti", None ],
                 [ "spdpro",         "CHAR",     2, None, "Provincia x spedizione doc.", None ],
                 [ "sconto1",        "DECIMAL",  5,    2, "Sconto perc.1", None ],
                 [ "sconto2",        "DECIMAL",  5,    2, "Sconto perc.2", None ],
@@ -1998,7 +1998,7 @@ class Azienda(object):
                 [ "grpstop",        "CHAR",     1, None, "Flag stop inserimento prodotti non in griglia", None ],
                 [ "allegcf",        "TINYINT",  1, None, "Flag allegati", None ],
                 [ "fido_maxpcf",    "INT",      4, None, "Fido: max partite aperte", None ],
-                [ "fido_maxggs",    "INT",      4, None, "Fido: max giorni scoperto pi˘ vecchio", None ],
+                [ "fido_maxggs",    "INT",      4, None, "Fido: max giorni scoperto pi√π vecchio", None ],
                 [ "fido_maximp",    "DECIMAL", 10, DVI,  "Fido: max importo scoperto", None ],
                 [ "fido_maxesp",    "DECIMAL", 10, DVI,  "Fido: max esposizione", None ],
                 [ "sogritacc",      "TINYINT",  1, None, "Flag soggetto a ritnuta d'acconto", None ],
@@ -2033,7 +2033,7 @@ class Azienda(object):
                 [ "descriz",    "VARCHAR", 60, None, "Descrizione", None ],
                 [ "indirizzo",  "VARCHAR", 60, None, "Indirizzo", None ],
                 [ "cap",        "CHAR",     5, None, "CAP", None ],
-                [ "citta",      "VARCHAR", 60, None, "Citt‡", None ],
+                [ "citta",      "VARCHAR", 60, None, "Citt√†", None ],
                 [ "prov",       "CHAR",     2, None, "Provincia", None ],
                 [ "numtel",     "VARCHAR", 60, None, "Num. telefono", None ],
                 [ "numtel2",    "VARCHAR", 60, None, "Num. telefono agg.", None ],
@@ -2079,7 +2079,7 @@ class Azienda(object):
               [ [ "id",             "INT",    idw, None, "ID Fornitore", None ],
                 [ "indirizzo",      "VARCHAR", 60, None, "Indirizzo", None ],
                 [ "cap",            "CHAR",     8, None, "CAP", None ],
-                [ "citta",          "VARCHAR", 60, None, "Citt‡", None ],
+                [ "citta",          "VARCHAR", 60, None, "Citt√†", None ],
                 [ "prov",           "CHAR",     2, None, "Provincia", None ],
                 [ "codfisc",        "CHAR",    16, None, "Cod. fiscale", None ],
                 [ "nazione",        "CHAR",     4, None, "Nazione", None ],
@@ -2102,7 +2102,7 @@ class Azienda(object):
                 [ "spddes",         "VARCHAR", 60, None, "Descriz. x spedizione documenti", None ],
                 [ "spdind",         "VARCHAR", 60, None, "Indirizzo x spedizione documenti", None ],
                 [ "spdcap",         "CHAR",     5, None, "CAP x spedizione documenti", None ],
-                [ "spdcit",         "VARCHAR", 60, None, "Citt‡ x spedizione documenti", None ],
+                [ "spdcit",         "VARCHAR", 60, None, "Citt√† x spedizione documenti", None ],
                 [ "spdpro",         "CHAR",     2, None, "Provincia x spedizione doc.", None ],
                 [ "sconto1",        "DECIMAL",  5,    2, "Sconto perc.1", None ],
                 [ "sconto2",        "DECIMAL",  5,    2, "Sconto perc.2", None ],
@@ -2183,7 +2183,7 @@ class Azienda(object):
                 [ "st_giobol",  "TINYINT",  1, None, "Flag stampa giornale bollato", "DEFAULT 0" ],
                 [ "id_valuta",  "INT",    idw, None, "ID Valuta", None ],
                 [ "id_regiva",  "INT",    idw, None, "ID Registro IVA associato", None ],
-                [ "id_modpag",  "INT",    idw, None, "ID Modalit‡ di pagamento", None ],
+                [ "id_modpag",  "INT",    idw, None, "ID Modalit√† di pagamento", None ],
                 [ "nocalciva",  "TINYINT",  1, None, "Flag inibizione calcolo dav/iva", None ],
             ]
             
@@ -2240,7 +2240,7 @@ class Azienda(object):
               [ [ "id",         "INT",     idw, None, "ID Partita", "AUTO_INCREMENT" ],
                 [ "id_pdc",     "INT",     idw, None, "ID sottoconto pdc", "NOT NULL" ],
                 [ "id_caus",    "INT",     idw, None, "ID causale di origine", None ],
-                [ "id_modpag",  "INT",     idw, None, "ID della modalit‡ di pagamento", None ],
+                [ "id_modpag",  "INT",     idw, None, "ID della modalit√† di pagamento", None ],
                 [ "riba",       "TINYINT",   1, None, "Flag riba", None ],
                 [ "contrass",   "TINYINT",   1, None, "Flag contrassegno", None ],
                 [ "insoluto",   "TINYINT",   1, None, "Flag insoluto", None ],
@@ -2391,7 +2391,7 @@ class Azienda(object):
               [ [ "id",         "INT",    idw, None, "ID Prodotto", "AUTO_INCREMENT" ],
                 [ "codice",     "CHAR",    16, None, "Codice", "NOT NULL" ],
                 [ "descriz",    "VARCHAR", 60, None, "Descrizione", "NOT NULL" ],
-                [ "um",         "CHAR",     5, None, "Unit‡ di misura", "NOT NULL" ],
+                [ "um",         "CHAR",     5, None, "Unit√† di misura", "NOT NULL" ],
                 [ "costo",      "DECIMAL",IPM,  DPM, "Ultimo costo di acquisto", None ],
                 [ "prezzo",     "DECIMAL",IPM,  DPM, "Prezzo di listino ufficiale", None ],
                 [ "sconto1",    "DECIMAL",  5,    2, "Sconto #1", None ],
@@ -2467,7 +2467,7 @@ class Azienda(object):
               [ [ "id",         "INT",     idw, None, "ID Listino", "AUTO_INCREMENT" ],
                 [ "id_prod",    "INT",     idw, None, "ID Prodotto", "NOT NULL" ],
                 [ "id_valuta",  "INT",     idw, None, "ID Valuta", None ],
-                [ "data",       "DATE",   None, None, "Data di validit‡", None ],
+                [ "data",       "DATE",   None, None, "Data di validit√†", None ],
                 [ "prezzo1",    "DECIMAL", IPM,  DPM, "Prezzo di vendita #1", None ],
                 [ "prezzo2",    "DECIMAL", IPM,  DPM, "Prezzo di vendita #2", None ],
                 [ "prezzo3",    "DECIMAL", IPM,  DPM, "Prezzo di vendita #3", None ],
@@ -2491,7 +2491,7 @@ class Azienda(object):
               [ [ "id",          "INT",    idw, None, "ID Griglia", "AUTO_INCREMENT" ],
                 [ "id_prod",     "INT",    idw, None, "ID Prodotto", "NOT NULL" ],
                 [ "id_pdc",      "INT",    idw, None, "ID Cliente/Fornitore", "NOT NULL" ],
-                [ "data",        "DATE",  None, None, "Data di validit‡", None ],
+                [ "data",        "DATE",  None, None, "Data di validit√†", None ],
                 [ "prezzo",      "DECIMAL", 12,  DPM, "Prezzo di griglia", None ],
                 [ "sconto1",     "DECIMAL",  5,    2, "Sconto #1", None ],
                 [ "sconto2",     "DECIMAL",  5,    2, "Sconto #2", None ],
@@ -2599,7 +2599,7 @@ class Azienda(object):
                 [ "vislistini", "TINYINT",  1, None, "Flag visualizzazione prezzi listino prodotto", None ],
                 [ "visultmov",  "TINYINT",  1, None, "Flag visualizzazione ultimi movimenti prod/cli-for", None ],
                 [ "vismargine", "TINYINT",  1, None, "Flag visualizzazione margine vendita", None ],
-                [ "ultmovbef",  "TINYINT",  1, None, "Flag priorit‡ ultimi movimenti prod/cli-for", "NOT NULL DEFAULT 0" ],
+                [ "ultmovbef",  "TINYINT",  1, None, "Flag priorit√† ultimi movimenti prod/cli-for", "NOT NULL DEFAULT 0" ],
                 [ "printetic",  "TINYINT",  1, None, "Flag stampa etichette", "NOT NULL DEFAULT 0" ],
                 [ "pdcdamag",   "TINYINT",  1, None, "Flag sottoconto da magazzino", None ],
                 [ "checkfido",  "TINYINT",  1, None, "Flag controllo fido cliente", None ],
@@ -2665,7 +2665,7 @@ class Azienda(object):
                 [ "statcscli",    "TINYINT",  1, None, "Flag +/- statistica fatturato clienti (costo)", None ],
                 [ "statftfor",    "TINYINT",  1, None, "Flag +/- statistica fatturato fornitori", None ],
                 [ "mancosto",     "CHAR",     1, None, "Management costo riga (N/V/M = nulla,visualizza,modifica)", None ],
-                [ "askvalori",    "CHAR",     1, None, "Flag richiesta quantit‡", None ],
+                [ "askvalori",    "CHAR",     1, None, "Flag richiesta quantit√†", None ],
                 [ "id_pdc",       "INT",    idw, None, "ID Sottoconto per collegamento contabile", None ],
                 [ "stadesc",      "VARCHAR", 30, None, "Descrizione in stampa", None ],
                 [ "tipvaluni",    "CHAR",     1, None, "Tipo di valore unitario da proporre", None ],
@@ -2761,7 +2761,7 @@ class Azienda(object):
                 [ "nocodedes_descriz",    "VARCHAR",    60, None, "Destinatario non codificato: Descrizione", None ],
                 [ "nocodedes_indirizzo",  "VARCHAR",    60, None, "Destinatario non codificato: Indirizzo", None ],
                 [ "nocodedes_cap",        "CHAR",        5, None, "Destinatario non codificato: CAP", None ],
-                [ "nocodedes_citta",      "VARCHAR",    60, None, "Destinatario non codificato: Citt‡", None ],
+                [ "nocodedes_citta",      "VARCHAR",    60, None, "Destinatario non codificato: Citt√†", None ],
                 [ "nocodedes_prov",       "CHAR",        2, None, "Destinatario non codificato: Provincia", None ],
                 [ "nocodedes_id_stato",   "INT",       idw, None, "Destinatario non codificato: ID stato", None ], ]
             
@@ -2771,7 +2771,7 @@ class Azienda(object):
                 [ "nocodevet_descriz",    "VARCHAR",    60, None, "Vettore non codificato: Descrizione", None ],
                 [ "nocodevet_indirizzo",  "VARCHAR",    60, None, "Vettore non codificato: Indirizzo", None ],
                 [ "nocodevet_cap",        "CHAR",        5, None, "Vettore non codificato: CAP", None ],
-                [ "nocodevet_citta",      "VARCHAR",    60, None, "Vettore non codificato: Citt‡", None ],
+                [ "nocodevet_citta",      "VARCHAR",    60, None, "Vettore non codificato: Citt√†", None ],
                 [ "nocodevet_prov",       "CHAR",        2, None, "Vettore non codificato: Provincia", None ],
                 [ "nocodevet_id_stato",   "INT",       idw, None, "Vettore non codificato: ID stato", None ], 
                 [ "nocodevet_codfisc",    "CHAR",       16, None, "Vettore non codificato: Cod. fiscale", None ],
@@ -2815,10 +2815,10 @@ class Azienda(object):
                 [ "numriga",    "INT",      10, None, "Numero della riga", None ],
                 [ "id_prod",    "INT",     idw, None, "ID Prodotto", None ],
                 [ "descriz",    "VARCHAR", ntw, None, "Descrizione libera", None ],
-                [ "um",         "CHAR",      5, None, "Unit‡ di misura", None ],
+                [ "um",         "CHAR",      5, None, "Unit√† di misura", None ],
                 [ "nmconf",     "INT",       6, None, "Numero di confezioni", None ],
                 [ "pzconf",     "DECIMAL",   6,  DQM, "Pezzi per confezione", None ],
-                [ "qta",        "DECIMAL", IQM,  DQM, "Quantit‡", None ],
+                [ "qta",        "DECIMAL", IQM,  DQM, "Quantit√†", None ],
                 [ "prezzo",     "DECIMAL", IPM,  DPM, "Valore unitario", None ],
                 [ "sconto1",    "DECIMAL",   5,    2, "Sconto riga #1", None ],
                 [ "sconto2",    "DECIMAL",   5,    2, "Sconto riga #2", None ],
@@ -2930,7 +2930,7 @@ class Azienda(object):
             
             cls.allegati =\
               [ [ "id",         "INT",      idw, None, "ID", "AUTO_INCREMENT" ],
-                [ "attscope",   "VARBINARY", 45, None, "Scope validit‡ di attkey", None ],
+                [ "attscope",   "VARBINARY", 45, None, "Scope validit√† di attkey", None ],
                 [ "attkey",     "INT",      idw, None, "Id record riferimento allegati", None ],
                 [ "description","VARBINARY",255, None, "Descrizione allegato", None ],
                 [ "folderno",   "INT",        6, None, "Numero cartella contenente il file", None ],
@@ -3597,9 +3597,9 @@ class Azienda(object):
                             lt.LinkTable.SetTabSearchOnCode(True)
                             lt.LinkTable.SetTabSearchOnDescriz(v)
                         if cls != Azienda.BaseTab_base:
-                            #se Ë stata sovrascritta la classe BaseTab, scrivo 
+                            #se √® stata sovrascritta la classe BaseTab, scrivo 
                             #gli stessi settaggi anche nella sua forma base,
-                            #che Ë gi‡ stata importata in svariati moduli
+                            #che √® gi√† stata importata in svariati moduli
                             setattr(Azienda.BaseTab_base, name, v)
                     else:
                         if err is not None:
@@ -3617,7 +3617,7 @@ class Azienda(object):
         @classmethod
         def GetSetupKeys(cls):
             
-            tc = 'del tipo di contabilit‡'
+            tc = 'del tipo di contabilit√†'
             d = 'del numero di decimali su'
             f = 'flag'
             i = 'importo'
@@ -3639,7 +3639,7 @@ class Azienda(object):
                 ('CONPERRITACC',    'conperritacc',       i, _flt, None),
                 ('CONCOMRITACC',    'concomritacc',       i, _flt, None),
                 ('MAGPRE_DECIMALS', 'magdec_prez',        i, _int, '%si prezzi' % d),
-                ('MAGQTA_DECIMALS', 'magdec_qta',         i, _int, '%slle quantit‡' % d),
+                ('MAGQTA_DECIMALS', 'magdec_qta',         i, _int, '%slle quantit√†' % d),
                 ('MAGEAN_PREFIX',   'mageanprefix',       s, _str, 'del prefisso EAN'),
                 ('VALINT_DECIMALS', 'contab_decimp',      i, _int, '%slla valuta di conto' % d),
                 ('MAGSCOCAT',       'magscocat',          f, _int, 'del flag di attivazione degli sconti per categoria'),

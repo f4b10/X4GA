@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         contab/giobol.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -244,16 +244,16 @@ class GiornalePanel(aw.Panel):
         v = {\
             "P": ("Stampa provvisoria",
                   """La stampa non aggiorna alcun dato sulle """
-                  """registrazioni e puÚ essere effettuata quando """
+                  """registrazioni e pu√≤ essere effettuata quando """
                   """si vuole.""",
                   'data'),
             "D": ("Stampa definitiva",
                   """La stampa definitiva aggiorna le registrazioni """
-                  """rendendole non pi˘ modificabili.  L'elaborazione puÚ """
+                  """rendendole non pi√π modificabili.  L'elaborazione pu√≤ """
                   """essere fatta solo una volta per il periodo selezionato.""",
                   'data'),
             "R": ("Ristampa",
-                  """La ristampa considera solo le registrazioni gi‡ stampate """
+                  """La ristampa considera solo le registrazioni gi√† stampate """
                   """in modo definitivo.  Occorre specificare l'intero periodo """
                   """da ristampare e i progressivi da riprendere.""",
                   'lastdat')
@@ -317,7 +317,7 @@ class GiornalePanel(aw.Panel):
         if cn('tiposta').GetValue() == 'D':
             aw.awu.MsgDialog(self, "Stampa giornale terminata.")
             if aw.awu.MsgDialog(self,\
-                                """Confermando questa scelta, la stampa ottenuta diverr‡ definitiva, ovvero:\n"""
+                                """Confermando questa scelta, la stampa ottenuta diverr√† definitiva, ovvero:\n"""
                                 """- le registrazioni coinvolte verrnno numerate definitivamente come sulla stampa;\n"""
                                 """- saranno nuovamente stampabili sul giornale, se necessario, solo mediante funzione di ristampa;\n"""
                                 """- i progressivi dare/avere verranno memorizzati in modo da essere ripresi alla stampa successiva.\n\n"""
@@ -401,11 +401,11 @@ class GiornalePanel(aw.Panel):
             if err is None and d2 is None:
                 err = 'Manca la data limite di stampa'
             if err is None and tipelab == 'R' and d1 is not None and d1<dmin:
-                err = 'La data di inizio stampa Ë precedente l\'inizio dell\'esercizio indicato'
+                err = 'La data di inizio stampa √® precedente l\'inizio dell\'esercizio indicato'
             if err is None and tipelab != 'R' and d1 is not None and d2<d1:
-                err = 'La data limite di stampa Ë antecedente l\'ultima data stampata'
+                err = 'La data limite di stampa √® antecedente l\'ultima data stampata'
             if err is None and d2>dmax:
-                err = 'La data limite di stampa Ë successiva la fine dell\'esercizio indicato'
+                err = 'La data limite di stampa √® successiva la fine dell\'esercizio indicato'
         if err:
             aw.awu.MsgDialog(self, message=err, style=wx.ICON_ERROR)
             return
@@ -414,7 +414,7 @@ class GiornalePanel(aw.Panel):
             #stampa provv. o defin., prendo solo registrazioni non stampate
             mov.AddFilter('reg.st_giobol IS NULL OR reg.st_giobol=0')
         else:
-            #ristampa, prendo solo registrazioni gi‡ stampate
+            #ristampa, prendo solo registrazioni gi√† stampate
             mov.AddFilter('reg.st_giobol=1')
         datstart = cn('lastdat').GetValue()
         if tipelab == 'R':

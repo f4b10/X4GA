@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         magazz/movint.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -83,7 +83,7 @@ class GridMov(maglib.GridMov):
             (110, (cn(tpm, "descriz"),   "Movimento",    _STR, True)),
             ( 90, (cn(pro, "codice"),    "Codice",       _STR, True)),
             (205, (cn(mov, "descriz"),   "Descrizione",  _STR, True)),
-            ( 80, (cn(mov, "qta"),       "Qt‡",          _QTA, True)),
+            ( 80, (cn(mov, "qta"),       "Qt√†",          _QTA, True)),
             ( 80, (cn(mov, "prezzo"),    "Prezzo",       _PRE, True)),
             ( 45, (cn(mov, "sconto1"),   "Sc.%1",        _SCO, True)),
             ( 45, (cn(mov, "sconto2"),   "Sc.%2",        _SCO, True)),

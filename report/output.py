@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         report/output.py
 # Author:       Marcello Montaldo <marcello.montaldo@gmail.com>
@@ -91,7 +91,7 @@ class astraCanvas(canvas.Canvas):
             if bandName=="PageHeader":
                 bandName="Page"
             elif bandName == 'Detail':
-                #in iReport non c'Ë un incremento di tipo Detail => uso Column
+                #in iReport non c'√® un incremento di tipo Detail => uso Column
                 bandName = 'Column'
             incrementType=bandName
         varlist = list(self.userVariableList)
@@ -252,7 +252,7 @@ class print_Report:
     @type oColumnHeader: L{columnHeader}
     @cvar oDetail: Oggetto che presiede alla gestione del dettaglio del report.
     @type oDetail: L{detail}
-    @cvar oPageFooter: Oggetto che presiede alla gestione del piË di pagina del report.
+    @cvar oPageFooter: Oggetto che presiede alla gestione del pi√® di pagina del report.
     @type oPageFooter: L{pageFooter}
     @cvar lGroup: lista degli oggetti di tipo L{group} che presiedono alla gestione delle rotture nell'ambito del report.
     @type lGroup: lista di L{group}
@@ -382,7 +382,7 @@ class print_Report:
             #nuovo canvas
             self.oCanvas = astraCanvas(self.oReport, nameOutputFile)
         else:
-            #canvas gi‡ creato (report accodato)
+            #canvas gi√† creato (report accodato)
             self.oCanvas = canvas
         
         """
@@ -416,7 +416,7 @@ class print_Report:
         
         uselabeler = False
         
-        #valutazione propriet‡ personalizzare
+        #valutazione propriet√† personalizzare
         queuedef = queuetab = None
         stru = self.oReport.get_ReportStru()
         prop = [e for e in stru if e[:8]=="property"]
@@ -433,7 +433,7 @@ class print_Report:
                             try:
                                 eval(expr)
                             except:
-                                msg = "Espressione non valida per la propriet‡ denominata '%s'" % elem['name']
+                                msg = "Espressione non valida per la propriet√† denominata '%s'" % elem['name']
                                 if messages:
                                     aw.awu.MsgDialog(parentWindow, message=msg)
                                 else:
@@ -627,7 +627,7 @@ class print_Report:
         
         if canvas:
             #report accodato, ritorno
-            # la chiusura del file Ë fatta dal report principale
+            # la chiusura del file √® fatta dal report principale
             return
         
         self.completed = True
@@ -661,10 +661,10 @@ class print_Report:
                     #permission denied, file is open
                     msg =\
                         """Il documento risulta non sovrascrivibile, """\
-                        """probabilmente Ë aperto da un'altra applicazione.\n"""
+                        """probabilmente √® aperto da un'altra applicazione.\n"""
                 else:
                     #other file error
-                    msg = """Non Ë possibile generare il documento:\n%s\n\n"""\
+                    msg = """Non √® possibile generare il documento:\n%s\n\n"""\
                         % nameOutputFile
                 if messages:
                     msg += """Vuoi riprovare a ricoprirlo nuovamente?"""
@@ -672,7 +672,7 @@ class print_Report:
                                          style=wx.ICON_QUESTION|wx.YES_NO|wx.YES_DEFAULT)
                     if n == wx.ID_NO:
                         aw.awu.MsgDialog(None, message=\
-                                         """Il documento pdf non Ë stato """
+                                         """Il documento pdf non √® stato """
                                          """generato.""")
                         break
                 else:
@@ -857,8 +857,8 @@ class print_Report:
         return lEof
            
     def stampoRottura(self):
-        # per stampare la rottura Ë necessario tornare indietro di un record
-        # poichË questa funzionalit‡ Ë inibita nel caso di dbTable di tipo
+        # per stampare la rottura √® necessario tornare indietro di un record
+        # poich√® questa funzionalit√† √® inibita nel caso di dbTable di tipo
         # FlatView verranno utilizzate i metodi SavePositio e RestorePosition
         dbt = self.oCanvas.recordSource
         if not self.lFlatReport:
@@ -931,11 +931,11 @@ class print_Report:
     def gruppiOnNewPage(self):
         """
         Il metodo, verifica se sia presente un gruppo che richieda la stampa dell'header 
-        a nuova pagina se questo Ë il caso tutti i gruppi precedenti che richiedano la 
+        a nuova pagina se questo √® il caso tutti i gruppi precedenti che richiedano la 
         stampa dell'header al cambio di pagina verranno marchiati come da stampare 
         isHeaderToPrint(True). 
-        La modalit‡ in cui viene effettuato il controllo Ë in senso inverso, dal gruppo
-        pi˘ interno a quello pi˘ esterno.
+        La modalit√† in cui viene effettuato il controllo √® in senso inverso, dal gruppo
+        pi√π interno a quello pi√π esterno.
         """
         lNeedNewPage=False
         lg=self.lGroup.keys()
@@ -989,10 +989,10 @@ class print_Report:
     def stampaFooterGruppi(self, fineReport=False):
         """
         Il metodo, ciclando su tutti i gruppi presenti sul report, provvede a stampare i
-        piedi dei gruppi per i quali si Ë in attesa di stamparne l'intestazione, cioË i 
-        piedi di quei gruppi per cui Ë True il metodo isHeaderWaitingFooter().
-        La stampa procede in senso inverso rispetto al livello di gruppo, cioË procede
-        dal gruppo pi˘ interno a quello pi˘ esterno.
+        piedi dei gruppi per i quali si √® in attesa di stamparne l'intestazione, cio√® i 
+        piedi di quei gruppi per cui √® True il metodo isHeaderWaitingFooter().
+        La stampa procede in senso inverso rispetto al livello di gruppo, cio√® procede
+        dal gruppo pi√π interno a quello pi√π esterno.
         Restituisce True o False a seconda che la stampa dei piedi gruppo abbia innescato
         o meno il salto pagina.
         """
@@ -1028,7 +1028,7 @@ class print_Report:
         di una rottura di gruppo.
         Qualora sia stata accertata la presenza di una rottura, il metodo provvede
         a marchiare da stampare (isHeaderToPrint(True)) le intestazione del gruppo
-        soggetto alla rottura e di quelli successivi(gruppi di livello pi˘ interno).
+        soggetto alla rottura e di quelli successivi(gruppi di livello pi√π interno).
         """
         lPrintGruppi=False
         lg=self.lGroup.keys()
@@ -1057,8 +1057,8 @@ class print_Report:
     
     def ejectPage(self):
         """
-        Il metodo si fa carico di stampare il piË di pagina, concludere la produzione della corrente pagina 
-        e quindi impostare i vari attributi in modo tale che il prossimo ciclo di stampa provveder‡, tramite il
+        Il metodo si fa carico di stampare il pi√® di pagina, concludere la produzione della corrente pagina 
+        e quindi impostare i vari attributi in modo tale che il prossimo ciclo di stampa provveder√†, tramite il
         metodo stampaTestata(), a produrre la stampa di tutti gli elementi richiesti su una nuova pagina
         ( pageHeader, groupHeader, columnHeader, ecc).
         """
@@ -1074,7 +1074,7 @@ class print_Report:
     def stampaGroupHeaderOnNewPage(self):
         """
         Il metodo si fa carico di ispezionare i vari gruppi presenti nel report
-        al fine di individuare quelli per i quali Ë richiesta comunque la stampa
+        al fine di individuare quelli per i quali √® richiesta comunque la stampa
         dell'intestazione all'atto della stampa di una nuova pagina. Via via che tali gruppi
         vengono individuati, provvede a settare a True l'attributo B{isHeaderToPrint} che, 
         ispezionato ad ogni ciclo di stampa, stabilisce se l'intestazione del gruppo debba essere stampata o meno.
@@ -1107,7 +1107,7 @@ class print_Report:
     def loadUserVariable(self, dDefinizione_report):
         """
         Il metodo si fa carico di caricare un dizionario  con gli oggetti L{userVariable}
-        corrispondenti alle vartiabili utente presenti nel report. La chiave del dizionario Ë
+        corrispondenti alle vartiabili utente presenti nel report. La chiave del dizionario √®
         data dal nome della variabile.
         """
         self.oCanvas.userVariableList={}
@@ -1125,7 +1125,7 @@ class print_Report:
     def loadUserParameter(self, dDefinizione_report):
         """
         Il metodo si fa carico di caricare un dizionario  con gli oggetti L{userVariable}
-        corrispondenti alle vartiabili utente presenti nel report. La chiave del dizionario Ë
+        corrispondenti alle vartiabili utente presenti nel report. La chiave del dizionario √®
         data dal nome della variabile.
         """
         Variable.parameterList={}

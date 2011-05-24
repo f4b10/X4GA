@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         magazz/dataentry_o.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -45,7 +45,7 @@ FRAME_TITLE = "Documento magazzino"
 
 class _MagazzPanel_O_Mixin(object):
     """
-    Dataentry magazzino per contabilit� ordinaria
+    Dataentry magazzino per contabilitï¿œ ordinaria
     """
     
     def InitPanelTot(self):
@@ -181,7 +181,7 @@ class _MagazzPanel_O_Mixin(object):
         if doc.mov.Locate(lambda m: not self.GridBodyIsRowOK()):
             warnText = "Attenzione: sono presenti righe con dati incompleti"
         else:
-            warnText = "Il documento � composto da %d righe"\
+            warnText = "Il documento è composto da %d righe"\
                      % doc.mov.RowsCount()
             if self._headok:
                 warnColor = wx.BLACK
@@ -326,7 +326,7 @@ class GridTotPdc_S(GridTotPdc_O):
 
 class MagazzFrame_O(aw.Frame, _FrameDialogMixin):
     """
-    Frame Dataentry documenti magazzino contabilit� ordinaria.
+    Frame Dataentry documenti magazzino contabilità ordinaria.
     """
     def __init__(self, *args, **kwargs):
         if not kwargs.has_key('title') and len(args) < 3:
@@ -356,7 +356,7 @@ class MagazzFrame_O(aw.Frame, _FrameDialogMixin):
 
 class MagazzDialog_O(aw.Dialog, _FrameDialogMixin):
     """
-    Dialog Dataentry documenti magazzino contabilit� ordinaria.
+    Dialog Dataentry documenti magazzino contabilità ordinaria.
     """
     def __init__(self, *args, **kwargs):
         if not kwargs.has_key('title') and len(args) < 3:

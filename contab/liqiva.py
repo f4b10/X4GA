@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         contab/liqiva.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -298,11 +298,11 @@ class LiqIvaPanel(aw.Panel):
         tipi = {'P': ("Stampa Provvisoria",\
                       """Vengono estratte solo le registrazioni IVA non """
                       """ancora stampate in modo definitivo.\nL'elaborazione"""
-                      """puÚ essere eseguita in qualsiasi momento."""),\
+                      """pu√≤ essere eseguita in qualsiasi momento."""),\
                 'D': ("Stampa Definitiva",\
                       """Vengono estratte solo le registrazioni IVA non """
                       """ancora stampate in modo definitivo.\nL'elaborazione"""
-                      """puÚ essere eseguita una sola volta.""")}
+                      """pu√≤ essere eseguita una sola volta.""")}
         self.tipoliq = 'P'
         self.tipiliq = tipi
         self.totaliq = {}
@@ -647,7 +647,7 @@ class LiqIvaPanel(aw.Panel):
                         segnop = "A"
                         segnom = "D"
                     db = dbc.RiepIva(reg.id, segnop, segnom, d1, d2)
-                    #per compatilibit‡ alias tabelle con riep.iva fatto x lista mov.
+                    #per compatilibit√† alias tabelle con riep.iva fatto x lista mov.
                     db.reg.regiva = db.reg.rei
                     db.aliqiva = db.iva
                     for aid,acod,ades,aprc,apin,atip,aimp,aiva,aind in tot[reg.id]:
@@ -668,7 +668,7 @@ class LiqIvaPanel(aw.Panel):
                 for tipo in 'AVC':
                     tot = self.dbliq._totxtip[tipo]
                     db = dbc.RiepIva(None, None, None, d1, d2)
-                    #per compatilibit‡ alias tabelle con riep.iva fatto x lista mov.
+                    #per compatilibit√† alias tabelle con riep.iva fatto x lista mov.
                     db.reg.regiva = db.reg.rei
                     db.aliqiva = db.iva
                     for aliq in tot:
@@ -697,7 +697,7 @@ class LiqIvaPanel(aw.Panel):
                 #prospetto di liquidazione
                 rn = 'Liquidazione IVA - Prospetto di Liquidazione'
         if db is None or db.IsEmpty():
-            aw.awu.MsgDialog(self, "Non c'Ë nulla da stampare", style=wx.ICON_INFORMATION)
+            aw.awu.MsgDialog(self, "Non c'√® nulla da stampare", style=wx.ICON_INFORMATION)
             return
         if db and rn:
             i = db._info
@@ -731,14 +731,14 @@ class LiqIvaPanel(aw.Panel):
                 if deb:
                     message =\
                             """Questa liquidazione porta ad un debito di imposta di Euro %s\n"""\
-                            """da non versare poichÈ inferiore al limite minimo di versamento\n"""\
+                            """da non versare poich√© inferiore al limite minimo di versamento\n"""\
                             """di Euro 25,82.\n"""\
-                            """Il debito di Euro %s verr‡ riportato nella prossima liquidazione."""\
+                            """Il debito di Euro %s verr√† riportato nella prossima liquidazione."""\
                             % (Env.StrImp(deb), Env.StrImp(deb))
                 elif cred:
                     message =\
-                            """Con questa liquidazione non c'Ë da versare nulla.\n"""\
-                            """Il credito di Euro %s verr‡ riportato nella prossima liquidazione."""\
+                            """Con questa liquidazione non c'√® da versare nulla.\n"""\
+                            """Il credito di Euro %s verr√† riportato nella prossima liquidazione."""\
                             % Env.StrImp(cred)
             message += """\n\nConfermi l'operazione?"""
             r = awu.MsgDialog(self, message, "Conferma liquidazione",
@@ -747,7 +747,7 @@ class LiqIvaPanel(aw.Panel):
                 cn = self.FindWindowByName
                 if liq.SaveLiq(self.regivasta, cn('intanno').GetValue(), cn('intpag').GetValue()-1):
                     awu.MsgDialog(self,
-                                  """La liquidazione Ë stata confermata.""")
+                                  """La liquidazione √® stata confermata.""")
                     evt = FineLiquidEvent(_evtLIQEND)
                     evt.SetEventObject(self)
                     self.GetEventHandler().AddPendingEvent(evt)
@@ -801,7 +801,7 @@ class LiqIvaPanel(aw.Panel):
             
             if datmin <= lastdat:
                 msg =\
-                    """La data di inizio del periodo da liquidare non Ë congruente\n"""\
+                    """La data di inizio del periodo da liquidare non √® congruente\n"""\
                     """con la data dell'ultima liquidazione effettuata."""
                 aw.awu.MsgDialog(self, msg, style=wx.ICON_ERROR)
                 return
@@ -880,10 +880,10 @@ class LiqIvaPanel(aw.Panel):
         if cn('tipoliq').GetValue() == "D":
             if out and datlas is not None:
                 if datmin<datlas:
-                    awu.MsgDialog(self, "La data di partenza Ë inferiore all'ultima liquidazione", style=wx.ICON_ERROR)
+                    awu.MsgDialog(self, "La data di partenza √® inferiore all'ultima liquidazione", style=wx.ICON_ERROR)
                     return False
                 elif datmin != (datlas+1):
-                    if awu.MsgDialog(self, "La data di partenza non Ë consequenziale\nall'ultima liquidazione. Confermi l'esattezza?", style=wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT) != wx.ID_YES:
+                    if awu.MsgDialog(self, "La data di partenza non √® consequenziale\nall'ultima liquidazione. Confermi l'esattezza?", style=wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT) != wx.ID_YES:
                         return False
             if out:
                 for ri in self.dbstatus:

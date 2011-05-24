@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         cfg/automat.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -45,8 +45,8 @@ class _automatmixin(object):
     """
     Gestione automatismi.
     self.auto = dizionario automatismi:
-        la chiave è il codice dell'automatismo
-        il valore è una lista contenente:
+        la chiave Ã¨ il codice dell'automatismo
+        il valore Ã¨ una lista contenente:
             - puntatore del controllo
             - descrizione dell'automatismo
     """

@@ -1,5 +1,5 @@
 #!/usr/bin/python2
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         X.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>

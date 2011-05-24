@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         versionchanges.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -31,7 +31,7 @@ history = (
     
     ('1.3.04', dt.Date(2011,5,18), (
          ("BET1090",
-         """Rilascio ufficiale su piattaforma Linux. Ora X4 Ë anche open!"""),
+         """Rilascio ufficiale su piattaforma Linux. Ora X4 √® anche open!"""),
         ),),
     
     ('1.3.01', None, (
@@ -80,7 +80,7 @@ history = (
     
     ('1.2.93', None, (
          ("BET1085",
-         """Estesa la funzionalit‡ del cash flow: Ë ora possibile, 
+         """Estesa la funzionalit√† del cash flow: √® ora possibile, 
          mediante il nuovo sottomenu presente nel menu scadenzari, 
          l'analisi di: cash flow generale (come prima); analisi incassi;
          analisi pagamenti; portafoglio effetti da emettere; scadenzario
@@ -90,10 +90,10 @@ history = (
     ('1.2.92', None, (
          ("BUG1066",
          """Corretta la funzione di generazione file effetti: in presenza
-         di clienti con indirizzo pi˘ lungo di 30 caratteri generava la 
+         di clienti con indirizzo pi√π lungo di 30 caratteri generava la 
          riga corrispondente in modo non idoneo al tracciato riba/rid."""),
          ("BET1084",
-         """Implementata la possibilit‡ nello scadenzario di raggruppare
+         """Implementata la possibilit√† nello scadenzario di raggruppare
          in base all'agente del documento invece che del cliente."""),
         ),),
     
@@ -115,8 +115,8 @@ history = (
          documenti da evadere (per coerenza con la fatturazione differita)."""),
          ("BUG1064",
          """Corretto dataentry documenti magazzino per inibizione editing colonna
-         quantit‡ e obbligo di evasione dell'intero documento se il tipo di 
-         evasione Ë 'acquisizione' (per coerenza con la fatturazione differita)."""),
+         quantit√† e obbligo di evasione dell'intero documento se il tipo di 
+         evasione √® 'acquisizione' (per coerenza con la fatturazione differita)."""),
         ),),
     
     ('1.2.89', None, (
@@ -130,17 +130,17 @@ history = (
          """Corretta inesattezza dei totali dare/avere alla chiusura di una 
          registrazione in saldaconto: non venivano azzerati."""),
          ("BET1081",
-         """Introdotta la possibilit‡ di inclusione delle colonne di costo di 
+         """Introdotta la possibilit√† di inclusione delle colonne di costo di 
          acquisto e/o pezzi per confezione nella griglia di visualizzazione dei
          listini validi alla data."""),
          ("BET1082",
-         """Introdotto il controllo di integrit‡ referenziale sulla gestione 
+         """Introdotto il controllo di integrit√† referenziale sulla gestione 
          della scheda anagrafica della partita: limita la sua cancellazione
          al fatto che non esistano registrazioni che puntano ad essa."""),
          ("BET1083",
          """Introdotto il controllo di coerenza delle partite nelle registrazioni
-         in saldaconto: ora non Ë pi˘ possibile salvare tali registrazioni se
-         contengono una o pi˘ scadenze che si riferiscono a partite inesistenti."""),
+         in saldaconto: ora non √® pi√π possibile salvare tali registrazioni se
+         contengono una o pi√π scadenze che si riferiscono a partite inesistenti."""),
         ),),
     
     ('1.2.86', None, (
@@ -152,7 +152,7 @@ history = (
     
     ('1.2.85', None, (
          ("BET1080",
-         """Implementata la possibilit‡ di estrazione delle sole partite marcate
+         """Implementata la possibilit√† di estrazione delle sole partite marcate
          come insolute (al di la del loro saldo) nello scadenzario della singola
          anagrafica, nello scadenzario clienti/fornitori e nello scadenzario di 
          gruppo."""),
@@ -160,13 +160,13 @@ history = (
     
     ('1.2.84', None, (
          ("BET1078",
-         """Implementata la possibilit‡ di corredare il documento di magazzino con
+         """Implementata la possibilit√† di corredare il documento di magazzino con
          destinazione merce non codificata e dati del vettore non codificato."""),
          ("BET1079",
-         """Implementata la possibilit‡ di effettuare la ricerca dei prodotti in
+         """Implementata la possibilit√† di effettuare la ricerca dei prodotti in
          modo tale da identificare subito il prodotto dal codice digitato, anche se
          ce ne sono altri con il codice che inizia con quanto digitato.  In questa
-         situazione, Ë comunque possibile trovare gli altri, semplicamente 
+         situazione, √® comunque possibile trovare gli altri, semplicamente 
          aggiungendo ".." alla fine del codice."""),
         ),),
     
@@ -180,13 +180,13 @@ history = (
          veniva costruita la serie di sottocartelle necessarie alla stampa dei 
          documenti di magazzino (.../Documenti ANNO/FORMATOSTAMPA/...)."""),
          ("BET1076",
-         """Implementata la possibilit‡ nella configurazione delle causali di 
+         """Implementata la possibilit√† nella configurazione delle causali di 
          magazzino di impostare il tipo di ricalcolo da effettuare nel caso di
          modifica dell'importo di riga: prima ricalcolava solo gli sconti, ora si
-         puÚ impostare il tipo di movimento in modo che ricalcoli la quantit‡ o
+         pu√≤ impostare il tipo di movimento in modo che ricalcoli la quantit√† o
          il prezzo."""),
          ("BET1077",
-         """Implementata la possibilit‡ di visualizzare nella griglia di ricerca
+         """Implementata la possibilit√† di visualizzare nella griglia di ricerca
          della gestione prodotti anche la giacenza globale di tutti i magazzini
          invece che solo di un magazzino alla volta.  Di conseguenza, a differenza
          di prima, la giacenza viene visualizzata sempre e comunque (se attivato 
@@ -246,16 +246,16 @@ history = (
          """Aggiunti meccanismi di controllo di coerenza delle data inserite nel
          dataentry di magazzino: ora viene anche testata la conguenza dell'anno
          della data di registrazione rispetto all'anno della data di login,
-         rispetto al quale non puÚ eccedere; la data del documento inoltre non 
-         puÚ essere successiva alla data di login, nel qual caso l'operatore 
-         viene avvisato e puÚ forzare il controllo; l'operatore viene avvisato
-         anche se la data di registrazione e/o la data del documento Ë relativa
+         rispetto al quale non pu√≤ eccedere; la data del documento inoltre non 
+         pu√≤ essere successiva alla data di login, nel qual caso l'operatore 
+         viene avvisato e pu√≤ forzare il controllo; l'operatore viene avvisato
+         anche se la data di registrazione e/o la data del documento √® relativa
          ad un anno inferiore all'anno precedente la data di login)."""),
         ("BUG1050",
          """Corretto dataentry magazzino: una volta inserito un documento, la
          finestra riposizionava correttamente il cursore sulla causale, ma non
          veniva attivato il bottone di default, con la conseguente perdita di 
-         funzionalit‡ del tasto <Invio> come scorciatoia per l'inserimento di
+         funzionalit√† del tasto <Invio> come scorciatoia per l'inserimento di
          un nuovo documento."""),
         ("BET1075",
          """Modificato il comportamento del flag di inibizione scontistiche sulla
@@ -275,9 +275,9 @@ history = (
          componente installato (X4, personalizzazione, elenco plugins), viene 
          effettuato un controllo di versione tra software in esecuzione e relativo
          livello di aggiornamento sul database dell'azienda.
-         Per ognuno di questi, se la versione riscontrata sul database risulta pi˘ 
+         Per ognuno di questi, se la versione riscontrata sul database risulta pi√π 
          recente riespetto al relativo software in esecuzione, ne viene data 
-         segnalazione, al fine di segnalare all'operatore la necessit‡ di 
+         segnalazione, al fine di segnalare all'operatore la necessit√† di 
          aggiornamento della workstation."""),
          ),),
     
@@ -292,7 +292,7 @@ history = (
     
     ('1.2.69', None, (
         ("BET1069",
-         """Implementata su tabella gruppi prezzo la possibilit‡ di inibire le
+         """Implementata su tabella gruppi prezzo la possibilit√† di inibire le
          scontistiche (tranne da condizioni promozionali)."""),
         ("BET1070",
          """Modificati alcuni report attinenti ai prodotti per allargamento della 
@@ -324,10 +324,10 @@ history = (
          visualizzazione e stampa del registro iva."""),
         ("BET1067",
          """Modifica di interfaccia nei controlli visuali atti a cercare informazioni
-         anagrafiche che sono dotati di uno o pi˘ filtri richiamabili con il bottone
+         anagrafiche che sono dotati di uno o pi√π filtri richiamabili con il bottone
          a forma di lente o con il tasto F12: ora i filtri vengono accompagnati da
-         apposito bottone di conferma e non basta pi˘ cambiare il contenuto di uno
-         di essi per applicarli.  Questo per migliorare l'interattivit‡ da tastiera."""),
+         apposito bottone di conferma e non basta pi√π cambiare il contenuto di uno
+         di essi per applicarli.  Questo per migliorare l'interattivit√† da tastiera."""),
          ),),
     
     ('1.2.64', None, (
@@ -370,7 +370,7 @@ history = (
          """Nelle gestioni anagrafiche, cercando con estremi di ricerca che non
          trovavano nulla, la finestra si settava come contenente dati modificati."""),
         ("BET1063",
-         """Implementata possibilit‡ di selezione multipla dei registri iva in
+         """Implementata possibilit√† di selezione multipla dei registri iva in
          fatturato contabile e sitesi vendite aziende/privati."""),
         ("BET1064",
          """Nel raggruppamento ddt, le note di stampa dei documenti generati sono
@@ -400,25 +400,25 @@ history = (
     ('1.2.56', None, (
         ("BET1049",
          """Implementazione dei tasti acceleratore nel menu principale, nelle
-         finestre di gestione anagrafica, nei dataentry di contabilit‡ e
+         finestre di gestione anagrafica, nei dataentry di contabilit√† e
          magazzino.  Migliarata la gestione del focus di tastiera nei
          dataentry."""),
         ("BET1050",
          """Correzione gestione destinatari di clienti/fornitori: prima, in 
-         presenza di una o pi˘ detinazioni, una di esse veniva contrassegnata
+         presenza di una o pi√π detinazioni, una di esse veniva contrassegnata
          come preferita, ora se si vuole si possono impostare le destinazioni
-         senza la necessit‡ che una di esse sia per forza preferita."""),
+         senza la necessit√† che una di esse sia per forza preferita."""),
         ("BET1051",
-         """Implementati i decimali della quantit‡ sui pezzi per confezione."""),
+         """Implementati i decimali della quantit√† sui pezzi per confezione."""),
         ("BET1052",
-         """Implementata la possibilit‡ di richiesta, a stampa documento, di
+         """Implementata la possibilit√† di richiesta, a stampa documento, di
          intestare graficamente il foglio o meno (per default viene proposto
          il flag 'intestazione' della causale)."""),
         ("BET1053",
-         """Implementata la possibilit‡ di richiesta, a stampa documento, di
+         """Implementata la possibilit√† di richiesta, a stampa documento, di
          mettere i prezzi sul ddt o meno (per default viene proposto quanto 
          specificato sul nuovo flag apposito presente sulla scheda del 
-         cliente).  Sul cliente Ë ora anche possibile indicare che la scelta
+         cliente).  Sul cliente √® ora anche possibile indicare che la scelta
          di mettere i prezzi o meno sul ddt sia non modificabile in fase di
          selezione della stampa."""),
         ("BET1054",
@@ -428,27 +428,27 @@ history = (
          vedere nel documento i suoi codici e/o descrizioni invece che quelli 
          nativi interni."""),
         ("BET1055",
-         """Implementata la possibilit‡ di utilizzo di una griglia prezzi, da
+         """Implementata la possibilit√† di utilizzo di una griglia prezzi, da
          parte di un cliente, di quella di un altro cliente.  Stessa metodica 
          nei confronti dei fornitori."""),
         ("BET1056",
-         """Implementata la possibilit‡ di inibire, nell'immissione documento
-         di magazzino, l'utilizzo di prodotti non a griglia, con la possibilit‡
+         """Implementata la possibilit√† di inibire, nell'immissione documento
+         di magazzino, l'utilizzo di prodotti non a griglia, con la possibilit√†
          o meno di forzare la situazione a seconda del flag apposito sulla 
          scheda del cliente."""),
         ("BET1057",
-         """Implementata la possibilit‡ di lasciare il prezzo nullo su righe 
-         di movimento che lo necessitano; a seguito di tale possibilit‡ da 
-         attivare sulla configurazione del tipo di movimento, Ë stato introdotto
+         """Implementata la possibilit√† di lasciare il prezzo nullo su righe 
+         di movimento che lo necessitano; a seguito di tale possibilit√† da 
+         attivare sulla configurazione del tipo di movimento, √® stato introdotto
          nella fatturazione differita il controllo nella non esistenza di righe
          del genere nei documenti in raggruppamento, nel qual caso l'elaborazione
-         non viene portata a termine, nonchÈ la possibilit‡ di estrarre righe del
+         non viene portata a termine, nonch√© la possibilit√† di estrarre righe del
          genere sia dall'interrogazione dei movimenti che dal mastro movimenti
          del prodotto."""),
         ("BET1058",
-         """Implementata la possibilit‡ di indirizzare il comportamento del focus
+         """Implementata la possibilit√† di indirizzare il comportamento del focus
          di tastiera su codice o descrizione nei punti in cui viene richiesto
-         l'inserimento di un sottoconto, di un cliente, di un fornitore; Ë
+         l'inserimento di un sottoconto, di un cliente, di un fornitore; √®
          possibile specificarne il comportamento, per ogniuna delle tre situazioni,
          sia nel caso la richiesta avvenga in una scheda piuttosto che in una 
          griglia."""),
@@ -459,7 +459,7 @@ history = (
     
     ('1.2.54', None, (
         ("BET1048",
-         """Introdotta la possibilit‡, nel dataentry dei documenti di magazzino,
+         """Introdotta la possibilit√†, nel dataentry dei documenti di magazzino,
          di inserire righe configurate come richiedenti qta e prezzo ma con prezzo
          nullo.  Utile nelle situazioni in cui la riga effettivamente deve essere
          comprensiva anche del prezzo e del relativo importo totale, ma al momento
@@ -479,7 +479,7 @@ history = (
         ("BUG1037",
          """Corretta interrogazione contabile di analisi del venduto e ripartizione
          tra clienti italiani privati e aziende, aziende cee, azienda estero: in
-         alcuni casi il cliente veniva 'spalmato' su pi˘ righe invece che 
+         alcuni casi il cliente veniva 'spalmato' su pi√π righe invece che 
          sintetizzato su una sola riga."""),
          ),),
     
@@ -487,7 +487,7 @@ history = (
         ("BUG1036",
          """Corretto dataentry contabile composto: coinvolgendo alla prima riga
          un cliente o fornitore, si manifestava una eccezione alla riapertura della
-         registrazione, con l'impossibilit‡ di riprendere la registrazione per la 
+         registrazione, con l'impossibilit√† di riprendere la registrazione per la 
          modifica."""),
          ),),
     
@@ -504,7 +504,7 @@ history = (
          richiamare il dataentry di magazzino, se non dalla relativa icona della
          barra degli strumenti."""),
         ("BET1044",
-         """Aggiunta la possibilit‡, nel setup dei dati aziendali, di impostare
+         """Aggiunta la possibilit√†, nel setup dei dati aziendali, di impostare
          la ricerca dei prodotti in modo da visualizzarne, a fianco dei dati
          anagrafici, anche la giacenza e/o il prezzo al pubblico."""),
         ("BET1045",
@@ -526,7 +526,7 @@ history = (
     ('1.2.46', None, (
         ("BUG1033",
          """Nella stampa del giornale non si riusciva ad effettuare la ristampa
-         nel caso l'esericio interessato fosse gi‡ stato chiuso.  Ora lo si puÚ 
+         nel caso l'esericio interessato fosse gi√† stato chiuso.  Ora lo si pu√≤ 
          selezionare in caso di ristampa."""),
         ("BET1043",
          """Aggiunta la funzione che consente di aggiornare il costo del prodotto
@@ -536,7 +536,7 @@ history = (
     
     ('1.2.43', None, (
         ("BET1041",
-         """Introdotte le funzionalit‡ di backup/restore del database 
+         """Introdotte le funzionalit√† di backup/restore del database 
          dell'azienda."""),
          ),),
     
@@ -567,11 +567,11 @@ history = (
          """Storicizzazione del costo prodotti e gestione del margine sui 
          documenti di vendita."""),
         ("BET1033",
-         """Possibilit‡ di escludere dalla gestione dei listini di vendita
+         """Possibilit√† di escludere dalla gestione dei listini di vendita
          i prodotti con costo e/o prezzo nulli."""),
         ("BET1034",
          """Attivazione dei meccanismi di controllo sul dataentry di magazzino
-         per la possibilit‡ di inibire l'uso di clienti con status opportuno 
+         per la possibilit√† di inibire l'uso di clienti con status opportuno 
          relativamente ai documenti classificati come ordine da cliente, 
          vendita a cliente, reso da cliente; l'uso di fornitori con status
          opportuno relativamente ai documenti classificati come ordine a 
@@ -579,7 +579,7 @@ history = (
          con status opportuno relativamente ai documenti classificati come
          ordine a fornitore, carico da fornitore, reso a fornitore, ordine da
          cliente, vendita a cliente, reso da cliente; l'uso di clienti con
-         status opportuno relativamente alle modalit‡ di pagamento con 
+         status opportuno relativamente alle modalit√† di pagamento con 
          effetti.  Inserita la classificazione nel setup dei documenti di 
          magazzino atta a rilevare le situazioni menzionate."""),
         ("BET1035",
@@ -587,18 +587,18 @@ history = (
          nell'interrogazione dei documenti di magazzino."""),
         ("BET1036",
          """Introduzione meccanismi di calcolo delle provvigioni agenti, con
-         possibilit‡ di indicazione della percentuale di provvigione sul
-         cliente e sul prodotto, con eventuale ereditariet‡ a livello di riga
+         possibilit√† di indicazione della percentuale di provvigione sul
+         cliente e sul prodotto, con eventuale ereditariet√† a livello di riga
          del movimento di vendita, e calcolo delle provvigioni per agente e
          periodo, su tutti i documenti o solo quelli saldati."""),
         ("BET1037",
-         """Aggiunta la possibilit‡ di richiamo del pdf a fine stampa mediante
+         """Aggiunta la possibilit√† di richiamo del pdf a fine stampa mediante
          dichiarazione esplicita del programma da utilizzare."""),
         ("BET1038",
          """Evidenziazione degli omaggi nella stampa del registro iva."""),
         ("BET1039",
-         """Attivazione modalit‡ di gestione dell'iva per le contabilit‡
-         semplificate: unico dataentry contabile/iva, possibilit‡ di stampa
+         """Attivazione modalit√† di gestione dell'iva per le contabilit√†
+         semplificate: unico dataentry contabile/iva, possibilit√† di stampa
          del registro iva comprensivo dei costi/ricavi."""),
         ("BET1040",
          """Modificato il comportamento della digitazione delle date: in 
@@ -615,7 +615,7 @@ history = (
          vengono analizzate solo le registrazioni inerenti l'esercizio 
          desiderato."""),
         ("BET1031",
-         """Modifica del programma di installazione: ora Ë possibile eseguire il
+         """Modifica del programma di installazione: ora √® possibile eseguire il
          setup di installazione da un utente privo dei privilegi di 
          amministratore."""),
          ),),
@@ -623,11 +623,11 @@ history = (
     ('1.2.35', dt.Date(2010,5,26), (
         ("BUG1028",
          """Corretto bug in dataentry registrazioni contabili con iva in presenza
-         di registro iva con attivata la possibilit‡ di protocollare a posteriori:
+         di registro iva con attivata la possibilit√† di protocollare a posteriori:
          in caso di presenza di altra registrazione su stesso registro con stesso
          numero documento, impediva la memorizzazione."""),
         ("BET1026",
-         """Integrata nell'esportazione di file CSV la possibilit‡ di trattare le
+         """Integrata nell'esportazione di file CSV la possibilit√† di trattare le
          informazioni di tipo testuale che iniziano con un carattere compreso tra
          0-9 come formule, al fine di evitare che Excel ne interpreti il contenuto
          come numero, perdendo la parte iniziale del testo."""),
@@ -635,8 +635,8 @@ history = (
          """Adeguamento colori griglie a colori del tema impostato a livello di
          sistema."""),
         ("BET1028",
-         """Aggiunta nella stampa mastri la possibilit‡ di ordinare per codice,
-         descrizione, classificazioni di bilancio, nonchË possibilit‡ di stampa di
+         """Aggiunta nella stampa mastri la possibilit√† di ordinare per codice,
+         descrizione, classificazioni di bilancio, nonch√® possibilit√† di stampa di
          un sottoconto per ogni pagina e l'inclusione o meno dei dati di 
          intestazione pagine.  Sulla stampa compaiono ora anche le classificazioni
          di bilancio mastro e conto."""),
@@ -646,12 +646,12 @@ history = (
          1.2.34, venivano considerate tutte le operazioni precedenti l'esercizio 
          desiderato. 
          Questo comportava la conformazione di progressivi dare/avere relativi a 
-         pi˘ esercizi, se presenti in numero maggiore di uno.  Ora, in base 
+         pi√π esercizi, se presenti in numero maggiore di uno.  Ora, in base 
          all'esercizio desidarato, si ha la seguente selezione: bilancio 
          dell'esercizio in corso: nessun riporto; bilancio di esercizio successivo 
          a quello in corso: riporto dall'esercizio in corso a quello desiderato; 
          bilancio di esercizio precedente quello in corso (esercizio chiuso): 
-         come prima, riporto di tutto ciÚ che precede l'esercizio desiderato."""),
+         come prima, riporto di tutto ci√≤ che precede l'esercizio desiderato."""),
          ),),
     
     ('1.2.34', dt.Date(2010,5,12), (
@@ -712,7 +712,7 @@ history = (
     ('1.2.31', dt.Date(2010,4,23), (
         ("BUG1019",
          """Corretta la liquidazione iva per integrazione campo VP13 (crediti 
-         speciali di imposta detratti), nonchÈ la gestione del versamento minimo
+         speciali di imposta detratti), nonch√© la gestione del versamento minimo
          pari a euro 25.82, che determina, in caso di versamento inferiore a tale
          cifra, il versamento a zero ed il riporto della cifra che non si versa
          come debito periodo precedente nei progressivi della liquidazione, come
@@ -736,7 +736,7 @@ history = (
     
     ('1.2.29', dt.Date(2010,3,29), (
         ("BUG1018",
-         """Attivando la funzionalit‡ di spedizione documenti via email, dal
+         """Attivando la funzionalit√† di spedizione documenti via email, dal
          dataentry di magazzino proponeva sempre e comunque l'invio del 
          messaggio email, anche per quei clienti sprovvisti di apposito 
          indirizzo di ricezione dei documenti in formato elettronico."""),
@@ -744,34 +744,34 @@ history = (
     
     ('1.2.28', dt.Date(2010,3,16), (
         ("BET1021",
-         """Attivata la funzionalit‡ di spedizione documenti via email anche 
+         """Attivata la funzionalit√† di spedizione documenti via email anche 
          sulla stampa differita."""),
         ("BUG1017",
-         """Corretto problema nella stampa differita: in presenza di pi˘ 
+         """Corretto problema nella stampa differita: in presenza di pi√π 
          magazzini, non effettuava l'eventuale filtro sul magazzino."""),
         ),),
     
     ('1.2.25', dt.Date(2010,3,12), (
         ("BET1020",
-         """Inserita la possibilit‡ di registrare in contabilit‡ documenti con 
+         """Inserita la possibilit√† di registrare in contabilit√† documenti con 
          iva con totale negativo: occorre attivare relativo permesso sulla 
          configurazione della causale e confermare all'occorrenza il messaggio
          di avvertimento relativo ai segni invertiti.  Nella sezione contabile
          vengono invertiti i segni della riga di partita (cliente/fornitore)
-         nonchÈ degli eventuali sottoconti preferiti dotati di segno; nella 
+         nonch√© degli eventuali sottoconti preferiti dotati di segno; nella 
          sezione iva e nello scadenzario gli importi sono algebricamente 
-         invertiti.  La stessa possibilit‡ Ë anche presente nell'inserimento
+         invertiti.  La stessa possibilit√† √® anche presente nell'inserimento
          dei documenti di magazzino."""),
         ("BUG1014",
-         """Controllo esistenza partita iva su sistema comunitario vies: Ë stato
+         """Controllo esistenza partita iva su sistema comunitario vies: √® stato
          aggiunto il controllo dell'errore nel caso in cui il sistema non sia 
-         accessibile mediante webservice, nel caso ciÚ accada viene mostrato un
-         avviso, prima si scatenava un errore.  La consultazione via web Ë 
+         accessibile mediante webservice, nel caso ci√≤ accada viene mostrato un
+         avviso, prima si scatenava un errore.  La consultazione via web √® 
          comunque possibile, mediante l'apposito bottone della finestrella di
          controllo."""),
         ("BUG1015",
          """Corretto problema nell'inserimento di un nuovo listino nella scheda
-         del prodotto: in caso di gestione dei listini con data di validit‡, la
+         del prodotto: in caso di gestione dei listini con data di validit√†, la
          data sulla nuova riga di listino veniva impostata uguale alla data di 
          lavoro, anche modificandola."""),
         ("BUG1016",
@@ -782,11 +782,11 @@ history = (
     
     ('1.2.24', dt.Date(2010,3,3), (
         ("BET1019",
-         """Inserita la possibilit‡ di recapito elettronico dei documenti di 
+         """Inserita la possibilit√† di recapito elettronico dei documenti di 
          magazzino, tipo fattura e quant'altro.  Per ogni documento che si voglia
          recapitare per via elettronica, occorre specificarne il flag ed il testo
          da includere come corpo del messaggio.  Sulla scheda anagrafica del 
-         cliente/fornitore Ë stato aggiunto il campo relativo all'indirizzo di
+         cliente/fornitore √® stato aggiunto il campo relativo all'indirizzo di
          posta elettronica su cui inviare i documenti."""),
         ),),
     
@@ -828,7 +828,7 @@ history = (
         ("BUG1009",
          """Corretto bug nel dataentry dei documenti di magazzino, introdotto 
          nella versione 1.2, a causa del quale la data di inizio trasporto non 
-         veniva memorizzata, nÈ stampata."""),
+         veniva memorizzata, n√© stampata."""),
         ("BUG1010",
          """Corretto bug in evasione documenti documenti di magazzino: nel caso 
          la configurazione preveda l'annullamento del documento evaso, questo
@@ -862,8 +862,8 @@ history = (
          """Corretta la selezione dell'esercizio da considerare in bilancio: 
          ad inizio anno, invocando il bilancio senza aver ancora registrato alcuna
          operazione nel nuovo anno, si verificava un errore e non si presentava la
-         maschera di selezione del bilancio.  A parit‡ di condizioni, ora la 
-         selezione dell'esercizio Ë inizializzata con l'esercizio trovato pi˘
+         maschera di selezione del bilancio.  A parit√† di condizioni, ora la 
+         selezione dell'esercizio √® inizializzata con l'esercizio trovato pi√π
          recente."""),
         ),),
     
@@ -891,18 +891,18 @@ history = (
     ('1.2.11', dt.Date(2009,12,26), (
         ("BET1005",
          """Miglioramento gestione bottone di default.  Sulle maschere complesse
-         il bottone di default Ë contestuale al controllo che ha il focus della
+         il bottone di default √® contestuale al controllo che ha il focus della
          tastiera, consentendo di indirizzare il bottone opportuno a seconda
          del posto in cui si digita con la tastiera."""),
         ("BET1006",
          """Implementazioni su interrogazione registrazioni contabili: 
-         introdotto la possibilit‡ di filtrare registrazioni con iva, di sola
+         introdotto la possibilit√† di filtrare registrazioni con iva, di sola
          iva e senza iva, per default tutte attivate; aggiunta la selezione
          delle registrazioni che contengono una determinata aliquota iva e/o un
          determinato sottoconto, questo evidenziato in stampa."""),
         ("BET1007",
-         """Migliorato l'inserimento delle date: ora Ë possibile digitare la data
-         con l'anno a 2 cifre, all'uscita dell'editazione l'anno verr‡ 
+         """Migliorato l'inserimento delle date: ora √® possibile digitare la data
+         con l'anno a 2 cifre, all'uscita dell'editazione l'anno verr√† 
          automaticamente espanso su 4; digitando solo giorno e mese, l'anno viene
          aggiunto automaticamente all'uscita con l'anno della data di sistema."""),
         ("BET1008",
@@ -911,9 +911,9 @@ history = (
          """Aggiunto il controllo di numerazione in fase di conferma di un documento 
          di magazzino: sia per numerazioni automatiche sul magazzino che su quelle
          derivanti dal protocollo della registrazione iva collegata, viene ora
-         effettuato un controllo di univocit‡ (rispettivamente sui documenti di 
+         effettuato un controllo di univocit√† (rispettivamente sui documenti di 
          magazzino e sulle registrazioni contabili) del numero immesso.
-         Se il numero inserito viene riscontrato gi‡ presente in altre registrazioni,
+         Se il numero inserito viene riscontrato gi√† presente in altre registrazioni,
          viene evidenziata la situazione e il documento rimane da salvare, dopo la
          correzione manuale del numero."""),
         ("BET1010",
@@ -932,11 +932,11 @@ history = (
          scritta "OMAGGI" nelle note, vengono automaticamente adeguate a questa
          gestione."""),
         ("BET1011",
-         """Implementata, nel dataentry dei documenti di magazzino, la possibilit‡
+         """Implementata, nel dataentry dei documenti di magazzino, la possibilit√†
          di digitare, su ogni riga di dettaglio, un testo al posto della singola 
-         descrizione.  Questo consente di inserire un testo, anche suddiviso su pi˘ 
-         righe, in corrispondenza di una riga di corpo, o pi˘ di una.  Tale 
-         possibilit‡ deve essere concertata sia con il setup della causale di 
+         descrizione.  Questo consente di inserire un testo, anche suddiviso su pi√π 
+         righe, in corrispondenza di una riga di corpo, o pi√π di una.  Tale 
+         possibilit√† deve essere concertata sia con il setup della causale di 
          magazzino che con il formato del report che genera la stampa del 
          documento."""),
         ("BET1012",
@@ -945,7 +945,7 @@ history = (
          ogni prodotto esaminato, la giacenza e l'ammontare degli ordini residui
          (backorders) di clienti e fornitori, consentendo quindi l'analisi del
          magazzino a fronte delle richieste di merce verso fornitori e clienti.
-         Per ogni prodotto Ë possibile consultare anche il dettaglio dei backorders
+         Per ogni prodotto √® possibile consultare anche il dettaglio dei backorders
          attivi, e per ognuno di questi visualizzare l'elenco dei documenti che
          lo hanno evaso fino a quel momento."""),
         ("BUG1004",
@@ -959,12 +959,12 @@ history = (
         ("BUG1006",
          """Corretta funzione di consolidamento dei costi e delle giacenze a fine
          anno: in alcune situazioni, determinati prodotti non venivano considerati
-         correttamente dall'elaborazione e non venivano quindi nË presentati per 
-         l'editazione delle giacenze rilevate, nË considerati nella funzione di 
+         correttamente dall'elaborazione e non venivano quindi n√® presentati per 
+         l'editazione delle giacenze rilevate, n√® considerati nella funzione di 
          generazione delle giacenze iniziali."""),
         ("BUG1007",
          """Corretta la griglia del documento di magazzino, che consentiva 
-         l'inserimento di campi di testo pi˘ lunghi del dovuto, causando problemi 
+         l'inserimento di campi di testo pi√π lunghi del dovuto, causando problemi 
          nel salvataggio del documento stesso."""),
         ),),
     
@@ -984,7 +984,7 @@ history = (
          iva al variare della data di registrazione."""),
         ("BET1004",
          """E' ora possibile impostare determinate stampe in modo tale da 
-         ottenere molteplici copie, ognuna delle quali puÚ riportare una diversa
+         ottenere molteplici copie, ognuna delle quali pu√≤ riportare una diversa
          descrizione (ad esempio 'Copia interna' e 'Copia cliente' sui DDT e
          sulle Fatture)."""),
         ),),
@@ -992,20 +992,20 @@ history = (
     ('1.1.40', dt.Date(2009,10,29), (
         ("BET1002",
          """Modificato dataentry schede anagrafiche: ora, su elementi esistenti,
-         il codice e la descrizione non sono pi˘ modificabili in maniera
+         il codice e la descrizione non sono pi√π modificabili in maniera
          immediata, per evitare che l'utente azzeri e/o alteri inavvertitamente
          il loro contenuto, visto che sono generalmente i primi campi presenti
          nelle videate di questo tipo, quini sono i primi a ricevere il focus
          da tastiera.  Nel caso occorra modificare codice e/o descrizione, 
-         occorre specificare tale volont‡ mediante un semplice doppio click del 
+         occorre specificare tale volont√† mediante un semplice doppio click del 
          mouse su codice o descrizione: in tal caso i due campi verranno resi
          disponibili per la modifica, fino a che si rimane in modifica su
          quell'elemento."""),
         ("BET1003",
          """Modificato dataentry registrazioni iva: ora attivando la sezione 
          iva, la colonna dell'aliquota nella griglia dare/avere non viene
-         annullata ed Ë consentito il cambiamento.  Questo in vista di nuova
-         interrogazione che dar‡ modo di visionare i costi relativamente ad una 
+         annullata ed √® consentito il cambiamento.  Questo in vista di nuova
+         interrogazione che dar√† modo di visionare i costi relativamente ad una 
          certa aliquota iva."""),
         ),),
     

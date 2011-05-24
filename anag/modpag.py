@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         anag/modpag.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -38,7 +38,7 @@ import wx.grid as gl
 import awc.controls.dbgrid as dbglib
 
 
-FRAME_TITLE = "Modalit‡ di pagamento"
+FRAME_TITLE = "Modalit√† di pagamento"
 
 
 class ModPagSearchResultsGrid(ga.SearchResultsGrid):
@@ -65,7 +65,7 @@ class ModPagSearchResultsGrid(ga.SearchResultsGrid):
 
 class ModPagPanel(ga.AnagPanel):
     """
-    Gestione tabella Moadlit‡ di pagamento.
+    Gestione tabella Moadlit√† di pagamento.
     """
     def __init__(self, *args, **kwargs):
         ga.AnagPanel.__init__(self, *args, **kwargs)
@@ -135,7 +135,7 @@ class ModPagPanel(ga.AnagPanel):
 
 class ModPagFrame(ga._AnagFrame):
     """
-    Frame Gestione tabella Modalit‡ di pagamento.
+    Frame Gestione tabella Modalit√† di pagamento.
     """
     def __init__(self, *args, **kwargs):
         if not kwargs.has_key('title') and len(args) < 3:
@@ -149,7 +149,7 @@ class ModPagFrame(ga._AnagFrame):
 
 class ModPagDialog(ga._AnagDialog):
     """
-    Dialog Gestione tabella Modalit‡ di pagamento.
+    Dialog Gestione tabella Modalit√† di pagamento.
     """
     def __init__(self, *args, **kwargs):
         if not kwargs.has_key('title') and len(args) < 3:

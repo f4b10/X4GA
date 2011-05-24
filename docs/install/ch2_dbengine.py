@@ -1,10 +1,24 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         docs/install/ch2_dbengine.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
-# Created:      2007/11/07
 # Copyright:    (C) 2011 Astra S.r.l. C.so Cavallotti, 122 18038 Sanremo (IM)
+# ------------------------------------------------------------------------------
+# This file is part of X4GA
+# 
+# X4GA is free software: you can redistribute it and/or modify
+# it under the terms of the Affero GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# X4GA is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
 
 from reportlab.tools.docco.rl_doc_utils import *
@@ -31,7 +45,7 @@ heading1("Installazione del Database")
 disc("""
 X4 opera con tecnologia client/server per quanto concerne i dati gestiti, ovvero
 si appoggia ad un motore SQL.
-In base alla configurazione, tale motore puÚ essere di vari tipi; al momento Ë
+In base alla configurazione, tale motore pu√≤ essere di vari tipi; al momento √®
 gestito MySQL versione 5.0, questo capitolo affronta l'installazione e la 
 configurazione di questo motore.
 """)
@@ -39,13 +53,13 @@ configurazione di questo motore.
 heading2("Identificazione della macchina server")
 disc("""
 La connessione al server MySQL avviene su protocollo TCP/IP: la sua installazione
-quindi puÚ essere eseguita su qualsiasi PC o server presente nella LAN.
-MySQL puÚ essere installato anche su un normale PC, in assenza di server, in
+quindi pu√≤ essere eseguita su qualsiasi PC o server presente nella LAN.
+MySQL pu√≤ essere installato anche su un normale PC, in assenza di server, in
 piccole installazioni (numero limitato di postazioni di lavoro, basso volume di 
 dati da gestire).  Le prestazioni del database dipenderanno sia dal carico di 
 lavoro, che dal numero di accessi contemporanei, che, ovviamente, dalle 
 prestazioni della macchina su cui gira.
-Occorre quindi identificare a priori quale macchina funger‡ da server dei dati 
+Occorre quindi identificare a priori quale macchina funger√† da server dei dati 
 e su questa procedere all'installazione del database.
 """)
 
@@ -58,14 +72,14 @@ installazione, il cui nome dipende dalla versione e dalla release.
 Si consiglia l'uso della versione 5.0, nella release disponibile al momento 
 dell'installazione.  Esempio: mysql-essential-5.0.51a-win32.msi  
 L'installazione avviene mediante un wizard e risulta decisamente semplice: 
-scegliere la voce "typical" e confermare.  Il setup provveder‡ all'installazione
+scegliere la voce "typical" e confermare.  Il setup provveder√† all'installazione
 dei files binari e quant'altro necessario al funzionamento del server.
-Una volta terminata l'installazione, il wizard segnaler‡ la fine del processo di
+Una volta terminata l'installazione, il wizard segnaler√† la fine del processo di
 setup, dando modo di procedere alla prima configurazione: lasciare quindi 
 spuntata la voce "Configure the MySQL Server now" e premere sul tasto "Finish".
 """)
 list("""
-Verr‡ quindi eseguito il wizard della prima configurazione: scegliere 
+Verr√† quindi eseguito il wizard della prima configurazione: scegliere 
 "Detailed Configuration" e premere "Next", scegliere il tipo di "peso" che deve
 avere il motore SQL sulle performances del PC (per installazione su Server 
 scegliere "Server Machine", altrimenti su un normale PC scegliere 
@@ -80,19 +94,19 @@ premere "Next"; selezionare la voce
 "Manual Selected Default Character Set / Collation" e quindi selezionare la voce 
 "latin1" dall'elenco a discesa, quindi premere "Next"; lasciare spuntata la voce 
 "Install As Windows Service" e selezionare il nome "MySQL5" dall'elenco a 
-discesa, nonchÈ spuntare la voce "Include Bin Directory in Windows PATH" e 
+discesa, nonch√© spuntare la voce "Include Bin Directory in Windows PATH" e 
 premere "Next"; impostare la password dell'utente root (amministratore del 
 database) e premere "Next"; confermare quindi il tutto premendo "Execute".
-Verr‡ configurato ed avviato il servizio MySQL.
-Nota: Ë possibile che il firewall installato sul sistema impedisca il corretto 
-funzionamento di MySQL: se appaiono richieste di conferma dell'attivit‡ server 
+Verr√† configurato ed avviato il servizio MySQL.
+Nota: √® possibile che il firewall installato sul sistema impedisca il corretto 
+funzionamento di MySQL: se appaiono richieste di conferma dell'attivit√† server 
 TCP/IP del processo mysqld-nt.exe autorizzare in modo permanente; se invece i 
-criteri del firewall non consentono l'interazione con l'utente, si dovr‡ 
+criteri del firewall non consentono l'interazione con l'utente, si dovr√† 
 provvedere manualmente alla sua configurazione, indicando che MySQL Server possa
 agire da server su TCP/IP e consentendone le connessioni sulla porta apposita 
 (3306 di default).
 Premere su "Finish" per tarminare il wizard di configurazione.
-Nota: tale wizard puÚ essere rieseguito a posteriori, nel caso occorresse 
+Nota: tale wizard pu√≤ essere rieseguito a posteriori, nel caso occorresse 
 modificare uno dei parametri qui impostati, eseguendo la voce 
 "MySQL Server Instance Config Wizard", presente nel menu 
 "MySQL / MySQL Server 5.0" nei programmi del pulsante "Start" di Windows.
@@ -105,16 +119,16 @@ Una volta installate queste utility, eseguire MySQL Administrator (disponibile
 sotto il menu "MySQL" dei programmi di Windows. Collegarsi al server appena 
 installato, con le credenziali di 'root', e provvedere alla creazione 
 dell'utente MySQL con il quale le postazioni di lavoro di X4 si collegheranno al
-database: X4, infatti, utilizza una sua tabella di utenti, per cui Ë normalmente
+database: X4, infatti, utilizza una sua tabella di utenti, per cui √® normalmente
 sufficente creare un unico utente a livello MySQL.
 Prima di creare l'utente, attivare la visualizzazione dei privilegi globali: 
 dal menu "Tools/Options", spuntare la casella "Show Global Privileges" e 
 confermare con "Apply".
 Creare quindi l'utente: scegliere "User Administration" dal menu grafico 
 verticale presente sulla sinistra della finestra di MySQL Administrator: 
-la parte sottostante riporter‡ l'elenco degli utenti presenti (ovviamente si 
-vedr‡ solo l'utente 'root'): in tale sezione mediante il tasto destro del mouse 
-scegliere "Add new user" dal menu contestuale che comparir‡ e, nella parte 
+la parte sottostante riporter√† l'elenco degli utenti presenti (ovviamente si 
+vedr√† solo l'utente 'root'): in tale sezione mediante il tasto destro del mouse 
+scegliere "Add new user" dal menu contestuale che comparir√† e, nella parte 
 destra della finestra, inserire il nome utente desiderato di fianco alla 
 voce "MySQL User"; selezionare il tabulatore "Global Privileges" ed assegnare 
 tutti i privilegi all'utente (portare tutte le voci presenti nella colonna di 
@@ -133,12 +147,12 @@ seguito dal comando:
 FLUSH PRIVILEGES;
 Ovviamente bisogna sostituire nome_utente con il nome dell'utente desiderato, 
 e "password_desiderata" con la password desiderata.
-Questa accoppiata utente/password dovr‡ essere inserita nella configurazione X4
-su ogni workstation che si andr‡ ad installare.
+Questa accoppiata utente/password dovr√† essere inserita nella configurazione X4
+su ogni workstation che si andr√† ad installare.
 """)
-list("""Setup dei componenti necessari per la connettivit‡ ODBC.  Questo Ë 
+list("""Setup dei componenti necessari per la connettivit√† ODBC.  Questo √® 
 necessario solo nel caso in cui si debbano impostare delle estrazioni dati da
 altri software, come ad esempio interrogazioni da Excel o stampe in fusione da Word.
-Eseguire questo setup solo sulle macchine che dovranno svolgere tali attivit‡ di
+Eseguire questo setup solo sulle macchine che dovranno svolgere tali attivit√† di
 collegamento ai dati.
 """)

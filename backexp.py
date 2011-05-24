@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         backexp.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -158,7 +158,7 @@ class SpecificheBackupPanel(wx.Panel):
                 t.SetModeRestore(tabrows)
                 if db_name != adb.db.__database__.database:
                     self.cando = False
-                    cn('warning').SetLabel('Il backup Ë di un\'altra azienda')
+                    cn('warning').SetLabel('Il backup √® di un\'altra azienda')
                     self.CheckTables()
             finally:
                 wx.EndBusyCursor()
@@ -323,7 +323,7 @@ class BackupExplorerPanel(wx.Panel):
             if not filename.lower().endswith('.adb'):
                 filename += '.adb'
             if os.path.exists(filename):
-                if aw.awu.MsgDialog(self, "Il file esiste gi‡, vuoi sovrascriverlo?", style=wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT) != wx.ID_YES:
+                if aw.awu.MsgDialog(self, "Il file esiste gi√†, vuoi sovrascriverlo?", style=wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT) != wx.ID_YES:
                     filename = None
         
         if filename:
@@ -396,7 +396,7 @@ class BackupExplorerPanel(wx.Panel):
                 del self.timer
                 wait.Destroy()
             
-            aw.awu.MsgDialog(self, 'Il file di backup Ë stato generato correttamente:\n%s' % filename, style=wx.ICON_INFORMATION)
+            aw.awu.MsgDialog(self, 'Il file di backup √® stato generato correttamente:\n%s' % filename, style=wx.ICON_INFORMATION)
         
         self.UpdateContent()
     
@@ -429,7 +429,7 @@ class BackupExplorerPanel(wx.Panel):
             """Attenzione!!!\n\n"""\
             """Confermando il ripristino, i dati attualmente presenti nell'azienda\n"""\
             """verranno sovrascritti con quelli contenuti nel file!!!\n"""\
-            """Procedere solo se si Ë certi che il ripristino Ë effettivamente da fare!!!"""
+            """Procedere solo se si √® certi che il ripristino √® effettivamente da fare!!!"""
             if aw.awu.MsgDialog(self, msg, "Conferma del ripristino", style=wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT) == wx.ID_YES:
                 do = True
                 tables = dlg.GetTables()
@@ -438,13 +438,13 @@ class BackupExplorerPanel(wx.Panel):
                     """ATTENZIONE !!!\n\n"""\
                     """Si sta ripristinando una copia dell'azienda con meno tabelle del previsto.\n"""\
                     """Questo potrebbe portare ad inconsistenze nel database!\n"""\
-                    """Procedere solo se si Ë certi che questo particolare ripristino Ë corretto!!!"""
+                    """Procedere solo se si √® certi che questo particolare ripristino √® corretto!!!"""
                     if aw.awu.MsgDialog(self, msg, "Conferma di ripristino particolare", style=wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT) != wx.ID_YES:
                         do = False
         dlg.Destroy()
         if do:
             if self.RestoreBackup(fullname, tables):
-                aw.awu.MsgDialog(self, "Il backup Ë stato ripristinato", style=wx.ICON_INFORMATION)
+                aw.awu.MsgDialog(self, "Il backup √® stato ripristinato", style=wx.ICON_INFORMATION)
     
     def RestoreBackup(self, filename, tables):
         

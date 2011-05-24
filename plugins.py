@@ -1,7 +1,7 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
-# Name:         xapp.py
+# Name:         plugins.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
 # Copyright:    (C) 2011 Astra S.r.l. C.so Cavallotti, 122 18038 Sanremo (IM)
 # ------------------------------------------------------------------------------

@@ -1,5 +1,5 @@
 #!/bin/env python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         cfg/caumagazz.py
 # Author:       Fabio Cassini <fabio.cassini@gmail.com>
@@ -266,7 +266,7 @@ class DefMovGrid(dbglib.DbGridColoriAlternati):
 
 class CauMagazzPanel(ga.AnagPanel):
     """
-    Gestione tabella Causali contabilit‡.
+    Gestione tabella Causali contabilit√†.
     """
     def __init__(self, *args, **kwargs):
         
@@ -524,7 +524,7 @@ class CauMagazzPanel(ga.AnagPanel):
                 if do:
                     if movid is not None:
                         if not movid in dbmov._info.deletedRecords:
-                            #riga gi‡ esistente, marco per cancellazione da db
+                            #riga gi√† esistente, marco per cancellazione da db
                             dbmov._info.deletedRecords.append(movid)
                     self._grid_mov.DeleteRows(row)
                     dbmov._info.recordCount -= 1
