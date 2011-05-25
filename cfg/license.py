@@ -44,7 +44,7 @@ import ConfigParser
 import md5
 
 import version
-import license
+import _license
 
 
 class _LicenseMixin(object):
@@ -99,8 +99,8 @@ class _LicenseMixin(object):
         except:
             ok = version.OSS()
         if ok:
-            Env.LICENSE_OWNER = license.getOwner()
-            Env.LICENSE_TEXT = license.getLicense()
+            Env.LICENSE_OWNER = _license.getOwner()
+            Env.LICENSE_TEXT = _license.getLicense()
         return ok
     
     def TestFormato(self, prefix, specvalid):
