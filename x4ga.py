@@ -33,6 +33,8 @@ config_base_path = xpaths.GetConfigPath()
 
 if hasattr(sys, 'frozen'):
     
+    sys.setdefaultencoding("utf-8")
+    
     try:
         os.chdir(os.path.split(sys.argv[0])[0])
     except:
@@ -172,10 +174,12 @@ def Main():
                 os.execl(prg, *parts)
         except:
             pass
+        
+    os._exit(0)
+
+
+# ------------------------------------------------------------------------------
 
 
 if __name__ == '__main__':
-    
     Main()
-    
-    os._exit(0)
