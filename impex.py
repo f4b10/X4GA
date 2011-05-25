@@ -26,6 +26,10 @@ Qui vanno messi gli import di package non presenti in X4
 ma richiesti da personalizzazioni e/o plugin.
 """
 
+import wx
+from wx.lib.pubsub import setupv1
+from wx.lib.pubsub import Publisher
+
 import wx.lib.colourchooser
 import wx.lib.gridmovers
 import wx.lib.calendar
