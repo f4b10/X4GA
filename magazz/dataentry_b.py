@@ -497,7 +497,7 @@ class GridBody(object):
         
         self.COL_codmov =  a(( 35, [m.RSMOV_codmov,    "Mov.",           _STR, True]))
         self.COL_codart =  a(( 80, [m.RSMOV_codart,    "Codice",         _STR, True]))
-        self.COL_DESCRIZ = a((220, [m.RSMOV_DESCRIZ,   "Descrizione",    _STR, True]))
+        self.COL_DESCRIZ = a((300, [m.RSMOV_DESCRIZ,   "Descrizione",    _STR, True]))
         self.COL_UM =      a(( 40, [m.RSMOV_UM,        "U.M.",           _STR, True]))
         
         if bt.MAGPZCONF:
