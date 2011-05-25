@@ -48,28 +48,8 @@ img = []
 img.append(('../images.py', (
     "   -u -n SplashLogo         imgsource/x4_splash.png",
     "-a -u -n X4Logo             imgsource/x4_logo.png",
-    "-a -u -n SplashLogoLite     imgsource/x4_splash_lite.png",
-    "-a -u -n X4LogoLite         imgsource/x4_logo_lite.png",
-    "-a -u -n X4LogoSanVal       imgsource/x4_logo_sanvalentino.png",
-    "-a -u -n X4LogoBirth7       imgsource/x4_logo_birthday7.png",
     "-a -u -n X4LogoBackup       imgsource/x4_logo_backup.png",
     "-a -u -n Icon               imgsource/x4_icon.png",
-    "-a -u -n SplashLogoNatale   imgsource/x4_splash_natale.png",
-    "-a -u -n X4LogoNatale       imgsource/x4_logo_natale.png",
-    "-a -u -n SplashLogoBrindisi imgsource/x4_splash_brindisi.png",
-    "-a -u -n X4LogoBrindisi     imgsource/x4_logo_brindisi.png",
-    "-a -u -n SplashLogoBefana   imgsource/x4_splash_befana.png",
-    "-a -u -n X4LogoBefana       imgsource/x4_logo_befana.png",
-    
-    #toolbar - old
-    "-a -u -n TB_Clienti         imgsource/tb_clienti.png",
-    "-a -u -n TB_Fornit          imgsource/tb_fornit.png",
-    "-a -u -n TB_EmiDoc          imgsource/tb_emidoc.png",
-    "-a -u -n TB_IncPag          imgsource/tb_incpag.png",
-    "-a -u -n TB_IntSott         imgsource/tb_intsott.png",
-    "-a -u -n TB_IntArt          imgsource/tb_intart.png",
-    "-a -u -n TB_Generic         imgsource/tb_generic.png",
-    "-a -u -n TB_ScadCF          imgsource/tb_vista_scadcf.png",
     
     #toolbar - spheric
     "-a -u -n TB_Spheric_EmiDoc  imgsource/tb_spheric_emidoc.png",
