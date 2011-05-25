@@ -246,6 +246,7 @@ class DB(object):
             database = kwargs['db']
             if kwargs['db'] is None:
                 kwargs.pop('db')
+            kwargs['use_unicode'] = True
             try:
                 self._dbCon = self._dbClass.connect(**kwargs)
                 self.hostname = hostname

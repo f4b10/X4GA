@@ -32,6 +32,8 @@ logmsg = adb.db.logmsg
 
 import locale
 
+FORCE_TO_LATIN1 = False
+
 
 __env__ = None
     
@@ -1382,7 +1384,7 @@ class DbTable(object):
         recno = info.recordNumber
         if 0 <= recno < len(rs):
             value = rs[recno][ncol]
-            if type(value) == unicode:
+            if type(value) == unicode and FORCE_TO_LATIN1:
                 value = value.encode('latin-1')
         return value
 
@@ -3105,7 +3107,7 @@ class SubDbTable(DbTable):
         recno = info.recordNumber
         if 0 <= recno < len(rs):
             value = rs[recno][ncol]
-            if type(value) == unicode:
+            if type(value) == unicode and FORCE_TO_LATIN1:
                 value = value.encode('latin-1')
         return value
 
