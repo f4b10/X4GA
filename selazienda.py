@@ -651,7 +651,7 @@ class SelAziendaPanel(aw.Panel):
         `modname` VARCHAR(20),
         PRIMARY KEY  (`id`), 
         UNIQUE KEY `Index_2` (`codice`)
-        ) ENGINE=MyISAM DEFAULT CHARSET=latin1
+        ) ENGINE=MyISAM DEFAULT CHARSET=utf8
         """)
         
         cur.execute("""
@@ -663,7 +663,7 @@ class SelAziendaPanel(aw.Panel):
         `datePsw`        TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         `amministratore` CHAR(1)                   DEFAULT NULL,
         PRIMARY KEY  (`id`)
-        ) ENGINE=MyISAM DEFAULT CHARSET=latin1
+        ) ENGINE=MyISAM DEFAULT CHARSET=utf8
         """)
         utente = self.FindWindowById(ID_USER).GetValue()
         cur.execute("""
@@ -678,7 +678,7 @@ class SelAziendaPanel(aw.Panel):
         `id_utente`  INT(10)    UNSIGNED NOT NULL DEFAULT '0',
         `attivo`     TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
         PRIMARY KEY  (`id`)
-        ) ENGINE=MyISAM DEFAULT CHARSET=latin1
+        ) ENGINE=MyISAM DEFAULT CHARSET=utf8
         """)
         
         cur.execute("""
@@ -694,7 +694,7 @@ class SelAziendaPanel(aw.Panel):
           `selectable` tinyint(4) default NULL,
           PRIMARY KEY  (`id`),
           UNIQUE KEY `index1` (`codice`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=459 DEFAULT CHARSET=latin1 COMMENT='Bilancio CEE'
+        ) ENGINE=MyISAM AUTO_INCREMENT=459 DEFAULT CHARSET=utf8 COMMENT='Bilancio CEE'
         """)
         
         cur.execute("""
@@ -863,7 +863,7 @@ class SelAziendaPanel(aw.Panel):
           `authpswd` char(128)  default NULL COMMENT 'Password per login smtp',
           PRIMARY KEY  (`id`),
           UNIQUE KEY `index1` (`azienda`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=latin1 COMMENT='Setup SMTP'
+        ) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='Setup SMTP'
         """)
         
         cur.execute("""
@@ -877,7 +877,7 @@ class SelAziendaPanel(aw.Panel):
           `onlineonly` tinyint(1) default NULL COMMENT 'Flag invio solo a contatto online',
           PRIMARY KEY  (`id`),
           UNIQUE KEY `index1` (`azienda`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=latin1 COMMENT='Setup XMPP'
+        ) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='Setup XMPP'
         """)
         
         cur.execute("""
@@ -892,7 +892,7 @@ CREATE TABLE IF NOT EXISTS `x4`.`stati` (
   PRIMARY KEY  (`id`),
   UNIQUE KEY `index1` (`codice`),
   UNIQUE KEY `index2` (`descriz`)
-) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=latin1 COMMENT='Stati'""")
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='Stati'""")
         
         cur.execute("""
 INSERT INTO `x4`.`stati`  
@@ -1370,7 +1370,7 @@ class AziendaSetup(aw.Dialog):
                     ind += ' (%s)' % indexpr
                     cmd += ind+', '
                 cmd = cmd[:-2]+')'
-                cmd += r' ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT=%s'
+                cmd += r' ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT=%s'
                 curs.execute(cmd, (tbdesc,))
                 pd.SetValue(n)
             curs.close()

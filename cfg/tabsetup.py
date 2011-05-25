@@ -411,7 +411,7 @@ CREATE TABLE IF NOT EXISTS `x4`.`cfgmail` (
   `authpswd` char(128)  default NULL COMMENT 'Password per login smtp',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `index1` (`azienda`)
-) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=latin1 COMMENT='Setup SMTP'
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='Setup SMTP'
 """)
                 
                 #creo tab.cfg.xmpp su db x4
@@ -426,7 +426,7 @@ CREATE TABLE IF NOT EXISTS `x4`.`cfgxmpp` (
   `onlineonly` tinyint(1) default NULL COMMENT 'Flag invio solo a contatto online',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `index1` (`azienda`)
-) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=latin1 COMMENT='Setup XMPP'
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='Setup XMPP'
 """)
         
                 #inserisco opzione notifiche in setup azienda, per default=0
@@ -459,7 +459,7 @@ CREATE TABLE IF NOT EXISTS `x4`.`bilcee` (
   `selectable` tinyint(1)  default NULL COMMENT 'Flag selezionabile in pdc',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `index1` (`codice`)
-) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=latin1 COMMENT='Bilancio CEE'
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='Bilancio CEE'
 """)
             
             test = adb.DbTable('x4.bilcee')
@@ -676,7 +676,7 @@ CREATE TABLE IF NOT EXISTS `x4`.`stati` (
   PRIMARY KEY  (`id`),
   UNIQUE KEY `index1` (`codice`),
   UNIQUE KEY `index2` (`descriz`)
-) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=latin1 COMMENT='Stati'""")
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='Stati'""")
         
                     db.Execute("""
 INSERT INTO `x4`.`stati`  
@@ -820,6 +820,32 @@ MODIFY COLUMN `cvfsca` DECIMAL(10,%(DQ)s) DEFAULT 0""" % locals())
 UPDATE `cfgsetup`
    SET importo=flag, flag=NULL
  WHERE chiave="magnumlis" """)
+        
+            
+            # -------------------------------------------------------------------------------------
+            
+            if oldver<'1.3.05' and ok:
+                #adeguo il charset di ugni tabella in utf8
+                wait = aw.awu.WaitDialog(self, "Adeguamento charset utf-8", "",
+                                         maximum=len(bt.tabelle))
+                wx.BeginBusyCursor()
+                err = None
+                try:
+                    for n, tabstru in enumerate(bt.tabelle):
+                        tabname, tabdesc = tabstru[:2]
+                        wait.SetMessage("Tabella: %s - %s" % (tabname, tabdesc))
+                        try:
+                            db.Execute("ALTER TABLE %s CONVERT TO CHARACTER SET utf8" % tabname)
+                        except Exception, e:
+                            err = repr(e.args)
+                            break
+                        wait.SetValue(n)
+                finally:
+                    wx.EndBusyCursor()
+                    wait.Destroy()
+                if err:
+                    aw.awu.MsgDialog(self, "Errore in conversione tabella:\n%s" % err)
+                    ok = False
         
         if ok:
             self.PerformExternalAdaptations()
