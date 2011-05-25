@@ -1273,7 +1273,7 @@ class AnagPanel(aw.Panel):
                 MsgDialogDbError(self, e)
             
         except Exception, e:
-            pass
+            MsgDialogDbError(self, e)
         
         return out
     
