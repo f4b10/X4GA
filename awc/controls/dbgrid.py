@@ -1286,7 +1286,7 @@ class DbGridTable(gridlib.PyGridTableBase):
                         else:
                             m = FORMAT_DATETIME_SH
                     out = value.Format(m)
-                except Exception:
+                except Exception, e:
                     out = repr(value)
             
         elif _type in (gridlib.GRID_VALUE_BOOL, gridlib.GRID_VALUE_CHOICE):
@@ -1514,7 +1514,7 @@ class DbGridTable(gridlib.PyGridTableBase):
             except Exception, e:
                 if e.args[0] == 1155:
                     msg =\
-                        """Il file CVS è stato generato, ma il sistema non """\
+                        """Il file CSV è stato generato, ma il sistema non """\
                         """conosce l'applicazione da utilizzare per aprirlo.\n\n"""
                     msg += tmpname
                 else:
