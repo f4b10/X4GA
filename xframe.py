@@ -1593,7 +1593,17 @@ class XFrame(wx.Frame):
         self.Close(True)
     
     def OnCloseWindow(self, event):
-        self.Destroy()
+        quit = True
+        #frames and dialogs cleanup test
+        for child in self.GetChildren():
+            if isinstance(child, (wx.Frame, wx.Dialog,)):
+                CanClose = 'CanClose'
+                if hasattr(child, CanClose):
+                    if not getattr(child, CanClose)():
+                        quit = False
+                        break
+        if quit:
+            event.Skip()
     
     def LaunchFrame(self, frameclass, size=None, show=True, centered=False):
 #        wait = awu.WaitDialog(self, message="Caricamento modulo in corso.",

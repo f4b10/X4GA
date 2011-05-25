@@ -1972,6 +1972,13 @@ class _AnagMixin(object):
         c = self.FindWindowByName('_attach_autotext')
         if c:
             c.Stop()
+    
+    def CanClose(self):
+        #richiamata da XFrame in fase di chiusura applicazione
+        if self.panel.TestForChanges():
+            self.FixTimerProblem()
+            return True
+        return False
 
 
 # ------------------------------------------------------------------------------

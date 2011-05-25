@@ -1169,6 +1169,11 @@ class _ContabMixin(object):
         c = self.FindWindowByName('autonotes')
         if c:
             c.Stop()
+    
+    def CanClose(self):
+        #richiamata da XFrame in fase di chiusura applicazione
+        self.FixTimerProblem()
+        return True
 
 
 # ------------------------------------------------------------------------------

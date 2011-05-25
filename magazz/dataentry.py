@@ -2984,3 +2984,10 @@ class _FrameDialogMixin(object):
             c = self.FindWindowByName(name)
             if c:
                 c.Stop()
+    
+    def CanClose(self):
+        #richiamata da XFrame in fase di chiusura applicazione
+        if self.panel.TestQuit():
+            self.FixTimerProblem()
+            return True
+        return False
