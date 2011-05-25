@@ -824,27 +824,35 @@ UPDATE `cfgsetup`
             
             # -------------------------------------------------------------------------------------
             
-            if oldver<'1.3.05' and ok:
+            if oldver<'1.3.06' and ok:
                 #adeguo il charset di ugni tabella in utf8
-                wait = aw.awu.WaitDialog(self, "Adeguamento charset utf-8", "",
-                                         maximum=len(bt.tabelle))
-                wx.BeginBusyCursor()
                 err = None
                 try:
-                    for n, tabstru in enumerate(bt.tabelle):
-                        tabname, tabdesc = tabstru[:2]
-                        wait.SetMessage("Tabella: %s - %s" % (tabname, tabdesc))
-                        try:
-                            db.Execute("ALTER TABLE %s CONVERT TO CHARACTER SET utf8" % tabname)
-                        except Exception, e:
-                            err = repr(e.args)
-                            break
-                        wait.SetValue(n)
-                finally:
-                    wx.EndBusyCursor()
-                    wait.Destroy()
+                    db.Execute("ALTER DATABASE CHARACTER SET utf8")
+                except Exception, e:
+                    err = repr(e.args)
                 if err:
-                    aw.awu.MsgDialog(self, "Errore in conversione tabella:\n%s" % err)
+                    aw.awu.MsgDialog(self, "Errore in conversione database:\n%s" % err)
+                else:
+                    wait = aw.awu.WaitDialog(self, "Adeguamento charset utf-8", "",
+                                             maximum=len(bt.tabelle))
+                    wx.BeginBusyCursor()
+                    try:
+                        for n, tabstru in enumerate(bt.tabelle):
+                            tabname, tabdesc = tabstru[:2]
+                            wait.SetMessage("Tabella: %s - %s" % (tabname, tabdesc))
+                            try:
+                                db.Execute("ALTER TABLE %s CONVERT TO CHARACTER SET utf8" % tabname)
+                            except Exception, e:
+                                err = repr(e.args)
+                                break
+                            wait.SetValue(n)
+                    finally:
+                        wx.EndBusyCursor()
+                        wait.Destroy()
+                    if err:
+                        aw.awu.MsgDialog(self, "Errore in conversione tabella:\n%s" % err)
+                if err:
                     ok = False
         
         if ok:
