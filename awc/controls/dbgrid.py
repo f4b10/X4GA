@@ -456,7 +456,8 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
         
         if self._csize:
             for col in self._csize:
-                self.SetColSize(col, self._csize[col])
+                if self._csize[col]>-1:
+                    self.SetColSize(col, self._csize[col])
         else:
             gridlib.Grid.AutoSizeColumns(self, *args, **kwargs)
         
