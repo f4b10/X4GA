@@ -501,19 +501,19 @@ class GridBody(object):
         self.COL_UM =      a(( 40, [m.RSMOV_UM,        "U.M.",           _STR, True]))
         
         if bt.MAGPZCONF:
-            self.COL_NMCONF = a(( -1, [m.RSMOV_NMCONF, "Confez.",        _PZC, True]))
-            self.COL_PZCONF = a(( -1, [m.RSMOV_PZCONF, "Pz.Conf.",       _PZC, True]))
+            self.COL_NMCONF = a((1, [m.RSMOV_NMCONF, "Confez.",          _PZC, True]))
+            self.COL_PZCONF = a((1, [m.RSMOV_PZCONF, "Pz.Conf.",         _PZC, True]))
         
-        self.COL_QTA =     a(( -1, [m.RSMOV_QTA,       "Quantità",       _QTA, True]))
-        self.COL_PREZZO =  a(( -1, [m.RSMOV_PREZZO,    "Prezzo",         _PRE, True]))
+        self.COL_QTA =     a((1, [m.RSMOV_QTA,       "Quantità",         _QTA, True]))
+        self.COL_PREZZO =  a((1, [m.RSMOV_PREZZO,    "Prezzo",           _PRE, True]))
         
         if (bt.MAGATTGRIP or bt.MAGATTGRIF) and bt.MAGAGGGRIP:
             self.COL_AGGGRIP = a(( -1, [m.RSMOV_AGGGRIP, "AGP",          _CHK, True]))
         
-        self.COL_SC1 =     a(( -1, [m.RSMOV_SC1,       "Sc.%1",          _SCO, True]))
-        self.COL_SC2 =     a(( -1, [m.RSMOV_SC2,       "Sc.%2",          _SCO, True]))
-        self.COL_SC3 =     a(( -1, [m.RSMOV_SC3,       "Sc.%3",          _SCO, True]))
-        self.COL_IMPORTO = a(( -1, [m.RSMOV_IMPORTO,   "Importo",        _IMP, True]))
+        self.COL_SC1 =     a((  1, [m.RSMOV_SC1,       "Sc.%1",          _SCO, True]))
+        self.COL_SC2 =     a((  1, [m.RSMOV_SC2,       "Sc.%2",          _SCO, True]))
+        self.COL_SC3 =     a((  1, [m.RSMOV_SC3,       "Sc.%3",          _SCO, True]))
+        self.COL_IMPORTO = a((  1, [m.RSMOV_IMPORTO,   "Importo",        _IMP, True]))
         self.COL_codiva =  a(( 35, [m.RSMOV_codiva,    "Iva",            _STR, True]))
         self.COL_NOTE =    a((200, [m.RSMOV_NOTE,      "Note",           _STR, True]))
         self.COL_PERPRO =  a(( 60,[-m.RSMOV_PERPRO,    "Provv.%",        _SCO, True]))
@@ -522,12 +522,12 @@ class GridBody(object):
         self.COL_pdcdes =  a((200, [m.RSMOV_PDCCG_des, "Coll.Contabile", _STR, True]))
         
         if viscosto:
-            self.COL_COSTOU =      a(( -1, [m.RSMOV_COSTOU, "Costo U.",  _PRE, True]))
-            self.COL_COSTOTOT =    a(( -1, [m.RSMOV_COSTOT, "Costo Tot.",_IMP, True]))
+            self.COL_COSTOU =      a((1, [m.RSMOV_COSTOU, "Costo U.",    _PRE, True]))
+            self.COL_COSTOTOT =    a((1, [m.RSMOV_COSTOT, "Costo Tot.",  _IMP, True]))
         if vismargine:
-            self.COL_VENDITATOT =  a(( -1, [-1,             "T.Vendita", _IMP, True]))
-            self.COL_MARGINEVAL =  a(( -1, [-1,             "Margine",   _IMP, True]))
-            self.COL_MARGINEPERC = a(( -1, [-1,             "Marg.%",    _SCO, True]))
+            self.COL_VENDITATOT =  a((1, [-1,             "T.Vendita",   _IMP, True]))
+            self.COL_MARGINEVAL =  a((1, [-1,             "Margine",     _IMP, True]))
+            self.COL_MARGINEPERC = a((1, [-1,             "Marg.%",      _SCO, True]))
         
         self.COL_ID =      a((  1, [m.RSMOV_ID,        "#mov",           _STR, True]))
         self.COL_ID_PROD = a((  1, [m.RSMOV_ID_PROD,   "#pro",           _STR, True]))
