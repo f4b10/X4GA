@@ -52,7 +52,7 @@ import reportlab.tools.docco.rltemplate as rlt
 rlt.FrontCoverTemplate = _FrontCoverTemplate
 
 def unitext(text):
-    return unicode(text or '', 'latin-1')
+    return unicode(text or '', 'utf-8')
 
 from reportlab.tools.docco.rl_doc_utils import heading1, quickfix
 import reportlab.tools.docco.rl_doc_utils as rldu

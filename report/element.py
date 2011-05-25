@@ -1365,7 +1365,7 @@ class staticText(elemento_Testuale):
         h = None
         
         #s = unicode(str(self.set_testo()), 'latin-1')
-        s = unicode(str(self.set_testo()), 'Windows-1252') #per il simbolo dell'euro
+        #s = unicode(str(self.set_testo()), 'Windows-1252') #per il simbolo dell'euro
         
         if rotate==1:
             dx=self.set_width()       # larghezza oggetto testo

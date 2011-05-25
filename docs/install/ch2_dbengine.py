@@ -92,7 +92,7 @@ venti e premere "Next"; lasciare spuntate le due scelte proposte, se non ci sono
 esigenze particolari lasciare inalterato il valore della porta TCP/IP da usare e 
 premere "Next"; selezionare la voce 
 "Manual Selected Default Character Set / Collation" e quindi selezionare la voce 
-"latin1" dall'elenco a discesa, quindi premere "Next"; lasciare spuntata la voce 
+"utf8" dall'elenco a discesa, quindi premere "Next"; lasciare spuntata la voce 
 "Install As Windows Service" e selezionare il nome "MySQL5" dall'elenco a 
 discesa, nonché spuntare la voce "Include Bin Directory in Windows PATH" e 
 premere "Next"; impostare la password dell'utente root (amministratore del 
