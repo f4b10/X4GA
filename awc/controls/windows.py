@@ -28,7 +28,6 @@ def opj(x, y):
 import re
 
 import wx
-import wx.lib.evtmgr as em
 from wx.lib.gestures import MouseGestures
 
 import awc.util as awu
