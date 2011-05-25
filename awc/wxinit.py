@@ -22,6 +22,8 @@
 # ------------------------------------------------------------------------------
 
 import wx
+wx.SetDefaultPyEncoding('utf-8')
+
 import os
 import subprocess
 
