@@ -51,7 +51,13 @@ if D:
     except:
         pass
 
-#import adodbapi as adodb
+#fix unicode: la funzione character_set_name della connessione ritorna sempre latin-1, anche se è utf-8
+_connect_original = MySQLdb.connect
+def connect_fixutf(*args, **kwargs):
+    connection = _connect_original(*args, **kwargs)
+    connection.set_character_set('utf8')
+    return connection
+MySQLdb.connect = MySQLdb.Connect = MySQLdb.Connection = connect_fixutf
 
 
 OPENMODE_READONLY = 0
