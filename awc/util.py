@@ -479,7 +479,7 @@ def ExpandPath(p):
             p = p[1:]
         p = os.path.join(aup, p)
     
-    return p
+    return os.path.abspath(p)
 
 
 # ------------------------------------------------------------------------------
