@@ -74,7 +74,7 @@ GENERA_FILE = 4
 CONTABILIZZ = 5
 
 
-class EffGrid(dbglib.DbGrid):
+class EffGrid(dbglib.DbGridColoriAlternati):
     """
     Griglia effetti
     """
@@ -84,7 +84,9 @@ class EffGrid(dbglib.DbGrid):
         parent griglia  (wx.Panel)
         dbtable effetti (eff.dbtables.Eff)
         """
-        size = parent.GetClientSizeTuple()
+        
+        dbglib.DbGridColoriAlternati.__init__(self, parent, -1, 
+                                              size=parent.GetClientSizeTuple())
         
         self.dbeff = dbeff
         
@@ -104,13 +106,14 @@ class EffGrid(dbglib.DbGrid):
         #colcodart = pro._GetFieldIndex("codice", inline=True)
         
         cols = (\
+            ( 80, (cn(eff, 'datscad'), "Scadenza",        _DAT, True )),\
+            ( 50, (cn(pdc, 'codice'),  "Cod.",            _STR, True )),\
+            (250, (cn(pdc, 'descriz'), "Cliente",         _STR, True )),\
+            (110, (cn(eff, 'impeff'),  "Importo Effetto", _IMP, True )),\
+            (110, (cn(eff, 'saldo'),   "Saldo partita",   _IMP, True )),\
             (100, (cn(cau, 'descriz'), "Causale",         _STR, True )),\
             ( 80, (cn(eff, 'datdoc'),  "Data",            _DAT, True )),\
             ( 60, (cn(eff, 'numdoc'),  "Num.",            _STR, True )),\
-            (250, (cn(pdc, 'descriz'), "Cliente",         _STR, True )),\
-            ( 80, (cn(eff, 'datscad'), "Scadenza",        _DAT, True )),\
-            (110, (cn(eff, 'impeff'),  "Importo Effetto", _IMP, True )),\
-            (110, (cn(eff, 'saldo'),   "Saldo partita",   _IMP, True )),\
             ( 50, (cn(bap, 'codice'),  "Cod.",            _STR, True )),\
             (220, (cn(bap, 'descriz'), "Banca Appoggio",  _STR, True )),\
             ( 60, (cn(bap, 'abi'),     "ABI",             _STR, True )),\
@@ -123,14 +126,12 @@ class EffGrid(dbglib.DbGrid):
             ( 50, (cn(eff, 'id'),      "eff#",            _STR, True )),\
             )
         
-        global gbapcod; gbapcod = 7
+        global gbapcod; gbapcod = 8
         
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
         canedit = True
         canins = False
-        
-        dbglib.DbGrid.__init__(self, parent, -1, size=size, style=0)
         
         links = []
         ltbap = dbglib.LinkTabAttr(bt.TABNAME_BANCF, #table
@@ -146,7 +147,6 @@ class EffGrid(dbglib.DbGrid):
         self.SetData( self.dbeff._info.rs, colmap, canedit, canins,\
                       links, afteredit)
         self.SetRowLabelAlignment(wx.ALIGN_RIGHT, wx.ALIGN_BOTTOM)
-        self.SetCellDynAttr(self.GetAttr)
         
         map(lambda c:\
             self.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
@@ -164,6 +164,7 @@ class EffGrid(dbglib.DbGrid):
                         'normal':  [stdcolor.NORMAL_FOREGROUND,
                                     stdcolor.NORMAL_BACKGROUND] }
         
+        self.SetAnchorColumns(3, 2)
         self.AutoSizeColumns()
         sz = wx.FlexGridSizer(1,0,0,0)
         sz.AddGrowableCol( 0 )
@@ -201,6 +202,7 @@ class EffGrid(dbglib.DbGrid):
         event.Skip()
 
     def GetAttr(self, row, col, rscol, attr=gl.GridCellAttr):
+        attr = dbglib.DbGridColoriAlternati.GetAttr(self, row, col, rscol, attr)
         readonly = not rscol in (colscad, bapcod)
         if 0 <= row < self.dbeff.RowsCount():
             roweff = self.dbeff.GetRecordset()[row]
@@ -229,7 +231,8 @@ class EffGrid(dbglib.DbGrid):
                (rse[bapabi] or False) and\
                (rse[bapcab] or False) and\
                (rse[colimp] > 0)
-    
+
+
 # ------------------------------------------------------------------------------
 
 
