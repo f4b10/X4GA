@@ -803,7 +803,7 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
         if table:
             table.ResetView(autosize_columns=False)
         self.SetRowScrollRatio()
-        if self._fitColumn:
+        if not self.AnchorColumn() and self._fitColumn:
             self.FitColumn()
     
     def SetRowScrollRatio(self):
