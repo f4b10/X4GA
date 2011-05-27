@@ -921,6 +921,8 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
         grid.SetAnchorColumns(5, 2)
         grid.AutoSizeColumns()
         
+        grid.SetColDefault(1)
+        
         def MoveColumnAfterEdit(grid, row, col):
             if col == 1:
                 s = self._cfg_pasegno
