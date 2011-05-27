@@ -25,7 +25,7 @@ import awc.checkvat.vatnumber as vn
 
 def check_vat(state, vat):
     out = False
-    if type(state) is str:
+    if type(state) in (str, unicode):
         if len(state) > 0:
             check_name = 'check_vat_%s' % state.lower()
             try:
