@@ -403,17 +403,25 @@ class DateTimeCtrl(DateCtrl):
                 return str(x).zfill(2)
             self.maskedCtrl.SetValue("%s.%s.%s %s:%s" % (dd,mm,yyyy,f(hh),f(mn)))
     
-    def GetValue( self ):
+    def GetValue(self, adapt_date=True):
         out = None
         try:
-            if self.maskedCtrl._validateDate():
-                cdate = self.maskedCtrl.GetValue()
-                dd = int(cdate[0:2])
-                mm = int(cdate[3:5])
-                yyyy = int(cdate[6:10])
-                hh = int(cdate[11:13])
-                mn = int(cdate[14:16])
-                out = DateTime.DateTime(yyyy, mm, dd, hh, mn)
+            masked = self.maskedCtrl
+            cdate = masked.GetValue()
+            dd = int(cdate[0:2])
+            mm = int(cdate[3:5])
+            yyyy = int((cdate[6:10]).strip() or YEAR_DEFAULT)
+            hh = int(cdate[11:13])
+            mn = int(cdate[14:16])
+            out = DateTime.DateTime(yyyy, mm, dd, hh, mn)
+            if adapt_date:
+                if int(cdate[0:2].strip() or 0) != out.day\
+                or int(cdate[3:5].strip() or 0) != out.month\
+                or int(cdate[6:10].strip() or 0) != out.year:
+                    ndate = str(out.day).zfill(2)+cdate[2]+str(out.month).zfill(2)+cdate[5]+str(out.year).zfill(2)+cdate[9]+str(out.hour).zfill(2)+cdate[11]+str(out.minute).zfill(2)+cdate[13]
+                    s1, s2 = masked.GetSelection()
+                    masked.SetValue(ndate)
+                    masked.SetSelection(s1, s2)
         except:
             pass
         return out
