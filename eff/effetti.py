@@ -123,7 +123,7 @@ class EffGrid(dbglib.DbGridColoriAlternati):
             (220, (cn(pba, 'descriz'), "Banca Emittente", _STR, True )),\
             ( 60, (cn(ban, 'abi'),     "ABI",             _STR, True )),\
             ( 60, (cn(ban, 'cab'),     "CAB",             _STR, True )),\
-            ( 50, (cn(eff, 'id'),      "eff#",            _STR, True )),\
+            (  1, (cn(eff, 'id'),      "#eff",            _STR, True )),\
             )
         
         global gbapcod; gbapcod = 8
