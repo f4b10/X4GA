@@ -29,6 +29,11 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.3.06', None, (
+         ("BET1092",
+         """Ottimizzata la finestra e la griglia dell'emissione effetti."""),
+        ),),
+    
     ('1.3.05', None, (
          ("BET1091",
          """Adozione di utf-8 come unico charset in tutta l'applicazione e
