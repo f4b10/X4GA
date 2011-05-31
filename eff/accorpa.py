@@ -293,7 +293,7 @@ class AccorpaPanel(wx.Panel):
         self.gridpcf.ChangeData(())
         
         if pdc.RowsCount() == 0:
-            grid.ChangeData(())
+            self.gridpcf.ChangeData(())
             awu.MsgDialog(self, message="Nessuna scadenza da accorpare")
         else:
             lc.SetSelection(0)
