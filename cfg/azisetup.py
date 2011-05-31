@@ -195,7 +195,7 @@ class AziendaSetupPanel(_SetupPanel):
             host = Env.Azienda.DB.servername
             user = Env.Azienda.DB.username
             pswd = Env.Azienda.DB.password
-            dba = adb.db.DB(dbType=adb.db.__database__._dbType, globalConnection=False)
+            dba = adb.db.DB(dbType=getattr(adb.db.__database__, '_dbType'), globalConnection=False)
             if dba.Connect(host=host, user=user, passwd=pswd, db='x4'):
                 dbz = adb.DbTable('aziende', 'azi', db=dba)
                 if dbz.Retrieve('azi.codice=%s', cod):
@@ -232,7 +232,8 @@ class AziendaSetupPanel(_SetupPanel):
                                 ht = open(fnt, 'wb')
                                 ht.write(buf)
                                 ht.close()
-                                p = Env.Azienda.config.get('Site', 'folder')
+                                cfg = Env.Azienda.config
+                                p = cfg.get('Site', 'folder')
                                 if os.path.isdir(p):
                                     if aw.awu.MsgDialog(self, 'Aggiorno anche il logo aziendale su X4?', style=wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT) == wx.ID_YES:
                                         fnt = os.path.join(p, self.GetLogoFileName())
