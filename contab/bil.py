@@ -1357,11 +1357,7 @@ class BilContrPanel(_BilPanel):
         self.UpdateQuadratura(totpat, toteco, salep=self.bilese, utiper=tpa-tpp,
                               ripep=(sezno == 0))
         
-        if self.adjustsize:
-            size = list(self.GetSize())
-            for d in (1,-1):
-                self.SetSize((size[0],size[1]+d))
-            self.adjustsize = False
+        self._Layout()
 
     def PrintBil(self):
         grids = self.gridbil.grids
