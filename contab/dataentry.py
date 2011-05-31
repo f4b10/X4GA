@@ -1333,7 +1333,7 @@ class RegSearchPanel(aw.Panel):
 """WHERE row.numriga=1 and %s """\
 """ORDER BY reg.datreg, year(reg.datdoc), reg.numdoc;"""\
  % (bt.TABNAME_CONTAB_H, bt.TABNAME_CFGCONTAB, filter)
-                db_curs = Env.adb.db.__database__._dbCon.cursor()
+                db_curs = getattr(Env.adb.db.__database__, '_dbCon').cursor()
                 db_curs.execute(cmd, par)
                 rs = db_curs.fetchall()
                 db_curs.close()
