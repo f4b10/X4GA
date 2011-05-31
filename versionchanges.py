@@ -29,6 +29,16 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.3.07', None, (
+         ("BUG1071",
+         """Correzione chiusure contabili nel caso di chiusura di esercizio
+         in perdita."""),
+         ("BET1093",
+         """Ottimizzata la finestra delle chiusure contabili."""),
+         ("BET1094",
+         """Ottimizzata la finestra dei bilanci."""),
+        ),),
+    
     ('1.3.06', None, (
          ("BET1092",
          """Ottimizzata la finestra e la griglia dell'emissione effetti."""),
