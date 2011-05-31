@@ -106,7 +106,7 @@ class DateCtrl(wx.Control, cmix.TextCtrlMixin):
                 if event.GetKeyCode() == wx.WXK_RETURN:
                     event.Skip()
                 else:
-                    start, stop = m.GetSelection()
+                    start, stop = maskedCtrl.GetSelection()
                     if start == 0 and stop == len(maskedCtrl.GetValue()) and 48 <= event.GetKeyCode() <= 57:
                         maskedCtrl.SetValue('')
                         maskedCtrl.SetSelection(0,0)
