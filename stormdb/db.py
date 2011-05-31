@@ -882,7 +882,7 @@ class DB(object):
                             t = str2datetime
                         elif v.startswith('date'):
                             t = str2date
-                        elif v.startswith('char') or v.startswith('varchar') or v.startswith('text') or v.startswith('blob') or v.startswith('longblob') or v.startswith('varbinary'):
+                        elif v.startswith('char') or v.startswith('varchar') or v.startswith('text') or v.startswith('mediumtext') or v.startswith('longtext') or v.startswith('blob') or v.startswith('longblob') or v.startswith('varbinary'):
                             t = str
                         else:
                             print "unknown lom type: %s" % v
