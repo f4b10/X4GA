@@ -122,16 +122,14 @@ def GeneraMovimentiFunc( parent, call_fit = True, set_sizer = True ):
         "Questa funzione provvede a generare le registrazioni necessarie per la chiusura e la riapertura dell'esercizio.  Una volta confermato l'esercizio da \n"
         "elaborare, verranno determinati i saldi di tutti i sottoconti movimentati.\n"
         "\n"
-        "CHIUSURA\n"
-        "Verrà richiesta la data in cui generare le registrazioni: i sottoconti di tipo patrimoniale saranno chiusi nel sottoconto indicato come bilancio di apertura;\n"
-        "i sottoconti di tipo economico saranno chiusi nel sottoconto indicato come profitti e perdite.\n"
-        "Il saldo a pareggio verrà quindi girato verso il sottoconto indicato come risultato di esercizio per la chiusura.\n"
+        "CHIUSURA: Verrà richiesta la data in cui generare le registrazioni: i sottoconti di tipo patrimoniale saranno chiusi nel sottoconto indicato come bilancio \n"
+        "di apertura; i sottoconti di tipo economico saranno chiusi nel sottoconto indicato come profitti e perdite.  Il saldo a pareggio verrà quindi girato verso \n"
+        "il sottoconto indicato come risultato di esercizio per la chiusura.\n"
         "\n"
-        "APERTURA\n"
-        "Verrà richiesta la data in cui generare le registrazioni: i sottoconti di tipo patrimoniale saranno riaperti dal sottoconto indicato come bilancio di apertura.\n"
-        "Il saldo a pareggio verrà quindi girato verso il sottoconto indicato come risultato di esercizio per l'apertura.",
+        "APERTURA: Verrà richiesta la data in cui generare le registrazioni: i sottoconti di tipo patrimoniale saranno riaperti dal sottoconto indicato come bilancio \n"
+        "di apertura.  Il saldo a pareggio verrà quindi girato verso il sottoconto indicato come risultato di esercizio per l'apertura.",
         wx.DefaultPosition, wx.DefaultSize, 0 )
-    item3.Add( item5, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+    item3.Add( item5, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item1.Add( item3, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
@@ -141,17 +139,17 @@ def GeneraMovimentiFunc( parent, call_fit = True, set_sizer = True ):
     item8 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
     item9 = wx.StaticText( parent, ID_TEXT, "Determina i saldi relativi all'esercizio:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item8.Add( item9, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+    item8.Add( item9, 0, wx.ALIGN_CENTER|wx.RIGHT, 5 )
 
     item10 = wx.StaticText( parent, ID_ESERCIZIO, "-", wx.DefaultPosition, [40,-1], wx.ST_NO_AUTORESIZE )
     item10.SetFont( wx.Font( 10, wx.SWISS, wx.NORMAL, wx.BOLD ) )
     item10.SetName( "esercizio" )
-    item8.Add( item10, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+    item8.Add( item10, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT, 5 )
 
     item11 = wx.Button( parent, ID_UPDATE, "Calcola", wx.DefaultPosition, wx.DefaultSize, 0 )
     item11.SetDefault()
     item11.SetName( "update" )
-    item8.Add( item11, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+    item8.Add( item11, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
     item8.AddGrowableCol( 2 )
 
@@ -163,7 +161,7 @@ def GeneraMovimentiFunc( parent, call_fit = True, set_sizer = True ):
 
     item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item13 = GeneraMovimentiNotebook( parent, ID_WORKZONE, wx.DefaultPosition, [200,160], 0 )
+    item13 = GeneraMovimentiNotebook( parent, ID_WORKZONE, wx.DefaultPosition, wx.DefaultSize, 0 )
     item12 = item13
     
     item14 = wx.Panel( item13, -1 )
@@ -201,7 +199,7 @@ def GeneraMovimentiSaldiPatFunc( parent, call_fit = True, set_sizer = True ):
     item1.SetForegroundColour( wx.BLUE )
     item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
 
-    item2 = wx.Panel( parent, ID_PANGRIDSALPAT, wx.DefaultPosition, [200,400], wx.SUNKEN_BORDER )
+    item2 = wx.Panel( parent, ID_PANGRIDSALPAT, wx.DefaultPosition, [800,220], wx.SUNKEN_BORDER )
     item2.SetName( "pangridsalpat" )
     item0.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
@@ -234,7 +232,7 @@ def GeneraMovimentiSaldiEcoFunc( parent, call_fit = True, set_sizer = True ):
     item1.SetForegroundColour( wx.BLUE )
     item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
 
-    item2 = wx.Panel( parent, ID_PANGRIDSALECO, wx.DefaultPosition, [200,400], wx.SUNKEN_BORDER )
+    item2 = wx.Panel( parent, ID_PANGRIDSALECO, wx.DefaultPosition, [800,220], wx.SUNKEN_BORDER )
     item2.SetName( "pangridsaleco" )
     item0.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
@@ -258,19 +256,13 @@ def GeneraMovimentiSaldiEcoFunc( parent, call_fit = True, set_sizer = True ):
     return item0
 
 ID_PANEL = 10009
-ID_WARNING = 10010
 
 def GeneraMovimentiTotaliFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
-    item1 = GeneraMovimentiCalcolaPanel( parent, ID_PANEL, wx.DefaultPosition, [200,160], 0 )
+    item1 = GeneraMovimentiCalcolaPanel( parent, ID_PANEL, wx.DefaultPosition, wx.DefaultSize, 0 )
     item1.SetName( "pancalc" )
-    item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
-
-    item2 = wx.StaticText( parent, ID_WARNING, "", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item2.SetFont( wx.Font( 12, wx.SWISS, wx.NORMAL, wx.BOLD ) )
-    item2.SetName( "warning" )
-    item0.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 10 )
+    item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item0.AddGrowableCol( 0 )
 
@@ -281,17 +273,17 @@ def GeneraMovimentiTotaliFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_PANCALCHI = 10011
-ID_PANCALAPE = 10012
+ID_PANCALCHI = 10010
+ID_PANCALAPE = 10011
 
 def GeneraMovimentiCalcolaFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
-    item1 = GeneraMovimentiCalcolaChiusurePanel( parent, ID_PANCALCHI, wx.DefaultPosition, [200,50], 0 )
+    item1 = GeneraMovimentiCalcolaChiusurePanel( parent, ID_PANCALCHI, wx.DefaultPosition, wx.DefaultSize, 0 )
     item1.SetName( "pancalchi" )
     item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item2 = GeneraMovimentiCalcolaAperturePanel( parent, ID_PANCALAPE, wx.DefaultPosition, [200,50], 0 )
+    item2 = GeneraMovimentiCalcolaAperturePanel( parent, ID_PANCALAPE, wx.DefaultPosition, wx.DefaultSize, 0 )
     item2.SetName( "pancalape" )
     item0.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
@@ -304,18 +296,18 @@ def GeneraMovimentiCalcolaFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_REGCHICAU = 10013
-ID_REGCHIDAT = 10014
-ID_DESCHIBIL = 10015
-ID_REGCHIBIL = 10016
-ID_SALCHIBIL = 10017
-ID_DESCHIPRP = 10018
-ID_REGCHIPRP = 10019
-ID_SALCHIPRP = 10020
-ID_DESCHIUPE = 10021
-ID_REGCHIUPE = 10022
-ID_SALCHIUPE = 10023
-ID_CHIRIS = 10024
+ID_REGCHICAU = 10012
+ID_REGCHIDAT = 10013
+ID_DESCHIBIL = 10014
+ID_REGCHIBIL = 10015
+ID_SALCHIBIL = 10016
+ID_DESCHIPRP = 10017
+ID_REGCHIPRP = 10018
+ID_SALCHIPRP = 10019
+ID_DESCHIUPE = 10020
+ID_REGCHIUPE = 10021
+ID_SALCHIUPE = 10022
+ID_CHIRIS = 10023
 
 def GeneraMovimentiCalcolaChiusurePanelFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -328,13 +320,13 @@ def GeneraMovimentiCalcolaChiusurePanelFunc( parent, call_fit = True, set_sizer 
     item4 = wx.FlexGridSizer( 0, 3, 0, 0 )
     
     item5 = wx.StaticText( parent, ID_TEXT, "", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item4.Add( item5, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+    item4.Add( item5, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
-    item6 = wx.StaticText( parent, ID_TEXT, "Causale", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item4.Add( item6, 0, wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP, 5 )
+    item6 = wx.StaticText( parent, ID_TEXT, "Causale", wx.DefaultPosition, [300,-1], 0 )
+    item4.Add( item6, 0, wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 
     item7 = wx.StaticText( parent, ID_TEXT, "Data reg.", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item4.Add( item7, 0, wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP, 5 )
+    item4.Add( item7, 0, wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 
     item8 = wx.StaticText( parent, ID_TEXT, "", wx.DefaultPosition, wx.DefaultSize, 0 )
     item4.Add( item8, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
@@ -347,13 +339,13 @@ def GeneraMovimentiCalcolaChiusurePanelFunc( parent, call_fit = True, set_sizer 
     item4.Add( item10, 0, wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
 
     item11 = wx.StaticText( parent, ID_TEXT, "", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item4.Add( item11, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+    item4.Add( item11, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
     item12 = wx.StaticText( parent, ID_TEXT, "Giroconto su:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item4.Add( item12, 0, wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP, 5 )
+    item4.Add( item12, 0, wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 
     item13 = wx.StaticText( parent, ID_TEXT, "Saldo:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item4.Add( item13, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP, 5 )
+    item4.Add( item13, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 
     item14 = wx.StaticText( parent, ID_DESCHIBIL, "Stato Patrimoniale:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item14.SetName( "deschibil" )
@@ -377,19 +369,19 @@ def GeneraMovimentiCalcolaChiusurePanelFunc( parent, call_fit = True, set_sizer 
 
     item20 = wx.StaticText( parent, ID_DESCHIUPE, "Risultato esercizio:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item20.SetName( "deschiupe" )
-    item4.Add( item20, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item4.Add( item20, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
     item21 = LinkTablePdc(parent, ID_REGCHIUPE, 'regchiupe'); item21.Disable()
-    item4.Add( item21, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
+    item4.Add( item21, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 
     item22 = ImportoCtrl(parent, ID_SALCHIUPE, "salchiupe")
-    item4.Add( item22, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
+    item4.Add( item22, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 
     item4.AddGrowableCol( 1 )
 
     item3.Add( item4, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item23 = wx.StaticText( parent, ID_CHIRIS, "", wx.DefaultPosition, [50,-1], wx.ST_NO_AUTORESIZE )
+    item23 = wx.StaticText( parent, ID_CHIRIS, "", wx.DefaultPosition, [120,-1], wx.ST_NO_AUTORESIZE )
     item23.SetFont( wx.Font( 10, wx.SWISS, wx.NORMAL, wx.BOLD ) )
     item23.SetName( "chiris" )
     item3.Add( item23, 0, wx.ALIGN_BOTTOM|wx.ALIGN_CENTER_HORIZONTAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
@@ -398,7 +390,7 @@ def GeneraMovimentiCalcolaChiusurePanelFunc( parent, call_fit = True, set_sizer 
 
     item1.Add( item3, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+    item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
     item0.AddGrowableCol( 0 )
 
@@ -409,15 +401,16 @@ def GeneraMovimentiCalcolaChiusurePanelFunc( parent, call_fit = True, set_sizer 
     
     return item0
 
-ID_REGAPECAU = 10025
-ID_REGAPEDAT = 10026
-ID_DESAPEBIL = 10027
-ID_REGAPEBIL = 10028
-ID_SALAPEBIL = 10029
-ID_DESAPEUPE = 10030
-ID_REGAPEUPE = 10031
-ID_SALAPEUPE = 10032
-ID_APERIS = 10033
+ID_REGAPECAU = 10024
+ID_REGAPEDAT = 10025
+ID_DESAPEBIL = 10026
+ID_REGAPEBIL = 10027
+ID_SALAPEBIL = 10028
+ID_DESAPEUPE = 10029
+ID_REGAPEUPE = 10030
+ID_SALAPEUPE = 10031
+ID_APERIS = 10032
+ID_WARNING = 10033
 ID_GENERA = 10034
 
 def GeneraMovimentiCalcolaAperturePanelFunc( parent, call_fit = True, set_sizer = True ):
@@ -431,13 +424,13 @@ def GeneraMovimentiCalcolaAperturePanelFunc( parent, call_fit = True, set_sizer 
     item4 = wx.FlexGridSizer( 0, 3, 0, 0 )
     
     item5 = wx.StaticText( parent, ID_TEXT, "", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item4.Add( item5, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+    item4.Add( item5, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
-    item6 = wx.StaticText( parent, ID_TEXT, "Causale", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item4.Add( item6, 0, wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP, 5 )
+    item6 = wx.StaticText( parent, ID_TEXT, "Causale", wx.DefaultPosition, [300,-1], 0 )
+    item4.Add( item6, 0, wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 
     item7 = wx.StaticText( parent, ID_TEXT, "Data reg.", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item4.Add( item7, 0, wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP, 5 )
+    item4.Add( item7, 0, wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 
     item8 = wx.StaticText( parent, ID_TEXT, "", wx.DefaultPosition, wx.DefaultSize, 0 )
     item4.Add( item8, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
@@ -450,13 +443,13 @@ def GeneraMovimentiCalcolaAperturePanelFunc( parent, call_fit = True, set_sizer 
     item4.Add( item10, 0, wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
 
     item11 = wx.StaticText( parent, ID_TEXT, "", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item4.Add( item11, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+    item4.Add( item11, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
     item12 = wx.StaticText( parent, ID_TEXT, "Giroconto su:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item4.Add( item12, 0, wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP, 5 )
+    item4.Add( item12, 0, wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 
     item13 = wx.StaticText( parent, ID_TEXT, "Saldo:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item4.Add( item13, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP, 5 )
+    item4.Add( item13, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 
     item14 = wx.StaticText( parent, ID_DESAPEBIL, "Stato Patrimoniale:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item14.SetName( "desapebil" )
@@ -470,19 +463,19 @@ def GeneraMovimentiCalcolaAperturePanelFunc( parent, call_fit = True, set_sizer 
 
     item17 = wx.StaticText( parent, ID_DESAPEUPE, "Risultato esercizio:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item17.SetName( "desapeupe" )
-    item4.Add( item17, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item4.Add( item17, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
     item18 = LinkTablePdc(parent, ID_REGAPEUPE, 'regapeupe'); item18.Disable()
-    item4.Add( item18, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
+    item4.Add( item18, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 
     item19 = ImportoCtrl(parent, ID_SALAPEUPE, "salapeupe")
-    item4.Add( item19, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
+    item4.Add( item19, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 
     item4.AddGrowableCol( 1 )
 
     item3.Add( item4, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item20 = wx.StaticText( parent, ID_APERIS, "", wx.DefaultPosition, [50,-1], wx.ST_NO_AUTORESIZE )
+    item20 = wx.StaticText( parent, ID_APERIS, "", wx.DefaultPosition, [120,-1], wx.ST_NO_AUTORESIZE )
     item20.SetFont( wx.Font( 10, wx.SWISS, wx.NORMAL, wx.BOLD ) )
     item20.SetName( "aperis" )
     item3.Add( item20, 0, wx.ALIGN_BOTTOM|wx.ALIGN_CENTER_HORIZONTAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
@@ -491,11 +484,22 @@ def GeneraMovimentiCalcolaAperturePanelFunc( parent, call_fit = True, set_sizer 
 
     item1.Add( item3, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+    item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item21 = wx.Button( parent, ID_GENERA, "&Genera movimenti", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item21.SetName( "genera" )
-    item0.Add( item21, 0, wx.ALIGN_RIGHT|wx.ALL, 5 )
+    item21 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    
+    item22 = wx.StaticText( parent, ID_WARNING, "-warning-", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item22.SetFont( wx.Font( 12, wx.SWISS, wx.NORMAL, wx.BOLD ) )
+    item22.SetName( "warning" )
+    item21.Add( item22, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item23 = wx.Button( parent, ID_GENERA, "&Genera movimenti", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item23.SetName( "genera" )
+    item21.Add( item23, 0, wx.ALIGN_RIGHT|wx.LEFT|wx.RIGHT, 5 )
+
+    item21.AddGrowableCol( 0 )
+
+    item0.Add( item21, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item0.AddGrowableCol( 0 )
 
