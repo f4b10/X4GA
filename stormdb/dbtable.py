@@ -275,7 +275,7 @@ class DbGroup(object):
         self.filtersSaved.append(copy.deepcopy(self.filters))
     
     def ResumeFilters(self):
-        assert len(i.filtersSaved) > 0,\
+        assert len(self.filtersSaved) > 0,\
                """No filters to resume on group"""
         self.filters = copy.deepcopy(self.filtersSaved[-1])
         self.filtersSaved.pop()
