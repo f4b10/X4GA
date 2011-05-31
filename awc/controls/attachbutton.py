@@ -564,6 +564,7 @@ class AttachmentButton(wx.Button):
     def UpdateButtonStatus(self):
         global _colorsok
         if not _colorsok:
+            import wx.lib.colourdb
             wx.lib.colourdb.updateColourDB()
             _colorsok = True
         if self._attmemo.RowsCount() > 0:
