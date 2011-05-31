@@ -49,6 +49,7 @@ import report as rpt
 import dbtables as dba
 
 
+import wx.lib.newevent
 (FilterChangedEvent,  EVT_FilterChanged)  =  wx.lib.newevent.NewEvent()
 
 import os
