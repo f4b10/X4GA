@@ -33,7 +33,6 @@ from magazz.dataentry import MagazzPanel, _FrameDialogMixin, STATUS_EDITING
 import magazz.dataentry_wdr as wdr
 
 import awc.controls.windows as aw
-from awc.util import MsgDialog
 
 import wx
 import wx.grid as gl
