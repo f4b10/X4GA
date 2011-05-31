@@ -39,7 +39,7 @@ class _FrontCoverTemplate(FrontCoverTemplate):
 
     def afterDrawPage(self, canvas, doc):
         canvas.saveState()
-        canvas.drawImage('../../imgsource/x4_splash.png',2*inch, 8*inch)
+        canvas.drawImage('../../tools/imgsource/x4_splash.png',2*inch, 8*inch)
         canvas.setFont('Times-Roman', 10)
         canvas.line(inch, 120, self.pageWidth - inch, 120)
         canvas.drawString(inch, 100, 'Astra S.r.l.')
@@ -112,11 +112,6 @@ def run(pagesize=None, verbose=0, outDir=None):
     if verbose: print 'Built story contains %d flowables...' % len(story)
     doc.build(story)
     if verbose: print 'Saved "%s"' % destfn
-
-def makeSuite():
-    "standard test harness support - run self as separate process"
-    from reportlab.test.utils import ScriptThatMakesFileTest
-    return ScriptThatMakesFileTest('../docs/userguide', 'genuserguide.py', 'userguide.pdf')
 
 def main():
     import sys
