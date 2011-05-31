@@ -51,6 +51,7 @@ from anag.aliqiva import AliqIvaDialog
 from anag.pdc import PdcDialog
 from anag.pdctip import PdcTipDialog
 
+import wx.lib.newevent
 (GridSelectedEvent, EVT_GRIDSELECTED) = wx.lib.newevent.NewEvent()
 
 import anag.lib as lib
