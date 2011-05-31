@@ -424,6 +424,16 @@ http-equiv="content-type" />
     
     def GetAllChildren(self):
         return awu.GetAllChildrens(self)
+    
+    def _Layout(self):
+        #la funzione layout su gtk non ridisegna sempre correttamente quanto dovuto
+        #specialmente in caso di controlli che possono essere nascosti/visualizzati
+        #al momento
+        #questo workaround si basa sul cambiodi grandezza del container, casistica
+        #che causa il corretto ridisegnamento
+        s = self.GetSize()
+        self.SetSize((s[0]+1, s[1]+1))
+        wx.CallAfter(lambda: self.SetSize(s))
 
 
 # ------------------------------------------------------------------------------
