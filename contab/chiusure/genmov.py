@@ -134,7 +134,6 @@ class GeneraMovimentiGrid(dbglib.DbGridColoriAlternati):
             #if d: cn(f, cnmas).SetValue(d)
         cn(f, 'masesercizio').SetValue(self.esercizio)
         f.panel.TestForUpdates()#mastroaddfilter=self.mastrofilter)
-        f.SetSize((1024, 768))
         f.CenterOnScreen()
         f.ShowModal()
         f.Destroy()
@@ -317,10 +316,10 @@ class GeneraMovimentiPanel(aw.Panel):
         cn('salchibil').Show(sq)
         cn('salchiprp').Show(sq)
         cn('salchiupe').Show(not sq)
-        cn('pancalchi').Show(not err or sq)
+        cn('pancalchi').Show(True)
         cn('salapebil').Show(sq)
         cn('salapeupe').Show(not sq)
-        cn('pancalape').Show(not err)
+        cn('pancalape').Show(True)
         self.risultato = msg # per stampa
         c = cn('warning')
         if err:
@@ -336,6 +335,7 @@ class GeneraMovimentiPanel(aw.Panel):
         cn('salapebil').SetValue(abs(tpa-tpp))
         for name in 'chi ape'.split():
             cn('%sris' % name).SetLabel(ris)
+        self._Layout()
     
     def PrintReport(self, dbsal):
         def GetSezione(tipo):
@@ -510,6 +510,9 @@ class GeneraMovimentiPanel(aw.Panel):
     
     def _GenRegFinale(self, e, pdc1, cau, pdc2, dat, imp, s1, s2):
         
+        assert s1 in ("D", "A"), "Segno non riconosciuto"
+        assert s2 in ("D", "A"), "Segno non riconosciuto"
+        
         reg = self.dbreg
         reg.Reset()
         
@@ -526,10 +529,7 @@ class GeneraMovimentiPanel(aw.Panel):
         b.numriga = 1
         b.tipriga = reg.tipreg
         b.importo = imp
-        if s1 == 'D':
-            b.segno = s1
-        else:
-            b.segno = s2
+        b.segno = s1
         b.id_pdcpa = pdc1
         b.id_pdccp = pdc2
         
@@ -538,12 +538,10 @@ class GeneraMovimentiPanel(aw.Panel):
         b.numriga = 2
         b.tipriga = reg.tipreg
         b.importo = imp
-        if s1 == 'D':
-            b.segno = s2
-        else:
-            b.segno = s1
+        b.segno = s2
         b.id_pdcpa = pdc2
         b.id_pdccp = pdc1
+        
         return reg.Save()
 
 
