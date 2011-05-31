@@ -204,6 +204,9 @@ class DateCtrl(wx.Control, cmix.TextCtrlMixin):
         event.Skip()
     
     def OnFocusLost(self, event):
+        if not aw.awu.GetParentFrame(self).IsShown():
+            #su gtk la chiusura del frame con focus su DateCtrl crasha l'app
+            return
         self.CheckDate()
 #        if self.FindFocus() is self.maskedCtrl:
 #            self.AdjustBackgroundColor()
