@@ -58,6 +58,7 @@ import cfg.cfgprogr as progr
 from anag.pdc import PdcDialog
 from anag.pdctip import PdcTipDialog
 
+import wx.lib.newevent
 (GridSelectedEvent, EVT_GRIDSELECTED) = wx.lib.newevent.NewEvent()
 
 from contab.dataentry_i import GeneraPartiteMixin, SelRowPa
