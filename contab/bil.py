@@ -189,6 +189,9 @@ class _BilGrid(dbglib.DbGridColoriAlternati):
     
     def MenuPopup(self, event):
         row, col = event.GetRow(), event.GetCol()
+        rsb = self.rsbil
+        if not rsb[row][GRIDCOL_CODPDC]:
+            return
         self.SetGridCursor(row, col)
         self.SelectRow(row)
         menu = wx.Menu()
