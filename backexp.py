@@ -74,13 +74,13 @@ class BackupExplorerGrid(dbglib.DbGridColoriAlternati):
         
         self.dbdir = None
         
-        _NUM = gl.GRID_VALUE_NUMBER+":7"
+        _NUM = gl.GRID_VALUE_NUMBER+":12"
         _STR = gl.GRID_VALUE_STRING
         _CHK = gl.GRID_VALUE_BOOL+":'all','partial'"
         _DTT = gl.GRID_VALUE_DATETIME+":withtime"
         
         cols = (\
-            (180, (0, "Nome file", _STR, True )),
+            (200, (0, "Nome file", _STR, True )),
             ( 90, (3, "Database",  _STR, True )),
             (140, (1, "Data",      _DTT, True )),
             (100, (2, "Bytes",     _NUM, True )),
