@@ -734,7 +734,7 @@ class AnagPanel(aw.Panel):
         event.Skip()
     
     def OnDataChanged(self, event):
-        if self.acceptDataChanged and not self.valuesearch:
+        if self.acceptDataChanged and not self.datachanged and not self.valuesearch:
             self.SetDataChanged(True, event.GetEventObject())
         event.Skip()
     
