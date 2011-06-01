@@ -27,6 +27,7 @@ def opj(x,y):
     return os.path.join(x,y).replace('\\', '/')
 
 import wx
+import wx.lib.colourdb as colourdb
 import stormdb as adb
 
 import awc.controls.attachbutton_wdr as wdr
@@ -564,8 +565,7 @@ class AttachmentButton(wx.Button):
     def UpdateButtonStatus(self):
         global _colorsok
         if not _colorsok:
-            import wx.lib.colourdb
-            wx.lib.colourdb.updateColourDB()
+            colourdb.updateColourDB()
             _colorsok = True
         if self._attmemo.RowsCount() > 0:
             bg = wx.TheColourDatabase.Find("LIGHT CORAL")
