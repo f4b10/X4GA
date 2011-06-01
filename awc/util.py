@@ -396,12 +396,13 @@ class WaitDialog(wx.Dialog):
         return True
     
     def _Update(self):
-        wx.Yield()
-#        if wx.Platform == '__WXMSW__':
-#            try:
-#                wx.SafeYield(onlyIfNeeded=True)
-#            except:
-#                pass
+        if wx.Platform == '__WXMSW__':
+            try:
+                wx.SafeYield(onlyIfNeeded=True)
+            except:
+                pass
+        else:
+            wx.Yield()
 
 
 # ------------------------------------------------------------------------------
