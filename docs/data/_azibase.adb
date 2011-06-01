@@ -1,4 +1,4 @@
-<tablesBackup version="1" database="x4__azibase" content="all" comment="">
+<tablesBackup version="1" database="x4__azibase" content="all" comment="azienda base per installazioni">
     <table name="bilmas">
         <structure>
             <column name="id" type="int(6)" can_null="NO" key_type="PRI" default_value="None" extra="auto_increment" />
