@@ -29,6 +29,13 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.3.08', None, (
+         ("BET1095",
+         """Migliorata la creazione di nuova azienda con la creazione
+         automatica dei progressivi contabili e messaggio finale per il 
+         completamento manuale del setup dell'azienda."""),
+        ),),
+    
     ('1.3.07', None, (
          ("BUG1071",
          """Correzione chiusure contabili nel caso di chiusura di esercizio
