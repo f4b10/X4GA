@@ -104,7 +104,10 @@ class SelEsercizioChoice(awch.Choice):
     
     def GetValue(self):
         n = self.GetSelection()
-        return self.esercizi[n]
+        try:
+            return self.esercizi[n]
+        except:
+            return None
 
 
 # ------------------------------------------------------------------------------
