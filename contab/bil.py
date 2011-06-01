@@ -1770,8 +1770,8 @@ class BilCeeGrid(_BilGrid):
             dbprt.cee = r[nccee]
             dbprt.cod = r[ncpdc]
             dbprt.des = r[ncdsc]
-            dbprt.sld = r[ncttd]
-            dbprt.sla = r[nctta]
+            dbprt.sld = r[ncttd] or 0
+            dbprt.sla = r[nctta] or 0
             dbprt.val = dbprt.sld-dbprt.sla
             dbprt.prt = bool(not r[nctpt] in "CF" or parms['detcf'] and TestZero(rowd, rowa))
         
