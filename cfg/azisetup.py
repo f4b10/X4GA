@@ -262,20 +262,26 @@ class AziendaSetupPanel(_SetupPanel):
     
     def Validate(self):
         out = True
+        cn = self.FindWindowByName
+        ci = self.FindWindowById
         for name in ('codice', 'ragsoc', 'indirizzo', 'cap', 'citta', 'prov'):
-            ctr = self.FindWindowByName('setup_azienda_'+name)
+            ctr = cn('setup_azienda_'+name)
             if ctr.GetValue():
                 ctr.SetBackgroundColour(None)
             else:
                 ctr.SetBackgroundColour(Env.Azienda.Colours.VALERR_BACKGROUND)
                 out = False
-        if not self.TestEsercizio():
-            aw.awu.MsgDialog(self, message="Giorno/Mese errati x l'esercizio")
+        if out and not self.TestEsercizio():
+            aw.awu.MsgDialog(self, message="Giorno/Mese errati x l'esercizio", style=wx.ICON_ERROR)
+            out = False
+        if out and cn('setup_contab_valcon').GetValue() is None:
+            aw.awu.MsgDialog(self, message="Definire la valuta di conto", style=wx.ICON_ERROR)
+            out = False
+        if out and ci(wdr.ID_MAGDEFAULT).GetValue() is None:
+            aw.awu.MsgDialog(self, message="Definire il magazzino di default", style=wx.ICON_ERROR)
             out = False
         self.Refresh()
         if out:
-            def cn(x):
-                return self.FindWindowByName(x)
             old = (bt.TIPO_CONTAB,
                    bt.CONBILRICL,
                    bt.CONBILRCEE,
