@@ -715,6 +715,10 @@ class _BilPanel(aw.Panel):
                                                               wdr.ID_DATREG1,
                                                               wdr.ID_DATREG2))
         
+        if ese is None:
+            aw.awu.MsgDialog(self, "Nessun esercizio presente", style=wx.ICON_ERROR)
+            return
+        
         if self.bilese:
             t = 'ESERCIZIO %d  ' % ese
             if cn('salep').GetValue():
