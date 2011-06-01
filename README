@@ -37,10 +37,13 @@ automatica dell'azienda da cui partire per installarne di nuove: la creazione
 di una nuova azienda presuppone l'acquisizione di determinate informazioni da
 un'azienda già esistente.
 Per sopperire facilmente a questo problema, è sufficiente creare una nuova 
-azienda assegnandole il codice 'azibase' ed il nome database 'x4_azibase',
+azienda assegnandole il codice '_azibase' ed il nome database 'x4__azibase',
 senza acquisire nulla da alcuna azienda; una volta creata, sarà possibile
-effettuare un ripristino di backup dal file azibase.adb presente nella
-cartella 'docs' (Strumenti/Backup Explorer).
+effettuare un ripristino di backup dal file _azibase.adb presente nella
+cartella 'docs/data' (Strumenti/Backup Explorer).  Nella stessa cartella è
+presente anche un altro file di backup, denominato 'impero.adb', contenente
+un'azienda con dati fittizi utile a fini dimostrativi; la creazione della
+relativa azienda avviene come menzionato per l'azienda base.
 
 ORM
 ===
