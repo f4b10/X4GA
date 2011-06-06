@@ -1597,11 +1597,12 @@ class XFrame(wx.Frame):
         #frames and dialogs cleanup test
         for child in self.GetChildren():
             if isinstance(child, (wx.Frame, wx.Dialog,)):
-                CanClose = 'CanClose'
-                if hasattr(child, CanClose):
-                    if not getattr(child, CanClose)():
-                        quit = False
-                        break
+                if child.IsShown():
+                    CanClose = 'CanClose'
+                    if hasattr(child, CanClose):
+                        if not getattr(child, CanClose)():
+                            quit = False
+                            break
         if quit:
             event.Skip()
     
