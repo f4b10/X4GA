@@ -22,10 +22,12 @@
 # ------------------------------------------------------------------------------
 
 from PIL import Image, ImageDraw
+import StringIO
 
 import reportlab.graphics.barcode.code39 as c39
 import reportlab.graphics.barcode.code128 as code128
 import reportlab.graphics.barcode.eanbc as eanbc
+import pygooglechart as pygc
 
 import string
 
@@ -57,6 +59,9 @@ BARCODE_TYPE_USD3 =        23
 BARCODE_TYPE_USD4 =        24
 BARCODE_TYPE_USPS =        25
 BARCODE_TYPE_CODE39EXT =   26
+
+#iReport 3.0.0 is missing qrcode, so use pdf417 instead
+BARCODE_TYPE_2D_QR =       BARCODE_TYPE_PDF417
 
 
 class Code39Barcode(c39.Standard39):
@@ -193,6 +198,42 @@ class Ean13Barcode(eanbc.Ean13BarcodeWidget):
 # ------------------------------------------------------------------------------
 
 
+class QRCode(pygc.QRChart):
+    
+    def __init__(self, w, h, message, **kwargs):
+        pygc.QRChart.__init__(self, w, h, **kwargs)
+        self.add_data(message)
+    
+    def getPngImage(self, w, h, fgcol, bgcol):
+        
+        w = int(w)
+        h = int(h)
+        
+#        img = Image.new('RGB', (w, h), bgcol)
+#        d = ImageDraw.Draw(img)
+#        for bx, bw in bars:
+#            d.rectangle(((bx, 0), (bx+bw-1, h-1)), fgcol)
+#        del d
+        
+        import urllib2
+        opener = urllib2.urlopen(self.get_url())
+
+        if opener.headers['content-type'] != 'image/png':
+            raise Exception('Server responded with a ' \
+                'content-type of %s' % opener.headers['content-type'])
+
+        stream = opener.read()
+        
+        opener.close()
+        
+        img = Image.open(StringIO.StringIO(stream))
+        
+        return img
+
+
+# ------------------------------------------------------------------------------
+
+
 def getBarcodeImage(oCanvas, x0, y0, dx, dy, fgcol, bgcol, 
                     ctype, ccode, cflag1, cflag2, cflag3, cflag4, cflag5):
     
@@ -227,6 +268,13 @@ def getBarcodeImage(oCanvas, x0, y0, dx, dy, fgcol, bgcol,
               'barHeight': dy}
         kw['lquiet'] = kw['rquiet'] = 0
         bc = Ean13Barcode(ccode, **kw)
+        img = bc.getPngImage(dx, dy, fgcol, bgcol)
+        
+    elif btype == BARCODE_TYPE_2D_QR:
+#        kw = {'barWidth': 1,
+#              'barHeight': dy}
+#        kw['lquiet'] = kw['rquiet'] = 0
+        bc = QRCode(int(dx), int(dy), ccode)#, **kw)
         img = bc.getPngImage(dx, dy, fgcol, bgcol)
     
     return img
