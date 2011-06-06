@@ -22,12 +22,10 @@
 # ------------------------------------------------------------------------------
 
 from PIL import Image, ImageDraw
-import StringIO
 
 import reportlab.graphics.barcode.code39 as c39
 import reportlab.graphics.barcode.code128 as code128
 import reportlab.graphics.barcode.eanbc as eanbc
-import pygooglechart as pygc
 
 import string
 
@@ -198,11 +196,19 @@ class Ean13Barcode(eanbc.Ean13BarcodeWidget):
 # ------------------------------------------------------------------------------
 
 
-class QRCode(pygc.QRChart):
+import StringIO
+try:
+    from pygooglechart import QRChart
+except ImportError:
+    class QRChart:
+        def __init__(self, *args, **kwargs):
+            raise Exception, "Manca package pygooglechart"
+
+class QRCode(object):
     
     def __init__(self, w, h, message, **kwargs):
-        pygc.QRChart.__init__(self, w, h, **kwargs)
-        self.add_data(message)
+        self.qrc = QRChart(w, h, **kwargs)
+        self.qrc.add_data(message)
     
     def getPngImage(self, w, h, fgcol, bgcol):
         
@@ -216,7 +222,7 @@ class QRCode(pygc.QRChart):
 #        del d
         
         import urllib2
-        opener = urllib2.urlopen(self.get_url())
+        opener = urllib2.urlopen(self.qrc.get_url())
 
         if opener.headers['content-type'] != 'image/png':
             raise Exception('Server responded with a ' \
