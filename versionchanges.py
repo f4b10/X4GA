@@ -29,6 +29,12 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.3.09', None, (
+         ("BUG1072",
+         """Indagine crash in chiusura applicazione, riutilizzo della
+         libreria wx versione 2.8.10.1 (unicode)."""),
+        ),),
+    
     ('1.3.08', None, (
          ("BET1095",
          """Migliorata la creazione di nuova azienda con la creazione
