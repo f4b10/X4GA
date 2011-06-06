@@ -21,6 +21,7 @@
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
 
+import sys
 import Env
 import locale
 from string import *
@@ -102,6 +103,8 @@ class Expression:
 
     def evaluate(self, oCanvas, object=None):
         exp=self.textFieldExpression
+        if type(exp) is str and sys.platform == 'win32':
+            exp = unicode(exp, 'Windows-1252')
         for v in oCanvas.userVariableList:
             exp=replace(exp,"$V{" +v + "}", "oCanvas.userVariableList['"+v+"'].valore")
         exp=replace(exp, "$F{", "")
