@@ -433,10 +433,11 @@ class SelAziendaPanel(aw.Panel):
         lEsito=True
         errMessage = None
         try:
-            conn = MySQLdb.connect( host=Env.Azienda.DB.servername,
-                                    user=Env.Azienda.DB.username,
-                                    passwd=Env.Azienda.DB.password,
-                                    db = nomedb )
+            conn = MySQLdb.connect(host=Env.Azienda.DB.servername,
+                                   user=Env.Azienda.DB.username,
+                                   passwd=Env.Azienda.DB.password,
+                                   db=nomedb,
+                                   use_unicode=True)
             Env.Azienda.DB.connection = conn
             Env.Azienda.codice = codice
             Env.Azienda.descrizione = nomeazi
