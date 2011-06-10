@@ -129,7 +129,7 @@ def CheckUtentiStructure():
             if not u._info.db.Execute(cmd):
                 err = repr(u._info.db.dbError.description)
         else:
-            err = repr(u._info.db.dbError.descripion)
+            err = repr(u._info.db.dbError.description)
         if err:
             util.MsgDialog(None, err, style=wx.ICON_ERROR)
             return False
