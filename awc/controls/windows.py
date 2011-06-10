@@ -138,9 +138,9 @@ class mixin(ContainersMixin):
     
     def __init__(self, title=None):
         ContainersMixin.__init__(self)
-        if title:
+        if title and hasattr(self, 'SetTitle'):
             self.SetTitle(title)
-        if STD_ICON:
+        if STD_ICON and hasattr(self, 'SetIcon'):
             self.SetIcon(STD_ICON)
     
     def HelpBuilder_Enable(self):
@@ -467,6 +467,7 @@ class Frame(wx.Frame, mixin):
                  **kwargs):
         
         wx.Frame.__init__(self, parent, id, title, pos, size, style, **kwargs)
+        mixin.__init__(self)
         
         if not title and 'title' in kwargs:
             title = kwargs.pop('title')
@@ -499,6 +500,7 @@ class Dialog(wx.Dialog, mixin):
                  **kwargs):
         
         wx.Dialog.__init__(self, parent, id, title, pos, size, style, **kwargs)
+        mixin.__init__(self)
         
         if not title and 'title' in kwargs:
             title = kwargs.pop('title')
@@ -570,6 +572,7 @@ class Panel(wx.Panel, mixin):
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize, style=wx.TAB_TRAVERSAL, name="panel"):                 
         style |= wx.TAB_TRAVERSAL
         wx.Panel.__init__(self, parent, id, pos, size, style, name)
+        mixin.__init__(self)
         self._default_item = None
         self._accelerators = {}
         self._accel_bindings = []
