@@ -153,20 +153,20 @@ class AutoCheckUpdates_Thread(object):
 # ------------------------------------------------------------------------------
 
 
-class XFrame(wx.Frame):
+class XFrame(aw.Frame):
     
     def __init__(self, parent=None, id=-1, title="X4",
                  pos=(0,0), size=(600, 160),
                  style = wx.DEFAULT_FRAME_STYLE ):
         
-        wx.Frame.__init__(self, parent, id, title, pos, size, style)
+        aw.Frame.__init__(self, parent, id, title, pos, size, style)
         
         show_promem = True#hasattr(sys, 'frozen')
         show_feeds = True
         
-        icon = wx.EmptyIcon()
-        icon.CopyFromBitmap(images.getIconBitmap())
-        self.SetIcon(icon)
+#        icon = wx.EmptyIcon()
+#        icon.CopyFromBitmap(images.getIconBitmap())
+#        self.SetIcon(icon)
         
         self.menuext = []
         self.ftdif = []
@@ -228,7 +228,7 @@ class XFrame(wx.Frame):
     
     def Show(self, *args, **kwargs):
         
-        wx.Frame.Show(self, *args, **kwargs)
+        aw.Frame.Show(self, *args, **kwargs)
         
         cfg = Env.Azienda.config
         if cfg.get('Updates', 'user') and cfg.get('Updates', 'pswd'):
