@@ -26,16 +26,16 @@ from datetime import datetime as dtime
 from datetime import timedelta
 
 
-FORMAT_DATE = '%d.%m.%Y'
-FORMAT_DATE_SH = '%d.%m.%y'
+FORMAT_DATE = '%d/%m/%Y'
+FORMAT_DATE_SH = '%d/%m/%y'
 def SetFormatDate(f):
     global FORMAT_DATE
     FORMAT_DATE = f
 def GetFormatDate():
     return FORMAT_DATE
 
-FORMAT_DATETIME = '%d.%m.%Y %H:%M:%S'
-FORMAT_DATETIME_SH = '%d.%m.%y %H:%M:%S'
+FORMAT_DATETIME = '%d/%m/%Y %H:%M:%S'
+FORMAT_DATETIME_SH = '%d/%m/%y %H:%M:%S'
 def SetFormatDateTime(f):
     global FORMAT_DATETIME
     FORMAT_DATETIME = f
