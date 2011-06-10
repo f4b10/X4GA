@@ -1425,10 +1425,12 @@ class DbGridTable(gridlib.PyGridTableBase):
             
             try:
                 
+                import codecs
                 tmpfile = tempfile.NamedTemporaryFile(suffix='.csv')
                 tmpname = tmpfile.name
                 tmpfile.close()
                 tmpfile = open(tmpname, 'wb')
+                tmpfile.write(codecs.BOM_UTF8)
                 wx.GetApp().AppendTempFile(tmpname)
                 
                 #writer = csv.writer(tmpfile)
@@ -1469,7 +1471,7 @@ class DbGridTable(gridlib.PyGridTableBase):
                         return [' ', 'X'][int(bool(x))]
                     def strstr(x):
                         if x is None: return ''
-                        x = str(x)
+                        x = unicode(x)
                         if CSVFORMAT_EXCELZERO and (x or ' ')[0].isdigit():
                             x = '="%s"' % x
                         return x
