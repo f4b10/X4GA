@@ -33,7 +33,9 @@ config_base_path = xpaths.GetConfigPath()
 
 if hasattr(sys, 'frozen'):
     
-    sys.setdefaultencoding("utf-8")
+    a = 'setdefaultencoding'
+    if hasattr(sys, a):
+        getattr(sys, a)("utf-8")
     
     try:
         os.chdir(os.path.split(sys.argv[0])[0])
@@ -152,6 +154,17 @@ def Main():
     def _exceptionhook(type, err, traceback):
         erman.ErrorWarning(err, traceback)
     sys.excepthook = _exceptionhook
+    
+    import images
+    icon = wx.EmptyIcon()
+    custicon = os.path.join(os.path.split(__file__)[0], 'customized_icon.png')
+    if os.path.isfile(custicon):
+        bmp = wx.Bitmap(custicon)
+    else:
+        bmp = images.getIconBitmap()
+    icon.CopyFromBitmap(bmp)
+    import awc.controls.windows as aw
+    aw.SetStandardIcon(icon)
     
     app.StartApp()
     app.MainLoop()
