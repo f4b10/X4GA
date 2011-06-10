@@ -29,6 +29,12 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.3.10', None, (
+         ("BUG1073",
+         """Correzione bug nell'impostazione di valori numerici, comparso 
+         nella versione 1.3.07."""),
+        ),),
+    
     ('1.3.09', None, (
          ("BUG1072",
          """Indagine crash in chiusura applicazione, riutilizzo della
