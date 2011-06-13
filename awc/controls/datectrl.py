@@ -311,14 +311,16 @@ class DateCtrl(wx.Control, cmix.TextCtrlMixin):
             yyyy = ("0000%d" % d.year)[-4:]
             self.maskedCtrl.SetValue("%s.%s.%s" % (dd,mm,yyyy) )
 
-    def GetValue(self, adapt_date=True):
+    def GetValue(self, adapt_date=True, adapt_year=True):
         out = None
         try:
             masked = self.maskedCtrl
             cdate = masked.GetValue()
             dd = int(cdate[0:2])
             mm = int(cdate[3:5])
-            yyyy = int((cdate[6:10]).strip() or YEAR_DEFAULT)
+            yyyy = int((cdate[6:10]).strip() or 0)
+            if not yyyy and adapt_year:
+                yyyy = YEAR_DEFAULT
             out = DateTime.Date( yyyy, mm, dd )
             if adapt_date:
                 if int(cdate[0:2].strip() or 0) != out.day\
@@ -406,14 +408,16 @@ class DateTimeCtrl(DateCtrl):
                 return str(x).zfill(2)
             self.maskedCtrl.SetValue("%s.%s.%s %s:%s" % (dd,mm,yyyy,f(hh),f(mn)))
     
-    def GetValue(self, adapt_date=True):
+    def GetValue(self, adapt_date=True, adapt_year=True):
         out = None
         try:
             masked = self.maskedCtrl
             cdate = masked.GetValue()
             dd = int(cdate[0:2])
             mm = int(cdate[3:5])
-            yyyy = int((cdate[6:10]).strip() or YEAR_DEFAULT)
+            yyyy = int((cdate[6:10]).strip() or 0)
+            if not yyyy and adapt_year:
+                yyyy = YEAR_DEFAULT
             hh = int(cdate[11:13])
             mn = int(cdate[14:16])
             out = DateTime.DateTime(yyyy, mm, dd, hh, mn)
