@@ -157,10 +157,15 @@ def Main():
     
     import images
     icon = wx.EmptyIcon()
-    custicon = os.path.join(os.path.split(__file__)[0], 'customized_icon.png')
+    prg = sys.argv[0]
+    custicon = os.path.join(os.path.split(prg)[0], 'customized_icon.png')
+    bmp = None
     if os.path.isfile(custicon):
-        bmp = wx.Bitmap(custicon)
-    else:
+        try:
+            bmp = wx.Bitmap(custicon)
+        except:
+            pass
+    if bmp is None:
         bmp = images.getIconBitmap()
     icon.CopyFromBitmap(bmp)
     import awc.controls.windows as aw
