@@ -29,6 +29,13 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.3.11', None, (
+         ("BET1096",
+         """Ottimizzate le dimensioni delle finestre dei dataentry contabili
+         e razionalizzate le griglie contenute (tolti gli ancoraggi alle 
+         colonne)."""),
+        ),),
+    
     ('1.3.10', None, (
          ("BUG1073",
          """Correzione bug nell'impostazione di valori numerici, comparso 
