@@ -1072,10 +1072,12 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
     def OnDatRegChanged(self, event):
         if self.reg_id is None:
             if self.status == ctb.STATUS_EDITING:
-                newdd = self.controls["datreg"].GetValue()
+                newdd = self.controls["datreg"].GetValue(adapt_year=False)
+                print 'date: ', newdd
                 if self.reg_datreg != newdd:
                     self.reg_datreg = newdd
-                    self.DefNumIva()
+                    if newdd:
+                        self.DefNumIva()
                 if self._cfg_datdoc == '1':
                     self.controls['datdoc'].SetValue(newdd)
                     self.RicalcolaScadenzeDaDataDocumento(forcericalc=True)

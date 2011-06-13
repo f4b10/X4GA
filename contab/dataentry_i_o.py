@@ -524,7 +524,7 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
         grid.SetCellDynAttr(self._GridEdit_Iva_GetAttr)
         map(lambda c:\
             grid.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
-        grid.SetAnchorColumns(4, 1)
+#        grid.SetAnchorColumns(4, 1)
         grid.AutoSizeColumns()
         
         def MoveColumnAfterEdit(grid, row, col):
@@ -919,7 +919,8 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
         grid.SetCellDynAttr(self._GridEdit_Dav_GetAttr)
         map(lambda c:\
             grid.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
-        grid.SetAnchorColumns(5, 2)
+#        grid.SetAnchorColumns(5, 2)
+        grid.SetFitColumn(9)
         grid.AutoSizeColumns()
         
         grid.SetColDefault(1)

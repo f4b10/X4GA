@@ -289,7 +289,7 @@ class ContabPanelTipo_C(ctb.ContabPanel,
     def OnDatRegChanged(self, event):
         if self.reg_id is None:
             if self.status == ctb.STATUS_EDITING:
-                newdd = self.controls["datreg"].GetValue()
+                newdd = self.controls["datreg"].GetValue(adapt_year=False)
                 if self.reg_datreg != newdd:
                     self.reg_datreg = newdd
                 if self._cfg_datdoc == '1':
@@ -298,7 +298,7 @@ class ContabPanelTipo_C(ctb.ContabPanel,
         event.Skip()
     
     def OnDatDocChanged(self, event):
-        newdd = self.controls["datdoc"].GetValue()
+        newdd = self.controls["datdoc"].GetValue(adapt_year=False)
         if self.reg_datdoc != newdd:
             self.reg_datdoc = newdd
             self.ScadCalc()
@@ -362,7 +362,7 @@ class ContabPanelTipo_C(ctb.ContabPanel,
         
         map(lambda c:\
             grid.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
-        grid.SetAnchorColumns(4, 2)
+#        grid.SetAnchorColumns(4, 2)
         grid.SetFitColumn(5)
         grid.AutoSizeColumns()
         

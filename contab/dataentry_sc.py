@@ -164,7 +164,7 @@ class DavGrid(dbglib.DbGrid):
         self.SetCellDynAttr(self.GetAttr)
         map(lambda c:\
             self.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
-        self.SetAnchorColumns(4, 2)
+#        self.SetAnchorColumns(4, 2)
         self.SetFitColumn(5)
         self.AutoSizeColumns()
         self.SetColDefault(1)
@@ -514,7 +514,7 @@ class ScaGrid(dbglib.DbGrid):
         
         map(lambda c:\
             self.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
-        self.SetAnchorColumns(5, 5)
+#        self.SetAnchorColumns(5, 5)
         self.AutoSizeColumns()
         sz = wx.FlexGridSizer(1,0,0,0)
         sz.AddGrowableCol( 0 )
@@ -721,7 +721,7 @@ class PcfGrid(dbglib.DbGridColoriAlternati):
         self.SetCellDynAttr(self.GetAttr)
         map(lambda c:\
             self.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
-        self.SetAnchorColumns(6, 3)
+#        self.SetAnchorColumns(6, 3)
         self.SetFitColumn(-1)
         self.AutoSizeColumns()
         

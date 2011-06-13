@@ -111,6 +111,23 @@ class ImportoNumCtrl_RO(ImportoNumCtrl):
         self.SetReadOnly()
 
 
+class DavIvaSplitter(wx.SplitterWindow):
+    
+    def __init__(self, *args, **kwargs):
+        wx.SplitterWindow.__init__(self, *args, **kwargs)
+        self.SetPanelSizes()
+        self.Bind(wx.EVT_SIZE, self.OnResized)
+    
+    def SetPanelSizes(self):
+        totparts, davpart = 2, 1
+        h = self.GetSize()[1]
+        self.SetSashPosition(int(float(h)/totparts*davpart))
+    
+    def OnResized(self, event):
+        self.SetPanelSizes()
+        event.Skip()
+
+
 
 
 # Window functions
@@ -468,17 +485,19 @@ def ScadFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_PAN_DAV = 10026
-ID_PAN_IVA = 10027
+ID_DAVIVAZONE = 10026
 
 def BodyFuncTipo_I_O( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
-    item1 = PanelDAV( parent, ID_PAN_DAV, wx.DefaultPosition, wx.DefaultSize, 0 )
+    item1 = DavIvaSplitter( parent, ID_DAVIVAZONE, wx.DefaultPosition, wx.DefaultSize, wx.SP_BORDER|wx.SP_3D|wx.CLIP_CHILDREN )
+    item2 = wx.Panel( item1, -1 )
+    BodyDavFunc( item2, False, True )
+    item3 = wx.Panel( item1, -1 )
+    BodyIvaFunc( item3, False, True )
+    item1.SplitHorizontally( item2, item3 )
+    item1.SetName( "davizazone" )
     item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
-
-    item2 = PanelIVA( parent, ID_PAN_IVA, wx.DefaultPosition, wx.DefaultSize, 0 )
-    item0.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item0.AddGrowableCol( 0 )
 
@@ -491,8 +510,8 @@ def BodyFuncTipo_I_O( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_FOREIGN = 10028
-ID_LINE = 10029
+ID_FOREIGN = 10027
+ID_LINE = 10028
 
 def BodyFuncTipo_I_S( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -593,11 +612,11 @@ def BodyFuncTipo_I_S( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_TXT_DATREG = 10030
-ID_REGIVA = 10031
-ID_TXT_NUMIVA = 10032
-ID_TXT_DATDOC = 10033
-ID_TXT_NUMDOC = 10034
+ID_TXT_DATREG = 10029
+ID_REGIVA = 10030
+ID_TXT_NUMIVA = 10031
+ID_TXT_DATDOC = 10032
+ID_TXT_NUMDOC = 10033
 
 def HeadFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 1, 0, 0, 0 )
@@ -679,11 +698,11 @@ def HeadFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_TEXT_TIPOPDC = 10035
-ID_PDCROWPA = 10036
-ID_TOTDOC = 10037
-ID_PANGRID_PDCPREF = 10038
-ID_BTNOK = 10039
+ID_TEXT_TIPOPDC = 10034
+ID_PDCROWPA = 10035
+ID_TOTDOC = 10036
+ID_PANGRID_PDCPREF = 10037
+ID_BTNOK = 10038
 
 def SelRowPaFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -748,15 +767,15 @@ def SelRowPaFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_PANGRID_PCF = 10040
-ID_CHKPCFOPEN = 10041
-ID_PCFOPENUM = 10042
-ID_PCFOPETOT = 10043
-ID_PCFSELNUM = 10044
-ID_PCFSELTOT = 10045
-ID_BTNPCFSALDA = 10046
-ID_BTNPCFCARD = 10047
-ID_BTNPCFNEW = 10048
+ID_PANGRID_PCF = 10039
+ID_CHKPCFOPEN = 10040
+ID_PCFOPENUM = 10041
+ID_PCFOPETOT = 10042
+ID_PCFSELNUM = 10043
+ID_PCFSELTOT = 10044
+ID_BTNPCFSALDA = 10045
+ID_BTNPCFCARD = 10046
+ID_BTNPCFNEW = 10047
 
 def PcfPanelFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -857,7 +876,8 @@ def PcfPanelFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_PAN_SCA = 10049
+ID_PAN_SCA = 10048
+ID_PAN_DAV = 10049
 
 def BodyFuncTipo_SC( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )

@@ -200,6 +200,17 @@ class ContabPanel(aw.Panel,\
             
             self.Bind(wx.EVT_SIZE,   self.OnResize)
     
+    def OptimizeSize(self, min_width=1000, min_height=640):
+        mw, mh = min_width, min_height
+        pw, ph = self.GetSize()
+        sw, sh = wx.DisplaySize()
+        if pw<mw and mw<sw:
+            pw = mw
+        if ph<mh and mh<sh:
+            ph = mh
+        self.SetSize((pw, ph))
+        self.SetMinSize((pw, ph))
+    
     def GetSegnoInvertito(self, segno):
         if segno == "D":
             return "A"
@@ -208,6 +219,8 @@ class ContabPanel(aw.Panel,\
         return None
     
     def __postInit(self):
+        
+        self.OptimizeSize()
         
         self.SetAcceleratorKey('I', wdr.ID_BTN_NEW,    'Inserisci',           'Inserisce una nuova registrazione')
         self.SetAcceleratorKey('C', wdr.ID_BTN_SEARCH, 'Cerca',               'Cerca registrazioni con la stessa causale')
