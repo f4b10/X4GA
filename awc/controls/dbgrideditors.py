@@ -62,6 +62,7 @@ class CellEditorsMixin(object):
         if moveCursor:#changed:
             def SetPos():
                 grid.TestNewColumn(row, col)
+                grid.SetFocus()
             wx.CallAfter(SetPos)
     
     def TestNewRow(self, grid, row, value):
@@ -144,17 +145,17 @@ class DateCellEditor(gridlib.PyGridCellEditor, CellEditorsMixin):
                 ctr.Bind(wx.EVT_CHAR, self.OnTestEscape)
             self.grid = parent.GetParent()
         
-        #if evtHandler:
-            #self._tc.PushEventHandler(evtHandler)
-
+#        if evtHandler:
+#            self._tc.PushEventHandler(evtHandler)
+    
     def OnFocusLost(self, event):
         if self.grid._edrow is None:
             return
-        if self._tc.GetValue() is not None:
+        if True:#self._tc.GetValue() is not None:
             #self.grid.SetGridCursor(self.grid._edrow, self.grid._edcol)
             self.EndEdit(self.grid._edrow, self.grid._edcol, self.grid)
             self.Show(0)
-            self.grid.SetFocusTo()
+            wx.CallAfter(self.grid.SetFocusTo)
         event.Skip()
     
     def OnTestEscape(self, event):
@@ -246,15 +247,22 @@ class DateCellEditor(gridlib.PyGridCellEditor, CellEditorsMixin):
         """
         self._tc.SetValue(self.startValue)
 
-    #def IsAcceptedKey(self, evt):
-        #"""
-        #Return True to allow the given key to start editing: the base class
-        #version only checks that the event has no modifiers.  F2 is special
-        #and will always start the editor.
-        #"""
-        #return (not (evt.ControlDown() or evt.AltDown()) and
-                #evt.GetKeyCode() != wx.WXK_SHIFT)
-
+    def IsAcceptedKey(self, evt):
+        """
+        Return True to allow the given key to start editing: the base class
+        version only checks that the event has no modifiers.  F2 is special
+        and will always start the editor.
+        """
+        key = evt.GetKeyCode()
+        ch = None
+        if key in\
+           [ wx.WXK_NUMPAD0, wx.WXK_NUMPAD1, wx.WXK_NUMPAD2, wx.WXK_NUMPAD3, 
+             wx.WXK_NUMPAD4, wx.WXK_NUMPAD5, wx.WXK_NUMPAD6, wx.WXK_NUMPAD7, 
+             wx.WXK_NUMPAD8, wx.WXK_NUMPAD9 ]:
+            ch = ch = chr(ord('0') + key - wx.WXK_NUMPAD0)
+        ch = chr(key)
+        return ch.isdigit()
+    
     def StartingKey(self, evt):
         """
         If the editor is enabled by pressing keys on the grid, this will be
@@ -268,12 +276,10 @@ class DateCellEditor(gridlib.PyGridCellEditor, CellEditorsMixin):
              wx.WXK_NUMPAD8, wx.WXK_NUMPAD9 ]:
             ch = ch = chr(ord('0') + key - wx.WXK_NUMPAD0)
         ch = chr(key)
-        if ch.isalnum():
+        if ch.isdigit():
             self._tc.maskedCtrl.SetValue(ch)
             wx.CallAfter(lambda: self._tc.maskedCtrl._SetInsertionPoint(1))
-        else:
-            evt.Skip()
-
+    
     def StartingClick(self):
         """
         If the editor is enabled by clicking on the cell, this method will be
@@ -566,15 +572,11 @@ class DataLinkCellEditor(gridlib.PyGridCellEditor, CellEditorsMixin):
            [ wx.WXK_NUMPAD0, wx.WXK_NUMPAD1, wx.WXK_NUMPAD2, wx.WXK_NUMPAD3, 
              wx.WXK_NUMPAD4, wx.WXK_NUMPAD5, wx.WXK_NUMPAD6, wx.WXK_NUMPAD7, 
              wx.WXK_NUMPAD8, wx.WXK_NUMPAD9 ]:
-            
-            ch = ch = chr(ord('0') + key - wx.WXK_NUMPAD0)
-            
-        elif key < 256 and key >= 0 and chr(key) in string.printable:
-            ch = chr(key)
-            if not evt.ShiftDown():
-                ch = ch.lower()
+            ch = chr(ord('0') + key - wx.WXK_NUMPAD0)
+        else:
+            ch = unichr(key)
         
-        if ch is not None:
+        if ch:
             if self._tc.initfocus == awc.controls.linktable.INITFOCUS_CODICE:
                 c = self._tc._ctrcod
             else:
@@ -926,7 +928,7 @@ class TextCellEditor(gridlib.PyGridCellEditor, CellEditorsMixin):
              #wx.WXK_NUMPAD8, wx.WXK_NUMPAD9 ]:
             ##tasti numerici tastierino
             #ch = chr(ord('0') + key - wx.WXK_NUMPAD0)
-        ch = chr(key)
+        ch = unichr(key)
         if ch:
             self._tc.SetValue(ch)
             wx.CallAfter(self.SetInitialCursor)
