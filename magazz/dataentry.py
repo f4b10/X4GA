@@ -876,8 +876,11 @@ class MagazzPanel(aw.Panel,\
         cn = self.FindWindowByName
         dl = Env.Azienda.Login.dataElab
         dr = cn('datreg').GetValue()
-        dd = cn('datdoc').GetValue()
-        err = None      
+        if self.dbdoc.cfgdoc.datdoc == '3':
+            dd = dr
+        else:
+            dd = cn('datdoc').GetValue()
+        err = None
         if not err and (not dr or not dd):
             err = 'Definire la data di registrazione e la data del documento'
         if not err and dr<dd:
@@ -940,6 +943,9 @@ class MagazzPanel(aw.Panel,\
         if err:
             aw.awu.MsgDialog(self, err, style=wx.ICON_ERROR)
             out = False
+        else:
+            self.dbdoc.datreg = dr
+            self.dbdoc.datdoc = dd
         return out
     
     def OnButPrint(self, event):
