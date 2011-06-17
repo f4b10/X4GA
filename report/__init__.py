@@ -196,7 +196,15 @@ class MultiReportStandardDialog(wx.Dialog):
             bmp = reports.GetClientData(n)[1]
             self.bitmap = wx.StaticBitmap(img, -1, bmp, size=img.GetClientSize())
             note = ci(wdr.ID_NOTE)
-            note.SetValue(reports.GetClientData(n)[2])
+            text = reports.GetClientData(n)[2]
+            try:
+                note.SetValue(text)
+            except:
+                text = text.decode('iso-8859-1')
+                try:
+                    note.SetValue(text)
+                except:
+                    note.SetValue('')
     
     def OnPrint(self, event):
         self._SetOutput('PRINT')
