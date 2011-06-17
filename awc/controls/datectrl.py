@@ -293,7 +293,6 @@ class DateCtrl(wx.Control, cmix.TextCtrlMixin):
                 evt.SetId(self.GetId())
                 evt.SetValue(v)
                 self.GetEventHandler().AddPendingEvent(evt)
-                print self.GetName(), self.GetValue()
         event.Skip()
 
     def SetDimensions(self, x, y, w, h, f):
