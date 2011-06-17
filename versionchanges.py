@@ -29,6 +29,24 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.3.12', None, (
+         ("BUG1074",
+         """Correzione immissione date: in alcuni casi compilava automaticamente
+         l'anno della data in digitazione."""),
+         ("BUG1075",
+         """Correzione immissione valori in griglia: la digitazione del primo 
+         carattere della cella, se la cella non era ancora in fase di editazione,
+         causava una eccezione se il tasto digitato era un carattere particolare
+         non facente parte della codifica ascii (lettere accentate, simbolo 
+         dell'euro, ecc)."""),
+         ("BUG1076",
+         """Correzione immissione valori data in griglia: dopo attivazione 
+         editazione cella, sia abbandonando con il tasto ESC che uscendo dalla
+         cella con il tasto TAB con valore vuoto, la griglia perdeva il focus di 
+         tastiera, costringendo l'utente all'uso del mouse per il riposizionamento
+         sulla griglia stessa."""),
+        ),),
+    
     ('1.3.11', None, (
          ("BET1096",
          """Ottimizzate le dimensioni delle finestre dei dataentry contabili
