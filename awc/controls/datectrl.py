@@ -70,6 +70,8 @@ class DateCtrl(wx.Control, cmix.TextCtrlMixin):
     C{EUDATEDDMMYYYY.}
     """
     _time = False
+    _spaces_count = 0
+    
     def __init__(self, parent, id, caption = "", pos = wx.DefaultPosition, 
                  size = wx.DefaultSize, style = 0):
         
@@ -138,7 +140,7 @@ class DateCtrl(wx.Control, cmix.TextCtrlMixin):
         sz.SetSizeHints(self)
         p.Fit()
         self.Bind(wx.EVT_BUTTON, self.OnCalendarCall, self.buttonCalendar)
-        self.Bind(wx.EVT_TEXT, self.OnDateChanged, self.maskedCtrl)
+        self.Bind(wx.EVT_TEXT, self.OnTextChanged, self.maskedCtrl)
         
         #quando DateCtrl riceve il focus, lo passa al TextCtrl interno
         self.Bind(wx.EVT_SET_FOCUS, self.OnFocusGain)
@@ -275,13 +277,23 @@ class DateCtrl(wx.Control, cmix.TextCtrlMixin):
     def IsEditable(self):
         return self.maskedCtrl.IsEditable()
     
-    def OnDateChanged(self, event):
+    def OnTextChanged(self, event):
         if self.notifyChanges:
-            evt = DateChangedEvent(evt_DATECHANGED, self.GetId())
-            evt.SetEventObject(self)
-            evt.SetId(self.GetId())
-            evt.SetValue(self.GetValue(adapt_date=False))
-            self.GetEventHandler().AddPendingEvent(evt)
+            text = self.maskedCtrl.GetValue()
+            e = False
+            if text.startswith(' '):
+                e = True
+                v = None
+            elif text.count(' ') == self._spaces_count:
+                e = True
+                v = self.GetValue()
+            if e:
+                evt = DateChangedEvent(evt_DATECHANGED, self.GetId())
+                evt.SetEventObject(self)
+                evt.SetId(self.GetId())
+                evt.SetValue(v)
+                self.GetEventHandler().AddPendingEvent(evt)
+                print self.GetName(), self.GetValue()
         event.Skip()
 
     def SetDimensions(self, x, y, w, h, f):
@@ -373,6 +385,7 @@ class CalDialog(wx.Dialog):
 
 class DateTimeCtrl(DateCtrl):
     _time = True
+    _spaces_count = 1
     
     def OnCalendarCall( self, event ):
         if self._cal is None:
