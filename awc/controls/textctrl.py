@@ -81,8 +81,8 @@ class TextCtrl(wx.TextCtrl, cmix.TextCtrlMixin):
     def SetValue(self, value):
         if value is None:
             value = ""
-        if not self.lowercaseok:
-            value = unicode(value).upper()
+        if not self.lowercaseok and hasattr(value, 'upper'):
+            value = value.upper()
         wx.TextCtrl.SetValue(self, value)
     
     def _OnKeyDown(self, event):
