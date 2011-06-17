@@ -85,6 +85,7 @@ class TextCtrl(wx.TextCtrl, cmix.TextCtrlMixin):
             value = value.upper()
         wx.TextCtrl.SetValue(self, value)
     
+    
     def _OnKeyDown(self, event):
         event.Skip()
     
