@@ -30,6 +30,13 @@ import mx.DateTime as dt
 history = (
     
     ('1.3.12', None, (
+         ("BUG1077",
+         """Correzione bug in liquidazione iva, il suo richiamo originava eccesione
+         in seguito ad test della periodicità non allineato alla nuova struttura
+         dati in unicode."""),
+        ),),
+    
+    ('1.3.12', None, (
          ("BUG1074",
          """Correzione immissione date: in alcuni casi compilava automaticamente
          l'anno della data in digitazione."""),
