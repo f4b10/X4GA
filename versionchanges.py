@@ -29,7 +29,7 @@ import mx.DateTime as dt
 
 history = (
     
-    ('1.3.12', None, (
+    ('1.3.13', None, (
          ("BUG1077",
          """Correzione bug in liquidazione iva, il suo richiamo originava eccesione
          in seguito ad test della periodicità non allineato alla nuova struttura
