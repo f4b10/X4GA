@@ -2193,7 +2193,7 @@ class LiqIva(adb.DbTable):
                 raise SetupMancante_Exception
             del s
         
-        if type(periodic) != str or periodic not in "MT":
+        if not (periodic or ' ') in "MT":
             class PeriodicError_Exception(Exception): pass
             raise PeriodicError_Exception
         
