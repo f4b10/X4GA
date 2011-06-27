@@ -485,25 +485,26 @@ class SelAziendaPanel(aw.Panel):
         else:
             dlg = AziendaSetup(None, -1, "Creazione nuova azienda")
             dlg.x4conn = self.x4conn
-            dlg.ShowModal()
+            do = (dlg.ShowModal() is True)
             dlg.Destroy()
-            #completamento creazione azienda con creazione record progressivi contabili
-            #viene impostato l'anno corrente come esercizio in corso
-            db_name = dlg.FindWindowById(ID_NOMEDB).GetValue()
-            tabname = '%s.cfgprogr' % db_name
-            anno = Env.Azienda.Login.dataElab.year
-            c = self.x4conn.cursor()
-            c.execute("""INSERT INTO %(tabname)s (codice, keydiff, progrnum, progrimp1, progrimp2) 
-            VALUES ("ccg_esercizio", 0, %(anno)s, 0, 0)""" % locals())
-            c.execute("""INSERT INTO %(tabname)s (codice, keydiff, progrnum, progrimp1, progrimp2) 
-            VALUES ("ccg_giobol",    0,        0, 0, 0)""" % locals())
-            c.execute("""INSERT INTO %(tabname)s (codice, keydiff,           progrimp1, progrimp2) 
-            VALUES ("ccg_giobol_ec",           0, 0, 0)""" % locals())
-            c.execute("""INSERT INTO %(tabname)s (codice, keydiff,           progrimp1, progrimp2) 
-            VALUES ("ccg_giobol_ep",           0, 0, 0)""" % locals())
-            c.close()
-            aw.awu.MsgDialog(self, "L'azienda è stata creata.\nProvvedere al completamento del setup dei dati aziendali.", style=wx.ICON_INFORMATION)
-            self.ReadAziende()
+            if do:
+                #completamento creazione azienda con creazione record progressivi contabili
+                #viene impostato l'anno corrente come esercizio in corso
+                db_name = dlg.FindWindowById(ID_NOMEDB).GetValue()
+                tabname = '%s.cfgprogr' % db_name
+                anno = Env.Azienda.Login.dataElab.year
+                c = self.x4conn.cursor()
+                c.execute("""INSERT INTO %(tabname)s (codice, keydiff, progrnum, progrimp1, progrimp2) 
+                VALUES ("ccg_esercizio", 0, %(anno)s, 0, 0)""" % locals())
+                c.execute("""INSERT INTO %(tabname)s (codice, keydiff, progrnum, progrimp1, progrimp2) 
+                VALUES ("ccg_giobol",    0,        0, 0, 0)""" % locals())
+                c.execute("""INSERT INTO %(tabname)s (codice, keydiff,           progrimp1, progrimp2) 
+                VALUES ("ccg_giobol_ec",           0, 0, 0)""" % locals())
+                c.execute("""INSERT INTO %(tabname)s (codice, keydiff,           progrimp1, progrimp2) 
+                VALUES ("ccg_giobol_ep",           0, 0, 0)""" % locals())
+                c.close()
+                aw.awu.MsgDialog(self, "L'azienda è stata creata.\nProvvedere al completamento del setup dei dati aziendali.", style=wx.ICON_INFORMATION)
+                self.ReadAziende()
     
     def OnQuit(self, event):
         """
