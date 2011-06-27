@@ -1917,7 +1917,6 @@ class Azienda(object):
               [ [ "id",         "INT",    idw, None, "ID Sottoconto", "AUTO_INCREMENT" ],
                 [ "codice",     "CHAR",    10, None, "Codice", None ],
                 [ "descriz",    "VARCHAR", 60, None, "Descrizione", None ],
-                [ "sermer",     "CHAR",     1, None, "Flag merce/servizi", None ],
                 [ "id_tipo",    "INT",    idw, None, "ID tipo anagrafico", None ],
                 [ "id_bilmas",  "INT",    idw, None, "ID mastro bilancio", "NOT NULL DEFAULT -1" ],
                 [ "id_bilcon",  "INT",    idw, None, "ID conto bilancio", "NOT NULL DEFAULT -1" ],
