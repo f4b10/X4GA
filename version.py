@@ -23,13 +23,16 @@
 
 appcode = "x4ga"
 appdesc = "X4 Gestione Aziendale"
+
+from _branch import branch
+VERSION_BRANCH  = branch
+
 from _version import apptype, appType, appinfo
 
 VERSION_MAJOR   = 1
 VERSION_MINOR   = 3
 VERSION_RELEASE = 13
 VERSION_TAG     = ""
-VERSION_BRANCH  = "allegati"
 VERSION_TYPE    = apptype
 VERSION_TYPEXT  = appType
 VERSION_INFO    = appinfo
