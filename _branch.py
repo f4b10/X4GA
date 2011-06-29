@@ -21,4 +21,4 @@
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
 
-branch = 'allegati'
+branch = 'master'
