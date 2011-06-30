@@ -32,6 +32,8 @@ from stormdb import DateTime, MySQLdb, pyodbc,\
      OPENMODE_READONLY, OPENMODE_WRITE, OPENMODE_STANDARD
 adodb = None
 
+import re
+
 import base64
 
 __database__ =    None
@@ -652,7 +654,7 @@ class DB(object):
                        tab_classes=None, special_encoders=None, 
                        on_table_init=None, on_table_read=None, on_table_row=None, on_table_end=None):
         
-        ADBVER = 1
+        ADBVER = 2
         
         f = open(filename, 'w')
         
@@ -672,6 +674,37 @@ class DB(object):
                 stormdb.DbMem.__init__(mem, 'field_name,field_type,can_null,key_type,default_value,extra')
                 self.Retrieve("DESCRIBE %s" % tabname)
                 mem.SetRecordset(self.rs)
+        
+        class SchemaInfoTable(stormdb.DbMem):
+            def __init__(mem, tabname):
+                stormdb.DbMem.__init__(mem, 'table,create_command')
+                self.Retrieve("SHOW CREATE TABLE %s" % tabname)
+                mem.SetRecordset(self.rs)
+            def GetAutoIncrementValue(self):
+                s = self.create_command
+                if s:
+                    x = re.search('AUTO_INCREMENT=[0-9+]+', s)
+                    if x:
+                        p = s[x.start():x.end()]
+                        v = p.split("=")
+                        return int(v[1])
+                return None
+            def GetCharset(self):
+                s = self.create_command
+                if s:
+                    x = re.search('DEFAULT CHARSET=[A-Za-z0-9+]+', s)
+                    if x:
+                        p = s[x.start():x.end()]
+                        v = p.split("=")
+                        return v[1]
+            def GetComment(self):
+                s = self.create_command
+                if s:
+                    x = re.search("COMMENT='.+'", s)
+                    if x:
+                        p = s[x.start():x.end()]
+                        v = p.split("=")
+                        return v[1][1:-1]
         
         class DescriptionIndexes(stormdb.DbMem):
             def __init__(mem, tabname):
@@ -707,8 +740,21 @@ class DB(object):
             if callable(on_table_init):
                 on_table_init(t)
             
+            cc = SchemaInfoTable(table)
+            charset = cc.GetCharset() or 'utf8'
+            autoinc = cc.GetAutoIncrementValue()
+            comment = cc.GetComment()
+            
             #inizio tabella
-            w('<table name="%s">' % table, 1)
+            tabdef = 'name="%s"' % table
+            if autoinc:
+                tabdef += ' autoincrement_start="%d"' % autoinc
+            if charset:
+                tabdef += ' charset="%s"' % charset
+            if comment:
+                tabdef += ' comment="%s"' % self.ADB_EncodeValue(comment)
+            
+            w('<table %s>' % tabdef, 1)
             
             #struttura
             w('<structure>', 2)
@@ -774,14 +820,18 @@ class DB(object):
     def ADB_RestoreFile(self, filename, database_name, tables=None, special_decoders=None,
                         on_table_init=None, on_table_write=None, on_table_end=None):
         
-        import re
-        
         re_table_search = 'name="[A-Za-z0-9 _]+"'
+        re_table_srcdes = 'comment=".+"'
+        re_table_chrset = 'charset="[A-Za-z0-9_-]+"'
+        re_table_autinc = 'autoincrement_start="[0-9]+"'
         re_column_search = '[A-Za-z0-9_]+="[A-Za-z0-9 !\(\)=_,]+"'
         re_content_search = '[A-Za-z0-9_]+="[^"]*"'
         
         f = file(filename, 'r')
         tab_name = None
+        tab_desc = None
+        tab_auti = None
+        tab_cset = None
         tab_stru = None
         col_list = None
         ind_list = None
@@ -825,18 +875,31 @@ class DB(object):
                 break
             l = l.strip()
             
-            if l.startswith('<table'):
+            if l.startswith('<table '):
                 
                 #inizio dichiarazione tabella
                 
                 if structure_reading or content_reading:
                     RaiseXmlError()
                 
-                if re.search(re_table_search, l):
-                    tab_name = l.split('"')[1]
+                s = re.search(re_table_search, l)
+                if s:
+                    tab_name = l[s.start():s.end()].split('"')[1]
                     special_decoder = {}
                     if special_decoders and tab_name in special_decoders:
                         special_decoder = special_decoders[tab_name]
+                
+                s = re.search(re_table_srcdes, l)
+                if s:
+                    tab_desc = l[s.start():s.end()].split('=')[1][1:-1]
+                
+                s = re.search(re_table_autinc, l)
+                if s:
+                    tab_auti = int(l[s.start():s.end()].split('=')[1][1:-1])
+                
+                s = re.search(re_table_chrset, l)
+                if s:
+                    tab_cset = l[s.start():s.end()].split('=')[1][1:-1]
                 
             elif l.startswith('<structure'):
                 
@@ -964,7 +1027,13 @@ class DB(object):
                 
                 coldef = structure+indexes
                 cmd = 'CREATE TABLE `%s`.`%s` (\n%s) ENGINE=MyISAM' % (database_name, tab_name, ',\n'.join(coldef))
-#                print cmd
+                if tab_auti:
+                    cmd += " AUTO_INCREMENT=%d" % tab_auti
+                if tab_cset:
+                    cmd += " DEFAULT CHARSET=%s" % tab_cset
+                if tab_desc:
+                    cmd += " COMMENT='%s'" % tab_desc
+                
                 if not self.Execute(cmd):
                     raise Exception, self.dbError.description
                 
