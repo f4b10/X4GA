@@ -1102,7 +1102,7 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
         self.reg_numiva = niva
         if self.reg_id is None:
             if self._cfg_numdoc == '1':
-                self.controls['numdoc'].SetValue(niva)
+                self.controls['numdoc'].SetValue(str(niva))
         event.Skip()
     
     def UpdateAllControls(self):
