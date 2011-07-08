@@ -1538,7 +1538,7 @@ class AnagPanel(aw.Panel):
         tab = self.db_tabname
         for tab, col, val in self.valuesearchvalues:
             op = '='
-            if type(val) is str:
+            if type(val) in (str, unicode):
                 val = val.replace(r'%', '')
                 val = val.replace('..', r'%')
                 endby = val.startswith("*")
