@@ -30,13 +30,17 @@ import mx.DateTime as dt
 history = (
     
     ('1.3.14', None, (
+         ("BUG1078",
+         """Correzione bug in dataentry registrazioni iva: originava eccezione nel
+         caso in cui la configurazione della causale specificava che il numero
+         documento doveva essere pari al numero di protocollo iva."""),
          ("BET1097",
          """Introduzione gestione Spesometro."""),
         ),),
     
     ('1.3.13', None, (
          ("BUG1077",
-         """Correzione bug in liquidazione iva, il suo richiamo originava eccesione
+         """Correzione bug in liquidazione iva, il suo richiamo originava eccezione
          in seguito ad test della periodicità non allineato alla nuova struttura
          dati in unicode."""),
         ),),
