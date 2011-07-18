@@ -24,45 +24,57 @@
 import stormdb as adb
 
 
-def GetPdcFrameClass(id_tipo):
-    return _GetPdcClass(id_tipo, 0)
+def GetPdcPanelClass(id_tipo, **kwargs):
+    return _GetPdcClass(id_tipo, 0, **kwargs)
 
 
 # ------------------------------------------------------------------------------
 
 
-def GetPdcDialogClass(id_tipo):
-    return _GetPdcClass(id_tipo, 1)
+def GetPdcFrameClass(id_tipo, **kwargs):
+    return _GetPdcClass(id_tipo, 1, **kwargs)
 
 
 # ------------------------------------------------------------------------------
 
 
-def _GetPdcClass(id_tipo, w_tipo):
+def GetPdcDialogClass(id_tipo, **kwargs):
+    return _GetPdcClass(id_tipo, 2, **kwargs)
+
+
+# ------------------------------------------------------------------------------
+
+
+def _GetPdcClass(id_tipo, w_tipo, **kwargs):
     """
-    Ritorna il Frame (se w_tipo=0) o il Dialog (se w_tipo=1) di gestione
-    anagrafica congruente con il tipo di sottoconto passato.
-    Il Frame/Dialog è da instaziare.
+    Ritorna la classe Panel, Frame o Dialog di gestione del sottoconto, in base al suo tipo.
+    La classe viene cercata in base all'id_tipo e può riferirsi al Frame, Dialog o Panel a seconda
+    di quanto passato in w_tipo (0,1,2)
     """
     cls = None
     tipibase = "ABDCF"
-    tipo = adb.DbTable("pdctip", "tipo", writable=False)
-    from anag.pdc     import PdcFrame,     PdcDialog
-    clss = [PdcFrame, PdcDialog]
-    if tipo.Get(id_tipo) and tipo.RowsCount() == 1:
-        from anag.casse   import CasseFrame,   CasseDialog
-        from anag.banche  import BancheFrame,  BancheDialog
-        from anag.effetti import EffettiFrame, EffettiDialog
-        from anag.clienti import ClientiFrame, ClientiDialog
-        from anag.fornit  import FornitFrame,  FornitDialog
-        if tipo.tipo in tipibase:
-            clss = ((CasseFrame,   CasseDialog),\
-                    (BancheFrame,  BancheDialog),\
-                    (EffettiFrame, EffettiDialog),\
-                    (ClientiFrame, ClientiDialog),\
-                    (FornitFrame,  FornitDialog))[tipibase.index(tipo.tipo)]
+    tipo = None
+    if 'tipo' in kwargs:
+        tipo = kwargs['tipo']
+    else:
+        dbtip = adb.DbTable("pdctip", "tipo", writable=False)
+        if dbtip.Get(id_tipo) and dbtip.RowsCount() == 1:
+            tipo = dbtip.tipo
+    if tipo is not None:
+        from anag.pdc     import PdcPanel,     PdcFrame,     PdcDialog
+        from anag.casse   import CassePanel,   CasseFrame,   CasseDialog
+        from anag.banche  import BanchePanel,  BancheFrame,  BancheDialog
+        from anag.effetti import EffettiPanel, EffettiFrame, EffettiDialog
+        from anag.clienti import ClientiPanel, ClientiFrame, ClientiDialog
+        from anag.fornit  import FornitPanel,  FornitFrame,  FornitDialog
+        clss = [PdcPanel, PdcFrame, PdcDialog]
+        if tipo in tipibase:
+            clss = ((CassePanel,   CasseFrame,   CasseDialog),\
+                    (BanchePanel,  BancheFrame,  BancheDialog),\
+                    (EffettiPanel, EffettiFrame, EffettiDialog),\
+                    (ClientiPanel, ClientiFrame, ClientiDialog),\
+                    (FornitPanel,  FornitFrame,  FornitDialog))[tipibase.index(tipo)]
     cls = clss[w_tipo]
-    del tipo
     return cls
 
 
