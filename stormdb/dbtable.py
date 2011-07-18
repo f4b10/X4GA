@@ -2614,6 +2614,14 @@ class DbTable(object):
         writer.writerows(csvrs)
         fh.close()
     
+    def MakeFiltersDict(self, filters):
+        assert isinstance(filters, (list, tuple))
+        keys = {}
+        for name, value in filters:
+            keys[name] = value
+        return keys
+    
+    
     # metodi di classe
     
     @classmethod

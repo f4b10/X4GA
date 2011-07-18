@@ -854,6 +854,29 @@ UPDATE `cfgsetup`
                         aw.awu.MsgDialog(self, "Errore in conversione tabella:\n%s" % err)
                 if err:
                     ok = False
+            
+            # -------------------------------------------------------------------------------------
+            
+            if oldver<'1.3.14' and ok:
+                
+                #imposto i massimali conosciuti per azienda/privato per gli anni 2010 e 2011
+                for anno, maxazi, maxpri in ((2010, 25000, 25000),
+                                             (2011,  3000,  3600),):
+                    cmd = """
+                    INSERT INTO cfgprogr (codice,       keydiff,   progrimp1,  progrimp2)
+                                  VALUES ('spesometro', %(anno)s, %(maxazi)s, %(maxpri)s)""" % locals()
+                    db.Execute(cmd)
+                
+                #adeguo il nuovo flag azienda/privato su tabelle clienti e fornitori
+                err = None
+                try:
+                    for tab_name in 'clienti fornit'.split():
+                        db.Execute('UPDATE %(tab_name)s SET aziper=IF((piva IS NULL OR LENGTH(piva)=0) AND LENGTH(codfisc)=16,"P","A")' % locals())
+                except Exception, e:
+                    err = repr(e.args)
+                if err:
+                    aw.awu.MsgDialog(self, "Errore in adeguamento tabella %(tab_name)s:\n%(err)s" % locals())
+                    ok = False
         
         if ok:
             self.PerformExternalAdaptations()

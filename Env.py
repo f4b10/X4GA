@@ -1917,7 +1917,7 @@ class Azienda(object):
               [ [ "id",         "INT",    idw, None, "ID Sottoconto", "AUTO_INCREMENT" ],
                 [ "codice",     "CHAR",    10, None, "Codice", None ],
                 [ "descriz",    "VARCHAR", 60, None, "Descrizione", None ],
-                [ "f_sermer",   "CHAR",     1, None, "Flag servizi/merce", None ],
+                [ "f_sermer",   "CHAR",     1, None, "Flag servizi/merce per spesometro", None ],
                 [ "id_tipo",    "INT",    idw, None, "ID tipo anagrafico", None ],
                 [ "id_bilmas",  "INT",    idw, None, "ID mastro bilancio", "NOT NULL DEFAULT -1" ],
                 [ "id_bilcon",  "INT",    idw, None, "ID conto bilancio", "NOT NULL DEFAULT -1" ],
@@ -2007,6 +2007,16 @@ class Azienda(object):
                 [ "ddtstapre",      "TINYINT",  1, None, "Flag stampa prezzi su ddt", None ],
                 [ "ddtfixpre",      "TINYINT",  1, None, "Flag blocco scelta stampa prezzi su ddt", None ],
                 [ "is_blacklisted", "TINYINT",  1, None, "Flag anagrafica in blacklist paradisi fiscali", None ],
+                [ "aziper",         "CHAR",     1, None, "Tipo cliente", None ],
+#                [ "pres_dfit_ind",  "VARCHAR", 60, None, "Privato estero: domicilio fiscale italiano - indirizzo", None ],
+#                [ "pres_dfit_cap",  "VARCHAR",  5, None, "Privato estero: domicilio fiscale italiano - cap", None ],
+#                [ "pres_dfit_cit",  "VARCHAR", 60, None, "Privato estero: domicilio fiscale italiano - città", None ],
+#                [ "pres_dfit_prv",  "VARCHAR",  2, None, "Privato estero: domicilio fiscale italiano - provincia", None ],
+#                [ "pres_dres_ind",  "VARCHAR", 60, None, "Privato estero: domicilio residenza - indirizzo", None ],
+#                [ "pres_dres_cap",  "VARCHAR", 10, None, "Privato estero: domicilio residenza - cap", None ],
+#                [ "pres_dres_cit",  "VARCHAR", 60, None, "Privato estero: domicilio residenza - città", None ],
+#                [ "pres_dres_prv",  "VARCHAR", 10, None, "Privato estero: domicilio residenza - provincia", None ],
+#                [ "pres_dres_stt",  "INT",    idw, None, "Privato estero: domicilio residenza - id stato", None ],
             ]
             
             cls.set_constraints(cls.TABNAME_CLIENTI,
@@ -2124,7 +2134,8 @@ class Azienda(object):
                 [ "id_pdcgrp",      "INT",    idw, None, "ID Fornitore griglia prezzi", None ],
                 [ "grpstop",        "CHAR",     1, None, "Flag stop inserimento prodotti non in griglia", None ],
                 [ "allegcf",        "TINYINT",  1, None, "Flag allegati", None ],
-                [ "is_blacklisted", "TINYINT",  1, None, "Flag anagrafica in blacklist paradisi fiscali", None ], 
+                [ "is_blacklisted", "TINYINT",  1, None, "Flag anagrafica in blacklist paradisi fiscali", None ],
+                [ "aziper",         "CHAR",     1, None, "Tipo cliente", None ], 
             ]
             
             cls.set_constraints(cls.TABNAME_FORNIT,
@@ -2186,6 +2197,7 @@ class Azienda(object):
                 [ "id_regiva",  "INT",    idw, None, "ID Registro IVA associato", None ],
                 [ "id_modpag",  "INT",    idw, None, "ID Modalità di pagamento", None ],
                 [ "nocalciva",  "TINYINT",  1, None, "Flag inibizione calcolo dav/iva", None ],
+                [ "sm_link",    "INT",      6, None, "Chiave di raggruppamento registrazioni per spesometro", None ],
             ]
             
             cls.set_constraints(cls.TABNAME_CONTAB_H,
@@ -2222,7 +2234,8 @@ class Azienda(object):
                 #[ "imposta_ve", "DECIMAL", IVE,  DVE, "Imposta in valuta", None ],
                 #[ "indeduc_ve", "DECIMAL", IVE,  DVE, "Imposta indeducibile in valuta", None ],
                 [ "ivaman",     "TINYINT",   1, None, "Calcolo IVA inibito", None ],
-                [ "solocont",   "TINYINT",   1, None, "Flag riga solo contabile", None ], ]
+                [ "solocont",   "TINYINT",   1, None, "Flag riga solo contabile", None ], 
+                [ "f_sermer",   "CHAR",      1, None, "Flag servizi/merce per spesometro", None ], ]
             
             cls.set_constraints(cls.TABNAME_CONTAB_B,
                                 ((cls.TABSETUP_CONSTR_CONTAB_H, 'id_reg',     cls.TABCONSTRAINT_TYPE_CASCADE),
@@ -3974,7 +3987,7 @@ if __name__ == '__main__':
         csvrs += tab.GetRecordset()
         writer.writerows(csvrs)
         tmpfile.close()
-        os.startfile(tmpname)
+        getattr(os, 'startfile')(tmpname)
     
     app = wx.PySimpleApp()
     

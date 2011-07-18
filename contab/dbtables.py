@@ -1953,7 +1953,7 @@ class RiepMovCon(adb.DbTable):
         
         bilmas = pdc.AddJoin(\
             bt.TABNAME_BILMAS,   "bilmas",    idLeft="id_bilmas", idRight="id",\
-            join=adb.JOIN_LEFT, fields="id,codice,descriz")
+            join=adb.JOIN_LEFT, fields="id,codice,descriz,tipo")
         
         bilcon = pdc.AddJoin(\
             bt.TABNAME_BILCON,   "bilcon",    idLeft="id_bilcon", idRight="id",\
@@ -3313,3 +3313,282 @@ class FatturatoContabileClienti(adb.DbTable):
 class FatturatoContabileFornitori(FatturatoContabileClienti):
     
     clifor = "F"
+
+
+# ------------------------------------------------------------------------------
+
+
+class Spesometro2011_AcquistiVendite(adb.DbMem):
+    
+    def __init__(self):
+        assert bt.TIPO_CONTAB == "O"
+        f = 'Reg_Id Reg_Link RegIva_Id RegIva_Cod RegIva_Descriz RegIva_Tipo'
+        f += ' Anag_Id Anag_Cod Anag_Descriz Anag_AziPer Anag_CodFisc Anag_Nazione Anag_PIVA'
+        f += ' Reg_Data Cau_Id Cau_Cod Cau_Descriz Reg_NumDoc Reg_DatDoc Reg_NumIva'
+        f += ' Totale_DAV DAV_Merce DAV_Servizi DAV_Altro'
+        f += ' IVA_AllImpo IVA_Imponib IVA_Imposta IVA_Totale IVA_NonImponib IVA_Esente IVA_FuoriCampo'
+        f += ' selected'
+        adb.DbMem.__init__(self, f.replace(' ', ','))
+        self.Reset()
+    
+    def GetData(self, param_list):
+        p = self.MakeFiltersDict(param_list)
+        filters = []
+        AF = filters.append
+        AF('bodyanag.numriga=1')
+        if p['acqven'] == "A":
+            AF('regiva.tipo="A"')
+            anacf = bt.TABNAME_FORNIT
+        else:
+            AF('regiva.tipo IN ("V", "C")')
+            anacf = bt.TABNAME_CLIENTI
+        AF('reg.datreg>="%s"' % p['data1'])
+        AF('reg.datreg<="%s"' % p['data2'])
+        filters = ' AND '.join(['(%s)' % f for f in filters])
+        cmd = """
+SELECT reg.id            'Reg_Id', 
+       reg.sm_link       'Reg_Link',
+       regiva.id         'RegIva_Id',
+       regiva.codice     'RegIva_Cod',
+       regiva.descriz    'RegIva_Descriz',
+       regiva.tipo       'RegIva_Tipo',
+       anag.id           'Anag_Id',
+       anag.codice       'Anag_Cod',
+       anag.descriz      'Anag_Descriz',
+       anagcf.aziper     'Anag_AziPer',
+       anagcf.codfisc    'Anag_CodFisc',
+       anagcf.nazione    'Anag_Nazione',
+       anagcf.piva       'Anag_PIVA',
+       reg.datreg        'Reg_Data',
+       causale.id        'Cau_Id',
+       causale.codice    'Cau_Cod',
+       causale.descriz   'Cau_Descriz',
+       reg.numdoc        'Reg_NumDoc',
+       reg.datdoc        'Reg_DatDoc',
+       reg.numiva        'Reg_NumIva',
+       
+       SUM(bodycri.importo
+           *IF(bodycri.tipriga IN ("C", "S"), 1, 0)
+           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, -1)) 'Totale_DAV',
+           
+       SUM(bodycri.importo
+           *IF(bodycri.tipriga IN ("C", "S"), 1, 0)
+           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, -1)
+           *IF(pdccer.f_sermer="M" OR bodycri.f_sermer="M", 1, 0))              'DAV_Merce',
+           
+       SUM(bodycri.importo
+           *IF(bodycri.tipriga IN ("C", "S"), 1, 0)
+           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, -1)
+           *IF(pdccer.f_sermer="S" OR bodycri.f_sermer="S", 1, 0))              'DAV_Servizi',
+           
+       SUM(bodycri.importo
+           *IF(bodycri.tipriga IN ("C", "S"), 1, 0)
+           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, -1)
+           *IF(    pdccer.f_sermer IN ("M", "S") 
+               OR bodycri.f_sermer IN ("M", "S"), 0, 1))                        'DAV_Altro',
+       
+       SUM(bodycri.imponib
+           *IF(bodycri.tipriga="I", 1, 0)
+           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, -1)) 'IVA_AllImpo',
+           
+       SUM(bodycri.imponib
+           *IF(bodycri.tipriga="I", 1, 0)
+           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, -1)
+           *IF(aliq.modo="I",1,0))                                              'IVA_Imponib',
+       
+       SUM(bodycri.imposta
+           *IF(bodycri.tipriga="I", 1, 0)
+           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, -1)
+           *IF(aliq.modo="I",1,0))                                              'IVA_Imposta',
+           
+       SUM(bodycri.importo
+           *IF(bodycri.tipriga="I", 1, 0)
+           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, -1)) 'IVA_Totale',
+           
+       SUM(bodycri.imponib
+           *IF(bodycri.tipriga="I", 1, 0)
+           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, -1)
+           *IF(aliq.modo="N",1,0))                                              'IVA_NonImponib',
+           
+       SUM(bodycri.imponib
+           *IF(bodycri.tipriga="I", 1, 0)
+           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, -1)
+           *IF(aliq.modo="E",1,0))                                              'IVA_Esente',
+           
+       SUM(bodycri.imponib
+           *IF(bodycri.tipriga="I", 1, 0)
+           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, -1)
+           *IF(aliq.modo="F",1,0))                                              'IVA_FuoriCampo',
+       
+       0                                                                        'selected'
+
+FROM contab_b bodyanag
+
+INNER JOIN pdc       anag    ON anag.id=bodyanag.id_pdcpa
+INNER JOIN %(anacf)s anagcf  ON anagcf.id=anag.id
+
+INNER JOIN contab_h  reg     ON reg.id=bodyanag.id_reg
+INNER JOIN           regiva  ON regiva.id=reg.id_regiva
+INNER JOIN cfgcontab causale ON causale.id=reg.id_caus
+
+INNER JOIN contab_b  bodycri ON bodycri.id_reg=bodyanag.id_reg AND bodycri.numriga>1
+INNER JOIN pdc       pdccer  ON pdccer.id=bodycri.id_pdcpa
+
+ LEFT JOIN aliqiva   aliq    ON aliq.id=bodycri.id_aliqiva
+
+WHERE %(filters)s
+
+GROUP BY anag.descriz, anag.codice, anagcf.aziper, reg.sm_link, reg.datdoc, reg.numdoc, regiva.tipo, regiva.codice
+ORDER BY anag.descriz, anag.codice, anagcf.aziper, reg.sm_link, reg.datdoc, reg.numdoc, regiva.tipo, regiva.codice
+        """ % locals()
+        
+        db = adb.db.__database__
+        if not db.Retrieve(cmd):
+            raise Exception, repr(db.dbError.description)
+        self.SetRecordset(db.rs)
+        
+        return True
+    
+    # info
+    
+    def Chiedi_QualiRigheSonoSelezionate(self):
+        righe = []
+        for det in self:
+            if det.selected:
+                righe.append(det.RowNumber())
+        return righe
+    
+    def Chiedi_QualiChiaviCiSonoNelleRighe(self, righe_sel, even_none=False):
+        keys = []
+        for row in righe_sel:
+            self.MoveRow(row)
+            if (self.Reg_Link is not None or even_none) and not self.Reg_Link in keys:
+                keys.append(self.Reg_Link)
+        return keys
+    
+    def Chiedi_QuanteChiaviCiSonoNelleRighe(self, righe_sel):
+        return len(self.Chiedi_QualiChiaviCiSonoNelleRighe(righe_sel))
+    
+    def Chiedi_CiSonoChiaviNelleRighe(self, righe_sel):
+        return self.Chiedi_QuanteChiaviCiSonoNelleRighe(righe_sel) > 0
+    
+    def Chiedi_CiSonoPiuChiaviNelleRighe(self, righe_sel):
+        return self.Chiedi_QuanteChiaviCiSonoNelleRighe(righe_sel) > 1
+    
+    def Chiedi_CeUnaSolaChiaveNelleRighe(self, righe_sel):
+        return self.Chiedi_QuanteChiaviCiSonoNelleRighe(righe_sel) == 1
+    
+    def Chiedi_MancanoChiaviNelleRighe(self, righe_sel):
+        return None in self.Chiedi_QualiChiaviCiSonoNelleRighe(righe_sel, even_none=True)
+    
+    def Chiedi_NuovaChiave(self):
+        tab_name = bt.TABNAME_CONTAB_H
+        cmd = """SELECT MAX(sm_link) FROM %(tab_name)s""" % locals()
+        db = adb.db.__database__
+        db.Retrieve(cmd)
+        if len(db.rs) == 0:
+            key = 1
+        else:
+            key = (db.rs[0][0] or 0) + 1
+        return key
+    
+    def Chiedi_NuovoRecordsetDaMassimali(self, anno):
+        
+        mass = Spesometro2011_Massimali()
+        maxazi, maxpri = mass.Chiedi_PrendiMassimaliPerLAnno(anno)
+        
+        colkey = self._GetFieldIndex('Reg_Link')
+        colapr = self._GetFieldIndex('Anag_AziPer')
+        colimp = self._GetFieldIndex('IVA_AllImpo') #sommatoria di imponibile, non imp, esente, fuori campo
+        coltot = self._GetFieldIndex('IVA_Totale')  #sommatoria di cui sopra più l'imposta
+        fields = 'DAV_Merce DAV_Servizi DAV_Altro IVA_Imponib IVA_NonImponib IVA_Esente IVA_FuoriCampo'.split()
+        columns = [self._GetFieldIndex(field)
+                   for field in fields]
+        
+        first_row_of_links = None
+        
+        rs1 = self.GetRecordset()
+        rs2 = []
+        
+        def TestImporti(row, first_row_of_links):
+            link = rs1[row][colkey]
+            azip = rs1[row][colapr]
+            if link is None:
+                totimp = rs1[row][colimp]
+                tottot = rs1[row][coltot]
+            else:
+                totimp = tottot = 0
+                if first_row_of_links is None:
+                    first_row_of_links = row
+                row_test = first_row_of_links
+                while True:
+                    totimp += rs1[row_test][colimp]
+                    tottot += rs1[row_test][coltot]
+                    if row == self.RowsCount()-1 or rs1[row_test+1][colkey] != link:
+                        break
+                    row_test += 1
+            if azip == "A":
+                return totimp > maxazi, first_row_of_links
+            return tottot > maxpri, first_row_of_links
+        
+        lastkey = None
+        for n, r in enumerate(rs1):
+            key =  r[colkey]
+            if key is None or key != lastkey:
+                first_row_of_links = None
+            add, first_row_of_links = TestImporti(n, first_row_of_links)
+            if add:
+                rs2.append(r)
+            lastkey = key
+        
+        return rs2
+    
+    # modifica dati
+    
+    def Esegui_AbbinaRighe(self, righe_sel):
+        keys = self.Chiedi_QualiChiaviCiSonoNelleRighe(righe_sel)
+        if len(keys) == 0:
+            key = self.Chiedi_NuovaChiave()
+        else:
+            key = keys[0]
+        db = adb.db.__database__
+        tab_name = bt.TABNAME_CONTAB_H
+        for row in righe_sel:
+            self.MoveRow(row)
+            if self.Reg_Link != key:
+                self.Reg_Link = sm_link = key
+                reg_id = self.Reg_Id
+                cmd = """UPDATE %(tab_name)s SET sm_link=%(sm_link)s WHERE id=%(reg_id)s""" % locals()
+                db.Execute(cmd)
+    
+    def Esegui_ResettaChiaviNelleRighe(self, righe_sel):
+        db = adb.db.__database__
+        tab_name = bt.TABNAME_CONTAB_H
+        for row in righe_sel:
+            self.MoveRow(row)
+            if self.Reg_Link is not None:
+                sm_link = self.Reg_Link
+                self.Reg_Link = None
+                reg_id = self.Reg_Id
+                cmd = """UPDATE %(tab_name)s SET sm_link=NULL WHERE sm_link=%(sm_link)s""" % locals()
+                db.Execute(cmd)
+
+
+# ------------------------------------------------------------------------------
+
+
+class Spesometro2011_Massimali(adb.DbTable):
+    
+    _key = 'spesometro'
+    
+    def __init__(self):
+        adb.DbTable.__init__(self, bt.TABNAME_CFGPROGR, 'progr')
+        self.AddBaseFilter('progr.codice=%s', self._key)
+        self.AddOrder('progr.keydiff')
+        self.Retrieve()
+    
+    def Chiedi_PrendiMassimaliPerLAnno(self, anno):
+        self.Retrieve('progr.keydiff=%s', anno)
+        if self.IsEmpty():
+            raise Exception, "Massimali non definiti per l'anno %d" % anno
+        return self.progrimp1, self.progrimp2

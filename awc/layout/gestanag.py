@@ -1837,6 +1837,7 @@ class AnagPanel(aw.Panel):
             aw.Panel.__init__( self, parent, pos = (0,0), size = (80,80) )
             self.SetBackgroundColour("white")
             TitlePanelFunc(self)
+            self.SetName('titlepanel')
             self.FindWindowById(ID_TITLECARD).SetLabel(title)
     
     def GetDbPrint(self):

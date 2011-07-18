@@ -29,6 +29,8 @@ import awc.controls.mixin as cmix
 class RadioBox(wx.RadioBox,\
                cmix.ControlsMixin):
     
+    index_if_not_found = 0 #elemento da settare con SetValue se valore=None
+    
     def __init__(self, parent = None, id = -1, label = "",
                  pos = wx.DefaultPosition, size = wx.DefaultSize, 
                  choices = ('test'), dim = -1, style = wx.RA_SPECIFY_COLS ):
@@ -52,12 +54,7 @@ class RadioBox(wx.RadioBox,\
 
     def SetValue(self, value):
         if value is None:
-            #if   self._valtype == str: value = ''
-            #elif self._valtype == int: value = 0
-            value = self._values[0]
-        #if type(value) == int:
-            #value = str(value)
-            #self._valtype = int
+            value = self._values[self.index_if_not_found]
         if value == '' and ' ' in self._values:
             value = ' '
         if value in self._values:
@@ -98,3 +95,8 @@ class RadioBox(wx.RadioBox,\
     def AdjustBackgroundColor(self, *args, **kwargs):
         cmix.ControlsMixin.AdjustBackgroundColor(self, *args, **kwargs)
         self.Update()
+
+
+class DefaultLastRadioBox(RadioBox):
+    
+    index_if_not_found = -1 #elemento da settare con SetValue se valore=None

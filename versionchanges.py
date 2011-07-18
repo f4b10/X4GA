@@ -29,6 +29,11 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.3.14', None, (
+         ("BET1097",
+         """Introduzione gestione Spesometro."""),
+        ),),
+    
     ('1.3.13', None, (
          ("BUG1077",
          """Correzione bug in liquidazione iva, il suo richiamo originava eccesione

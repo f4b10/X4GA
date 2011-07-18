@@ -27,6 +27,9 @@ import wx.gizmos as gizmos
 import awc.controls.windows as aw
 import anag.dbtables as dba
 import anag.pdcrel_wdr as wdr
+import anag.util as autil
+
+import contab.pdcint as pdcint
 
 import stormdb as adb
 
@@ -34,23 +37,112 @@ import report as rpt
 
 
 class PdcStrutturaPanel(aw.Panel):
+    
     pdcstru = dba.PdcStruttura
+    viscard = 0
     
     def __init__(self, *args, **kwargs):
+        
         aw.Panel.__init__(self, *args, **kwargs)
         wdr.PdcStruFunc(self)
+        cn  = self.FindWindowByName
         
         self.dbstru = self.pdcstru()
+        
+        self.cards = {'mastro':     {},
+                      'conto':      {},
+                      'sottoconto': {}}
+        
         self.tree = None
         self.populate()
         
         self.Bind(wx.EVT_SIZE, self.OnSize)
-        self.Bind(wx.EVT_CHECKBOX, self.OnPopulate, id=wdr.ID_INCLCF)
+        self.Bind(wx.EVT_CHECKBOX, self.OnPopulate, cn('inclcf'))
+        self.Bind(wx.EVT_CHECKBOX, self.OnScheda, cn('viscard'))
+        self.tree.Bind(wx.EVT_TREE_SEL_CHANGED, self.OnItemSelected)
         self.Bind(wx.EVT_BUTTON, self.OnPrint, id=wdr.ID_PRINT)
     
     def OnPopulate(self, event):
         self.populate()
         event.Skip()
+    
+    def OnScheda(self, event):
+        self.viscard = 1-self.viscard
+        self.DisplayCard()
+        event.Skip()
+    
+    def OnItemSelected(self, event):
+        try:
+            tipo, key, id = self.tree.GetItemPyData(event.GetItem())
+        except:
+            self.HideAllCards()
+            return
+        event.Skip()
+        self.UpdateCard(tipo, key, id)
+    
+    def DisplayCard(self):
+        if self.viscard:
+            pass
+    
+    def UpdateCard(self, level, key, id):
+        cards = self.cards[level]
+        if not key in cards:
+            cards[key] = None
+        if cards[key] is None:
+            if level == 'mastro':
+                from anag.bilmas import BilMasPanel as CardClass
+            elif level == 'conto':
+                from anag.bilcon import BilConPanel as CardClass
+            elif level == 'sottoconto':
+                if key == "A":
+                    CardClass = pdcint.CasseInterrPanel
+                elif key == "B":
+                    CardClass = pdcint.BancheInterrPanel
+                elif key == "C":
+                    CardClass = pdcint.ClientiInterrPanel
+                elif key == "D":
+                    CardClass = pdcint.EffettiInterrPanel
+                elif key == "F":
+                    CardClass = pdcint.FornitInterrPanel
+                else:
+                    CardClass = pdcint.PdcInterrPanel
+            cards[key] = [CardClass, #classe
+                          None]      #istanza (creata una sola volta, x motivi di velocità)
+#            print 'Aggiunto %s per level=%s e key=%s' % (CardClass, level, key)
+        CardClass, card = self.cards[level][key]
+        if card is None:
+            card = CardClass(self.FindWindowByName('cardspanel'))
+            card.complete = False
+            card.InitControls()
+            card.FindWindowByName('titlepanel').Hide()
+            self.cards[level][key][1] = card
+        card.SetOneCodeOnly(id)
+        card.UpdateSearch()
+        self.HideAllCards()
+        c = self.cards[level][key][1]
+        c.Fit()
+        cw, ch = c.GetSize()
+        p = c.GetParent()
+        pw, ph = p.GetClientSize()
+        if pw<cw or ph<ch:
+            newsize = [pw, ph]
+            if pw<cw:
+                newsize[0] = cw
+            if ph<ch:
+                newsize[1] = ch
+            w1, h1 = p.GetSize()
+            w2, h2 = p.GetClientSize()
+            dx = w1-w2
+            dy = h1-h2
+            p.SetSize((newsize[0]+dx, newsize[1]+dy))
+        c.SetSize(p.GetClientSize())
+        c.Show()
+    
+    def HideAllCards(self):
+        for level in 'mastro conto sottoconto'.split():
+            for key in self.cards[level]:
+                if key in self.cards[level]:
+                    self.cards[level][key][1].Hide()
     
     def populate(self):
         
@@ -69,7 +161,7 @@ class PdcStrutturaPanel(aw.Panel):
         fileidx     = il.Add(wx.ArtProvider_GetBitmap(wx.ART_NORMAL_FILE, wx.ART_OTHER, isz))
         
         if self.tree is None:
-            pr = self.FindWindowById(wdr.ID_PANELSTRU)
+            pr = self.FindWindowByName('treepanel')
             tree = gizmos.TreeListCtrl(pr, -1, style =
                                        wx.TR_DEFAULT_STYLE|wx.TR_FULL_ROW_HIGHLIGHT)
             tree.SetImageList(il)
@@ -77,7 +169,7 @@ class PdcStrutturaPanel(aw.Panel):
             tree.AddColumn("Codice")
             tree.AddColumn("Descrizione")
             tree.SetMainColumn(0) # the one with the tree in it...
-            tree.SetColumnWidth(0, 175)
+            tree.SetColumnWidth(0, 160)
         else:
             tree = self.tree
         tree.DeleteAllItems()
@@ -104,6 +196,7 @@ class PdcStrutturaPanel(aw.Panel):
             if sc.bilmas.id != lastmas:
                 treemas = tree.AppendItem(treetip, sc.bilmas.codice)
                 tree.SetItemText(treemas, sc.bilmas.descriz, 1)
+                tree.SetItemPyData(treemas, ('mastro', None, sc.bilmas.id))
                 tree.SetItemImage(treemas, fldridx, which = wx.TreeItemIcon_Normal)
                 tree.SetItemImage(treemas, fldropenidx, which = wx.TreeItemIcon_Expanded)
                 lastmas = sc.bilmas.id
@@ -111,12 +204,14 @@ class PdcStrutturaPanel(aw.Panel):
             if sc.bilcon.id != lastcon:
                 treecon = tree.AppendItem(treemas, sc.bilcon.codice)
                 tree.SetItemText(treecon, sc.bilcon.descriz, 1)
+                tree.SetItemPyData(treecon, ('conto', None, sc.bilcon.id))
                 tree.SetItemImage(treecon, fldridx, which = wx.TreeItemIcon_Normal)
                 tree.SetItemImage(treecon, fldropenidx, which = wx.TreeItemIcon_Expanded)
                 lastcon = sc.bilcon.id
             
             child = tree.AppendItem(treecon, sc.codice)
             tree.SetItemText(child, sc.descriz, 1)
+            tree.SetItemPyData(child, ('sottoconto', sc.tipana.tipo, sc.id))
             tree.SetItemImage(child, fldridx, which = wx.TreeItemIcon_Normal)
             tree.SetItemImage(child, fldropenidx, which = wx.TreeItemIcon_Expanded)
             last = child
@@ -135,11 +230,13 @@ class PdcStrutturaPanel(aw.Panel):
         evt.Skip()
         
     def _SetSize(self):
-        self.tree.SetSize(self.tree.GetParent().GetClientSize())
-        w = self.tree.GetSize()[0]
-        w -= self.tree.GetColumnWidth(0)
+        tree = self.tree
+        parent = tree.GetParent()
+        tree.SetSize(parent.GetClientSize())
+        w = tree.GetSize()[0]
+        w -= tree.GetColumnWidth(0)
         w -= 10
-        if w>0: self.tree.SetColumnWidth(1, w)
+        if w>0: tree.SetColumnWidth(1, w)
     
     def OnPrint(self, event):
         rpt.Report(self, self.dbstru, "Piano dei Conti")

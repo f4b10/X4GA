@@ -445,6 +445,7 @@ class XFrame(aw.Frame):
             (self.OnGiornaleGenerale,          ID_CONTAB_GIORNALE),
             (self.OnFatturatoAcqVen,           ID_FATCONACQVEN),
             (self.OnVendAziPriv,               ID_VENDAZIPRIV),
+            (self.OnSpesometro,                ID_CONTAB_SPESOM),
             
             #interrogazioni iva
             (self.OnIntRegIva,                 ID_INTREGIVA),
@@ -504,6 +505,7 @@ class XFrame(aw.Frame):
             (self.OnCfgWorkstation,            ID_CFGWKS),
             (self.OnCfgUpdates,                ID_CFGUPDATES),
             (self.OnCfgPdcRange,               ID_CFGPDCRANGE),
+            (self.OnCfgMassimaliSpesometro,    ID_CFGSPESOM),
             
             #dataentry contabili
             (self.OnDataEntryContabIva,        ID_CONTABGES_ACQVEN),
@@ -1306,6 +1308,10 @@ class XFrame(aw.Frame):
         from contab.vendazipriv import VendAziPrivFrame
         self.LaunchFrame(VendAziPrivFrame)
     
+    def OnSpesometro(self, event):
+        from contab.spesometro_2011 import SpesometroFrame
+        self.LaunchFrame(SpesometroFrame)
+    
     def OnCfgAutoContab( self, event ):
         from cfg.automat import AutomatContabFrame
         self.LaunchFrame(AutomatContabFrame)
@@ -1375,6 +1381,10 @@ class XFrame(aw.Frame):
     def OnCfgProgrContab( self, event ):
         from cfg.progrcon import ProgrContabFrame
         self.LaunchFrame(ProgrContabFrame)
+    
+    def OnCfgMassimaliSpesometro(self, event):
+        from cfg.spesometro_2011 import MassimaliSpesometroFrame
+        self.LaunchFrame(MassimaliSpesometroFrame)
     
     def OnCfgCauMagazz( self, event ):
         from cfg.caumagazz import CauMagazzFrame

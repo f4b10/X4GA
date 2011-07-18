@@ -373,10 +373,11 @@ class DataLinkCellEditor(gridlib.PyGridCellEditor, CellEditorsMixin):
         self._tc = self.baseclass(parent, id=id, pos = (-100,-100),
                                   fromgrid=True)
         
-        self._tc.SetDataLink(self.lt_tabname,\
-                             cardclass = self.lt_cardclass,\
-                             filter = self.lt_filter,\
-                             filterlinks = self.lt_filterlinks)
+        if self.lt_tabname:
+            self._tc.SetDataLink(self.lt_tabname,\
+                                 cardclass = self.lt_cardclass,\
+                                 filter = self.lt_filter,\
+                                 filterlinks = self.lt_filterlinks)
         for container, callable in self.lt_eventBindings:
             container.Bind(awc.controls.linktable.EVT_LINKTABCHANGED,\
                            callable, self._tc)
