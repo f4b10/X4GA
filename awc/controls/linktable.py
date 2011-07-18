@@ -1175,7 +1175,8 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
             self.SetName("")
         
         self.db_name = tabname
-        self.db_alias = tabname
+        if not self.db_alias:
+            self.db_alias = tabname
         self.cardclass = cardclass
         self.canedit = canedit
         self.canins = canins
