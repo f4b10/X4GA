@@ -123,7 +123,7 @@ class XApp(wx.App):
     def AppStarted(self):
         if self.TestDBVers():
             import xframe as xfr
-            frame = xfr.XFrame(None, -1, "X4 :: " + Env.Azienda.descrizione)
+            frame = xfr.XFrame(None, -1, "X4GA")
             frame.Show(True)
             frame.Update()
             while not wx.SafeYield(onlyIfNeeded=True):
