@@ -945,8 +945,8 @@ class ProdPanel(ga.AnagPanel):
             return self.FindWindowByName(x)
         if bt.MAGNUMLIS == 0:
             cn('btnriclis').Hide()
-            if not bt.MAGATTGRIP and not bt.MAGATTGRIF:
-                cn('workzone').RemovePage(1)
+#            if not bt.MAGATTGRIP and not bt.MAGATTGRIF:
+#                cn('workzone').RemovePage(1)
         cn('_btnattach').SetAutoScan()
         self.Bind(wx.EVT_BUTTON, self.OnGeneraBarcode, id=wdr.ID_GENBC)
         self.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnTestImmagine, id=wdr.ID_NOTEFOTOZONE)
