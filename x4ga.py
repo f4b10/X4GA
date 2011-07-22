@@ -150,10 +150,11 @@ def Main():
     except ImportError:
         pass
     
-    import erman
-    def _exceptionhook(type, err, traceback):
-        erman.ErrorWarning(err, traceback)
-    sys.excepthook = _exceptionhook
+    if hasattr(sys, 'frozen'):
+        import erman
+        def _exceptionhook(type, err, traceback):
+            erman.ErrorWarning(err, traceback)
+        sys.excepthook = _exceptionhook
     
     import images
     icon = wx.EmptyIcon()
