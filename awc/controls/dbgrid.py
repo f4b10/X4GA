@@ -1872,7 +1872,7 @@ class ADB_Grid(DbGridColoriAlternati):
             col_name = col['col_name']
             col_index = cn(db_table, col_name)
             
-            assert col_index >= 0 or 'get_cell_func' in col
+            assert col_index >= 0 or col['get_cell_func'] is not None, 'Unable to map column %d' % n
             
             col_type = col['col_type']
             col_size = col['col_size']
