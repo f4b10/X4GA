@@ -29,6 +29,15 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.3.15', None, (
+         ("BUG1079",
+         """Presentazione tabulatore dei valori di costo/prezzo indipententemente
+         dall'attivazione di griglie e/o listini"""),
+         ("BET1098",
+         """Separazione dei corrispettivi dalle vendite nell'analisi dei dati
+         per lo Spesometro."""),
+        ),),
+    
     ('1.3.14', None, (
          ("BUG1078",
          """Correzione bug in dataentry registrazioni iva: originava eccezione nel
