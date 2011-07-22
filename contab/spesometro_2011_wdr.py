@@ -23,16 +23,16 @@ import anag.lib as alib
 from Env import Azienda
 bt = Azienda.BaseTab
 
-class AcquistiVenditeRadioBox(RadioBox):
+class AcquistiVenditeCorrispettiviRadioBox(RadioBox):
     def __init__(self, *args, **kwargs):
         RadioBox.__init__(self, *args, **kwargs)
-        self.SetDataLink(values=["A", "V"])
+        self.SetDataLink(values=["A", "V", "C"])
 
 
 
 # Window functions
 
-ID_ACQVEN = 10000
+ID_ACQVENCOR = 10000
 ID_TEXT = 10001
 ID_ANNO = 10002
 ID_DATA1 = 10003
@@ -49,9 +49,9 @@ def SpesometroPanelFunc( parent, call_fit = True, set_sizer = True ):
     
     item1 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
-    item2 = AcquistiVenditeRadioBox( parent, ID_ACQVEN, "Tipo", wx.DefaultPosition, wx.DefaultSize, 
-        ["Acquisti","Vendite"] , 1, wx.RA_SPECIFY_ROWS )
-    item2.SetName( "acqven" )
+    item2 = AcquistiVenditeCorrispettiviRadioBox( parent, ID_ACQVENCOR, "Tipo", wx.DefaultPosition, wx.DefaultSize, 
+        ["Acquisti","Vendite","Corrisp."] , 1, wx.RA_SPECIFY_ROWS )
+    item2.SetName( "acqvencor" )
     item1.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL|wx.ALL, 5 )
 
     item4 = wx.StaticBox( parent, -1, "Periodo" )

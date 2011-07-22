@@ -227,9 +227,9 @@ class SpesometroPanel(aw.Panel):
             TTS(b, wms)
             b.Enable(valid)
         if valid:
-            acqven = "acquisto vendita".split()[cn('acqven').GetSelection()]
-            TTS(cn('butupdate'), "Estrae tutte le operazioni di %(acqven)s del periodo, ordinate per cliente." % locals())
-            TTS(cn('butestrai'), "Raggruppa, ove indicato, le operazioni di %(acqven)s ed estrae solo quelle eccedenti i massimali impostati per il %(anno)s." % locals())
+            acqvencor = "acquisto vendita corrispettivi".split()[cn('acqvencor').GetSelection()]
+            TTS(cn('butupdate'), "Estrae tutte le operazioni di %(acqvencor)s del periodo, ordinate per cliente." % locals())
+            TTS(cn('butestrai'), "Raggruppa, ove indicato, le operazioni di %(acqvencor)s ed estrae solo quelle eccedenti i massimali impostati per il %(anno)s." % locals())
         return valid
     
     def UpdateData(self):
@@ -237,7 +237,7 @@ class SpesometroPanel(aw.Panel):
         wx.BeginBusyCursor()
         spe = self.dbspe
         try:
-            spe.GetData([(name, cn(name).GetValue()) for name in 'acqven data1 data2'.split()])
+            spe.GetData([(name, cn(name).GetValue()) for name in 'acqvencor data1 data2'.split()])
             self.anno = cn('data1').GetValue().year
             self.gridspe.ChangeData(spe.GetRecordset())
         except Exception, e:

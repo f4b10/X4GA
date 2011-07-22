@@ -3336,11 +3336,14 @@ class Spesometro2011_AcquistiVendite(adb.DbMem):
         filters = []
         AF = filters.append
         AF('bodyanag.numriga=1')
-        if p['acqven'] == "A":
+        if p['acqvencor'] == "A":
             AF('regiva.tipo="A"')
             anacf = bt.TABNAME_FORNIT
         else:
-            AF('regiva.tipo IN ("V", "C")')
+            if p['acqvencor'] == "V":
+                AF('regiva.tipo="V"')
+            else:
+                AF('regiva.tipo="C"')
             anacf = bt.TABNAME_CLIENTI
         AF('reg.datreg>="%s"' % p['data1'])
         AF('reg.datreg<="%s"' % p['data2'])
