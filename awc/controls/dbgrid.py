@@ -2015,7 +2015,7 @@ class ADB_Grid(DbGridColoriAlternati):
         if 0 <= col < len(db_table.GetFieldNames()):
             db_table.MoveRow(row)
             setattr(db_table, c['col_name'], value)
-        self.CellEditAfterUpdate(row, gridcol, col, value)
+        return self.CellEditAfterUpdate(row, gridcol, col, value)
     
     def OnContextMenu(self, event):
         self.ShowContextMenu(event.GetPosition(), event.GetRow(), event.GetCol())
@@ -2177,7 +2177,10 @@ if __name__ == '__main__':
             stato = anag.AddJoin('x4.stati', 'stato')
             aliqiva = anag.AddJoin('aliqiva', join=adb.JOIN_LEFT)
             clifat = anag.AddJoin('pdc', 'clifat', join=adb.JOIN_LEFT)
+            test.AddField('NULL', 'prova_data')
             test.Retrieve()
+            for test in test:
+                test.prova_data = Env.DateTime.now()
             
             self.dbpdc = test
             print '%d rows' % test.RowsCount()
@@ -2204,8 +2207,8 @@ if __name__ == '__main__':
                               on_menu_select=None)
             
             self.AddColumn(test,    'codice',         'Codice', col_width=60)
-            self.AddColumn(test,    'descriz',        'Cliente', col_width=300)
-            self.AddColumn(anag,    'indirizzo',      'Indirizzo', col_width=200, is_editable=True, is_fittable=True)
+            self.AddColumn(test,    'descriz',        'Cliente', col_width=300, is_editable=True)
+            self.AddColumn(anag,    'indirizzo',      'Indirizzo', col_width=200, is_fittable=True)
             self.AddColumn(anag,    'cap',            'CAP', col_width=50)
             self.AddColumn(anag,    'citta',          'Città', col_width=200)
             self.AddColumn(anag,    'prov',           'Prov.', col_width=40)
@@ -2219,6 +2222,12 @@ if __name__ == '__main__':
             
             self.AddColumn(clifat,  'codice',         'Cod.', col_width=40, is_editable=True, linktable_info=linktable_clifat)
             self.AddColumn(clifat,  'descriz',        'ClienteFatt.', col_width=200, is_editable=True)
+            
+            self.AddColumn(test,    'prova_data',     'TestData', col_type=self.TypeDateTime(), is_editable=True)
+            
+            def TestCella(row, col):
+                return '%s-%s' % (row, col)
+            self.AddColumn(col_name='TestCella', label='prova funzione', get_cell_func=TestCella)
             
             self.CreateGrid()
             
@@ -2234,6 +2243,10 @@ if __name__ == '__main__':
         def CreateNewRow(self, *args, **kwargs):
             ADB_Grid.CreateNewRow(self, *args, **kwargs)
             return True
+        
+        def CellEditAfterUpdate(self, row, gridcol, col, value):
+            print 'CellEditAfterUpdate: row=%d, col=%d, value=%s' % (row, gridcol, value)
+            return "OK" in value
         
         def OnCellSelected(self, event):
             print 'OnCellSelected: row=%d, col=%d' % (event.GetRow(), event.GetCol())
