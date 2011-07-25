@@ -2007,7 +2007,7 @@ class ADB_Grid(DbGridColoriAlternati):
             event.Skip()
     
     def _CellEditBeforeUpdate(self, row, gridcol, col, value):
-        return True
+        return self.CellEditBeforeUpdate(row, gridcol, col, value)
     
     def _CellEditAfterUpdate(self, row, gridcol, col, value):
         c = self._cols[gridcol]
@@ -2244,9 +2244,12 @@ if __name__ == '__main__':
             ADB_Grid.CreateNewRow(self, *args, **kwargs)
             return True
         
+        def CellEditBeforeUpdate(self, row, gridcol, col, value):
+            print 'CellBeforeAfterUpdate: row=%d, col=%d, value=%s' % (row, gridcol, value)
+            return "OK" in value
+        
         def CellEditAfterUpdate(self, row, gridcol, col, value):
             print 'CellEditAfterUpdate: row=%d, col=%d, value=%s' % (row, gridcol, value)
-            return "OK" in value
         
         def OnCellSelected(self, event):
             print 'OnCellSelected: row=%d, col=%d' % (event.GetRow(), event.GetCol())
