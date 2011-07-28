@@ -39,7 +39,7 @@ class UnoZeroCheckBox(CheckBox):
         self.SetDataLink(values={True: 1, False: 0})
     
     def SetValue(self, v):
-        if isinstance(v, str):
+        if isinstance(v, (str, unicode)):
             v = int(v)
         CheckBox.SetValue(self, v)
 

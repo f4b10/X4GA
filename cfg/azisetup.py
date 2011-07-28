@@ -137,40 +137,6 @@ class AziendaSetupPanel(_SetupPanel):
                            ('liqiva_periodic', 'MT')):
             name = 'setup_'+name
             cn(name).SetDataLink(name, list(vals))
-        tf = {True: '1', False: '0'}
-        for name, vals in (('setup_conbilricl',   tf),
-                           ('setup_conbilrcee',   tf),
-                           ('setup_conattritacc', tf),
-                           ('setup_magscocat',    tf),
-                           ('setup_gesfidicli',   tf),
-                           ('setup_magimgprod',   tf),
-                           ('setup_magdigsearch', tf),
-                           ('setup_optdigsearch', tf),
-                           ('setup_opttabsearch', tf),
-                           ('setup_optlnkcrdpdc', tf),
-                           ('setup_optlnkgrdpdc', tf),
-                           ('setup_optlnkcrdcli', tf),
-                           ('setup_optlnkgrdcli', tf),
-                           ('setup_optlnkcrdfor', tf),
-                           ('setup_optlnkgrdfor', tf),
-                           ('setup_optnotifiche', tf),
-                           ('setup_magpzconf',    tf),
-                           ('setup_magpzgrip',    tf),
-                           ('setup_magppromo',    tf),
-                           ('setup_magprovatt',   tf),
-                           ('setup_magprovcli',   tf),
-                           ('setup_magprovpro',   tf),
-                           ('setup_magvisgia',    tf),
-                           ('setup_magvispre',    tf),
-                           ('setup_magviscos',    tf),
-                           ('setup_magviscpf',    tf),
-                           ('setup_magvisbcd',    tf),
-                           ('setup_maggesacc',    tf),
-                           ):
-            try:
-                cn(name).SetDataLink(name, vals)
-            except:
-                pass
         self.SetupRead()
         self.Bind(wx.EVT_BUTTON, self.OnConfirm, id=wdr.ID_BTNOK)
     
