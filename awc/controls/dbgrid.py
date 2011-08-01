@@ -251,7 +251,7 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
                 voci.append((text, func, True))
         data = self.GetTable().data
         if data:
-            voci.append(("Esporta file CSV", self.OnExportCSV, True))
+            voci.append(("Esporta file CSV (%d righe)" % len(data), self.OnExportCSV, True))
         for text, func, enab in voci:
             if text is None:
                 menu.AppendSeparator()
