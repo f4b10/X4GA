@@ -29,6 +29,8 @@ class SintesiPanel(wx.Panel):
     def __init__(self, *args, **kwargs):
         wx.Panel.__init__(self, *args, **kwargs)
         SintesiPanelFunc(self)
+        self.SetName('pansint')
+
 
 PREZZOWIDTH = 90
 
@@ -64,7 +66,7 @@ class OrdinamentoRadioBox(RadioBox):
 
     def __init__(self, *args, **kwargs):
         RadioBox.__init__(self, *args, **kwargs)
-        self.SetDataLink(values="CDF")
+        self.SetDataLink(values="CDFB")
         #if not bt.MAGFORLIS:
             #self.ShowItem(2, False)
 
@@ -98,36 +100,38 @@ class ValutaCostiFornitoriPanel(wx.Panel):
 # Window functions
 
 ID_TEXT = 14000
-ID_LINE = 14001
-ID_CODICE1 = 14002
-ID_CODICE2 = 14003
-ID_DESCRIZ1 = 14004
-ID_DESCRIZ2 = 14005
-ID_FILT_TIPART = 14006
-ID_FILT_CATART = 14007
-ID_FILT_GRUART = 14008
-ID_FILT_FORNIT1 = 14009
-ID_FILT_FORNIT2 = 14010
-ID_FILT_STATUS1 = 14011
-ID_FILT_STATUS2 = 14012
-ID_AUTORICALC = 14013
-ID_AUTOLISTINO = 14014
-ID_ORDINAM = 14015
-ID_RAGGRUPPAM = 14016
-ID_ESCL0COS = 14017
-ID_ESCL0PRE = 14018
-ID_SSV = 14019
-ID_PANSINT = 14020
-ID_UPDATE = 14021
+ID_CODICE1 = 14001
+ID_CODICE2 = 14002
+ID_DESCRIZ1 = 14003
+ID_DESCRIZ2 = 14004
+ID_FILT_TIPART = 14005
+ID_FILT_CATART = 14006
+ID_FILT_GRUART = 14007
+ID_MARART1 = 14008
+ID_MARART2 = 14009
+ID_FILT_FORNIT1 = 14010
+ID_FILT_FORNIT2 = 14011
+ID_FILT_STATUS1 = 14012
+ID_FILT_STATUS2 = 14013
+ID_AUTORICALC = 14014
+ID_AUTOLISTINO = 14015
+ID_ORDINAM = 14016
+ID_RAGGRUPPAM = 14017
+ID_ESCL0COS = 14018
+ID_ESCL0PRE = 14019
+ID_SSV = 14020
+ID_LINE = 14021
+ID_PANSINT = 14022
+ID_UPDATE = 14023
 ID_SOLOLIST = 0
-ID_PANGRIDLIS = 14022
-ID_RICALCPC = 14023
-ID_RICALCALL = 14024
-ID_RICALCLIST = 14025
-ID_VARIAPERC = 14026
-ID_ACQLIST = 14027
-ID_PRINTLIS = 14028
-ID_SAVELIST = 14029
+ID_PANGRIDLIS = 14024
+ID_RICALCPC = 14025
+ID_RICALCALL = 14026
+ID_RICALCLIST = 14027
+ID_VARIAPERC = 14028
+ID_ACQLIST = 14029
+ID_PRINTLIS = 14030
+ID_SAVELIST = 14031
 
 def ListiniFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -138,167 +142,171 @@ def ListiniFunc( parent, call_fit = True, set_sizer = True ):
     
     item3 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
-    item4 = wx.StaticText( parent, ID_TEXT, "Selezione prodotti", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item4.SetForegroundColour( wx.BLUE )
-    item3.Add( item4, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
-
-    item5 = wx.StaticLine( parent, ID_LINE, wx.DefaultPosition, [20,-1], wx.LI_HORIZONTAL )
-    item3.Add( item5, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
-
-    item6 = wx.FlexGridSizer( 0, 3, 0, 0 )
+    item4 = wx.FlexGridSizer( 0, 3, 0, 0 )
     
-    item7 = wx.StaticText( parent, ID_TEXT, "", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item6.Add( item7, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+    item5 = wx.StaticText( parent, ID_TEXT, "Selezioni", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item5.SetForegroundColour( wx.BLUE )
+    item4.Add( item5, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
 
-    item8 = wx.StaticText( parent, ID_TEXT, "Da:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item6.Add( item8, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+    item6 = wx.StaticText( parent, ID_TEXT, "Da:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item4.Add( item6, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
 
-    item9 = wx.StaticText( parent, ID_TEXT, "A:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item6.Add( item9, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+    item7 = wx.StaticText( parent, ID_TEXT, "A:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item4.Add( item7, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
 
-    item10 = wx.StaticText( parent, ID_TEXT, "Codice:", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
-    item6.Add( item10, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+    item8 = wx.StaticText( parent, ID_TEXT, "Codice:", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
+    item4.Add( item8, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
 
-    item11 = TextCtrl( parent, ID_CODICE1, "", wx.DefaultPosition, [120,-1], 0 )
-    item11.SetName( "codice1" )
-    item6.Add( item11, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+    item9 = TextCtrl( parent, ID_CODICE1, "", wx.DefaultPosition, [120,-1], 0 )
+    item9.SetName( "codice1" )
+    item4.Add( item9, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
 
-    item12 = TextCtrl( parent, ID_CODICE2, "", wx.DefaultPosition, [120,-1], 0 )
-    item12.SetName( "codice2" )
-    item6.Add( item12, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+    item10 = TextCtrl( parent, ID_CODICE2, "", wx.DefaultPosition, [120,-1], 0 )
+    item10.SetName( "codice2" )
+    item4.Add( item10, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item13 = wx.StaticText( parent, ID_TEXT, "Descrizione:", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
-    item6.Add( item13, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item11 = wx.StaticText( parent, ID_TEXT, "Descrizione:", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
+    item4.Add( item11, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item14 = TextCtrl( parent, ID_DESCRIZ1, "", wx.DefaultPosition, [80,-1], 0 )
-    item14.SetName( "descriz1" )
-    item6.Add( item14, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item12 = TextCtrl( parent, ID_DESCRIZ1, "", wx.DefaultPosition, [80,-1], 0 )
+    item12.SetName( "descriz1" )
+    item4.Add( item12, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item15 = TextCtrl( parent, ID_DESCRIZ2, "", wx.DefaultPosition, [80,-1], 0 )
-    item15.SetName( "descriz2" )
-    item6.Add( item15, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item13 = TextCtrl( parent, ID_DESCRIZ2, "", wx.DefaultPosition, [80,-1], 0 )
+    item13.SetName( "descriz2" )
+    item4.Add( item13, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item16 = wx.StaticText( parent, ID_TEXT, "Tipo:", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
-    item6.Add( item16, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item14 = wx.StaticText( parent, ID_TEXT, "Tipo:", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
+    item4.Add( item14, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item17 = LinkTableTipArt(parent, ID_FILT_TIPART, 'id_tipart1')
-    item6.Add( item17, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item15 = LinkTableTipArt(parent, ID_FILT_TIPART, 'id_tipart1')
+    item4.Add( item15, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item18 = LinkTableTipArt(parent, ID_FILT_TIPART, 'id_tipart2')
-    item6.Add( item18, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item16 = LinkTableTipArt(parent, ID_FILT_TIPART, 'id_tipart2')
+    item4.Add( item16, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item19 = wx.StaticText( parent, ID_TEXT, "Categoria:", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
-    item6.Add( item19, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item17 = wx.StaticText( parent, ID_TEXT, "Categoria:", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
+    item4.Add( item17, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item20 = LinkTableCatArt(parent, ID_FILT_CATART, 'id_catart1')
-    item6.Add( item20, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item18 = LinkTableCatArt(parent, ID_FILT_CATART, 'id_catart1')
+    item4.Add( item18, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item21 = LinkTableCatArt(parent, ID_FILT_CATART, 'id_catart2')
-    item6.Add( item21, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item19 = LinkTableCatArt(parent, ID_FILT_CATART, 'id_catart2')
+    item4.Add( item19, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item22 = wx.StaticText( parent, ID_TEXT, "Gruppo:", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
-    item6.Add( item22, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item20 = wx.StaticText( parent, ID_TEXT, "Gruppo:", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
+    item4.Add( item20, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item23 = LinkTableGruArt(parent, ID_FILT_GRUART, 'id_gruart1')
-    item6.Add( item23, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item21 = LinkTableGruArt(parent, ID_FILT_GRUART, 'id_gruart1')
+    item4.Add( item21, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item24 = LinkTableGruArt(parent, ID_FILT_GRUART, 'id_gruart2')
-    item6.Add( item24, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item22 = LinkTableGruArt(parent, ID_FILT_GRUART, 'id_gruart2')
+    item4.Add( item22, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item25 = wx.StaticText( parent, ID_TEXT, "Fornitore:", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
-    item6.Add( item25, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item23 = wx.StaticText( parent, ID_TEXT, "Marca:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item4.Add( item23, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item26 = LinkTableFornit(parent, ID_FILT_FORNIT1, 'id_fornit1')
-    item6.Add( item26, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item24 = LinkTableMarArt(parent, ID_MARART1, 'id_marart1')
+    item4.Add( item24, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item27 = LinkTableFornit(parent, ID_FILT_FORNIT2, 'id_fornit2')
-    item6.Add( item27, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item25 = LinkTableMarArt(parent, ID_MARART2, 'id_marart2')
+    item4.Add( item25, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item28 = wx.StaticText( parent, ID_TEXT, "Status:", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
-    item6.Add( item28, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item26 = wx.StaticText( parent, ID_TEXT, "Fornitore:", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
+    item4.Add( item26, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item29 = LinkTableStatArt(parent, ID_FILT_STATUS1, 'id_status1')
-    item6.Add( item29, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item27 = LinkTableFornit(parent, ID_FILT_FORNIT1, 'id_fornit1')
+    item4.Add( item27, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item30 = LinkTableStatArt(parent, ID_FILT_STATUS2, 'id_status2')
-    item6.Add( item30, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item28 = LinkTableFornit(parent, ID_FILT_FORNIT2, 'id_fornit2')
+    item4.Add( item28, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item6.AddGrowableCol( 1 )
+    item29 = wx.StaticText( parent, ID_TEXT, "Status:", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
+    item4.Add( item29, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item6.AddGrowableCol( 2 )
+    item30 = LinkTableStatArt(parent, ID_FILT_STATUS1, 'id_status1')
+    item4.Add( item30, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item3.Add( item6, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item31 = LinkTableStatArt(parent, ID_FILT_STATUS2, 'id_status2')
+    item4.Add( item31, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item31 = wx.BoxSizer( wx.HORIZONTAL )
+    item4.AddGrowableCol( 1 )
+
+    item4.AddGrowableCol( 2 )
+
+    item3.Add( item4, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item32 = wx.BoxSizer( wx.HORIZONTAL )
     
-    item32 = wx.StaticText( parent, ID_TEXT, "Ricalcola automaticamente:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item31.Add( item32, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+    item33 = wx.StaticText( parent, ID_TEXT, "Ricalcola automaticamente:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item32.Add( item33, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
-    item33 = wx.CheckBox( parent, ID_AUTORICALC, "Costo/Prezzo", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item31.Add( item33, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+    item34 = wx.CheckBox( parent, ID_AUTORICALC, "Costo/Prezzo", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item34.SetName( "autoricalc" )
+    item32.Add( item34, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item34 = wx.CheckBox( parent, ID_AUTOLISTINO, "Prezzi listino", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item34.SetName( "autolistino" )
-    item31.Add( item34, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+    item35 = wx.CheckBox( parent, ID_AUTOLISTINO, "Prezzi listino", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item35.SetName( "autolistino" )
+    item32.Add( item35, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item3.Add( item31, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item3.Add( item32, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item3.AddGrowableCol( 0 )
 
     item2.Add( item3, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item35 = wx.BoxSizer( wx.VERTICAL )
+    item36 = wx.BoxSizer( wx.VERTICAL )
     
-    item36 = OrdinamentoRadioBox( parent, ID_ORDINAM, "Ordinamento", wx.DefaultPosition, wx.DefaultSize, 
-        ["Codice","Descrizione","Cod.Fornitore"] , 1, wx.RA_SPECIFY_COLS )
-    item36.SetName( "ordinam" )
-    item35.Add( item36, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+    item37 = OrdinamentoRadioBox( parent, ID_ORDINAM, "Ordinamento", wx.DefaultPosition, wx.DefaultSize, 
+        ["Codice","Descrizione","Cod.Fornitore","Barcode"] , 1, wx.RA_SPECIFY_COLS )
+    item37.SetName( "ordinam" )
+    item36.Add( item37, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
 
-    item37 = RaggruppamentoRadioBox( parent, ID_RAGGRUPPAM, "Raggruppamento", wx.DefaultPosition, wx.DefaultSize, 
+    item38 = RaggruppamentoRadioBox( parent, ID_RAGGRUPPAM, "Raggruppamento", wx.DefaultPosition, wx.DefaultSize, 
         ["Nessuno","Categoria","Categoria, gruppo"] , 1, wx.RA_SPECIFY_COLS )
-    item37.SetName( "raggruppam" )
-    item35.Add( item37, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+    item38.SetName( "raggruppam" )
+    item36.Add( item38, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
-    item39 = wx.StaticBox( parent, -1, "Escludi se è nullo:" )
-    item38 = wx.StaticBoxSizer( item39, wx.HORIZONTAL )
+    item40 = wx.StaticBox( parent, -1, "Escludi se è nullo:" )
+    item39 = wx.StaticBoxSizer( item40, wx.HORIZONTAL )
     
-    item40 = wx.CheckBox( parent, ID_ESCL0COS, "Il costo", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item40.SetName( "excl0cos" )
-    item38.Add( item40, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
+    item41 = wx.CheckBox( parent, ID_ESCL0COS, "Il costo", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item41.SetName( "excl0cos" )
+    item39.Add( item41, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item41 = wx.CheckBox( parent, ID_ESCL0PRE, "Il prezzo", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item41.SetName( "excl0pre" )
-    item38.Add( item41, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+    item42 = wx.CheckBox( parent, ID_ESCL0PRE, "Il prezzo", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item42.SetName( "excl0pre" )
+    item39.Add( item42, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
 
-    item35.Add( item38, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item36.Add( item39, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item42 = wx.CheckBox( parent, ID_SSV, "Solo Status Visibile", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item42.SetValue( True )
-    item42.SetName( "ssv" )
-    item35.Add( item42, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+    item43 = wx.CheckBox( parent, ID_SSV, "Solo Status Visibile", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item43.SetValue( True )
+    item43.SetName( "ssv" )
+    item36.Add( item43, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item2.Add( item35, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item2.Add( item36, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item43 = wx.StaticLine( parent, ID_LINE, wx.DefaultPosition, [-1,20], wx.LI_VERTICAL )
-    item2.Add( item43, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
-
-    item44 = wx.FlexGridSizer( 0, 1, 0, 0 )
-    
-    item45 = SintesiPanel(parent, ID_PANSINT)
-    item44.Add( item45, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
-
-    item46 = wx.Button( parent, ID_UPDATE, "&Aggiorna", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item46.SetToolTip( wx.ToolTip("Aggiorna la griglia dei prodotti") )
-    item46.SetName( "update" )
-    item44.Add( item46, 0, wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM|wx.ALL, 5 )
-
-    item44.AddGrowableCol( 0 )
-
-    item44.AddGrowableRow( 1 )
-
-    item44.AddGrowableRow( 2 )
-
+    item44 = wx.StaticLine( parent, ID_LINE, wx.DefaultPosition, [-1,20], wx.LI_VERTICAL )
     item2.Add( item44, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item45 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    
+    item46 = SintesiPanel(parent, ID_PANSINT)
+    item45.Add( item46, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item47 = wx.Button( parent, ID_UPDATE, "&Aggiorna", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item47.SetToolTip( wx.ToolTip("Aggiorna la griglia dei prodotti") )
+    item47.SetName( "update" )
+    item45.Add( item47, 0, wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM|wx.ALL, 5 )
+
+    item45.AddGrowableCol( 0 )
+
+    item45.AddGrowableRow( 1 )
+
+    item45.AddGrowableRow( 2 )
+
+    item2.Add( item45, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item2.AddGrowableCol( 0 )
 
@@ -312,95 +320,103 @@ def ListiniFunc( parent, call_fit = True, set_sizer = True ):
 
     item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item47 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    item48 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
-    item48 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    item49 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
-    item49 = wx.StaticText( parent, ID_TEXT, "Prezzi di listino", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item49.SetForegroundColour( wx.BLUE )
-    item48.Add( item49, 0, wx.GROW|wx.ALIGN_BOTTOM|wx.LEFT, 5 )
+    item50 = wx.StaticText( parent, ID_TEXT, "Prodotti", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item50.SetForegroundColour( wx.BLUE )
+    item49.Add( item50, 0, wx.GROW|wx.ALIGN_BOTTOM|wx.LEFT, 5 )
 
-    item50 = RCheckBox( parent, ID_SOLOLIST, "Mostra solo prodotti presenti nei listini", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item50.SetName( "sololist" )
-    item48.Add( item50, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT, 5 )
+    item51 = RCheckBox( parent, ID_SOLOLIST, "Mostra solo prodotti presenti nei listini", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item51.SetName( "sololist" )
+    item49.Add( item51, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT, 5 )
+
+    item49.AddGrowableCol( 0 )
+
+    item48.Add( item49, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item52 = ListinoPanel( parent, ID_PANGRIDLIS, wx.DefaultPosition, [-1,360], wx.SUNKEN_BORDER )
+    item52.SetName( "pangridlis" )
+    item48.Add( item52, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
     item48.AddGrowableCol( 0 )
 
-    item47.Add( item48, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item48.AddGrowableRow( 1 )
 
-    item51 = ListinoPanel( parent, ID_PANGRIDLIS, wx.DefaultPosition, [-1,400], wx.SUNKEN_BORDER )
-    item47.Add( item51, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+    item0.Add( item48, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item47.AddGrowableCol( 0 )
-
-    item47.AddGrowableRow( 1 )
-
-    item0.Add( item47, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
-
-    item52 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    item53 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
-    item54 = wx.StaticBox( parent, -1, "Ricalcoli da effettuare sui prodotti selezionati" )
-    item53 = wx.StaticBoxSizer( item54, wx.HORIZONTAL )
+    item55 = wx.StaticBox( parent, -1, "Ricalcoli da effettuare sui prodotti selezionati" )
+    item54 = wx.StaticBoxSizer( item55, wx.HORIZONTAL )
     
-    item55 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    item56 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
-    item56 = wx.StaticText( parent, ID_TEXT, "Ricalcola:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item55.Add( item56, 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+    item57 = wx.StaticText( parent, ID_TEXT, "Ricalcola:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item56.Add( item57, 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
 
-    item57 = wx.Button( parent, ID_RICALCPC, "&1: Costo/prezzo", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item57.SetToolTip( wx.ToolTip("Ricalcola il costo/prezzo dei prodotti selezionati") )
-    item55.Add( item57, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+    item58 = wx.Button( parent, ID_RICALCPC, "&1: Costo/prezzo", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item58.SetToolTip( wx.ToolTip("Ricalcola il costo/prezzo dei prodotti selezionati") )
+    item58.SetName( "ricalcpc" )
+    item56.Add( item58, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
 
-    item58 = wx.Button( parent, ID_RICALCALL, "&2: Costo/prezzo e Listini", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item58.SetToolTip( wx.ToolTip("Ricalcola il costo/prezzo e i prezzi di listino dei prodotti selezionati") )
-    item55.Add( item58, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+    item59 = wx.Button( parent, ID_RICALCALL, "&2: Costo/prezzo e Listini", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item59.SetToolTip( wx.ToolTip("Ricalcola il costo/prezzo e i prezzi di listino dei prodotti selezionati") )
+    item59.SetName( "ricalcall" )
+    item56.Add( item59, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
 
-    item59 = wx.Button( parent, ID_RICALCLIST, "&3: Listini", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item59.SetToolTip( wx.ToolTip("Ricalcola i prezzi di listino dei prodotti selezionati") )
-    item55.Add( item59, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+    item60 = wx.Button( parent, ID_RICALCLIST, "&3: Listini", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item60.SetToolTip( wx.ToolTip("Ricalcola i prezzi di listino dei prodotti selezionati") )
+    item60.SetName( "ricalclist" )
+    item56.Add( item60, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
 
-    item60 = wx.Button( parent, ID_VARIAPERC, "&Variazioni %", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item60.SetToolTip( wx.ToolTip("Applica variazioni percentuali al costo, al prezzo e ai prezzi di listino") )
-    item55.Add( item60, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+    item61 = wx.Button( parent, ID_VARIAPERC, "&Variazioni %", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item61.SetToolTip( wx.ToolTip("Applica variazioni percentuali al costo, al prezzo e ai prezzi di listino") )
+    item61.SetName( "variaperc" )
+    item56.Add( item61, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item55.AddGrowableCol( 4 )
+    item56.AddGrowableCol( 4 )
 
-    item53.Add( item55, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item54.Add( item56, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item52.Add( item53, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+    item53.Add( item54, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item62 = wx.StaticBox( parent, -1, "Acquisizione" )
-    item61 = wx.StaticBoxSizer( item62, wx.VERTICAL )
+    item63 = wx.StaticBox( parent, -1, "Acquisizione" )
+    item62 = wx.StaticBoxSizer( item63, wx.VERTICAL )
     
-    item63 = wx.Button( parent, ID_ACQLIST, "CSV Fornitore", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item61.Add( item63, 0, wx.ALIGN_CENTER|wx.TOP|wx.BOTTOM, 5 )
+    item64 = wx.Button( parent, ID_ACQLIST, "CSV Fornitore", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item64.SetName( "acqlist" )
+    item62.Add( item64, 0, wx.ALIGN_CENTER|wx.TOP|wx.BOTTOM, 5 )
 
-    item52.Add( item61, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
+    item53.Add( item62, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
 
-    item65 = wx.StaticBox( parent, -1, "Salva dati" )
-    item64 = wx.StaticBoxSizer( item65, wx.VERTICAL )
+    item66 = wx.StaticBox( parent, -1, "Salva dati" )
+    item65 = wx.StaticBoxSizer( item66, wx.VERTICAL )
     
-    item66 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    item67 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
-    item67 = wx.Button( parent, ID_PRINTLIS, "Stam&pa", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item67.SetToolTip( wx.ToolTip("Stampa listino") )
-    item66.Add( item67, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+    item68 = wx.Button( parent, ID_PRINTLIS, "Stam&pa", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item68.SetToolTip( wx.ToolTip("Stampa listino") )
+    item68.SetName( "printlis" )
+    item67.Add( item68, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
-    item68 = wx.Button( parent, ID_SAVELIST, "&Salva", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item68.SetToolTip( wx.ToolTip("Memorizza le variazioni apportate") )
-    item66.Add( item68, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+    item69 = wx.Button( parent, ID_SAVELIST, "&Salva", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item69.SetToolTip( wx.ToolTip("Memorizza le variazioni apportate") )
+    item69.SetName( "savelist" )
+    item67.Add( item69, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item66.AddGrowableCol( 0 )
+    item67.AddGrowableCol( 0 )
 
-    item66.AddGrowableCol( 1 )
+    item67.AddGrowableCol( 1 )
 
-    item64.Add( item66, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item65.Add( item67, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item52.Add( item64, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
+    item53.Add( item65, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
 
-    item52.AddGrowableCol( 1 )
+    item53.AddGrowableCol( 1 )
 
-    item0.Add( item52, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item0.Add( item53, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item0.AddGrowableCol( 0 )
 
@@ -413,13 +429,13 @@ def ListiniFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_CANCLIST = 14030
-ID_PANGRIDSIN = 14031
-ID_DATA = 14032
-ID_RESET = 14033
-ID_NEWDATALABEL = 14034
-ID_NEWDATA = 14035
-ID_COPYLIS = 14036
+ID_CANCLIST = 14032
+ID_PANGRIDSIN = 14033
+ID_DATA = 14034
+ID_RESET = 14035
+ID_NEWDATALABEL = 14036
+ID_NEWDATA = 14037
+ID_COPYLIS = 14038
 
 def SintesiPanelFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.BoxSizer( wx.VERTICAL )
@@ -433,6 +449,7 @@ def SintesiPanelFunc( parent, call_fit = True, set_sizer = True ):
     item2.Add( item3, 0, wx.ALIGN_BOTTOM|wx.LEFT|wx.RIGHT, 5 )
 
     item4 = wx.Button( parent, ID_CANCLIST, "&Elimina", wx.DefaultPosition, [-1,20], 0 )
+    item4.SetName( "canclist" )
     item2.Add( item4, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 
     item2.AddGrowableCol( 1 )
@@ -440,6 +457,7 @@ def SintesiPanelFunc( parent, call_fit = True, set_sizer = True ):
     item1.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item5 = wx.Panel( parent, ID_PANGRIDSIN, wx.DefaultPosition, [170,120], wx.SUNKEN_BORDER )
+    item5.SetName( "pangridsin" )
     item1.Add( item5, 0, wx.GROW|wx.LEFT|wx.RIGHT, 5 )
 
     item6 = wx.FlexGridSizer( 0, 3, 0, 0 )
@@ -453,6 +471,7 @@ def SintesiPanelFunc( parent, call_fit = True, set_sizer = True ):
 
     item9 = wx.Button( parent, ID_RESET, "&Reset", wx.DefaultPosition, [50,-1], 0 )
     item9.SetToolTip( wx.ToolTip("Abbandona le variazioni apportate e riaggiorna la griglia prodotti") )
+    item9.SetName( "reset" )
     item6.Add( item9, 0, wx.ALIGN_CENTER|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
 
     item10 = wx.StaticText( parent, ID_NEWDATALABEL, "Nuovo:", wx.DefaultPosition, wx.DefaultSize, 0 )
@@ -465,6 +484,7 @@ def SintesiPanelFunc( parent, call_fit = True, set_sizer = True ):
 
     item12 = wx.Button( parent, ID_COPYLIS, "&Copia", wx.DefaultPosition, [50,-1], 0 )
     item12.SetToolTip( wx.ToolTip("Abbandona le variazioni apportate e riaggiorna la griglia prodotti") )
+    item12.SetName( "copylis" )
     item6.Add( item12, 0, wx.ALIGN_CENTER|wx.RIGHT|wx.BOTTOM, 5 )
 
     item1.Add( item6, 0, wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM, 5 )
@@ -484,19 +504,19 @@ def SintesiPanelFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_PVCOSTO = 14037
-ID_PVPREZZO = 14038
-ID_TVLIST = 14039
-ID_PVPREZZO1 = 14040
-ID_PVPREZZO2 = 14041
-ID_PVPREZZO3 = 14042
-ID_PVPREZZO4 = 14043
-ID_PVPREZZO5 = 14044
-ID_PVPREZZO6 = 14045
-ID_PVPREZZO7 = 14046
-ID_PVPREZZO8 = 14047
-ID_PVPREZZO9 = 14048
-ID_BTNOK = 14049
+ID_PVCOSTO = 14039
+ID_PVPREZZO = 14040
+ID_TVLIST = 14041
+ID_PVPREZZO1 = 14042
+ID_PVPREZZO2 = 14043
+ID_PVPREZZO3 = 14044
+ID_PVPREZZO4 = 14045
+ID_PVPREZZO5 = 14046
+ID_PVPREZZO6 = 14047
+ID_PVPREZZO7 = 14048
+ID_PVPREZZO8 = 14049
+ID_PVPREZZO9 = 14050
+ID_BTNOK = 14051
 
 def VariaPercFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -613,6 +633,7 @@ def VariaPercFunc( parent, call_fit = True, set_sizer = True ):
     item32 = wx.Button( parent, ID_BTNOK, "Applica", wx.DefaultPosition, wx.DefaultSize, 0 )
     item32.SetDefault()
     item32.SetToolTip( wx.ToolTip("Applica le variazioni percentuali indicate sui prodotti selezionati") )
+    item32.SetName( "btnok" )
     item31.Add( item32, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
     item0.Add( item31, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
@@ -626,18 +647,18 @@ def VariaPercFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_STCOSTO = 14050
-ID_STPREZZO = 14051
-ID_STPREZZO1 = 14052
-ID_STPREZZO2 = 14053
-ID_STPREZZO3 = 14054
-ID_STPREZZO4 = 14055
-ID_STPREZZO5 = 14056
-ID_STPREZZO6 = 14057
-ID_STPREZZO7 = 14058
-ID_STPREZZO8 = 14059
-ID_STPREZZO9 = 14060
-ID_OKPRINT = 14061
+ID_STCOSTO = 14052
+ID_STPREZZO = 14053
+ID_STPREZZO1 = 14054
+ID_STPREZZO2 = 14055
+ID_STPREZZO3 = 14056
+ID_STPREZZO4 = 14057
+ID_STPREZZO5 = 14058
+ID_STPREZZO6 = 14059
+ID_STPREZZO7 = 14060
+ID_STPREZZO8 = 14061
+ID_STPREZZO9 = 14062
+ID_OKPRINT = 14063
 
 def ColonneDaStampareFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -706,6 +727,7 @@ def ColonneDaStampareFunc( parent, call_fit = True, set_sizer = True ):
     item17 = wx.Button( parent, ID_OKPRINT, "Conferma", wx.DefaultPosition, wx.DefaultSize, 0 )
     item17.SetDefault()
     item17.SetToolTip( wx.ToolTip("Conferma la stampa del listino con i valori indicati") )
+    item17.SetName( "okprint" )
     item16.Add( item17, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
     item0.Add( item16, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
@@ -721,21 +743,19 @@ def ColonneDaStampareFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_FOREIGN = 14062
-ID_CODFOR1 = 14063
-ID_BARCODE1 = 14064
-ID_CODFOR2 = 14065
-ID_BARCODE2 = 14066
-ID_TIPART1 = 14067
-ID_TIPART2 = 14068
-ID_CATART1 = 14069
-ID_CATART2 = 14070
-ID_GRUART1 = 14071
-ID_GRUART2 = 14072
-ID_FORNIT1 = 14073
-ID_FORNIT2 = 14074
-ID_MARART1 = 14075
-ID_MARART2 = 14076
+ID_FOREIGN = 14064
+ID_CODFOR1 = 14065
+ID_BARCODE1 = 14066
+ID_CODFOR2 = 14067
+ID_BARCODE2 = 14068
+ID_TIPART1 = 14069
+ID_TIPART2 = 14070
+ID_CATART1 = 14071
+ID_CATART2 = 14072
+ID_GRUART1 = 14073
+ID_GRUART2 = 14074
+ID_FORNIT1 = 14075
+ID_FORNIT2 = 14076
 ID_STATUS1 = 14077
 ID_STATUS2 = 14078
 ID_BUTUPDATE = 14079

@@ -116,7 +116,8 @@ class VariaPercDialog(aw.Dialog):
         aw.Dialog.__init__(self, *args, **kwargs)
         p = aw.Panel(self)
         wdr.VariaPercFunc(p)
-        c = self.FindWindowByName('tvlist')
+        cn = self.FindWindowByName
+        c = cn('tvlist')
         c.SetValue('R')
         if bt.MAGNUMLIS == 0:
             c.Disable()
@@ -124,8 +125,8 @@ class VariaPercDialog(aw.Dialog):
         self.AddSizedPanel(p)
         self.Fit()
         self.CenterOnScreen()
-        self.Bind(wx.EVT_RADIOBOX, self.OnEnableList, id=wdr.ID_TVLIST)
-        self.Bind(wx.EVT_BUTTON, self.OnApplica, id=wdr.ID_BTNOK)
+        self.Bind(wx.EVT_RADIOBOX, self.OnEnableList, cn('tvlist'))
+        self.Bind(wx.EVT_BUTTON, self.OnApplica, cn('btnok'))
     
     def OnEnableList(self, event):
         self.EnableList()
@@ -146,26 +147,29 @@ class VariaPercDialog(aw.Dialog):
 # ------------------------------------------------------------------------------
 
 
-class DescrizCellEditor(dbgred.TextCellEditor):
+class _SeekCellEditor(dbgred.TextCellEditor):
     
     qtacol = 0
     def SetQtaCol(self, qc):
         self.qtacol = qc
     
     def EndEdit(self, row, col, grid):
-        """
-        Complete the editing of the current cell. Returns True if the value
-        has changed.  If necessary, the control may be destroyed.
-        *Must Override*
-        """
+        
         if not self.editing:
             return
+        
         changed = False
+        
         val = self._tc.GetValue()
         if val != self.startValue:
+            
             table = grid.GetTable()
+            
+            def SearchValue(row_data):
+                return self.SearchValue(grid, row_data, val)
+            
             try:
-                r = aw.awu.ListSearch(table.data, lambda x: (x[grid.descrizcol] or '').startswith(val.lstrip()))
+                r = aw.awu.ListSearch(table.data, SearchValue)
                 def Muovi():
                     grid.MakeCellVisible(r, self.qtacol)
                     grid.SetGridCursor(r, self.qtacol)
@@ -175,40 +179,27 @@ class DescrizCellEditor(dbgred.TextCellEditor):
         self.editing = False
         self.startValue = None
         return changed
-
-
-# ------------------------------------------------------------------------------
-
-
-class CodForCellEditor(dbgred.TextCellEditor):
     
-    qtacol = 0
-    def SetQtaCol(self, qc):
-        self.qtacol = qc
+    def SearchValue(self, *args, **kwargs):
+        raise Exception, "Classe non istanziabile"
+
+
+class DescrizCellEditor(_SeekCellEditor):
     
-    def EndEdit(self, row, col, grid):
-        """
-        Complete the editing of the current cell. Returns True if the value
-        has changed.  If necessary, the control may be destroyed.
-        *Must Override*
-        """
-        if not self.editing:
-            return
-        changed = False
-        val = self._tc.GetValue()
-        if val != self.startValue:
-            table = grid.GetTable()
-            try:
-                r = aw.awu.ListSearch(table.data, lambda x: x[grid.codforcol] == val)
-                def Muovi():
-                    grid.MakeCellVisible(r, self.qtacol)
-                    grid.SetGridCursor(r, self.qtacol)
-                wx.CallAfter(Muovi)
-            except IndexError:
-                pass
-        self.editing = False
-        self.startValue = None
-        return changed
+    def SearchValue(self, grid, row_data, value):
+        return (row_data[grid.descrizcol] or '').startswith(value.lstrip())    
+
+
+class CodForCellEditor(_SeekCellEditor):
+    
+    def SearchValue(self, grid, row_data, value):
+        return row_data[grid.codforcol] == value
+
+
+class BarcodeCellEditor(_SeekCellEditor):
+    
+    def SearchValue(self, grid, row_data, value):
+        return row_data[grid.barcodecol] == value
 
 
 # ------------------------------------------------------------------------------
@@ -373,12 +364,17 @@ class ListiniGrid(dbglib.DbGridColoriAlternati):
         
         self.COL_CODICE =  C(( 80, None,       (cn(pro, "codice"),   "Codice",        _STR, True )))
         self.proidcol = cn(pro, "id")
-        self.COL_DESCRIZ = C((240, None,       (cn(pro, "descriz"),  "Prodotto",      _STR, True )))
+        
         self.descrizcol = cn(pro, "descriz")
+        self.COL_DESCRIZ = C((240, None,       (self.descrizcol,     "Prodotto",      _STR, True )))
         
         if bt.MAGFORLIS:
-            self.COL_CODFOR = C(( 90, None,    (cn(pro, "codfor"),   "Cod.Fornit.",   _STR, True )))
             self.codforcol = cn(pro, "codfor")
+            self.COL_CODFOR = C(( 100, None,    (self.codforcol,     "Cod.Fornit.",   _STR, True )))
+        
+        if bt.MAGBCOLIS:
+            self.barcodecol = cn(pro, "barcode")
+            self.COL_BARCODE = C(( 100, None,   (self.barcodecol,    "Barcode",       _STR, True )))
         
         self.COL_grupre =  C(( 30, None,       (cn(gpr, "codice"),   "GP",            _STR, False)))
         self.COL_cpc =     c(( 10, None,       (cn(gpr, "calcpc"),   "CPC",           _STR, False)))
@@ -501,6 +497,11 @@ class ListiniGrid(dbglib.DbGridColoriAlternati):
             codfor_editor = CodForCellEditor()
             codfor_editor.SetQtaCol(self.COL_PREZZO)
             editors.append((self.COL_CODFOR, codfor_editor))
+        
+        if bt.MAGBCOLIS:
+            barcode_editor = BarcodeCellEditor()
+            barcode_editor.SetQtaCol(self.COL_PREZZO)
+            editors.append((self.COL_BARCODE, barcode_editor))
         
         import anag.lib as alib
         from anag.gruprez import GruPrezDialog
@@ -923,14 +924,13 @@ class ColonneDaStampareDialog(aw.Dialog):
         self.unique = False
         p = aw.Panel(self)
         wdr.ColonneDaStampareFunc(p)
+        cn = self.FindWindowByName
         self.AddSizedPanel(p)
-        def cn(x):
-            return self.FindWindowByName(x)
         for l in range(1,10):
             name = 'prezzo%d' % l
             cn(name).Enable(l<=bt.MAGNUMLIS)
         self.CenterOnScreen()
-        self.Bind(wx.EVT_BUTTON, self.OnOk, id=wdr.ID_OKPRINT)
+        self.Bind(wx.EVT_BUTTON, self.OnOk, cn('okprint'))
         self.Bind(wx.EVT_CHECKBOX, self.OnCheckBox)
     
     def SetUnique(self, u):
@@ -957,13 +957,9 @@ class ListiniPanel(aw.Panel, aw.awu.LimitiFiltersMixin):
         
         aw.Panel.__init__(self, *args, **kwargs)
         wdr.ListiniFunc(self)
+        cn = self.FindWindowByName
         
         aw.awu.LimitiFiltersMixin.__init__(self)
-        
-        def ci(x):
-            return self.FindWindowById(x)
-        def cn(x):
-            return self.FindWindowByName(x)
         
         self.dblis = dbm.Listino()
         self.dbsin = dbm.ListinoSintesi()
@@ -979,23 +975,24 @@ class ListiniPanel(aw.Panel, aw.awu.LimitiFiltersMixin):
         ALS(lis, 'gruart', 'id_gruart')
         ALS(lis, 'tipart', 'id_tipart')
         ALS(lis, 'fornit', 'id_fornit')
+        ALS(lis, 'marart', 'id_marart')
         
         self.dataval = None
         self.listchanged = False
         self.sololist = False
         
-        self.gridsin = SintesiGrid(ci(wdr.ID_PANGRIDSIN), self.dbsin)
-        self.gridlis = ListiniGrid(ci(wdr.ID_PANGRIDLIS), self.dblis)
+        self.gridsin = SintesiGrid(cn('pangridsin'), self.dbsin)
+        self.gridlis = ListiniGrid(cn('pangridlis'), self.dblis)
         
         if bt.MAGNUMLIS == 0 or not bt.MAGDATLIS:
-            ci(wdr.ID_PANSINT).Hide()
+            cn('pansint').Hide()
             if bt.MAGNUMLIS == 0:
-                for cid in (wdr.ID_RICALCALL, wdr.ID_RICALCLIST, wdr.ID_SOLOLIST):
-                    ci(cid).Hide()
+                for name in 'ricalcall ricalclist sololist'.split():
+                    cn(name).Hide()
             self.Layout()
         
-        ci(wdr.ID_NEWDATA).Hide()
-        ci(wdr.ID_NEWDATALABEL).Hide()
+        cn('newdata').Hide()
+        cn('newdatalabel').Hide()
         
         self.gridsin.Bind(gl.EVT_GRID_SELECT_CELL, self.OnUpdateData)
         self.gridlis.Bind(gl.EVT_GRID_CELL_CHANGE, self.OnListChanged)
@@ -1005,23 +1002,23 @@ class ListiniPanel(aw.Panel, aw.awu.LimitiFiltersMixin):
         self.Bind(dc.EVT_DATECHANGED, self.OnData, cn('data'))
         self.Bind(EVT_PRODCHANGED, self.OnProdChanged)
         
-        for cid, func in ((wdr.ID_UPDATE,     self.OnUpdateSin),
-                          (wdr.ID_RICALCALL,  self.OnRicalcAll),
-                          (wdr.ID_RICALCPC,   self.OnRicalcPC),
-                          (wdr.ID_RICALCLIST, self.OnRicalcList),
-                          (wdr.ID_VARIAPERC,  self.OnVariaPerc),
-                          (wdr.ID_RESET,      self.OnReset),
-                          (wdr.ID_COPYLIS,    self.OnCopyList),
-                          (wdr.ID_CANCLIST,   self.OnDeleteList),
-                          (wdr.ID_PRINTLIS,   self.OnPrintList),
-                          (wdr.ID_SAVELIST,   self.OnSaveList),
-                          (wdr.ID_ACQLIST,    self.OnAcqCSV),):
-            self.Bind(wx.EVT_BUTTON, func, id=cid)
+        for name, func in (('update',     self.OnUpdateSin),
+                           ('ricalcall',  self.OnRicalcAll),
+                           ('ricalcpc',   self.OnRicalcPC),
+                           ('ricalclist', self.OnRicalcList),
+                           ('variaperc',  self.OnVariaPerc),
+                           ('reset',      self.OnReset),
+                           ('copylis',    self.OnCopyList),
+                           ('canclist',   self.OnDeleteList),
+                           ('printlis',   self.OnPrintList),
+                           ('savelist',   self.OnSaveList),
+                           ('acqlist',    self.OnAcqCSV),):
+            self.Bind(wx.EVT_BUTTON, func, cn(name))
         
-        for cid, func in ((wdr.ID_SOLOLIST,    self.OnSoloList),
-                          (wdr.ID_AUTORICALC,  self.OnAutoRicalc),
-                          (wdr.ID_AUTOLISTINO, self.OnAutoList)):
-            self.Bind(wx.EVT_CHECKBOX, func, id=cid)
+        for name, func in (('sololist',    self.OnSoloList),
+                           ('autoricalc',  self.OnAutoRicalc),
+                           ('autolistino', self.OnAutoList)):
+            self.Bind(wx.EVT_CHECKBOX, func, cn(name))
         
         self.Bind(gl.EVT_GRID_CELL_CHANGE, self.OnGridChanged)
         
@@ -1136,9 +1133,8 @@ class ListiniPanel(aw.Panel, aw.awu.LimitiFiltersMixin):
         event.Skip()
     
     def DeleteList(self):
-        def ci(x):
-            return self.FindWindowById(x)
-        dat = ci(wdr.ID_DATA).GetValue()
+        cn = self.FindWindowByName
+        dat = cn('data').GetValue()
         if dat is None:
             MsgBox(self, "Data vuota, cancellazione non possibile")
             return False
@@ -1168,25 +1164,23 @@ class ListiniPanel(aw.Panel, aw.awu.LimitiFiltersMixin):
             self.UpdateSintesi()
     
     def OnCopyList(self, event):
-        def ci(x):
-            return self.FindWindowById(x)
-        if ci(wdr.ID_NEWDATA).IsShown():
+        cn = self.FindWindowByName
+        if cn('newdata').IsShown():
             self.CopiaListino()
         else:
-            ci(wdr.ID_NEWDATA).SetValue(None)
-            ci(wdr.ID_NEWDATA).Show()
-            ci(wdr.ID_NEWDATA).SetFocus()
-            ci(wdr.ID_NEWDATALABEL).Show()
-            ci(wdr.ID_DATA).Disable()
-            ci(wdr.ID_UPDATE).Disable()
-            ci(wdr.ID_SAVELIST).Disable()
-            ci(wdr.ID_COPYLIS).SetLabel('&Genera')
-            ci(wdr.ID_COPYLIS).SetToolTipString(\
-                "Conferma la generazione dei nuovi prezzi")
+            cn('newdata').SetValue(None)
+            cn('newdata').Show()
+            cn('newdata').SetFocus()
+            cn('newdatalabel').Show()
+            cn('data').Disable()
+            cn('update').Disable()
+            cn('savelist').Disable()
+            cn('copylis').SetLabel('&Genera')
+            cn('copylis').SetToolTipString("Conferma la generazione dei nuovi prezzi")
         event.Skip()
     
     def CopiaListino(self):
-        newdat = self.FindWindowById(wdr.ID_NEWDATA).GetValue()
+        newdat = self.FindWindowByName('newdata').GetValue()
         if newdat is None:
             MsgBox(self, message="Data errata", style=wx.ICON_ERROR)
             return False
@@ -1231,15 +1225,13 @@ class ListiniPanel(aw.Panel, aw.awu.LimitiFiltersMixin):
         event.Skip()
     
     def ListNav(self, e=True):
-        def ci(x):
-            return self.FindWindowById(x)
-        ci(wdr.ID_DATA).Enable(e)
-        ci(wdr.ID_PANGRIDSIN).Enable(e)
-        ci(wdr.ID_NEWDATA).Hide()
-        ci(wdr.ID_NEWDATALABEL).Hide()
-        ci(wdr.ID_COPYLIS).SetLabel('&Copia')
-        ci(wdr.ID_COPYLIS).SetToolTipString(\
-            "Permette la copia dei prezzi visualizzati in una nuova data")
+        cn = self.FindWindowByName
+        cn('data').Enable(e)
+        cn('pangridsin').Enable(e)
+        cn('newdata').Hide()
+        cn('newdatalabel').Hide()
+        cn('copylis').SetLabel('&Copia')
+        cn('copylis').SetToolTipString("Permette la copia dei prezzi visualizzati in una nuova data")
     
     def OnPrintList(self, event):
         self.PrintListino()
@@ -1252,7 +1244,7 @@ class ListiniPanel(aw.Panel, aw.awu.LimitiFiltersMixin):
         if bt.MAGNUMLIS == 0 or not bt.MAGDATLIS:
             lis._datlis = Env.Azienda.Login.dataElab
         else:
-            lis._datlis = self.FindWindowById(wdr.ID_DATA).GetValue()
+            lis._datlis = self.FindWindowByName('data').GetValue()
         lis._deslis = "Prezzi validi a partire dal:"
         dlg = ColonneDaStampareDialog(self, -1, 'Stampa listini')
         dlg.SetUnique(unique)
@@ -1295,16 +1287,20 @@ class ListiniPanel(aw.Panel, aw.awu.LimitiFiltersMixin):
     def PrintListino(self):
         name = 'Listino prezzi'
         cn = self.FindWindowByName
-        r = cn('raggruppam').GetValue()
-        if r == "C":
-            #raggruppamento per categoria
-            name += ' per categoria'
-        elif r == "G":
-            #raggruppamento per categoria
-            name += ' per categoria e gruppo'
+        c = cn('raggruppam')
+        if c:
+            r = c.GetValue()
+            if r == "C":
+                #raggruppamento per categoria
+                name += ' per categoria'
+            elif r == "G":
+                #raggruppamento per categoria
+                name += ' per categoria e gruppo'
+        else:
+            r = None
         def setEjectPage(rptdef, dbt):
             pass
-        if r in 'CG':
+        if r and r in 'CG':
             msg = "Salto pagina ad ogni categoria?"
             stl = wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT
             if aw.awu.MsgDialog(self, msg, style=stl) == wx.ID_YES:
@@ -1332,15 +1328,14 @@ class ListiniPanel(aw.Panel, aw.awu.LimitiFiltersMixin):
         return do
     
     def ResetList(self):
-        def ci(x):
-            return self.FindWindowById(x)
-        ci(wdr.ID_NEWDATA).Hide()
-        ci(wdr.ID_NEWDATALABEL).Hide()
-        ci(wdr.ID_UPDATE).Enable()
+        cn = self.FindWindowByName
+        cn('newdata').Hide()
+        cn('newdatalabel').Hide()
+        cn('update').Enable()
         if self.TestDataSaved():
             self.UpdateListini()
             self.ListNav(True)
-            c = self.FindWindowById(wdr.ID_DATA)
+            c = cn('data')
             c.Enable()
             c.SetFocus()
     
@@ -1379,9 +1374,7 @@ class ListiniPanel(aw.Panel, aw.awu.LimitiFiltersMixin):
     
     def SetListChanged(self, changed=True):
         self.listchanged = changed
-        def cn(x):
-            return self.FindWindowById(x)
-        cn(wdr.ID_SAVELIST).Enable(changed)
+        self.FindWindowByName('savelist').Enable(changed)
     
     def OnData(self, event):
         data = event.GetEventObject().GetValue()
@@ -1420,29 +1413,52 @@ class ListiniPanel(aw.Panel, aw.awu.LimitiFiltersMixin):
         self.ApplyFilters(self.dbsin, self.gridsin, riep=True)
     
     def UpdateListini(self):
+        
         cn = self.FindWindowByName
-        ordinam = cn('ordinam').GetValue()
-        raggruppam = cn('raggruppam').GetValue()
+        
         lis = self.dblis
         lis.ClearOrders()
-        if raggruppam == "C":
-            lis.AddOrder('catart.codice')
-        elif raggruppam == "G":
-            lis.AddOrder('catart.codice')
-            lis.AddOrder('gruart.codice')
-        if ordinam == "C":
-            lis.AddOrder('prod.codice')
-        elif ordinam == "D":
-            lis.AddOrder('prod.descriz')
-        elif ordinam == "F":
-            lis.AddOrder('prod.codfor')
-            lis.AddOrder('prod.codice')
+        
+        try:
+            ordinam = cn('ordinam').GetValue()
+            if ordinam == "C":
+                lis.AddOrder('prod.codice')
+                
+            elif ordinam == "D":
+                lis.AddOrder('prod.descriz')
+                
+            elif ordinam == "F":
+                lis.AddOrder('prod.codfor')
+                lis.AddOrder('prod.codice')
+                
+            elif ordinam == "B":
+                lis.AddOrder('prod.barcode')
+            
+        except:
+            pass
+        
+        try:
+            
+            raggruppam = cn('raggruppam').GetValue()
+            if raggruppam == "C":
+            
+                lis.AddOrder('catart.codice')
+                
+            elif raggruppam == "G":
+                lis.AddOrder('catart.codice')
+                lis.AddOrder('gruart.codice')
+            
+        except:
+            pass
+        
         lis.AddOrder('lis.data', adb.ORDER_DESCENDING)
+        
         self.ApplyFilters(lis, self.gridlis, riep=False)
+        
         self.SetListChanged(False)
-        self.FindWindowById(wdr.ID_DATA).Enable()
-        for cid in (wdr.ID_NEWDATALABEL, wdr.ID_NEWDATA):
-            self.FindWindowById(cid).Hide()
+        cn('data').Enable()
+        for name in 'newdata newdatalabel'.split():
+            cn(name).Hide()
 
     def ApplyFilters(self, lis, grid, riep):
         cn = lambda x: self.FindWindowByName(x)
@@ -1468,7 +1484,7 @@ class ListiniPanel(aw.Panel, aw.awu.LimitiFiltersMixin):
                 expr += " AND (%s) " % " OR ".join(["lis.prezzo%d<>0"%(n+1) for n in range(bt.MAGNUMLIS)])
                 r.joinType = adb.JOIN_ALL
             r.expression = expr
-        self.LimitiFiltersApply()
+        self.LimitiFiltersApply(lis)
         ssv = cn('ssv').GetValue()
         if ssv:
             lis.AddFilter('status.hidesearch IS NULL OR status.hidesearch<>1')
