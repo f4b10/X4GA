@@ -29,6 +29,11 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.3.16', None, (
+         ("BET1099",
+         """Introdotto il barcode nella gestione dei listini di vendita."""),
+        ),),
+    
     ('1.3.15', None, (
          ("BUG1079",
          """Presentazione tabulatore dei valori di costo/prezzo indipententemente
