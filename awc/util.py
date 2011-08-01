@@ -556,7 +556,7 @@ class LimitiFiltersMixin(object):
             return self.FindWindowByName(x)
         self.limseq.append([table, alias, column, cn(column+'1'), cn(column+'2')])
     
-    def LimitiFiltersApply(self):
+    def LimitiFiltersApply(self, root=None):
         from awc.controls.linktable import LinkTable
         for table, alias, column, ctrl1, ctrl2 in self.limseq:
             if isinstance(ctrl1, LinkTable):
@@ -570,6 +570,8 @@ class LimitiFiltersMixin(object):
                 v1, v2 = ctrl1.GetValue(), ctrl2.GetValue()
                 field = column
             if v1 or v2:
+                if root is not None:
+                    table = root
                 if v1 == v2:
                     table.AddFilter("%s.%s=%%s" % (alias, field), v1)
                 elif v1 and v2:
