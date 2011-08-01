@@ -544,7 +544,7 @@ class ProdSearchResultsGrid(ga.SearchResultsGrid):
         return cols
     
     def SetColumn2Fit(self):
-        self.SetFitColumn(1)
+        self.SetFitColumn(2)
 
 
 # ------------------------------------------------------------------------------
