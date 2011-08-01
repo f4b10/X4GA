@@ -991,6 +991,7 @@ class Azienda(object):
         MAGNUMLIS = 0        #numero di listini vendita
         MAGDATLIS = False    #flag listini per data
         MAGFORLIS = False    #flag codice fornitore su manutenzione listini
+        MAGBCOLIS = False    #flag barcode su manutenzione listini
         MAGERPLIS = 0        #numero di ricariche del prodotto da visualizzare e mantenere
         MAGESPLIS = 0        #numero di scontistiche del prodotto da visualizzare e mantenere
         MAGVRGLIS = 0        #numero di ricariche del gruppo prezzi da visualizzare
@@ -3706,6 +3707,7 @@ class Azienda(object):
                 ('MAGNUMLIS',       'magnumlis',          i, _int, 'del numero di listini'),
                 ('MAGDATLIS',       'magdatlis',          f, _int, 'del flag di gestione dei listini per data'),
                 ('MAGFORLIS',       'magforlis',          f, _int, None),
+                ('MAGBCOLIS',       'magbcolis',          f, _int, None),
                 ('MAGERPLIS',       'magerplis',          i, _int, None),
                 ('MAGESPLIS',       'magesplis',          i, _int, None),
                 ('MAGVRGLIS',       'magvrglis',          i, _int, None),
