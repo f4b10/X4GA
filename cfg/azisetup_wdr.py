@@ -50,10 +50,10 @@ class SovrapposizioneRadioBox(RadioBox):
         RadioBox.__init__(self, *args, **kwargs)
         self.SetDataLink(values=(0,1))
 
-class RitAccCheckBox(CheckBox):
+class RitAccCheckBox(UnoZeroCheckBox):
 
     def __init__(self, *args, **kwargs):
-        CheckBox.__init__(self, *args, **kwargs)
+        UnoZeroCheckBox.__init__(self, *args, **kwargs)
         self.Bind(wx.EVT_CHECKBOX, self.OnRitAccChanged)
 
     def OnRitAccChanged(self, event):
@@ -213,7 +213,7 @@ def ContabSetup( parent, call_fit = True, set_sizer = True ):
     item21 = wx.StaticBox( parent, -1, "Gestione fidi clienti" )
     item20 = wx.StaticBoxSizer( item21, wx.VERTICAL )
     
-    item22 = CheckBox( parent, ID_CHECKBOX, "Attiva la gestione dei fidi sui clienti", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item22 = UnoZeroCheckBox( parent, ID_CHECKBOX, "Attiva la gestione dei fidi sui clienti", wx.DefaultPosition, wx.DefaultSize, 0 )
     item22.SetName( "setup_gesfidicli" )
     item20.Add( item22, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
@@ -222,11 +222,11 @@ def ContabSetup( parent, call_fit = True, set_sizer = True ):
     item24 = wx.StaticBox( parent, -1, "Bilanci" )
     item23 = wx.StaticBoxSizer( item24, wx.HORIZONTAL )
     
-    item25 = CheckBox( parent, ID_CONBILRICL, "Attiva riclassificazioni di bilancio", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item25 = UnoZeroCheckBox( parent, ID_CONBILRICL, "Attiva riclassificazioni di bilancio", wx.DefaultPosition, wx.DefaultSize, 0 )
     item25.SetName( "setup_conbilricl" )
     item23.Add( item25, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
-    item26 = CheckBox( parent, ID_CONBILRCEE, "Attiva riclassificazioni CEE", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item26 = UnoZeroCheckBox( parent, ID_CONBILRCEE, "Attiva riclassificazioni CEE", wx.DefaultPosition, wx.DefaultSize, 0 )
     item26.SetName( "setup_conbilrcee" )
     item23.Add( item26, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
