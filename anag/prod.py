@@ -1219,6 +1219,7 @@ class ProdPanel(ga.AnagPanel):
             if dat:
                 lis.data = dat
         pro.RicalcolaListini(lis)
+        self.gridlist.ResetView()
         self.SetDataChanged()
     
     def OnStEtic(self, event):
