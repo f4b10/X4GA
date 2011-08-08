@@ -583,7 +583,7 @@ class DocMag(adb.DbTable,\
                 #scoporare (è comprensivo di iva), mentre sul documento l'iva
                 #deve essere aggiunta: il valore proposto va quindi scorporato
                 imponib, imposta, ivato, indeduc =\
-                       self.CalcolaIVA(prod.id_aliqiva, ivato=prezzo)
+                       self.CalcolaIVA(prod.id_aliqiva, ivato=prezzo, decimals=bt.MAGPRE_DECIMALS)
                 prezzo = imponib
             else:
                 #sul setup dell'azienda è indicato che il prezzo/costo non è da 
@@ -591,7 +591,7 @@ class DocMag(adb.DbTable,\
                 #deve essere scorporata: il valore proposto va quindi aumentato
                 #dell'iva
                 imponib, imposta, ivato, indeduc =\
-                       self.CalcolaIVA(prod.id_aliqiva, imponib=prezzo)
+                       self.CalcolaIVA(prod.id_aliqiva, imponib=prezzo, decimals=bt.MAGPRE_DECIMALS)
                 prezzo = ivato
         
         #costo/prezzo su anagrafica ivato e documento da scorporare, ma in 
@@ -600,7 +600,7 @@ class DocMag(adb.DbTable,\
         if sia and sid:
             if self.ivadoc.id and not self.ivadoc.perciva:
                 imponib, imposta, ivato, indeduc =\
-                       self.CalcolaIVA(prod.id_aliqiva, ivato=prezzo)
+                       self.CalcolaIVA(prod.id_aliqiva, ivato=prezzo, decimals=bt.MAGPRE_DECIMALS)
                 prezzo = imponib
         
         return (prezzo, tipo, sc1, sc2, sc3)
@@ -1491,6 +1491,8 @@ class DocMag(adb.DbTable,\
                         totscrip += imp
                         #totimpon -= mov.importo
                     elif tipo not in "EDP":
+                        if mov.qta and mov.prezzo:
+                            self.totscpra += RoundImp(mov.qta*mov.prezzo)-imp
                         mi = mov.iva
                         if bt.TIPO_CONTAB == "O":
                             #ordinaria
@@ -1592,7 +1594,7 @@ class DocMag(adb.DbTable,\
             tipo = mov.config.tipologia
             if   tipo == "M":
                 self.totmerce += imp
-                self.totscpra += (mov.qta*mov.prezzo)-imp
+#                self.totscpra += (mov.qta*mov.prezzo)-imp
             elif tipo == "V":
                 self.totservi += imp
             elif tipo == "T":

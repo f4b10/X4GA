@@ -26,8 +26,6 @@ import MySQLdb
 from Env import Azienda
 bt = Azienda.BaseTab
 
-from awc.util import MsgDialog, MsgDialogDbError, ListSearch
-
 
 MODO_CALCOLO =  1
 MODO_SCORPORO = 2
@@ -52,7 +50,7 @@ class IVA(object):
         self.db_curs = db_curs
 
     def CalcolaIVA(self, id_aliq, 
-                   imponib=None, imposta=None, ivato=None, indeduc=None):
+                   imponib=None, imposta=None, ivato=None, indeduc=None, decimals=None):
         """
         Calcolo dei imponibile, imposta e ivato a partire dal dato a
         disposizione.
@@ -72,95 +70,97 @@ class IVA(object):
 """SELECT codice, descriz, perciva, percind FROM %s WHERE id=%%s"""\
 % bt.TABNAME_ALIQIVA
         
+        if decimals is None:
+            decimals = bt.VALINT_DECIMALS
         def R(n):
-            return round(n, bt.VALINT_DECIMALS)
+            return round(n, decimals)
         
         curs = self.db_curs
-        try:
-            if curs is None:
-                import stormdb as adb
-                con = adb.db.__database__._dbCon
-                curs = con.cursor()
-            curs.execute(cmd, id_aliq)
-            rs = curs.fetchone()
+        if curs is None:
+            import stormdb as adb
+            con = getattr(adb.db.__database__, '_dbCon')
+            curs = con.cursor()
+        curs.execute(cmd, id_aliq)
+        rs = curs.fetchone()
             
-        except MySQLdb.Error, e:
-            MsgDialogDbError(self, e)
-        else:
+        cod, des, perciva, percind = rs
+        perciva /= 100
+        percind /= 100
+        
+        if imponib is not None:
+            #calcolo imposta e ivato da imponibile
+            imposta = self._Iva_CalcImposta(imponib, perciva, decimals)
+            ivato = R(imponib+imposta)
             
-            cod, des, perciva, percind = rs
-            perciva /= 100
-            percind /= 100
+        elif ivato is not None:
+            #calcolo imponibile e imopsta da ivato
+            imponib = self._Iva_ScorpImponib(ivato, perciva, decimals)
+            imposta = R(ivato-imponib)
             
-            if imponib is not None:
-                #calcolo imposta e ivato da imponibile
-                imposta = self._Iva_CalcImposta(imponib, perciva)
-                ivato = R(imponib+imposta)
-                
-            elif ivato is not None:
-                #calcolo imponibile e imopsta da ivato
-                imponib = self._Iva_ScorpImponib(ivato, perciva)
-                imposta = R(ivato-imponib)
-                
-            elif imposta is not None:
-                #calcolo imponibile e ivato da imposta
-                imponib = self._Iva_CalcoliDaImposta(imposta, perciva)
-                ivato = R(imponib+imposta)
-            
-            indeduc = R(imposta*percind)
-            imposta = R(imposta-indeduc)
+        elif imposta is not None:
+            #calcolo imponibile e ivato da imposta
+            imponib = self._Iva_CalcoliDaImposta(imposta, perciva, decimals)
+            ivato = R(imponib+imposta)
+        
+        indeduc = R(imposta*percind)
+        imposta = R(imposta-indeduc)
         
         if curs and self.db_curs is None:
             curs.close()
         
         return imponib, imposta, ivato, indeduc
 
-    def _Iva_CalcImposta(self, imponib, perciva):
+    def _Iva_CalcImposta(self, imponib, perciva, decimals=None):
         """
         Restituisce l'imposta dall'imponibile e percentuale passati.
         """
-        return round(imponib*perciva, bt.VALINT_DECIMALS)
+        if decimals is None:
+            decimals = bt.VALINT_DECIMALS
+        return round(imponib*perciva, decimals)
 
-    def _Iva_ScorpImponib(self, ivato, perciva):
+    def _Iva_ScorpImponib(self, ivato, perciva, decimals=None):
         """
         Restituisce l'imponibile scorporando la percentuale dalla
         cifra passata.
         """
-#        return round(ivato/(1+perciva), bt.VALINT_DECIMALS)
-        imposta = round(ivato-ivato/(1+perciva), bt.VALINT_DECIMALS)
+        if decimals is None:
+            decimals = bt.VALINT_DECIMALS
+        imposta = round(ivato-ivato/(1+perciva), decimals)
         return ivato-imposta
         
     
-    def _Iva_CalcoliDaImposta(self, imposta, perciva):
+    def _Iva_CalcoliDaImposta(self, imposta, perciva, decimals=None):
         """
         Determina imponibile e tot.ivato a partire da imposta e percentuale
         passati.
         """
+        if decimals is None:
+            decimals = bt.VALINT_DECIMALS
         try:
-            return round(imposta/perciva, bt.VALINT_DECIMALS)
+            return round(imposta/perciva, decimals)
         except ZeroDivisionError:
             return 0
     
-    def CalcolaIva_DaImponibile(self, id_aliq, x, ind=0):
+    def CalcolaIva_DaImponibile(self, id_aliq, x, ind=0, decimals=None):
         """
         Wrapper per il metodo CalcolaIva.
         Passare solo id_aliquota e imponibile (e indeducibile, facolt.).
         """
-        return self.CalcolaIVA(id_aliq, imponib=x, indeduc=ind)
+        return self.CalcolaIVA(id_aliq, imponib=x, indeduc=ind, decimals=decimals)
     
-    def CalcolaIva_DaIvato(self, id_aliq, x, ind = 0):
+    def CalcolaIva_DaIvato(self, id_aliq, x, ind = 0, decimals=None):
         """
         Wrapper per il metodo CalcolaIva.
         Passare solo id_aliquota e tot.ivato (e indeducibile, facolt.).
         """
-        return self.CalcolaIVA(id_aliq, ivato=x, indeduc=ind)
+        return self.CalcolaIVA(id_aliq, ivato=x, indeduc=ind, decimals=decimals)
     
-    def CalcolaIva_DaImposta(self, id_aliq, x, ind=0):
+    def CalcolaIva_DaImposta(self, id_aliq, x, ind=0, decimals=None):
         """
         Wrapper per il metodo CalcolaIva.
         Passare solo id_aliquota e imposta (e indeducibile, facolt.).
         """
-        return self.CalcolaIVA(id_aliq, imposta=x, indeduc=ind)
+        return self.CalcolaIVA(id_aliq, imposta=x, indeduc=ind, decimals=decimals)
     
 
 # ---------------------------------------------------------------------------
