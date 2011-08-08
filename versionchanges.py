@@ -33,6 +33,9 @@ history = (
          ("BUG1079",
          """Risolto problema in configurazione azienda, alcuni flag della pagina 
          contabile non venivano memorizzati."""),
+         ("BUG1080",
+         """Risolto problema in controlli testuali multi-linea: quando disabilitati,
+         non venivano disegnati correttamente a video."""),
         ),),
     
     ('1.3.16', None, (
