@@ -4366,7 +4366,7 @@ class ListiniAttuali(adb.DbMem, iva.IVA):
                 dl = "LISTINO %d" % n
                 il = None
             pre = getattr(lis, 'prezzo%d' % n)
-            pre, iva, pri, ind = self.CalcolaIVA(pro.id_aliqiva, pre)
+            pre, iva, pri, ind = self.CalcolaIVA(pro.id_aliqiva, pre, decimals=bt.MAGPRE_DECIMALS)
             prp = pro.prezzo or 0
             cos = pro.costo or 0
             spp = 0 #sconto su prezzo al pubblico
