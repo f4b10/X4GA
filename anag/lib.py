@@ -329,6 +329,36 @@ class LinkTableCatArt(LinkTable):
 # ------------------------------------------------------------------------------
 
 
+class LinkTableCatCli(LinkTable):
+    
+    def __init__(self, parent, id, name=None, **kwargs):
+        LinkTable.__init__(self, parent, id, **kwargs)
+        if name:
+            self.SetName(name)
+        self.db_name = Env.Azienda.BaseTab.TABNAME_CATCLI
+        self.db_alias = 'catcli'
+        from anag.catcli import CatCliDialog
+        self.cardclass = CatCliDialog
+
+
+# ------------------------------------------------------------------------------
+
+
+class LinkTableCatFor(LinkTable):
+    
+    def __init__(self, parent, id, name=None, **kwargs):
+        LinkTable.__init__(self, parent, id, **kwargs)
+        if name:
+            self.SetName(name)
+        self.db_name = Env.Azienda.BaseTab.TABNAME_CATFOR
+        self.db_alias = 'catfor'
+        from anag.catfor import CatForDialog
+        self.cardclass = CatForDialog
+
+
+# ------------------------------------------------------------------------------
+
+
 class LinkTableGruArt(LinkTable):
     
     def __init__(self, parent, id, name=None, **kwargs):
