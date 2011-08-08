@@ -18,12 +18,7 @@ from awc.controls.datectrl import DateCtrl
 from awc.controls.radiobox import RadioBox
 from awc.controls.linktable import LinkTable
 
-from anag.mag import MagazzDialog
-from anag.pdc import PdcDialog
-from anag.agenti import AgentiDialog
-from anag.zone import ZoneDialog
-from anag.modpag import ModPagDialog
-from anag.catcli import CatCliDialog
+import anag.lib as alib
 
 from anag.basetab import WorkZoneNotebook
 
@@ -110,6 +105,7 @@ def SelFunc( parent, call_fit = True, set_sizer = True ):
     
     item4 = wx.StaticText( parent, ID_DESDOC, "Documento", wx.DefaultPosition, [160,-1], 0 )
     item4.SetFont( wx.Font( 12, wx.SWISS, wx.NORMAL, wx.BOLD ) )
+    item4.SetName( "desdoc" )
     item2.Add( item4, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
     item5 = wx.FlexGridSizer( 0, 3, 0, 0 )
@@ -127,18 +123,20 @@ def SelFunc( parent, call_fit = True, set_sizer = True ):
     item5.Add( item9, 0, wx.ALIGN_CENTER|wx.LEFT|wx.BOTTOM, 5 )
 
     item10 = DateCtrl( parent, ID_DATLAST, "", wx.DefaultPosition, [80,-1], 0 )
+    item10.SetName( "datlast" )
     item5.Add( item10, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item11 = NumCtrl(parent, ID_NUMLAST, integerWidth=6, allowNegative=False, groupDigits=False)
+    item11 = NumCtrl(parent, ID_NUMLAST, name='numlast', integerWidth=6, allowNegative=False, groupDigits=False)
     item5.Add( item11, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item12 = wx.StaticText( parent, ID_TEXT, "Primo documento da generare:", wx.DefaultPosition, [215,-1], wx.ALIGN_RIGHT )
     item5.Add( item12, 0, wx.ALIGN_CENTER|wx.LEFT|wx.BOTTOM, 5 )
 
     item13 = DateCtrl( parent, ID_DATDOC, "", wx.DefaultPosition, [80,-1], 0 )
+    item13.SetName( "datdoc" )
     item5.Add( item13, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item14 = NumCtrl(parent, ID_NUMDOC, integerWidth=6, allowNegative=False, groupDigits=False)
+    item14 = NumCtrl(parent, ID_NUMDOC, name='numdoc', integerWidth=6, allowNegative=False, groupDigits=False)
     item5.Add( item14, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item2.Add( item5, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
@@ -149,12 +147,15 @@ def SelFunc( parent, call_fit = True, set_sizer = True ):
     item15 = wx.StaticBoxSizer( item16, wx.VERTICAL )
     
     item17 = wx.CheckBox( parent, ID_SEPDEST, "Ogni diverso destinatario riscontrato", wx.DefaultPosition, [420,-1], 0 )
+    item17.SetName( "sepdest" )
     item15.Add( item17, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
     item18 = wx.CheckBox( parent, ID_SEPMP, "Ogni diversa mod.pagamento riscontrata", wx.DefaultPosition, [280,-1], 0 )
+    item18.SetName( "sepmp" )
     item15.Add( item18, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item19 = wx.CheckBox( parent, ID_SEPALL, "Ogni documento esaminato", wx.DefaultPosition, [280,-1], 0 )
+    item19.SetName( "sepall" )
     item15.Add( item19, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item1.Add( item15, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
@@ -183,18 +184,20 @@ def SelFunc( parent, call_fit = True, set_sizer = True ):
     item23.Add( item27, 0, wx.ALIGN_CENTER|wx.LEFT|wx.BOTTOM, 5 )
 
     item28 = DateCtrl( parent, ID_DATMIN, "", wx.DefaultPosition, [80,-1], 0 )
+    item28.SetName( "datmin" )
     item23.Add( item28, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item29 = NumCtrl(parent, ID_NUMMIN, integerWidth=6, allowNegative=False, groupDigits=False); 
+    item29 = NumCtrl(parent, ID_NUMMIN, name='nummin', integerWidth=6, allowNegative=False, groupDigits=False)
     item23.Add( item29, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item30 = wx.StaticText( parent, ID_TEXT, "a:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item23.Add( item30, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
     item31 = DateCtrl( parent, ID_DATMAX, "", wx.DefaultPosition, [80,-1], 0 )
+    item31.SetName( "datmax" )
     item23.Add( item31, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item32 = NumCtrl(parent, ID_NUMMAX, integerWidth=6, allowNegative=False, groupDigits=False)
+    item32 = NumCtrl(parent, ID_NUMMAX, name='nummax', integerWidth=6, allowNegative=False, groupDigits=False)
     item23.Add( item32, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item21.Add( item23, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
@@ -210,9 +213,11 @@ def SelFunc( parent, call_fit = True, set_sizer = True ):
     item34.Add( item36, 0, wx.ALIGN_BOTTOM|wx.RIGHT, 5 )
 
     item37 = wx.CheckListBox( parent, ID_DOCS, wx.DefaultPosition, wx.DefaultSize, [], wx.LB_SINGLE )
+    item37.SetName( "docs" )
     item34.Add( item37, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item38 = wx.CheckListBox( parent, ID_CAUTRA, wx.DefaultPosition, wx.DefaultSize, [], wx.LB_SINGLE )
+    item38.SetName( "cautra" )
     item34.Add( item38, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
 
     item34.AddGrowableCol( 0 )
@@ -233,13 +238,16 @@ def SelFunc( parent, call_fit = True, set_sizer = True ):
     
     item40 = wx.CheckBox( parent, ID_ESCLACQ, "Escludi se acquisiti", wx.DefaultPosition, wx.DefaultSize, 0 )
     item40.SetValue( True )
+    item40.SetName( "esclacq" )
     item39.Add( item40, 0, wx.GROW|wx.ALIGN_BOTTOM|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item41 = wx.CheckBox( parent, ID_ESCLANN, "Escludi se annullati", wx.DefaultPosition, wx.DefaultSize, 0 )
     item41.SetValue( True )
+    item41.SetName( "esclann" )
     item39.Add( item41, 0, wx.GROW|wx.ALIGN_BOTTOM|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item42 = wx.CheckBox( parent, ID_SOLOSTA, "Estrai solo se stampati", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item42.SetName( "solosta" )
     item39.Add( item42, 0, wx.GROW|wx.ALIGN_BOTTOM|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item39.AddGrowableCol( 0 )
@@ -262,37 +270,37 @@ def SelFunc( parent, call_fit = True, set_sizer = True ):
     item47 = wx.StaticText( parent, ID_TEXT, "Solo del magazzino:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item46.Add( item47, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
 
-    item48 = LinkTable(parent, ID_SOLOMAG ); item48.SetDataLink( bt.TABNAME_MAGAZZ, "magazz", MagazzDialog, canins=False, canedit=False)
+    item48 = alib.LinkTableMagazz(parent, ID_SOLOMAG, "magazz")
     item46.Add( item48, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
     item49 = wx.StaticText( parent, ID_TEXT, "Solo del cliente:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item46.Add( item49, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item50 = LinkTable(parent, ID_SOLOPDC ); item50.SetDataLink( bt.TABNAME_PDC, "pdc", PdcDialog, canins=False, canedit=False)
+    item50 = alib.LinkTableCliente(parent, ID_SOLOPDC, 'pdc')
     item46.Add( item50, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item51 = wx.StaticText( parent, ID_TEXT, "Solo clienti dell'agente:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item46.Add( item51, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item52 = LinkTable(parent, ID_SOLOAGE ); item52.SetDataLink( bt.TABNAME_AGENTI, "agente", AgentiDialog, canins=False, canedit=False)
+    item52 = alib.LinkTableAgente(parent, ID_SOLOAGE, 'agente')
     item46.Add( item52, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item53 = wx.StaticText( parent, ID_TEXT, "Solo clienti della zona:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item46.Add( item53, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item54 = LinkTable(parent, ID_SOLOZONA ); item54.SetDataLink( bt.TABNAME_ZONE, "zona", ZoneDialog, canins=False, canedit=False)
+    item54 =alib.LinkTableZona(parent, ID_SOLOZONA, 'zona')
     item46.Add( item54, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item55 = wx.StaticText( parent, ID_TEXT, "Solo clienti della categoria:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item46.Add( item55, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item56 = LinkTable(parent, ID_SOLOCATEG); item56.SetDataLink(bt.TABNAME_CATCLI, "catcli", CatCliDialog, canins=False, canedit=False)
+    item56 = alib.LinkTableCatCli(parent, ID_SOLOCATEG, 'catcli')
     item46.Add( item56, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item57 = wx.StaticText( parent, ID_TEXT, "Solo con mod.pagamento:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item46.Add( item57, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item58 = LinkTable(parent, ID_SOLOMP ); item58.SetDataLink( bt.TABNAME_MODPAG, "modpag", ModPagDialog, canins=False, canedit=False)
+    item58 = alib.LinkTableModPag(parent, ID_SOLOMP, 'modpag')
     item46.Add( item58, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item46.AddGrowableCol( 1 )
@@ -312,9 +320,11 @@ def SelFunc( parent, call_fit = True, set_sizer = True ):
     item59 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
     item60 = wx.Button( parent, ID_STORY, "Elaborazioni precedenti", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item60.SetName( "story" )
     item59.Add( item60, 0, wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
 
     item61 = wx.Button( parent, ID_BUTEST, "Avvia estrazione", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item61.SetName( "butest" )
     item59.Add( item61, 0, wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM|wx.ALL, 5 )
 
     item0.Add( item59, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
@@ -347,26 +357,26 @@ def DocRagFunc( parent, call_fit = True, set_sizer = True ):
     item2 = wx.StaticText( parent, ID_TEXT, "Documenti da raggruppare:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item1.Add( item2, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item3 = NumCtrl(parent, ID_DOCINCLNUM, integerWidth=6, allowNegative=False, groupDigits=False); item3.SetEditable(False)
+    item3 = NumCtrl(parent, ID_DOCINCLNUM, name='docinclnum', integerWidth=6, allowNegative=False, groupDigits=False); item3.SetEditable(False)
     item1.Add( item3, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
     item4 = wx.StaticText( parent, ID_TEXT, "Totale imponibile:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item1.Add( item4, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item5 = NumCtrl(parent, ID_DOCINCLTOT, integerWidth=12, fractionWidth=bt.VALINT_DECIMALS, allowNegative=False, groupDigits=True); item5.SetEditable(False)
+    item5 = NumCtrl(parent, ID_DOCINCLTOT, name='docincltot', integerWidth=12, fractionWidth=bt.VALINT_DECIMALS, allowNegative=False, groupDigits=True); item5.SetEditable(False)
     item1.Add( item5, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
     item6 = wx.StaticText( parent, ID_TEXT, "Documenti esclusi da raggruppamento:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item1.Add( item6, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item7 = NumCtrl(parent, ID_DOCESCLNUM, integerWidth=6, allowNegative=False, groupDigits=False); item7.SetEditable(False)
-    item1.Add( item7, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item7 = NumCtrl(parent, ID_DOCESCLNUM, name='docesclnum', integerWidth=6, allowNegative=False, groupDigits=False); item7.SetEditable(False)
+    item1.Add( item7, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
     item8 = wx.StaticText( parent, ID_TEXT, "Totale imponibile:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item1.Add( item8, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item9 = NumCtrl(parent, ID_DOCESCLTOT, integerWidth=12, fractionWidth=bt.VALINT_DECIMALS, allowNegative=False, groupDigits=True); item9.SetEditable(False)
-    item1.Add( item9, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item9 = NumCtrl(parent, ID_DOCESCLTOT, name='docescltot', integerWidth=12, fractionWidth=bt.VALINT_DECIMALS, allowNegative=False, groupDigits=True); item9.SetEditable(False)
+    item1.Add( item9, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
     item1.AddGrowableCol( 2 )
 
@@ -381,6 +391,7 @@ def DocRagFunc( parent, call_fit = True, set_sizer = True ):
     item12 = wx.Panel( item10, -1 )
     DocRagMovFunc( item12, False, True )
     item10.SplitHorizontally( item11, item12 )
+    item10.SetName( "docragzone" )
     item0.Add( item10, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item13 = wx.StaticLine( parent, ID_LINE, wx.DefaultPosition, [20,-1], wx.LI_HORIZONTAL )
@@ -389,9 +400,11 @@ def DocRagFunc( parent, call_fit = True, set_sizer = True ):
     item14 = wx.BoxSizer( wx.HORIZONTAL )
     
     item15 = wx.Button( parent, ID_LISTRAG, "Lista documenti estratti", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item15.SetName( "listrag" )
     item14.Add( item15, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
     item16 = wx.Button( parent, ID_BUTRAG, "Avvia raggruppamento", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item16.SetName( "butrag" )
     item14.Add( item16, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
     item0.Add( item14, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
@@ -418,6 +431,7 @@ def DocRagDocFunc( parent, call_fit = True, set_sizer = True ):
     item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item2 = wx.Panel( parent, ID_PGEDOC, wx.DefaultPosition, wx.DefaultSize, 0 )
+    item2.SetName( "pgedoc" )
     item0.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item0.AddGrowableCol( 0 )
@@ -442,6 +456,7 @@ def DocRagMovFunc( parent, call_fit = True, set_sizer = True ):
     item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item2 = wx.Panel( parent, ID_PGEMOV, wx.DefaultPosition, wx.DefaultSize, 0 )
+    item2.SetName( "pgemov" )
     item0.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item0.AddGrowableCol( 0 )
@@ -470,19 +485,19 @@ def DocGenFunc( parent, call_fit = True, set_sizer = True ):
     item2 = wx.StaticText( parent, ID_TEXT, "Documenti generati:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item1.Add( item2, 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
 
-    item3 = NumCtrl(parent, ID_DOCGENNUM, integerWidth=6, allowNegative=False, groupDigits=False); item3.SetEditable(False)
+    item3 = NumCtrl(parent, ID_DOCGENNUM, name='docgennum', integerWidth=6, allowNegative=False, groupDigits=False); item3.SetEditable(False)
     item1.Add( item3, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
     item4 = wx.StaticText( parent, ID_TEXT, "dal num:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item1.Add( item4, 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
 
-    item5 = NumCtrl(parent, ID_DOCGENMIN, integerWidth=6, allowNegative=False, groupDigits=False); item5.SetEditable(False)
+    item5 = NumCtrl(parent, ID_DOCGENMIN, name='docgenmin', integerWidth=6, allowNegative=False, groupDigits=False); item5.SetEditable(False)
     item1.Add( item5, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
     item6 = wx.StaticText( parent, ID_TEXT, "al num:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item1.Add( item6, 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
 
-    item7 = NumCtrl(parent, ID_DOCGENMAX, integerWidth=6, allowNegative=False, groupDigits=False); item7.SetEditable(False)
+    item7 = NumCtrl(parent, ID_DOCGENMAX, name='docgenmax', integerWidth=6, allowNegative=False, groupDigits=False); item7.SetEditable(False)
     item1.Add( item7, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
     item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
@@ -494,6 +509,7 @@ def DocGenFunc( parent, call_fit = True, set_sizer = True ):
     item10 = wx.Panel( item8, -1 )
     DocGenMovFunc( item10, False, True )
     item8.SplitHorizontally( item9, item10 )
+    item8.SetName( "docgenzone" )
     item0.Add( item8, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item11 = wx.StaticLine( parent, ID_LINE, wx.DefaultPosition, [20,-1], wx.LI_HORIZONTAL )
@@ -502,9 +518,11 @@ def DocGenFunc( parent, call_fit = True, set_sizer = True ):
     item12 = wx.BoxSizer( wx.HORIZONTAL )
     
     item13 = wx.Button( parent, ID_LISTGEN, "Lista documenti generati", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item13.SetName( "listgen" )
     item12.Add( item13, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
     item14 = wx.Button( parent, ID_BUTCONF, "Conferma generazione", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item14.SetName( "butconf" )
     item12.Add( item14, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
     item0.Add( item12, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
@@ -531,6 +549,7 @@ def DocGenDocFunc( parent, call_fit = True, set_sizer = True ):
     item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item2 = wx.Panel( parent, ID_PGGDOC, wx.DefaultPosition, wx.DefaultSize, 0 )
+    item2.SetName( "pggdoc" )
     item0.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item0.AddGrowableCol( 0 )
@@ -555,6 +574,7 @@ def DocGenMovFunc( parent, call_fit = True, set_sizer = True ):
     item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item2 = wx.Panel( parent, ID_PGGMOV, wx.DefaultPosition, wx.DefaultSize, 0 )
+    item2.SetName( "pggmov" )
     item0.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item0.AddGrowableCol( 0 )
@@ -593,13 +613,13 @@ def StaDifFunc( parent, call_fit = True, set_sizer = True ):
     item5 = wx.StaticText( parent, ID_TEXT, "Tipo documento da stampare:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item4.Add( item5, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
 
-    item6 = LinkTable(parent, ID_TIPDOC ); item6.SetDataLink( bt.TABNAME_CFGMAGDOC, "id_tipdoc", None, canins=False, canedit=False)
+    item6 = alib.LinkTableDocMagazz(parent, ID_TIPDOC, 'id_tipdoc')
     item4.Add( item6, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
     item7 = wx.StaticText( parent, ID_TEXT, "Documenti del magazzino:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item4.Add( item7, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
 
-    item8 = LinkTable(parent, ID_MAGAZZ ); item8.SetDataLink( bt.TABNAME_MAGAZZ, "id_magazz", MagazzDialog, canins=False, canedit=False)
+    item8 = alib.LinkTableMagazz(parent, ID_MAGAZZ, 'id_magazz')
     item4.Add( item8, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
     item9 = wx.StaticText( parent, ID_TEXT, "Registrati nell'anno:", wx.DefaultPosition, wx.DefaultSize, 0 )
@@ -607,19 +627,19 @@ def StaDifFunc( parent, call_fit = True, set_sizer = True ):
 
     item10 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
-    item11 = NumCtrl(parent, ID_YEAR, integerWidth=4, allowNegative=False, groupDigits=False)
+    item11 = NumCtrl(parent, ID_YEAR, name='year', integerWidth=4, allowNegative=False, groupDigits=False)
     item10.Add( item11, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
     item12 = wx.StaticText( parent, ID_TEXT, "dal num.:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item10.Add( item12, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT, 5 )
 
-    item13 = NumCtrl(parent, ID_NUMDOC1, integerWidth=5, allowNegative=False, groupDigits=False); item13.SetName('numdoc1')
+    item13 = NumCtrl(parent, ID_NUMDOC1, name='numdoc1', integerWidth=5, allowNegative=False, groupDigits=False)
     item10.Add( item13, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
     item14 = wx.StaticText( parent, ID_TEXT, "al num.:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item10.Add( item14, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT, 5 )
 
-    item15 = NumCtrl(parent, ID_NUMDOC2, integerWidth=5, allowNegative=False, groupDigits=False); item15.SetName('numdoc2')
+    item15 = NumCtrl(parent, ID_NUMDOC2, name='numdoc2', integerWidth=5, allowNegative=False, groupDigits=False)
     item10.Add( item15, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
 
     item4.Add( item10, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
@@ -636,6 +656,7 @@ def StaDifFunc( parent, call_fit = True, set_sizer = True ):
     item1.Add( item16, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
 
     item17 = wx.Button( parent, ID_UPDATE, "Aggiorna", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item17.SetName( "update" )
     item1.Add( item17, 0, wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM|wx.RIGHT|wx.BOTTOM, 5 )
 
     item1.AddGrowableCol( 0 )
@@ -647,6 +668,7 @@ def StaDifFunc( parent, call_fit = True, set_sizer = True ):
     item0.Add( item18, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
     item19 = wx.Panel( parent, ID_PANGRID, wx.DefaultPosition, [660,300], wx.SUNKEN_BORDER )
+    item19.SetName( "pangrid" )
     item0.Add( item19, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item20 = wx.FlexGridSizer( 1, 0, 0, 0 )
@@ -702,22 +724,26 @@ def FtDifHistoryFunc( parent, call_fit = True, set_sizer = True ):
     item2.Add( item3, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
     item4 = DateCtrl( parent, ID_STORYDAT1, "", wx.DefaultPosition, [80,-1], 0 )
+    item4.SetName( "storydat1" )
     item2.Add( item4, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
     item5 = wx.StaticText( parent, ID_TEXT, "al:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item2.Add( item5, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
     item6 = DateCtrl( parent, ID_STORYDAT2, "", wx.DefaultPosition, [80,-1], 0 )
+    item6.SetName( "storydat2" )
     item2.Add( item6, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
     item1.Add( item2, 0, wx.ALIGN_BOTTOM, 5 )
 
     item7 = wx.RadioBox( parent, ID_STORYORDER, "Ordina per documento:", wx.DefaultPosition, wx.DefaultSize, 
         ["Raggruppato","Generato"] , 1, wx.RA_SPECIFY_ROWS )
+    item7.SetName( "storyorder" )
     item1.Add( item7, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item8 = wx.Button( parent, ID_STORYUPD, "Aggiorna", wx.DefaultPosition, wx.DefaultSize, 0 )
     item8.SetDefault()
+    item8.SetName( "storyupd" )
     item1.Add( item8, 0, wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM|wx.ALL, 5 )
 
     item1.AddGrowableCol( 1 )
@@ -731,6 +757,7 @@ def FtDifHistoryFunc( parent, call_fit = True, set_sizer = True ):
     item9.Add( item10, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
 
     item11 = wx.Panel( parent, ID_STORYPANGRID, wx.DefaultPosition, [600,400], wx.SUNKEN_BORDER )
+    item11.SetName( "storypangrid" )
     item9.Add( item11, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item9.AddGrowableCol( 0 )

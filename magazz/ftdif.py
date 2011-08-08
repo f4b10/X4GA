@@ -170,7 +170,6 @@ class GridDocGen(dbglib.DbGrid):
         doc = self.dbdoc
         mag = doc.magazz
         cau = doc.tipdoc
-        tpd = doc.tipdoc
         pdc = doc.pdc
         des = doc.dest
         mpa = doc.modpag
@@ -322,6 +321,7 @@ class FtDifPanel(aw.Panel):
         
         aw.Panel.__init__(self, *args, **kwargs)
         wdr.FtdSelFunc(self)
+        cn = self.FindWindowByName
         
         #fatturazione differita
         self.ftd = ftd.FtDif()
@@ -331,7 +331,6 @@ class FtDifPanel(aw.Panel):
         
         #inizializzazione controlli
         today = Env.Azienda.Esercizio.dataElab
-        ci = lambda x: self.FindWindowById(x)
         
         d1 = today
         if d1.day < 15:
@@ -342,16 +341,17 @@ class FtDifPanel(aw.Panel):
             d1 = dt.DateTime(d1.year, d1.month, 1)
             d2 = today
         
-        for cid, val in ((wdr.ID_DATMIN, d1),
-                         (wdr.ID_DATMAX, d2),
-                         (wdr.ID_DATDOC, d2)):
-            ci(cid).SetValue(val)
+        for name, val in (('datmin', d1),
+                          ('datmax', d2),
+                          ('datdoc', d2)):
+            cn(name).SetValue(val)
         
-        map(lambda x: ci(x).Disable(), (wdr.ID_DATLAST, wdr.ID_NUMLAST))
+        cn('datlast').Disable()
+        cn('numlast').Disable()
         
         #griglie doc/mov estratti
-        self.gridocrag = GridDocRag(ci(wdr.ID_PGEDOC), self.ftd.docrag)
-        self.grimovrag = GridMovRag(ci(wdr.ID_PGEMOV), self.ftd.movrag)
+        self.gridocrag = GridDocRag(cn('pgedoc'), self.ftd.docrag)
+        self.grimovrag = GridMovRag(cn('pgemov'), self.ftd.movrag)
         
         #def MenuPopup(self, event, row):
             #def _DeleteRow(*args):
@@ -379,8 +379,8 @@ class FtDifPanel(aw.Panel):
         self.gridocrag.Bind(gl.EVT_GRID_SELECT_CELL, self.OnDocRagSelected)
         
         #griglie doc/mov generati
-        self.gridocgen = GridDocGen(ci(wdr.ID_PGGDOC), self.ftd.docgen)
-        self.grimovgen = GridMovGen(ci(wdr.ID_PGGMOV), self.ftd.movgen)
+        self.gridocgen = GridDocGen(cn('pggdoc'), self.ftd.docgen)
+        self.grimovgen = GridMovGen(cn('pggmov'), self.ftd.movgen)
         
         self.gridocgen.Bind(gl.EVT_GRID_SELECT_CELL, self.OnDocGenSelected)
         
@@ -394,7 +394,6 @@ class FtDifPanel(aw.Panel):
             colors = [wx.TheColourDatabase.Find(x)
                       for x in ('oldlace', 'azure')]
             def MovGenGetAttr(row, col, rscol, attr=gl.GridCellAttr):
-                readonly = True
                 rs = self.grimovgen.GetTable().data
                 if row < len(rs):
                     rowrs = rs[row]
@@ -402,16 +401,16 @@ class FtDifPanel(aw.Panel):
                 return attr
             self.grimovgen.SetCellDynAttr(MovGenGetAttr)
         
-        for evt, cbf, cid in (
-            (EVT_DATECHANGED, self.OnDatDocChanged, wdr.ID_DATDOC),
-            (wx.EVT_BUTTON,   self.OnEstrai,     wdr.ID_BUTEST),
-            (wx.EVT_BUTTON,   self.OnRaggr,      wdr.ID_BUTRAG),
-            (wx.EVT_BUTTON,   self.OnListaRag,   wdr.ID_LISTRAG),
-            (wx.EVT_BUTTON,   self.OnGenera,     wdr.ID_BUTCONF),
-            (wx.EVT_BUTTON,   self.OnListaGen,   wdr.ID_LISTGEN),
-            (wx.EVT_BUTTON,   self.OnHistory,    wdr.ID_STORY),
+        for evt, cbf, name in (
+            (EVT_DATECHANGED, self.OnDatDocChanged, 'datdoc'),
+            (wx.EVT_BUTTON,   self.OnEstrai,        'butest'),
+            (wx.EVT_BUTTON,   self.OnRaggr,         'butrag'),
+            (wx.EVT_BUTTON,   self.OnListaRag,      'listrag'),
+            (wx.EVT_BUTTON,   self.OnGenera,        'butconf'),
+            (wx.EVT_BUTTON,   self.OnListaGen,      'listgen'),
+            (wx.EVT_BUTTON,   self.OnHistory,       'story'),
             ):
-            self.Bind(evt, cbf, id=cid)
+            self.Bind(evt, cbf, cn(name))
         
         self.Bind(gl.EVT_GRID_SELECT_CELL, self.OnDocRagInclEscl)
     
@@ -440,7 +439,6 @@ class FtDifPanel(aw.Panel):
     def OnListaGen(self, event):
         #caricamento dbm.DocMag x stampa di tutti i documenti generati
         dg = self.ftd.docgen
-        mg = self.ftd.movgen
         wait = aw.awu.WaitDialog(self, 
                                  message='Preparazione dei dati per la stampa',
                                  maximum = dg.RowsCount())
@@ -449,7 +447,7 @@ class FtDifPanel(aw.Panel):
         docs.Get(-1)
         mov = self.ftd.movgen
         docs._info.updateMChildrens = False
-        for n,d in enumerate(dg):
+        for n, dg in enumerate(dg):
             docs.CreateNewRow()
             for field in dg.GetFieldNames():
                 setattr(docs, field, getattr(dg, field))
@@ -538,13 +536,9 @@ class FtDifPanel(aw.Panel):
         event.Skip()
     
     def Validate(self):
-        ci = lambda x: self.FindWindowById(x)
-        ddoc, dmin, dmax = map(lambda x: ci(x).GetValue(), (wdr.ID_DATDOC,
-                                                            wdr.ID_DATMIN,
-                                                            wdr.ID_DATMAX))
-        ndoc, nmin, nmax = map(lambda x: ci(x).GetValue(), (wdr.ID_NUMDOC,
-                                                            wdr.ID_NUMMIN,
-                                                            wdr.ID_NUMMAX))
+        cn = self.FindWindowByName
+        ddoc, dmin, dmax = map(lambda x: cn(x).GetValue(), 'datdoc datmin datmax'.split())
+        ndoc, nmin, nmax = map(lambda x: cn(x).GetValue(), 'numdoc nummin nummax'.split())
         err = False
         cando = False
         if not err:
@@ -590,38 +584,45 @@ class FtDifPanel(aw.Panel):
     def Estrai(self):
         
         ftd = self.ftd
-        ci = lambda x: self.FindWindowById(x)
+        cn = self.FindWindowByName
         
-        for cid, name in ((wdr.ID_SEPALL,  '_sepall'),
-                          (wdr.ID_SEPMP,   '_sepmp'),
-                          (wdr.ID_SEPDEST, '_sepdest')):
-            ftd.docgen.__setattr__(name, ci(cid).GetValue())
-        
-        for cid, name in ((wdr.ID_DATMIN,    '_datmin'),
-                          (wdr.ID_DATMAX,    '_datmax'),
-                          (wdr.ID_NUMMIN,    '_nummin'),
-                          (wdr.ID_NUMMAX,    '_nummax'),
-                          (wdr.ID_ESCLACQ,   '_esclacq'),
-                          (wdr.ID_ESCLANN,   '_esclann'),
-                          (wdr.ID_SOLOSTA,   '_solosta'),
-                          (wdr.ID_SOLOMAG,   '_solomag'),
-                          (wdr.ID_SOLOPDC,   '_solopdc'),
-                          (wdr.ID_SOLOAGE,   '_soloage'),
-                          (wdr.ID_SOLOZONA,  '_solozona'),
-                          (wdr.ID_SOLOCATEG, '_solocateg'),
-                          (wdr.ID_SOLOMP,    '_solomp'),
-                          ):
-            ftd.docrag.__setattr__(name, ci(cid).GetValue())
-        
+        for uname, tname in (('sepall',  None),
+                             ('sepmp',   None),
+                             ('sepdest', None),
+                             ('datmin',  None),
+                             ('datmax',  None),
+                             ('nummin',  None),
+                             ('nummax',  None),
+                             ('esclacq', None),
+                             ('esclann', None),
+                             ('solosta', None),
+                             ('magazz',  '_solomag'),
+                             ('pdc',     '_solopdc'),
+                             ('agente',  '_soloage'),
+                             ('zona',    '_solozona'),
+                             ('catcli',  '_solocateg'),
+                             ('modpag',  '_solomp'),):
+            if tname is None:
+                tname = '_%s' % uname
+            c = cn(uname)
+            if c:
+                v = cn(uname).GetValue()
+            else:
+                v = getattr(self, uname, None)
+            setattr(ftd.docgen, tname, v)
+       
         ftd.docrag._tipidoc = [int(ddr.id_docrag)
                                for n, ddr in enumerate(ftd.ddr)
-                               if ci(wdr.ID_DOCS).IsChecked(n)]
+                               if cn('docs').IsChecked(n)]
         
-        ctrct = ci(wdr.ID_CAUTRA)
-        ftd.docrag._cautras = [ct.id for n, ct in enumerate(self.dbtracau)
-                               if ctrct.IsChecked(n)]
-        if ctrct.IsChecked(ctrct.GetCount()-1):
-            ftd.docrag._cautras.append(None)
+        ctrct = cn('cautra')
+        if ctrct:
+            ftd.docrag._cautras = [ct.id for n, ct in enumerate(self.dbtracau)
+                                   if ctrct.IsChecked(n)]
+            if ctrct.IsChecked(ctrct.GetCount()-1):
+                ftd.docrag._cautras.append(None)
+        else:
+            ftd.docrag._cautras = [None]
         
         #azzero contenuto griglie
         for grid in (self.gridocrag, self.grimovrag,
@@ -640,8 +641,10 @@ class FtDifPanel(aw.Panel):
             p0 = True
         if p0:
             wx.CallAfter(lambda: aw.awu.MsgDialog(self, "Ci sono documenti con prezzo nullo.\nImpossibile procedere.", style=wx.ICON_ERROR))
-        for i in (wdr.ID_BUTRAG, wdr.ID_BUTCONF):
-            ci(i).Enable(not p0)
+        for name in 'butrag butconf'.split():
+            c = cn(name)
+            if c:
+                c.Enable(not p0)
         
         self.UpdateDocRag()
         
@@ -651,7 +654,7 @@ class FtDifPanel(aw.Panel):
             self.gridocrag.inclescl = False
             self.gridocrag.ChangeData(ftd.docrag.GetRecordset())
             self.gridocrag.inclescl = True
-            ci(wdr.ID_WORKZONE).SetSelection(1)
+            cn('workzone').SetSelection(1)
     
     def UpdateDocRag(self):
         dr = self.ftd.docrag
@@ -661,24 +664,24 @@ class FtDifPanel(aw.Panel):
         for docrs in dr.GetRecordset():
             tot[docrs[colrag]][0] += 1
             tot[docrs[colrag]][1] += docrs[coltot]
-        ci = lambda x: self.FindWindowById(x)
-        for cid, rag, col in ((wdr.ID_DOCINCLNUM, 1, 0),
-                              (wdr.ID_DOCINCLTOT, 1, 1),
-                              (wdr.ID_DOCESCLNUM, 0, 0),
-                              (wdr.ID_DOCESCLTOT, 0, 1)):
-            ci(cid).SetValue(tot[rag][col])
+        cn = self.FindWindowByName
+        for name, rag, col in (('docinclnum', 1, 0),
+                               ('docincltot', 1, 1),
+                               ('docesclnum', 0, 0),
+                               ('docescltot', 0, 1)):
+            cn(name).SetValue(tot[rag][col])
     
     def UpdateDocGen(self):
-        ci = lambda x: self.FindWindowById(x)
+        cn = self.FindWindowByName
         dg = self.ftd.docgen
-        ci(wdr.ID_DOCGENNUM).SetValue(dg.RowsCount())
+        cn('docgennum').SetValue(dg.RowsCount())
         if dg.RowsCount() == 0:
             n1 = n2 = None
         else:
             col = self.ftd.docgen._GetFieldIndex('numdoc', inline=True)
             n1, n2 = [dg._info.rs[row][col] for row in (0, dg.LastRow())]
-        ci(wdr.ID_DOCGENMIN).SetValue(n1)
-        ci(wdr.ID_DOCGENMAX).SetValue(n2)
+        cn('docgenmin').SetValue(n1)
+        cn('docgenmax').SetValue(n2)
     
     def Raggruppa(self):
         
@@ -686,9 +689,9 @@ class FtDifPanel(aw.Panel):
             aw.awu.MsgDialog(self, "Nessun documento estratto")
             return
         
-        ci = lambda x: self.FindWindowById(x)
-        self.ftd.docgen._firstdat = ci(wdr.ID_DATDOC).GetValue()
-        self.ftd.docgen._firstnum = ci(wdr.ID_NUMDOC).GetValue()
+        cn = self.FindWindowByName
+        self.ftd.docgen._firstdat = cn('datdoc').GetValue()
+        self.ftd.docgen._firstnum = cn('numdoc').GetValue()
         
         wait = aw.awu.WaitDialog(
             self, message="Raggruppamento documenti in corso...",
@@ -705,19 +708,19 @@ class FtDifPanel(aw.Panel):
         wait.Destroy()
         self.UpdateDocGen()
         self.gridocgen.ChangeData(self.ftd.docgen.GetRecordset())
-        ci(wdr.ID_WORKZONE).SetSelection(2)
+        cn('workzone').SetSelection(2)
     
     def OnDatDocChanged(self, event):
-        ci = lambda x: self.FindWindowById(x)
+        cn = self.FindWindowByName
         if event.GetValue() is not None:
             self.ftd.SetYear(event.GetValue().year)
-            ci(wdr.ID_DATLAST).SetValue(self.ftd.docgen._lastdat)
-            ci(wdr.ID_NUMLAST).SetValue(self.ftd.docgen._lastnum)
-            ci(wdr.ID_NUMDOC).SetValue((self.ftd.docgen._lastnum or 0)+1)
+            cn('datlast').SetValue(self.ftd.docgen._lastdat)
+            cn('numlast').SetValue(self.ftd.docgen._lastnum)
+            cn('numdoc').SetValue((self.ftd.docgen._lastnum or 0)+1)
     
     def SetRaggr(self, fdid):
         
-        ci = lambda x: self.FindWindowById(x)
+        cn = self.FindWindowByName
         
         ftd = self.ftd
         try:
@@ -726,22 +729,25 @@ class FtDifPanel(aw.Panel):
         except Exception, e:
             aw.awu.MsgDialog(self, repr(e.args))
             enab = False
-        for cid in (wdr.ID_BUTEST, wdr.ID_BUTRAG):
-            ci(cid).Enable(enab)
+        for name in 'butest butrag'.split():
+            cn(name).Enable(enab)
         
-        ci(wdr.ID_DESDOC).SetLabel(ftd.tipdoc.descriz)
+        cn('desdoc').SetLabel(ftd.tipdoc.descriz)
         
-        l = ci(wdr.ID_DOCS)
+        l = cn('docs')
         for ddr in ftd.ddr:
             l.Append(ddr.tipdoc.descriz)
             l.Check(l.GetCount()-1)
         
-        for cbi, value in (
-            (wdr.ID_SEPALL,  ftd.f_sepall == 1),
-            (wdr.ID_SEPMP,   ftd.f_sepmp == 1),
-            (wdr.ID_SEPDEST, ftd.f_sepdest == 1),
-            (wdr.ID_SOLOSTA, ftd.f_solosta == 1)):
-            ci(cbi).SetValue(value)
+        for name, value in (('sepall',  ftd.f_sepall == 1),
+                            ('sepmp',   ftd.f_sepmp == 1),
+                            ('sepdest', ftd.f_sepdest == 1),
+                            ('solosta', ftd.f_solosta == 1)):
+            c = cn(name)
+            if c:
+                c.SetValue(value)
+            else:
+                setattr(self, name, value)
         
         ct = adb.DbTable(bt.TABNAME_TRACAU, 'tracau', writable=True)
         ct.AddOrder('esclftd')
@@ -750,14 +756,15 @@ class FtDifPanel(aw.Panel):
         ct.CreateNewRow()
         ct.descriz = 'non definito'
         ct.esclftd = 0
-        l = ci(wdr.ID_CAUTRA)
-        for ct in ct:
-            l.Append(ct.descriz)
-            if ct.esclftd != 1:
-                l.Check(l.GetCount()-1)
+        l = cn('cautra')
+        if l:
+            for ct in ct:
+                l.Append(ct.descriz)
+                if ct.esclftd != 1:
+                    l.Check(l.GetCount()-1)
         self.dbtracau = ct
         
-        ci(wdr.ID_SOLOPDC).SetFilter("id_tipo=%d" % ftd.tipdoc.id_pdctip)
+        cn('pdc').SetFilter("id_tipo=%d" % ftd.tipdoc.id_pdctip)
     
     def OnGenera(self, event):
         if self.Genera():
@@ -777,7 +784,7 @@ class FtDifPanel(aw.Panel):
         
         wx.BeginBusyCursor()
         try:
-            ok = self.ftd.Genera(WaitUpdate)
+            self.ftd.Genera(WaitUpdate)
             wait.Destroy()
             wx.EndBusyCursor()
             aw.awu.MsgDialog(self, 'Raggruppamento terminato')
@@ -808,10 +815,11 @@ class FtDifFrame(aw.Frame, _FtDif_Mixin):
         if not kwargs.has_key('title') and len(args) < 3:
             kwargs['title'] = FRAME_TITLE
         aw.Frame.__init__(self, *args, **kwargs)
+        cn = self.FindWindowByName
         self.ftdifpanel = FtDifPanel(self, -1)
         self.AddSizedPanel(self.ftdifpanel)
         self.CenterOnScreen()
-        self.Bind(wx.EVT_BUTTON, self.OnClose, id=wdr.ID_BUTCONF)
+        self.Bind(wx.EVT_BUTTON, self.OnClose, cn('butconf'))
     
     def OnClose(self, event):
         self.Close()
@@ -840,7 +848,8 @@ class FtDifHistoryGrid(dbglib.DbGrid):
         g = d.docgen
         g.docgen = g
         
-        cn = lambda db, col: db._GetFieldIndex(col, inline=True)
+        def cn(db, col):
+            return db._GetFieldIndex(col, inline=True)
         
         _NUM = gl.GRID_VALUE_NUMBER
         _FLT = bt.GetValIntMaskInfo()
@@ -893,17 +902,17 @@ class FtDifHistoryPanel(aw.Panel):
         
         aw.Panel.__init__(self, *args, **kwargs)
         wdr.FtDifHistoryFunc(self)
+        cn = self.FindWindowByName
         
         self.dbdocs = ftd.FtDifHistory()
         self.dbdocs.ShowDialog(self)
         
-        ci = lambda x: self.FindWindowById(x)
-        self.grid = FtDifHistoryGrid(ci(wdr.ID_STORYPANGRID), self.dbdocs)
+        self.grid = FtDifHistoryGrid(cn('storypangrid'), self.dbdocs)
         
         self.UpdateGrid()
         
-        self.Bind(wx.EVT_BUTTON, self.OnUpdate, id=wdr.ID_STORYUPD)
-        self.Bind(wx.EVT_RADIOBOX, self.OnOrder, id=wdr.ID_STORYORDER)
+        self.Bind(wx.EVT_BUTTON, self.OnUpdate, cn('storyupd'))
+        self.Bind(wx.EVT_RADIOBOX, self.OnOrder, cn('storyorder'))
     
     def OnOrder(self, event):
         docs = self.dbdocs
@@ -920,9 +929,8 @@ class FtDifHistoryPanel(aw.Panel):
         event.Skip()
     
     def UpdateGrid(self):
-        ci = lambda x: self.FindWindowById(x)
-        dat1, dat2 = [ci(x).GetValue() for x in (wdr.ID_STORYDAT1,
-                                                 wdr.ID_STORYDAT2)]
+        cn = self.FindWindowByName
+        dat1, dat2 = [cn(x).GetValue() for x in 'storydat1 storydat2'.split()]
         docs = self.dbdocs
         docs.ClearFilters()
         if dat1: docs.AddFilter('docrag.datdoc>=%s', dat1)
