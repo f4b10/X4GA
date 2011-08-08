@@ -29,6 +29,12 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.3.18', None, (
+         ("BUG1079",
+         """Risolto problema in configurazione azienda, alcuni flag della pagina 
+         contabile non venivano memorizzati."""),
+        ),),
+    
     ('1.3.16', None, (
          ("BET1099",
          """Introdotto il barcode nella gestione dei listini di vendita."""),
