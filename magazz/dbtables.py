@@ -1491,7 +1491,8 @@ class DocMag(adb.DbTable,\
                         totscrip += imp
                         #totimpon -= mov.importo
                     elif tipo not in "EDP":
-                        self.totscpra += RoundImp(mov.qta*mov.prezzo)-imp
+                        if mov.qta and mov.prezzo:
+                            self.totscpra += RoundImp(mov.qta*mov.prezzo)-imp
                         mi = mov.iva
                         if bt.TIPO_CONTAB == "O":
                             #ordinaria
