@@ -29,6 +29,12 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.3.19', None, (
+         ("BUG1081",
+         """Modificati i calcoli di costo/prezzo/listini per considerare il
+         numero di decimali impostati per i prezzi."""),
+        ),),
+    
     ('1.3.18', None, (
          ("BUG1079",
          """Risolto problema in configurazione azienda, alcuni flag della pagina 
