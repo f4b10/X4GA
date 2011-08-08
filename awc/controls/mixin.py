@@ -145,41 +145,30 @@ class ControlsMixin(HelpedControl):
 class TextCtrlMixin(ControlsMixin):
     
     def PaintDisabled(self, text, obj=None):
-        
-        if wx.Platform == '__WXGTK__':
-            return
-        
-        if obj is None:
-            obj = self
-        
-        dc = wx.PaintDC(obj)
-        dc.SetFont(self.GetFont())
-        dc.Clear()
-        textwidth, textheight = dc.GetTextExtent(text)
-        dcwidth, dcheight = self.GetClientSizeTuple()
-        y = (dcheight - textheight) / 2
-        x = 2#dcwidth - textwidth - 2
-        
-        c = wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNFACE)
-        b = wx.Brush(c, wx.SOLID)
-        dc.SetBrush(b)
-        dc.SetPen(wx.Pen(c, 0, wx.TRANSPARENT))
-        dc.DrawRectangle(0,0, dcwidth, dcheight)
-        c = self.colors['disabledForeground']
-        dc.SetPen(wx.Pen(c, 0, wx.SOLID))
-        dc.SetClippingRegion(0, 0, dcwidth, dcheight)
-        dc.DrawText(text, x, y)
-    
-    #def RePaint(self):
-        #self.Refresh()#UpdateWindowUI(wx.UPDATE_UI_PROCESS_ALL|wx.UPDATE_UI_RECURSE)
-    
-    #def Enable(self, e=True):
-        #wx.TextCtrl.Enable(self, e)
-        #wx.CallAfter(self.RePaint)
-    
-    #def Disable(self, e=True):
-        #wx.TextCtrl.Disable()
-        #wx.CallAfter(self.RePaint)
+        pass
+#        if wx.Platform == '__WXGTK__':
+#            return
+#        
+#        if obj is None:
+#            obj = self
+#        
+#        dc = wx.PaintDC(obj)
+#        dc.SetFont(self.GetFont())
+#        dc.Clear()
+#        textwidth, textheight = dc.GetTextExtent(text)
+#        dcwidth, dcheight = self.GetClientSizeTuple()
+#        y = (dcheight - textheight) / 2
+#        x = 2#dcwidth - textwidth - 2
+#        
+#        c = wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNFACE)
+#        b = wx.Brush(c, wx.SOLID)
+#        dc.SetBrush(b)
+#        dc.SetPen(wx.Pen(c, 0, wx.TRANSPARENT))
+#        dc.DrawRectangle(0,0, dcwidth, dcheight)
+#        c = self.colors['disabledForeground']
+#        dc.SetPen(wx.Pen(c, 0, wx.SOLID))
+#        dc.SetClippingRegion(0, 0, dcwidth, dcheight)
+#        dc.DrawText(text, x, y)
     
 
 # ------------------------------------------------------------------------------
