@@ -243,7 +243,7 @@ class GeneralSetup(Setup):
     def GetConfigPath(cls):
         return opj(config_base_path, cls.GetConfigFileName())
     
-    def __init__(self, fileName=None):
+    def __init__(self, fileName=None, config_stru=None):
         
         defs = [('Database',                            #configurazione database
                  (('type', 'mysql'),                    #tipo motore
@@ -299,6 +299,9 @@ class GeneralSetup(Setup):
                  (('iconstype', 'Vista'),               #tipo di icone delle toolbar
                   ('gridtabtraversal', '1'),)),         #flag navigazione con tasto "Alt"
              ]
+        
+        if config_stru:
+            defs += config_stru
         
         if fileName is None:
             fileName = self.GetConfigPath()
