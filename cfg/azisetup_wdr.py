@@ -821,7 +821,7 @@ def OpzioniFunc( parent, call_fit = True, set_sizer = True ):
     item2 = wx.StaticBox( parent, -1, "Notifiche" )
     item1 = wx.StaticBoxSizer( item2, wx.VERTICAL )
     
-    item3 = CheckBox( parent, ID_OPTNOTIFICHE, "Attiva notifiche (Email, XMPP)", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item3 = UnoZeroCheckBox( parent, ID_OPTNOTIFICHE, "Attiva notifiche (Email, XMPP)", wx.DefaultPosition, wx.DefaultSize, 0 )
     item3.SetName( "setup_optnotifiche" )
     item1.Add( item3, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
 
@@ -832,11 +832,11 @@ def OpzioniFunc( parent, call_fit = True, set_sizer = True ):
     
     item6 = wx.FlexGridSizer( 0, 2, 0, 0 )
     
-    item7 = CheckBox( parent, ID_OPTTABSEARCH, "Attiva la ricerca con il tasto Tab", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item7 = UnoZeroCheckBox( parent, ID_OPTTABSEARCH, "Attiva la ricerca con il tasto Tab", wx.DefaultPosition, wx.DefaultSize, 0 )
     item7.SetName( "setup_opttabsearch" )
     item6.Add( item7, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item8 = CheckBox( parent, ID_OPTDIGSEARCH, "Cerca durante la digitazione del codice o della descrizione", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item8 = UnoZeroCheckBox( parent, ID_OPTDIGSEARCH, "Cerca durante la digitazione del codice o della descrizione", wx.DefaultPosition, wx.DefaultSize, 0 )
     item8.SetName( "setup_optdigsearch" )
     item6.Add( item8, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
 
@@ -862,33 +862,33 @@ def OpzioniFunc( parent, call_fit = True, set_sizer = True ):
     item15 = wx.StaticText( parent, ID_TEXT, "Piano dei Conti:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item11.Add( item15, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item16 = CheckBox( parent, ID_OPTLNKCRDPDC, "", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item16 = UnoZeroCheckBox( parent, ID_OPTLNKCRDPDC, "", wx.DefaultPosition, wx.DefaultSize, 0 )
     item16.SetName( "setup_optlnkcrdpdc" )
     item11.Add( item16, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item17 = CheckBox( parent, ID_OPTLNKGRDPDC, "", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item17 = UnoZeroCheckBox( parent, ID_OPTLNKGRDPDC, "", wx.DefaultPosition, wx.DefaultSize, 0 )
     item17.SetName( "setup_optlnkgrdpdc" )
     item11.Add( item17, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item18 = wx.StaticText( parent, ID_TEXT, "Clienti:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item11.Add( item18, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item19 = CheckBox( parent, ID_OPTLNKCRDCLI, "", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item19 = UnoZeroCheckBox( parent, ID_OPTLNKCRDCLI, "", wx.DefaultPosition, wx.DefaultSize, 0 )
     item19.SetName( "setup_optlnkcrdcli" )
     item11.Add( item19, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item20 = CheckBox( parent, ID_OPTLNKGRDCLI, "", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item20 = UnoZeroCheckBox( parent, ID_OPTLNKGRDCLI, "", wx.DefaultPosition, wx.DefaultSize, 0 )
     item20.SetName( "setup_optlnkgrdcli" )
     item11.Add( item20, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item21 = wx.StaticText( parent, ID_TEXT, "Fornitori:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item11.Add( item21, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item22 = CheckBox( parent, ID_OPTLNKCRDFOR, "", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item22 = UnoZeroCheckBox( parent, ID_OPTLNKCRDFOR, "", wx.DefaultPosition, wx.DefaultSize, 0 )
     item22.SetName( "setup_optlnkcrdfor" )
     item11.Add( item22, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item23 = CheckBox( parent, ID_OPTLNKGRDFOR, "", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item23 = UnoZeroCheckBox( parent, ID_OPTLNKGRDFOR, "", wx.DefaultPosition, wx.DefaultSize, 0 )
     item23.SetName( "setup_optlnkgrdfor" )
     item11.Add( item23, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
