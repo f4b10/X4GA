@@ -345,6 +345,8 @@ class ListiniGrid(dbglib.DbGridColoriAlternati):
         _DAT = gl.GRID_VALUE_DATETIME
         _PRE = bt.GetMagPreMaskInfo()
         _PRC = bt.GetMagScoMaskInfo()
+        _PRR = bt.GetMagRicMaskInfo()
+        
         wp = wdr.PREZZOWIDTH
         wr = 40 #larghezza wx delle colonne percentuale intera
         
@@ -384,27 +386,29 @@ class ListiniGrid(dbglib.DbGridColoriAlternati):
         #ricariche sul prodotto - editazione
         self.COL_P_ERP1 = self.COL_P_ERP2 = self.COL_P_ERP3 = None
         if bt.MAGERPLIS >= 1:
-            self.COL_P_ERP1 = C(( wr, None,    (cn(pro, "ricar1"),   "RP%1",    _PRC, False)))
+            self.COL_P_ERP1 = C(( wr, None,    (cn(pro, "ricar1"),   "RP%1",    _PRR, False)))
         if bt.MAGERPLIS >= 2:
-            self.COL_P_ERP2 = C(( wr, None,    (cn(pro, "ricar2"),   "RP%2",    _PRC, False)))
+            self.COL_P_ERP2 = C(( wr, None,    (cn(pro, "ricar2"),   "RP%2",    _PRR, False)))
         if bt.MAGERPLIS >= 3:
-            self.COL_P_ERP3 = C(( wr, None,    (cn(pro, "ricar3"),   "RP%3",    _PRC, False)))
+            self.COL_P_ERP3 = C(( wr, None,    (cn(pro, "ricar3"),   "RP%3",    _PRR, False)))
         
         #ricariche sul gruppo prezzi - visualizzazione 
         self.COL_P_VRG1 = self.COL_P_VRG2 = self.COL_P_VRG3 = None
         if bt.MAGVRGLIS >= 1:
-            self.COL_P_VRG1 = c(( wr, None,    (cn(gpr, "prccosric1"), "RG%1",    _PRC, False)))
+            self.COL_P_VRG1 = c(( wr, None,    (cn(gpr, "prccosric1"), "RG%1",    _PRR, False)))
         if bt.MAGVRGLIS >= 2:
-            self.COL_P_VRG2 = c(( wr, None,    (cn(gpr, "prccosric2"), "RG%2",    _PRC, False)))
+            self.COL_P_VRG2 = c(( wr, None,    (cn(gpr, "prccosric2"), "RG%2",    _PRR, False)))
         if bt.MAGVRGLIS >= 3:
-            self.COL_P_VRG3 = c(( wr, None,    (cn(gpr, "prccosric3"), "RG%3",    _PRC, False)))
+            self.COL_P_VRG3 = c(( wr, None,    (cn(gpr, "prccosric3"), "RG%3",    _PRR, False)))
         
         self.COL_PREZZO =  C(( wp, 'p_prezzo', (cn(lis, "p_prezzo"), "Prezzo pubbl.", _PRE, False)))
         
         #ricarica effettiva del prezzo pubblico sul costo - visualizzazione 
         self.COL_P_VREP = self.COL_P_VSEP = None
         if bt.MAGREPLIS >= 1:
-            self.COL_P_VREP = c(( wr, None,    (-1, "RE%",    _PRC, False)))
+            self.COL_P_VREP = c(( wr, None,    (-1, "RE%",    _PRR, False)))
+        
+        #sconto effettivo del prezzo pubblico sul costo - visualizzazione
         if bt.MAGSEPLIS >= 1:
             self.COL_P_VSEP = c(( wr, None,    (-1, "SE%",    _PRC, False)))
         
@@ -434,7 +438,7 @@ class ListiniGrid(dbglib.DbGridColoriAlternati):
             #ricarica effettiva del listino - visualizzazione
             setattr(self, 'COL_P_VRE%d'%l, None) 
             if bt.MAGRELLIS >= 1:
-                v = c(( wr, None,    (-1, "RE%", _PRC, False)))
+                v = c(( wr, None,    (-1, "RE%", _PRR, False)))
                 setattr(self, 'COL_P_VRE%d'%l, v)
             
             #sconto effettivo del listino - visualizzazione
