@@ -30,9 +30,6 @@ import stormdb as adb
 import Env
 bt = Env.Azienda.BaseTab
 
-from awc.util import ListSearch, MsgDialog
-
-import mx
 import copy
 
 
