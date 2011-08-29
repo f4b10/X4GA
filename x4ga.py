@@ -44,6 +44,11 @@ if hasattr(sys, 'frozen'):
     
     sp = []
     
+    pp = os.getenv('X4_PYTHONPATH')
+    if pp:
+        for p in pp.split(';'):
+            sp.append(p)
+
     for file in glob.glob(os.path.join(config_base_path, 'cust/*.zip')):
         sp.append(file.replace('/', '\\'))
     
@@ -140,6 +145,9 @@ if hasattr(sys, 'frozen'):
             plugins[name] = m
 
 
+if Env.Azienda.params['show-syspath']:
+    wx.MessageBox('\n'.join(sys.path), 'sys.path')
+
 import xframe as xfr
 
 
@@ -194,7 +202,7 @@ def Main():
         except:
             pass
         
-#    os._exit(0)
+    os._exit(0)
 
 
 # ------------------------------------------------------------------------------
