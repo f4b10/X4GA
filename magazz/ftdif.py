@@ -586,31 +586,38 @@ class FtDifPanel(aw.Panel):
         ftd = self.ftd
         cn = self.FindWindowByName
         
-        for uname, tname in (('sepall',  None),
-                             ('sepmp',   None),
-                             ('sepdest', None),
-                             ('datmin',  None),
-                             ('datmax',  None),
-                             ('nummin',  None),
-                             ('nummax',  None),
-                             ('esclacq', None),
-                             ('esclann', None),
-                             ('solosta', None),
-                             ('magazz',  '_solomag'),
-                             ('pdc',     '_solopdc'),
-                             ('agente',  '_soloage'),
-                             ('zona',    '_solozona'),
-                             ('catcli',  '_solocateg'),
-                             ('modpag',  '_solomp'),):
-            if tname is None:
-                tname = '_%s' % uname
+        dr = ftd.docrag
+        dg = ftd.docgen
+        
+        for d, uname, tname in ((dg, 'sepall',  None),
+                                (dg, 'sepmp',   None),
+                                (dg, 'sepdest', None),
+                                (dr, 'datmin',  None),
+                                (dr, 'datmax',  None),
+                                (dr, 'nummin',  None),
+                                (dr, 'nummax',  None),
+                                (dr, 'esclacq', None),
+                                (dr, 'esclann', None),
+                                (dr, 'solosta', None),
+                                (dr, 'magazz',  'solomag'),
+                                (dr, 'pdc',     'solopdc'),
+                                (dr, 'agente',  'soloage'),
+                                (dr, 'zona',    'solozona'),
+                                (dr, 'catcli',  'solocateg'),
+                                (dr, 'modpag',  'solomp'),):
+            
             c = cn(uname)
             if c:
-                v = cn(uname).GetValue()
+                v = c.GetValue()
             else:
                 v = getattr(self, uname, None)
-            setattr(ftd.docgen, tname, v)
-       
+            
+            name = tname
+            if name is None:
+                name = uname
+            
+            setattr(d, '_%s' % name, v)
+        
         ftd.docrag._tipidoc = [int(ddr.id_docrag)
                                for n, ddr in enumerate(ftd.ddr)
                                if cn('docs').IsChecked(n)]
@@ -787,7 +794,7 @@ class FtDifPanel(aw.Panel):
             self.ftd.Genera(WaitUpdate)
             wait.Destroy()
             wx.EndBusyCursor()
-            aw.awu.MsgDialog(self, 'Raggruppamento terminato')
+            aw.awu.MsgDialog(self, 'Raggruppamento terminato', style=wx.ICON_INFORMATION)
             out = True
         except Exception, e:
             wait.Destroy()
