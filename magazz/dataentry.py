@@ -1528,7 +1528,9 @@ class MagazzPanel(aw.Panel,\
                         fields += ' dichiar targa autista'
                     for field in fields.split():
                         v = getattr(doc.travet, field)
-                        cn('nocodevet_%s' % field).SetValue(v)
+                        c = cn('nocodevet_%s' % field)
+                        if c is not None:
+                            c.SetValue(v)
                         setattr(doc, 'nocodevet_%s' % field, v)
                 self.EnableDatiAcc()
             elif "nocodedes" in name and not name.startswith("enable"):
