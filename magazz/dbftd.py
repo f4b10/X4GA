@@ -146,12 +146,12 @@ class FtDif(adb.DbTable):
         docrag._movmap = None
         docrag._movdes = None
         docrag.ClearOrders()
-        docrag.AddOrder('pdc.descriz')
-        docrag.AddOrder('modpag.descriz')
-        docrag.AddOrder('dest.descriz')
-        docrag.AddOrder('docrag.datreg')
-        docrag.AddOrder('docrag.datdoc')
-        docrag.AddOrder('docrag.numdoc')
+#        docrag.AddOrder('pdc.descriz')
+#        docrag.AddOrder('modpag.descriz')
+#        docrag.AddOrder('dest.descriz')
+#        docrag.AddOrder('docrag.datreg')
+#        docrag.AddOrder('docrag.datdoc')
+#        docrag.AddOrder('docrag.numdoc')
         
         self.docrag = docrag
         self.movrag = movrag
@@ -232,6 +232,18 @@ class FtDif(adb.DbTable):
     def Estrai(self):
         
         dr = self.docrag
+        dg = self.docgen
+        
+        dr.ClearOrders()
+        dr.AddOrder('pdc.descriz')
+        if dg._sepmp:
+            dr.AddOrder('modpag.descriz')
+        if dg._sepdest:
+            dr.AddOrder('dest.descriz')
+        dr.AddOrder('docrag.datreg')
+        dr.AddOrder('docrag.datdoc')
+        dr.AddOrder('docrag.numdoc')
+                
         dr.ClearFilters()
         dr.AddFilter('docrag.id_tipdoc IN (%s)'\
                      % ','.join([str(x) for x in dr._tipidoc]))
@@ -309,13 +321,9 @@ class FtDif(adb.DbTable):
         if err:
             raise Exception, err
         
-        sepall, sepmp, sepdest = None, None, None
-        for name, value, default in (
-            ('sepall',  dg._sepall,  self.f_sepall  == 1),
-            ('sepmp',   dg._sepmp,   self.f_sepmp   == 1),
-            ('sepdest', dg._sepdest, self.f_sepdest == 1),
-            ):
-            locals()[name] = value or default
+        sepall = dg._sepall# or self.f_sepall == 1)
+        sepmp = dg._sepmp# or self.f_sepmp == 1)
+        sepdest = dg._sepdest# or self.f_sepdest == 1)
         
         dat = dg._firstdat
         num = dg._firstnum-1
@@ -396,7 +404,7 @@ class FtDif(adb.DbTable):
                 idmag = d.id_magazz
             
             #test necessità di nuovo documento
-            if idmag != lastmag or d.id_pdc != lastpdc or \
+            if idmag != lastmag or d.id_pdc != lastpdc or sepall or\
                (sepmp and d.id_modpag != lastmp) or \
                (sepdest and d.id_destin != lastdest):
                 
