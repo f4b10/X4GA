@@ -2454,14 +2454,13 @@ class DbTable(object):
         return object.__getattribute__(self, field)
 
     def __getitem__(self, table):
-        if type(table) not in (str, unicode):
-            raise TypeError,\
-                  """Scriptable index bust be a table name"""
-        info = self._info
-        if table in info.relTab:
-            n = info.relTab.index(table)
-            return info.relDb[n]
-
+        if type(table) in (str, unicode):
+            info = self._info
+            if table in info.relTab:
+                n = info.relTab.index(table)
+                return info.relDb[n]
+        raise TypeError, """Scriptable index bust be a table name"""
+    
     def _GetDbMem(self):
         raise Exception, "Not implemented"
         if self._info.iRoot:
@@ -2782,6 +2781,12 @@ class DbTable(object):
     
     def GetSqlPage(self):
         return int(self._info.limit/PAGE_ROWS+.999)+1
+    
+    def GetSqlPagePrevious(self):
+        return self.GetSqlPage()-1
+    
+    def GetSqlPageNext(self):
+        return self.GetSqlPage()+1
     
     def GetSqlPages(self, **kwargs):
         pt = int(float(self.GetSqlCount(**kwargs))/PAGE_ROWS+.999)+1
