@@ -29,6 +29,36 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.3.23', None, (
+         ("BUG1085",
+         """Risolto bug in fatturazione differita: impostando la
+         separazione delle fatture in base alla modalità di pagamento,
+         veniva generata una sola fattura, con i ddt contenuti in
+         ordine di mod.pagamento e numero."""),
+         ("BUG1086",
+         """Risolto bug in lista registrazioni contabili con riepilogo
+         iva: al momento di agganciare il riepilogo, originava 
+         eccezione."""),
+        ),),
+    
+    ('1.3.22', None, (
+         ("BUG1084",
+         """Risolto bug in configurazione azienda: non leggeva
+         correttamente i checkbox della sezione "Opzioni"."""),
+        ),),
+    
+    ('1.3.21', None, (
+         ("BUG1083",
+         """Risolto bug in immissione documento: selezionando un vettore,
+         sollevava eccezione."""),
+        ),),
+    
+    ('1.3.20', None, (
+         ("BUG1082",
+         """Modificata la maschera di inserimento delle ricariche fino a tre 
+         interi invece dei precedenti due."""),
+        ),),
+    
     ('1.3.19', None, (
          ("BUG1081",
          """Modificati i calcoli di costo/prezzo/listini per considerare il
