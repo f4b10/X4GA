@@ -665,6 +665,13 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
                               """per le colonne checkbox indicare i """\
                               """valori per checked/notchecked"""
                     
+                elif _type == gridlib.GRID_VALUE_STRING:
+                    #std editor data
+                    if len(spec) > 1 and spec[1] == 'lowercase':
+                        attr_editor = awg.TextLowerCaseCellEditor()
+                    else:
+                        attr_editor = awg.TextCellEditor()
+            
             if _type == 'image':
                 #esempio: image:bitmap,48x48 (width x height)
                 attr_editor = None
@@ -1247,10 +1254,13 @@ class DbGridTable(gridlib.PyGridTableBase):
             if value is None:# and self.noneIsBlank[col]:
                 value = ''
             if len(spec) > 1:
-                try:
-                    out = value.rjust(int(spec[1]))
-                except:
-                    pass
+                if spec[1] == 'lowercase':
+                    out = value
+                else:
+                    try:
+                        out = value.rjust(int(spec[1]))
+                    except:
+                        pass
             else:
                 out = value
             
@@ -1764,6 +1774,11 @@ class ADB_Grid(DbGridColoriAlternati):
     def TypeString(cls):
         return cls._TYPE_STRING
     
+    _TYPE_STRING_LOWERCASE = GRID_VALUE_STRING+":lowercase"
+    @classmethod
+    def TypeStringLowerCase(cls):
+        return cls._TYPE_STRING_LOWERCASE
+    
     _TYPE_CHECK = GRID_VALUE_CHOICE
     @classmethod
     def TypeCheck(cls, value_check=1, value_uncheck=0):
@@ -1872,7 +1887,7 @@ class ADB_Grid(DbGridColoriAlternati):
             col_name = col['col_name']
             col_index = cn(db_table, col_name)
             
-            assert col_index >= 0 or col['get_cell_func'] is not None, 'Unable to map column %d' % n
+            assert col_index >= 0 or col['get_cell_func'] is not None, 'Unable to map column %s' % col_name
             
             col_type = col['col_type']
             col_size = col['col_size']

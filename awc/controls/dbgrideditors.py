@@ -788,6 +788,8 @@ class TextCellEditor(gridlib.PyGridCellEditor, CellEditorsMixin):
     """
     CellEditor di tipo stringa.
     """
+    _lowercase = False
+    
     def __init__(self):
         gridlib.PyGridCellEditor.__init__(self)
         CellEditorsMixin.__init__(self)
@@ -802,11 +804,12 @@ class TextCellEditor(gridlib.PyGridCellEditor, CellEditorsMixin):
                                                   pos = (-100, -100))
         if self._maxlen is not None:
             self._tc.SetMaxLength(self._maxlen)
+        self._tc.ForceUpperCase(not self._lowercase)
         self.SetControl(self._tc)
         self.grid = parent.GetParent()
         if evtHandler:
             self._tc.PushEventHandler(evtHandler)
-
+    
     def SetInitialCursor(self):
         mask = wx.TextCtrl.GetValue(self._tc)
         if "," in mask: pos = mask.index(",")
@@ -961,6 +964,13 @@ class TextCellEditor(gridlib.PyGridCellEditor, CellEditorsMixin):
                                   #self.lt_cardclass,\
                                   #self.lt_filter)
         pass
+
+
+class TextLowerCaseCellEditor(TextCellEditor):
+    """
+    CellEditor di tipo stringa, caratteri minuscoli ammessi
+    """
+    _lowercase = True
 
 
 # ------------------------------------------------------------------------------
