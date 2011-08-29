@@ -29,6 +29,17 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.3.25', None, (
+         ("INT1002",
+         """Aggiunta gestione variabile di ambiente X4_PYTHONPATH per
+         aggancio a personalizzazioni esterne sorgenti."""),
+        ),),
+    
+    ('1.3.24', None, (
+         ("INT1001",
+         """Internals."""),
+        ),),
+    
     ('1.3.23', None, (
          ("BUG1085",
          """Risolto bug in fatturazione differita: impostando la
