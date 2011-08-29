@@ -650,7 +650,8 @@ class Azienda(object):
     args = sys.argv[1:]
     params = {'password-length': 6,
               'onexit-execute': '',
-              'redirect-output': 0,}
+              'redirect-output': 0,
+              'show-syspath': 0,}
     try:
         optlist, args = getopt.getopt(args, '', ['%s=' % key for key in params])
         for opt, val in optlist:
@@ -3884,7 +3885,7 @@ class Azienda(object):
          
         @classmethod
         def GetMagScoIntegersDisplay(cls):
-            return 3
+            return 2
         
         @classmethod
         def GetMagScoDecimalsDisplay(cls):
@@ -3901,7 +3902,27 @@ class Azienda(object):
         @classmethod
         def GetMagScoNumCtrl(cls, parent, id, name, editable=True, numint=None, numdec=None):
             if numint is None:
-                numint = cls.GetMagScoDecimalsDisplay()
+                numint = cls.GetMagScoIntegersDisplay()
+            if numdec is None:
+                numdec = cls.GetMagScoDecimalsDisplay()
+            ctrl = numctrl.NumCtrl(parent, id or -1, 
+                                   integerWidth=numint, fractionWidth=numdec, groupDigits=True)
+            ctrl.SetName(name)
+            ctrl.SetEditable(editable)
+            return ctrl
+         
+        @classmethod
+        def GetMagRicMaskInfo(cls, numint=None, numdec=None):
+            if numint is None:
+                numint = 3
+            if numdec is None:
+                numdec = cls.GetMagScoDecimalsDisplay()
+            return gl.GRID_VALUE_FLOAT+":%d,%d" % (numint, numdec)
+        
+        @classmethod
+        def GetMagRicNumCtrl(cls, parent, id, name, editable=True, numint=None, numdec=None):
+            if numint is None:
+                numint = 3
             if numdec is None:
                 numdec = cls.GetMagScoDecimalsDisplay()
             ctrl = numctrl.NumCtrl(parent, id or -1, 
