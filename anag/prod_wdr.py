@@ -1612,7 +1612,7 @@ def ListGriFunc( parent, call_fit = True, set_sizer = True ):
     item33 = wx.StaticText( parent, ID_LABELRIC1, "Ric.%1", wx.DefaultPosition, wx.DefaultSize, 0 )
     item32.Add( item33, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item34 = bt.GetMagScoNumCtrl(parent, ID_RICAR1, 'ricar1')
+    item34 = bt.GetMagRicNumCtrl(parent, ID_RICAR1, 'ricar1')
     item32.Add( item34, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item31.Add( item32, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL, 5 )
@@ -1622,7 +1622,7 @@ def ListGriFunc( parent, call_fit = True, set_sizer = True ):
     item36 = wx.StaticText( parent, ID_LABELRIC2, "Ric.%2", wx.DefaultPosition, wx.DefaultSize, 0 )
     item35.Add( item36, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item37 = bt.GetMagScoNumCtrl(parent, ID_RICAR2, 'ricar2')
+    item37 = bt.GetMagRicNumCtrl(parent, ID_RICAR2, 'ricar2')
     item35.Add( item37, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
 
     item31.Add( item35, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL, 5 )
@@ -1632,7 +1632,7 @@ def ListGriFunc( parent, call_fit = True, set_sizer = True ):
     item39 = wx.StaticText( parent, ID_LABELRIC3, "Ric.%3", wx.DefaultPosition, wx.DefaultSize, 0 )
     item38.Add( item39, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item40 = bt.GetMagScoNumCtrl(parent, ID_RICAR3, 'ricar3')
+    item40 = bt.GetMagRicNumCtrl(parent, ID_RICAR3, 'ricar3')
     item38.Add( item40, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
 
     item31.Add( item38, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL, 5 )
