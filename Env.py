@@ -993,6 +993,7 @@ class Azienda(object):
         
         #variabili per la gestione dei listini
         MAGNUMLIS = 0        #numero di listini vendita
+        MAGROWLIS = 0        #flag attivazione listino su righe dettaglio documento
         MAGDATLIS = False    #flag listini per data
         MAGFORLIS = False    #flag codice fornitore su manutenzione listini
         MAGBCOLIS = False    #flag barcode su manutenzione listini
@@ -2582,6 +2583,7 @@ class Azienda(object):
                 [ "askagente",  "CHAR",     1, None, "Flag richiesta agente", None ],
                 [ "askzona",    "CHAR",     1, None, "Flag richiesta zona", None ],
                 [ "asklist",    "CHAR",     1, None, "Flag richiesta listino", None ],
+                [ "rowlist",    "CHAR",     1, None, "Flag richiesta listino su riga", None ],
                 [ "askbanca",   "CHAR",     1, None, "Flag richiesta banca", None ],
                 [ "askdatiacc", "CHAR",     1, None, "Flag richiesta dati trasporto", None ],
                 [ "asktracau",  "CHAR",     1, None, "Flag richiesta dati trasporto: causale", None ],
@@ -2854,6 +2856,7 @@ class Azienda(object):
                 [ "note",       "VARCHAR", ntw, None, "Note", None],
                 [ "id_pdccg",   "INT",     idw, None, "ID Pdc collegamento contabile specifico", None],
                 [ "agggrip",    "TINYINT",   1, None, "Flag aggiornamento griglia prezzi", None ],
+                [ "id_tiplist", "INT",     idw, None, "ID Tipo listino", None ],
             ]
             
             cls.set_constraints(cls.TABNAME_MOVMAG_B,
@@ -3709,6 +3712,7 @@ class Azienda(object):
                 ('MAGNOCDEFVET',    'magnocdefvet',       f, _int, None),
                 ('MAGEXTRAVET',     'magextravet',        f, _int, None),
                 ('MAGNUMLIS',       'magnumlis',          i, _int, 'del numero di listini'),
+                ('MAGROWLIS',       'magrowlis',          f, _int, None),
                 ('MAGDATLIS',       'magdatlis',          f, _int, 'del flag di gestione dei listini per data'),
                 ('MAGFORLIS',       'magforlis',          f, _int, None),
                 ('MAGBCOLIS',       'magbcolis',          f, _int, None),

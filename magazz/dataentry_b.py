@@ -443,6 +443,8 @@ class GridBody(object):
         m.RSMOV_desart = mov.prod._GetFieldIndex("descriz", inline=True)
         m.RSMOV_codiva = mov.iva._GetFieldIndex("codice", inline=True)
         m.RSMOV_desiva = mov.iva._GetFieldIndex("descriz", inline=True)
+        m.RSMOV_codlis = mov.tiplist._GetFieldIndex("codice", inline=True)
+        m.RSMOV_deslis = mov.tiplist._GetFieldIndex("descriz", inline=True)
         m.RSMOV_PDCCG_cod = mov.pdccg._GetFieldIndex("codice", inline=True)
         m.RSMOV_PDCCG_des = mov.pdccg._GetFieldIndex("descriz", inline=True)
         
@@ -505,6 +507,10 @@ class GridBody(object):
             self.COL_PZCONF = a((1, [m.RSMOV_PZCONF, "Pz.Conf.",         _PZC, True]))
         
         self.COL_QTA =     a((1, [m.RSMOV_QTA,       "Quantità",         _QTA, True]))
+        
+        if bt.MAGROWLIS and self.dbdoc.cfgdoc.rowlist == 'X':
+            self.COL_TIPLIST = a((40, [m.RSMOV_TIPLIST, "List.",         _STR, True]))
+        
         self.COL_PREZZO =  a((1, [m.RSMOV_PREZZO,    "Prezzo",           _PRE, True]))
         
         if (bt.MAGATTGRIP or bt.MAGATTGRIF) and bt.MAGAGGGRIP:
@@ -671,6 +677,19 @@ class GridBody(object):
                                     refresh=True,       #refresh flag
                                     oncreate=SetPdcTip) #on create call
         links.append(ltpdc)
+        
+        if bt.MAGROWLIS and self.dbdoc.cfgdoc.rowlist == 'X':
+            
+            from anag.tiplist import TipListDialog
+            
+            ltlis = dbglib.LinkTabAttr(bt.TABNAME_TIPLIST, #table
+                                       self.COL_TIPLIST,   #grid col
+                                       m.RSMOV_TIPLIST,    #rs col id
+                                       m.RSMOV_codlis,     #rs col cod
+                                       -1,                 #rs col des
+                                       TipListDialog,      #card class
+                                       refresh=True)       #refresh flag
+            links.append(ltlis)
         
         return links
     
@@ -1311,6 +1330,11 @@ class GridBody(object):
                      m.RSMOV_SC1, m.RSMOV_SC2, m.RSMOV_SC3):
             DefImporto()
             resetview = True
+            
+        elif hasattr(self, 'COL_TIPLIST') and col == m.RSMOV_TIPLIST:
+            if value is not None:
+                mov.prezzo, _, _, _, _ = doc.DefPrezzoSconti(force_tiplist=value)
+                DefImporto()
             
         elif col == m.RSMOV_IMPORTO:
             if value:

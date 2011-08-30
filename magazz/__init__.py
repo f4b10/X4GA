@@ -75,17 +75,19 @@ RSMOV_PERPRO  =  20; a('perpro')
 RSMOV_F_ANN   =  21; a('f_ann')
 RSMOV_PDCCG_ID = 22; a('id_pdccg')
 RSMOV_COSTOU =   23; a('costou')
-RSMOV_lastcol =\
 RSMOV_COSTOT =   24; a('costot')
-
+RSMOV_lastcol =\
+RSMOV_TIPLIST =  25; a('id_tiplist')
 
 # i seguenti valori sono determinati in fase di caricamento tabelle
 RSMOV_codmov  = -1
 RSMOV_codart  = -1
 RSMOV_codiva  = -1
+RSMOV_codlis  = -1
 RSMOV_desmov  = -1
 RSMOV_desart  = -1
 RSMOV_desiva  = -1
+RSMOV_deslis  = -1
 RSMOV_PDCCG_cod = -1
 RSMOV_PDCCG_des = -1
 

@@ -259,6 +259,10 @@ class DocMag(adb.DbTable,\
             bt.TABNAME_PDC,       "pdccg",   idLeft="id_pdccg",\
             join=adb.JOIN_LEFT)
         
+        dbtlis = dbmov.AddJoin(\
+            bt.TABNAME_TIPLIST,   "tiplist", idLeft="id_tiplist",\
+            join=adb.JOIN_LEFT)
+        
         self.cfgdoc = CfgDocMov()
         self.regcon = dbc.DbRegCon()
         self.updpro = Prodotti()
@@ -493,7 +497,7 @@ class DocMag(adb.DbTable,\
             tipo = 'H'
         return sconto, tipo
     
-    def DefPrezzoSconti(self, prod=None, cfgmov=None):
+    def DefPrezzoSconti(self, prod=None, cfgmov=None, force_tiplist=None):
         prezzo = 0
         sc1 = sc2 = sc3 = None
         tipo = None
@@ -556,8 +560,16 @@ class DocMag(adb.DbTable,\
                 tipo = 'P'
             elif cfg.tipvaluni == "L":
                 # proposizione prezzo di listino
-                tiplist = self.tiplist
-                if tiplist.id is not None and tiplist.tipoprezzo in "123456789":
+                tiplist = adb.DbTable(bt.TABNAME_TIPLIST, 'tiplist')
+                tiplist.Reset()
+                if force_tiplist is None:
+                    if self.mov.id_tiplist is not None:
+                        tiplist.Get(self.mov.id_tiplist)
+                    elif self.tiplist.id is not None:
+                        tiplist.Get(self.tiplist.id)
+                else:
+                    tiplist.Get(force_tiplist)
+                if tiplist.id is not None:
                     list = self._info.dblist
                     list.ClearFilters()
                     list.AddFilter("id_prod=%s", prod.id)
@@ -1283,7 +1295,7 @@ class DocMag(adb.DbTable,\
         for mov in self.mov:
             if mov.id_prod:
                 prz, tipo, _, _, _ = self.DefPrezzoSconti()
-                if tipo == "L":
+                if tipo == "L" and mov.id_tiplist is None:
                     if prz:
                         mov.prezzo = prz
                         ND = bt.VALINT_DECIMALS

@@ -343,6 +343,7 @@ class CauMagazzPanel(ga.AnagPanel):
                            ("askagente",  { True: 'X', False: ' '} ),
                            ("askzona",    { True: 'X', False: ' '} ),
                            ("asklist",    { True: 'X', False: ' '} ),
+                           ("rowlist",    { True: 'X', False: ' '} ),
                            ("askbanca",   { True: 'X', False: ' '} ),
                            ("asktracau",  { True: 'X', False: ' '} ),
                            ("asktracur",  { True: 'X', False: ' '} ),
