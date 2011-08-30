@@ -29,6 +29,12 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.3.26', None, (
+         ("BET1100",
+         """Attivata la possibilità di modifica del listino su ogni riga
+         del documento."""),
+        ),),
+    
     ('1.3.25', None, (
          ("INT1002",
          """Aggiunta gestione variabile di ambiente X4_PYTHONPATH per
