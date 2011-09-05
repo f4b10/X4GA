@@ -716,6 +716,7 @@ class ProdPanel(ga.AnagPanel):
         
         self.SetDbOrderColumns((
             ("Codice",              ('prod.codice',)),
+            ("Descrizione",         ('prod.descriz',)),
             ("Tipo/Descrizione",    ('tipart.codice', 'prod.descriz',)),
             ("Categoria/Gruppo",    ('catart.codice', 'gruart.codice', 'prod.codice',)),
             ("Fornitore/Cod.Forn.", ('pdc.descriz',   'prod.codfor',   'prod.codice',)),
