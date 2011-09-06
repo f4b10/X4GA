@@ -103,16 +103,15 @@ class _EntryCtrlMixin(wx.Window, cmix.ControlsMixin):
         return self.address.GetValue()
     
     def Enable(self, e=True):
-        #cmix.ControlsMixin.Enable(self, e)
-        wx.Window.Enable(self, e)
-        self.address.SetEditable(e)
+#        wx.Window.Enable(self, e)
+        self.address.Enable(e)
     
     def Disable(self):
         self.Enable(False)
     
     def IsEnabled(self):
-#        return cmix.ControlsMixin.IsEnabled(self)
-        return wx.Window.IsEnabled(self)
+#        return wx.Window.IsEnabled(self)
+        return self.address.IsEnabled()
     
     def SetEditable(self, e=True):
         self.address.SetEditable(e)

@@ -70,10 +70,15 @@ class ControllaPIVA(object):
         
         return out
     
+#    def GetPIvaDateURL(self):
+#        return """http://www1.agenziaentrate.it/servizi/vies/vies.htm?"""\
+#               """act=piva&stato=%(stato)s&piva=%(piva)s""" % {'stato': self.stato or 'IT',
+#                                                               'piva':  self.piva}
+    
     def GetPIvaDateURL(self):
-        return """http://www1.agenziaentrate.it/servizi/vies/vies.htm?"""\
-               """act=piva&stato=%(stato)s&piva=%(piva)s""" % {'stato': self.stato or 'IT',
-                                                               'piva':  self.piva}
+        return """http://www1.agenziaentrate.it/servizi/vies/transazione.htm?"""\
+               """s=%(stato)s&p=%(piva)s""" % {'stato': self.stato or 'IT',
+                                               'piva':  self.piva}
     
     def GetPIvaDateOpenWebPage(self):
         os.startfile(self.GetPIvaDateURL())
