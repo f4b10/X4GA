@@ -242,7 +242,7 @@ class DateCtrl(wx.Control, cmix.TextCtrlMixin):
         masked = self.maskedCtrl.GetValue() #dd.mm.yyyy hh:mm
         if len(masked) == 16 and masked[-5:] == '  :  ':
             now = DateTime.now()
-            masked = '%s%s:%s' % (masked[:-5], now.hour, now.minute)
+            masked = '%s%s:%s' % (masked[:-5], str(now.hour).zfill(2), str(now.minute).zfill(2))
         self.maskedCtrl.SetValue('%s%s%s' % (masked[:5], str(year).zfill(4), masked[10:]))
     
     def AdaptMaskedColors(self, bg):
