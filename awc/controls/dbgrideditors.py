@@ -470,6 +470,8 @@ class DataLinkCellEditor(gridlib.PyGridCellEditor, CellEditorsMixin):
         to set colours or fonts for the control.
         """
         if not show and self._tc._helpInProgress: return
+        if not show and hasattr(self._tc, '_retain_focus'):
+            show = True
         self._tc.Enable()
         #self.base_Show(show, attr)
         gridlib.PyGridCellEditor.Show(self, show, attr)
