@@ -376,11 +376,11 @@ def MagazzSetup( parent, call_fit = True, set_sizer = True ):
     item20 = wx.StaticBox( parent, -1, "Confezioni" )
     item19 = wx.StaticBoxSizer( item20, wx.VERTICAL )
     
-    item21 = CheckBox( parent, ID_MAGPZCONF, "Gestisci", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item21 = UnoZeroCheckBox( parent, ID_MAGPZCONF, "Gestisci", wx.DefaultPosition, wx.DefaultSize, 0 )
     item21.SetName( "setup_magpzconf" )
     item19.Add( item21, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
 
-    item22 = CheckBox( parent, ID_MAGPZGRIP, "Su griglie", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item22 = UnoZeroCheckBox( parent, ID_MAGPZGRIP, "Su griglie", wx.DefaultPosition, wx.DefaultSize, 0 )
     item22.SetName( "setup_magpzgrip" )
     item19.Add( item22, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
 
@@ -415,11 +415,11 @@ def MagazzSetup( parent, call_fit = True, set_sizer = True ):
     item28 = wx.StaticBox( parent, -1, "" )
     item27 = wx.StaticBoxSizer( item28, wx.VERTICAL )
     
-    item29 = CheckBox( parent, ID_MAGSCOCAT, "Attiva sconti per categoria", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item29 = UnoZeroCheckBox( parent, ID_MAGSCOCAT, "Attiva sconti per categoria", wx.DefaultPosition, wx.DefaultSize, 0 )
     item29.SetName( "setup_magscocat" )
     item27.Add( item29, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
 
-    item30 = CheckBox( parent, ID_MAGGESACC, "Attiva gestione acconti", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item30 = UnoZeroCheckBox( parent, ID_MAGGESACC, "Attiva gestione acconti", wx.DefaultPosition, wx.DefaultSize, 0 )
     item30.SetName( "setup_maggesacc" )
     item27.Add( item30, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
 
@@ -574,7 +574,7 @@ def MagazzSetup( parent, call_fit = True, set_sizer = True ):
     item74 = wx.StaticBox( parent, -1, "Promoz." )
     item73 = wx.StaticBoxSizer( item74, wx.HORIZONTAL )
     
-    item75 = CheckBox( parent, ID_MAGPPROMO, "Attiva", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item75 = UnoZeroCheckBox( parent, ID_MAGPPROMO, "Attiva", wx.DefaultPosition, wx.DefaultSize, 0 )
     item75.SetToolTip( wx.ToolTip("Attiva le condizioni promozionali sui prodotti") )
     item75.SetName( "setup_magppromo" )
     item73.Add( item75, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 5 )
@@ -704,7 +704,7 @@ def MagazzSetup( parent, call_fit = True, set_sizer = True ):
     item104 = wx.StaticBox( parent, -1, "Immagine del prodotto" )
     item103 = wx.StaticBoxSizer( item104, wx.VERTICAL )
     
-    item105 = CheckBox( parent, ID_MAGIMGPROD, "Attiva se presente", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item105 = UnoZeroCheckBox( parent, ID_MAGIMGPROD, "Attiva se presente", wx.DefaultPosition, wx.DefaultSize, 0 )
     item105.SetName( "setup_magimgprod" )
     item103.Add( item105, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
 
@@ -727,17 +727,17 @@ def MagazzSetup( parent, call_fit = True, set_sizer = True ):
     item111 = wx.StaticText( parent, ID_TEXT, "Visualizza:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item106.Add( item111, 0, wx.ALIGN_CENTER|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item112 = CheckBox( parent, ID_MAGVISGIA, "Giacenza", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item112 = UnoZeroCheckBox( parent, ID_MAGVISGIA, "Giacenza", wx.DefaultPosition, wx.DefaultSize, 0 )
     item112.SetName( "setup_magvisgia" )
     item106.Add( item112, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
 
     item113 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
-    item114 = CheckBox( parent, ID_MAGVISCOS, "Costo", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item114 = UnoZeroCheckBox( parent, ID_MAGVISCOS, "Costo", wx.DefaultPosition, wx.DefaultSize, 0 )
     item114.SetName( "setup_magviscos" )
     item113.Add( item114, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 
-    item115 = CheckBox( parent, ID_MAGVISPRE, "Prezzo", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item115 = UnoZeroCheckBox( parent, ID_MAGVISPRE, "Prezzo", wx.DefaultPosition, wx.DefaultSize, 0 )
     item115.SetName( "setup_magvispre" )
     item113.Add( item115, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 
@@ -745,11 +745,11 @@ def MagazzSetup( parent, call_fit = True, set_sizer = True ):
 
     item116 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
-    item117 = CheckBox( parent, ID_MAGVISCPF, "Cod.Forn.", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item117 = UnoZeroCheckBox( parent, ID_MAGVISCPF, "Cod.Forn.", wx.DefaultPosition, wx.DefaultSize, 0 )
     item117.SetName( "setup_magviscpf" )
     item116.Add( item117, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 
-    item118 = CheckBox( parent, ID_MAGVISBCD, "Barcode", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item118 = UnoZeroCheckBox( parent, ID_MAGVISBCD, "Barcode", wx.DefaultPosition, wx.DefaultSize, 0 )
     item118.SetName( "setup_magvisbcd" )
     item116.Add( item118, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 
@@ -766,15 +766,15 @@ def MagazzSetup( parent, call_fit = True, set_sizer = True ):
     item121 = wx.StaticBox( parent, -1, "Provvigioni" )
     item120 = wx.StaticBoxSizer( item121, wx.HORIZONTAL )
     
-    item122 = CheckBox( parent, ID_MAGPROVATT, "Attiva", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item122 = UnoZeroCheckBox( parent, ID_MAGPROVATT, "Attiva", wx.DefaultPosition, wx.DefaultSize, 0 )
     item122.SetName( "setup_magprovatt" )
     item120.Add( item122, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 5 )
 
-    item123 = CheckBox( parent, ID_MAGPROVCLI, "Su clienti", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item123 = UnoZeroCheckBox( parent, ID_MAGPROVCLI, "Su clienti", wx.DefaultPosition, wx.DefaultSize, 0 )
     item123.SetName( "setup_magprovcli" )
     item120.Add( item123, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
 
-    item124 = CheckBox( parent, ID_MAGPROVPRO, "Su prodotti", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item124 = UnoZeroCheckBox( parent, ID_MAGPROVPRO, "Su prodotti", wx.DefaultPosition, wx.DefaultSize, 0 )
     item124.SetName( "setup_magprovpro" )
     item120.Add( item124, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
