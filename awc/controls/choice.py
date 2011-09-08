@@ -27,6 +27,7 @@ import awc.controls.mixin as cmix
 
 
 class Choice(wx.Choice, cmix.ControlsMixin):
+    
     def __init__(self, *args, **kwargs):
         wx.Choice.__init__(self, *args, **kwargs)
         cmix.ControlsMixin.__init__(self)
@@ -46,3 +47,39 @@ class Choice(wx.Choice, cmix.ControlsMixin):
     
     def GetValue(self):
         return self.GetClientData(self.GetSelection())
+
+
+# ------------------------------------------------------------------------------
+
+
+class ChoiceData(Choice):
+    
+    index_if_not_found = 0 #elemento da settare con SetValue se valore=None
+    
+    def __init__(self, *args, **kwargs):
+        Choice.__init__(self, *args, **kwargs)
+        self._values = []
+    
+    def SetDataLink(self, name=None, values=None):
+        if name is not None:
+            self.SetName(name)
+        if type(values) == tuple:
+            values = list(values)
+        self._values = values
+
+    def SetValue(self, value):
+        if value is None:
+            value = self._values[self.index_if_not_found]
+        if value == '' and ' ' in self._values:
+            value = ' '
+        if value in self._values:
+            n = self._values.index(value)
+            if n <= self.GetCount()-1:
+                wx.Choice.SetSelection(self, n)
+
+    def GetValue(self):
+        out = None
+        n = self.GetSelection()
+        if n <= len(self._values)-1:
+            out = self._values[n]
+        return out
