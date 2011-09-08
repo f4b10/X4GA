@@ -29,6 +29,13 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.3.27', None, (
+         ("BET1101",
+         """Implementato controllo sul numero di righe restituite dalle ricerche
+         sql a livello di gestioni anagrafiche e ricerche tabellari, configurabile
+         per ogni utente."""),
+        ),),
+    
     ('1.3.26', None, (
          ("BET1100",
          """Attivata la possibilità di modifica del listino su ogni riga

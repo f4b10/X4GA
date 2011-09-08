@@ -365,7 +365,18 @@ class SelAziendaPanel(aw.Panel):
             dlg.ShowModal()
             dlg.Destroy()
         
-        return (psw_memo==psw_digi)
+        ok = (psw_memo==psw_digi)
+        if ok:
+            try:
+                c.execute("SELECT max_sqlrows FROM utenti WHERE descriz=%s", user)
+                maxrows = c.fetchone()[0]
+                Env.SetUserMaxSqlCount(maxrows)
+                import awc.controls.linktable as lt
+                lt.SetMaxSqlCount(maxrows)
+            except:
+                pass
+            
+        return ok
 
     def OnSelect(self, event):
         self.AziSelect()

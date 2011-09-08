@@ -41,7 +41,7 @@ import awc.controls.images as awcimg
 
 from gestanag_wdr import *
 
-from Env import Azienda
+from Env import Azienda, GetUserMaxSqlCount
 bt = Azienda.BaseTab
 
 from awc.util import GetNamedChildrens
@@ -94,7 +94,6 @@ ID_BITMAP_ORDERDOWN = 9
 
 PAGE_ELENCO = 0
 PAGE_SCHEDA = 1
-
 
 class SearchResultsGrid(dbglib.DbGridColoriAlternati):
     
@@ -1554,12 +1553,73 @@ class AnagPanel(aw.Panel):
             par.append(val)
         return flt, par
     
+    def TestSqlCount(self):
+        
+        valid = True
+        if not self.complete or not GetUserMaxSqlCount():
+            return valid
+        
+        def ci(x):
+            return self.FindWindowById(x)
+        
+        cmd = "SELECT COUNT(*) FROM %s%s%s"\
+              % (self.db_schema, self.db_tabname, self._sqlrelfrm)
+        par = []
+        
+        filterexpr, filterpar = self.GetSqlFilter()
+        fvs, pvs = self.GetSqlValueSearch()
+        if fvs:
+            if filterexpr:
+                filterexpr = "(%s) AND (%s)" % (filterexpr, fvs)
+            else:
+                filterexpr = fvs
+            filterpar += pvs
+        if filterexpr:
+            cmd += " WHERE %s" % filterexpr
+            if filterpar: par += filterpar
+        if self._sqlrelwhr:
+            cmd += self._sqlrelwhr
+        _group = self.GetSqlGroup()
+        if _group:
+            cmd += " GROUP BY %s" % _group
+        
+        wx.BeginBusyCursor()
+        
+        try:
+            
+            cmd, par = self.AlterSqlSearch(cmd, par)
+            
+            db = adb.db.__database__
+            if db.Retrieve(cmd, par):
+                rows = db.rs[0][0]
+                if rows>GetUserMaxSqlCount():
+                    if aw.awu.GetParentFrame(self).IsShown():
+                        msg = """Sono stati trovati %d risultati.\n"""\
+                        """Proseguendo con questi criteri, la ricerca """\
+                        """potrebbe durare più tempo del solito.\n\n"""\
+                        """Confermi la ricerca ?""" % rows
+                        if aw.awu.MsgDialog(self, msg, style=wx.ICON_WARNING|wx.YES_NO|wx.NO_DEFAULT) != wx.ID_YES:
+                            valid = False
+                    else:
+                        valid = False
+            
+        finally:
+            wx.EndBusyCursor()
+        
+        return valid
+    
     def UpdateSearch(self):
         
+        def ci(x):
+            return self.FindWindowById(x)
+        
         cmd, par = self.GetSqlSearch()
-        ci = lambda x: self.FindWindowById(x)
         
         if self.complete:
+            
+            if not self.TestSqlCount():
+                return False
+            
             filterexpr, filterpar = self.GetSqlFilter()
             
             fvs, pvs = self.GetSqlValueSearch()

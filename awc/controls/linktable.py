@@ -69,6 +69,14 @@ COLORS_LABEL = 'black darkseagreen3'.split()
 GRID_HEIGHT = 200
 
 
+_MAX_SQL_COUNT = None
+def GetMaxSqlCount():
+    return _MAX_SQL_COUNT
+def SetMaxSqlCount(n):
+    global _MAX_SQL_COUNT
+    _MAX_SQL_COUNT = n
+
+
 class LinkTableChangedEvent(wx.PyCommandEvent):
     def __init__(self, evtType, id):
         wx.PyCommandEvent.__init__(self, evtType, id)
@@ -245,6 +253,8 @@ class LinkTable(wx.Control,\
         self._rs = None
         
         self._stopevents = False
+        
+        self._from_grid = lt_kwargs.get('fromgrid', False)
         
         self._helpInProgress = False
         self._testNone = True
@@ -449,7 +459,7 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
     
     def OnKillFocus(self, event):
         if not self: return
-        if not self.HasFocus():
+        if not self.HasFocus() and not hasattr(self, '_retain_focus'):
             if self.currentid is None:
                 if self.reset_fields_on_focus_lose:
                     for c in (self._ctrcod, self._ctrdes):
@@ -781,12 +791,16 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
             obj = event.GetEventObject()
             self.HelpChoice(obj)
     
-    def GetSql(self):
-        return "SELECT %(alias)s.id, %(alias)s.%(codice)s, %(alias)s.%(descriz)s FROM %(table)s %(alias)s"\
-               % {'table': self.db_name,
-                  'alias': self.db_alias,
-                  'codice': self.codice_fieldname,
-                  'descriz': self.descriz_fieldname}
+    def GetSql(self, count=False):
+        table = self.db_name
+        alias = self.db_alias
+        codice = self.codice_fieldname
+        descriz = self.descriz_fieldname
+        if count:
+            fields = 'COUNT(*)'
+        else:
+            fields = '%(alias)s.id, %(alias)s.%(codice)s, %(alias)s.%(descriz)s' % locals()
+        return "SELECT %(fields)s FROM %(table)s %(alias)s" % locals()
     
     def GetValueSearchSqlJoins(self):
         return ''
@@ -810,10 +824,34 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
         return self._rs
     
     def HelpChoice(self, obj, showgrid=True, forceAll=False, exact=None, resetFields=True):
+        
         out = False
         if self._helpInProgress:
             return out
+        
+        maxrows = GetMaxSqlCount()
+        if maxrows:
+            cmd, par = self.GetSqlSearch(obj, forceAll, exact, count=True)
+            db = adb.db.__database__
+            if db.Retrieve(cmd, par):
+                rows = db.rs[0][0]
+                if rows>maxrows:
+                    p = awu.GetParentFrame(self)
+                    if p.IsShown():
+                        self._retain_focus = True
+                        msg = """Sono stati trovati %d risultati.\n"""\
+                        """Proseguendo con questi criteri, la ricerca """\
+                        """potrebbe durare più tempo del solito.\n\n"""\
+                        """Confermi la ricerca ?""" % rows
+                        do = (awu.MsgDialog(self, msg, style=wx.ICON_WARNING|wx.YES_NO|wx.NO_DEFAULT) == wx.ID_YES)
+                        del self._retain_focus
+                        if not do:
+                            return False
+                    else:
+                        return False
+            
         self._helpInProgress = True
+        
         cmd, par = self.GetSqlSearch(obj, forceAll, exact)
         if cmd:
             if showgrid:
@@ -825,6 +863,7 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
             db = adb.db.__database__
             if w:
                 wx.BeginBusyCursor()
+                wx.Yield()
             try:
                 if db.Retrieve(cmd, par):
                     rs = db.rs
@@ -855,7 +894,7 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
             del self.valuesearch[:]
         return out
     
-    def GetSqlSearch(self, obj, forceAll, exact):
+    def GetSqlSearch(self, obj, forceAll, exact, count=False):
         cmd = None
         par = []
         if obj == self._ctrcod:
@@ -869,7 +908,7 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
         if fltf:
             if exact is None:
                 exact = (fltf == self.codice_fieldname and self.exactcode)
-            cmd = self.GetSql()
+            cmd = self.GetSql(count=count)
             filter = ""
             if self.basefilter:
                 #filtro base da SetFilter - ha prevalenza su tutto
@@ -1041,7 +1080,7 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
         self.SetTips()
 
     def OnCard( self, evt ):
-        self.CallCard()
+        self.CallCard(new=(self.currentid is None))
         evt.Skip()
     
     def CallValueSearch(self):

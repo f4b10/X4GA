@@ -50,6 +50,13 @@ import crypt
 
 import sys, getopt
 
+_USER_MAX_SQL_COUNT = None
+def GetUserMaxSqlCount():
+    return _USER_MAX_SQL_COUNT
+def SetUserMaxSqlCount(n):
+    global _USER_MAX_SQL_COUNT
+    _USER_MAX_SQL_COUNT = n
+
 
 logfile = 'c:/x4.log'
 if os.path.exists(logfile):

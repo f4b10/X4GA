@@ -178,17 +178,14 @@ class LinkTableDestin(LinkTable):
         if pp.dbele.IsEmpty():
             self.SetNewCode(p, pp)
     
-    def GetSql(self):
-        cmd = """
-        SELECT id,
-               codice,
-               descriz,
-               indirizzo,
-               cap,
-               citta,
-               prov
-          FROM %s
-          """ % self.db_name
+    def GetSql(self, count=False):
+        table = self.db_name
+        if count:
+            fields = 'COUNT(*)'
+        else:
+            fields = 'id,codice,descriz,indirizzo,cap,citta,prov'
+        cmd = """SELECT %(fields)s
+                 FROM %(table)s""" % locals()
         return cmd
     
     def SetDataGrid(self, grid, rs):
@@ -304,16 +301,14 @@ class LinkTableBanCF(LinkTableDestin):
         LinkTable.__init__(self, *args, **kwargs)
         self.SetMinWidth(600)
     
-    def GetSql(self):
-        cmd = """
-        SELECT id,
-               codice,
-               descriz,
-               abi,
-               cab,
-               numcc
-          FROM %s
-          """ % self.db_name
+    def GetSql(self, count=False):
+        table = self.db_name
+        if count:
+            fields = 'COUNT(*)'
+        else:
+            fields = 'id,codice,descriz,abi,cab,numcc'
+        cmd = """SELECT %(fields)s
+                 FROM %(table)s""" % locals()
         return cmd
     
     def SetDataGrid(self, grid, rs):

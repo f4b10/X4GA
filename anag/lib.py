@@ -165,24 +165,34 @@ class LinkTableProd(LinkTable, LinkTableHideSearchMixin):
     def OnChar(self, event):
         LinkTableHideSearchMixin.OnChar(self, event)
     
-    def GetSql(self):
-        return self.GetSqlSelect()+self.GetSqlFrom()
+    def GetSql(self, count=False):
+        if count:
+            cmd = 'SELECT COUNT(*)'
+        else:
+            cmd = self.GetSqlSelect()
+        return cmd+self.GetSqlFrom()
     
     def GetSqlSelect(self):
         
-        out = """ 
-        SELECT prod.id, 
-               prod.codice, 
-               prod.descriz, 
-               prod.codfor AS codfor,
-               prod.barcode AS barcode, 
-               prod.costo,
-               prod.prezzo"""
+        out = """SELECT prod.id, 
+                        prod.codice, 
+                        prod.descriz, 
+                        prod.codfor AS codfor,
+                        prod.barcode AS barcode, 
+                        prod.costo,
+                        prod.prezzo"""
                     
-        if bt.MAGVISGIA: 
-            out += """,\nSUM(IF(pp.ini IS NULL,0,pp.ini)+IF(pp.car IS NULL,0,pp.car)-IF(pp.sca IS NULL,0,pp.sca)) AS giac, 
-                         pp.id_magazz AS magid"""
-        
+        if bt.MAGVISGIA:
+            tabprogr = bt.TABNAME_PRODPRO
+            if self.ppmag:
+                testmag = ' AND pp.id_magazz=%d' % self.ppmag
+            else:
+                testmag = ''
+            out += ',\n'
+            out += ("""(SELECT SUM(IF(pp.ini IS NULL,0,pp.ini)+IF(pp.car IS NULL,0,pp.car)-IF(pp.sca IS NULL,0,pp.sca)) 
+                          FROM %(tabprogr)s pp
+                         WHERE pp.id_prod=prod.id %(testmag)s) 'giac', 
+                        NULL AS magid""" % locals()).replace('\n', ' ')        
         return out
     
     def GetSqlFrom(self):
@@ -192,31 +202,31 @@ class LinkTableProd(LinkTable, LinkTableHideSearchMixin):
         LEFT JOIN %s status ON prod.id_status=status.id"""\
             % (self.db_name, bt.TABNAME_STATART)
         
-        if bt.MAGVISGIA:
-            out += """
-        LEFT JOIN %s pp ON pp.id_prod=prod.id"""\
-            % Env.Azienda.BaseTab.TABNAME_PRODPRO
+#        if bt.MAGVISGIA:
+#            out += """
+#        LEFT JOIN %s pp ON pp.id_prod=prod.id"""\
+#            % Env.Azienda.BaseTab.TABNAME_PRODPRO
         
         return out
     
-    def GetSqlGroup(self):
-        if bt.MAGVISGIA:
-            out = "GROUP BY prod.id"
-        else:
-            out = ""
-        return out
-    
-    def GetSqlHaving(self):
-        cmd = ''
-        par = []
-        if bt.MAGVISGIA:
-            if self.ppmag:
-                cmd += r" AND pp.id_magazz=%s"
-                par.append(self.ppmag)
-            if cmd:
-                cmd = " HAVING "+cmd[5:]
-        return cmd, par
-    
+#    def GetSqlGroup(self):
+#        if bt.MAGVISGIA:
+#            out = "GROUP BY prod.id"
+#        else:
+#            out = ""
+#        return out
+#    
+#    def GetSqlHaving(self):
+#        cmd = ''
+#        par = []
+#        if bt.MAGVISGIA:
+#            if self.ppmag:
+#                cmd += r" AND pp.id_magazz=%s"
+#                par.append(self.ppmag)
+#            if cmd:
+#                cmd = " HAVING "+cmd[5:]
+#        return cmd, par
+#    
     def GetDataGridStructure(self):
         
         _STR = gridlib.GRID_VALUE_STRING
@@ -542,28 +552,33 @@ class _LinkTablePdcMixin(LinkTable):
     def GetDialogClass(self):
         return autil.GetPdcDialogClass(self.filtervalues[0][1])
     
-    def GetSql(self):
+    def GetSql(self, count=False):
         bt = Env.Azienda.BaseTab
+        if count:
+            fields = 'COUNT(*)'
+        else:
+            fields = """pdc.id         'id',
+                        pdc.codice     'codice',
+                        pdc.descriz    'descriz',
+                        tipana.id      'id_tipo',
+                        tipana.tipo    'tipo',
+                        bilmas.id      'bilmas_id',
+                        bilmas.codice  'bilmas_codice',
+                        bilmas.descriz 'bilmas_descriz',
+                        bilcon.id      'bilcon_id',
+                        bilcon.codice  'bilcon_codice',
+                        bilcon.descriz 'bilcon_descriz'"""
+        pdc = bt.TABNAME_PDC
+        tipana = bt.TABNAME_PDCTIP
+        bilmas = bt.TABNAME_BILMAS
+        bilcon = bt.TABNAME_BILCON
         cmd = """
-        SELECT pdc.id         'id',
-               pdc.codice     'codice',
-               pdc.descriz    'descriz',
-               tipana.id      'id_tipo',
-               tipana.tipo    'tipo',
-               bilmas.id      'bilmas_id',
-               bilmas.codice  'bilmas_codice',
-               bilmas.descriz 'bilmas_descriz',
-               bilcon.id      'bilcon_id',
-               bilcon.codice  'bilcon_codice',
-               bilcon.descriz 'bilcon_descriz'
+        SELECT %(fields)s
           FROM %(pdc)s    pdc
           JOIN %(tipana)s tipana ON tipana.id=pdc.id_tipo
           JOIN %(bilmas)s bilmas ON pdc.id_bilmas=bilmas.id
           JOIN %(bilcon)s bilcon ON pdc.id_bilcon=bilcon.id
-          """ % {'pdc':    bt.TABNAME_PDC,
-                 'tipana': bt.TABNAME_PDCTIP,
-                 'bilmas': bt.TABNAME_BILMAS,
-                 'bilcon': bt.TABNAME_BILCON}
+          """ % locals()
         return cmd
     
     def GetValueSearchSqlJoins(self):
@@ -604,16 +619,22 @@ class LinkTablePdc(_LinkTablePdcMixin, LinkTableHideSearchMixin):
     def OnChar(self, event):
         LinkTableHideSearchMixin.OnChar(self, event)
     
-    def GetSql(self):
+    def GetSql(self, count=False):
         bt = Env.Azienda.BaseTab
+        if count:
+            fields = 'COUNT(*)'
+        else:
+            fields = """pdc.id      'id',
+                        pdc.codice  'codice',
+                        pdc.descriz 'descriz'
+            """
+        pdc = bt.TABNAME_PDC
+        statpdc = bt.TABNAME_STATPDC
         cmd = """
-        SELECT pdc.id      'id',
-               pdc.codice  'codice',
-               pdc.descriz 'descriz'
+        SELECT %(fields)s
           FROM      %(pdc)s    pdc
           LEFT JOIN %(statpdc)s statpdc ON statpdc.id=pdc.id_statpdc
-          """ % {'pdc':      bt.TABNAME_PDC,
-                 'statpdc':  bt.TABNAME_STATPDC,}
+          """ % locals()
         return cmd
 
 
@@ -705,32 +726,38 @@ class LinkTableCliFor(_LinkTablePdcMixin, LinkTableHideSearchMixin):
     def OnChar(self, event):
         LinkTableHideSearchMixin.OnChar(self, event)
     
-    def GetSql(self):
+    def GetSql(self, count=False):
         bt = Env.Azienda.BaseTab
+        if count:
+            fields = 'COUNT(*)'
+        else:
+            fields = """pdc.id      'id',
+                        pdc.codice  'codice',
+                        pdc.descriz 'descriz',
+                        tipana.id   'id_tipo',
+                        tipana.tipo 'tipo',
+                        IF(tipana.tipo='C', anacli.indirizzo, anafor.indirizzo) 'indirizzo',
+                        IF(tipana.tipo='C', anacli.cap,       anafor.cap)       'cap',
+                        IF(tipana.tipo='C', anacli.citta,     anafor.citta)     'citta',
+                        IF(tipana.tipo='C', anacli.prov,      anafor.prov)      'prov',
+                        IF(tipana.tipo='C', anacli.piva,      anafor.piva)      'piva',
+                        IF(tipana.tipo='C', anacli.codfisc,   anafor.codfisc)   'codfisc'
+            """
+        pdc = bt.TABNAME_PDC
+        tipana = bt.TABNAME_PDCTIP
+        clienti = bt.TABNAME_CLIENTI
+        statcli = bt.TABNAME_STATCLI
+        fornit = bt.TABNAME_FORNIT
+        statfor = bt.TABNAME_STATFOR
         cmd = """
-        SELECT pdc.id      'id',
-               pdc.codice  'codice',
-               pdc.descriz 'descriz',
-               tipana.id   'id_tipo',
-               tipana.tipo 'tipo',
-               IF(tipana.tipo='C', anacli.indirizzo, anafor.indirizzo) 'indirizzo',
-               IF(tipana.tipo='C', anacli.cap,       anafor.cap)       'cap',
-               IF(tipana.tipo='C', anacli.citta,     anafor.citta)     'citta',
-               IF(tipana.tipo='C', anacli.prov,      anafor.prov)      'prov',
-               IF(tipana.tipo='C', anacli.piva,      anafor.piva)      'piva',
-               IF(tipana.tipo='C', anacli.codfisc,   anafor.codfisc)   'codfisc'
+        SELECT %(fields)s
           FROM      %(pdc)s    pdc
                JOIN %(tipana)s  tipana  ON tipana.id=pdc.id_tipo
           LEFT JOIN %(clienti)s anacli  ON anacli.id=pdc.id
           LEFT JOIN %(statcli)s statcli ON anacli.id_status=statcli.id
           LEFT JOIN %(fornit)s  anafor  ON anafor.id=pdc.id
           LEFT JOIN %(statfor)s statfor ON anafor.id_status=statfor.id
-          """ % {'pdc':     bt.TABNAME_PDC,
-                 'tipana':  bt.TABNAME_PDCTIP,
-                 'clienti': bt.TABNAME_CLIENTI,
-                 'statcli': bt.TABNAME_STATCLI,
-                 'fornit':  bt.TABNAME_FORNIT,
-                 'statfor': bt.TABNAME_STATFOR}
+          """ % locals()
         return cmd
     
     def SetDataGrid(self, grid, rs):
@@ -832,20 +859,26 @@ class LinkTableEffetto(_LinkTablePdcMixin):
         self.SetInitFocus(INITFOCUS_DESCRIZ)
         self.SetMinWidth(400)
     
-    def GetSql(self):
+    def GetSql(self, count=False):
         bt = Env.Azienda.BaseTab
+        if count:
+            fields = "COUNT(*)"
+        else:
+            fields = """pdc.id      'id',
+                        pdc.codice  'codice',
+                        pdc.descriz 'descriz',
+                        IF(eff.tipo="R", "RIBA", IF(eff.tipo="I","RID",eff.tipo)) 'tipeff',
+                        tipana.tipo 'tipo'
+            """
+        pdc = bt.TABNAME_PDC
+        tipana = bt.TABNAME_PDCTIP
+        effetti = bt.TABNAME_EFFETTI
         cmd = """
-        SELECT pdc.id      'id',
-               pdc.codice  'codice',
-               pdc.descriz 'descriz',
-               IF(eff.tipo="R", "RIBA", IF(eff.tipo="I","RID",eff.tipo)) 'tipeff',
-               tipana.tipo 'tipo'
+        SELECT %(fields)s
           FROM      %(pdc)s    pdc
                JOIN %(tipana)s  tipana ON tipana.id=pdc.id_tipo
           LEFT JOIN %(effetti)s eff ON eff.id=pdc.id
-          """ % {'pdc':     bt.TABNAME_PDC,
-                 'tipana':  bt.TABNAME_PDCTIP,
-                 'effetti': bt.TABNAME_EFFETTI}
+          """ % locals()
         return cmd
     
     def SetDataGrid(self, grid, rs):
@@ -891,11 +924,16 @@ class LinkTableRegIva(LinkTable):
         self.SetDataLink(Env.Azienda.BaseTab.TABNAME_REGIVA, name, RegIvaDialog)
         self.canins = False
     
-    def GetSql(self):
+    def GetSql(self, count=False):
+        if count:
+            fields = 'COUNT(*)'
+        else:
+            fields = 'regiva.id, regiva.codice, regiva.descriz, regiva.tipo'
+        table = self.db_name
+        alias = 'regiva'
         return\
-        """SELECT regiva.id, regiva.codice, regiva.descriz, regiva.tipo """\
-        """FROM %(table)s AS %(alias)s""" % {'table': self.db_name,
-                                             'alias': 'regiva'}
+        """SELECT %(fields)s """\
+        """FROM %(table)s AS %(alias)s""" % locals()
 
 
 # ------------------------------------------------------------------------------
@@ -918,10 +956,15 @@ class LinkTableCauContab(LinkTable):
         self.SetDataLink(Env.Azienda.BaseTab.TABNAME_CFGCONTAB, name, None)
         self.SetMinWidth(400)
     
-    def GetSql(self):
-        return """
-        SELECT id, codice, descriz, IF(esercizio=1,"Es.Precedente","")
-        FROM %s %s""" % (self.db_name, self.db_alias)
+    def GetSql(self, count=False):
+        if count:
+            fields = 'COUNT(*)'
+        else:
+            fields = 'id, codice, descriz, IF(esercizio=1,"Es.Precedente","")'
+        table = self.db_name
+        alias = self.db_alias
+        return """SELECT %(fields)s
+                  FROM %(table)s %(alias)s""" % locals()
     
     def SetDataGrid(self, grid, rs):
         _STR = gridlib.GRID_VALUE_STRING
@@ -977,16 +1020,21 @@ class LinkTableMovMagazz(LinkTable):
             flt = "id_tipdoc=%d" % td
         self.SetFilter(flt)
     
-    def GetSql(self):
+    def GetSql(self, count=False):
+        tabmov = Env.Azienda.BaseTab.TABNAME_CFGMAGMOV
+        tabdoc = Env.Azienda.BaseTab.TABNAME_CFGMAGDOC
         self.db_alias = """tm"""
-        return """
-        SELECT tm.id, tm.codice, tm.descriz, 
-               td.id      AS 'tipdoc_id', 
-               td.codice  AS 'tipdoc_codice', 
-               td.descriz AS 'tipdoc_descriz'
-          FROM %s tm
-          JOIN %s td ON tm.id_tipdoc=td.id""" % (Env.Azienda.BaseTab.TABNAME_CFGMAGMOV,
-                                                 Env.Azienda.BaseTab.TABNAME_CFGMAGDOC)
+        if count:
+            fields = 'COUNT(*)'
+        else:
+            fields = """tm.id, tm.codice, tm.descriz, 
+                        td.id      AS 'tipdoc_id', 
+                        td.codice  AS 'tipdoc_codice', 
+                        td.descriz AS 'tipdoc_descriz' 
+               """
+        return """SELECT %(fields)s
+                  FROM %(tabmov)s tm
+                  JOIN %(tabdoc)s td ON tm.id_tipdoc=td.id""" % locals()
     
     def GetSqlOrder(self, field):
         return """td.%s, tm.%s""" % (field, field)
@@ -1253,12 +1301,16 @@ class LinkTableBilCee(LinkTable):
         self.SetCodeWidth(80)
         self.SetMinWidth(640)
     
-    def GetSql(self):
-        return """
-        SELECT bilcee.id, bilcee.codice, bilcee.descriz, 
-               bilcee.sezione, bilcee.voce, bilcee.capitolo, 
-               bilcee.dettaglio, bilcee.subdett
-          FROM x4.bilcee AS bilcee"""
+    def GetSql(self, count=False):
+        if count:
+            fields = 'COUNT(*)'
+        else:
+            fields = """bilcee.id, bilcee.codice, bilcee.descriz, 
+                        bilcee.sezione, bilcee.voce, bilcee.capitolo, 
+                        bilcee.dettaglio, bilcee.subdett
+            """
+        return """SELECT %(fields)s
+                  FROM x4.bilcee AS bilcee""" % locals()
     
     def GetDataGridColumns(self):
         cols = self.GetDataGridStructure()
@@ -1266,11 +1318,11 @@ class LinkTableBilCee(LinkTable):
     
     def _GetColMap(self):
         _STR = gridlib.GRID_VALUE_STRING
-        return (( 30, ( 3, "Sez.",        _STR, False)),
-                ( 30, ( 4, "Voce",        _STR, False)),
-                ( 30, ( 5, "Capitolo",    _STR, False)),
-                ( 30, ( 6, "Dett.",       _STR, False)),
-                ( 30, ( 7, "Sub",         _STR, False)),
+        return (( 35, ( 3, "Sez.",        _STR, False)),
+                ( 35, ( 4, "Voce",        _STR, False)),
+                ( 35, ( 5, "Cap.",        _STR, False)),
+                ( 35, ( 6, "Det.",        _STR, False)),
+                ( 35, ( 7, "Sub",         _STR, False)),
                 (300, ( 2, "Descrizione", _STR, False)),
             )
     
@@ -1310,11 +1362,15 @@ class LinkTableOperatori(LinkTable):
         self.db_name = 'x4.utenti'
         self.db_alias = 'utenti'
         
-    def GetSql(self):
-        return\
-        """SELECT utenti.id, utenti.codice, utenti.descriz """\
-        """FROM %(table)s AS %(alias)s""" % {'table': self.db_name,
-                                             'alias': self.db_alias}
+    def GetSql(self, count=False):
+        table = self.db_name
+        alias = self.db_alias
+        if count:
+            fields = 'COUNT(*)'
+        else:
+            fields = 'utenti.id, utenti.codice, utenti.descriz'
+        return """SELECT %(fields)s 
+                    FROM %(table)s AS %(alias)s""" % locals()
 
 
 # ------------------------------------------------------------------------------
@@ -1348,11 +1404,15 @@ class LinkTableStati(LinkTable):
         self.db_name = 'x4.stati'
         self.db_alias = 'stati'
         
-    def GetSql(self):
-        return\
-        """SELECT stati.id, stati.codice, stati.descriz, stati.is_cee, stati.is_blacklisted, stati.vatprefix """\
-        """FROM %(table)s AS %(alias)s""" % {'table': self.db_name,
-                                             'alias': self.db_alias}
+    def GetSql(self, count=False):
+        table = self.db_name
+        alias = self.db_alias
+        if count:
+            fields = 'COUNT(*)'
+        else:
+            fields = 'stati.id, stati.codice, stati.descriz, stati.is_cee, stati.is_blacklisted, stati.vatprefix'
+        return """SELECT %(fields)s """\
+               """FROM %(table)s AS %(alias)s""" % locals()
     
     def IsCee(self):
         if self._rs:
@@ -1539,11 +1599,15 @@ class LinkTableTraVet(LinkTable):
         self.db_name = bt.TABNAME_TRAVET
         self.db_alias = 'travet'
         
-    def GetSql(self):
-        return\
-        """SELECT travet.id, travet.codice, travet.descriz, travet.indirizzo, travet.cap, travet.citta, travet.prov """\
-        """FROM %(table)s AS %(alias)s""" % {'table': self.db_name,
-                                             'alias': self.db_alias}
+    def GetSql(self, count=False):
+        table = self.db_name
+        alias = self.db_alias
+        if count:
+            fields = 'COUNT(*)'
+        else:
+            fields = 'travet.id, travet.codice, travet.descriz, travet.indirizzo, travet.cap, travet.citta, travet.prov'
+        return """SELECT %(fields)s 
+                    FROM %(table)s AS %(alias)s""" % locals()
     
     def GetFullDescription(self):
         if self._rs:
