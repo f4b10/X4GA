@@ -82,6 +82,7 @@ ID_UTENTE = 16005
 ID_TXT_ID = 16006
 ID_PSW = 16007
 ID_AMMINISTRATORE = 16008
+ID_FOREIGN = 16009
 
 def AnagCardFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -104,11 +105,11 @@ def AnagCardFunc( parent, call_fit = True, set_sizer = True ):
 
     item8 = TextCtrlCD( parent, ID_TXT_CODICE, "", wx.DefaultPosition, [80,-1], 0 )
     item8.SetName( "codice" )
-    item4.Add( item8, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
+    item4.Add( item8, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
 
     item9 = TextCtrlCD_LC( parent, ID_UTENTE, "", wx.DefaultPosition, [300,-1], 0 )
     item9.SetName( "descriz" )
-    item4.Add( item9, 0, wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
+    item4.Add( item9, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item10 = NumCtrl( parent, integerWidth=6, allowNegative=False, groupDigits=False); item10.SetName("id"); item10.SetEditable(False)
     item4.Add( item10, 0, wx.ALIGN_RIGHT|wx.LEFT, 5 )
@@ -120,13 +121,22 @@ def AnagCardFunc( parent, call_fit = True, set_sizer = True ):
     
     item13 = TextCtrl_LC( parent, ID_PSW, "", wx.DefaultPosition, [140,-1], wx.TE_PASSWORD )
     item13.SetName( "psw" )
-    item12.Add( item13, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+    item12.Add( item13, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
     item14 = CheckBox( parent, ID_AMMINISTRATORE, "Amministratore", wx.DefaultPosition, wx.DefaultSize, 0 )
     item14.SetName( "Amministratore" )
     item12.Add( item14, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
     item4.Add( item12, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item15 = wx.StaticText( parent, ID_TEXT, "", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item4.Add( item15, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item16 = wx.StaticText( parent, ID_TEXT, "Max righe SQL:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item4.Add( item16, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+
+    item17 = NumCtrl(parent, ID_FOREIGN, integerWidth=6, allowNegative=False, groupDigits=False); item17.SetName("max_sqlrows")
+    item4.Add( item17, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item4.AddGrowableCol( 2 )
 
@@ -147,12 +157,12 @@ def AnagCardFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_LOGO = 16009
-ID_PSW1 = 16010
-ID_PSW2 = 16011
-ID_ABORT = 16012
-ID_CONFIRM = 16013
-ID_MSG = 16014
+ID_LOGO = 16010
+ID_PSW1 = 16011
+ID_PSW2 = 16012
+ID_ABORT = 16013
+ID_CONFIRM = 16014
+ID_MSG = 16015
 
 def PswCardFunction( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 2, 0, 0 )
@@ -207,29 +217,29 @@ def PswCardFunction( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_CAN_CONTABINS = 16015
-ID_CAN_CONTABINT = 16016
-ID_CAN_CONTABGES = 16017
-ID_CAN_CONTABFIS = 16018
-ID_CAN_CONTABBIL = 16019
-ID_CAN_CONTABSCA = 16020
-ID_CAN_CONTABEFF = 16021
-ID_CAN_CONTABCHI = 16022
-ID_CAN_MAGAZZINS = 16023
-ID_CAN_MAGAZZINT = 16024
-ID_CAN_MAGAZZDIF = 16025
-ID_CAN_MAGAZZELA = 16026
-ID_CAN_MAGAZZCHI = 16027
-ID_CAN_SETUPCONTAB = 16028
-ID_CAN_SETUPMAGAZZ = 16029
-ID_CAN_SETUPSETUP = 16030
-ID_CAN_SETUPOPTION = 16031
-ID_LINE = 16032
-ID_CAN_SETUPOTHER = 16033
-ID_CAN_SETUPOPTOTH = 16034
-ID_CAN_BACKUPDATA = 16035
-ID_CAN_RESTOREDATA = 16036
-ID_AZIENDE = 16037
+ID_CAN_CONTABINS = 16016
+ID_CAN_CONTABINT = 16017
+ID_CAN_CONTABGES = 16018
+ID_CAN_CONTABFIS = 16019
+ID_CAN_CONTABBIL = 16020
+ID_CAN_CONTABSCA = 16021
+ID_CAN_CONTABEFF = 16022
+ID_CAN_CONTABCHI = 16023
+ID_CAN_MAGAZZINS = 16024
+ID_CAN_MAGAZZINT = 16025
+ID_CAN_MAGAZZDIF = 16026
+ID_CAN_MAGAZZELA = 16027
+ID_CAN_MAGAZZCHI = 16028
+ID_CAN_SETUPCONTAB = 16029
+ID_CAN_SETUPMAGAZZ = 16030
+ID_CAN_SETUPSETUP = 16031
+ID_CAN_SETUPOPTION = 16032
+ID_LINE = 16033
+ID_CAN_SETUPOTHER = 16034
+ID_CAN_SETUPOPTOTH = 16035
+ID_CAN_BACKUPDATA = 16036
+ID_CAN_RESTOREDATA = 16037
+ID_AZIENDE = 16038
 
 def UtentiCardPage1Func( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 3, 0, 0 )
