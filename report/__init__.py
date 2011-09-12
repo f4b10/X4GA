@@ -402,8 +402,8 @@ class Report:
                 if not os.path.isdir(basePath):
                     os.makedirs(basePath)
             except:
-                awu.MsgDialog(None, 'Impossibile creare la cartella %s' % basePath, style=wx.ICON_ERROR|wx.YES_NO|wx.YES_DEFAULT)
-                pass
+                awu.MsgDialog(None, 'Impossibile creare la cartella %s' % basePath, style=wx.ICON_ERROR)
+                return None
                 
             p = self.parameters
             p['rptdef'] = rptdef

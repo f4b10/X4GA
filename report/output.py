@@ -317,16 +317,23 @@ class print_Report:
         
         if nameOutputFile and type(nameOutputFile) is str:
             nameOutputFile = report.epura(nameOutputFile, True).replace('\\', '/')
-            p = ''
-            for pp in awu.up(nameOutputFile).split('/')[:-1]:
-                if pp:
-                    p = os.path.join(p, pp).replace('\\', '/')
-                else:
-                    p += '/'
-                if len(p)>=3 and (not p.startswith('//') or len(p)-len(p.replace('/', ''))>3):
-                    c = True
-                    if not os.path.isdir(p):
-                        os.mkdir(p)
+#            p = ''
+#            for pp in awu.up(nameOutputFile).split('/')[:-1]:
+#                if pp:
+#                    p = os.path.join(p, pp).replace('\\', '/')
+#                else:
+#                    p += '/'
+#                if len(p)>=3 and (not p.startswith('//') or len(p)-len(p.replace('/', ''))>3):
+#                    c = True
+#                    if not os.path.isdir(p):
+#                        os.mkdir(p)
+            basePath, _ = os.path.split(nameOutputFile)
+            try:
+                if not os.path.isdir(basePath):
+                    os.makedirs(basePath)
+            except:
+                awu.MsgDialog(None, 'Impossibile creare la cartella %s' % basePath, style=wx.ICON_ERROR)
+                return None
         
         #impostazione multicopia
         multicopia = ['standard']
@@ -664,8 +671,8 @@ class print_Report:
                         """probabilmente è aperto da un'altra applicazione.\n"""
                 else:
                     #other file error
-                    msg = """Non è possibile generare il documento:\n%s\n\n"""\
-                        % nameOutputFile
+                    msg = """Non è possibile generare il documento:\n%s\n(%s)\n"""\
+                        % (nameOutputFile, repr(e.args))
                 if messages:
                     msg += """Vuoi riprovare a ricoprirlo nuovamente?"""
                     n = aw.awu.MsgDialog(None, message=msg,
