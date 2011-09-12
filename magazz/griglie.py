@@ -183,9 +183,18 @@ class GridGriglia(dbglib.DbGrid):
         
         self.COL_PREUFF =  a(( wp, (cn(pro, "prezzo"),  "Listino uff.",   _VAL, False)))
         self.COL_PREGRI =  b(( wp, (cn(gri, "prezzo"),  "Prezzo griglia", _VAL, False)))
-        self.COL_SCONTO1 = b(( ws, (cn(gri, "sconto1"), "Sc.%1",          _PRC, False)))
-        self.COL_SCONTO2 = b(( ws, (cn(gri, "sconto2"), "Sc.%2",          _PRC, False)))
-        self.COL_SCONTO3 = b(( ws, (cn(gri, "sconto3"), "Sc.%3",          _PRC, False)))
+        if bt.MAGNUMSCO >= 1:
+            self.COL_SCONTO1 = b(( ws, (cn(gri, "sconto1"), "Sc.%"+'1'*int(bt.MAGNUMSCO>1), _PRC, False)))
+        if bt.MAGNUMSCO >= 2:
+            self.COL_SCONTO2 = b(( ws, (cn(gri, "sconto2"), "Sc.%2",      _PRC, False)))
+        if bt.MAGNUMSCO >= 3:
+            self.COL_SCONTO3 = b(( ws, (cn(gri, "sconto3"), "Sc.%3",      _PRC, False)))
+        if bt.MAGNUMSCO >= 4:
+            self.COL_SCONTO4 = b(( ws, (cn(gri, "sconto4"), "Sc.%4",      _PRC, False)))
+        if bt.MAGNUMSCO >= 5:
+            self.COL_SCONTO5 = b(( ws, (cn(gri, "sconto5"), "Sc.%5",      _PRC, False)))
+        if bt.MAGNUMSCO >= 6:
+            self.COL_SCONTO6 = b(( ws, (cn(gri, "sconto6"), "Sc.%6",      _PRC, False)))
         
         if bt.MAGPZCONF and bt.MAGPZGRIP:
             self.COL_PZCONF = b(( 50, (cn(gri, "pzconf"), "Pz.Conf.",     _PZC, False)))
@@ -319,7 +328,7 @@ class GrigliaPanel(aw.Panel):
         
         self.id_pdc = None
         self.grigliachanged = False
-        self.sologriglia = False
+        self.sologriglia = True
         
         self.gridsia = GridSintAnag(ci(wdr.ID_PANGRIDSIA), self.dbsia)
         self.gridgri = GridGriglia( ci(wdr.ID_PANGRIDGRI), self.dbgri, self.clifor)

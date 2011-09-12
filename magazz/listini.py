@@ -384,22 +384,36 @@ class ListiniGrid(dbglib.DbGridColoriAlternati):
         self.COL_COSTO =   C(( wp, 'p_costo',  (cn(lis, "p_costo"),  "Costo acq.",    _PRE, False)))
         
         #ricariche sul prodotto - editazione
-        self.COL_P_ERP1 = self.COL_P_ERP2 = self.COL_P_ERP3 = None
+        self.COL_P_ERP1 = self.COL_P_ERP2 = self.COL_P_ERP3 =\
+        self.COL_P_ERP4 = self.COL_P_ERP5 = self.COL_P_ERP6 = None
         if bt.MAGERPLIS >= 1:
             self.COL_P_ERP1 = C(( wr, None,    (cn(pro, "ricar1"),   "RP%1",    _PRR, False)))
         if bt.MAGERPLIS >= 2:
             self.COL_P_ERP2 = C(( wr, None,    (cn(pro, "ricar2"),   "RP%2",    _PRR, False)))
         if bt.MAGERPLIS >= 3:
             self.COL_P_ERP3 = C(( wr, None,    (cn(pro, "ricar3"),   "RP%3",    _PRR, False)))
+        if bt.MAGERPLIS >= 4:
+            self.COL_P_ERP4 = C(( wr, None,    (cn(pro, "ricar4"),   "RP%4",    _PRR, False)))
+        if bt.MAGERPLIS >= 5:
+            self.COL_P_ERP5 = C(( wr, None,    (cn(pro, "ricar5"),   "RP%5",    _PRR, False)))
+        if bt.MAGERPLIS >= 6:
+            self.COL_P_ERP6 = C(( wr, None,    (cn(pro, "ricar6"),   "RP%6",    _PRR, False)))
         
         #ricariche sul gruppo prezzi - visualizzazione 
-        self.COL_P_VRG1 = self.COL_P_VRG2 = self.COL_P_VRG3 = None
+        self.COL_P_VRG1 = self.COL_P_VRG2 = self.COL_P_VRG3 =\
+        self.COL_P_VRG4 = self.COL_P_VRG5 = self.COL_P_VRG6 = None
         if bt.MAGVRGLIS >= 1:
             self.COL_P_VRG1 = c(( wr, None,    (cn(gpr, "prccosric1"), "RG%1",    _PRR, False)))
         if bt.MAGVRGLIS >= 2:
             self.COL_P_VRG2 = c(( wr, None,    (cn(gpr, "prccosric2"), "RG%2",    _PRR, False)))
         if bt.MAGVRGLIS >= 3:
             self.COL_P_VRG3 = c(( wr, None,    (cn(gpr, "prccosric3"), "RG%3",    _PRR, False)))
+        if bt.MAGVRGLIS >= 4:
+            self.COL_P_VRG4 = c(( wr, None,    (cn(gpr, "prccosric4"), "RG%4",    _PRR, False)))
+        if bt.MAGVRGLIS >= 5:
+            self.COL_P_VRG5 = c(( wr, None,    (cn(gpr, "prccosric5"), "RG%5",    _PRR, False)))
+        if bt.MAGVRGLIS >= 6:
+            self.COL_P_VRG6 = c(( wr, None,    (cn(gpr, "prccosric6"), "RG%6",    _PRR, False)))
         
         self.COL_PREZZO =  C(( wp, 'p_prezzo', (cn(lis, "p_prezzo"), "Prezzo pubbl.", _PRE, False)))
         
@@ -413,22 +427,36 @@ class ListiniGrid(dbglib.DbGridColoriAlternati):
             self.COL_P_VSEP = c(( wr, None,    (-1, "SE%",    _PRC, False)))
         
         #scontistiche sul prodotto - editazione
-        self.COL_P_ESP1 = self.COL_P_ESP2 = self.COL_P_ESP3 = None
+        self.COL_P_ESP1 = self.COL_P_ESP2 = self.COL_P_ESP3 =\
+        self.COL_P_ESP4 = self.COL_P_ESP5 = self.COL_P_ESP6 = None
         if bt.MAGESPLIS >= 1:
             self.COL_P_ESP1 = C(( wr, None,    (cn(pro, "sconto1"),  "SP%1",    _PRC, False)))
         if bt.MAGESPLIS >= 2:
             self.COL_P_ESP2 = C(( wr, None,    (cn(pro, "sconto2"),  "SP%2",    _PRC, False)))
         if bt.MAGESPLIS >= 3:
             self.COL_P_ESP3 = C(( wr, None,    (cn(pro, "sconto3"),  "SP%3",    _PRC, False)))
+        if bt.MAGESPLIS >= 4:
+            self.COL_P_ESP4 = C(( wr, None,    (cn(pro, "sconto4"),  "SP%4",    _PRC, False)))
+        if bt.MAGESPLIS >= 5:
+            self.COL_P_ESP5 = C(( wr, None,    (cn(pro, "sconto5"),  "SP%5",    _PRC, False)))
+        if bt.MAGESPLIS >= 6:
+            self.COL_P_ESP6 = C(( wr, None,    (cn(pro, "sconto6"),  "SP%6",    _PRC, False)))
         
         #scontistiche sul gruppo prezzi - visualizzazione 
-        self.COL_P_VSG1 = self.COL_P_VSG2 = self.COL_P_VSG3 = None
+        self.COL_P_VSG1 = self.COL_P_VSG2 = self.COL_P_VSG3 =\
+        self.COL_P_VSG4 = self.COL_P_VSG5 = self.COL_P_VSG6 = None
         if bt.MAGVSGLIS >= 1:
             self.COL_P_VSG1 = c(( wr, None,    (cn(gpr, "prcpresco1"),  "SG%1",    _PRC, False)))
         if bt.MAGVSGLIS >= 2:
             self.COL_P_VSG2 = c(( wr, None,    (cn(gpr, "prcpresco2"),  "SG%2",    _PRC, False)))
         if bt.MAGVSGLIS >= 3:
             self.COL_P_VSG3 = c(( wr, None,    (cn(gpr, "prcpresco3"),  "SG%3",    _PRC, False)))
+        if bt.MAGVSGLIS >= 4:
+            self.COL_P_VSG4 = c(( wr, None,    (cn(gpr, "prcpresco4"),  "SG%4",    _PRC, False)))
+        if bt.MAGVSGLIS >= 5:
+            self.COL_P_VSG5 = c(( wr, None,    (cn(gpr, "prcpresco5"),  "SG%5",    _PRC, False)))
+        if bt.MAGVSGLIS >= 6:
+            self.COL_P_VSG6 = c(( wr, None,    (cn(gpr, "prcpresco6"),  "SG%6",    _PRC, False)))
         
         for l in range(1,bt.MAGNUMLIS+1):
             
@@ -746,7 +774,7 @@ class ListiniGrid(dbglib.DbGridColoriAlternati):
                 pro.costo = lis.p_costo
                 pro.prezzo = lis.p_prezzo
                 for name in 'ricar sconto'.split():
-                    for num in range(3):
+                    for num in range(6):
                         field = '%s%d' % (name, num+1)
                         setattr(pro, field, getattr(lis.prod, field))
                 pro.id_gruprez = lis.prod.id_gruprez
@@ -807,12 +835,12 @@ class ListiniGrid(dbglib.DbGridColoriAlternati):
             pro.id_gruprez = lis.prod.id_gruprez
             prezzi = pro.RicalcolaListini(lis)
             w = False
-            for n in range(1, bt.MAGNUMLIS+1):
-                if n in prezzi:
-                    p = prezzi[n]
+            for l in range(1, bt.MAGNUMLIS+1):
+                if l in prezzi:
+                    p = prezzi[l]
                 else:
                     p = 0
-                if not adb.DbTable.samefloat(getattr(lis, 'prezzo%d'%n) or 0, p or 0):
+                if not adb.DbTable.samefloat(getattr(lis, 'prezzo%d'%l) or 0, p or 0):
                     setattr(lis, 'prezzo%d'%n, p)
                 w = chg = True
             if w:
@@ -864,12 +892,24 @@ class ListiniGrid(dbglib.DbGridColoriAlternati):
                     p.ricar2 = value
                 elif gridcol == self.COL_P_ERP3:
                     p.ricar3 = value
+                elif gridcol == self.COL_P_ERP4:
+                    p.ricar4 = value
+                elif gridcol == self.COL_P_ERP5:
+                    p.ricar5 = value
+                elif gridcol == self.COL_P_ERP6:
+                    p.ricar6 = value
                 elif gridcol == self.COL_P_ESP1:
                     p.sconto1 = value
                 elif gridcol == self.COL_P_ESP2:
                     p.sconto2 = value
                 elif gridcol == self.COL_P_ESP3:
                     p.sconto3 = value
+                elif gridcol == self.COL_P_ESP4:
+                    p.sconto4 = value
+                elif gridcol == self.COL_P_ESP5:
+                    p.sconto5 = value
+                elif gridcol == self.COL_P_ESP6:
+                    p.sconto6 = value
                 p.Save()
                 self.ForceResetView()
         return True

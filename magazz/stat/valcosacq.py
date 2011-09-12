@@ -80,9 +80,18 @@ class MovimentiCostiGrid(preapp.MovimentiPrezziGrid):
         self.COL_PREZUN = c(( wp, (cn(mov, "prezzo"),  "Prezzo Un.", _PRZ, True )))
         self.COL_PREZSC = c(( wp, (cn(mov, "presco"),  "Prezzo Sc.", _PRZ, True )))
         self.COL_TOTQTA = c(( wp, (cn(mov, "qta"),     "Qta",        _QTA, True )))
-        self.COL_SCONT1 = c(( 50, (cn(mov, "sconto1"), "Sc.%1",      _SCO, True )))
-        self.COL_SCONT2 = c(( 50, (cn(mov, "sconto2"), "Sc.%2",      _SCO, True )))
-        self.COL_SCONT3 = c(( 50, (cn(mov, "sconto3"), "Sc.%3",      _SCO, True )))
+        if bt.MAGNUMSCO >= 1:
+            self.COL_SCONT1 = c(( 50, (cn(mov, "sconto1"), "Sc.%"+'1'*int(bt.MAGNUMSCO>1), _SCO, True )))
+        if bt.MAGNUMSCO >= 2:
+            self.COL_SCONT2 = c(( 50, (cn(mov, "sconto2"), "Sc.%2",  _SCO, True )))
+        if bt.MAGNUMSCO >= 3:
+            self.COL_SCONT3 = c(( 50, (cn(mov, "sconto3"), "Sc.%3",  _SCO, True )))
+        if bt.MAGNUMSCO >= 4:
+            self.COL_SCONT4 = c(( 50, (cn(mov, "sconto4"), "Sc.%4",  _SCO, True )))
+        if bt.MAGNUMSCO >= 5:
+            self.COL_SCONT5 = c(( 50, (cn(mov, "sconto5"), "Sc.%5",  _SCO, True )))
+        if bt.MAGNUMSCO >= 6:
+            self.COL_SCONT6 = c(( 50, (cn(mov, "sconto6"), "Sc.%6",  _SCO, True )))
         self.COL_IMPORT = c(( wi, (cn(mov, "importo"), "Importo",    _IMP, True )))
         c((  1, (cn(tpd, "id"),   "#tpd", _STR, True )))
         c((  1, (cn(tpm, "id"),   "#tpm", _STR, True )))

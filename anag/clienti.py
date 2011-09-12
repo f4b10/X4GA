@@ -35,6 +35,8 @@ import anag.pdcrel_wdr as wdr
 import awc.controls.windows as aw
 from awc.util import MsgDialog, MsgDialogDbError
 
+import anag.lib as alib
+
 from anag import pdcrel
 
 from anag.catart import CatArtDialog
@@ -55,140 +57,37 @@ import report as rpt
 FRAME_TITLE = "Clienti"
 
 
-class ScontiCategoriaGrid(dbglib.DbGridColoriAlternati):
+class ScontiCategoriaGrid(dbglib.ADB_Grid):
     
     def __init__(self, parent, dbscc):
         
-        dbglib.DbGridColoriAlternati.__init__(self, parent, -1, 
-                                              size=parent.GetClientSizeTuple())
-        
-        self.id_pdc = None
+        dbglib.ADB_Grid.__init__(self, parent, db_table=dbscc, can_edit=True, can_insert=True, on_menu_select='row')
         
         self.dbscc = dbscc
+        self.id_pdc = None
         
-        cols = self.GetColumnsStructure()
-        colmap  = [c[1] for c in cols]
-        colsize = [c[0] for c in cols]
+        scc = dbscc
+        cat = dbscc.catart
+        def cn(tab, col):
+            return tab._GetFieldIndex(col, inline=True)
+        self.AddColumn(cat, 'codice',  'Cod.', col_width=40, is_editable=True, 
+                       linktable_info={'class':   alib.LinkTableCatArt,
+                                       'col_id':  cn(scc, 'id_catart'),
+                                       'col_cod': cn(cat, 'codice'),
+                                       'col_des': cn(cat, 'descriz')})
+        self.AddColumn(cat, 'descriz', 'Categoria', col_width=140, is_fittable=True)
+        for n in range(1, bt.MAGNUMSCO+1, 1):
+            self.AddColumn(scc, 'sconto%d'%n, 'Sc.%%%d'%n, col_type=self.TypeFloat(2, 2), is_editable=True)
+        self.AddColumn(scc, 'id', '#scc', col_width=1)
+        self.AddColumn(scc, 'id', '#cat', col_width=1)
         
-        links = []
+        self.CreateGrid()
         
-        scc = self.dbscc
-        pdc = scc.pdc
-        cli = pdc.cliente
-        cat = scc.catart
-        
-        def cn(db, col):
-            return db._GetFieldIndex(col, inline=True)
-        
-        ltcat = dbglib.LinkTabAttr(bt.TABNAME_CATART,    #table
-                                   0,                    #grid col
-                                   cn(scc, 'id_catart'), #rs col id
-                                   cn(cat, 'codice'),    #rs col cod
-                                   cn(cat, 'descriz'),   #rs col des
-                                   CatArtDialog)         #card class
-        links.append(ltcat)
-        
-        afteredit = ((dbglib.CELLEDIT_AFTER_UPDATE, -1, self.EditedValues),)
-        
-        self.SetData(dbscc.GetRecordset(), colmap, canEdit=True, canIns=True, 
-                     linktables=links, newRowFunc=self.AddNewRow,
-                     afterEdit=afteredit)
-        
-        self.SetCellDynAttr(self.GetAttr)
-        
-        map(lambda c:\
-            self.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
-        
-        self.SetFitColumn(1)
-        self.AutoSizeColumns()
-        sz = wx.FlexGridSizer(1,0,0,0)
-        sz.AddGrowableCol( 0 )
-        sz.AddGrowableRow( 0 )
-        sz.Add(self, 0, wx.GROW|wx.ALL, 0)
-        parent.SetSizer(sz)
-        sz.SetSizeHints(parent)
-        
-        self.Bind(gl.EVT_GRID_CELL_RIGHT_CLICK, self.OnRightClick)
-    
-    def GetColumnsStructure(self):
-        
-        scc = self.dbscc
-        pdc = scc.pdc
-        cli = pdc.cliente
-        cat = scc.catart
-        
-        _STR = gl.GRID_VALUE_STRING
-        _SCO = bt.GetMagScoMaskInfo()
-        
-        def cn(db, col):
-            return db._GetFieldIndex(col, inline=True)
-        
-        return (( 40, (cn(cat, "codice"),    "Cod.",      _STR, True)),
-                (120, (cn(cat, "descriz"),   "Categoria", _STR, True)),
-                ( 50, (cn(scc, "sconto1"),   "Sc.%1",     _SCO, True)),
-                ( 50, (cn(scc, "sconto2"),   "Sc.%2",     _SCO, True)),
-                ( 50, (cn(scc, "sconto3"),   "Sc.%3",     _SCO, True)),
-                (  1, (cn(scc, "id"),        "#scc",      _STR, True)),
-                (  1, (cn(scc, "id_pdc"),    "#pdc",      _STR, True)),
-                (  1, (cn(scc, "id_catart"), "#cat",      _STR, True)),)
+        self.AppendContextMenuVoice('Scheda categoria', self.OnSchedaCatArt)
+        self.AppendContextMenuVoice('Elimina sconto', self.OnDeleteRow)
     
     def SetPdc(self, idpdc):
         self.id_pdc = idpdc
-    
-    def OnRightClick(self, event):
-        row = event.GetRow()
-        if 0 <= row < self.dbscc.RowsCount():
-            self.MenuPopup(event)
-            event.Skip()
-    
-    def MenuPopup(self, event):
-        row, col = event.GetRow(), event.GetCol()
-        self.SetGridCursor(row, col)
-        self.SelectRow(row)
-        scc = self.dbscc
-        voci = []
-        voci.append(("Scheda categoria", self.OnSchedaCatArt, True))
-        voci.append(("Elimina sconto", self.OnDeleteRow, True))
-        menu = wx.Menu()
-        for text, func, enab in voci:
-            id = wx.NewId()
-            menu.Append(id, text)
-            menu.Enable(id, enab)
-            self.Bind(wx.EVT_MENU, func, id=id)
-        xo, yo = event.GetPosition()
-        self.PopupMenu(menu, (xo, yo))
-        menu.Destroy()
-        event.Skip()
-    
-    def OnDeleteRow(self, event):
-        row = self.GetSelectedRows()[0]
-        scc = self.dbscc
-        if 0<=row<scc.RowsCount():
-            scc.MoveRow(row)
-            if scc.id is not None:
-                scc._info.deletedRecords.append(scc.id)
-                scc._info.recordNumber -= 1
-                scc._info.recordCount -= 1
-            self.DeleteRows(row)
-        event.Skip()
-    
-    def AddNewRow(self):
-        self.dbscc.CreateNewRow()
-    
-    def EditedValues(self, row, gridcol, col, value):
-        scc = self.dbscc
-        scc.MoveRow(row)
-        scc.id_pdc = self.id_pdc
-        return True
-    
-    def GetAttr(self, row, col, rscol, attr):
-        attr = dbglib.DbGridColoriAlternati.GetAttr(self, row, col, rscol, attr)
-        if row == self.dbscc.RowsCount():
-            ro = col != 0
-        else:
-            ro = col == 1
-        attr.SetReadOnly(ro)
-        return attr
     
     def OnSchedaCatArt(self, event):
         row = self.GetSelectedRows()[0]
@@ -201,8 +100,14 @@ class ScontiCategoriaGrid(dbglib.DbGridColoriAlternati):
             d.Destroy()
         event.Skip()
     
-    def UpdateGrid(self):
-        self.ChangeData(self.dbmas.GetMastro().GetRecordset())
+    def OnDeleteRow(self, event):
+        row = self.GetSelectedRows()[0]
+        self.DeleteRow(row)
+        event.Skip()
+    
+    def CreateNewRow(self):
+        dbglib.ADB_Grid.CreateNewRow(self)
+        self.db_table.id_pdc = self.id_pdc
 
 
 # ------------------------------------------------------------------------------
@@ -286,9 +191,18 @@ class ClientiPanel(pdcrel._CliForPanel):
         cn('allegcf').SetDataLink('allegcf', {True:  1, False: 0})
         cn('piva').SetStateControl(cn('nazione'))
         self.InitGrigliaPrezzi()
+        
+        for n in range(9):
+            if n+1>bt.MAGNUMSCO:
+                for prefix in 'labsco sconto'.split():
+                    c = cn('%s%d' % (prefix, n+1))
+                    if c:
+                        c.Hide()
+        
         self.Bind(EVT_LINKTABCHANGED, self.OnPdcGrpChanged, cn('id_pdcgrp'))
         self.Bind(EVT_LINKTABCHANGED, self.OnStatoChanged, cn('id_stato'))
         self.Bind(wx.EVT_BUTTON, self.OnVediFido, cn('_butfido'))
+        
         return p
     
     def OnStatoChanged(self, event):
@@ -305,7 +219,6 @@ class ClientiPanel(pdcrel._CliForPanel):
         event.Skip()
     
     def GetLinkTableClass(self):
-        import anag.lib as alib
         return alib.LinkTableCliente
 
     def OnVediFido(self, event):

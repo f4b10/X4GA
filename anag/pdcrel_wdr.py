@@ -2509,7 +2509,7 @@ def FidiPanelFunc( parent, call_fit = True, set_sizer = True ):
     item11 = bt.GetValIntNumCtrl(parent, ID_FIDOMAXESP, 'fido_maxesp')
     item2.Add( item11, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
-    item0.Add( item2, 0, 0, 5 )
+    item0.Add( item2, 0, wx.ALIGN_BOTTOM, 5 )
 
     item12 = wx.Button( parent, ID_BUTFIDO, 
         "Vedi\n"
@@ -2528,44 +2528,83 @@ def FidiPanelFunc( parent, call_fit = True, set_sizer = True ):
 ID_SCONTO1 = 14126
 ID_SCONTO2 = 14127
 ID_SCONTO3 = 14128
+ID_SCONTO4 = 14129
+ID_SCONTO5 = 14130
+ID_SCONTO6 = 14131
 
 def ScontiPanelFunc( parent, call_fit = True, set_sizer = True ):
     item1 = wx.StaticBox( parent, -1, "Scontistiche" )
     item0 = wx.StaticBoxSizer( item1, wx.VERTICAL )
     
-    item2 = wx.FlexGridSizer( 0, 5, 0, 0 )
+    item2 = wx.FlexGridSizer( 0, 3, 0, 0 )
     
-    item3 = wx.StaticText( parent, ID_TEXT, "%1", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item2.Add( item3, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item3 = wx.BoxSizer( wx.VERTICAL )
+    
+    item4 = wx.StaticText( parent, ID_TEXT, "%1", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item4.SetName( "labsco1" )
+    item3.Add( item4, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item4 = wx.StaticText( parent, ID_TEXT, "", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item2.Add( item4, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+    item5 = bt.GetMagScoNumCtrl(parent, ID_SCONTO1, 'sconto1')
+    item3.Add( item5, 0, wx.ALIGN_CENTER, 5 )
 
-    item5 = wx.StaticText( parent, ID_TEXT, "%2", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item2.Add( item5, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+    item2.Add( item3, 0, wx.ALIGN_CENTER, 5 )
 
-    item6 = wx.StaticText( parent, ID_TEXT, "", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item2.Add( item6, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+    item6 = wx.BoxSizer( wx.VERTICAL )
+    
+    item7 = wx.StaticText( parent, ID_TEXT, "%2", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item7.SetName( "labsco2" )
+    item6.Add( item7, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item7 = wx.StaticText( parent, ID_TEXT, "%3", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item2.Add( item7, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+    item8 = bt.GetMagScoNumCtrl(parent, ID_SCONTO2, 'sconto2')
+    item6.Add( item8, 0, wx.ALIGN_CENTER|wx.LEFT, 5 )
 
-    item8 = bt.GetMagScoNumCtrl(parent, ID_SCONTO1, 'sconto1')
-    item2.Add( item8, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+    item2.Add( item6, 0, wx.ALIGN_CENTER, 5 )
 
-    item9 = wx.StaticText( parent, ID_TEXT, "+", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item2.Add( item9, 0, wx.ALIGN_CENTER|wx.BOTTOM, 5 )
+    item9 = wx.BoxSizer( wx.VERTICAL )
+    
+    item10 = wx.StaticText( parent, ID_TEXT, "%3", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item10.SetName( "labsco3" )
+    item9.Add( item10, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item10 = bt.GetMagScoNumCtrl(parent, ID_SCONTO2, 'sconto2')
-    item2.Add( item10, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+    item11 = bt.GetMagScoNumCtrl(parent, ID_SCONTO3, 'sconto3')
+    item9.Add( item11, 0, wx.ALIGN_CENTER|wx.LEFT, 5 )
 
-    item11 = wx.StaticText( parent, ID_TEXT, "+", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item2.Add( item11, 0, wx.ALIGN_CENTER|wx.BOTTOM, 5 )
+    item2.Add( item9, 0, wx.ALIGN_CENTER, 5 )
 
-    item12 = bt.GetMagScoNumCtrl(parent, ID_SCONTO3, 'sconto3')
-    item2.Add( item12, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+    item12 = wx.BoxSizer( wx.VERTICAL )
+    
+    item13 = wx.StaticText( parent, ID_TEXT, "%4", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item13.SetName( "labsco4" )
+    item12.Add( item13, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item0.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item14 = bt.GetMagScoNumCtrl(parent, ID_SCONTO4, 'sconto4')
+    item12.Add( item14, 0, wx.ALIGN_CENTER, 5 )
+
+    item2.Add( item12, 0, wx.ALIGN_CENTER, 5 )
+
+    item15 = wx.BoxSizer( wx.VERTICAL )
+    
+    item16 = wx.StaticText( parent, ID_TEXT, "%5", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item16.SetName( "labsco5" )
+    item15.Add( item16, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item17 = bt.GetMagScoNumCtrl(parent, ID_SCONTO5, 'sconto5')
+    item15.Add( item17, 0, wx.ALIGN_CENTER|wx.LEFT, 5 )
+
+    item2.Add( item15, 0, wx.ALIGN_CENTER, 5 )
+
+    item18 = wx.BoxSizer( wx.VERTICAL )
+    
+    item19 = wx.StaticText( parent, ID_TEXT, "%6", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item19.SetName( "labsco6" )
+    item18.Add( item19, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item20 = bt.GetMagScoNumCtrl(parent, ID_SCONTO6, 'sconto6')
+    item18.Add( item20, 0, wx.ALIGN_CENTER|wx.LEFT, 5 )
+
+    item2.Add( item18, 0, wx.ALIGN_CENTER, 5 )
+
+    item0.Add( item2, 0, 0, 5 )
 
     if set_sizer == True:
         parent.SetSizer( item0 )
@@ -2574,8 +2613,8 @@ def ScontiPanelFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_PANSCONTI = 14129
-ID_PANFIDI = 14130
+ID_PANSCONTI = 14132
+ID_PANFIDI = 14133
 
 def ScontiFidiPanelFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.BoxSizer( wx.HORIZONTAL )
@@ -2595,9 +2634,9 @@ def ScontiFidiPanelFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_DESDES = 14131
-ID_BTNSEARCH = 14132
-ID_PANGRIDSEARCH = 14133
+ID_DESDES = 14134
+ID_BTNSEARCH = 14135
+ID_PANGRIDSEARCH = 14136
 
 def DestinazSearchFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -2642,10 +2681,10 @@ def DestinazSearchFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_PDCGRP = 14134
-ID_BUTVEDIPDCGRP = 14135
-ID_BUTVEDIPREVIG = 14136
-ID_PANGRIP = 14137
+ID_PDCGRP = 14137
+ID_BUTVEDIPDCGRP = 14138
+ID_BUTVEDIPREVIG = 14139
+ID_PANGRIP = 14140
 
 def CliForGrigliaPrezziFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -2699,8 +2738,8 @@ def CliForGrigliaPrezziFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_CTRBRIMAS = 14138
-ID_CTRBRICON = 14139
+ID_CTRBRIMAS = 14141
+ID_CTRBRICON = 14142
 
 def BilRiclPanelFunc( parent, call_fit = True, set_sizer = True ):
     item1 = wx.StaticBox( parent, -1, "Bilancio riclassificato" )
@@ -2731,7 +2770,7 @@ def BilRiclPanelFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_CTRBILCEE = 14140
+ID_CTRBILCEE = 14143
 
 def BilRCeePanelFunc( parent, call_fit = True, set_sizer = True ):
     item1 = wx.StaticBox( parent, -1, "Riclassificazione CEE" )
@@ -2756,9 +2795,9 @@ def BilRCeePanelFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_BAN_PANELGRID = 14141
-ID_BANCAWARNING = 14142
-ID_BAN_PANELCARD = 14143
+ID_BAN_PANELGRID = 14144
+ID_BANCAWARNING = 14145
+ID_BAN_PANELCARD = 14146
 
 def CliForBanFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -2810,22 +2849,22 @@ def CliForBanFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_BAN_CODICE = 14144
-ID_BAN_DESCRIZ = 14145
-ID_BAN_BIC = 14146
-ID_BAN_ABI = 14147
-ID_BAN_CAB = 14148
-ID_BAN_NUMCC = 14149
-ID_BTNBANCHENEW = 14150
-ID_BTNBANCHEDEL = 14151
-ID_BTNBANCHELIST = 14152
-ID_BAN_CINBBAN = 14153
-ID_BAN_BBAN = 14154
-ID_BAN_BUTCALC_BBAN = 14155
-ID_BAN_PAESE = 14156
-ID_BAN_CINIBAN = 14157
-ID_BAN_IBAN = 14158
-ID_BAN_BUTCALC_IBAN = 14159
+ID_BAN_CODICE = 14147
+ID_BAN_DESCRIZ = 14148
+ID_BAN_BIC = 14149
+ID_BAN_ABI = 14150
+ID_BAN_CAB = 14151
+ID_BAN_NUMCC = 14152
+ID_BTNBANCHENEW = 14153
+ID_BTNBANCHEDEL = 14154
+ID_BTNBANCHELIST = 14155
+ID_BAN_CINBBAN = 14156
+ID_BAN_BBAN = 14157
+ID_BAN_BUTCALC_BBAN = 14158
+ID_BAN_PAESE = 14159
+ID_BAN_CINIBAN = 14160
+ID_BAN_IBAN = 14161
+ID_BAN_BUTCALC_IBAN = 14162
 
 def CliForBanCardFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -2991,9 +3030,9 @@ def CliForBanCardFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_DES_PANELGRID = 14160
-ID_DESTWARNING = 14161
-ID_DES_PANELCARD = 14162
+ID_DES_PANELGRID = 14163
+ID_DESTWARNING = 14164
+ID_DES_PANELCARD = 14165
 
 def CliForDesFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -3045,21 +3084,21 @@ def CliForDesFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_DES_CODICE = 14163
-ID_DES_DESCRIZ = 14164
-ID_DES_INDIRIZZO = 14165
-ID_DES_CAP = 14166
-ID_DES_CITTA = 14167
-ID_DES_PROV = 14168
-ID_BTNDESTNEW = 14169
-ID_BTNDESTDEL = 14170
-ID_BTNDESTLIST = 14171
-ID_DES_CONTATTO = 14172
-ID_DES_EMAIL = 14173
-ID_DES_NUMTEL = 14174
-ID_DES_NUMTEL2 = 14175
-ID_DES_NUMFAX = 14176
-ID_DES_NUMCEL = 14177
+ID_DES_CODICE = 14166
+ID_DES_DESCRIZ = 14167
+ID_DES_INDIRIZZO = 14168
+ID_DES_CAP = 14169
+ID_DES_CITTA = 14170
+ID_DES_PROV = 14171
+ID_BTNDESTNEW = 14172
+ID_BTNDESTDEL = 14173
+ID_BTNDESTLIST = 14174
+ID_DES_CONTATTO = 14175
+ID_DES_EMAIL = 14176
+ID_DES_NUMTEL = 14177
+ID_DES_NUMTEL2 = 14178
+ID_DES_NUMFAX = 14179
+ID_DES_NUMCEL = 14180
 
 def CliForDesCardFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.BoxSizer( wx.VERTICAL )
@@ -3221,7 +3260,7 @@ def CliForDesCardFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_PERPRO = 14178
+ID_PERPRO = 14181
 
 def ProvvigPanelFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.BoxSizer( wx.VERTICAL )
@@ -3342,8 +3381,8 @@ def OLD_CliForContattiFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_PDC_MASTER = 14179
-ID_PANGRIDLINK = 14180
+ID_PDC_MASTER = 14182
+ID_PANGRIDLINK = 14183
 
 def GriglieCollegateFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -3894,7 +3933,7 @@ def ClientiCommFunc( parent, call_fit = True, set_sizer = True ):
     item28.SetName( "is_blacklisted" )
     item26.Add( item28, 0, wx.ALIGN_CENTER|wx.RIGHT, 5 )
 
-    item29 = RitAccCheckBox( parent, ID_SOGRITACC, "Soggetto Rit.Acconto", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item29 = RitAccCheckBox( parent, ID_SOGRITACC, "Soggetto Rit.Acconto", wx.DefaultPosition, [-1,50], 0 )
     item29.SetName( "sogritacc" )
     item26.Add( item29, 0, wx.ALIGN_CENTER|wx.RIGHT, 5 )
 
@@ -3905,7 +3944,7 @@ def ClientiCommFunc( parent, call_fit = True, set_sizer = True ):
     item30 = AziPerRadioBox( parent, ID_AZIPER, "Tipo:", wx.DefaultPosition, wx.DefaultSize, 
         ["Azienda","Privato"] , 1, wx.RA_SPECIFY_COLS )
     item30.SetName( "aziper" )
-    item20.Add( item30, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
+    item20.Add( item30, 0, wx.RIGHT|wx.BOTTOM, 5 )
 
     item20.AddGrowableCol( 0 )
 
@@ -3914,7 +3953,7 @@ def ClientiCommFunc( parent, call_fit = True, set_sizer = True ):
     item32 = wx.StaticBox( parent, -1, "Note da stampare sui documenti" )
     item31 = wx.StaticBoxSizer( item32, wx.VERTICAL )
     
-    item33 = TextCtrl_LC( parent, ID_TEXTCTRL, "", wx.DefaultPosition, [80,60], wx.TE_MULTILINE )
+    item33 = TextCtrl_LC( parent, ID_TEXTCTRL, "", wx.DefaultPosition, [450,60], wx.TE_MULTILINE )
     item33.SetName( "notedoc" )
     item31.Add( item33, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
@@ -3990,7 +4029,7 @@ def ClientiCommFunc( parent, call_fit = True, set_sizer = True ):
 
     item53 = ScontiFidiPanel( parent, ID_PANSCOFID, wx.DefaultPosition, wx.DefaultSize, 0 )
     item53.SetName( "panscofid" )
-    item34.Add( item53, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
+    item34.Add( item53, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item54 = ScontiCategoriaPanel( parent, ID_PANSCONTICC, wx.DefaultPosition, wx.DefaultSize, 0 )
     item34.Add( item54, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )

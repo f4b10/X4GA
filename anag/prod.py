@@ -220,9 +220,18 @@ class GrigliaPrezziCliForGrid(dbglib.DbGridColoriAlternati):
             self.COL_PZCONF = b((70,(cn(gri,'pzconf'),  "Pz.Conf.",       _PZC, True)))
         
         self.COL_PREZZO =  b((110, (cn(gri, 'prezzo'),  "Prezzo griglia", _PRE, True)))
-        self.COL_SCONTO1 = b(( 50, (cn(gri, 'sconto1'), "Sc.%1",          _PRC, True)))
-        self.COL_SCONTO2 = b(( 50, (cn(gri, 'sconto2'), "Sc.%2",          _PRC, True)))
-        self.COL_SCONTO3 = b(( 50, (cn(gri, 'sconto3'), "Sc.%3",          _PRC, True)))
+        if bt.MAGNUMSCO >= 1:
+            self.COL_SCONTO1 = b(( 50, (cn(gri, 'sconto1'), "Sc.%"+'1'*int(bt.MAGNUMSCO>1), _PRC, True)))
+        if bt.MAGNUMSCO >= 2:
+            self.COL_SCONTO2 = b(( 50, (cn(gri, 'sconto2'), "Sc.%2",      _PRC, True)))
+        if bt.MAGNUMSCO >= 3:
+            self.COL_SCONTO3 = b(( 50, (cn(gri, 'sconto3'), "Sc.%3",      _PRC, True)))
+        if bt.MAGNUMSCO >= 4:
+            self.COL_SCONTO4 = b(( 50, (cn(gri, 'sconto4'), "Sc.%4",      _PRC, True)))
+        if bt.MAGNUMSCO >= 5:
+            self.COL_SCONTO5 = b(( 50, (cn(gri, 'sconto5'), "Sc.%5",      _PRC, True)))
+        if bt.MAGNUMSCO >= 6:
+            self.COL_SCONTO6 = b(( 50, (cn(gri, 'sconto6'), "Sc.%6",      _PRC, True)))
         self.COL_ID_GRIP = a((  1, (cn(gri, 'id'),      "#gri",           _STR, True)))
         self.COL_ID_PDC =  a((  1, (cn(pdc, 'id'),      "#pdc",           _STR, True)))
         
@@ -621,6 +630,12 @@ class DatiPromoPanel(wx.Panel):
             c = cn(name)
             if c:
                 c.SetValue(getattr(prm, name))
+            for n in range(9):
+                if n+1>bt.MAGNUMSCO:
+                    for prefix in ('labsco', 'sconto'):
+                        c = cn('%s%d' % (prefix, n+1))
+                        if c:
+                            c.Hide()
         for name, func in (('butsavepromo', self.OnSavePromo),
                            ('butcancpromo', self.OnDeletePromo)):
             self.Bind(wx.EVT_BUTTON, func, cn(name))
@@ -666,7 +681,7 @@ class DatiPromoPanel(wx.Panel):
             return self.FindWindowByName(x)
         prm = self.dbpromo
         prm.prezzo = cn('prezzo').GetValue()
-        for name in 'sconto1 sconto2 sconto3'.split():
+        for name in 'sconto1 sconto2 sconto3 sconto4 sconto5 sconto6'.split():
             setattr(prm, name, cn(name).GetValue())
         if prm.Save():
             out = True
@@ -890,16 +905,23 @@ class ProdPanel(ga.AnagPanel):
         def cnv(x):
             return cn(x).GetValue()
         
-        p_cst, p_prz, p_sc1, p_sc2, p_sc3, p_rc1, p_rc2, p_rc3 =\
-        map(cnv, 'costo prezzo sconto1 sconto2 sconto3 ricar1 ricar2 ricar3'.split())
+        p_cst, p_prz =\
+            map(cnv, 'costo prezzo'.split())
+        p_sc1, p_sc2, p_sc3, p_sc4, p_sc5, p_sc6 =\
+            map(cnv, 'sconto1 sconto2 sconto3 sconto4 sconto5 sconto6'.split())
+        p_rc1, p_rc2, p_rc3, p_rc4, p_rc5, p_rc6 =\
+            map(cnv, 'ricar1 ricar2 ricar3 ricar4 ricar5 ricar6'.split())
         
         def cpv(x):
             return getattr(gpr, x)
         
-        g_sc1, g_sc2, g_sc3, g_rc1, g_rc2, g_rc3 =\
-        map(cpv, 'prcpresco1 prcpresco2 prcpresco3 prccosric1 prccosric2 prccosric3'.split())
+        g_sc1, g_sc2, g_sc3, g_sc4, g_sc5, g_sc6 =\
+            map(cpv, 'prcpresco1 prcpresco2 prcpresco3 prcpresco4 prcpresco5 prcpresco6'.split())
+        g_rc1, g_rc2, g_rc3, g_rc4, g_rc5, g_rc6 =\
+            map(cpv, 'prccosric1 prccosric2 prccosric3 prccosric4 prccosric5 prccosric6'.split())
         
-        if gpr.calcpc == 'C' or (p_sc1 or p_sc2 or p_sc3):
+        
+        if gpr.calcpc == 'C' or (p_sc1 or p_sc2 or p_sc3 or p_sc4 or p_sc5 or p_sc6):
             label = 'Ric.Costo'
             s_prezzo = pro.sepnpr(p_prz)
             s_sconti = ''
@@ -907,15 +929,21 @@ class ProdPanel(ga.AnagPanel):
                 s_sconti = cascade_perc(s_sconti, p_sc1)
                 s_sconti = cascade_perc(s_sconti, p_sc2)
                 s_sconti = cascade_perc(s_sconti, p_sc3)
+                s_sconti = cascade_perc(s_sconti, p_sc4)
+                s_sconti = cascade_perc(s_sconti, p_sc5)
+                s_sconti = cascade_perc(s_sconti, p_sc6)
                 s_qualisconti = 'prodotto'
             else:
                 s_sconti = cascade_perc(s_sconti, g_sc1)
                 s_sconti = cascade_perc(s_sconti, g_sc2)
                 s_sconti = cascade_perc(s_sconti, g_sc3)
+                s_sconti = cascade_perc(s_sconti, g_sc4)
+                s_sconti = cascade_perc(s_sconti, g_sc5)
+                s_sconti = cascade_perc(s_sconti, g_sc6)
                 s_qualisconti = 'gruppo prezzi'
             tt = 'Ricalcola il costo, applicando al prezzo di %(s_prezzo)s lo sconto del %(s_sconti)s%% come indicato sul %(s_qualisconti)s' % locals()
             
-        elif gpr.calcpc == 'P' or (p_rc1 or p_rc2 or p_rc3):
+        elif gpr.calcpc == 'P' or (p_rc1 or p_rc2 or p_rc3 or p_rc4 or p_rc5 or p_rc6):
             label = 'Ric.Prezzo'
             s_costo = pro.sepnpr(p_cst)
             s_ricar = ''
@@ -923,11 +951,17 @@ class ProdPanel(ga.AnagPanel):
                 s_ricar = cascade_perc(s_ricar, p_rc1)
                 s_ricar = cascade_perc(s_ricar, p_rc2)
                 s_ricar = cascade_perc(s_ricar, p_rc3)
+                s_ricar = cascade_perc(s_ricar, p_rc4)
+                s_ricar = cascade_perc(s_ricar, p_rc5)
+                s_ricar = cascade_perc(s_ricar, p_rc6)
                 s_qualiricar = 'prodotto'
             else:
                 s_ricar = cascade_perc(s_ricar, g_rc1)
                 s_ricar = cascade_perc(s_ricar, g_rc2)
                 s_ricar = cascade_perc(s_ricar, g_rc3)
+                s_ricar = cascade_perc(s_ricar, g_rc4)
+                s_ricar = cascade_perc(s_ricar, g_rc5)
+                s_ricar = cascade_perc(s_ricar, g_rc6)
                 s_qualiricar = 'gruppo prezzi'
             tt = 'Ricalcola il prezzo al pubblico, applicando al costo di %(s_costo)s la ricarica del %(s_ricar)s%% come indicato sul %(s_qualiricar)s' % locals()
         else:
@@ -954,45 +988,29 @@ class ProdPanel(ga.AnagPanel):
 #        for name, func in (('_calcprezzo', self.OnRicalcPrezzo),
 #                           ('_calccosto',  self.OnRicalcCosto)):
 #            self.Bind(wx.EVT_BUTTON, func, cn(name))
-        for name in 'costo prezzo sconto1 sconto2 sconto3 ricar1 ricar2 ricar3'.split():
-            self.Bind(wx.EVT_TEXT, self.OnUpdateButtonRicalcCP, cn(name))
+        names = 'costo prezzo'.split()
+        for f in 'sconto ricar'.split():
+            for n in range(9):
+                names.append('%s%d' % (f, n+1))
+        for name in names:
+            c = cn(name)
+            if c:
+                self.Bind(wx.EVT_TEXT, self.OnUpdateButtonRicalcCP, c)
+        for prefix_label, prefix_field, maxnum in (('ricar', 'labric', bt.MAGNUMRIC),
+                                                   ('sconto', 'labsco', bt.MAGNUMSCO),
+                                                   ('_promolabelsc', '_promo_sconto', bt.MAGNUMSCO)):
+            for n in range(9):
+                if n+1>maxnum:
+                    for prefix in (prefix_label, prefix_field):
+                        c = cn('%s%d' % (prefix, n+1))
+                        if c:
+                            c.Hide()
         return p
     
     def OnUpdateButtonRicalcCP(self, event):
         self.UpdateButtonRicalcCP()
         event.Skip()
     
-#    def OnRicalcPrezzo(self, event):
-#        self.RicalcolaPC('prezzo')
-#        event.Skip()
-#    
-#    def OnRicalcCosto(self, event):
-#        self.RicalcolaPC('costo')
-#        event.Skip()
-#    
-#    def RicalcolaPC(self, elemento):
-#        
-#        #ricalcola costo/prezzo mediante dati da scheda (prezzo,costo,sconti,ricariche)
-#        #in maniera indipendente dal gruppo prezzi
-#        
-#        cn = self.FindWindowByName
-#        ND = Env.Azienda.BaseTab.MAGPRE_DECIMALS
-#        
-#        if elemento == 'prezzo':
-#            cs, r1, r2, r3 = map(lambda x: cn(x).GetValue() or 0,
-#                                 'costo ricar1 ricar2 ricar3'.split())
-#            pr = round(cs*(100+r1)/100*(100+r2)/100*(100+r3)/100, ND)
-#            cn('prezzo').SetValue(pr)
-#            
-#        elif elemento == 'costo':
-#            pr, s1, s2, s3 = map(lambda x: cn(x).GetValue() or 0,
-#                                 'prezzo sconto1 sconto2 sconto3'.split())
-#            cs = round(pr*(100-s1)/100*(100-s2)/100*(100-s3)/100, ND)
-#            cn('costo').SetValue(cs)
-#            
-#        else:
-#            raise Exception, "Tipo di ricalcolo non riconosciuto"
-#    
     def OnTestImmagine(self, event):
         self.TestImmagine()
         event.Skip()
@@ -1176,12 +1194,15 @@ class ProdPanel(ga.AnagPanel):
         pro.CreateNewRow()
         gpr = pro.gruprez
         pro.id_gruprez = self.FindWindowById(wdr.ID_GRUPREZ).GetValue()
-        for name in 'costo prezzo id_gruprez sconto1 sconto2 sconto3 ricar1 ricar2 ricar3'.split():
+        for name in\
+                """costo prezzo id_gruprez """\
+                """sconto1 sconto2 sconto3 sconto4 sconto5 sconto6 """\
+                """ricar1 ricar2 ricar3 ricar4 ricar5 ricar6""".split():
             setattr(pro, name, cn(name).GetValue())
-        if gpr.calcpc == "C" or (pro.sconto1 or pro.sconto2 or pro.sconto3):
+        if gpr.calcpc == "C" or (pro.sconto1 or pro.sconto2 or pro.sconto3 or pro.sconto4 or pro.sconto5 or pro.sconto6):
             pro.RicalcolaCosto()
             cn('costo').SetValue(pro.costo)
-        elif gpr.calcpc == 'P' or (pro.ricar1 or pro.ricar2 or pro.ricar3):
+        elif gpr.calcpc == 'P' or (pro.ricar1 or pro.ricar2 or pro.ricar3 or pro.ricar4 or pro.ricar5 or pro.ricar6):
             pro.RicalcolaPrezzo()
             cn('prezzo').SetValue(pro.prezzo)
         if bt.MAGNUMLIS>0:
@@ -1198,7 +1219,10 @@ class ProdPanel(ga.AnagPanel):
         pro = self.dbpro
         pro.Reset()
         pro.CreateNewRow()
-        for name in 'costo prezzo id_gruprez sconto1 sconto2 sconto3 ricar1 ricar2 ricar3'.split():
+        for name in \
+                """costo prezzo id_gruprez """\
+                """sconto1 sconto2 sconto3 sconto4 sconto5 sconto6 """\
+                """ricar1 ricar2 ricar3 ricar4 ricar5 ricar6""".split():
             setattr(pro, name, cn(name).GetValue())
         lis = self.dblis
         new = lis.IsEmpty()

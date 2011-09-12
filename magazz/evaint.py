@@ -70,38 +70,47 @@ class GridMov(maglib.GridMovEva):
         _SCO = bt.GetMagScoMaskInfo()
         _IMP = bt.GetValIntMaskInfo()
         
-        cols = (\
-            ( 35, (cn(mag, "codice"),  "Mag.",         _STR, True)),
-            ( 80, (cn(doc, "datreg"),  "Data reg.",    _DAT, True)),
-            ( 35, (cn(tpd, "codice"),  "Doc.",         _STR, True)),
-            ( 35, (cn(tpm, "codice"),  "Mov.",         _STR, True)),
-            ( 80, (cn(pro, "codice"),  "Codice",       _STR, True)),
-            (190, (cn(mov, "descriz"), "Descrizione",  _STR, True)),
-            ( 80, (cn(mov, "qta"),     "Qtà",          _QTA, True)),
-            ( 80, (-1,                 "Evaso",        _QTA, True)),
-            ( 80, (-2,                 "Residuo",      _QTA, True)),
-            ( 80, (cn(mov, "prezzo"),  "Prezzo",       _PRE, True)),
-            ( 85, (cn(mov, "importo"), "Importo",      _IMP, True)),
-            ( 50, (cn(doc, "numdoc"),  "Num.",         _STR, True)),
-            ( 80, (cn(doc, "datdoc"),  "Data doc.",    _DAT, True)),
-            ( 50, (cn(pdc, "codice"),  "Cod.",         _STR, True)),
-            (260, (cn(pdc, "descriz"), "Sottoconto",   _STR, True)),
-            (110, (cn(tpd, "descriz"), "Documento",    _STR, True)),
-            (110, (cn(tpm, "descriz"), "Movimento",    _STR, True)),
-            ( 45, (cn(mov, "sconto1"), "Sc.%1",        _SCO, True)),
-            ( 45, (cn(mov, "sconto2"), "Sc.%2",        _SCO, True)),
-            ( 45, (cn(mov, "sconto3"), "Sc.%3",        _SCO, True)),
-            (120, (cn(mov, "note"),    "Note",         _STR, True)),
-            ( 35, (cn(age, "codice"),  "Cod.",         _STR, True)),
-            ( 90, (cn(age, "descriz"), "Agente",       _STR, True)),
-            ( 35, (cn(iva, "codice"),  "Cod.",         _STR, True)),
-            ( 90, (cn(iva, "descriz"), "Aliquota IVA", _STR, True)),
-            ( 30, (cn(mov, "f_ann"),   "Man",          _CHK, True)),
-            ( 30, (cn(doc, "f_ann"),   "Ann",          _CHK, True)),
-            ( 30, (cn(doc, "f_acq"),   "Acq",          _CHK, True)),
-            (  1, (cn(mov, "id"),      "#mov",         _STR, True)),
-            (  1, (cn(doc, "id"),      "#doc",         _STR, True)),
-        )
+        cols = []
+        a = cols.append
+        a(( 35, (cn(mag, "codice"),  "Mag.",         _STR, True)))
+        a(( 80, (cn(doc, "datreg"),  "Data reg.",    _DAT, True)))
+        a(( 35, (cn(tpd, "codice"),  "Doc.",         _STR, True)))
+        a(( 35, (cn(tpm, "codice"),  "Mov.",         _STR, True)))
+        a(( 80, (cn(pro, "codice"),  "Codice",       _STR, True)))
+        a((190, (cn(mov, "descriz"), "Descrizione",  _STR, True)))
+        a(( 80, (cn(mov, "qta"),     "Qtà",          _QTA, True)))
+        a(( 80, (-1,                 "Evaso",        _QTA, True)))
+        a(( 80, (-2,                 "Residuo",      _QTA, True)))
+        a(( 80, (cn(mov, "prezzo"),  "Prezzo",       _PRE, True)))
+        a(( 85, (cn(mov, "importo"), "Importo",      _IMP, True)))
+        a(( 50, (cn(doc, "numdoc"),  "Num.",         _STR, True)))
+        a(( 80, (cn(doc, "datdoc"),  "Data doc.",    _DAT, True)))
+        a(( 50, (cn(pdc, "codice"),  "Cod.",         _STR, True)))
+        a((260, (cn(pdc, "descriz"), "Sottoconto",   _STR, True)))
+        a((110, (cn(tpd, "descriz"), "Documento",    _STR, True)))
+        a((110, (cn(tpm, "descriz"), "Movimento",    _STR, True)))
+        if bt.MAGNUMSCO >= 1:
+            a(( 45, (cn(mov, "sconto1"), "Sc.%"+'1'*int(bt.MAGNUMSCO>1), _SCO, True)))
+        if bt.MAGNUMSCO >= 2:
+            a(( 45, (cn(mov, "sconto2"), "Sc.%2",    _SCO, True)))
+        if bt.MAGNUMSCO >= 3:
+            a(( 45, (cn(mov, "sconto3"), "Sc.%3",    _SCO, True)))
+        if bt.MAGNUMSCO >= 4:
+            a(( 45, (cn(mov, "sconto4"), "Sc.%4",    _SCO, True)))
+        if bt.MAGNUMSCO >= 5:
+            a(( 45, (cn(mov, "sconto5"), "Sc.%5",    _SCO, True)))
+        if bt.MAGNUMSCO >= 6:
+            a(( 45, (cn(mov, "sconto6"), "Sc.%6",    _SCO, True)))
+        a((120, (cn(mov, "note"),    "Note",         _STR, True)))
+        a(( 35, (cn(age, "codice"),  "Cod.",         _STR, True)))
+        a(( 90, (cn(age, "descriz"), "Agente",       _STR, True)))
+        a(( 35, (cn(iva, "codice"),  "Cod.",         _STR, True)))
+        a(( 90, (cn(iva, "descriz"), "Aliquota IVA", _STR, True)))
+        a(( 30, (cn(mov, "f_ann"),   "Man",          _CHK, True)))
+        a(( 30, (cn(doc, "f_ann"),   "Ann",          _CHK, True)))
+        a(( 30, (cn(doc, "f_acq"),   "Acq",          _CHK, True)))
+        a((  1, (cn(mov, "id"),      "#mov",         _STR, True)))
+        a((  1, (cn(doc, "id"),      "#doc",         _STR, True)))
         
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
@@ -201,29 +210,38 @@ class VediEvasioniGrid(dbglib.DbGridColoriAlternati):
         _SCO = bt.GetMagScoMaskInfo()
         _IMP = bt.GetValIntMaskInfo()
         
-        cols = (\
-            ( 80, (cn(doc, "datreg"),  "Data reg.",    _DAT, True)),
-            ( 35, (cn(tpd, "codice"),  "Cod.",         _STR, True)),
-            (110, (cn(tpd, "descriz"), "Documento",    _STR, True)),
-            ( 50, (cn(doc, "numdoc"),  "Num.",         _STR, True)),
-            ( 80, (cn(doc, "datdoc"),  "Data doc.",    _DAT, True)),
-            ( 40, (cn(mov, "numriga"), "Riga",         _QTA, True)),
-            ( 35, (cn(tpm, "codice"),  "Cod.",         _STR, True)),
-            (110, (cn(tpm, "descriz"), "Movimento",    _STR, True)),
-            ( 80, (cn(mov, "qta"),     "Qtà",          _QTA, True)),
-            ( 80, (cn(eva, "qta"),     "Evaso",        _QTA, True)),
-            ( 80, (cn(mov, "prezzo"),  "Prezzo",       _PRE, True)),
-            ( 45, (cn(mov, "sconto1"), "Sc.%1",        _SCO, True)),
-            ( 45, (cn(mov, "sconto2"), "Sc.%2",        _SCO, True)),
-            ( 45, (cn(mov, "sconto3"), "Sc.%3",        _SCO, True)),
-            ( 85, (cn(mov, "importo"), "Importo",      _IMP, True)),
-            (120, (cn(mov, "note"),    "Note",         _STR, True)),
-            ( 30, (cn(mov, "f_ann"),   "Man",          _CHK, True)),
-            ( 30, (cn(doc, "f_ann"),   "Ann",          _CHK, True)),
-            ( 30, (cn(doc, "f_acq"),   "Acq",          _CHK, True)),
-            (  1, (cn(mov, "id"),      "#mov",         _STR, True)),
-            (  1, (cn(doc, "id"),      "#doc",         _STR, True)),
-        )
+        cols = []
+        a = cols.append
+        a(( 80, (cn(doc, "datreg"),  "Data reg.",    _DAT, True)))
+        a(( 35, (cn(tpd, "codice"),  "Cod.",         _STR, True)))
+        a((110, (cn(tpd, "descriz"), "Documento",    _STR, True)))
+        a(( 50, (cn(doc, "numdoc"),  "Num.",         _STR, True)))
+        a(( 80, (cn(doc, "datdoc"),  "Data doc.",    _DAT, True)))
+        a(( 40, (cn(mov, "numriga"), "Riga",         _QTA, True)))
+        a(( 35, (cn(tpm, "codice"),  "Cod.",         _STR, True)))
+        a((110, (cn(tpm, "descriz"), "Movimento",    _STR, True)))
+        a(( 80, (cn(mov, "qta"),     "Qtà",          _QTA, True)))
+        a(( 80, (cn(eva, "qta"),     "Evaso",        _QTA, True)))
+        a(( 80, (cn(mov, "prezzo"),  "Prezzo",       _PRE, True)))
+        if bt.MAGNUMSCO >= 1:
+            a(( 45, (cn(mov, "sconto1"), "Sc.%"+'1'*int(bt.MAGNUMSCO>1), _SCO, True)))
+        if bt.MAGNUMSCO >= 2:
+            a(( 45, (cn(mov, "sconto2"), "Sc.%2",    _SCO, True)))
+        if bt.MAGNUMSCO >= 3:
+            a(( 45, (cn(mov, "sconto3"), "Sc.%3",    _SCO, True)))
+        if bt.MAGNUMSCO >= 4:
+            a(( 45, (cn(mov, "sconto4"), "Sc.%4",    _SCO, True)))
+        if bt.MAGNUMSCO >= 5:
+            a(( 45, (cn(mov, "sconto5"), "Sc.%5",    _SCO, True)))
+        if bt.MAGNUMSCO >= 6:
+            a(( 45, (cn(mov, "sconto6"), "Sc.%6",    _SCO, True)))
+        a(( 85, (cn(mov, "importo"), "Importo",      _IMP, True)))
+        a((120, (cn(mov, "note"),    "Note",         _STR, True)))
+        a(( 30, (cn(mov, "f_ann"),   "Man",          _CHK, True)))
+        a(( 30, (cn(doc, "f_ann"),   "Ann",          _CHK, True)))
+        a(( 30, (cn(doc, "f_acq"),   "Acq",          _CHK, True)))
+        a((  1, (cn(mov, "id"),      "#mov",         _STR, True)))
+        a((  1, (cn(doc, "id"),      "#doc",         _STR, True)))
         
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]

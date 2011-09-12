@@ -2621,6 +2621,10 @@ class DbTable(object):
         return keys
     
     
+    def GetEnv(self):
+        return self._info.GetEnv()
+    
+    
     # metodi di classe
     
     @classmethod
@@ -3214,6 +3218,9 @@ class DbMem(DbTable):
             return r
         except:
             return object.__repr__(self)
+    
+    def GetEnv(self):
+        return self._info.GetEnv()
 
 
 # ------------------------------------------------------------------------------

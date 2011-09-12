@@ -298,18 +298,29 @@ class InventarioPresuntoBackordersElencoEvasioniGrid(dbglib.DbGridColoriAlternat
         qw = 110 # qta col width
         iw = 110 # val col width
         
-        cols = [( 50, (cc(tpd, 'codice'),  "Cod.",      _STR, True)),
-                (140, (cc(tpd, 'descriz'), "Documento", _STR, True)),
-                ( 50, (cc(doc, 'numdoc'),  "Num.",      _STR, True)),
-                ( 80, (cc(doc, 'datdoc'),  "Data doc.", _DAT, True)),
-                ( 30, (cc(tpm, 'codice'),  "M.",        _STR, True)),
-                ( 90, (cc(mov, 'qta'),     "Qtà",       _QTA, True)),
-                ( 90, (cc(mov, 'prezzo'),  "Prezzo",    _VAL, True)),
-                ( 50, (cc(mov, 'sconto1'), "Sc.%1",     _SCO, True)),
-                ( 50, (cc(mov, 'sconto2'), "Sc.%2",     _SCO, True)),
-                ( 50, (cc(mov, 'sconto3'), "Sc.%3",     _SCO, True)),
-                (110, (cc(mov, 'importo'), "Importo",   _VAL, True)),
-                (200, (cc(mov, 'note'),    "Note",      _STR, True)),]
+        cols = []
+        a = cols.append
+        a(( 50, (cc(tpd, 'codice'),  "Cod.",      _STR, True)))
+        a((140, (cc(tpd, 'descriz'), "Documento", _STR, True)))
+        a(( 50, (cc(doc, 'numdoc'),  "Num.",      _STR, True)))
+        a(( 80, (cc(doc, 'datdoc'),  "Data doc.", _DAT, True)))
+        a(( 30, (cc(tpm, 'codice'),  "M.",        _STR, True)))
+        a(( 90, (cc(mov, 'qta'),     "Qtà",       _QTA, True)))
+        a(( 90, (cc(mov, 'prezzo'),  "Prezzo",    _VAL, True)))
+        if bt.MAGNUMSCO >= 1:
+            a(( 50, (cc(mov, 'sconto1'), "Sc.%"+'1'*int(bt.MAGNUMSCO>1), _SCO, True)))
+        if bt.MAGNUMSCO >= 2:
+            a(( 50, (cc(mov, 'sconto2'), "Sc.%2", _SCO, True)))
+        if bt.MAGNUMSCO >= 3:
+            a(( 50, (cc(mov, 'sconto3'), "Sc.%3", _SCO, True)))
+        if bt.MAGNUMSCO >= 4:
+            a(( 50, (cc(mov, 'sconto4'), "Sc.%4", _SCO, True)))
+        if bt.MAGNUMSCO >= 5:
+            a(( 50, (cc(mov, 'sconto5'), "Sc.%5", _SCO, True)))
+        if bt.MAGNUMSCO >= 6:
+            a(( 50, (cc(mov, 'sconto6'), "Sc.%6", _SCO, True)))
+        a((110, (cc(mov, 'importo'), "Importo",   _VAL, True)))
+        a((200, (cc(mov, 'note'),    "Note",      _STR, True)))
         
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]

@@ -84,9 +84,18 @@ class GrigliaPrezziAttualiGrid(stalis.ListiniAttualiGrid):
             a(( 80, (cc("grip_ext_codice"),  "Codice Ext.",      _STR, False)))
             a((200, (cc("grip_ext_descriz"), "Descrizione Ext.", _STR, False)))
         
-        a(( ws, (cc("grip_sconto1"), "Sc.%1",       _SCO, True)))
-        a(( ws, (cc("grip_sconto2"), "Sc.%2",       _SCO, True)))
-        a(( ws, (cc("grip_sconto3"), "Sc.%3",       _SCO, True)))
+        if bt.MAGNUMSCO >= 1:
+            a(( ws, (cc("grip_sconto1"), "Sc.%"+'1'*int(bt.MAGNUMSCO>1), _SCO, True)))
+        if bt.MAGNUMSCO >= 2:
+            a(( ws, (cc("grip_sconto2"), "Sc.%2",       _SCO, True)))
+        if bt.MAGNUMSCO >= 3:
+            a(( ws, (cc("grip_sconto3"), "Sc.%3",       _SCO, True)))
+        if bt.MAGNUMSCO >= 4:
+            a(( ws, (cc("grip_sconto4"), "Sc.%4",       _SCO, True)))
+        if bt.MAGNUMSCO >= 5:
+            a(( ws, (cc("grip_sconto5"), "Sc.%5",       _SCO, True)))
+        if bt.MAGNUMSCO >= 6:
+            a(( ws, (cc("grip_sconto6"), "Sc.%6",       _SCO, True)))
         
         if bt.MAGDATGRIP:
             a(( 80, (cc("grip_data"),"Data val.",   _DAT, True)))
@@ -148,9 +157,18 @@ class GrigliaPrezziAttualiProdottoGrid(GrigliaPrezziAttualiGrid):
         a(( 80, (cc("grip_pdc_codice"),  "Cod.",        _STR, True)))
         a((300, (cc("grip_pdc_descriz"), "Anagrafica",  _STR, True)))
         a(( wp, (cc("grip_prezzo"),      "Prezzo",      _PRZ, True)))
-        a(( ws, (cc("grip_sconto1"),     "Sc.%1",       _SCO, True)))
-        a(( ws, (cc("grip_sconto2"),     "Sc.%2",       _SCO, True)))
-        a(( ws, (cc("grip_sconto3"),     "Sc.%3",       _SCO, True)))
+        if bt.MAGNUMSCO >= 1:
+            a(( ws, (cc("grip_sconto1"), "Sc.%"+'1'*int(bt.MAGNUMSCO>1), _SCO, True)))
+        if bt.MAGNUMSCO >= 2:
+            a(( ws, (cc("grip_sconto2"), "Sc.%2",       _SCO, True)))
+        if bt.MAGNUMSCO >= 3:
+            a(( ws, (cc("grip_sconto3"), "Sc.%3",       _SCO, True)))
+        if bt.MAGNUMSCO >= 4:
+            a(( ws, (cc("grip_sconto4"), "Sc.%4",       _SCO, True)))
+        if bt.MAGNUMSCO >= 5:
+            a(( ws, (cc("grip_sconto5"), "Sc.%5",       _SCO, True)))
+        if bt.MAGNUMSCO >= 6:
+            a(( ws, (cc("grip_sconto6"), "Sc.%6",       _SCO, True)))
         
         if bt.MAGDATGRIP:
             a(( 80, (cc("grip_data"),    "Data val.",   _DAT, True)))

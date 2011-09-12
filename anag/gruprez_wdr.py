@@ -33,37 +33,39 @@ class TipoCalcoloRadioBox(RadioBox):
         self.SetDataLink(values='NCPV')
 
 
-class ListinoVariabileRadioBox(RadioBox):
+from awc.controls.choice import ChoiceData
+
+class ListinoVariabileChoice(ChoiceData):
     listino = 0
     def __init__(self, *args, **kwargs):
-        RadioBox.__init__(self, *args, **kwargs)
+        ChoiceData.__init__(self, *args, **kwargs)
         self.SetDataLink(values='XCP'+''.join(map(lambda x: str(x+1), range(self.listino))))
 
-class ListinoVariabileRadioBox1(ListinoVariabileRadioBox):
+class ListinoVariabileChoice1(ListinoVariabileChoice):
     listino = 1
 
-class ListinoVariabileRadioBox2(ListinoVariabileRadioBox):
+class ListinoVariabileChoice2(ListinoVariabileChoice):
     listino = 2
 
-class ListinoVariabileRadioBox3(ListinoVariabileRadioBox):
+class ListinoVariabileChoice3(ListinoVariabileChoice):
     listino = 3
 
-class ListinoVariabileRadioBox4(ListinoVariabileRadioBox):
+class ListinoVariabileChoice4(ListinoVariabileChoice):
     listino = 4
 
-class ListinoVariabileRadioBox5(ListinoVariabileRadioBox):
+class ListinoVariabileChoice5(ListinoVariabileChoice):
     listino = 5
 
-class ListinoVariabileRadioBox6(ListinoVariabileRadioBox):
+class ListinoVariabileChoice6(ListinoVariabileChoice):
     listino = 6
 
-class ListinoVariabileRadioBox7(ListinoVariabileRadioBox):
+class ListinoVariabileChoice7(ListinoVariabileChoice):
     listino = 7
 
-class ListinoVariabileRadioBox8(ListinoVariabileRadioBox):
+class ListinoVariabileChoice8(ListinoVariabileChoice):
     listino = 8
 
-class ListinoVariabileRadioBox9(ListinoVariabileRadioBox):
+class ListinoVariabileChoice9(ListinoVariabileChoice):
     listino = 9
 
 
@@ -76,49 +78,55 @@ ID_TEXT = 16002
 ID_PRCCOSRIC1 = 16003
 ID_PRCCOSRIC2 = 16004
 ID_PRCCOSRIC3 = 16005
-ID_PRCPRESCO1 = 16006
-ID_PRCPRESCO2 = 16007
-ID_PRCPRESCO3 = 16008
-ID_TIPOLIS = 16009
-ID_NOSCONTI = 16010
-ID_LISDAGP = 16011
-ID_LINE = 16012
-ID_PRCLISRIC1 = 16013
-ID_PRCLISRIC2 = 16014
-ID_PRCLISRIC3 = 16015
-ID_PRCLISRIC4 = 16016
-ID_PRCLISRIC5 = 16017
-ID_PRCLISRIC6 = 16018
-ID_PRCLISRIC7 = 16019
-ID_PRCLISRIC8 = 16020
-ID_PRCLISRIC9 = 16021
-ID_PRCLISSCO1 = 16022
-ID_PRCLISSCO2 = 16023
-ID_PRCLISSCO3 = 16024
-ID_PRCLISSCO4 = 16025
-ID_PRCLISSCO5 = 16026
-ID_PRCLISSCO6 = 16027
-ID_PRCLISSCO7 = 16028
-ID_PRCLISSCO8 = 16029
-ID_PRCLISSCO9 = 16030
-ID_PRCLISVAR1 = 16031
-ID_PRCLISVAR2 = 16032
-ID_PRCLISVAR3 = 16033
-ID_PRCLISVAR4 = 16034
-ID_PRCLISVAR5 = 16035
-ID_PRCLISVAR6 = 16036
-ID_PRCLISVAR7 = 16037
-ID_PRCLISVAR8 = 16038
-ID_PRCLISVAR9 = 16039
-ID_PRCLISBAS1 = 16040
-ID_PRCLISBAS2 = 16041
-ID_PRCLISBAS3 = 16042
-ID_PRCLISBAS4 = 16043
-ID_PRCLISBAS5 = 16044
-ID_PRCLISBAS6 = 16045
-ID_PRCLISBAS7 = 16046
-ID_PRCLISBAS8 = 16047
-ID_PRCLISBAS9 = 16048
+ID_PRCCOSRIC4 = 16006
+ID_PRCCOSRIC5 = 16007
+ID_PRCCOSRIC6 = 16008
+ID_PRCPRESCO1 = 16009
+ID_PRCPRESCO2 = 16010
+ID_PRCPRESCO3 = 16011
+ID_PRCPRESCO4 = 16012
+ID_PRCPRESCO5 = 16013
+ID_PRCPRESCO6 = 16014
+ID_TIPOLIS = 16015
+ID_NOSCONTI = 16016
+ID_LISDAGP = 16017
+ID_LINE = 16018
+ID_PRCLISRIC1 = 16019
+ID_PRCLISRIC2 = 16020
+ID_PRCLISRIC3 = 16021
+ID_PRCLISRIC4 = 16022
+ID_PRCLISRIC5 = 16023
+ID_PRCLISRIC6 = 16024
+ID_PRCLISRIC7 = 16025
+ID_PRCLISRIC8 = 16026
+ID_PRCLISRIC9 = 16027
+ID_PRCLISSCO1 = 16028
+ID_PRCLISSCO2 = 16029
+ID_PRCLISSCO3 = 16030
+ID_PRCLISSCO4 = 16031
+ID_PRCLISSCO5 = 16032
+ID_PRCLISSCO6 = 16033
+ID_PRCLISSCO7 = 16034
+ID_PRCLISSCO8 = 16035
+ID_PRCLISSCO9 = 16036
+ID_PRCLISVAR1 = 16037
+ID_PRCLISVAR2 = 16038
+ID_PRCLISVAR3 = 16039
+ID_PRCLISVAR4 = 16040
+ID_PRCLISVAR5 = 16041
+ID_PRCLISVAR6 = 16042
+ID_PRCLISVAR7 = 16043
+ID_PRCLISVAR8 = 16044
+ID_PRCLISVAR9 = 16045
+ID_PRCLISBAS1 = 16046
+ID_PRCLISBAS2 = 16047
+ID_PRCLISBAS3 = 16048
+ID_PRCLISBAS4 = 16049
+ID_PRCLISBAS5 = 16050
+ID_PRCLISBAS6 = 16051
+ID_PRCLISBAS7 = 16052
+ID_PRCLISBAS8 = 16053
+ID_PRCLISBAS9 = 16054
 
 def GruPrezCardFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -129,278 +137,358 @@ def GruPrezCardFunc( parent, call_fit = True, set_sizer = True ):
     item2 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
     item3 = TipoCalcCPRadioBox( parent, ID_TIPOCP, "Tipo di calcolo per la determinazione del costo di acquisto o del prezzo di vendita al pubblico", wx.DefaultPosition, wx.DefaultSize, 
-        ["Nessun calcolo: il costo ed il prezzo sono indipendenti","Determina il prezzo di vendita al pubblico applicando le seguenti ricariche al costo di acquisto","Determina il costo di acquisto applicando le seguenti scontistiche al prezzo di vendita al pubblico"] , 1, wx.RA_SPECIFY_COLS )
+        ["Nessun calcolo: il costo ed il prezzo sono indipendenti","Determina il prezzo al pubblico con queste ricariche sul costo di acquisto","Determina il costo di acquisto con questi sconti sul prezzo di vendita al pubblico"] , 1, wx.RA_SPECIFY_COLS )
     item2.Add( item3, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
     item5 = wx.StaticBox( parent, -1, "Percentuali di calcolo del costo/prezzo" )
     item4 = wx.StaticBoxSizer( item5, wx.VERTICAL )
     
-    item6 = wx.FlexGridSizer( 0, 4, 0, 0 )
+    item6 = wx.FlexGridSizer( 0, 2, 0, 0 )
     
-    item7 = wx.StaticText( parent, ID_TEXT, "", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item6.Add( item7, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP, 5 )
+    item7 = wx.StaticText( parent, ID_TEXT, "Ricariche:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item6.Add( item7, 0, wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM|wx.TOP|wx.BOTTOM, 5 )
 
-    item8 = wx.StaticText( parent, ID_TEXT, "%1", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item6.Add( item8, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+    item8 = wx.BoxSizer( wx.HORIZONTAL )
+    
+    item9 = wx.BoxSizer( wx.VERTICAL )
+    
+    item10 = wx.StaticText( parent, ID_TEXT, "%1", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item10.SetName( "labric1" )
+    item9.Add( item10, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
 
-    item9 = wx.StaticText( parent, ID_TEXT, "%2", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item6.Add( item9, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+    item11 = bt.GetMagRicNumCtrl(parent, ID_PRCCOSRIC1, 'prccosric1')
+    item9.Add( item11, 0, wx.ALIGN_CENTER|wx.LEFT|wx.BOTTOM, 5 )
 
-    item10 = wx.StaticText( parent, ID_TEXT, "%3", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item6.Add( item10, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+    item8.Add( item9, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item11 = wx.StaticText( parent, ID_TEXT, "Ricarica:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item6.Add( item11, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+    item12 = wx.BoxSizer( wx.VERTICAL )
+    
+    item13 = wx.StaticText( parent, ID_TEXT, "%2", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item13.SetName( "labric2" )
+    item12.Add( item13, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
 
-    item12 = NumCtrl(parent, ID_PRCCOSRIC1, integerWidth=3, fractionWidth=2, allowNegative=False, groupDigits=False); item12.SetName("prccosric1")
-    item6.Add( item12, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item14 = bt.GetMagRicNumCtrl(parent, ID_PRCCOSRIC2, 'prccosric2')
+    item12.Add( item14, 0, wx.ALIGN_CENTER|wx.LEFT|wx.BOTTOM, 5 )
 
-    item13 = NumCtrl(parent, ID_PRCCOSRIC2, integerWidth=3, fractionWidth=2, allowNegative=False, groupDigits=False); item13.SetName("prccosric2")
-    item6.Add( item13, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item8.Add( item12, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item14 = NumCtrl(parent, ID_PRCCOSRIC3, integerWidth=3, fractionWidth=2, allowNegative=False, groupDigits=False); item14.SetName("prccosric3")
-    item6.Add( item14, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item15 = wx.BoxSizer( wx.VERTICAL )
+    
+    item16 = wx.StaticText( parent, ID_TEXT, "%3", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item16.SetName( "labric3" )
+    item15.Add( item16, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
 
-    item15 = wx.StaticText( parent, ID_TEXT, "Sconto:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item6.Add( item15, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+    item17 = bt.GetMagRicNumCtrl(parent, ID_PRCCOSRIC3, 'prccosric3')
+    item15.Add( item17, 0, wx.ALIGN_CENTER|wx.LEFT|wx.BOTTOM, 5 )
 
-    item16 = NumCtrl(parent, ID_PRCPRESCO1, integerWidth=3, fractionWidth=2, allowNegative=False, groupDigits=False); item16.SetName("prcpresco1")
-    item6.Add( item16, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+    item8.Add( item15, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item17 = NumCtrl(parent, ID_PRCPRESCO2, integerWidth=3, fractionWidth=2, allowNegative=False, groupDigits=False); item17.SetName("prcpresco2")
-    item6.Add( item17, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+    item18 = wx.BoxSizer( wx.VERTICAL )
+    
+    item19 = wx.StaticText( parent, ID_TEXT, "%4", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item19.SetName( "labric4" )
+    item18.Add( item19, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
 
-    item18 = NumCtrl(parent, ID_PRCPRESCO3, integerWidth=3, fractionWidth=2, allowNegative=False, groupDigits=False); item18.SetName("prcpresco3")
-    item6.Add( item18, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
+    item20 = bt.GetMagRicNumCtrl(parent, ID_PRCCOSRIC4, 'prccosric4')
+    item18.Add( item20, 0, wx.ALIGN_CENTER|wx.LEFT|wx.BOTTOM, 5 )
 
-    item4.Add( item6, 0, wx.ALIGN_CENTER, 5 )
+    item8.Add( item18, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item2.Add( item4, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+    item21 = wx.BoxSizer( wx.VERTICAL )
+    
+    item22 = wx.StaticText( parent, ID_TEXT, "%5", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item22.SetName( "labric5" )
+    item21.Add( item22, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item23 = bt.GetMagRicNumCtrl(parent, ID_PRCCOSRIC5, 'prccosric5')
+    item21.Add( item23, 0, wx.ALIGN_CENTER|wx.LEFT|wx.BOTTOM, 5 )
+
+    item8.Add( item21, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item24 = wx.BoxSizer( wx.VERTICAL )
+    
+    item25 = wx.StaticText( parent, ID_TEXT, "%6", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item25.SetName( "labric6" )
+    item24.Add( item25, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item26 = bt.GetMagRicNumCtrl(parent, ID_PRCCOSRIC6, 'prccosric6')
+    item24.Add( item26, 0, wx.ALIGN_CENTER|wx.LEFT|wx.BOTTOM, 5 )
+
+    item8.Add( item24, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item6.Add( item8, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item27 = wx.StaticText( parent, ID_TEXT, "Sconti:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item6.Add( item27, 0, wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM|wx.TOP|wx.BOTTOM, 5 )
+
+    item28 = wx.BoxSizer( wx.HORIZONTAL )
+    
+    item29 = bt.GetMagScoNumCtrl(parent, ID_PRCPRESCO1, 'prcpresco1')
+    item28.Add( item29, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+
+    item30 = bt.GetMagScoNumCtrl(parent, ID_PRCPRESCO2, 'prcpresco2')
+    item28.Add( item30, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+
+    item31 = bt.GetMagScoNumCtrl(parent, ID_PRCPRESCO3, 'prcpresco3')
+    item28.Add( item31, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+
+    item32 = bt.GetMagScoNumCtrl(parent, ID_PRCPRESCO4, 'prcpresco4')
+    item28.Add( item32, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+
+    item33 = bt.GetMagScoNumCtrl(parent, ID_PRCPRESCO5, 'prcpresco5')
+    item28.Add( item33, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+
+    item34 = bt.GetMagScoNumCtrl(parent, ID_PRCPRESCO6, 'prcpresco6')
+    item28.Add( item34, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+
+    item6.Add( item28, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item4.Add( item6, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item2.Add( item4, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
 
     item2.AddGrowableCol( 0 )
 
     item0.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item19 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    item35 = wx.FlexGridSizer( 0, 2, 0, 0 )
     
-    item20 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    item36 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
-    item21 = TipoCalcoloRadioBox( parent, ID_TIPOLIS, "Tipo di calcolo dei listini di vendita", wx.DefaultPosition, wx.DefaultSize, 
+    item37 = TipoCalcoloRadioBox( parent, ID_TIPOLIS, "Tipo di calcolo dei listini di vendita", wx.DefaultPosition, wx.DefaultSize, 
         ["Nessun calcolo: i listini sono manuali","Applica la ricarica al costo di acquisto","Applica lo sconto al prezzo al pubblico","Applica condizioni diverse x ogni listino"] , 1, wx.RA_SPECIFY_COLS )
-    item21.SetName( "calclis" )
-    item20.Add( item21, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+    item37.SetName( "calclis" )
+    item36.Add( item37, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item23 = wx.StaticBox( parent, -1, "Comportamenti particolari" )
-    item22 = wx.StaticBoxSizer( item23, wx.VERTICAL )
+    item39 = wx.StaticBox( parent, -1, "Comportamenti particolari" )
+    item38 = wx.StaticBoxSizer( item39, wx.VERTICAL )
     
-    item24 = UnoZeroCheckBox( parent, ID_NOSCONTI, "Inibizione scontistiche", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item24.SetName( "nosconti" )
-    item22.Add( item24, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+    item40 = UnoZeroCheckBox( parent, ID_NOSCONTI, "Inibizione scontistiche", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item40.SetName( "nosconti" )
+    item38.Add( item40, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
 
-    item25 = wx.StaticText( parent, ID_TEXT, "(tranne griglie e promozioni)", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item22.Add( item25, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item41 = wx.StaticText( parent, ID_TEXT, "(tranne griglie e promozioni)", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item38.Add( item41, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item20.Add( item22, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item36.Add( item38, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item20.AddGrowableCol( 0 )
+    item36.AddGrowableCol( 0 )
 
-    item19.Add( item20, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item35.Add( item36, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item27 = wx.StaticBox( parent, -1, "Percentuali di calcolo dei listini di vendita" )
-    item26 = wx.StaticBoxSizer( item27, wx.VERTICAL )
+    item43 = wx.StaticBox( parent, -1, "Percentuali di calcolo dei listini di vendita" )
+    item42 = wx.StaticBoxSizer( item43, wx.VERTICAL )
     
-    item28 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    item44 = wx.FlexGridSizer( 0, 2, 0, 0 )
     
-    item29 = wx.StaticText( parent, ID_TEXT, "Usa parametri del gruppo prezzi:", wx.DefaultPosition, [160,-1], wx.ALIGN_RIGHT )
-    item28.Add( item29, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+    item45 = wx.StaticText( parent, ID_TEXT, "Usa parametri del gruppo prezzi:", wx.DefaultPosition, [160,-1], wx.ALIGN_RIGHT )
+    item44.Add( item45, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
 
-    item30 = LinkTableGruPrez(parent, ID_LISDAGP, 'id_lisdagp')
-    item28.Add( item30, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+    item46 = LinkTableGruPrez(parent, ID_LISDAGP, 'id_lisdagp')
+    item44.Add( item46, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
 
-    item28.AddGrowableCol( 1 )
+    item44.AddGrowableCol( 1 )
 
-    item26.Add( item28, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item42.Add( item44, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item31 = wx.StaticLine( parent, ID_LINE, wx.DefaultPosition, [20,-1], wx.LI_HORIZONTAL )
-    item26.Add( item31, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+    item47 = wx.StaticLine( parent, ID_LINE, wx.DefaultPosition, [20,-1], wx.LI_HORIZONTAL )
+    item42.Add( item47, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
 
-    item32 = wx.FlexGridSizer( 0, 10, 0, 0 )
+    item48 = wx.FlexGridSizer( 0, 10, 0, 0 )
     
-    item33 = wx.StaticText( parent, ID_TEXT, "", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item32.Add( item33, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP, 5 )
+    item49 = wx.StaticText( parent, ID_TEXT, "", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item48.Add( item49, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP, 5 )
 
-    item34 = wx.StaticText( parent, ID_TEXT, "Listino 1", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item32.Add( item34, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+    item50 = wx.StaticText( parent, ID_TEXT, "Listino 1", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item48.Add( item50, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
 
-    item35 = wx.StaticText( parent, ID_TEXT, "Listino 2", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item32.Add( item35, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+    item51 = wx.StaticText( parent, ID_TEXT, "Listino 2", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item48.Add( item51, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
 
-    item36 = wx.StaticText( parent, ID_TEXT, "Listino 3", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item32.Add( item36, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+    item52 = wx.StaticText( parent, ID_TEXT, "Listino 3", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item48.Add( item52, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
 
-    item37 = wx.StaticText( parent, ID_TEXT, "Listino 4", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item32.Add( item37, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+    item53 = wx.StaticText( parent, ID_TEXT, "Listino 4", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item48.Add( item53, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
 
-    item38 = wx.StaticText( parent, ID_TEXT, "Listino 5", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item32.Add( item38, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+    item54 = wx.StaticText( parent, ID_TEXT, "Listino 5", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item48.Add( item54, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
 
-    item39 = wx.StaticText( parent, ID_TEXT, "Listino 6", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item32.Add( item39, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+    item55 = wx.StaticText( parent, ID_TEXT, "Listino 6", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item48.Add( item55, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
 
-    item40 = wx.StaticText( parent, ID_TEXT, "Listino 7", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item32.Add( item40, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+    item56 = wx.StaticText( parent, ID_TEXT, "Listino 7", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item48.Add( item56, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
 
-    item41 = wx.StaticText( parent, ID_TEXT, "Listino 8", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item32.Add( item41, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+    item57 = wx.StaticText( parent, ID_TEXT, "Listino 8", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item48.Add( item57, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
 
-    item42 = wx.StaticText( parent, ID_TEXT, "Listino 9", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item32.Add( item42, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+    item58 = wx.StaticText( parent, ID_TEXT, "Listino 9", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item48.Add( item58, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
 
-    item43 = wx.StaticText( parent, ID_TEXT, "Ricarica da costo di acquisto:", wx.DefaultPosition, [160,-1], wx.ALIGN_RIGHT )
-    item32.Add( item43, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+    item59 = wx.StaticText( parent, ID_TEXT, "Ricarica da costo acquisto:", wx.DefaultPosition, [160,-1], wx.ALIGN_RIGHT )
+    item48.Add( item59, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
 
-    item44 = NumCtrl(parent, ID_PRCLISRIC1, integerWidth=3, fractionWidth=2, allowNegative=False, groupDigits=False); item44.SetName("prclisric1")
-    item32.Add( item44, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item60 = bt.GetMagRicNumCtrl(parent, ID_PRCLISRIC1, 'prclisric1')
+    item48.Add( item60, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item45 = NumCtrl(parent, ID_PRCLISRIC2, integerWidth=3, fractionWidth=2, allowNegative=False, groupDigits=False); item45.SetName("prclisric2")
-    item32.Add( item45, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item61 = bt.GetMagRicNumCtrl(parent, ID_PRCLISRIC2, 'prclisric2')
+    item48.Add( item61, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item46 = NumCtrl(parent, ID_PRCLISRIC3, integerWidth=3, fractionWidth=2, allowNegative=False, groupDigits=False); item46.SetName("prclisric3")
-    item32.Add( item46, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item62 = bt.GetMagRicNumCtrl(parent, ID_PRCLISRIC3, 'prclisric3')
+    item48.Add( item62, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item47 = NumCtrl(parent, ID_PRCLISRIC4, integerWidth=3, fractionWidth=2, allowNegative=False, groupDigits=False); item47.SetName("prclisric4")
-    item32.Add( item47, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item63 = bt.GetMagRicNumCtrl(parent, ID_PRCLISRIC4, 'prclisric4')
+    item48.Add( item63, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item48 = NumCtrl(parent, ID_PRCLISRIC5, integerWidth=3, fractionWidth=2, allowNegative=False, groupDigits=False); item48.SetName("prclisric5")
-    item32.Add( item48, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item64 = bt.GetMagRicNumCtrl(parent, ID_PRCLISRIC5, 'prclisric5')
+    item48.Add( item64, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item49 = NumCtrl(parent, ID_PRCLISRIC6, integerWidth=3, fractionWidth=2, allowNegative=False, groupDigits=False); item49.SetName("prclisric6")
-    item32.Add( item49, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item65 = bt.GetMagRicNumCtrl(parent, ID_PRCLISRIC6, 'prclisric6')
+    item48.Add( item65, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item50 = NumCtrl(parent, ID_PRCLISRIC7, integerWidth=3, fractionWidth=2, allowNegative=False, groupDigits=False); item50.SetName("prclisric7")
-    item32.Add( item50, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item66 = bt.GetMagRicNumCtrl(parent, ID_PRCLISRIC7, 'prclisric7')
+    item48.Add( item66, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item51 = NumCtrl(parent, ID_PRCLISRIC8, integerWidth=3, fractionWidth=2, allowNegative=False, groupDigits=False); item51.SetName("prclisric8")
-    item32.Add( item51, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item67 = bt.GetMagRicNumCtrl(parent, ID_PRCLISRIC8, 'prclisric8')
+    item48.Add( item67, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item52 = NumCtrl(parent, ID_PRCLISRIC9, integerWidth=3, fractionWidth=2, allowNegative=False, groupDigits=False); item52.SetName("prclisric9")
-    item32.Add( item52, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item68 = bt.GetMagRicNumCtrl(parent, ID_PRCLISRIC9, 'prclisric9')
+    item48.Add( item68, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item53 = wx.StaticText( parent, ID_TEXT, "Sconto da prezzo al pubblico:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item32.Add( item53, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item69 = wx.StaticText( parent, ID_TEXT, "Sconto da prezzo al pubblico:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item48.Add( item69, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item54 = NumCtrl(parent, ID_PRCLISSCO1, integerWidth=3, fractionWidth=2, allowNegative=False, groupDigits=False); item54.SetName("prclissco1")
-    item32.Add( item54, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item70 = bt.GetMagScoNumCtrl(parent, ID_PRCLISSCO1, 'prclissco1')
+    item48.Add( item70, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item55 = NumCtrl(parent, ID_PRCLISSCO2, integerWidth=3, fractionWidth=2, allowNegative=False, groupDigits=False); item55.SetName("prclissco2")
-    item32.Add( item55, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+    item71 = bt.GetMagScoNumCtrl(parent, ID_PRCLISSCO2, 'prclissco2')
+    item48.Add( item71, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
 
-    item56 = NumCtrl(parent, ID_PRCLISSCO3, integerWidth=3, fractionWidth=2, allowNegative=False, groupDigits=False); item56.SetName("prclissco3")
-    item32.Add( item56, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+    item72 = bt.GetMagScoNumCtrl(parent, ID_PRCLISSCO3, 'prclissco3')
+    item48.Add( item72, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
 
-    item57 = NumCtrl(parent, ID_PRCLISSCO4, integerWidth=3, fractionWidth=2, allowNegative=False, groupDigits=False); item57.SetName("prclissco4")
-    item32.Add( item57, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+    item73 = bt.GetMagScoNumCtrl(parent, ID_PRCLISSCO4, 'prclissco4')
+    item48.Add( item73, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
 
-    item58 = NumCtrl(parent, ID_PRCLISSCO5, integerWidth=3, fractionWidth=2, allowNegative=False, groupDigits=False); item58.SetName("prclissco5")
-    item32.Add( item58, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+    item74 = bt.GetMagScoNumCtrl(parent, ID_PRCLISSCO5, 'prclissco5')
+    item48.Add( item74, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
 
-    item59 = NumCtrl(parent, ID_PRCLISSCO6, integerWidth=3, fractionWidth=2, allowNegative=False, groupDigits=False); item59.SetName("prclissco6")
-    item32.Add( item59, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item75 = bt.GetMagScoNumCtrl(parent, ID_PRCLISSCO6, 'prclissco6')
+    item48.Add( item75, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item60 = NumCtrl(parent, ID_PRCLISSCO7, integerWidth=3, fractionWidth=2, allowNegative=False, groupDigits=False); item60.SetName("prclissco7")
-    item32.Add( item60, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item76 = bt.GetMagScoNumCtrl(parent, ID_PRCLISSCO7, 'prclissco7')
+    item48.Add( item76, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item61 = NumCtrl(parent, ID_PRCLISSCO8, integerWidth=3, fractionWidth=2, allowNegative=False, groupDigits=False); item61.SetName("prclissco8")
-    item32.Add( item61, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item77 = bt.GetMagScoNumCtrl(parent, ID_PRCLISSCO8, 'prclissco8')
+    item48.Add( item77, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item62 = NumCtrl(parent, ID_PRCLISSCO9, integerWidth=3, fractionWidth=2, allowNegative=False, groupDigits=False); item62.SetName("prclissco9")
-    item32.Add( item62, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item78 = bt.GetMagScoNumCtrl(parent, ID_PRCLISSCO9, 'prclissco9')
+    item48.Add( item78, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item63 = wx.StaticText( parent, ID_TEXT, "Applica variazione%:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item32.Add( item63, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item79 = wx.StaticText( parent, ID_TEXT, "Applica variazione%:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item48.Add( item79, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item64 = NumCtrl(parent, ID_PRCLISVAR1, integerWidth=3, fractionWidth=2, groupDigits=False); item64.SetName("prclisvar1")
-    item32.Add( item64, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item80 = bt.GetPerGenNumCtrl(parent, ID_PRCLISVAR1, 'prclisvar1')
+    item48.Add( item80, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item65 = NumCtrl(parent, ID_PRCLISVAR2, integerWidth=3, fractionWidth=2, groupDigits=False); item65.SetName("prclisvar2")
-    item32.Add( item65, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+    item81 = bt.GetPerGenNumCtrl(parent, ID_PRCLISVAR2, 'prclisvar2')
+    item48.Add( item81, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
 
-    item66 = NumCtrl(parent, ID_PRCLISVAR3, integerWidth=3, fractionWidth=2, groupDigits=False); item66.SetName("prclisvar3")
-    item32.Add( item66, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+    item82 = bt.GetPerGenNumCtrl(parent, ID_PRCLISVAR3, 'prclisvar3')
+    item48.Add( item82, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
 
-    item67 = NumCtrl(parent, ID_PRCLISVAR4, integerWidth=3, fractionWidth=2, groupDigits=False); item67.SetName("prclisvar4")
-    item32.Add( item67, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+    item83 = bt.GetPerGenNumCtrl(parent, ID_PRCLISVAR4, 'prclisvar4')
+    item48.Add( item83, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
 
-    item68 = NumCtrl(parent, ID_PRCLISVAR5, integerWidth=3, fractionWidth=2, groupDigits=False); item68.SetName("prclisvar5")
-    item32.Add( item68, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+    item84 = bt.GetPerGenNumCtrl(parent, ID_PRCLISVAR5, 'prclisvar5')
+    item48.Add( item84, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
 
-    item69 = NumCtrl(parent, ID_PRCLISVAR6, integerWidth=3, fractionWidth=2, groupDigits=False); item69.SetName("prclisvar6")
-    item32.Add( item69, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+    item85 = bt.GetPerGenNumCtrl(parent, ID_PRCLISVAR6, 'prclisvar6')
+    item48.Add( item85, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
 
-    item70 = NumCtrl(parent, ID_PRCLISVAR7, integerWidth=3, fractionWidth=2, groupDigits=False); item70.SetName("prclisvar7")
-    item32.Add( item70, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+    item86 = bt.GetPerGenNumCtrl(parent, ID_PRCLISVAR7, 'prclisvar7')
+    item48.Add( item86, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
 
-    item71 = NumCtrl(parent, ID_PRCLISVAR8, integerWidth=3, fractionWidth=2, groupDigits=False); item71.SetName("prclisvar8")
-    item32.Add( item71, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+    item87 = bt.GetPerGenNumCtrl(parent, ID_PRCLISVAR8, 'prclisvar8')
+    item48.Add( item87, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
 
-    item72 = NumCtrl(parent, ID_PRCLISVAR9, integerWidth=3, fractionWidth=2, groupDigits=False); item72.SetName("prclisvar9")
-    item32.Add( item72, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+    item88 = bt.GetPerGenNumCtrl(parent, ID_PRCLISVAR9, 'prclisvar9')
+    item48.Add( item88, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
 
-    item73 = wx.StaticText( parent, ID_TEXT, "Riespetto a:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item32.Add( item73, 0, wx.ALIGN_RIGHT|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+    item89 = wx.StaticText( parent, ID_TEXT, "Rispetto a:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item48.Add( item89, 0, wx.ALIGN_RIGHT|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
 
-    item74 = ListinoVariabileRadioBox1( parent, ID_PRCLISBAS1, "", wx.DefaultPosition, wx.DefaultSize, 
-        ["-","Costo","P.P"] , 1, wx.RA_SPECIFY_COLS )
-    item74.SetName( "prclisbas1" )
-    item32.Add( item74, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item90 = ListinoVariabileChoice1( parent, ID_PRCLISBAS1, wx.DefaultPosition, wx.DefaultSize, 
+        ["-","Cst","P.P."] , 0 )
+    item90.SetName( "prclisbas1" )
+    item48.Add( item90, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item75 = ListinoVariabileRadioBox2( parent, ID_PRCLISBAS2, "", wx.DefaultPosition, wx.DefaultSize, 
-        ["-","Costo","P.P","L.1"] , 1, wx.RA_SPECIFY_COLS )
-    item75.SetName( "prclisbas2" )
-    item32.Add( item75, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item91 = ListinoVariabileChoice2( parent, ID_PRCLISBAS2, wx.DefaultPosition, wx.DefaultSize, 
+        ["-","Cst","P.P.","L.1"] , 0 )
+    item91.SetName( "prclisbas2" )
+    item48.Add( item91, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item76 = ListinoVariabileRadioBox3( parent, ID_PRCLISBAS3, "", wx.DefaultPosition, wx.DefaultSize, 
-        ["-","Costo","P.P","L.1","L.2"] , 1, wx.RA_SPECIFY_COLS )
-    item76.SetName( "prclisbas3" )
-    item32.Add( item76, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item92 = ListinoVariabileChoice3( parent, ID_PRCLISBAS3, wx.DefaultPosition, wx.DefaultSize, 
+        ["-","Cst","P.P.","L.1","L.2"] , 0 )
+    item92.SetName( "prclisbas3" )
+    item48.Add( item92, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item77 = ListinoVariabileRadioBox4( parent, ID_PRCLISBAS4, "", wx.DefaultPosition, wx.DefaultSize, 
-        ["-","Costo","P.P","L.1","L.2","L.3"] , 1, wx.RA_SPECIFY_COLS )
-    item77.SetName( "prclisbas4" )
-    item32.Add( item77, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item93 = ListinoVariabileChoice4( parent, ID_PRCLISBAS4, wx.DefaultPosition, wx.DefaultSize, 
+        ["-","Cst","P.P.","L.1","L.2","L.3"] , 0 )
+    item93.SetName( "prclisbas4" )
+    item48.Add( item93, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item78 = ListinoVariabileRadioBox5( parent, ID_PRCLISBAS5, "", wx.DefaultPosition, wx.DefaultSize, 
-        ["-","Costo","P.P","L.1","L.2","L.3","L.4"] , 1, wx.RA_SPECIFY_COLS )
-    item78.SetName( "prclisbas5" )
-    item32.Add( item78, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item94 = ListinoVariabileChoice5( parent, ID_PRCLISBAS5, wx.DefaultPosition, wx.DefaultSize, 
+        ["-","Cst","P.P.","L.1","L.2","L.3","L.4"] , 0 )
+    item94.SetName( "prclisbas5" )
+    item48.Add( item94, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item79 = ListinoVariabileRadioBox6( parent, ID_PRCLISBAS6, "", wx.DefaultPosition, wx.DefaultSize, 
-        ["-","Costo","P.P","L.1","L.2","L.3","L.4","L.5"] , 1, wx.RA_SPECIFY_COLS )
-    item79.SetName( "prclisbas6" )
-    item32.Add( item79, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item95 = ListinoVariabileChoice6( parent, ID_PRCLISBAS6, wx.DefaultPosition, wx.DefaultSize, 
+        ["-","Cst","P.P","L.1","L.2","L.3","L.4","L.5"] , 0 )
+    item95.SetName( "prclisbas6" )
+    item48.Add( item95, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item80 = ListinoVariabileRadioBox7( parent, ID_PRCLISBAS7, "", wx.DefaultPosition, wx.DefaultSize, 
-        ["-","Costo","P.P","L.1","L.2","L.3","L.4","L.5","L.6"] , 1, wx.RA_SPECIFY_COLS )
-    item80.SetName( "prclisbas7" )
-    item32.Add( item80, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item96 = ListinoVariabileChoice7( parent, ID_PRCLISBAS7, wx.DefaultPosition, wx.DefaultSize, 
+        ["-","Cst","P.P.","L.1","L.2","L.3","L.4","L.5","L.6"] , 0 )
+    item96.SetName( "prclisbas7" )
+    item48.Add( item96, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item81 = ListinoVariabileRadioBox8( parent, ID_PRCLISBAS8, "", wx.DefaultPosition, wx.DefaultSize, 
-        ["-","Costo","P.P","L.1","L.2","L.3","L.4","L.5","L.6","L.7"] , 1, wx.RA_SPECIFY_COLS )
-    item81.SetName( "prclisbas8" )
-    item32.Add( item81, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item97 = ListinoVariabileChoice8( parent, ID_PRCLISBAS8, wx.DefaultPosition, wx.DefaultSize, 
+        ["-","Cst","P.P.","L.1","L.2","L.3","L.4","L.5","L.6","L.7"] , 0 )
+    item97.SetName( "prclisbas8" )
+    item48.Add( item97, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item82 = ListinoVariabileRadioBox9( parent, ID_PRCLISBAS9, "", wx.DefaultPosition, wx.DefaultSize, 
-        ["-","Costo","P.P","L.1","L.2","L.3","L.4","L.5","L.6","L.7","L.8"] , 1, wx.RA_SPECIFY_COLS )
-    item82.SetName( "prclisbas9" )
-    item32.Add( item82, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item98 = ListinoVariabileChoice9( parent, ID_PRCLISBAS9, wx.DefaultPosition, wx.DefaultSize, 
+        ["-","Cst","P.P.","L.1","L.2","L.3","L.4","L.5","L.6","L.7","L.8"] , 0 )
+    item98.SetName( "prclisbas9" )
+    item48.Add( item98, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item26.Add( item32, 0, wx.ALIGN_CENTER, 5 )
+    item48.AddGrowableCol( 1 )
 
-    item19.Add( item26, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+    item48.AddGrowableCol( 2 )
 
-    item19.AddGrowableCol( 1 )
+    item48.AddGrowableCol( 3 )
 
-    item0.Add( item19, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item48.AddGrowableCol( 4 )
+
+    item48.AddGrowableCol( 5 )
+
+    item48.AddGrowableCol( 6 )
+
+    item48.AddGrowableCol( 7 )
+
+    item48.AddGrowableCol( 8 )
+
+    item48.AddGrowableCol( 9 )
+
+    item42.Add( item48, 0, wx.ALIGN_CENTER, 5 )
+
+    item35.Add( item42, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item35.AddGrowableCol( 1 )
+
+    item0.Add( item35, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item0.AddGrowableCol( 0 )
 

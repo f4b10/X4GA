@@ -262,24 +262,34 @@ class AcqDocGrid(dbglib.DbGrid):
         
         colcodart = pro._GetFieldIndex("codice", inline=True)
         
-        cols = (\
-            ( 40, (cn(mov, 'numriga'),      "Riga",        _NUM, True )),\
-            ( 80, (colcodart,               "Codice",      _STR, True )),\
-            (140, (cn(mov, 'descriz'),      "Descrizione", _STR, True )),\
-            ( 30, (cn(mov, 'um'),           "U.M.",        _STR, True )),\
-            ( -1, (cn(mov, 'qta'),          "Qta orig.",   _QTA, True )),\
-            ( -1, (cn(mov, 'total_qtaeva'), "Evaso",       _QTA, True )),\
-            ( -1, (   -1,                   "Residuo",     _QTA, True )),\
-            ( -1, (cn(mov, 'qtaacq'),       "Quantità",    _QTA, True )),\
-            ( -1, (cn(mov, 'prezzo'),       "Prezzo",      _PRE, True )),\
-            ( -1, (cn(mov, 'sconto1'),      "Sc.%1",       _SCO, True )),\
-            ( -1, (cn(mov, 'sconto2'),      "Sc.%2",       _SCO, True )),\
-            ( -1, (cn(mov, 'sconto3'),      "Sc.%3",       _SCO, True )),\
-            ( -1, (cn(mov, 'impacq'),       "Importo",     _IMP, True )),\
-            ( -1, (cn(mov, 'annacq'),       "Annulla",     _CHK, True )),\
-            ( -1, (cn(mov, 'importo'),      "Imp.Orig.",   _IMP, True )),\
-            ( 80, (cn(iva, 'descriz'),      "Aliq.IVA",    _STR, True )),\
-            )
+        cols = []
+        a = cols.append
+        a(( 40, (cn(mov, 'numriga'),      "Riga",        _NUM, True )))
+        a(( 80, (colcodart,               "Codice",      _STR, True )))
+        a((140, (cn(mov, 'descriz'),      "Descrizione", _STR, True )))
+        a(( 30, (cn(mov, 'um'),           "U.M.",        _STR, True )))
+        a(( -1, (cn(mov, 'qta'),          "Qta orig.",   _QTA, True )))
+        a(( -1, (cn(mov, 'total_qtaeva'), "Evaso",       _QTA, True )))
+        a(( -1, (   -1,                   "Residuo",     _QTA, True )))
+        a(( -1, (cn(mov, 'qtaacq'),       "Quantità",    _QTA, True )))
+        a(( -1, (cn(mov, 'prezzo'),       "Prezzo",      _PRE, True )))
+        if bt.MAGNUMSCO >= 1:
+            a(( -1, (cn(mov, 'sconto1'),  "Sc.%"+'1'*int(bt.MAGNUMSCO>1), _SCO, True )))
+        if bt.MAGNUMSCO >= 2:
+            a(( -1, (cn(mov, 'sconto2'),  "Sc.%2",       _SCO, True )))
+        if bt.MAGNUMSCO >= 3:
+            a(( -1, (cn(mov, 'sconto3'),  "Sc.%3",       _SCO, True )))
+        if bt.MAGNUMSCO >= 4:
+            a(( -1, (cn(mov, 'sconto4'),  "Sc.%4",       _SCO, True )))
+        if bt.MAGNUMSCO >= 5:
+            a(( -1, (cn(mov, 'sconto5'),  "Sc.%5",       _SCO, True )))
+        if bt.MAGNUMSCO >= 6:
+            a(( -1, (cn(mov, 'sconto6'),  "Sc.%6",       _SCO, True )))
+        a(( -1, (cn(mov, 'impacq'),       "Importo",     _IMP, True )))
+        a(( -1, (cn(mov, 'annacq'),       "Annulla",     _CHK, True )))
+        a(( -1, (cn(mov, 'importo'),      "Imp.Orig.",   _IMP, True )))
+        a(( 80, (cn(iva, 'descriz'),      "Aliq.IVA",    _STR, True )))
+        
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
         canedit = True
@@ -429,7 +439,7 @@ class AcqDocGrid(dbglib.DbGrid):
         elif field == 'prezzo':
             valid = value > 0
             
-        elif field in ('sconto1', 'sconto2', 'sconto3'):
+        elif field in 'sconto1 sconto2 sconto3 sconto4 sconto5 sconto6'.split():
             valid = 0 <= value <= 100
             if not valid: msg = """Sconto non valido"""
             

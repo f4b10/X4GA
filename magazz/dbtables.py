@@ -486,7 +486,7 @@ class DocMag(adb.DbTable,\
             scc = self._info.dbscc
             if scc.Retrieve('scc.id_pdc=%s and scc.id_catart=%s', 
                             self.id_pdc, mov.prod.id_catart):
-                if scc.sconto1 or scc.sconto2 or scc.sconto3:
+                if scc.sconto1 or scc.sconto2 or scc.sconto3 or scc.sconto4 or scc.sconto5 or scc.sconto6:
                     sconto = getattr(scc, scontocol) or 0
                     tipo = 'C'
         if not sconto and mov.config.tipsconti == '1': #sconti da prodotto
@@ -497,14 +497,14 @@ class DocMag(adb.DbTable,\
             tipo = 'H'
         return sconto, tipo
     
-    def DefPrezzoSconti(self, prod=None, cfgmov=None, force_tiplist=None):
+    def DefPrezzoSconti(self, prod=None, cfgmov=None, force_tiplist=None, sconti6=False):
         prezzo = 0
-        sc1 = sc2 = sc3 = None
+        sc1 = sc2 = sc3 = sc4 = sc5 = sc6 = None
         tipo = None
         if callable(DefPrezzoSconti):
-            prezzo, sc1, sc2, sc3 = DefPrezzoSconti(self)
-            if prezzo or sc1 or sc2 or sc3:
-                return prezzo, 'X', sc1, sc2, sc3
+            prezzo, sc1, sc2, sc3, sc4, sc5, sc6 = DefPrezzoSconti(self)
+            if prezzo or sc1 or sc2 or sc3 or sc4 or sc5 or sc6:
+                return prezzo, 'X', sc1, sc2, sc3, sc4, sc5, sc6
         if prod is None:
             prod = self.mov.prod
         if cfgmov is None:
@@ -530,6 +530,9 @@ class DocMag(adb.DbTable,\
                 sc1 = prm.sconto1 or 0
                 sc2 = prm.sconto2 or 0
                 sc3 = prm.sconto3 or 0
+                sc4 = prm.sconto4 or 0
+                sc5 = prm.sconto5 or 0
+                sc6 = prm.sconto6 or 0
                 tipo = "P"
         if tipo is None:
             if cfg.tipvaluni in '12L':
@@ -546,6 +549,9 @@ class DocMag(adb.DbTable,\
                     sc1 = grip.sconto1 or 0
                     sc2 = grip.sconto2 or 0
                     sc3 = grip.sconto3 or 0
+                    sc4 = grip.sconto4 or 0
+                    sc5 = grip.sconto5 or 0
+                    sc6 = grip.sconto6 or 0
                     if prezzo != 0:
                         tipo = 'G'
         if tipo is None:
@@ -586,6 +592,9 @@ class DocMag(adb.DbTable,\
                 sc1 = gp.prcpresco1
                 sc2 = gp.prcpresco2
                 sc3 = gp.prcpresco3
+                sc4 = gp.prcpresco4
+                sc5 = gp.prcpresco5
+                sc6 = gp.prcpresco6
         
         #adeguamento del costo/prezzo in funzione dei flag di scoporo dell'iva
         #relativamente all'azienda (scheda prodotto) e al tipo di documento
@@ -615,7 +624,14 @@ class DocMag(adb.DbTable,\
                        self.CalcolaIVA(prod.id_aliqiva, ivato=prezzo, decimals=bt.MAGPRE_DECIMALS)
                 prezzo = imponib
         
+        if sconti6:
+            return (prezzo, tipo, sc1, sc2, sc3, sc4, sc5, sc6)
+        
         return (prezzo, tipo, sc1, sc2, sc3)
+    
+    def DefPrezzoSconti6(self, *args, **kwargs):
+        kwargs['sconti6'] = True
+        return self.DefPrezzoSconti(self, *args, **kwargs)
     
     def GetDatoGriglia(self, col):
         grip = self._info.dbgrip
@@ -794,17 +810,6 @@ class DocMag(adb.DbTable,\
                     agg = getattr(tm, 'agg%s' % col) or 0
                     p = pr[col]
                     p['tw'] += round(((eval(p['exp']) or 0)*agg),p['dec'])
-                #cols = {'costo':   {'val':  None, 
-                                    #'type': tm.aggcosto,
-                                    #'sia': bt.MAGSCORPCOS == '1'},
-                        #'prezzo':  {'val':  None, 
-                                    #'type': tm.aggprezzo,
-                                    #'sia': bt.MAGSCORPPRE == '1'},
-                        #'griprez': {'val':  mov.prezzo or 0, },
-                        #'gripsc1': {'val':  mov.sconto1 or 0, },
-                        #'gripsc2': {'val':  mov.sconto2 or 0, },
-                        #'gripsc3': {'val':  mov.sconto3 or 0, },
-                                #}
                 cols = {}
                 if (tm.aggcosto or ' ') in '12':
                     cols['costo'] = {'val':  None, 
@@ -827,6 +832,9 @@ class DocMag(adb.DbTable,\
                                                     mov.sconto1 or 0, 
                                                     mov.sconto2 or 0, 
                                                     mov.sconto3 or 0,
+                                                    mov.sconto4 or 0,
+                                                    mov.sconto5 or 0,
+                                                    mov.sconto6 or 0,
                                                     mov.pzconf] }
                 
                 sid = (self.config.scorpiva == '1')
@@ -857,7 +865,13 @@ class DocMag(adb.DbTable,\
                         pup[proid].append({col: val,
                                            '|1|riccosto':   tm.riccosto == 'X',
                                            '|2|ricprezzo':  tm.ricprezzo == 'X',
-                                           '|3|riccostosr': (tm.riccostosr == 'X', mov.sconto1, mov.sconto2, mov.sconto3),
+                                           '|3|riccostosr': (tm.riccostosr == 'X', 
+                                                             mov.sconto1, 
+                                                             mov.sconto2, 
+                                                             mov.sconto3, 
+                                                             mov.sconto4, 
+                                                             mov.sconto5, 
+                                                             mov.sconto6),
                                            '|4|riclist':    tm.riclist == 'X',
                                            '|?|newlist':    tm.newlist == 'X',
                                            '|?|datlist':    self.datreg})
@@ -971,10 +985,16 @@ class DocMag(adb.DbTable,\
                                     rc = pup['|3|riccostosr']
                                     if rc[0] and (rc[1] or\
                                                   rc[2] or\
-                                                  rc[3]):
+                                                  rc[3] or\
+                                                  rc[4] or\
+                                                  rc[5] or\
+                                                  rc[6]):
                                         pro.RicalcolaCosto(rc[1] or 0,
                                                            rc[2] or 0,
-                                                           rc[3] or 0)
+                                                           rc[3] or 0,
+                                                           rc[4] or 0,
+                                                           rc[5] or 0,
+                                                           rc[6] or 0)
                                     else:
                                         pro.RicalcolaCosto()
                             if 'ricprezzo' in col and val:
@@ -1023,7 +1043,7 @@ class DocMag(adb.DbTable,\
                                 wpro = True
                             
                         elif col == 'griprez':
-                            tip, dat, prz, sc1, sc2, sc3, pzc = val
+                            tip, dat, prz, sc1, sc2, sc3, sc4, sc5, sc6, pzc = val
                             if val and self.id_pdc:
                                 #aggiorna griglia prezzi
                                 grp.ClearFilters()
@@ -1053,6 +1073,9 @@ class DocMag(adb.DbTable,\
                                 grp.sconto1 = sc1
                                 grp.sconto2 = sc2
                                 grp.sconto3 = sc3
+                                grp.sconto4 = sc4
+                                grp.sconto5 = sc5
+                                grp.sconto6 = sc6
                                 if bt.MAGPZGRIP:
                                     grp.pzconf = pzc
                                 if not grp.Save():
@@ -1294,7 +1317,7 @@ class DocMag(adb.DbTable,\
         lisnul = []
         for mov in self.mov:
             if mov.id_prod:
-                prz, tipo, _, _, _ = self.DefPrezzoSconti()
+                prz, tipo, _, _, _, _, _, _ = self.DefPrezzoSconti()
                 if tipo == "L" and mov.id_tiplist is None:
                     if prz:
                         mov.prezzo = prz
@@ -1302,7 +1325,10 @@ class DocMag(adb.DbTable,\
                         mov.importo = round(mov.qta*mov.prezzo\
                                             *(100-mov.sconto1)/100\
                                             *(100-mov.sconto2)/100\
-                                            *(100-mov.sconto3)/100, ND)
+                                            *(100-mov.sconto3)/100\
+                                            *(100-mov.sconto4)/100\
+                                            *(100-mov.sconto5)/100\
+                                            *(100-mov.sconto6)/100, ND)
                     else:
                         if not mov.prod.codice in lisnul:
                             lisnul.append(mov.prod.codice)
@@ -1453,6 +1479,9 @@ class DocMag(adb.DbTable,\
             s1col = mcc('sconto1')
             s2col = mcc('sconto2')
             s3col = mcc('sconto3')
+            s4col = mcc('sconto4')
+            s5col = mcc('sconto5')
+            s6col = mcc('sconto6')
             avcol = self.mov.config._GetFieldIndex('askvalori', inline=True)
             rs = self.mov.GetRecordset()
             totau = 0
@@ -1469,7 +1498,13 @@ class DocMag(adb.DbTable,\
                     continue
                 if mov.importo is not None:
                     if mov.qta is not None and mov.prezzo is not None:
-                        mov.importo = RoundImp(mov.qta*mov.prezzo*(100-mov.sconto1)/100*(100-mov.sconto2)/100*(100-mov.sconto3)/100)
+                        mov.importo = RoundImp(mov.qta*mov.prezzo\
+                                               *(100-mov.sconto1)/100\
+                                               *(100-mov.sconto2)/100\
+                                               *(100-mov.sconto3)/100\
+                                               *(100-mov.sconto4)/100\
+                                               *(100-mov.sconto5)/100\
+                                               *(100-mov.sconto6)/100)
                         totim += mov.importo
             if self.totaumpr>0:
                 totau = 0
@@ -3739,7 +3774,7 @@ class RiepDocAcquis(adb.SubDbTable):
         
         mov = adb.DbTable(\
             bt.TABNAME_MOVMAG_B,  "mov", writable=False,
-            fields='id,id_doc,qta,prezzo,sconto1,sconto2,sconto3')
+            fields='id,id_doc,qta,prezzo,sconto1,sconto2,sconto3,sconto4,sconto5,sconto6')
         mov.AddFilter("mov.f_ann IS NULL or mov.f_ann<>1")
         
         doc = mov.AddJoin(\
@@ -3768,7 +3803,10 @@ class RiepDocAcquis(adb.SubDbTable):
         mov.AddTotalOf("""eva.qta*eva.prezzo"""\
                        """*(100-eva.sconto1)/100"""\
                        """*(100-eva.sconto2)/100"""\
-                       """*(100-eva.sconto3)/100""", "valeva")
+                       """*(100-eva.sconto3)/100"""\
+                       """*(100-eva.sconto4)/100"""\
+                       """*(100-eva.sconto5)/100"""\
+                       """*(100-eva.sconto6)/100""", "valeva")
         mov.AddOrder("doc.numdoc")
         mov.Reset()
         
@@ -3780,7 +3818,10 @@ class RiepDocAcquis(adb.SubDbTable):
         self.AddTotalOf("""totacq.mov_qta*totacq.mov_prezzo"""\
                         """*(100-totacq.mov_sconto1)/100"""\
                         """*(100-totacq.mov_sconto2)/100"""\
-                        """*(100-totacq.mov_sconto3)/100""", "valorig")
+                        """*(100-totacq.mov_sconto3)/100"""\
+                        """*(100-totacq.mov_sconto4)/100"""\
+                        """*(100-totacq.mov_sconto5)/100"""\
+                        """*(100-totacq.mov_sconto6)/100""", "valorig")
         self.AddTotalOf("""totacq.mov_total_valeva""",       "valevas")
         #self.SetDebug()
 
@@ -3896,7 +3937,10 @@ class RiepMovAcquis(adb.DbTable):
             m.impacq = round(m.qtaacq*m.prezzo\
                              *(100-(m.sconto1 or 0))/100\
                              *(100-(m.sconto2 or 0))/100\
-                             *(100-(m.sconto3 or 0))/100, bt.VALINT_DECIMALS)
+                             *(100-(m.sconto3 or 0))/100\
+                             *(100-(m.sconto4 or 0))/100\
+                             *(100-(m.sconto5 or 0))/100\
+                             *(100-(m.sconto6 or 0))/100, bt.VALINT_DECIMALS)
         else:
             m.impacq = None
 
@@ -4144,49 +4188,67 @@ class Prodotti(adb.DbTable):
         self.AddOrder('prod.codice')
         self.Reset()
     
-    def RicalcolaCosto(self, s1=None, s2=None, s3=None):
+    def RicalcolaCosto(self, s1=None, s2=None, s3=None, s4=None, s5=None, s6=None):
         out = False
         gpr = self.gruprez
         if s1 is None:
-            if self.sconto1 or self.sconto2 or self.sconto3:
+            if self.sconto1 or self.sconto2 or self.sconto3 or self.sconto4 or self.sconto5 or self.sconto6:
                 s1 = self.sconto1 or 0
                 s2 = self.sconto2 or 0
                 s3 = self.sconto3 or 0
+                s4 = self.sconto4 or 0
+                s5 = self.sconto5 or 0
+                s6 = self.sconto6 or 0
             else:
                 s1 = gpr.prcpresco1 or 0
                 s2 = gpr.prcpresco2 or 0
                 s3 = gpr.prcpresco3 or 0
-        if gpr.calcpc == 'C' or (s1 or s2 or s3):
+                s4 = gpr.prcpresco4 or 0
+                s5 = gpr.prcpresco5 or 0
+                s6 = gpr.prcpresco6 or 0
+        if gpr.calcpc == 'C' or (s1 or s2 or s3 or s4 or s5 or s6):
             #aggiorna costo
-            if s1 or s2 or s3:
+            if s1 or s2 or s3 or s4 or s5 or s6:
                 c = round((self.prezzo or 0)\
                           *(100-s1)/100\
                           *(100-s2)/100\
-                          *(100-s3)/100, bt.MAGPRE_DECIMALS)
+                          *(100-s3)/100\
+                          *(100-s4)/100\
+                          *(100-s5)/100\
+                          *(100-s6)/100, bt.MAGPRE_DECIMALS)
                 if c:
                     self.costo = c
                     out = True
         return out
     
-    def RicalcolaPrezzo(self, r1=None, r2=None, r3=None):
+    def RicalcolaPrezzo(self, r1=None, r2=None, r3=None, r4=None, r5=None, r6=None):
         out = False
         gpr = self.gruprez
         if r1 is None:
-            if self.ricar1 or self.ricar2 or self.ricar3:
+            if self.ricar1 or self.ricar2 or self.ricar3 or self.ricar4 or self.ricar5 or self.ricar6:
                 r1 = self.ricar1 or 0
                 r2 = self.ricar2 or 0
                 r3 = self.ricar3 or 0
+                r4 = self.ricar4 or 0
+                r5 = self.ricar5 or 0
+                r6 = self.ricar6 or 0
             else:
                 r1 = gpr.prccosric1 or 0
                 r2 = gpr.prccosric2 or 0
                 r3 = gpr.prccosric3 or 0
-        if gpr.calcpc == 'P' or (r1 or r2 or r3):
+                r4 = gpr.prccosric4 or 0
+                r5 = gpr.prccosric5 or 0
+                r6 = gpr.prccosric6 or 0
+        if gpr.calcpc == 'P' or (r1 or r2 or r3 or r4 or r5 or r6):
             #aggiorna prezzo
             if r1 or r2 or r3:
                 p = round(self.costo\
                           *(100+r1)/100\
                           *(100+r2)/100\
-                          *(100+r3)/100, bt.MAGPRE_DECIMALS)
+                          *(100+r3)/100\
+                          *(100+r4)/100\
+                          *(100+r5)/100\
+                          *(100+r6)/100, bt.MAGPRE_DECIMALS)
                 if p:
                     self.prezzo = p
                     out = True
@@ -4194,9 +4256,9 @@ class Prodotti(adb.DbTable):
     
     def RicalcolaPC(self):
         gpr = self.gruprez
-        if gpr.calcpc == 'C' or (self.sconto1 or self.sconto2 or self.sconto3):
+        if gpr.calcpc == 'C' or (self.sconto1 or self.sconto2 or self.sconto3 or self.sconto4 or self.sconto5 or self.sconto6):
             out = 'C', self.RicalcolaCosto()
-        elif gpr.calcpc == 'P' or (self.ricar1 or self.ricar2 or self.ricar3):
+        elif gpr.calcpc == 'P' or (self.ricar1 or self.ricar2 or self.ricar3 or self.ricar4 or self.ricar5 or self.ricar6):
             out = 'P', self.RicalcolaPrezzo()
         else:
             out = None, None

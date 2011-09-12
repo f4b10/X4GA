@@ -202,6 +202,7 @@ def GrigliaFunc( parent, call_fit = True, set_sizer = True ):
     item31.Add( item32, 0, wx.GROW|wx.ALIGN_BOTTOM|wx.LEFT, 5 )
 
     item33 = wx.CheckBox( parent, ID_CHECKBOX, "Mostra solo prodotti presenti nella griglia", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item33.SetValue( True )
     item33.SetName( "sologriglie" )
     item31.Add( item33, 0, wx.ALIGN_CENTER|wx.RIGHT, 5 )
 

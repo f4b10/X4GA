@@ -40,6 +40,8 @@ import wx.grid as gl
 import awc.controls.dbgrid as dbglib
 import awc.controls.windows as aw
 
+from awc.controls.linktable import EVT_LINKTABCHANGED
+
 
 FRAME_TITLE = "Gruppi prezzi"
 
@@ -83,9 +85,17 @@ class GruPrezPanel(ga.AnagPanel):
     def InitAnagCard(self, parent):
         p = wx.Panel( parent, -1)
         wdr.GruPrezCardFunc( p, True )
+        cn = self.FindWindowByName
+        for prefix_label, prefix_field, maxnum in (('prccosric', 'labric', bt.MAGNUMRIC),
+                                                   ('prcpresco', 'labsco', bt.MAGNUMSCO),):
+            for n in range(9):
+                if n+1>maxnum:
+                    for prefix in (prefix_label, prefix_field):
+                        c = cn('%s%d' % (prefix, n+1))
+                        if c:
+                            c.Hide()
         self.Bind(wx.EVT_RADIOBOX, self.OnTipoChanged, id=wdr.ID_TIPOCP)
         self.Bind(wx.EVT_RADIOBOX, self.OnTipoChanged, id=wdr.ID_TIPOLIS)
-        from awc.controls.linktable import EVT_LINKTABCHANGED
         self.Bind(EVT_LINKTABCHANGED, self.OnLisGPChanged, 
                   self.FindWindowByName('id_lisdagp'))
         wx.CallAfter(self.TestTipoCalc)

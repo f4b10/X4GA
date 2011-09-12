@@ -29,6 +29,12 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.3.28', None, (
+         ("BET1102",
+         """Esteso a sei il numero di sconti e ricariche gestibili, in base a
+         setup azienda."""),
+        ),),
+    
     ('1.3.27', None, (
          ("BET1101",
          """Implementato controllo sul numero di righe restituite dalle ricerche

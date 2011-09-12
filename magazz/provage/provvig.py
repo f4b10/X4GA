@@ -82,33 +82,44 @@ class ProvvigAgentiDetGrid(dbglib.DbGridColoriAlternati):
         _SCO = bt.GetMagScoMaskInfo()
         _VAL = bt.GetValIntMaskInfo()
         
-        return (\
-            ( 40, (cn('age_codice'),     "Cod.",         _STR, False)),
-            (120, (cn('age_descriz'),    "Agente",       _STR, False)),
-            ( 40, (cn('tipdoc_codice'),  "Cod.",         _STR, False)),
-            (110, (cn('tipdoc_descriz'), "Documento",    _STR, False)),
-            ( 50, (cn('doc_numdoc'),     "Num.",         _STR, False)),
-            ( 80, (cn('doc_datdoc'),     "Data",         _DAT, False)),
-            ( 40, (cn('pdc_codice'),     "Cod.",         _STR, False)),
-            (200, (cn('pdc_descriz'),    "Cliente",      _STR, False)),
-            (100, (cn('prod_codice'),    "Cod.",         _STR, False)),
-            (200, (cn('mov_descriz'),    "Descrizione",  _STR, False)),
-            ( 90, (cn('mov_qta'),        "Qta",          _QTA, False)),
-            ( 90, (cn('mov_prezzo'),     "Prezzo",       _PRE, False)),
-            ( 50, (cn('mov_sconto1'),    "Sc.%1",        _SCO, False)),
-            ( 50, (cn('mov_sconto2'),    "Sc.%2",        _SCO, False)),
-            ( 50, (cn('mov_sconto3'),    "Sc.%3",        _SCO, False)),
-            (110, (cn('total_vendita'),  "Vendita",      _VAL, False)),
-            ( 40, (cn('aliqiva_codice'), "Aliq.",        _STR, False)),
-            ( 50, (cn('avg_perpro'),     "Prov.%.",      _SCO, False)),
-            (110, (cn('total_provvig'),  "Provvig.",     _VAL, False)),
-            ( 40, (cn('dest_codice'),    "Cod.",         _STR, False)),
-            (200, (cn('dest_descriz'),   "Destinatario", _STR, False)),
-            (  1, (cn('mov_id'),         "#mov",         _STR, False)),
-            (  1, (cn('mov_id_doc'),     "#doc",         _STR, False)),
-            (  1, (cn('pdc_id'),         "#pdc",         _STR, False)),
-            (  1, (cn('prod_id'),        "#pro",         _STR, False)),
-        )
+        cols = []
+        a = cols.append
+        a(( 40, (cn('age_codice'),     "Cod.",         _STR, False)))
+        a((120, (cn('age_descriz'),    "Agente",       _STR, False)))
+        a(( 40, (cn('tipdoc_codice'),  "Cod.",         _STR, False)))
+        a((110, (cn('tipdoc_descriz'), "Documento",    _STR, False)))
+        a(( 50, (cn('doc_numdoc'),     "Num.",         _STR, False)))
+        a(( 80, (cn('doc_datdoc'),     "Data",         _DAT, False)))
+        a(( 40, (cn('pdc_codice'),     "Cod.",         _STR, False)))
+        a((200, (cn('pdc_descriz'),    "Cliente",      _STR, False)))
+        a((100, (cn('prod_codice'),    "Cod.",         _STR, False)))
+        a((200, (cn('mov_descriz'),    "Descrizione",  _STR, False)))
+        a(( 90, (cn('mov_qta'),        "Qta",          _QTA, False)))
+        a(( 90, (cn('mov_prezzo'),     "Prezzo",       _PRE, False)))
+        if bt.MAGNUMSCO >= 1:
+            a(( 50, (cn('mov_sconto1'),    "Sc.%"+'1'*int(bt.MAGNUMSCO>1), _SCO, False)))
+        if bt.MAGNUMSCO >= 2:
+            a(( 50, (cn('mov_sconto2'),    "Sc.%2",    _SCO, False)))
+        if bt.MAGNUMSCO >= 3:
+            a(( 50, (cn('mov_sconto3'),    "Sc.%3",    _SCO, False)))
+        if bt.MAGNUMSCO >= 4:
+            a(( 50, (cn('mov_sconto4'),    "Sc.%4",    _SCO, False)))
+        if bt.MAGNUMSCO >= 5:
+            a(( 50, (cn('mov_sconto5'),    "Sc.%5",    _SCO, False)))
+        if bt.MAGNUMSCO >= 6:
+            a(( 50, (cn('mov_sconto6'),    "Sc.%6",    _SCO, False)))
+        a((110, (cn('total_vendita'),  "Vendita",      _VAL, False)))
+        a(( 40, (cn('aliqiva_codice'), "Aliq.",        _STR, False)))
+        a(( 50, (cn('avg_perpro'),     "Prov.%.",      _SCO, False)))
+        a((110, (cn('total_provvig'),  "Provvig.",     _VAL, False)))
+        a(( 40, (cn('dest_codice'),    "Cod.",         _STR, False)))
+        a((200, (cn('dest_descriz'),   "Destinatario", _STR, False)))
+        a((  1, (cn('mov_id'),         "#mov",         _STR, False)))
+        a((  1, (cn('mov_id_doc'),     "#doc",         _STR, False)))
+        a((  1, (cn('pdc_id'),         "#pdc",         _STR, False)))
+        a((  1, (cn('prod_id'),        "#pro",         _STR, False)))
+        
+        return cols
     
     def _SetFitColumn(self):
         self.SetFitColumn(7)

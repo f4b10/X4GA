@@ -168,28 +168,38 @@ class PdcIntMagMovGrid(dbglib.DbGridColoriABlocchi):
         _SCO = bt.GetMagScoMaskInfo()
         _IMP = bt.GetValIntMaskInfo()
         
-        cols = (\
-            ( 35, (cn(mag, "codice"),  "Mag.",         _STR, True )),
-            ( 80, (cn(doc, "datreg"),  "Data reg.",    _DAT, True)),
-            ( 35, (cn(tpd, "codice"),  "Doc.",         _STR, True)),
-            ( 80, (cn(doc, "datdoc"),  "Data doc.",    _DAT, True)),
-            ( 60, (cn(doc, "numdoc"),  "Num.",         _NUM, True)),
-            ( 35, (cn(tpm, "codice"),  "Mov.",         _STR, True)),
-            (100, (cn(pro, "codice"),  "Cod.",         _STR, True)),
-            (190, (cn(mov, "descriz"), "Descrizione.", _STR, True)),
-            ( 80, (cn(mov, "qta"),     "Quantità",     _QTA, True)),
-            ( 90, (cn(mov, "prezzo"),  "Prezzo",       _PRZ, True)),
-            ( 60, (cn(mov, "sconto1"), "Sc.%1",        _SCO, True)),
-            ( 60, (cn(mov, "sconto2"), "Sc.%2",        _SCO, True)),
-            ( 60, (cn(mov, "sconto3"), "Sc.%3",        _SCO, True)),
-            (110, (cn(mov, "importo"), "Importo",      _IMP, True)),
-            (200, (cn(mov, "note"),    "Note",         _STR, True)),
-            (120, (cn(tpd, "descriz"), "Documento",    _STR, True)),
-            (120, (cn(tpm, "descriz"), "Movimento",    _STR, True)),
-            (  1, (cn(mov, "id"),      "#mov",         _STR, True)),
-            (  1, (cn(doc, "id"),      "#doc",         _STR, True)),
-            (  1, (cn(pro, "id"),      "#pro",         _STR, True)),
-        )                                           
+        cols = []
+        a = cols.append
+        a(( 35, (cn(mag, "codice"),  "Mag.",         _STR, True)))
+        a(( 80, (cn(doc, "datreg"),  "Data reg.",    _DAT, True)))
+        a(( 35, (cn(tpd, "codice"),  "Doc.",         _STR, True)))
+        a(( 80, (cn(doc, "datdoc"),  "Data doc.",    _DAT, True)))
+        a(( 60, (cn(doc, "numdoc"),  "Num.",         _NUM, True)))
+        a(( 35, (cn(tpm, "codice"),  "Mov.",         _STR, True)))
+        a((100, (cn(pro, "codice"),  "Cod.",         _STR, True)))
+        a((190, (cn(mov, "descriz"), "Descrizione.", _STR, True)))
+        a(( 80, (cn(mov, "qta"),     "Quantità",     _QTA, True)))
+        a(( 90, (cn(mov, "prezzo"),  "Prezzo",       _PRZ, True)))
+        if bt.MAGNUMSCO >= 1:
+            a(( 60, (cn(mov, "sconto1"), "Sc.%"+'1'*int(bt.MAGNUMSCO>1), _SCO, True)))
+        if bt.MAGNUMSCO >= 2:
+            a(( 60, (cn(mov, "sconto2"), "Sc.%2",    _SCO, True)))
+        if bt.MAGNUMSCO >= 3:
+            a(( 60, (cn(mov, "sconto3"), "Sc.%3",    _SCO, True)))
+        if bt.MAGNUMSCO >= 4:
+            a(( 60, (cn(mov, "sconto4"), "Sc.%4",    _SCO, True)))
+        if bt.MAGNUMSCO >= 5:
+            a(( 60, (cn(mov, "sconto5"), "Sc.%5",    _SCO, True)))
+        if bt.MAGNUMSCO >= 6:
+            a(( 60, (cn(mov, "sconto6"), "Sc.%6",    _SCO, True)))
+        a((110, (cn(mov, "importo"), "Importo",      _IMP, True)))
+        a((200, (cn(mov, "note"),    "Note",         _STR, True)))
+        a((120, (cn(tpd, "descriz"), "Documento",    _STR, True)))
+        a((120, (cn(tpm, "descriz"), "Movimento",    _STR, True)))
+        a((  1, (cn(mov, "id"),      "#mov",         _STR, True)))
+        a((  1, (cn(doc, "id"),      "#doc",         _STR, True)))
+        a((  1, (cn(pro, "id"),      "#pro",         _STR, True)))
+        
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
         

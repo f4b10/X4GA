@@ -516,9 +516,19 @@ class GridBody(object):
         if (bt.MAGATTGRIP or bt.MAGATTGRIF) and bt.MAGAGGGRIP:
             self.COL_AGGGRIP = a(( -1, [m.RSMOV_AGGGRIP, "AGP",          _CHK, True]))
         
-        self.COL_SC1 =     a((  1, [m.RSMOV_SC1,       "Sc.%1",          _SCO, True]))
-        self.COL_SC2 =     a((  1, [m.RSMOV_SC2,       "Sc.%2",          _SCO, True]))
-        self.COL_SC3 =     a((  1, [m.RSMOV_SC3,       "Sc.%3",          _SCO, True]))
+        if bt.MAGNUMSCO >= 1:
+            self.COL_SC1 = a((  1, [m.RSMOV_SC1,       "Sc.%"+'1'*int(bt.MAGNUMSCO>1), _SCO, True]))
+        if bt.MAGNUMSCO >= 2:
+            self.COL_SC2 = a((  1, [m.RSMOV_SC2,       "Sc.%2",          _SCO, True]))
+        if bt.MAGNUMSCO >= 3:
+            self.COL_SC3 = a((  1, [m.RSMOV_SC3,       "Sc.%3",          _SCO, True]))
+        if bt.MAGNUMSCO >= 4:
+            self.COL_SC4 = a((  1, [m.RSMOV_SC4,       "Sc.%4",          _SCO, True]))
+        if bt.MAGNUMSCO >= 5:
+            self.COL_SC5 = a((  1, [m.RSMOV_SC5,       "Sc.%5",          _SCO, True]))
+        if bt.MAGNUMSCO >= 6:
+            self.COL_SC6 = a((  1, [m.RSMOV_SC6,       "Sc.%6",          _SCO, True]))
+            
         self.COL_IMPORTO = a((  1, [m.RSMOV_IMPORTO,   "Importo",        _IMP, True]))
         self.COL_codiva =  a(( 35, [m.RSMOV_codiva,    "Iva",            _STR, True]))
         self.COL_NOTE =    a((200, [m.RSMOV_NOTE,      "Note",           _STR, True]))
@@ -1014,18 +1024,27 @@ class GridBody(object):
                 self.GridBodyDefAliqIva()
                 mov.um = row.prod.um
                 mov.qta = row.qta
-                p, s1, s2, s3 = self.GridBodyDefPrezzoSconti()
+                p, s1, s2, s3, s4, s5, s6 = self.GridBodyDefPrezzoSconti()
                 mov.prezzo = p
                 mov.sconto1 = s1 or 0
                 mov.sconto2 = s2 or 0
                 mov.sconto3 = s3 or 0
+                mov.sconto4 = s4 or 0
+                mov.sconto5 = s5 or 0
+                mov.sconto6 = s6 or 0
                 mov.sconto1 = self.GridBodyDefSconto(1, mov)
                 mov.sconto2 = self.GridBodyDefSconto(2, mov)
                 mov.sconto3 = self.GridBodyDefSconto(3, mov)
+                mov.sconto4 = self.GridBodyDefSconto(4, mov)
+                mov.sconto5 = self.GridBodyDefSconto(5, mov)
+                mov.sconto6 = self.GridBodyDefSconto(6, mov)
                 mov.importo = round(mov.prezzo*mov.qta\
                                     *(100-mov.sconto1)/100\
                                     *(100-mov.sconto2)/100\
-                                    *(100-mov.sconto3)/100, bt.VALINT_DECIMALS)
+                                    *(100-mov.sconto3)/100\
+                                    *(100-mov.sconto4)/100\
+                                    *(100-mov.sconto5)/100\
+                                    *(100-mov.sconto6)/100, bt.VALINT_DECIMALS)
             #dbpdt.Delete()
             #dbpdt.Save()
             doc._info.pdtreadann.append(dbpdt.id)
@@ -1211,7 +1230,10 @@ class GridBody(object):
             i = round((mov.qta or 0)*(mov.prezzo or 0)\
                       *(100-(mov.sconto1 or 0))/100\
                       *(100-(mov.sconto2 or 0))/100\
-                      *(100-(mov.sconto3 or 0))/100, bt.VALINT_DECIMALS)
+                      *(100-(mov.sconto3 or 0))/100\
+                      *(100-(mov.sconto4 or 0))/100\
+                      *(100-(mov.sconto5 or 0))/100\
+                      *(100-(mov.sconto6 or 0))/100, bt.VALINT_DECIMALS)
             if len(str(abs(int(i)))) > bt.VALINT_INTEGERS:
                 msg =\
                 """Il valore dell'importo è troppo elevato,\n"""\
@@ -1230,9 +1252,7 @@ class GridBody(object):
                 if askvalori != mov._info.askvprec:
                     if askvalori in "DQVT":
                         mov.prezzo  = 0
-                        mov.sconto1 = 0
-                        mov.sconto2 = 0
-                        mov.sconto3 = 0
+                        mov.sconto1 = mov.sconto2 = mov.sconto3 = mov.sconto4 = mov.sconto5 = mov.sconto6 = 0
                         if askvalori == "T":
                             mov.importo = 0
                         elif askvalori == "D":
@@ -1258,14 +1278,20 @@ class GridBody(object):
                 mov.descriz    = self.dbprod.descriz
                 mov.um         = self.dbprod.um
                 if mov.config.askvalori == 'T':
-                    p, s1, s2, s3 = self.GridBodyDefPrezzoSconti()
+                    p, s1, s2, s3, s4, s5, s6 = self.GridBodyDefPrezzoSconti()
                     mov.prezzo = p
                     mov.sconto1 = s1 or 0
                     mov.sconto2 = s2 or 0
                     mov.sconto3 = s3 or 0
+                    mov.sconto4 = s4 or 0
+                    mov.sconto5 = s5 or 0
+                    mov.sconto6 = s6 or 0
                     mov.sconto1 = self.GridBodyDefSconto(1, mov)
                     mov.sconto2 = self.GridBodyDefSconto(2, mov)
                     mov.sconto3 = self.GridBodyDefSconto(3, mov)
+                    mov.sconto4 = self.GridBodyDefSconto(4, mov)
+                    mov.sconto5 = self.GridBodyDefSconto(5, mov)
+                    mov.sconto6 = self.GridBodyDefSconto(6, mov)
                     if bt.MAGPZCONF:
                         mov.pzconf = mov.prod.pzconf
                         if bt.MAGPZGRIP:
@@ -1300,7 +1326,7 @@ class GridBody(object):
                             mov.perpro = self.dbprod.perpro
                     DefImporto()
                 elif mov.config.askvalori == 'V':
-                    mov.importo, _, _, _ = self.GridBodyDefPrezzoSconti()
+                    mov.importo, _, _, _, _, _, _ = self.GridBodyDefPrezzoSconti()
                 self.GridBodyDefAliqIva()
                 self.UpdateProdZone(value)
                 if self.dbdoc.config.autoqtaonbc == 1:
@@ -1327,13 +1353,13 @@ class GridBody(object):
             resetview = True
             
         elif col in (m.RSMOV_QTA, m.RSMOV_PREZZO,\
-                     m.RSMOV_SC1, m.RSMOV_SC2, m.RSMOV_SC3):
+                     m.RSMOV_SC1, m.RSMOV_SC2, m.RSMOV_SC3, m.RSMOV_SC4, m.RSMOV_SC5, m.RSMOV_SC6):
             DefImporto()
             resetview = True
             
         elif hasattr(self, 'COL_TIPLIST') and col == m.RSMOV_TIPLIST:
             if value is not None:
-                mov.prezzo, _, _, _, _ = doc.DefPrezzoSconti(force_tiplist=value)
+                mov.prezzo, _, _, _, _, _, _, _ = doc.DefPrezzoSconti6(force_tiplist=value)
                 DefImporto()
             
         elif col == m.RSMOV_IMPORTO:
@@ -1341,11 +1367,23 @@ class GridBody(object):
                 if mov.config.modimpricalc == "P":
                     #da configurazione movimento, devo ricalcolare il prezzo
                     if mov.qta:
-                        mov.prezzo = value/(mov.qta*(100-(mov.sconto1 or 0))/100*(100-(mov.sconto2 or 0))/100*(100-(mov.sconto3 or 0))/100)
+                        mov.prezzo = value/(mov.qta\
+                                            *(100-(mov.sconto1 or 0))/100\
+                                            *(100-(mov.sconto2 or 0))/100\
+                                            *(100-(mov.sconto3 or 0))/100\
+                                            *(100-(mov.sconto4 or 0))/100\
+                                            *(100-(mov.sconto5 or 0))/100\
+                                            *(100-(mov.sconto6 or 0))/100)
                 elif mov.config.modimpricalc == "Q":
                     #da configurazione movimento, devo ricalcolare la quantità
                     if mov.prezzo:
-                        mov.qta = value/(mov.prezzo*(100-(mov.sconto1 or 0))/100*(100-(mov.sconto2 or 0))/100*(100-(mov.sconto3 or 0))/100)
+                        mov.qta = value/(mov.prezzo\
+                                         *(100-(mov.sconto1 or 0))/100\
+                                         *(100-(mov.sconto2 or 0))/100\
+                                         *(100-(mov.sconto3 or 0))/100\
+                                         *(100-(mov.sconto4 or 0))/100\
+                                         *(100-(mov.sconto5 or 0))/100\
+                                         *(100-(mov.sconto6 or 0))/100)
                 else:
                     #da configurazione movimento, devo ricalcolare lo sconto
                     if mov.qta and mov.prezzo:
@@ -1364,8 +1402,7 @@ class GridBody(object):
                             """correggere il prezzo o la quantità"""
                             s = 0
                         mov.sconto1 = s
-                        mov.sconto2 = 0
-                        mov.sconto3 = 0
+                        mov.sconto2 = mov.sconto3 = mov.sconto4 = mov.sconto5 = mov.sconto6 = 0
                 resetview = True
             mov.importo = value
             
@@ -1407,8 +1444,8 @@ class GridBody(object):
         return sconto
     
     def GridBodyDefPrezzoSconti(self):
-        prezzo, tipo, sc1, sc2, sc3 = self.dbdoc.DefPrezzoSconti()
-        return prezzo, sc1, sc2, sc3
+        prezzo, tipo, sc1, sc2, sc3, sc4, sc5, sc6 = self.dbdoc.DefPrezzoSconti6()
+        return prezzo, sc1, sc2, sc3, sc4, sc5, sc6
     
     def GridBodyDefAliqIva(self):
         doc = self.dbdoc
@@ -1468,9 +1505,7 @@ class GridBody(object):
         mov.MoveNewRow()
         mov.AppendNewRow()
         mov.numriga = mov.RowsCount()
-        map(mov._ResetTableVar,\
-            ("descriz", "um", "note", "qta", "prezzo",\
-             "sconto1", "sconto2", "sconto3", "importo"))
+        map(mov._ResetTableVar, 'descriz um note qta prezzo sconto1 sconto2 sconto3 sconto4 sconto5 sconto6 importo'.split())
         mov.perpro = None
         mov.agggrip = int((bt.MAGATTGRIP or bt.MAGATTGRIF) and bt.MAGAGGGRIP and bt.MAGALWGRIP)
         if self.lastmovid is not None:

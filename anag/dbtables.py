@@ -604,7 +604,32 @@ class TabProdGrigliaPrezziAttualiPdcTable(adb.DbMem):
     idpdc = None
     
     def __init__(self, **kwargs):
-        adb.DbMem.__init__(self, 'prod_id,prod_codice,prod_descriz,prod_descextra,prod_codfor,prod_barcode,pdc_id,pdc_codice,pdc_descriz,prod_costo,prod_prezzo,prod_pzconf,grip_pdc_id,grip_pdc_codice,grip_pdc_descriz,grip_data,grip_prezzo,grip_sconto1,grip_sconto2,grip_sconto3,grip_ext_codice,grip_ext_descriz,grip_pzconf')
+        adb.DbMem.__init__(self, ['prod_id',
+                                  'prod_codice',
+                                  'prod_descriz',
+                                  'prod_descextra',
+                                  'prod_codfor',
+                                  'prod_barcode',
+                                  'pdc_id',
+                                  'pdc_codice',
+                                  'pdc_descriz',
+                                  'prod_costo',
+                                  'prod_prezzo',
+                                  'prod_pzconf',
+                                  'grip_pdc_id',
+                                  'grip_pdc_codice',
+                                  'grip_pdc_descriz',
+                                  'grip_data',
+                                  'grip_prezzo',
+                                  'grip_sconto1',
+                                  'grip_sconto2',
+                                  'grip_sconto3',
+                                  'grip_sconto4',
+                                  'grip_sconto5',
+                                  'grip_sconto6',
+                                  'grip_ext_codice',
+                                  'grip_ext_descriz',
+                                  'grip_pzconf'])
     
     def Retrieve(self, filter_cmd=None, filter_par=[]):
         if bt.MAGDATGRIP:
@@ -629,6 +654,9 @@ class TabProdGrigliaPrezziAttualiPdcTable(adb.DbMem):
                    grip.sconto1     'grip_sconto1', 
                    grip.sconto2     'grip_sconto2', 
                    grip.sconto3     'grip_sconto3', 
+                   grip.sconto4     'grip_sconto4', 
+                   grip.sconto5     'grip_sconto5', 
+                   grip.sconto6     'grip_sconto6', 
                    grip.ext_codice  'grip_ext_codice',
                    grip.ext_descriz 'grip_ext_descriz',
                    grip.pzconf      'grip_pzconf'
@@ -676,6 +704,9 @@ class TabProdGrigliaPrezziAttualiPdcTable(adb.DbMem):
                    grip.sconto1     'grip_sconto1', 
                    grip.sconto2     'grip_sconto2', 
                    grip.sconto3     'grip_sconto3', 
+                   grip.sconto4     'grip_sconto4', 
+                   grip.sconto5     'grip_sconto5', 
+                   grip.sconto6     'grip_sconto6', 
                    grip.ext_codice  'grip_ext_codice',
                    grip.ext_descriz 'grip_ext_descriz',
                    grip.pzconf      'grip_pzconf'
@@ -719,7 +750,11 @@ class TabProdGrigliaPrezziAttualiProdTable(adb.DbMem):
     tipana = None
     
     def __init__(self, **kwargs):
-        adb.DbMem.__init__(self, 'prod_id,prod_codice,prod_descriz,prod_descextra,prod_codfor,prod_barcode,pdc_id,pdc_codice,pdc_descriz,prod_costo,prod_prezzo,prod_pzconf,grip_pdc_id,grip_pdc_codice,grip_pdc_descriz,grip_data,grip_prezzo,grip_sconto1,grip_sconto2,grip_sconto3,grip_pzconf')
+        adb.DbMem.__init__(self,\
+                           """prod_id prod_codice prod_descriz prod_descextra prod_codfor prod_barcode """\
+                           """pdc_id pdc_codice pdc_descriz prod_costo prod_prezzo prod_pzconf """\
+                           """grip_pdc_id grip_pdc_codice grip_pdc_descriz grip_data grip_prezzo """\
+                           """grip_sconto1 grip_sconto2 grip_sconto3 grip_sconto4 grip_sconto5 grip_sconto6 grip_pzconf""".split())
     
     def Retrieve(self, filter_cmd=None, filter_par=[]):
         cmd = """
@@ -742,7 +777,10 @@ class TabProdGrigliaPrezziAttualiProdTable(adb.DbMem):
                grip.prezzo      'grip_prezzo', 
                grip.sconto1     'grip_sconto1', 
                grip.sconto2     'grip_sconto2', 
-               grip.sconto3     'grip_sconto3', 
+               grip.sconto3     'grip_sconto3',
+               grip.sconto4     'grip_sconto4', 
+               grip.sconto5     'grip_sconto5', 
+               grip.sconto6     'grip_sconto6', 
                grip.pzconf      'grip_pzconf'
                              
           FROM prod

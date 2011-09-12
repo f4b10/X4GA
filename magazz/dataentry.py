@@ -119,26 +119,36 @@ class PdcProdHistoryGrid(dbglib.DbGrid):
         _IMP = bt.GetValIntMaskInfo()
         _SCO = bt.GetMagScoMaskInfo()
         
-        cols = (\
-            ( 35, (cn(mag, "codice"),  "Mag.",      _STR, True)),
-            (100, (cn(tpd, "descriz"), "Documento", _STR, True)),
-            ( 40, (cn(doc, "numdoc"),  "Num.",      _STR, True)),
-            ( 80, (cn(doc, "datdoc"),  "Data doc.", _DAT, True)),
-            ( 35, (cn(tpm, "codice"),  "Mov.",      _STR, True)),
-            ( 35, (cn(mov, "um"),      "UM",        _STR, True)),
-            ( 80, (cn(mov, "qta"),     "Qtà",       _QTA, True)),
-            ( 80, (cn(mov, "prezzo"),  "Prezzo",    _PRE, True)),
-            ( 60, (cn(mov, "sconto1"), "Sc.%1",     _SCO, True)),
-            ( 60, (cn(mov, "sconto2"), "Sc.%2",     _SCO, True)),
-            ( 60, (cn(mov, "sconto3"), "Sc.%3",     _SCO, True)),
-            (100, (cn(mov, "importo"), "Importo",   _IMP, True)),
-            (140, (cn(mov, "note"),    "Note.",     _STR, True)),
-            ( 30, (cn(doc, "f_ann"),   "Dan",       _CHK, True)),
-            ( 30, (cn(mov, "f_ann"),   "Man",       _CHK, True)),
-            ( 30, (cn(doc, "f_acq"),   "Acq",       _CHK, True)),
-            (  1, (cn(doc, "id"),      "#doc",      _STR, True)),
-            (  1, (cn(mov, "id"),      "#mov",      _STR, True)),
-        )
+        cols = []
+        a = cols.append
+        a(( 35, (cn(mag, "codice"),  "Mag.",      _STR, True)))
+        a((100, (cn(tpd, "descriz"), "Documento", _STR, True)))
+        a(( 40, (cn(doc, "numdoc"),  "Num.",      _STR, True)))
+        a(( 80, (cn(doc, "datdoc"),  "Data doc.", _DAT, True)))
+        a(( 35, (cn(tpm, "codice"),  "Mov.",      _STR, True)))
+        a(( 35, (cn(mov, "um"),      "UM",        _STR, True)))
+        a(( 80, (cn(mov, "qta"),     "Qtà",       _QTA, True)))
+        a(( 80, (cn(mov, "prezzo"),  "Prezzo",    _PRE, True)))
+        if bt.MAGNUMSCO >= 1:
+            a(( 60, (cn(mov, "sconto1"), "Sc.%"+'1'*int(bt.MAGNUMSCO>1), _SCO, True)))
+        if bt.MAGNUMSCO >= 2:
+            a(( 60, (cn(mov, "sconto2"), "Sc.%2", _SCO, True)))
+        if bt.MAGNUMSCO >= 3:
+            a(( 60, (cn(mov, "sconto3"), "Sc.%3", _SCO, True)))
+        if bt.MAGNUMSCO >= 4:
+            a(( 60, (cn(mov, "sconto4"), "Sc.%4", _SCO, True)))
+        if bt.MAGNUMSCO >= 5:
+            a(( 60, (cn(mov, "sconto5"), "Sc.%5", _SCO, True)))
+        if bt.MAGNUMSCO >= 6:
+            a(( 60, (cn(mov, "sconto6"), "Sc.%6", _SCO, True)))
+        a((100, (cn(mov, "importo"), "Importo",   _IMP, True)))
+        a((140, (cn(mov, "note"),    "Note.",     _STR, True)))
+        a(( 30, (cn(doc, "f_ann"),   "Dan",       _CHK, True)))
+        a(( 30, (cn(mov, "f_ann"),   "Man",       _CHK, True)))
+        a(( 30, (cn(doc, "f_acq"),   "Acq",       _CHK, True)))
+        a((  1, (cn(doc, "id"),      "#doc",      _STR, True)))
+        a((  1, (cn(mov, "id"),      "#mov",      _STR, True)))
+        
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
         
@@ -396,6 +406,13 @@ class MagazzPanel(aw.Panel,\
         
         self.SetFieldsMaxLength()
         
+        for n in range(9):
+            if n+1>bt.MAGNUMSCO:
+                for prefix in 'labsco sconto'.split():
+                    c = cn('%s%d' % (prefix, n+1))
+                    if c:
+                        c.Hide()
+        
         # bind eventi dei bottoni
         for name, func in (("butnew",     self.OnDocNew),
                            ("butsrc",     self.OnDocSearch),
@@ -435,24 +452,23 @@ class MagazzPanel(aw.Panel,\
                   #id=wdr.ID_DEST)
         
         # bind eventi di cambiamento dati di testata
-        for name in ('f_ann', 'f_acq'):
+        for name in 'f_ann f_acq'.split():
             self.Bind(wx.EVT_CHECKBOX, self.OnHeadChanged, cn(name))
         
-        for name in ("pdc", "modpag", "bancf", "speinc", "aliqiva",\
-                     "agente", "zona", "tiplist", "valuta", "dest"):
+        for name in 'pdc modpag bancf speinc aliqiva agente zona tiplist valuta dest'.split():
             self.Bind(EVT_LINKTABCHANGED, self.OnHeadChanged, cn("id_%s" % name))
         
-        for name in 'desrif,numrif,noteint,notedoc,sconto1,sconto2,sconto3'.split(','):
+        for name in 'desrif numrif noteint notedoc sconto1 sconto2 sconto3 sconto4 sconto5 sconto6'.split():
             self.Bind(wx.EVT_TEXT, self.OnHeadChanged, cn(name))
         
-        for name in 'datrif,'.split(','):
+        for name in 'datrif'.split():
             self.Bind(EVT_DATECHANGED, self.OnHeadChanged, cn(name))
         
         # bind eventi di cambiamento dati accompagnatori
-        for name in ("cau", "cur", "vet", "asp", "por", "con"):
+        for name in 'cau cur vet asp por con'.split():
             self.Bind(EVT_LINKTABCHANGED, self.OnFootChanged, cn("id_tra%s" % name))
         
-        for name in ("impcontr", "totpeso", "totcolli", "notevet"):
+        for name in 'impcontr totpeso totcolli notevet'.split():
             self.Bind(wx.EVT_TEXT, self.OnFootChanged, cn(name))
             
         self.Bind(EVT_DATECHANGED, self.OnFootChanged, cn("initrasp"))
@@ -1018,9 +1034,9 @@ class MagazzPanel(aw.Panel,\
             pass
         def UpdateHead():
             for name in\
-                """id_pdc,id_dest,id_modpag,id_bancf,id_speinc,id_agente,"""\
-                """id_zona,id_valuta,id_tiplist,id_aliqiva,desrif,numrif,"""\
-                """datrif,noteint,notedoc,sconto1,sconto2,sconto3""".split(','):
+                """id_pdc id_dest id_modpag id_bancf id_speinc id_agente """\
+                """id_zona id_valuta id_tiplist id_aliqiva desrif numrif """\
+                """datrif noteint notedoc sconto1 sconto2 sconto3 sconto4 sconto5 sconto6""".split():
                 setattr(doc, name, cn(name).GetValue())
             if bt.MAGNUMLIS > 0:
                 if doc.mov.RowsCount()>0 and doc.id_tiplist is not None\
@@ -1178,11 +1194,10 @@ class MagazzPanel(aw.Panel,\
         doc.id_pdc = idpdc
         anag = doc.GetAnag()
         self.dbanag = anag
-        copyCols = """indirizzo,cap,citta,prov,nazione,piva,codfisc"""
+        copyCols = """indirizzo cap citta prov nazione piva codfisc"""
         if initAll:
-            copyCols += """,id_modpag,id_speinc,id_aliqiva,"""\
-                     """id_agente,id_zona,id_tiplist,"""\
-                     """sconto1,sconto2,sconto3"""
+            copyCols += """ id_modpag id_speinc id_aliqiva id_agente id_zona id_tiplist """\
+                     """sconto1 sconto2 sconto3 sconto4 sconto5 sconto6"""
             if bt.CONATTRITACC and doc.cfgdoc.sogritacc:
                 ra = 0
                 if hasattr(anag, 'sogritacc'):
@@ -1191,7 +1206,7 @@ class MagazzPanel(aw.Panel,\
                 sra = self.FindWindowByName('sogritacc')
                 sra.SetValue(ra)
                 sra.TestPercentuali(doc)
-        copyCols = copyCols.split(',')
+        copyCols = copyCols.split()
         hcol = {}
         hcol["descriz"] = doc.pdc.descriz
         for field in copyCols:
@@ -2240,10 +2255,9 @@ class MagazzPanel(aw.Panel,\
         return out
     
     def UpdatePanelHead(self):
-        names = ["id_pdc", "id_dest", "id_modpag",\
-                 "id_agente", "id_zona", "id_valuta", "id_tiplist",\
-                 "datrif", "numrif", "desrif", "noteint", "notedoc",\
-                 "f_ann", "f_acq", "sconto1", "sconto2", "sconto3"]
+        names = """id_pdc id_dest id_modpag id_agente id_zona id_valuta id_tiplist """\
+                """datrif numrif desrif noteint notedoc f_ann f_acq """\
+                """sconto1 sconto2 sconto3 sconto4 sconto5 sconto6""".split()
         if not self.dbdoc.cfgdoc.askmpnoeff:
             names.append("id_bancf")
             names.append("id_speinc")
@@ -2300,6 +2314,9 @@ class MagazzPanel(aw.Panel,\
         c["sconto1"].Enable(en)
         c["sconto2"].Enable(en)
         c["sconto3"].Enable(en)
+        c["sconto4"].Enable(en)
+        c["sconto5"].Enable(en)
+        c["sconto6"].Enable(en)
         c["id_agente"].Enable(en and cfg.askagente)
         c["id_zona"].Enable(en and cfg.askzona)
         c["id_tiplist"].Enable(en and cfg.asklist)
@@ -2547,7 +2564,10 @@ class MagazzPanel(aw.Panel,\
                                     ('id_tiplist', 'Listino'),
                                     ('sconto1',    'Sconto 1'),
                                     ('sconto2',    'Sconto 2'),
-                                    ('sconto3',    'Sconto 3'),):
+                                    ('sconto3',    'Sconto 3'),
+                                    ('sconto4',    'Sconto 4'),
+                                    ('sconto5',    'Sconto 5'),
+                                    ('sconto6',    'Sconto 6'),):
                     v_doc = x_doc = getattr(daq, field)
                     if field == 'id_bancf':
                         v_ana = x_ana = None
@@ -2621,6 +2641,9 @@ class MagazzPanel(aw.Panel,\
                         mov.sconto1 = acq.sconto1
                         mov.sconto2 = acq.sconto2
                         mov.sconto3 = acq.sconto3
+                        mov.sconto4 = acq.sconto4
+                        mov.sconto5 = acq.sconto5
+                        mov.sconto6 = acq.sconto6
                         mov.f_ann = 0
                         riga += 1
                 if acq.annacq:

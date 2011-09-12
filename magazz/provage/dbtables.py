@@ -86,6 +86,9 @@ class ProvvigAgentiDetTable(adb.DbTable):
         self.AddGroupOn('mov.sconto1',     'mov_sconto1')
         self.AddGroupOn('mov.sconto2',     'mov_sconto2')
         self.AddGroupOn('mov.sconto3',     'mov_sconto3')
+        self.AddGroupOn('mov.sconto4',     'mov_sconto4')
+        self.AddGroupOn('mov.sconto5',     'mov_sconto5')
+        self.AddGroupOn('mov.sconto6',     'mov_sconto6')
     
     def _AddOrders(self):
         self.AddOrder('age.codice')

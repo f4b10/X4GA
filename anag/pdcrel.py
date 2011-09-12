@@ -474,9 +474,19 @@ class GrigliaPrezziGrid(dbglib.DbGridColoriAlternati):
             self.COL_PZCONF = b((70,(cn(gri,'pzconf'),  "Pz.Conf.",       _PZC, True)))
         
         self.COL_PREZZO =  b((110, (cn(gri, 'prezzo'),  "Prezzo griglia", _PRE, True)))
-        self.COL_SCONTO1 = b(( 50, (cn(gri, 'sconto1'), "Sc.%1",          _PRC, True)))
-        self.COL_SCONTO2 = b(( 50, (cn(gri, 'sconto2'), "Sc.%2",          _PRC, True)))
-        self.COL_SCONTO3 = b(( 50, (cn(gri, 'sconto3'), "Sc.%3",          _PRC, True)))
+        
+        if bt.MAGNUMSCO >= 1:
+            self.COL_SCONTO1 = b(( 50, (cn(gri, 'sconto1'), "Sc.%"+'1'*int(bt.MAGNUMSCO>1), _PRC, True)))
+        if bt.MAGNUMSCO >= 2:
+            self.COL_SCONTO2 = b(( 50, (cn(gri, 'sconto2'), "Sc.%2",      _PRC, True)))
+        if bt.MAGNUMSCO >= 3:
+            self.COL_SCONTO3 = b(( 50, (cn(gri, 'sconto3'), "Sc.%3",      _PRC, True)))
+        if bt.MAGNUMSCO >= 4:
+            self.COL_SCONTO4 = b(( 50, (cn(gri, 'sconto4'), "Sc.%4",      _PRC, True)))
+        if bt.MAGNUMSCO >= 5:
+            self.COL_SCONTO5 = b(( 50, (cn(gri, 'sconto5'), "Sc.%5",      _PRC, True)))
+        if bt.MAGNUMSCO >= 6:
+            self.COL_SCONTO6 = b(( 50, (cn(gri, 'sconto6'), "Sc.%6",      _PRC, True)))
         self.COL_ID_GRIP = a((  1, (cn(gri, 'id'),      "#gri",           _STR, True)))
         self.COL_ID_PROD = a((  1, (cn(pro, 'id'),      "#pro",           _STR, True)))
         

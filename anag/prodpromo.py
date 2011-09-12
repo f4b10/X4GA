@@ -101,9 +101,18 @@ class ProdPromoGrid(dbglib.DbGridColoriAlternati):
         self.COL_DATMIN =  C(( 90, (cc(prm, 'datmin'),  "Dal",      _DAT, True)))
         self.COL_DATMAX =  C(( 90, (cc(prm, 'datmax'),  "Al",       _DAT, True)))
         self.COL_PREZZO =  C(( 80, (cc(prm, 'prezzo'),  "Prezzo",   _PRZ, True)))
-        self.COL_SCONTO1 = C(( 50, (cc(prm, 'sconto1'), "Sc.%1",    _SCO, True)))
-        self.COL_SCONTO2 = C(( 50, (cc(prm, 'sconto2'), "Sc.%2",    _SCO, True)))
-        self.COL_SCONTO3 = C(( 50, (cc(prm, 'sconto3'), "Sc.%3",    _SCO, True)))
+        if bt.MAGNUMSCO >= 1:
+            self.COL_SCONTO1 = C(( 50, (cc(prm, 'sconto1'), "Sc.%"+'1'*int(bt.MAGNUMSCO>1), _SCO, True)))
+        if bt.MAGNUMSCO >= 2:
+            self.COL_SCONTO2 = C(( 50, (cc(prm, 'sconto2'), "Sc.%2",    _SCO, True)))
+        if bt.MAGNUMSCO >= 3:
+            self.COL_SCONTO3 = C(( 50, (cc(prm, 'sconto3'), "Sc.%3",    _SCO, True)))
+        if bt.MAGNUMSCO >= 4:
+            self.COL_SCONTO4 = C(( 50, (cc(prm, 'sconto4'), "Sc.%4",    _SCO, True)))
+        if bt.MAGNUMSCO >= 5:
+            self.COL_SCONTO5 = C(( 50, (cc(prm, 'sconto5'), "Sc.%5",    _SCO, True)))
+        if bt.MAGNUMSCO >= 6:
+            self.COL_SCONTO6 = C(( 50, (cc(prm, 'sconto6'), "Sc.%6",    _SCO, True)))
         self.COL_ID_PROM = c((  1, (cc(prm, 'id'),      "#prm",     _STR, True)))
         self.COL_ID_PROD = c((  1, (cc(pro, 'id'),      "#pdc",     _STR, True)))
                                   

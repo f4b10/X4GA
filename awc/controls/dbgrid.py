@@ -2142,6 +2142,14 @@ class ADB_Grid(DbGridColoriAlternati):
         self.db_table.CreateNewRow()
         return True
     
+    def DeleteRow(self, row):
+        t = self.db_table
+        if 0 <= row < t.RowsCount():
+            t.MoveRow(row)
+            if t.id is not None:
+                t.Delete()
+            self.DeleteRows(row)
+    
     def CellEditBeforeUpdate(self, row, gridcol, col, value):
         return True
     

@@ -270,50 +270,51 @@ ID_MAGPZCONF = 15020
 ID_MAGPZGRIP = 15021
 ID_MAGSCORPCOS = 15022
 ID_MAGSCORPPRE = 15023
-ID_MAGSCOCAT = 15024
-ID_MAGGESACC = 15025
-ID_MAGDATCHI = 15026
+ID_FOREIGN = 15024
+ID_MAGSCOCAT = 15025
+ID_MAGGESACC = 15026
 ID_MAGEANPREFIX = 15027
-ID_MAGNUMLIS = 15028
-ID_MAGDATLIS = 15029
-ID_MAGBCOLIS = 15030
-ID_MAGFORLIS = 15031
-ID_MAGROWLIS = 15032
-ID_MAGERPLIS = 15033
-ID_MAGESPLIS = 15034
-ID_MAGVRGLIS = 15035
-ID_MAGVSGLIS = 15036
-ID_MAGREPLIS = 15037
-ID_MAGRELLIS = 15038
-ID_MAGSEPLIS = 15039
-ID_MAGSELLIS = 15040
-ID_MAGPPROMO = 15041
-ID_MAGATTGRIP = 15042
-ID_MAGCDEGRIP = 15043
-ID_LINE = 15044
-ID_MAGATTGRIF = 15045
-ID_MAGCDEGRIF = 15046
-ID_MAGAGGGRIP = 15047
-ID_MAGALWGRIP = 15048
-ID_MAGDATGRIP = 15049
-ID_MAGNOCODEVET = 15050
-ID_MAGNOCDEFVET = 15051
-ID_MAGEXTRAVET = 15052
-ID_MAGNOCODEDES = 15053
-ID_MAGNOCDEFDES = 15054
-ID_MAGIMGPROD = 15055
-ID_MAGDIGSEARCH = 15056
-ID_MAGEXCSEARCH = 15057
-ID_MAGVISGIA = 15058
-ID_MAGVISCOS = 15059
-ID_MAGVISPRE = 15060
-ID_MAGVISCPF = 15061
-ID_MAGVISBCD = 15062
-ID_MAGPROVATT = 15063
-ID_MAGPROVCLI = 15064
-ID_MAGPROVPRO = 15065
-ID_MAGPROVMOV = 15066
-ID_MAGPROVSEQ = 15067
+ID_MAGDATCHI = 15028
+ID_MAGNUMLIS = 15029
+ID_MAGDATLIS = 15030
+ID_MAGBCOLIS = 15031
+ID_MAGFORLIS = 15032
+ID_MAGROWLIS = 15033
+ID_MAGERPLIS = 15034
+ID_MAGESPLIS = 15035
+ID_MAGVRGLIS = 15036
+ID_MAGVSGLIS = 15037
+ID_MAGREPLIS = 15038
+ID_MAGRELLIS = 15039
+ID_MAGSEPLIS = 15040
+ID_MAGSELLIS = 15041
+ID_MAGPPROMO = 15042
+ID_MAGATTGRIP = 15043
+ID_MAGCDEGRIP = 15044
+ID_LINE = 15045
+ID_MAGATTGRIF = 15046
+ID_MAGCDEGRIF = 15047
+ID_MAGAGGGRIP = 15048
+ID_MAGALWGRIP = 15049
+ID_MAGDATGRIP = 15050
+ID_MAGNOCODEVET = 15051
+ID_MAGNOCDEFVET = 15052
+ID_MAGEXTRAVET = 15053
+ID_MAGNOCODEDES = 15054
+ID_MAGNOCDEFDES = 15055
+ID_MAGIMGPROD = 15056
+ID_MAGDIGSEARCH = 15057
+ID_MAGEXCSEARCH = 15058
+ID_MAGVISGIA = 15059
+ID_MAGVISCOS = 15060
+ID_MAGVISPRE = 15061
+ID_MAGVISCPF = 15062
+ID_MAGVISBCD = 15063
+ID_MAGPROVATT = 15064
+ID_MAGPROVCLI = 15065
+ID_MAGPROVPRO = 15066
+ID_MAGPROVMOV = 15067
+ID_MAGPROVSEQ = 15068
 
 def MagazzSetup( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -412,110 +413,110 @@ def MagazzSetup( parent, call_fit = True, set_sizer = True ):
 
     item26 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
-    item28 = wx.StaticBox( parent, -1, "" )
+    item28 = wx.StaticBox( parent, -1, "Gestisci" )
     item27 = wx.StaticBoxSizer( item28, wx.VERTICAL )
     
-    item29 = UnoZeroCheckBox( parent, ID_MAGSCOCAT, "Attiva sconti per categoria", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item29.SetName( "setup_magscocat" )
-    item27.Add( item29, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
-
-    item30 = UnoZeroCheckBox( parent, ID_MAGGESACC, "Attiva gestione acconti", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item30.SetName( "setup_maggesacc" )
-    item27.Add( item30, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item26.Add( item27, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
-
-    item32 = wx.StaticBox( parent, -1, "Chiusura" )
-    item31 = wx.StaticBoxSizer( item32, wx.HORIZONTAL )
+    item29 = wx.FlexGridSizer( 0, 2, 0, 0 )
     
-    item33 = wx.StaticText( parent, ID_TEXT, "Data ultima chiusura magazzino:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item31.Add( item33, 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+    item30 = wx.StaticText( parent, ID_TEXT, "Ricariche:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item29.Add( item30, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
 
-    item34 = DateCtrl( parent, ID_MAGDATCHI, "", wx.DefaultPosition, [80,-1], 0 )
-    item34.SetName( "setup_magdatchi" )
-    item31.Add( item34, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+    item31 = NumCtrl(parent, ID_FOREIGN, integerWidth=1, allowNegative=False); item31.SetName('setup_magnumric'); item31.SetToolTipString("Indicare il numero delle ricariche da gestire (0-6)")
+    item29.Add( item31, 0, wx.ALIGN_CENTER|wx.LEFT|wx.BOTTOM, 5 )
 
-    item26.Add( item31, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+    item32 = wx.StaticText( parent, ID_TEXT, "Sconti:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item29.Add( item32, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item36 = wx.StaticBox( parent, -1, "Codifica barcodes" )
-    item35 = wx.StaticBoxSizer( item36, wx.HORIZONTAL )
+    item33 = NumCtrl(parent, ID_FOREIGN, integerWidth=1, allowNegative=False); item33.SetName('setup_magnumsco'); item33.SetToolTipString("Indicare il numero degli sconti da gestire (0-6)")
+    item29.Add( item33, 0, wx.ALIGN_CENTER|wx.LEFT, 5 )
+
+    item27.Add( item29, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item26.Add( item27, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item35 = wx.StaticBox( parent, -1, "" )
+    item34 = wx.StaticBoxSizer( item35, wx.VERTICAL )
     
-    item37 = wx.StaticText( parent, ID_TEXT, "EAN13 C.C.:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item35.Add( item37, 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+    item36 = UnoZeroCheckBox( parent, ID_MAGSCOCAT, "Attiva sconti per categoria", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item36.SetName( "setup_magscocat" )
+    item34.Add( item36, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
 
-    item38 = wx.TextCtrl( parent, ID_MAGEANPREFIX, "", wx.DefaultPosition, [30,-1], 0 )
-    item38.SetName( "setup_mageanprefix" )
-    item35.Add( item38, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+    item37 = UnoZeroCheckBox( parent, ID_MAGGESACC, "Attiva gestione acconti", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item37.SetName( "setup_maggesacc" )
+    item34.Add( item37, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item26.Add( item35, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+    item26.Add( item34, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+
+    item39 = wx.StaticBox( parent, -1, "Codifica barcodes" )
+    item38 = wx.StaticBoxSizer( item39, wx.HORIZONTAL )
+    
+    item40 = wx.StaticText( parent, ID_TEXT, "EAN13 C.C.:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item38.Add( item40, 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+
+    item41 = wx.TextCtrl( parent, ID_MAGEANPREFIX, "", wx.DefaultPosition, [30,-1], 0 )
+    item41.SetName( "setup_mageanprefix" )
+    item38.Add( item41, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+    item26.Add( item38, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+
+    item43 = wx.StaticBox( parent, -1, "Chiusura" )
+    item42 = wx.StaticBoxSizer( item43, wx.HORIZONTAL )
+    
+    item44 = wx.StaticText( parent, ID_TEXT, "Data ultima chiusura magazzino:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item42.Add( item44, 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+
+    item45 = DateCtrl( parent, ID_MAGDATCHI, "", wx.DefaultPosition, [80,-1], 0 )
+    item45.SetName( "setup_magdatchi" )
+    item42.Add( item45, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+    item26.Add( item42, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 
     item26.AddGrowableCol( 0 )
 
     item0.Add( item26, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item39 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    item46 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
-    item41 = wx.StaticBox( parent, -1, "Gestione Listini di vendita" )
-    item40 = wx.StaticBoxSizer( item41, wx.VERTICAL )
+    item48 = wx.StaticBox( parent, -1, "Gestione Listini di vendita" )
+    item47 = wx.StaticBoxSizer( item48, wx.VERTICAL )
     
-    item42 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    item49 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
-    item43 = wx.StaticText( parent, ID_TEXT, "Num.Listini:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item42.Add( item43, 0, wx.ALIGN_CENTER|wx.BOTTOM, 5 )
+    item50 = wx.StaticText( parent, ID_TEXT, "Num.Listini:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item49.Add( item50, 0, wx.ALIGN_CENTER|wx.BOTTOM, 5 )
 
-    item44 = NumCtrl(parent, ID_MAGNUMLIS, integerWidth=1, allowNegative=False); item44.SetName('setup_magnumlis'); item44.SetToolTipString("Indicare il numero dei listini da gestire (0-9)")
-    item42.Add( item44, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item51 = NumCtrl(parent, ID_MAGNUMLIS, integerWidth=1, allowNegative=False); item51.SetName('setup_magnumlis'); item51.SetToolTipString("Indicare il numero dei listini da gestire (0-9)")
+    item49.Add( item51, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item45 = UnoZeroCheckBox( parent, ID_MAGDATLIS, "Per data", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item45.SetToolTip( wx.ToolTip("Attiva la gestione dei listini per data") )
-    item45.SetName( "setup_magdatlis" )
-    item42.Add( item45, 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+    item52 = UnoZeroCheckBox( parent, ID_MAGDATLIS, "Per data", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item52.SetToolTip( wx.ToolTip("Attiva la gestione dei listini per data") )
+    item52.SetName( "setup_magdatlis" )
+    item49.Add( item52, 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
 
-    item40.Add( item42, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
+    item47.Add( item49, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item46 = wx.BoxSizer( wx.HORIZONTAL )
+    item53 = wx.BoxSizer( wx.HORIZONTAL )
     
-    item47 = UnoZeroCheckBox( parent, ID_MAGBCOLIS, "Barcode", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item47.SetToolTip( wx.ToolTip("Attiva la gestione dei listini per data") )
-    item47.SetName( "setup_magbcolis" )
-    item46.Add( item47, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP, 5 )
+    item54 = UnoZeroCheckBox( parent, ID_MAGBCOLIS, "Barcode", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item54.SetToolTip( wx.ToolTip("Attiva la gestione dei listini per data") )
+    item54.SetName( "setup_magbcolis" )
+    item53.Add( item54, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP, 5 )
 
-    item48 = UnoZeroCheckBox( parent, ID_MAGFORLIS, "Cod.Forn.", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item48.SetToolTip( wx.ToolTip("Attiva la codifica prodotto del fornitore sul listino") )
-    item48.SetName( "setup_magforlis" )
-    item46.Add( item48, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP, 5 )
+    item55 = UnoZeroCheckBox( parent, ID_MAGFORLIS, "Cod.Forn.", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item55.SetToolTip( wx.ToolTip("Attiva la codifica prodotto del fornitore sul listino") )
+    item55.SetName( "setup_magforlis" )
+    item53.Add( item55, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP, 5 )
 
-    item49 = UnoZeroCheckBox( parent, ID_MAGROWLIS, "Su riga", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item49.SetToolTip( wx.ToolTip("Attiva la selezione del listino su ogni riga del documento") )
-    item49.SetName( "setup_magrowlis" )
-    item46.Add( item49, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP, 5 )
+    item56 = UnoZeroCheckBox( parent, ID_MAGROWLIS, "Su riga", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item56.SetToolTip( wx.ToolTip("Attiva la selezione del listino su ogni riga del documento") )
+    item56.SetName( "setup_magrowlis" )
+    item53.Add( item56, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP, 5 )
 
-    item40.Add( item46, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
+    item47.Add( item53, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item39.Add( item40, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+    item46.Add( item47, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
-    item51 = wx.StaticBox( parent, -1, "Del prodotto gestisci:" )
-    item50 = wx.StaticBoxSizer( item51, wx.VERTICAL )
-    
-    item52 = wx.FlexGridSizer( 0, 2, 0, 0 )
-    
-    item53 = wx.StaticText( parent, ID_TEXT, "Ricariche:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item52.Add( item53, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
-
-    item54 = NumCtrl(parent, ID_MAGERPLIS, integerWidth=1, allowNegative=False); item54.SetName('setup_magerplis'); item54.SetToolTipString("Indicare il numero delle ricariche del prodotto da gestire (0-3)")
-    item52.Add( item54, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
-
-    item55 = wx.StaticText( parent, ID_TEXT, "Scontistiche:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item52.Add( item55, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
-
-    item56 = NumCtrl(parent, ID_MAGESPLIS, integerWidth=1, allowNegative=False); item56.SetName('setup_magesplis'); item56.SetToolTipString("Indicare il numero delle scontistiche del prodotto da gestire (0-3)")
-    item52.Add( item56, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
-
-    item50.Add( item52, 0, wx.ALIGN_CENTER, 5 )
-
-    item39.Add( item50, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
-
-    item58 = wx.StaticBox( parent, -1, "Del gruppo pr. visualizza:" )
+    item58 = wx.StaticBox( parent, -1, "Del prodotto gestisci:" )
     item57 = wx.StaticBoxSizer( item58, wx.VERTICAL )
     
     item59 = wx.FlexGridSizer( 0, 2, 0, 0 )
@@ -523,283 +524,304 @@ def MagazzSetup( parent, call_fit = True, set_sizer = True ):
     item60 = wx.StaticText( parent, ID_TEXT, "Ricariche:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item59.Add( item60, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item61 = NumCtrl(parent, ID_MAGVRGLIS, integerWidth=1, allowNegative=False); item61.SetName('setup_magvrglis'); item61.SetToolTipString("Indicare il numero delle ricariche del gruppo prezzi da visualizzare (0-3)")
+    item61 = NumCtrl(parent, ID_MAGERPLIS, integerWidth=1, allowNegative=False); item61.SetName('setup_magerplis'); item61.SetToolTipString("Indicare il numero delle ricariche del prodotto da gestire (0-3)")
     item59.Add( item61, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
     item62 = wx.StaticText( parent, ID_TEXT, "Scontistiche:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item59.Add( item62, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
 
-    item63 = NumCtrl(parent, ID_MAGVSGLIS, integerWidth=1, allowNegative=False); item63.SetName('setup_magvsglis'); item63.SetToolTipString("Indicare il numero delle scontistiche del gruppo prezzi da visualizzare (0-3)")
+    item63 = NumCtrl(parent, ID_MAGESPLIS, integerWidth=1, allowNegative=False); item63.SetName('setup_magesplis'); item63.SetToolTipString("Indicare il numero delle scontistiche del prodotto da gestire (0-3)")
     item59.Add( item63, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
 
     item57.Add( item59, 0, wx.ALIGN_CENTER, 5 )
 
-    item39.Add( item57, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+    item46.Add( item57, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 
-    item65 = wx.StaticBox( parent, -1, "Visualizza %effettiva:" )
+    item65 = wx.StaticBox( parent, -1, "Del gruppo pr. visualizza:" )
     item64 = wx.StaticBoxSizer( item65, wx.VERTICAL )
     
-    item66 = wx.FlexGridSizer( 0, 3, 0, 0 )
+    item66 = wx.FlexGridSizer( 0, 2, 0, 0 )
     
-    item67 = wx.StaticText( parent, ID_TEXT, "Ricarica:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item66.Add( item67, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
+    item67 = wx.StaticText( parent, ID_TEXT, "Ricariche:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item66.Add( item67, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item68 = UnoZeroCheckBox( parent, ID_MAGREPLIS, "Prezzo p.", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item68.SetToolTip( wx.ToolTip("Attiva la visualizzazione della ricarica effettiva del prezzo al pubblico rispetto al costo ultimo") )
-    item68.SetName( "setup_magreplis" )
-    item66.Add( item68, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 5 )
+    item68 = NumCtrl(parent, ID_MAGVRGLIS, integerWidth=1, allowNegative=False); item68.SetName('setup_magvrglis'); item68.SetToolTipString("Indicare il numero delle ricariche del gruppo prezzi da visualizzare (0-3)")
+    item66.Add( item68, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item69 = UnoZeroCheckBox( parent, ID_MAGRELLIS, "Listino", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item69.SetToolTip( wx.ToolTip("Attiva la visualizzazione della ricarica effettiva di ogni listino rispetto al costo ultimo") )
-    item69.SetName( "setup_magrellis" )
-    item66.Add( item69, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 5 )
+    item69 = wx.StaticText( parent, ID_TEXT, "Scontistiche:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item66.Add( item69, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
 
-    item70 = wx.StaticText( parent, ID_TEXT, "Sconto:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item66.Add( item70, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
+    item70 = NumCtrl(parent, ID_MAGVSGLIS, integerWidth=1, allowNegative=False); item70.SetName('setup_magvsglis'); item70.SetToolTipString("Indicare il numero delle scontistiche del gruppo prezzi da visualizzare (0-3)")
+    item66.Add( item70, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
 
-    item71 = UnoZeroCheckBox( parent, ID_MAGSEPLIS, "Prezzo p.", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item71.SetToolTip( wx.ToolTip("Attiva la visualizzazione dello sconto effettivo del costo ultimo rispetto al prezzo al pubblico") )
-    item71.SetName( "setup_magseplis" )
-    item66.Add( item71, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 5 )
+    item64.Add( item66, 0, wx.ALIGN_CENTER, 5 )
 
-    item72 = UnoZeroCheckBox( parent, ID_MAGSELLIS, "Listino", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item72.SetToolTip( wx.ToolTip("Attiva la visualizzazione dello sconto effettivo del costo ultimo rispetto ad ogni listino") )
-    item72.SetName( "setup_magsellis" )
-    item66.Add( item72, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 5 )
+    item46.Add( item64, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 
-    item64.Add( item66, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
-
-    item39.Add( item64, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
-
-    item74 = wx.StaticBox( parent, -1, "Promoz." )
-    item73 = wx.StaticBoxSizer( item74, wx.HORIZONTAL )
+    item72 = wx.StaticBox( parent, -1, "Visualizza %effettiva:" )
+    item71 = wx.StaticBoxSizer( item72, wx.VERTICAL )
     
-    item75 = UnoZeroCheckBox( parent, ID_MAGPPROMO, "Attiva", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item75.SetToolTip( wx.ToolTip("Attiva le condizioni promozionali sui prodotti") )
-    item75.SetName( "setup_magppromo" )
+    item73 = wx.FlexGridSizer( 0, 3, 0, 0 )
+    
+    item74 = wx.StaticText( parent, ID_TEXT, "Ricarica:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item73.Add( item74, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
+
+    item75 = UnoZeroCheckBox( parent, ID_MAGREPLIS, "Prezzo p.", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item75.SetToolTip( wx.ToolTip("Attiva la visualizzazione della ricarica effettiva del prezzo al pubblico rispetto al costo ultimo") )
+    item75.SetName( "setup_magreplis" )
     item73.Add( item75, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 5 )
 
-    item39.Add( item73, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+    item76 = UnoZeroCheckBox( parent, ID_MAGRELLIS, "Listino", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item76.SetToolTip( wx.ToolTip("Attiva la visualizzazione della ricarica effettiva di ogni listino rispetto al costo ultimo") )
+    item76.SetName( "setup_magrellis" )
+    item73.Add( item76, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 5 )
 
-    item39.AddGrowableCol( 1 )
+    item77 = wx.StaticText( parent, ID_TEXT, "Sconto:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item73.Add( item77, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
 
-    item39.AddGrowableCol( 2 )
+    item78 = UnoZeroCheckBox( parent, ID_MAGSEPLIS, "Prezzo p.", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item78.SetToolTip( wx.ToolTip("Attiva la visualizzazione dello sconto effettivo del costo ultimo rispetto al prezzo al pubblico") )
+    item78.SetName( "setup_magseplis" )
+    item73.Add( item78, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 5 )
 
-    item39.AddGrowableCol( 3 )
+    item79 = UnoZeroCheckBox( parent, ID_MAGSELLIS, "Listino", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item79.SetToolTip( wx.ToolTip("Attiva la visualizzazione dello sconto effettivo del costo ultimo rispetto ad ogni listino") )
+    item79.SetName( "setup_magsellis" )
+    item73.Add( item79, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 5 )
 
-    item0.Add( item39, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item71.Add( item73, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item76 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    item46.Add( item71, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+
+    item81 = wx.StaticBox( parent, -1, "Promoz." )
+    item80 = wx.StaticBoxSizer( item81, wx.HORIZONTAL )
     
-    item78 = wx.StaticBox( parent, -1, "Griglie prezzi Clienti/Fornitori" )
-    item77 = wx.StaticBoxSizer( item78, wx.HORIZONTAL )
+    item82 = UnoZeroCheckBox( parent, ID_MAGPPROMO, "Attiva", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item82.SetToolTip( wx.ToolTip("Attiva le condizioni promozionali sui prodotti") )
+    item82.SetName( "setup_magppromo" )
+    item80.Add( item82, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 5 )
+
+    item46.Add( item80, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+
+    item46.AddGrowableCol( 1 )
+
+    item46.AddGrowableCol( 2 )
+
+    item46.AddGrowableCol( 3 )
+
+    item0.Add( item46, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item83 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
-    item79 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    item85 = wx.StaticBox( parent, -1, "Griglie prezzi Clienti/Fornitori" )
+    item84 = wx.StaticBoxSizer( item85, wx.HORIZONTAL )
     
-    item80 = UnoZeroCheckBox( parent, ID_MAGATTGRIP, "Attiva clienti", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item80.SetToolTip( wx.ToolTip("Attiva la gestione delle griglie prezzi di vendita sui clienti") )
-    item80.SetName( "setup_magattgrip" )
-    item79.Add( item80, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
-
-    item81 = UnoZeroCheckBox( parent, ID_MAGCDEGRIP, "Cod.esterna prodotti", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item81.SetToolTip( wx.ToolTip("Attiva la codifica del prodotto sulla griglia da parte del cliente") )
-    item81.SetName( "setup_magcdegrip" )
-    item79.Add( item81, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item77.Add( item79, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
-
-    item82 = wx.StaticLine( parent, ID_LINE, wx.DefaultPosition, [-1,20], wx.LI_VERTICAL )
-    item77.Add( item82, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL|wx.RIGHT, 5 )
-
-    item83 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    item86 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
-    item84 = UnoZeroCheckBox( parent, ID_MAGATTGRIF, "Attiva fornitori", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item84.SetToolTip( wx.ToolTip("Attiva la gestione delle griglie prezzi di acquisto sui fornitori") )
-    item84.SetName( "setup_magattgrif" )
-    item83.Add( item84, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
+    item87 = UnoZeroCheckBox( parent, ID_MAGATTGRIP, "Attiva clienti", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item87.SetToolTip( wx.ToolTip("Attiva la gestione delle griglie prezzi di vendita sui clienti") )
+    item87.SetName( "setup_magattgrip" )
+    item86.Add( item87, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
 
-    item85 = UnoZeroCheckBox( parent, ID_MAGCDEGRIF, "Cod.esterna prodotti", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item85.SetToolTip( wx.ToolTip("Attiva la codifica del prodotto sulla griglia da parte del fornitore") )
-    item85.SetName( "setup_magcdegrif" )
-    item83.Add( item85, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
+    item88 = UnoZeroCheckBox( parent, ID_MAGCDEGRIP, "Cod.esterna prodotti", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item88.SetToolTip( wx.ToolTip("Attiva la codifica del prodotto sulla griglia da parte del cliente") )
+    item88.SetName( "setup_magcdegrip" )
+    item86.Add( item88, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item77.Add( item83, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL, 5 )
+    item84.Add( item86, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item86 = wx.StaticLine( parent, ID_LINE, wx.DefaultPosition, [-1,20], wx.LI_VERTICAL )
-    item77.Add( item86, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL|wx.RIGHT, 5 )
+    item89 = wx.StaticLine( parent, ID_LINE, wx.DefaultPosition, [-1,20], wx.LI_VERTICAL )
+    item84.Add( item89, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL|wx.RIGHT, 5 )
 
-    item87 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    item90 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
-    item88 = UnoZeroCheckBox( parent, ID_MAGAGGGRIP, "Aggiorna da doc.", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item88.SetToolTip( wx.ToolTip("Attiva la facoltà di creare/aggiornare la griglia dal dataentry di magazzino") )
-    item88.SetName( "setup_magagggrip" )
-    item87.Add( item88, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
+    item91 = UnoZeroCheckBox( parent, ID_MAGATTGRIF, "Attiva fornitori", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item91.SetToolTip( wx.ToolTip("Attiva la gestione delle griglie prezzi di acquisto sui fornitori") )
+    item91.SetName( "setup_magattgrif" )
+    item90.Add( item91, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
 
-    item89 = UnoZeroCheckBox( parent, ID_MAGALWGRIP, "Default sempre", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item89.SetToolTip( wx.ToolTip("Attiva di default l'aggiornamento della griglia dal dataentry di magazzino") )
-    item89.SetName( "setup_magalwgrip" )
-    item87.Add( item89, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+    item92 = UnoZeroCheckBox( parent, ID_MAGCDEGRIF, "Cod.esterna prodotti", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item92.SetToolTip( wx.ToolTip("Attiva la codifica del prodotto sulla griglia da parte del fornitore") )
+    item92.SetName( "setup_magcdegrif" )
+    item90.Add( item92, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item90 = UnoZeroCheckBox( parent, ID_MAGDATGRIP, "Griglie per data", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item90.SetToolTip( wx.ToolTip("Attiva la gestione delle griglie per data") )
-    item90.SetName( "setup_magdatgrip" )
-    item87.Add( item90, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+    item84.Add( item90, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL, 5 )
 
-    item77.Add( item87, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL, 5 )
+    item93 = wx.StaticLine( parent, ID_LINE, wx.DefaultPosition, [-1,20], wx.LI_VERTICAL )
+    item84.Add( item93, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL|wx.RIGHT, 5 )
 
-    item91 = wx.StaticLine( parent, ID_LINE, wx.DefaultPosition, [-1,20], wx.LI_VERTICAL )
-    item77.Add( item91, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL|wx.RIGHT, 5 )
-
-    item76.Add( item77, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
-
-    item92 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    item94 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
-    item94 = wx.StaticBox( parent, -1, "Vettori" )
-    item93 = wx.StaticBoxSizer( item94, wx.HORIZONTAL )
+    item95 = UnoZeroCheckBox( parent, ID_MAGAGGGRIP, "Aggiorna da doc.", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item95.SetToolTip( wx.ToolTip("Attiva la facoltà di creare/aggiornare la griglia dal dataentry di magazzino") )
+    item95.SetName( "setup_magagggrip" )
+    item94.Add( item95, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
+
+    item96 = UnoZeroCheckBox( parent, ID_MAGALWGRIP, "Default sempre", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item96.SetToolTip( wx.ToolTip("Attiva di default l'aggiornamento della griglia dal dataentry di magazzino") )
+    item96.SetName( "setup_magalwgrip" )
+    item94.Add( item96, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+
+    item97 = UnoZeroCheckBox( parent, ID_MAGDATGRIP, "Griglie per data", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item97.SetToolTip( wx.ToolTip("Attiva la gestione delle griglie per data") )
+    item97.SetName( "setup_magdatgrip" )
+    item94.Add( item97, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+
+    item84.Add( item94, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL, 5 )
+
+    item98 = wx.StaticLine( parent, ID_LINE, wx.DefaultPosition, [-1,20], wx.LI_VERTICAL )
+    item84.Add( item98, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL|wx.RIGHT, 5 )
+
+    item83.Add( item84, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item99 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
-    item95 = UnoZeroCheckBox( parent, ID_MAGNOCODEVET, "Variaz.manuale", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item95.SetToolTip( wx.ToolTip("Attiva la possibilità di variazione manuale del vettore sul singolo documento, senza doverlo codificare") )
-    item95.SetName( "setup_magnocodevet" )
-    item93.Add( item95, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
-
-    item96 = UnoZeroCheckBox( parent, ID_MAGNOCDEFVET, "Default", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item96.SetToolTip( wx.ToolTip("Imposta di default il nuovo documento con già spuntata la casella di variazione manuale del vettore") )
-    item96.SetName( "setup_magnocdefvet" )
-    item93.Add( item96, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
-
-    item97 = UnoZeroCheckBox( parent, ID_MAGEXTRAVET, "Extra-dati", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item97.SetToolTip( wx.ToolTip("Attiva extra-dati sui vettori") )
-    item97.SetName( "setup_magextravet" )
-    item93.Add( item97, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item92.Add( item93, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
-
-    item99 = wx.StaticBox( parent, -1, "Destinazioni merce" )
-    item98 = wx.StaticBoxSizer( item99, wx.HORIZONTAL )
+    item101 = wx.StaticBox( parent, -1, "Vettori" )
+    item100 = wx.StaticBoxSizer( item101, wx.HORIZONTAL )
     
-    item100 = UnoZeroCheckBox( parent, ID_MAGNOCODEDES, "Variaz.manuale", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item100.SetToolTip( wx.ToolTip("Attiva la possibilità di variazione manuale della destinazione merce sul singolo documento, senza doverla codificare") )
-    item100.SetName( "setup_magnocodedes" )
-    item98.Add( item100, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+    item102 = UnoZeroCheckBox( parent, ID_MAGNOCODEVET, "Variaz.manuale", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item102.SetToolTip( wx.ToolTip("Attiva la possibilità di variazione manuale del vettore sul singolo documento, senza doverlo codificare") )
+    item102.SetName( "setup_magnocodevet" )
+    item100.Add( item102, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
 
-    item101 = UnoZeroCheckBox( parent, ID_MAGNOCDEFDES, "Default", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item101.SetToolTip( wx.ToolTip("Imposta di default il nuovo documento con già spuntata la casella di variazione manuale della destinazione") )
-    item101.SetName( "setup_magnocdefdes" )
-    item98.Add( item101, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+    item103 = UnoZeroCheckBox( parent, ID_MAGNOCDEFVET, "Default", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item103.SetToolTip( wx.ToolTip("Imposta di default il nuovo documento con già spuntata la casella di variazione manuale del vettore") )
+    item103.SetName( "setup_magnocdefvet" )
+    item100.Add( item103, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
 
-    item92.Add( item98, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL|wx.LEFT|wx.RIGHT, 5 )
+    item104 = UnoZeroCheckBox( parent, ID_MAGEXTRAVET, "Extra-dati", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item104.SetToolTip( wx.ToolTip("Attiva extra-dati sui vettori") )
+    item104.SetName( "setup_magextravet" )
+    item100.Add( item104, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item92.AddGrowableCol( 0 )
+    item99.Add( item100, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
-    item92.AddGrowableRow( 1 )
-
-    item76.Add( item92, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
-
-    item76.AddGrowableCol( 1 )
-
-    item0.Add( item76, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
-
-    item102 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    item106 = wx.StaticBox( parent, -1, "Destinazioni merce" )
+    item105 = wx.StaticBoxSizer( item106, wx.HORIZONTAL )
     
-    item104 = wx.StaticBox( parent, -1, "Immagine del prodotto" )
-    item103 = wx.StaticBoxSizer( item104, wx.VERTICAL )
+    item107 = UnoZeroCheckBox( parent, ID_MAGNOCODEDES, "Variaz.manuale", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item107.SetToolTip( wx.ToolTip("Attiva la possibilità di variazione manuale della destinazione merce sul singolo documento, senza doverla codificare") )
+    item107.SetName( "setup_magnocodedes" )
+    item105.Add( item107, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+
+    item108 = UnoZeroCheckBox( parent, ID_MAGNOCDEFDES, "Default", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item108.SetToolTip( wx.ToolTip("Imposta di default il nuovo documento con già spuntata la casella di variazione manuale della destinazione") )
+    item108.SetName( "setup_magnocdefdes" )
+    item105.Add( item108, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+
+    item99.Add( item105, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL|wx.LEFT|wx.RIGHT, 5 )
+
+    item99.AddGrowableCol( 0 )
+
+    item99.AddGrowableRow( 1 )
+
+    item83.Add( item99, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item83.AddGrowableCol( 1 )
+
+    item0.Add( item83, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item109 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
-    item105 = UnoZeroCheckBox( parent, ID_MAGIMGPROD, "Attiva se presente", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item105.SetName( "setup_magimgprod" )
-    item103.Add( item105, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
-
-    item102.Add( item103, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
-
-    item107 = wx.StaticBox( parent, -1, "Ricerca prodotti" )
-    item106 = wx.StaticBoxSizer( item107, wx.HORIZONTAL )
+    item111 = wx.StaticBox( parent, -1, "Immagine del prodotto" )
+    item110 = wx.StaticBoxSizer( item111, wx.VERTICAL )
     
-    item108 = CheckBox( parent, ID_MAGDIGSEARCH, "Cerca in digitaz. codice", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item108.SetName( "setup_magdigsearch" )
-    item106.Add( item108, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+    item112 = UnoZeroCheckBox( parent, ID_MAGIMGPROD, "Attiva se presente", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item112.SetName( "setup_magimgprod" )
+    item110.Add( item112, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
 
-    item109 = UnoZeroCheckBox( parent, ID_MAGEXCSEARCH, "Ricerca esclusiva", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item109.SetName( "setup_magexcsearch" )
-    item106.Add( item109, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+    item109.Add( item110, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
-    item110 = wx.StaticLine( parent, ID_LINE, wx.DefaultPosition, [-1,20], wx.LI_VERTICAL )
-    item106.Add( item110, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL|wx.LEFT|wx.RIGHT, 5 )
-
-    item111 = wx.StaticText( parent, ID_TEXT, "Visualizza:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item106.Add( item111, 0, wx.ALIGN_CENTER|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item112 = UnoZeroCheckBox( parent, ID_MAGVISGIA, "Giacenza", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item112.SetName( "setup_magvisgia" )
-    item106.Add( item112, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item113 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    item114 = wx.StaticBox( parent, -1, "Ricerca prodotti" )
+    item113 = wx.StaticBoxSizer( item114, wx.HORIZONTAL )
     
-    item114 = UnoZeroCheckBox( parent, ID_MAGVISCOS, "Costo", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item114.SetName( "setup_magviscos" )
-    item113.Add( item114, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+    item115 = CheckBox( parent, ID_MAGDIGSEARCH, "Cerca in digitaz. codice", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item115.SetName( "setup_magdigsearch" )
+    item113.Add( item115, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
 
-    item115 = UnoZeroCheckBox( parent, ID_MAGVISPRE, "Prezzo", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item115.SetName( "setup_magvispre" )
-    item113.Add( item115, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+    item116 = UnoZeroCheckBox( parent, ID_MAGEXCSEARCH, "Ricerca esclusiva", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item116.SetName( "setup_magexcsearch" )
+    item113.Add( item116, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
 
-    item106.Add( item113, 0, wx.ALIGN_CENTER, 5 )
+    item117 = wx.StaticLine( parent, ID_LINE, wx.DefaultPosition, [-1,20], wx.LI_VERTICAL )
+    item113.Add( item117, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL|wx.LEFT|wx.RIGHT, 5 )
 
-    item116 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    item118 = wx.StaticText( parent, ID_TEXT, "Visualizza:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item113.Add( item118, 0, wx.ALIGN_CENTER|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item119 = UnoZeroCheckBox( parent, ID_MAGVISGIA, "Giacenza", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item119.SetName( "setup_magvisgia" )
+    item113.Add( item119, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item120 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
-    item117 = UnoZeroCheckBox( parent, ID_MAGVISCPF, "Cod.Forn.", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item117.SetName( "setup_magviscpf" )
-    item116.Add( item117, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+    item121 = UnoZeroCheckBox( parent, ID_MAGVISCOS, "Costo", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item121.SetName( "setup_magviscos" )
+    item120.Add( item121, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 
-    item118 = UnoZeroCheckBox( parent, ID_MAGVISBCD, "Barcode", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item118.SetName( "setup_magvisbcd" )
-    item116.Add( item118, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+    item122 = UnoZeroCheckBox( parent, ID_MAGVISPRE, "Prezzo", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item122.SetName( "setup_magvispre" )
+    item120.Add( item122, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 
-    item106.Add( item116, 0, wx.ALIGN_CENTER, 5 )
+    item113.Add( item120, 0, wx.ALIGN_CENTER, 5 )
 
-    item102.Add( item106, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
-
-    item102.AddGrowableCol( 1 )
-
-    item0.Add( item102, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
-
-    item119 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    item123 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
-    item121 = wx.StaticBox( parent, -1, "Provvigioni" )
-    item120 = wx.StaticBoxSizer( item121, wx.HORIZONTAL )
+    item124 = UnoZeroCheckBox( parent, ID_MAGVISCPF, "Cod.Forn.", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item124.SetName( "setup_magviscpf" )
+    item123.Add( item124, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+
+    item125 = UnoZeroCheckBox( parent, ID_MAGVISBCD, "Barcode", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item125.SetName( "setup_magvisbcd" )
+    item123.Add( item125, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+
+    item113.Add( item123, 0, wx.ALIGN_CENTER, 5 )
+
+    item109.Add( item113, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+
+    item109.AddGrowableCol( 1 )
+
+    item0.Add( item109, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item126 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
-    item122 = UnoZeroCheckBox( parent, ID_MAGPROVATT, "Attiva", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item122.SetName( "setup_magprovatt" )
-    item120.Add( item122, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 5 )
+    item128 = wx.StaticBox( parent, -1, "Provvigioni" )
+    item127 = wx.StaticBoxSizer( item128, wx.HORIZONTAL )
+    
+    item129 = UnoZeroCheckBox( parent, ID_MAGPROVATT, "Attiva", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item129.SetName( "setup_magprovatt" )
+    item127.Add( item129, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 5 )
 
-    item123 = UnoZeroCheckBox( parent, ID_MAGPROVCLI, "Su clienti", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item123.SetName( "setup_magprovcli" )
-    item120.Add( item123, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+    item130 = UnoZeroCheckBox( parent, ID_MAGPROVCLI, "Su clienti", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item130.SetName( "setup_magprovcli" )
+    item127.Add( item130, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
 
-    item124 = UnoZeroCheckBox( parent, ID_MAGPROVPRO, "Su prodotti", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item124.SetName( "setup_magprovpro" )
-    item120.Add( item124, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+    item131 = UnoZeroCheckBox( parent, ID_MAGPROVPRO, "Su prodotti", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item131.SetName( "setup_magprovpro" )
+    item127.Add( item131, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item119.Add( item120, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+    item126.Add( item127, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
-    item125 = MagProvMovRadioBox( parent, ID_MAGPROVMOV, "Provvig. sui movimenti", wx.DefaultPosition, wx.DefaultSize, 
+    item132 = MagProvMovRadioBox( parent, ID_MAGPROVMOV, "Provvig. sui movimenti", wx.DefaultPosition, wx.DefaultSize, 
         ["Default","Eredita"] , 1, wx.RA_SPECIFY_ROWS )
-    item125.SetName( "setup_magprovmov" )
-    item119.Add( item125, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+    item132.SetName( "setup_magprovmov" )
+    item126.Add( item132, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 
-    item127 = wx.StaticBox( parent, -1, "Gerarchia ereditarietà" )
-    item126 = wx.StaticBoxSizer( item127, wx.HORIZONTAL )
+    item134 = wx.StaticBox( parent, -1, "Gerarchia ereditarietà" )
+    item133 = wx.StaticBoxSizer( item134, wx.HORIZONTAL )
     
-    item128 = wx.StaticText( parent, ID_TEXT, "Sequenza priorità provvig.:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item126.Add( item128, 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+    item135 = wx.StaticText( parent, ID_TEXT, "Sequenza priorità provvig.:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item133.Add( item135, 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
 
-    item129 = wx.TextCtrl( parent, ID_MAGPROVSEQ, "", wx.DefaultPosition, [80,-1], 0 )
-    item129.SetName( "setup_magprovseq" )
-    item126.Add( item129, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item136 = wx.TextCtrl( parent, ID_MAGPROVSEQ, "", wx.DefaultPosition, [80,-1], 0 )
+    item136.SetName( "setup_magprovseq" )
+    item133.Add( item136, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item119.Add( item126, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+    item126.Add( item133, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 
-    item119.AddGrowableCol( 2 )
+    item126.AddGrowableCol( 2 )
 
-    item0.Add( item119, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item0.Add( item126, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item0.AddGrowableCol( 0 )
 
@@ -810,16 +832,16 @@ def MagazzSetup( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_OPTNOTIFICHE = 15068
-ID_OPTTABSEARCH = 15069
-ID_OPTDIGSEARCH = 15070
-ID_OPTLNKCRDPDC = 15071
-ID_OPTLNKGRDPDC = 15072
-ID_OPTLNKCRDCLI = 15073
-ID_OPTLNKGRDCLI = 15074
-ID_OPTLNKCRDFOR = 15075
-ID_OPTLNKGRDFOR = 15076
-ID_BACKUPDIR = 15077
+ID_OPTNOTIFICHE = 15069
+ID_OPTTABSEARCH = 15070
+ID_OPTDIGSEARCH = 15071
+ID_OPTLNKCRDPDC = 15072
+ID_OPTLNKGRDPDC = 15073
+ID_OPTLNKCRDCLI = 15074
+ID_OPTLNKGRDCLI = 15075
+ID_OPTLNKCRDFOR = 15076
+ID_OPTLNKGRDFOR = 15077
+ID_BACKUPDIR = 15078
 
 def OpzioniFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -924,8 +946,8 @@ def OpzioniFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_TEXTCTRL = 15078
-ID_AZIENDA_LOGO = 15079
+ID_TEXTCTRL = 15079
+ID_AZIENDA_LOGO = 15080
 
 def DatiAziendaFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )

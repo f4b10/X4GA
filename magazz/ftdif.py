@@ -263,22 +263,31 @@ class GridMovRag(dbglib.DbGrid):
         _DAT = gl.GRID_VALUE_DATETIME
         _CHK = gl.GRID_VALUE_BOOL+":True,False"
         
-        cols = (
-            ( 30, (cn(tpm, 'codice'),  "M.",           _STR, True)),
-            ( 90, (cn(pro, 'codice'),  "Cod.",         _STR, True)),
-            (280, (cn(mov, 'descriz'), "Descrizione",  _STR, True)),
-            ( 20, (cn(mov, 'um'),      "U.M.",         _STR, True)),
-            ( 90, (cn(mov, 'qta'),     "Qtà",          _FLQ, True)),
-            (100, (cn(mov, 'prezzo'),  "Prezzo",       _FLP, True)),
-            ( 40, (cn(mov, 'sconto1'), "Sc.%1",        _FLS, True)),
-            ( 40, (cn(mov, 'sconto2'), "Sc.%2",        _FLS, True)),
-            ( 40, (cn(mov, 'sconto3'), "Sc.%3",        _FLS, True)),
-            (110, (cn(mov, 'importo'), "Importo",      _FLT, True)),
-            ( 30, (cn(iva, 'codice'),  "Cod.",         _STR, True)),
-            ( 90, (cn(iva, 'descriz'), "Aliquota IVA", _STR, True)),
-            ( 90, (cn(tpm, 'descriz'), "Movimento",    _STR, True)),
-            (200, (cn(mov, 'note'),    "Note",         _STR, True)),
-        )
+        cols = []
+        a = cols.append
+        a(( 30, (cn(tpm, 'codice'),  "M.",           _STR, True)))
+        a(( 90, (cn(pro, 'codice'),  "Cod.",         _STR, True)))
+        a((280, (cn(mov, 'descriz'), "Descrizione",  _STR, True)))
+        a(( 20, (cn(mov, 'um'),      "U.M.",         _STR, True)))
+        a(( 90, (cn(mov, 'qta'),     "Qtà",          _FLQ, True)))
+        a((100, (cn(mov, 'prezzo'),  "Prezzo",       _FLP, True)))
+        if bt.MAGNUMSCO >= 1:
+            a(( 40, (cn(mov, 'sconto1'), "Sc.%"+'1'*int(bt.MAGNUMSCO>1), _FLS, True)))
+        if bt.MAGNUMSCO >= 2:
+            a(( 40, (cn(mov, 'sconto2'), "Sc.%2",    _FLS, True)))
+        if bt.MAGNUMSCO >= 3:
+            a(( 40, (cn(mov, 'sconto3'), "Sc.%3",    _FLS, True)))
+        if bt.MAGNUMSCO >= 4:
+            a(( 40, (cn(mov, 'sconto4'), "Sc.%4",    _FLS, True)))
+        if bt.MAGNUMSCO >= 5:
+            a(( 40, (cn(mov, 'sconto5'), "Sc.%5",    _FLS, True)))
+        if bt.MAGNUMSCO >= 6:
+            a(( 40, (cn(mov, 'sconto6'), "Sc.%6",    _FLS, True)))
+        a((110, (cn(mov, 'importo'), "Importo",      _FLT, True)))
+        a(( 30, (cn(iva, 'codice'),  "Cod.",         _STR, True)))
+        a(( 90, (cn(iva, 'descriz'), "Aliquota IVA", _STR, True)))
+        a(( 90, (cn(tpm, 'descriz'), "Movimento",    _STR, True)))
+        a((200, (cn(mov, 'note'),    "Note",         _STR, True)))
         
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]

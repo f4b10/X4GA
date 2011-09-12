@@ -999,6 +999,8 @@ class Azienda(object):
         MAGEXTRAVET = False  #flag attivazione campi extra sui vettori
         
         #variabili per la gestione dei listini
+        MAGNUMSCO = 3        #numero di sconti gestiti
+        MAGNUMRIC = 3        #numero di ricariche gestite
         MAGNUMLIS = 0        #numero di listini vendita
         MAGROWLIS = 0        #flag attivazione listino su righe dettaglio documento
         MAGDATLIS = False    #flag listini per data
@@ -1986,6 +1988,9 @@ class Azienda(object):
                 [ "sconto1",        "DECIMAL",  5,    2, "Sconto perc.1", None ],
                 [ "sconto2",        "DECIMAL",  5,    2, "Sconto perc.2", None ],
                 [ "sconto3",        "DECIMAL",  5,    2, "Sconto perc.3", None ],
+                [ "sconto4",        "DECIMAL",  5,    2, "Sconto perc.4", None ],
+                [ "sconto5",        "DECIMAL",  5,    2, "Sconto perc.5", None ],
+                [ "sconto6",        "DECIMAL",  5,    2, "Sconto perc.6", None ],
                 [ "chiusura",       "VARCHAR", 60, None, "Giorno di chiusura", None ],
                 [ "note",           "VARCHAR",ntw, None, "Annotazioni", None ],
                 [ "notedoc",        "VARCHAR",ntw, None, "Note da stampre sui documenti", None ],
@@ -2131,6 +2136,9 @@ class Azienda(object):
                 [ "sconto1",        "DECIMAL",  5,    2, "Sconto perc.1", None ],
                 [ "sconto2",        "DECIMAL",  5,    2, "Sconto perc.2", None ],
                 [ "sconto3",        "DECIMAL",  5,    2, "Sconto perc.3", None ],
+                [ "sconto4",        "DECIMAL",  5,    2, "Sconto perc.4", None ],
+                [ "sconto5",        "DECIMAL",  5,    2, "Sconto perc.5", None ],
+                [ "sconto6",        "DECIMAL",  5,    2, "Sconto perc.6", None ],
                 [ "note",           "VARCHAR",ntw, None, "Annotazioni", None ],
                 [ "id_stato",       "INT",    idw, None, "ID Stato", None ],
                 [ "id_pdc",         "INT",    idw, None, "ID P.d.C. associato", None ],
@@ -2424,9 +2432,15 @@ class Azienda(object):
                 [ "sconto1",    "DECIMAL",  5,    2, "Sconto #1", None ],
                 [ "sconto2",    "DECIMAL",  5,    2, "Sconto #2", None ],
                 [ "sconto3",    "DECIMAL",  5,    2, "Sconto #3", None ],
+                [ "sconto4",    "DECIMAL",  5,    2, "Sconto #4", None ],
+                [ "sconto5",    "DECIMAL",  5,    2, "Sconto #5", None ],
+                [ "sconto6",    "DECIMAL",  5,    2, "Sconto #6", None ],
                 [ "ricar1",     "DECIMAL",  5,    2, "Ricarica #1", None ],
                 [ "ricar2",     "DECIMAL",  5,    2, "Ricarica #2", None ],
                 [ "ricar3",     "DECIMAL",  5,    2, "Ricarica #3", None ],
+                [ "ricar4",     "DECIMAL",  5,    2, "Ricarica #4", None ],
+                [ "ricar5",     "DECIMAL",  5,    2, "Ricarica #5", None ],
+                [ "ricar6",     "DECIMAL",  5,    2, "Ricarica #6", None ],
                 [ "note",       "VARCHAR",ntw, None, "Annotazioni", None ],
                 [ "barcode",    "VARCHAR", 20, None, "Barcode", None ],
                 [ "codfor",     "VARCHAR", 20, None, "Codice prodotto del fornitore", None ],
@@ -2523,6 +2537,9 @@ class Azienda(object):
                 [ "sconto1",     "DECIMAL",  5,    2, "Sconto #1", None ],
                 [ "sconto2",     "DECIMAL",  5,    2, "Sconto #2", None ],
                 [ "sconto3",     "DECIMAL",  5,    2, "Sconto #3", None ],
+                [ "sconto4",     "DECIMAL",  5,    2, "Sconto #4", None ],
+                [ "sconto5",     "DECIMAL",  5,    2, "Sconto #5", None ],
+                [ "sconto6",     "DECIMAL",  5,    2, "Sconto #6", None ],
                 [ "prebloc",     "TINYINT",  1, None, "Flag blocco prezzo", None ],
                 [ "pzconf",      "DECIMAL",  6,  DQM, "Pezzi per confezione specifici dell'anagrafica", None ],
                 [ "ext_codice",  "VARCHAR", 20, None, "Codice prodotto del cliente/fornitore", None ],
@@ -2736,6 +2753,9 @@ class Azienda(object):
                 [ "sconto1",              "DECIMAL",     4,    2, "Sconto perc.1", None ],
                 [ "sconto2",              "DECIMAL",     4,    2, "Sconto perc.2", None ],
                 [ "sconto3",              "DECIMAL",     4,    2, "Sconto perc.3", None ],
+                [ "sconto4",              "DECIMAL",     4,    2, "Sconto perc.4", None ],
+                [ "sconto5",              "DECIMAL",     4,    2, "Sconto perc.5", None ],
+                [ "sconto6",              "DECIMAL",     4,    2, "Sconto perc.6", None ],
                 [ "totimponib",           "DECIMAL",   IVI,  DVI, "Totale imponibile", None ],
                 [ "totimposta",           "DECIMAL",   IVI,  DVI, "Totale imposta", None ],
                 [ "totimporto",           "DECIMAL",   IVI,  DVI, "Totale documento", None ],
@@ -2851,6 +2871,9 @@ class Azienda(object):
                 [ "sconto1",    "DECIMAL",   5,    2, "Sconto riga #1", None ],
                 [ "sconto2",    "DECIMAL",   5,    2, "Sconto riga #2", None ],
                 [ "sconto3",    "DECIMAL",   5,    2, "Sconto riga #3", None ],
+                [ "sconto4",    "DECIMAL",   5,    2, "Sconto riga #4", None ],
+                [ "sconto5",    "DECIMAL",   5,    2, "Sconto riga #5", None ],
+                [ "sconto6",    "DECIMAL",   5,    2, "Sconto riga #6", None ],
                 [ "importo",    "DECIMAL", IVI,  DVI, "Valore globale della riga", None ],
                 [ "costou",     "DECIMAL", IPM,  DPM, "Costo unitario della riga", None ],
                 [ "costot",     "DECIMAL", IVI,  DVI, "Costo totale della riga", None ],
@@ -3238,9 +3261,15 @@ class Azienda(object):
                 [ "prccosric1", "DECIMAL",  6, 2,    "Calcolo prezzo al pubblico: ricarica 1", None],\
                 [ "prccosric2", "DECIMAL",  6, 2,    "Calcolo prezzo al pubblico: ricarica 2", None],\
                 [ "prccosric3", "DECIMAL",  6, 2,    "Calcolo prezzo al pubblico: ricarica 3", None],\
+                [ "prccosric4", "DECIMAL",  6, 2,    "Calcolo prezzo al pubblico: ricarica 4", None],\
+                [ "prccosric5", "DECIMAL",  6, 2,    "Calcolo prezzo al pubblico: ricarica 5", None],\
+                [ "prccosric6", "DECIMAL",  6, 2,    "Calcolo prezzo al pubblico: ricarica 6", None],\
                 [ "prcpresco1", "DECIMAL",  6, 2,    "Calcolo costo di acquisto: sconto 1", None],\
                 [ "prcpresco2", "DECIMAL",  6, 2,    "Calcolo costo di acquisto: sconto 2", None],\
                 [ "prcpresco3", "DECIMAL",  6, 2,    "Calcolo costo di acquisto: sconto 3", None],\
+                [ "prcpresco4", "DECIMAL",  6, 2,    "Calcolo costo di acquisto: sconto 4", None],\
+                [ "prcpresco5", "DECIMAL",  6, 2,    "Calcolo costo di acquisto: sconto 5", None],\
+                [ "prcpresco6", "DECIMAL",  6, 2,    "Calcolo costo di acquisto: sconto 6", None],\
                 [ "prclisric1", "DECIMAL",  6, 2,    "Prezzo da costo di acquisto: ricarica prezzo 1", None],\
                 [ "prclisric2", "DECIMAL",  6, 2,    "Prezzo da costo di acquisto: ricarica prezzo 2", None],\
                 [ "prclisric3", "DECIMAL",  6, 2,    "Prezzo da costo di acquisto: ricarica prezzo 3", None],\
@@ -3292,7 +3321,10 @@ class Azienda(object):
                  [ "id_catart",  "INT",    idw, None, "ID categoria", None ],
                  [ "sconto1",    "DECIMAL",  4,    2, "Sconto perc.1", None ],
                  [ "sconto2",    "DECIMAL",  4,    2, "Sconto perc.2", None ],
-                 [ "sconto3",    "DECIMAL",  4,    2, "Sconto perc.3", None ], ]
+                 [ "sconto3",    "DECIMAL",  4,    2, "Sconto perc.3", None ], 
+                 [ "sconto4",    "DECIMAL",  4,    2, "Sconto perc.4", None ], 
+                 [ "sconto5",    "DECIMAL",  4,    2, "Sconto perc.5", None ], 
+                 [ "sconto6",    "DECIMAL",  4,    2, "Sconto perc.6", None ], ]
             
             cls.set_constraints(cls.TABNAME_SCONTICC,
                                 ((cls.TABSETUP_CONSTR_PDC,    'id_pdc',    cls.TABCONSTRAINT_TYPE_CASCADE),
@@ -3387,6 +3419,9 @@ class Azienda(object):
                  [ "sconto1",   "DECIMAL",   5,    2, "Sconto #1", None ],
                  [ "sconto2",   "DECIMAL",   5,    2, "Sconto #2", None ],
                  [ "sconto3",   "DECIMAL",   5,    2, "Sconto #3", None ],
+                 [ "sconto4",   "DECIMAL",   5,    2, "Sconto #4", None ],
+                 [ "sconto5",   "DECIMAL",   5,    2, "Sconto #5", None ],
+                 [ "sconto6",   "DECIMAL",   5,    2, "Sconto #6", None ],
                  [ "note",      "VARCHAR", ntw, None, "Annotazioni", None ], ]
             
             cls.set_constraints(cls.TABNAME_PROMO,
@@ -3718,6 +3753,8 @@ class Azienda(object):
                 ('MAGNOCDEFDES',    'magnocdefdes',       f, _int, None),
                 ('MAGNOCDEFVET',    'magnocdefvet',       f, _int, None),
                 ('MAGEXTRAVET',     'magextravet',        f, _int, None),
+                ('MAGNUMSCO',       'magnumsco',          i, _int, None),
+                ('MAGNUMRIC',       'magnumric',          i, _int, None),
                 ('MAGNUMLIS',       'magnumlis',          i, _int, 'del numero di listini'),
                 ('MAGROWLIS',       'magrowlis',          f, _int, None),
                 ('MAGDATLIS',       'magdatlis',          f, _int, 'del flag di gestione dei listini per data'),
@@ -3805,13 +3842,13 @@ class Azienda(object):
             return gl.GRID_VALUE_FLOAT+":%d,%d" % (numint, numdec)
         
         @classmethod
-        def GetValIntNumCtrl(cls, parent, id, name, editable=True, numint=None, numdec=None):
+        def GetValIntNumCtrl(cls, parent, id, name, editable=True, numint=None, numdec=None, **kwa):
             if numint is None:
                 numint = cls.GetValIntIntegersDisplay()
             if numdec is None:
                 numdec = cls.VALINT_DECIMALS
             ctrl = numctrl.NumCtrl(parent, id or -1, 
-                                   integerWidth=numint, fractionWidth=numdec, groupDigits=True)
+                                   integerWidth=numint, fractionWidth=numdec, groupDigits=True, **kwa)
             ctrl.SetName(name)
             ctrl.SetEditable(editable)
             return ctrl
@@ -3829,13 +3866,13 @@ class Azienda(object):
             return gl.GRID_VALUE_FLOAT+":%d,%d" % (numint, numdec)
         
         @classmethod
-        def GetMagQtaNumCtrl(cls, parent, id, name, editable=True, numint=None, numdec=None):
+        def GetMagQtaNumCtrl(cls, parent, id, name, editable=True, numint=None, numdec=None, **kwa):
             if numint is None:
                 numint = cls.GetMagQtaIntegersDisplay()
             if numdec is None:
                 numdec = cls.MAGQTA_DECIMALS
             ctrl = numctrl.NumCtrl(parent, id or -1, 
-                                   integerWidth=numint, fractionWidth=numdec, groupDigits=True)
+                                   integerWidth=numint, fractionWidth=numdec, groupDigits=True, **kwa)
             ctrl.SetName(name)
             ctrl.SetEditable(editable)
             return ctrl
@@ -3858,13 +3895,13 @@ class Azienda(object):
             return gl.GRID_VALUE_FLOAT+":%d,%d" % (numint, numdec)
         
         @classmethod
-        def GetMagPzcNumCtrl(cls, parent, id, name, editable=True, numint=None, numdec=None):
+        def GetMagPzcNumCtrl(cls, parent, id, name, editable=True, numint=None, numdec=None, **kwa):
             if numint is None:
                 numint = cls.GetMagPzcIntegersDisplay()
             if numdec is None:
                 numdec = cls.GetMagPzcDecimalsDisplay()
             ctrl = numctrl.NumCtrl(parent, id or -1, 
-                                   integerWidth=numint, fractionWidth=numdec, groupDigits=True)
+                                   integerWidth=numint, fractionWidth=numdec, groupDigits=True, **kwa)
             ctrl.SetName(name)
             ctrl.SetEditable(editable)
             return ctrl
@@ -3883,13 +3920,13 @@ class Azienda(object):
             return gl.GRID_VALUE_FLOAT+":%d,%d" % (numint, numdec)
         
         @classmethod
-        def GetMagPreNumCtrl(cls, parent, id, name, editable=True, numint=None, numdec=None):
+        def GetMagPreNumCtrl(cls, parent, id, name, editable=True, numint=None, numdec=None, **kwa):
             if numint is None:
                 numint = cls.GetMagPreIntegersDisplay()
             if numdec is None:
                 numdec = cls.MAGPRE_DECIMALS
             ctrl = numctrl.NumCtrl(parent, id or -1, 
-                                   integerWidth=numint, fractionWidth=numdec, groupDigits=True)
+                                   integerWidth=numint, fractionWidth=numdec, groupDigits=True, **kwa)
             ctrl.SetName(name)
             ctrl.SetEditable(editable)
             return ctrl
@@ -3911,37 +3948,51 @@ class Azienda(object):
             return gl.GRID_VALUE_FLOAT+":%d,%d" % (numint, numdec)
         
         @classmethod
-        def GetMagScoNumCtrl(cls, parent, id, name, editable=True, numint=None, numdec=None):
+        def GetMagScoNumCtrl(cls, parent, id, name, editable=True, numint=None, numdec=None, **kwa):
             if numint is None:
                 numint = cls.GetMagScoIntegersDisplay()
             if numdec is None:
                 numdec = cls.GetMagScoDecimalsDisplay()
             ctrl = numctrl.NumCtrl(parent, id or -1, 
-                                   integerWidth=numint, fractionWidth=numdec, groupDigits=True)
+                                   integerWidth=numint, fractionWidth=numdec, 
+                                   groupDigits=True, allowNegative=True, **kwa)
             ctrl.SetName(name)
             ctrl.SetEditable(editable)
             return ctrl
          
+        @classmethod
+        def GetMagRicIntegersDisplay(cls):
+            return 3
+        
+        @classmethod
+        def GetMagRicDecimalsDisplay(cls):
+            return 2
+        
         @classmethod
         def GetMagRicMaskInfo(cls, numint=None, numdec=None):
             if numint is None:
-                numint = 3
+                numint = cls.GetMagRicIntegersDisplay()
             if numdec is None:
-                numdec = cls.GetMagScoDecimalsDisplay()
+                numdec = cls.GetMagRicDecimalsDisplay()
             return gl.GRID_VALUE_FLOAT+":%d,%d" % (numint, numdec)
         
         @classmethod
-        def GetMagRicNumCtrl(cls, parent, id, name, editable=True, numint=None, numdec=None):
+        def GetMagRicNumCtrl(cls, parent, id, name, editable=True, numint=None, numdec=None, **kwa):
             if numint is None:
-                numint = 3
+                numint = cls.GetMagRicIntegersDisplay()
             if numdec is None:
-                numdec = cls.GetMagScoDecimalsDisplay()
+                numdec = cls.GetMagRicDecimalsDisplay()
             ctrl = numctrl.NumCtrl(parent, id or -1, 
-                                   integerWidth=numint, fractionWidth=numdec, groupDigits=True)
+                                   integerWidth=numint, fractionWidth=numdec, 
+                                   groupDigits=True, allowNegative=False, **kwa)
             ctrl.SetName(name)
             ctrl.SetEditable(editable)
             return ctrl
          
+        @classmethod
+        def GetPerGenIntegersDisplay(cls):
+            return 2
+        
         @classmethod
         def GetPerGenDecimalsDisplay(cls):
             return 2
@@ -3949,19 +4000,20 @@ class Azienda(object):
         @classmethod
         def GetPerGenMaskInfo(cls, numint=None, numdec=None):
             if numint is None:
-                numint = cls.GetPerGenDecimalsDisplay()
+                numint = cls.GetPerGenIntegersDisplay()
             if numdec is None:
-                numdec = 2
+                numdec = cls.GetPerGenDecimalsDisplay()
             return gl.GRID_VALUE_FLOAT+":%d,%d" % (numint, numdec)
         
         @classmethod
-        def GetPerGenNumCtrl(cls, parent, id, name, editable=True, numint=None, numdec=None):
+        def GetPerGenNumCtrl(cls, parent, id, name, editable=True, numint=None, numdec=None, **kwa):
             if numint is None:
-                numint = 3
+                numint = cls.GetPerGenIntegersDisplay()
             if numdec is None:
                 numdec = cls.GetPerGenDecimalsDisplay()
             ctrl = numctrl.NumCtrl(parent, id or -1, 
-                                   integerWidth=numint, fractionWidth=numdec, groupDigits=True)
+                                   integerWidth=numint, fractionWidth=numdec, 
+                                   groupDigits=True, allowNegative=True, **kwa)
             ctrl.SetName(name)
             ctrl.SetEditable(editable)
             return ctrl
