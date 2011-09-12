@@ -3321,7 +3321,7 @@ class FatturatoContabileFornitori(FatturatoContabileClienti):
 class Spesometro2011_AcquistiVendite(adb.DbMem):
     
     def __init__(self):
-        assert bt.TIPO_CONTAB == "O"
+#        assert bt.TIPO_CONTAB == "O"
         f = 'Reg_Id Reg_Link RegIva_Id RegIva_Cod RegIva_Descriz RegIva_Tipo'
         f += ' Anag_Id Anag_Cod Anag_Descriz Anag_AziPer Anag_CodFisc Anag_Nazione Anag_PIVA'
         f += ' Reg_Data Cau_Id Cau_Cod Cau_Descriz Reg_NumDoc Reg_DatDoc Reg_NumIva'
@@ -3348,6 +3348,10 @@ class Spesometro2011_AcquistiVendite(adb.DbMem):
         AF('reg.datreg>="%s"' % p['data1'])
         AF('reg.datreg<="%s"' % p['data2'])
         filters = ' AND '.join(['(%s)' % f for f in filters])
+        if bt.TIPO_CONTAB == 'O':
+            righecon = '"C", "S"'
+        else:
+            righecon = '"C", "S", "I"'
         cmd = """
 SELECT reg.id            'Reg_Id', 
        reg.sm_link       'Reg_Link',
@@ -3371,21 +3375,21 @@ SELECT reg.id            'Reg_Id',
        reg.numiva        'Reg_NumIva',
        
        SUM(bodycri.importo
-           *IF(bodycri.tipriga IN ("C", "S"), 1, 0)
+           *IF(bodycri.tipriga IN (%(righecon)s), 1, 0)
            *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, -1)) 'Totale_DAV',
            
        SUM(bodycri.importo
-           *IF(bodycri.tipriga IN ("C", "S"), 1, 0)
+           *IF(bodycri.tipriga IN (%(righecon)s), 1, 0)
            *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, -1)
            *IF(pdccer.f_sermer="M" OR bodycri.f_sermer="M", 1, 0))              'DAV_Merce',
            
        SUM(bodycri.importo
-           *IF(bodycri.tipriga IN ("C", "S"), 1, 0)
+           *IF(bodycri.tipriga IN (%(righecon)s), 1, 0)
            *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, -1)
            *IF(pdccer.f_sermer="S" OR bodycri.f_sermer="S", 1, 0))              'DAV_Servizi',
            
        SUM(bodycri.importo
-           *IF(bodycri.tipriga IN ("C", "S"), 1, 0)
+           *IF(bodycri.tipriga IN (%(righecon)s), 1, 0)
            *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, -1)
            *IF(    pdccer.f_sermer IN ("M", "S") 
                OR bodycri.f_sermer IN ("M", "S"), 0, 1))                        'DAV_Altro',
@@ -3404,7 +3408,7 @@ SELECT reg.id            'Reg_Id',
            *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, -1)
            *IF(aliq.modo="I",1,0))                                              'IVA_Imposta',
            
-       SUM(bodycri.importo
+       SUM((bodycri.imponib+bodycri.imposta+bodycri.indeduc)
            *IF(bodycri.tipriga="I", 1, 0)
            *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, -1)) 'IVA_Totale',
            

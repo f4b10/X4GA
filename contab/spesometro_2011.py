@@ -484,8 +484,11 @@ class RegSpyPanel(aw.Panel):
         wdr.RegSpyPanelFunc(self)
         cn = self.FindWindowByName
         self.dbdet = dbc.RiepMovCon()
-        assert bt.TIPO_CONTAB == "O"
-        self.dbdet.AddBaseFilter('body.tipriga IN ("S", "C", "A")')
+        if bt.TIPO_CONTAB == "O":
+            f = 'body.tipriga IN ("S", "C", "A")'
+        else:
+            f = 'body.tipriga IN ("S", "C", "A", "I")'
+        self.dbdet.AddBaseFilter(f)
         self.gridreg = RegSpyGrid(cn('pangridbody'), self.dbdet)
     
     def SetReg(self, reg_id):
@@ -508,6 +511,9 @@ class RegSpyGrid(dbgrid.ADB_Grid):
         dbgrid.ADB_Grid.__init__(self, parent, db_table=dbdet, on_menu_select='row')
         
         self.id_reg = None
+        
+        self._col_numrig = det._GetFieldIndex('numriga', inline=True)
+        self._col_tiprig = det._GetFieldIndex('tipriga', inline=True)
         
         _float = self.TypeFloat(6, bt.VALINT_DECIMALS)
         
@@ -537,12 +543,22 @@ class RegSpyGrid(dbgrid.ADB_Grid):
         
         self.CreateGrid()
     
+    def GetAttr(self, row, col, rscol, attr):
+        attr = dbgrid.ADB_Grid.GetAttr(self, row, col, rscol, attr)
+        r = self.db_table.GetRecordset()[row]
+        if r[self._col_numrig] == 1 or r[self._col_tiprig] == "A":
+            attr.SetTextColour('gray')
+            attr.SetReadOnly()
+        return attr
+    
     def ReadData(self, id_reg=None):
         if id_reg is None:
             id_reg = self.id_reg
         det = self.db_table
         det.Retrieve('reg.id=%s' % id_reg)
         self.ChangeData(det.GetRecordset())
+        if det.Locate(lambda d: d.numriga != 1 and d.tipriga != "A"):
+            self.SetGridCursor(det.RowNumber(), 0)
         self.id_reg = id_reg
     
     def ShowContextMenu(self, position, row, col):
@@ -552,6 +568,9 @@ class RegSpyGrid(dbgrid.ADB_Grid):
         if not 0 <= row < det.RowsCount():
             return
         det.MoveRow(row)
+        
+        if det.numriga == 1 or det.tipriga == 'A':
+            return
         
         self.ResetContextMenu()
         ACM = self.AppendContextMenuVoice
