@@ -877,6 +877,16 @@ UPDATE `cfgsetup`
                 if err:
                     aw.awu.MsgDialog(self, "Errore in adeguamento tabella %(tab_name)s:\n%(err)s" % locals())
                     ok = False
+                
+            # -------------------------------------------------------------------------------------
+            
+            if oldver<'1.3.28' and ok:
+                
+                try:
+                    for key in 'magnumric magnumsco'.split():
+                        db.Execute('INSERT INTO cfgsetup (chiave, importo) VALUES ("%(key)s", 3)' % locals())
+                except Exception, e:
+                    pass
         
         if ok:
             self.PerformExternalAdaptations()
