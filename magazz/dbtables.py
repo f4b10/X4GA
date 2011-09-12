@@ -2381,7 +2381,7 @@ class DocMag(adb.DbTable,\
     
     def GetPrintFileName_Normalize(self, x):
         c = True
-        x = x.lower()
+        x = x.lower().encode('ascii', 'xmlcharrefreplace')
         y = ''
         for n in range(len(x)):
             if x[n] == '.':
