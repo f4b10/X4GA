@@ -29,6 +29,12 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.3.29', None, (
+         ("BET1103",
+         """Aggiunta descrizione dell'errore in caso di problemi in generazione
+         file pdf."""),
+        ),),
+    
     ('1.3.28', None, (
          ("BET1102",
          """Esteso a sei il numero di sconti e ricariche gestibili, in base a
