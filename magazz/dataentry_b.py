@@ -1024,7 +1024,7 @@ class GridBody(object):
                 self.GridBodyDefAliqIva()
                 mov.um = row.prod.um
                 mov.qta = row.qta
-                p, s1, s2, s3, s4, s5, s6 = self.GridBodyDefPrezzoSconti()
+                p, s1, s2, s3, s4, s5, s6 = self.GridBodyDefPrezzoSconti6()
                 mov.prezzo = p
                 mov.sconto1 = s1 or 0
                 mov.sconto2 = s2 or 0
@@ -1278,7 +1278,7 @@ class GridBody(object):
                 mov.descriz    = self.dbprod.descriz
                 mov.um         = self.dbprod.um
                 if mov.config.askvalori == 'T':
-                    p, s1, s2, s3, s4, s5, s6 = self.GridBodyDefPrezzoSconti()
+                    p, s1, s2, s3, s4, s5, s6 = self.GridBodyDefPrezzoSconti6()
                     mov.prezzo = p
                     mov.sconto1 = s1 or 0
                     mov.sconto2 = s2 or 0
@@ -1326,7 +1326,7 @@ class GridBody(object):
                             mov.perpro = self.dbprod.perpro
                     DefImporto()
                 elif mov.config.askvalori == 'V':
-                    mov.importo, _, _, _, _, _, _ = self.GridBodyDefPrezzoSconti()
+                    mov.importo, _, _, _, _, _, _ = self.GridBodyDefPrezzoSconti6()
                 self.GridBodyDefAliqIva()
                 self.UpdateProdZone(value)
                 if self.dbdoc.config.autoqtaonbc == 1:
@@ -1443,9 +1443,17 @@ class GridBody(object):
         sconto, tipo = self.dbdoc.DefSconto(numsc, mov)
         return sconto
     
-    def GridBodyDefPrezzoSconti(self):
-        prezzo, tipo, sc1, sc2, sc3, sc4, sc5, sc6 = self.dbdoc.DefPrezzoSconti6()
-        return prezzo, sc1, sc2, sc3, sc4, sc5, sc6
+    def GridBodyDefPrezzoSconti(self, sconti6=False):
+        
+        if sconti6:
+            prezzo, tipo, sc1, sc2, sc3, sc4, sc5, sc6 = self.dbdoc.DefPrezzoSconti6()
+            return prezzo, sc1, sc2, sc3, sc4, sc5, sc6
+        
+        prezzo, tipo, sc1, sc2, sc3 = self.dbdoc.DefPrezzoSconti()
+        return prezzo, sc1, sc2, sc3
+    
+    def GridBodyDefPrezzoSconti6(self):
+        return self.GridBodyDefPrezzoSconti(sconti6=True)
     
     def GridBodyDefAliqIva(self):
         doc = self.dbdoc

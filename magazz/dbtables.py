@@ -504,7 +504,9 @@ class DocMag(adb.DbTable,\
         if callable(DefPrezzoSconti):
             prezzo, sc1, sc2, sc3, sc4, sc5, sc6 = DefPrezzoSconti(self)
             if prezzo or sc1 or sc2 or sc3 or sc4 or sc5 or sc6:
-                return prezzo, 'X', sc1, sc2, sc3, sc4, sc5, sc6
+                if sconti6:
+                    return prezzo, 'X', sc1, sc2, sc3, sc4, sc5, sc6
+                return prezzo, 'X', sc1, sc2, sc3
         if prod is None:
             prod = self.mov.prod
         if cfgmov is None:
@@ -631,7 +633,7 @@ class DocMag(adb.DbTable,\
     
     def DefPrezzoSconti6(self, *args, **kwargs):
         kwargs['sconti6'] = True
-        return self.DefPrezzoSconti(self, *args, **kwargs)
+        return self.DefPrezzoSconti(*args, **kwargs)
     
     def GetDatoGriglia(self, col):
         grip = self._info.dbgrip
