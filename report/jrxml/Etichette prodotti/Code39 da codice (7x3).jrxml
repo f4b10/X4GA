@@ -110,7 +110,7 @@
 					<graphicElement stretchType="NoStretch" fill="Solid" >
 					<pen lineWidth="0.0" lineStyle="Solid"/>
 </graphicElement>
-					<imageExpression class="java.lang.String"><![CDATA[$code39$RS.codice_0{'barWidth': 72*0.0100}]]></imageExpression>
+					<imageExpression class="java.lang.String"><![CDATA[$code39$str(RS.codice_0){'barWidth': 72*0.0100}]]></imageExpression>
 				</image>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -192,7 +192,7 @@
 						</reportElement>
 					<box></box>
 					<graphicElement stretchType="NoStretch" fill="Solid" />
-					<imageExpression class="java.lang.String"><![CDATA[$code39$RS.codice_1{'barWidth': 72*0.0100}]]></imageExpression>
+					<imageExpression class="java.lang.String"><![CDATA[$code39$str(RS.codice_1){'barWidth': 72*0.0100}]]></imageExpression>
 				</image>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -274,7 +274,7 @@
 						</reportElement>
 					<box></box>
 					<graphicElement stretchType="NoStretch" fill="Solid" />
-					<imageExpression class="java.lang.String"><![CDATA[$code39$RS.codice_2{'barWidth': 72*0.0100}]]></imageExpression>
+					<imageExpression class="java.lang.String"><![CDATA[$code39$(RS.codice_2){'barWidth': 72*0.0100}]]></imageExpression>
 				</image>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
