@@ -766,6 +766,7 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
                 if self.retsearch_ondescriz:
                     if self._ctrdes.GetValue():
                         self.HelpChoice(obj, exact=False, resetFields=False)
+            event.Skip()
             
         elif event.GetKeyCode() == wx.WXK_F3 and active:
             #F3 azzera selezione attiva
@@ -855,23 +856,29 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
         if maxrows:
             cmd, par = self.GetSqlSearch(obj, forceAll, exact, count=True)
             db = adb.db.__database__
-            if db.Retrieve(cmd, par) and len(db.rs) == 1:
-                rows = db.rs[0][0]
-                if rows>maxrows:
-                    p = awu.GetParentFrame(self)
-                    if p.IsShown():
-                        self._retain_focus = True
-                        msg = """Sono stati trovati %d risultati.\n"""\
-                        """Proseguendo con questi criteri, la ricerca """\
-                        """potrebbe durare più tempo del solito.\n\n"""\
-                        """Confermi la ricerca ?""" % rows
-                        do = (awu.MsgDialog(self, msg, style=wx.ICON_WARNING|wx.YES_NO|wx.NO_DEFAULT) == wx.ID_YES)
-                        del self._retain_focus
-                        if not do:
-                            return False
-                    else:
+            countok = db.Retrieve(cmd, par)
+            if len(db.rs) == 0:
+                msg = "Nessun risultato dal test di conteggio righe:\n\n%s\n%s" % (cmd, repr(par))
+                if not countok:
+                    msg += '\nErrore riscontrato:\n%s' % db.dbError.description
+                awu.MsgDialog(self, msg, style=wx.ICON_ERROR)
+                return False
+            rows = db.rs[0][0]
+            if rows>maxrows:
+                p = awu.GetParentFrame(self)
+                if p.IsShown():
+                    self._retain_focus = True
+                    msg = """Sono stati trovati %d risultati.\n"""\
+                    """Proseguendo con questi criteri, la ricerca """\
+                    """potrebbe durare più tempo del solito.\n\n"""\
+                    """Confermi la ricerca ?""" % rows
+                    do = (awu.MsgDialog(self, msg, style=wx.ICON_WARNING|wx.YES_NO|wx.NO_DEFAULT) == wx.ID_YES)
+                    del self._retain_focus
+                    if not do:
                         return False
-            
+                else:
+                    return False
+        
         self._helpInProgress = True
         
         cmd, par = self.GetSqlSearch(obj, forceAll, exact)
