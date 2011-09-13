@@ -786,9 +786,10 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
     def AdjustRowsHeight(self):
         if self.rowheight is None:
             return
-        for n in range(self.GetNumberRows()):
-            self.SetRowSize(n, self.rowheight)
-
+#        for n in range(self.GetNumberRows()):
+#            self.SetRowSize(n, self.rowheight)
+        self.SetDefaultRowSize(self.rowheight)
+    
     def SetEditableColumns(self, edcol):
         """
         Imposta le colonne che è possibile modificare
