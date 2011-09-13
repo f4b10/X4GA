@@ -470,8 +470,9 @@ class MagazzPanel(aw.Panel,\
         
         for name in 'impcontr totpeso totcolli notevet'.split():
             self.Bind(wx.EVT_TEXT, self.OnFootChanged, cn(name))
-            
+        
         self.Bind(EVT_DATECHANGED, self.OnFootChanged, cn("initrasp"))
+        self.Bind(wx.EVT_BUTTON, self.OnFootChanged, cn("initraspnow"))
         
         self.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnWorkZoneChanged, cn('workzone'))
         
@@ -1532,9 +1533,9 @@ class MagazzPanel(aw.Panel,\
     def OnFootChanged(self, event):
         cn = self.FindWindowByName
         name = event.GetEventObject().GetName()
-        value = event.GetEventObject().GetValue()
         doc = self.dbdoc
         if name in doc.GetFieldNames():
+            value = event.GetEventObject().GetValue()
             setattr(doc, name, value)
             if name in 'id_tracur id_travet':
                 if name == 'id_travet':
@@ -1552,6 +1553,16 @@ class MagazzPanel(aw.Panel,\
                 self.UpdateHeadDest(update_nocodedes=False)
             elif name == 'nocodevet_id_stato':
                 cn('nocodevet_nazione').SetValue(cn('nocodevet_id_stato').GetVatPrefix())
+            elif name == 'initrasp':
+                cn('butinitraspnow').Enable(not bool(value))
+                
+        elif name == 'butinitraspnow':
+            now = Env.DateTime.now()
+            doc.initrasp = now
+            c = cn('initrasp')
+            c.SetValue(now)
+            c.SetFocus()
+        
         event.Skip()
     
     def OnDocNew( self, event ):
@@ -2370,8 +2381,9 @@ class MagazzPanel(aw.Panel,\
         enab = cfgdoc.askdatiacc == 'X'
         for name in 'notevet totpeso totcolli initrasp'.split():
             ctrls[name].Enable(self.status == STATUS_EDITING and enab)
-        #abilitazione campi destinatario non codificato
         cn = self.FindWindowByName
+        cn('butinitraspnow').Enable(self.status == STATUS_EDITING and not bool(cn('initrasp').GetValue()))
+        #abilitazione campi destinatario non codificato
         e = (bt.MAGNOCODEDES and self.status == STATUS_EDITING and enab and cfgdoc.askdatiacc == 'X' and cfgdoc.askdestin == 'X' and doc.id_dest is None)
         self.FindWindowByName('enable_nocodedes').Enable(e)
         e = e and cn('enable_nocodedes').IsChecked()

@@ -29,6 +29,13 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.3.30', None, (
+         ("BET1104",
+         """Aggiunto bottone in piede dati accompagnatori del documento per
+         attribuzione immediata di data e ora attuali alla data di inizio 
+         trasporto."""),
+        ),),
+    
     ('1.3.29', None, (
          ("BET1103",
          """Aggiunta descrizione dell'errore in caso di problemi in generazione
