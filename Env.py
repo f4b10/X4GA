@@ -448,11 +448,11 @@ class GeneralSetup(Setup):
         import report
         del report.pathalt[:]
         for n,p in enumerate(plugins):
-            report.AppendPathAlt(opj(pathsub or pathrpt, 
-                                     'X4-plugin.%s' % p))
             if pathsub:
                 report.AppendPathAlt(opj(opj(pathsub or pathrpt, sub), 
                                          'X4-plugin.%s' % p))
+            report.AppendPathAlt(opj(pathsub or pathrpt, 
+                                     'X4-plugin.%s' % p))
         pathsub = opj(pathsub or pathrpt, sub)
         report.SetPathRpt(pathrpt)
         report.SetPathSub(pathsub)
