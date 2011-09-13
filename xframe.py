@@ -161,7 +161,7 @@ class XFrame(aw.Frame):
         
         aw.Frame.__init__(self, parent, id, title, pos, size, style)
         
-        show_promem = True#hasattr(sys, 'frozen')
+        show_promem = True
         show_feeds = True
         
 #        icon = wx.EmptyIcon()
@@ -207,9 +207,10 @@ class XFrame(aw.Frame):
         
         if show_promem:
             rp.populate()
-            rp.autoUpdate(5)
-            rp.startReminder(1)
             self.promem = rp
+            if hasattr(sys, 'frozen'):
+                rp.autoUpdate(5)
+                rp.startReminder(1)
         
         self.Bind(lib.EVT_CHANGEMENU, self.OnChangeMenu)
         self.Bind(EVT_STATUSBAR_TEXTCHANGE_EVENT, self.OnStatusBarTextChange)

@@ -931,6 +931,7 @@ class Azienda(object):
         
         OPTDIGSEARCH = True  #flag ricerca immediata in digitazione codice/descrizione
         OPTTABSEARCH = True  #flag attivazione ricerche anche con il tasto Tab
+        OPTRETSEARCH = True  #flag attivazione ricerche anche con il tasto Return
         OPTNOTIFICHE = False #flag attivazione notifiche eventi
         OPTBACKUPDIR = None  #cartella predefinita per i backup
         OPTLNKCRDPDC = None  #inizializzazione focus su codice/descrizione in LinkTablePdc da scheda
@@ -3660,6 +3661,10 @@ class Azienda(object):
                             import awc.controls.linktable as lt
                             lt.LinkTable.SetTabSearchOnCode(True)
                             lt.LinkTable.SetTabSearchOnDescriz(v)
+                        elif name == 'OPTRETSEARCH':
+                            import awc.controls.linktable as lt
+                            lt.LinkTable.SetRetSearchOnCode(True)
+                            lt.LinkTable.SetRetSearchOnDescriz(v)
                         if cls != Azienda.BaseTab_base:
                             #se è stata sovrascritta la classe BaseTab, scrivo 
                             #gli stessi settaggi anche nella sua forma base,
@@ -3715,6 +3720,7 @@ class Azienda(object):
                 ('MAGEXCSEARCH',    'magexcsearch',       f, _int, None),
                 ('OPTDIGSEARCH',    'optdigsearch',       f, _int, None),
                 ('OPTTABSEARCH',    'opttabsearch',       f, _int, None),
+                ('OPTRETSEARCH',    'optretsearch',       f, _int, None),
                 ('OPTLNKCRDPDC',    'optlnkcrdpdc',       f, _int, None),
                 ('OPTLNKGRDPDC',    'optlnkgrdpdc',       f, _int, None),
                 ('OPTLNKCRDCLI',    'optlnkcrdcli',       f, _int, None),

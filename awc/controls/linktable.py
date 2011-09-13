@@ -180,6 +180,16 @@ class LinkTable(wx.Control,\
     def SetTabSearchOnDescriz(self, ts):
         self.tabsearch_ondescriz = ts
     
+    retsearch_oncode = False
+    @classmethod
+    def SetRetSearchOnCode(self, ts):
+        self.retsearch_oncode = ts
+    
+    retsearch_ondescriz = False
+    @classmethod
+    def SetRetSearchOnDescriz(self, ts):
+        self.retsearch_ondescriz = ts
+    
     def SetCodExclusive(self, ce):
         self.codexclusive = ce
     
@@ -745,6 +755,18 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
                     if do:
                         self.Navigate(wx.NavigationKeyEvent.IsForward)
             
+        elif event.GetKeyCode() == wx.WXK_RETURN:# and not event.ControlDown():
+            if obj == self._ctrcod:
+                if self.retsearch_oncode:
+                    if self._ctrcod.GetValue():
+                        self._fromtab = True
+                        self.HelpChoice(obj, exact=False, resetFields=False)
+                        del self._fromtab
+            elif obj == self._ctrdes:
+                if self.retsearch_ondescriz:
+                    if self._ctrdes.GetValue():
+                        self.HelpChoice(obj, exact=False, resetFields=False)
+            
         elif event.GetKeyCode() == wx.WXK_F3 and active:
             #F3 azzera selezione attiva
             self.ResetValue()
@@ -833,7 +855,7 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
         if maxrows:
             cmd, par = self.GetSqlSearch(obj, forceAll, exact, count=True)
             db = adb.db.__database__
-            if db.Retrieve(cmd, par):
+            if db.Retrieve(cmd, par) and len(db.rs) == 1:
                 rows = db.rs[0][0]
                 if rows>maxrows:
                     p = awu.GetParentFrame(self)

@@ -29,6 +29,13 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.3.31', None, (
+         ("BET1105",
+         """Introdotta possibilità di attivare le ricerche di tabelle anche con
+         il tasto Invio, per compatibilità con lettori di codici a barre in
+         emulazione di tastiera."""),
+        ),),
+    
     ('1.3.30', None, (
          ("BET1104",
          """Aggiunto bottone in piede dati accompagnatori del documento per
