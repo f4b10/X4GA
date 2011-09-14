@@ -56,6 +56,8 @@ class XApp(wx.App):
     
     keyver = 'x4_version'
     setupname = 'x4setup'
+    if ver.OSS():
+        setupname += '_oss'
     
     def __init__(self, *args, **kwargs):
         
