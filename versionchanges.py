@@ -29,6 +29,22 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.3.33', None, (
+         ("BET1106",
+         """Aggiunto controllo di congruenza della data di registrazione rispetto
+         alle registrazioni iva presenti in contabilità: se esiste registrazione
+         sullo stesso registro, con data successiva e numero inferiore, avverte e
+         blocca l'inserimento."""),
+        ),),
+    
+    ('1.3.32', None, (
+         ("BUG1087",
+         """Corretto bug in generazione file effetti: i valori testuali eccedenti 
+         la lunghezza impostata non venivano troncati; inoltre, eventuali caratteri
+         unicode contenuti al loro interno non venivano opportunamente trattati,
+         causando una malformazione della struttura del file. Ora tali caratteri,
+         ove presenti, vengono omessi."""),
+        ),),
     ('1.3.31', None, (
          ("BET1105",
          """Introdotta possibilità di attivare le ricerche di tabelle anche con

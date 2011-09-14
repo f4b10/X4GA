@@ -907,6 +907,9 @@ class MagazzPanel(aw.Panel,\
         if not err:
             doc = self.dbdoc
             cfg = doc.cfgdoc
+            riv = doc.GetRegIva()
+            dbriv = adb.DbTable(bt.TABNAME_REGIVA, 'regiva')
+            dbriv.Get(riv)
             if cfg.colcg == 'X':
                 p = doc._info.progr
                 p.ClearFilters()
@@ -924,8 +927,25 @@ class MagazzPanel(aw.Panel,\
                     err =\
                         """La data di registrazione è antecedente l'ultima\n"""\
                         """chiusura contabile."""
-                if not err and cfg.caucon.id_regiva is not None:
-                    #controlli iva
+                if not err and riv is not None:
+                    #controllo sequenza protocollo
+                    ni = cn('numiva').GetValue()
+                    if ni and dr:
+                        db = adb.db.__database__
+                        year = dr.year
+                        cmd = """
+                        SELECT COUNT(reg.id)
+                          FROM contab_h reg
+                         WHERE reg.id_regiva=%(riv)s AND YEAR(reg.datreg)=%(year)s AND reg.datreg>"%(dr)s" AND reg.numiva<%(ni)s
+                         """ % locals()
+                        if db.Retrieve(cmd):
+                            if (db.rs[0][0] or 0) > 0:
+                                err =\
+                                """Sono presenti registrazioni successive con protocollo inferiore."""
+                        else:
+                            err = 'Errore in controllo protocollo iva\n\n%s' % db.dbError.description
+                if not err and riv is not None:
+                    #controllo progressivi liquidazione
                     p.ClearFilters()
                     p.AddFilter('progr.codice=%s', 'iva_debcred')
                     p.AddFilter('progr.keydiff=%s', Env.Azienda.Login.dataElab.year)
@@ -943,7 +963,7 @@ class MagazzPanel(aw.Panel,\
                             """La data di registrazione è antecedente l'ultima\n"""\
                             """liquidazione iva."""
                     if not err:
-                        usri = cfg.caucon.regiva.lastprtdat #data ultima stampa reg.iva
+                        usri = dbriv.lastprtdat #data ultima stampa reg.iva
                         if usri is not None and dr<=usri:
                             err =\
                             """La data di registrazione è antecedente l'ultima\n"""\
