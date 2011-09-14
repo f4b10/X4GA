@@ -665,7 +665,9 @@ class EmiEffettiPanel(wx.Panel):
             else:
                 out = '000000'
             return out
-        s = lambda x,n: (x or "").ljust(n)
+#        s = lambda x,n: (x or "").ljust(n)
+        def s(x, n):
+            return ((x or '').encode('ascii', 'ignore')+' '*n)[:n]
         z = lambda x,n: str(x or 0).zfill(n)
         def pivacf(piva,cf):
             if not piva:
