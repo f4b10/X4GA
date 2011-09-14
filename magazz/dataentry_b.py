@@ -516,19 +516,24 @@ class GridBody(object):
         if (bt.MAGATTGRIP or bt.MAGATTGRIF) and bt.MAGAGGGRIP:
             self.COL_AGGGRIP = a(( -1, [m.RSMOV_AGGGRIP, "AGP",          _CHK, True]))
         
-        if bt.MAGNUMSCO >= 1:
-            self.COL_SC1 = a((  1, [m.RSMOV_SC1,       "Sc.%"+'1'*int(bt.MAGNUMSCO>1), _SCO, True]))
-        if bt.MAGNUMSCO >= 2:
+        numsco = bt.MAGNUMSCO
+        c = self.dbdoc.cfgdoc.numsconti or 0
+        if 0 < c < numsco:
+            numsco = c
+        
+        if numsco >= 1:
+            self.COL_SC1 = a((  1, [m.RSMOV_SC1,       "Sc.%"+'1'*int(numsco>1), _SCO, True]))
+        if numsco >= 2:
             self.COL_SC2 = a((  1, [m.RSMOV_SC2,       "Sc.%2",          _SCO, True]))
-        if bt.MAGNUMSCO >= 3:
+        if numsco >= 3:
             self.COL_SC3 = a((  1, [m.RSMOV_SC3,       "Sc.%3",          _SCO, True]))
-        if bt.MAGNUMSCO >= 4:
+        if numsco >= 4:
             self.COL_SC4 = a((  1, [m.RSMOV_SC4,       "Sc.%4",          _SCO, True]))
-        if bt.MAGNUMSCO >= 5:
+        if numsco >= 5:
             self.COL_SC5 = a((  1, [m.RSMOV_SC5,       "Sc.%5",          _SCO, True]))
-        if bt.MAGNUMSCO >= 6:
+        if numsco >= 6:
             self.COL_SC6 = a((  1, [m.RSMOV_SC6,       "Sc.%6",          _SCO, True]))
-            
+        
         self.COL_IMPORTO = a((  1, [m.RSMOV_IMPORTO,   "Importo",        _IMP, True]))
         self.COL_codiva =  a(( 35, [m.RSMOV_codiva,    "Iva",            _STR, True]))
         self.COL_NOTE =    a((200, [m.RSMOV_NOTE,      "Note",           _STR, True]))

@@ -2660,6 +2660,7 @@ class Azienda(object):
                 [ "clasdoc",    "CHAR",     6, None, "Classificazione documento: ordfor, carfor, ordcli, vencli", None ],
                 [ "askstapre",  "CHAR",     1, None, "Flag richiesta stampa prezzi in stampa documento", None ],
                 [ "askstaint",  "CHAR",     1, None, "Flag richiesta stampa intestazioni in stampa", None ],
+                [ "numsconti",  "TINYINT",  1, None, "Numero di sconti da gestire se diverso da setup azienda", None ],
             ]
             
             cls.set_constraints(cls.TABNAME_CFGMAGDOC,
