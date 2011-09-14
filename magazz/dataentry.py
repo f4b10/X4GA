@@ -2359,6 +2359,11 @@ class MagazzPanel(aw.Panel,\
         c["noteint"].Enable(en)
         c["notecli"].Enable(False)
         c["notecli2"].Enable(False)
+        h = self.FindWindowByName('workzone').GetPage(0)
+        for n in range(6):
+            l = n+1
+            s = h.FindWindowByName('sconto%d'%l)
+            s.Enable(en and (not (cfg.numsconti) or l<=cfg.numsconti))
     
     def EnableFootControls(self, enable=True):
         enable = enable and self.status == STATUS_EDITING
