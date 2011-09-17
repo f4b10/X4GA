@@ -345,7 +345,15 @@ class Report:
                 if not printer:
                     printer = printername
                     SetUpdateLastPrinter(True)
-                rptdef, printer, def_output, copies = self.GetMultiReport(parent, test, rptdef, printer, copies, emailbutton, multi_default=multi_default, otherquestions_filler=otherquestions_filler, can_preview=can_preview, can_print=can_print)
+                if self.messages:
+                    rptdef, printer, def_output, copies = self.GetMultiReport(parent, test, rptdef, printer, copies, emailbutton, multi_default=multi_default, otherquestions_filler=otherquestions_filler, can_preview=can_preview, can_print=can_print)
+                else:
+                    if os.path.isfile(test+'.jrxml'):
+                        rptdef = test+'.jrxml'
+                        def_output = output
+                        break
+                    else:
+                        raise Exception, "Multireport non attivabile senza interfaccia visuale"
                 if callable(otherquestions_reactor):
                     otherquestions_reactor(self.usedDialog)
                 if output != "STORE":
@@ -402,9 +410,13 @@ class Report:
                 if not os.path.isdir(basePath):
                     os.makedirs(basePath)
             except:
-                awu.MsgDialog(None, 'Impossibile creare la cartella %s' % basePath, style=wx.ICON_ERROR)
-                return None
-                
+                msg = 'Impossibile creare la cartella %s' % basePath
+                if self.messages:
+                    awu.MsgDialog(None, msg, style=wx.ICON_ERROR)
+                    return None
+                else:
+                    raise Exception, msg
+            
             p = self.parameters
             p['rptdef'] = rptdef
             p['rptout'] = rptout
@@ -537,12 +549,12 @@ class Report:
             ok = not datareq
         else:
             if testrec.RowsCount() == 0:
+                msg = "Nessun dato da stampare"
                 if self.messages:
-                    err = message="Nessun dato da stampare"
-                    awu.MsgDialog(parent, message=err)
-                    ok = False
+                    awu.MsgDialog(parent, msg)
+                    return False
                 else:
-                    raise Exception, err
+                    raise Exception, msg
         return ok
         
     def SetRange(self, range):

@@ -512,7 +512,8 @@ class print_Report:
                 wait = awu.WaitDialog(parentWindow, message=waitMessage,
                                       maximum=dbTable.RowsCount())
                 self.progressBar = progressBar = wait.progress
-                focused_object = parentWindow.FindFocus()
+                if messages:
+                    focused_object = parentWindow.FindFocus()
             else:
                 wait = None
             
@@ -570,7 +571,8 @@ class print_Report:
 #                        progressBar.SetValue(dbt.RowNumber()+1)
                     if progressBar:
                         self.dbt_row = dbt.RowNumber()
-                        wx.YieldIfNeeded()
+                        if messages:
+                            wx.YieldIfNeeded()
                     
                     if not rowFilter(dbt):
                         if not dbt.MoveNext():
@@ -608,11 +610,12 @@ class print_Report:
                     except:
                         pass
                     awu.GetParentFrame(parentWindow).Enable(re_enable)
-                    if focused_object is not None:
-                        try:
-                            wx.CallAfter(lambda: focused_object.SetFocus())
-                        except:
-                            pass
+                    if messages:
+                        if focused_object is not None:
+                            try:
+                                wx.CallAfter(lambda: focused_object.SetFocus())
+                            except:
+                                pass
 
             
             if queuedef:
@@ -652,10 +655,14 @@ class print_Report:
                     if output == "VIEW":
                         PdfView(os.path.abspath(nameOutputFile), usedde=usedde, pdfcmd=pdfcmd)
                     elif output == "PRINT":
-                        f = parentWindow.FindFocus()
-                        def RipristinaFocus():
-                            if f is not None:
-                                f.SetFocus()
+                        if messages:
+                            f = parentWindow.FindFocus()
+                            def RipristinaFocus():
+                                if f is not None:
+                                    f.SetFocus()
+                        else:
+                            def RipristinaFocus():
+                                pass
                         copies = copies or 1
                         PdfPrint(os.path.abspath(nameOutputFile), printer, copies, RipristinaFocus)
                     else:
