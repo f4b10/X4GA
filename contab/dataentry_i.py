@@ -60,6 +60,8 @@ from anag.pdctip import PdcTipDialog
 
 import stormdb as adb
 
+from contab.util import SetWarningPag
+
 
 (GridSelectedEvent, EVT_GRIDSELECTED) = wx.lib.newevent.NewEvent()
 
@@ -642,6 +644,7 @@ class GeneraPartiteMixin(scad.Scadenze):
                                 dbiva = adb.DbTable(bt.TABNAME_ALIQIVA, 'aliq')
                                 if dbiva.Get(rs[n]) and dbiva.OneRow():
                                     self.SetAliqIvaDefault(dbiva)
+                SetWarningPag(self.FindWindowByName('butattach'), self.id_pdcpa)
     
     def InfoCliFor(self, col):
         """

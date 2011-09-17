@@ -62,6 +62,8 @@ if False:
     import magazz.dataentry_gw as gateway
 
 import contab
+from contab.util import SetWarningPag
+
 import anag
 import anag.prod as prod
 import anag.util as autil
@@ -1497,6 +1499,7 @@ class MagazzPanel(aw.Panel,\
         warn = ''
         pdcid = doc.id_pdc
         if pdcid:
+            SetWarningPag(self.FindWindowByName('butattach'), pdcid)
             if s.Get(pdcid) and s.OneRow():
                 if s.sintesi.total_saldo_ins:
                     warn = "ATTENZIONE! Insoluti aperti per un totale di %s"\
