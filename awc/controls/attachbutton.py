@@ -317,6 +317,9 @@ class AttachmentButton(wx.Button):
         self._canedit = True
         self._autotext = None
         
+        self._autotext_prefix = None
+        self._autotext_suffix = None
+        
         self._twain_sm = None
         self._twain_sd = None
         
@@ -367,6 +370,10 @@ class AttachmentButton(wx.Button):
         tabella sulla quale risiede il record a cui si riferiscono gli allegati.
         """
         self._attscope = scope
+    
+    def SetAutotextPS(self, prefix=None, suffix=None):
+        self._autotext_prefix = prefix
+        self._autotext_suffix = suffix
     
     def SetKey(self, key, save=False, delete=False):
         """
@@ -423,7 +430,17 @@ class AttachmentButton(wx.Button):
                     except:
                         pass
             if at is not None:
-                self._autotext.SetText(txt)
+                text, sep = '', ' :: '
+                if self._autotext_prefix:
+                    text += self._autotext_prefix
+                    if txt:
+                        text += sep
+                text += txt
+                if self._autotext_suffix:
+                    if txt:
+                        text += sep
+                    text += self._autotext_suffix
+                at.SetText(text)
             n = db.RowsCount()
         else:
             n = 0
