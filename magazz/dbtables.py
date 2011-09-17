@@ -2342,8 +2342,8 @@ class DocMag(adb.DbTable,\
             return None
         anag = self._info.anag
         dest = self.dest
-        assert isinstance(anag, adb.DbTable)
-        assert isinstance(dest, adb.DbTable)
+#        assert isinstance(anag, adb.DbTable)
+#        assert isinstance(dest, adb.DbTable)
         try:
             if self.config.askdatiacc == 'X':
                 #dati accompagnatori richiesti
