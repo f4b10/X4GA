@@ -36,47 +36,59 @@ ID_MODOCALC = 16008
 ID_PERIODI = 16009
 ID_TXT_NUMSCAD = 16010
 ID_TXT_GGEXTRA = 16011
-ID_PDCPI = 16012
-ID_GG01 = 16013
-ID_GG02 = 16014
-ID_GG03 = 16015
-ID_GG04 = 16016
-ID_GG05 = 16017
-ID_GG06 = 16018
-ID_GG07 = 16019
-ID_GG08 = 16020
-ID_GG09 = 16021
-ID_GG10 = 16022
-ID_GG11 = 16023
-ID_GG12 = 16024
-ID_GG13 = 16025
-ID_GG14 = 16026
-ID_GG15 = 16027
-ID_GG16 = 16028
-ID_GG17 = 16029
-ID_GG18 = 16030
-ID_GG19 = 16031
-ID_GG20 = 16032
-ID_GG21 = 16033
-ID_GG22 = 16034
-ID_GG23 = 16035
-ID_GG24 = 16036
-ID_GG25 = 16037
-ID_GG26 = 16038
-ID_GG27 = 16039
-ID_GG28 = 16040
-ID_GG29 = 16041
-ID_GG30 = 16042
-ID_GG31 = 16043
-ID_GG32 = 16044
-ID_GG33 = 16045
-ID_GG34 = 16046
-ID_GG35 = 16047
-ID_GG36 = 16048
-ID_SC1NOEFF = 16049
-ID_SC1IVA = 16050
-ID_PERCSC1 = 16051
-ID_PANEL = 16052
+ID_GEM01 = 16012
+ID_GEM02 = 16013
+ID_GEM03 = 16014
+ID_GEM04 = 16015
+ID_GEM05 = 16016
+ID_GEM06 = 16017
+D_GEM07 = 16018
+ID_GEM08 = 16019
+ID_GEM09 = 16020
+ID_GEM10 = 16021
+ID_GEM11 = 16022
+ID_GEM12 = 16023
+ID_PDCPI = 16024
+ID_GG01 = 16025
+ID_GG02 = 16026
+ID_GG03 = 16027
+ID_GG04 = 16028
+ID_GG05 = 16029
+ID_GG06 = 16030
+ID_GG07 = 16031
+ID_GG08 = 16032
+ID_GG09 = 16033
+ID_GG10 = 16034
+ID_GG11 = 16035
+ID_GG12 = 16036
+ID_GG13 = 16037
+ID_GG14 = 16038
+ID_GG15 = 16039
+ID_GG16 = 16040
+ID_GG17 = 16041
+ID_GG18 = 16042
+ID_GG19 = 16043
+ID_GG20 = 16044
+ID_GG21 = 16045
+ID_GG22 = 16046
+ID_GG23 = 16047
+ID_GG24 = 16048
+ID_GG25 = 16049
+ID_GG26 = 16050
+ID_GG27 = 16051
+ID_GG28 = 16052
+ID_GG29 = 16053
+ID_GG30 = 16054
+ID_GG31 = 16055
+ID_GG32 = 16056
+ID_GG33 = 16057
+ID_GG34 = 16058
+ID_GG35 = 16059
+ID_GG36 = 16060
+ID_SC1NOEFF = 16061
+ID_SC1IVA = 16062
+ID_PERCSC1 = 16063
+ID_PANEL = 16064
 
 def ModPagCardFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -121,16 +133,16 @@ def ModPagCardFunc( parent, call_fit = True, set_sizer = True ):
     item11 = wx.StaticBoxSizer( item12, wx.HORIZONTAL )
     
     item13 = wx.StaticText( parent, ID_TEXT, "Numero di scadenze:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item11.Add( item13, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+    item11.Add( item13, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
     item14 = NumCtrl( parent, integerWidth=2, allowNegative=False, groupDigits=False); item14.SetName("numscad")
     item11.Add( item14, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item11.Add( [ 20, 20 ] , 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+    item11.Add( [ 20, 20 ] , 0, wx.ALIGN_CENTER, 5 )
 
     item15 = CheckBox( parent, ID_FINEMESE, "Portate a fine mese", wx.DefaultPosition, wx.DefaultSize, 0 )
     item15.SetName( "finemese" )
-    item11.Add( item15, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+    item11.Add( item15, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT, 5 )
 
     item10.Add( item11, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
@@ -182,9 +194,90 @@ def ModPagCardFunc( parent, call_fit = True, set_sizer = True ):
     item30.Add( item31, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
     item32 = NumCtrl(parent, ID_TXT_GGEXTRA, integerWidth=2, allowNegative=False, groupDigits=False); item32.SetName("ggextra")
-    item30.Add( item32, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item30.Add( item32, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 
-    item28.Add( item30, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+    item33 = wx.StaticText( parent, ID_TEXT, "Giorni extra in base al mese:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item30.Add( item33, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+
+    item30.AddGrowableCol( 2 )
+
+    item28.Add( item30, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+
+    item34 = wx.FlexGridSizer( 2, 0, 0, 0 )
+    
+    item35 = wx.StaticText( parent, ID_TEXT, "1", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item34.Add( item35, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item36 = wx.StaticText( parent, ID_TEXT, "2", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item34.Add( item36, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item37 = wx.StaticText( parent, ID_TEXT, "3", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item34.Add( item37, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item38 = wx.StaticText( parent, ID_TEXT, "4", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item34.Add( item38, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item39 = wx.StaticText( parent, ID_TEXT, "5", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item34.Add( item39, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item40 = wx.StaticText( parent, ID_TEXT, "6", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item34.Add( item40, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item41 = wx.StaticText( parent, ID_TEXT, "7", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item34.Add( item41, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item42 = wx.StaticText( parent, ID_TEXT, "8", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item34.Add( item42, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item43 = wx.StaticText( parent, ID_TEXT, "9", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item34.Add( item43, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item44 = wx.StaticText( parent, ID_TEXT, "10", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item34.Add( item44, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item45 = wx.StaticText( parent, ID_TEXT, "11", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item34.Add( item45, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item46 = wx.StaticText( parent, ID_TEXT, "12", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item34.Add( item46, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+
+    item47 = NumCtrl( parent, integerWidth=2, allowNegative=False, groupDigits=False); item47.SetName("gem01")
+    item34.Add( item47, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item48 = NumCtrl( parent, integerWidth=2, allowNegative=False, groupDigits=False); item48.SetName("gem02")
+    item34.Add( item48, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item49 = NumCtrl( parent, integerWidth=2, allowNegative=False, groupDigits=False); item49.SetName("gem03")
+    item34.Add( item49, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item50 = NumCtrl( parent, integerWidth=2, allowNegative=False, groupDigits=False); item50.SetName("gem04")
+    item34.Add( item50, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item51 = NumCtrl( parent, integerWidth=2, allowNegative=False, groupDigits=False); item51.SetName("gem05")
+    item34.Add( item51, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item52 = NumCtrl( parent, integerWidth=2, allowNegative=False, groupDigits=False); item52.SetName("gem06")
+    item34.Add( item52, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item53 = NumCtrl( parent, integerWidth=2, allowNegative=False, groupDigits=False); item53.SetName("gem07")
+    item34.Add( item53, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item54 = NumCtrl( parent, integerWidth=2, allowNegative=False, groupDigits=False); item54.SetName("gem08")
+    item34.Add( item54, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item55 = NumCtrl( parent, integerWidth=2, allowNegative=False, groupDigits=False); item55.SetName("gem09")
+    item34.Add( item55, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item56 = NumCtrl( parent, integerWidth=2, allowNegative=False, groupDigits=False); item56.SetName("gem10")
+    item34.Add( item56, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item57 = NumCtrl( parent, integerWidth=2, allowNegative=False, groupDigits=False); item57.SetName("gem11")
+    item34.Add( item57, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item58 = NumCtrl( parent, integerWidth=2, allowNegative=False, groupDigits=False); item58.SetName("gem12")
+    item34.Add( item58, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+
+    item28.Add( item34, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item18.Add( item28, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
@@ -200,22 +293,22 @@ def ModPagCardFunc( parent, call_fit = True, set_sizer = True ):
 
     item10.Add( item16, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item34 = wx.StaticBox( parent, -1, "Incasso/Pagamento immediato" )
-    item33 = wx.StaticBoxSizer( item34, wx.VERTICAL )
+    item60 = wx.StaticBox( parent, -1, "Incasso/Pagamento immediato" )
+    item59 = wx.StaticBoxSizer( item60, wx.VERTICAL )
     
-    item35 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    item61 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
-    item36 = wx.StaticText( parent, ID_TEXT, "Cassa/Banca:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item35.Add( item36, 0, wx.ALIGN_CENTER|wx.LEFT|wx.BOTTOM, 5 )
+    item62 = wx.StaticText( parent, ID_TEXT, "Cassa/Banca:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item61.Add( item62, 0, wx.ALIGN_CENTER|wx.LEFT, 5 )
 
-    item37 = LinkTableCassaBanca(parent, ID_PDCPI ); item37.SetDataLink( bt.TABNAME_PDC, "id_pdcpi", None); item37.SetObligatory(True)
-    item35.Add( item37, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item63 = LinkTableCassaBanca(parent, ID_PDCPI ); item63.SetDataLink( bt.TABNAME_PDC, "id_pdcpi", None); item63.SetObligatory(True)
+    item61.Add( item63, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
-    item35.AddGrowableCol( 1 )
+    item61.AddGrowableCol( 1 )
 
-    item33.Add( item35, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item59.Add( item61, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item10.Add( item33, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+    item10.Add( item59, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
     item10.AddGrowableCol( 0 )
 
@@ -227,257 +320,263 @@ def ModPagCardFunc( parent, call_fit = True, set_sizer = True ):
 
     item0.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item39 = wx.StaticBox( parent, -1, "Calcolo dettagliato" )
-    item38 = wx.StaticBoxSizer( item39, wx.VERTICAL )
+    item64 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
-    item40 = wx.FlexGridSizer( 0, 12, 0, 0 )
+    item66 = wx.StaticBox( parent, -1, "Calcolo dettagliato" )
+    item65 = wx.StaticBoxSizer( item66, wx.VERTICAL )
     
-    item41 = wx.StaticText( parent, ID_TEXT, "1", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item40.Add( item41, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
-
-    item42 = wx.StaticText( parent, ID_TEXT, "2", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item40.Add( item42, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
-
-    item43 = wx.StaticText( parent, ID_TEXT, "3", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item40.Add( item43, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
-
-    item44 = wx.StaticText( parent, ID_TEXT, "4", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item40.Add( item44, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
-
-    item45 = wx.StaticText( parent, ID_TEXT, "5", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item40.Add( item45, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
-
-    item46 = wx.StaticText( parent, ID_TEXT, "6", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item40.Add( item46, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
-
-    item47 = wx.StaticText( parent, ID_TEXT, "7", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item40.Add( item47, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
-
-    item48 = wx.StaticText( parent, ID_TEXT, "8", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item40.Add( item48, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
-
-    item49 = wx.StaticText( parent, ID_TEXT, "9", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item40.Add( item49, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
-
-    item50 = wx.StaticText( parent, ID_TEXT, "10", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item40.Add( item50, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
-
-    item51 = wx.StaticText( parent, ID_TEXT, "11", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item40.Add( item51, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
-
-    item52 = wx.StaticText( parent, ID_TEXT, "12", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item40.Add( item52, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
-
-    item53 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item53.SetName("gg01")
-    item40.Add( item53, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
-
-    item54 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item54.SetName("gg02")
-    item40.Add( item54, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
-
-    item55 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item55.SetName("gg03")
-    item40.Add( item55, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
-
-    item56 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item56.SetName("gg04")
-    item40.Add( item56, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
-
-    item57 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item57.SetName("gg05")
-    item40.Add( item57, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
-
-    item58 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item58.SetName("gg06")
-    item40.Add( item58, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
-
-    item59 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item59.SetName("gg07")
-    item40.Add( item59, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
-
-    item60 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item60.SetName("gg08")
-    item40.Add( item60, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
-
-    item61 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item61.SetName("gg09")
-    item40.Add( item61, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
-
-    item62 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item62.SetName("gg10")
-    item40.Add( item62, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
-
-    item63 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item63.SetName("gg11")
-    item40.Add( item63, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
-
-    item64 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item64.SetName("gg12")
-    item40.Add( item64, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
-
-    item65 = wx.StaticText( parent, ID_TEXT, "13", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item40.Add( item65, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
-
-    item66 = wx.StaticText( parent, ID_TEXT, "14", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item40.Add( item66, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
-
-    item67 = wx.StaticText( parent, ID_TEXT, "15", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item40.Add( item67, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
-
-    item68 = wx.StaticText( parent, ID_TEXT, "16", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item40.Add( item68, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
-
-    item69 = wx.StaticText( parent, ID_TEXT, "17", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item40.Add( item69, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
-
-    item70 = wx.StaticText( parent, ID_TEXT, "18", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item40.Add( item70, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
-
-    item71 = wx.StaticText( parent, ID_TEXT, "19", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item40.Add( item71, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
-
-    item72 = wx.StaticText( parent, ID_TEXT, "20", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item40.Add( item72, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
-
-    item73 = wx.StaticText( parent, ID_TEXT, "21", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item40.Add( item73, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
-
-    item74 = wx.StaticText( parent, ID_TEXT, "22", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item40.Add( item74, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
-
-    item75 = wx.StaticText( parent, ID_TEXT, "23", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item40.Add( item75, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
-
-    item76 = wx.StaticText( parent, ID_TEXT, "24", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item40.Add( item76, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
-
-    item77 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item77.SetName("gg13")
-    item40.Add( item77, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
-
-    item78 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item78.SetName("gg14")
-    item40.Add( item78, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
-
-    item79 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item79.SetName("gg15")
-    item40.Add( item79, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
-
-    item80 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item80.SetName("gg16")
-    item40.Add( item80, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
-
-    item81 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item81.SetName("gg17")
-    item40.Add( item81, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
-
-    item82 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item82.SetName("gg18")
-    item40.Add( item82, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
-
-    item83 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item83.SetName("gg19")
-    item40.Add( item83, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
-
-    item84 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item84.SetName("gg20")
-    item40.Add( item84, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
-
-    item85 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item85.SetName("gg21")
-    item40.Add( item85, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
-
-    item86 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item86.SetName("gg22")
-    item40.Add( item86, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
-
-    item87 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item87.SetName("gg23")
-    item40.Add( item87, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
-
-    item88 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item88.SetName("gg24")
-    item40.Add( item88, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
-
-    item89 = wx.StaticText( parent, ID_TEXT, "25", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item40.Add( item89, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
-
-    item90 = wx.StaticText( parent, ID_TEXT, "26", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item40.Add( item90, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
-
-    item91 = wx.StaticText( parent, ID_TEXT, "27", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item40.Add( item91, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
-
-    item92 = wx.StaticText( parent, ID_TEXT, "28", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item40.Add( item92, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
-
-    item93 = wx.StaticText( parent, ID_TEXT, "29", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item40.Add( item93, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
-
-    item94 = wx.StaticText( parent, ID_TEXT, "30", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item40.Add( item94, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
-
-    item95 = wx.StaticText( parent, ID_TEXT, "31", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item40.Add( item95, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
-
-    item96 = wx.StaticText( parent, ID_TEXT, "32", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item40.Add( item96, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
-
-    item97 = wx.StaticText( parent, ID_TEXT, "33", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item40.Add( item97, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
-
-    item98 = wx.StaticText( parent, ID_TEXT, "34", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item40.Add( item98, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
-
-    item99 = wx.StaticText( parent, ID_TEXT, "35", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item40.Add( item99, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
-
-    item100 = wx.StaticText( parent, ID_TEXT, "36", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item40.Add( item100, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
-
-    item101 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item101.SetName("gg25")
-    item40.Add( item101, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
-
-    item102 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item102.SetName("gg26")
-    item40.Add( item102, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
-
-    item103 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item103.SetName("gg27")
-    item40.Add( item103, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
-
-    item104 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item104.SetName("gg28")
-    item40.Add( item104, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
-
-    item105 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item105.SetName("gg29")
-    item40.Add( item105, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
-
-    item106 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item106.SetName("gg30")
-    item40.Add( item106, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
-
-    item107 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item107.SetName("gg31")
-    item40.Add( item107, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
-
-    item108 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item108.SetName("gg32")
-    item40.Add( item108, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
-
-    item109 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item109.SetName("gg33")
-    item40.Add( item109, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
-
-    item110 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item110.SetName("gg34")
-    item40.Add( item110, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
-
-    item111 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item111.SetName("gg35")
-    item40.Add( item111, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
-
-    item112 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item112.SetName("gg36")
-    item40.Add( item112, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
-
-    item38.Add( item40, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
-
-    item0.Add( item38, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item114 = wx.StaticBox( parent, -1, "Opzioni prima scadenza" )
-    item113 = wx.StaticBoxSizer( item114, wx.HORIZONTAL )
+    item67 = wx.FlexGridSizer( 0, 12, 0, 0 )
     
-    item115 = CheckBox( parent, ID_SC1NOEFF, "Escludi effetto", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item115.SetName( "sc1noeff" )
-    item113.Add( item115, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+    item68 = wx.StaticText( parent, ID_TEXT, "1", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item67.Add( item68, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
 
-    item113.Add( [ 20, 20 ] , 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+    item69 = wx.StaticText( parent, ID_TEXT, "2", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item67.Add( item69, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
 
-    item116 = CheckBox( parent, ID_SC1IVA, "Importo pari a tot.IVA", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item116.SetName( "sc1iva" )
-    item113.Add( item116, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+    item70 = wx.StaticText( parent, ID_TEXT, "3", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item67.Add( item70, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
 
-    item117 = wx.StaticText( parent, ID_TEXT, "Importo pari al", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item113.Add( item117, 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+    item71 = wx.StaticText( parent, ID_TEXT, "4", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item67.Add( item71, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
 
-    item118 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item118.SetName("sc1perc")
-    item113.Add( item118, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+    item72 = wx.StaticText( parent, ID_TEXT, "5", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item67.Add( item72, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
 
-    item119 = wx.StaticText( parent, ID_TEXT, "% del totale documento", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item113.Add( item119, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+    item73 = wx.StaticText( parent, ID_TEXT, "6", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item67.Add( item73, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
 
-    item0.Add( item113, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+    item74 = wx.StaticText( parent, ID_TEXT, "7", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item67.Add( item74, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
 
-    item120 = wx.Panel( parent, ID_PANEL, wx.DefaultPosition, [520,10], 0 )
-    item0.Add( item120, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item75 = wx.StaticText( parent, ID_TEXT, "8", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item67.Add( item75, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+
+    item76 = wx.StaticText( parent, ID_TEXT, "9", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item67.Add( item76, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+
+    item77 = wx.StaticText( parent, ID_TEXT, "10", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item67.Add( item77, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+
+    item78 = wx.StaticText( parent, ID_TEXT, "11", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item67.Add( item78, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+
+    item79 = wx.StaticText( parent, ID_TEXT, "12", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item67.Add( item79, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+
+    item80 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item80.SetName("gg01")
+    item67.Add( item80, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item81 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item81.SetName("gg02")
+    item67.Add( item81, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item82 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item82.SetName("gg03")
+    item67.Add( item82, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item83 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item83.SetName("gg04")
+    item67.Add( item83, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item84 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item84.SetName("gg05")
+    item67.Add( item84, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item85 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item85.SetName("gg06")
+    item67.Add( item85, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item86 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item86.SetName("gg07")
+    item67.Add( item86, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item87 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item87.SetName("gg08")
+    item67.Add( item87, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item88 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item88.SetName("gg09")
+    item67.Add( item88, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item89 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item89.SetName("gg10")
+    item67.Add( item89, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item90 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item90.SetName("gg11")
+    item67.Add( item90, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item91 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item91.SetName("gg12")
+    item67.Add( item91, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item92 = wx.StaticText( parent, ID_TEXT, "13", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item67.Add( item92, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+
+    item93 = wx.StaticText( parent, ID_TEXT, "14", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item67.Add( item93, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+
+    item94 = wx.StaticText( parent, ID_TEXT, "15", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item67.Add( item94, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+
+    item95 = wx.StaticText( parent, ID_TEXT, "16", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item67.Add( item95, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+
+    item96 = wx.StaticText( parent, ID_TEXT, "17", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item67.Add( item96, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+
+    item97 = wx.StaticText( parent, ID_TEXT, "18", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item67.Add( item97, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+
+    item98 = wx.StaticText( parent, ID_TEXT, "19", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item67.Add( item98, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+
+    item99 = wx.StaticText( parent, ID_TEXT, "20", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item67.Add( item99, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+
+    item100 = wx.StaticText( parent, ID_TEXT, "21", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item67.Add( item100, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+
+    item101 = wx.StaticText( parent, ID_TEXT, "22", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item67.Add( item101, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+
+    item102 = wx.StaticText( parent, ID_TEXT, "23", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item67.Add( item102, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+
+    item103 = wx.StaticText( parent, ID_TEXT, "24", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item67.Add( item103, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+
+    item104 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item104.SetName("gg13")
+    item67.Add( item104, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item105 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item105.SetName("gg14")
+    item67.Add( item105, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item106 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item106.SetName("gg15")
+    item67.Add( item106, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item107 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item107.SetName("gg16")
+    item67.Add( item107, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item108 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item108.SetName("gg17")
+    item67.Add( item108, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item109 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item109.SetName("gg18")
+    item67.Add( item109, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item110 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item110.SetName("gg19")
+    item67.Add( item110, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item111 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item111.SetName("gg20")
+    item67.Add( item111, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item112 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item112.SetName("gg21")
+    item67.Add( item112, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item113 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item113.SetName("gg22")
+    item67.Add( item113, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item114 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item114.SetName("gg23")
+    item67.Add( item114, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item115 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item115.SetName("gg24")
+    item67.Add( item115, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item116 = wx.StaticText( parent, ID_TEXT, "25", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item67.Add( item116, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+
+    item117 = wx.StaticText( parent, ID_TEXT, "26", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item67.Add( item117, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+
+    item118 = wx.StaticText( parent, ID_TEXT, "27", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item67.Add( item118, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+
+    item119 = wx.StaticText( parent, ID_TEXT, "28", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item67.Add( item119, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+
+    item120 = wx.StaticText( parent, ID_TEXT, "29", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item67.Add( item120, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+
+    item121 = wx.StaticText( parent, ID_TEXT, "30", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item67.Add( item121, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+
+    item122 = wx.StaticText( parent, ID_TEXT, "31", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item67.Add( item122, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+
+    item123 = wx.StaticText( parent, ID_TEXT, "32", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item67.Add( item123, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+
+    item124 = wx.StaticText( parent, ID_TEXT, "33", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item67.Add( item124, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+
+    item125 = wx.StaticText( parent, ID_TEXT, "34", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item67.Add( item125, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+
+    item126 = wx.StaticText( parent, ID_TEXT, "35", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item67.Add( item126, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+
+    item127 = wx.StaticText( parent, ID_TEXT, "36", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item67.Add( item127, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+
+    item128 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item128.SetName("gg25")
+    item67.Add( item128, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item129 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item129.SetName("gg26")
+    item67.Add( item129, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item130 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item130.SetName("gg27")
+    item67.Add( item130, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item131 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item131.SetName("gg28")
+    item67.Add( item131, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item132 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item132.SetName("gg29")
+    item67.Add( item132, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item133 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item133.SetName("gg30")
+    item67.Add( item133, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item134 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item134.SetName("gg31")
+    item67.Add( item134, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item135 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item135.SetName("gg32")
+    item67.Add( item135, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item136 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item136.SetName("gg33")
+    item67.Add( item136, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item137 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item137.SetName("gg34")
+    item67.Add( item137, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item138 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item138.SetName("gg35")
+    item67.Add( item138, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item139 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item139.SetName("gg36")
+    item67.Add( item139, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item65.Add( item67, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item64.Add( item65, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item141 = wx.StaticBox( parent, -1, "Opzioni prima scadenza" )
+    item140 = wx.StaticBoxSizer( item141, wx.VERTICAL )
+    
+    item142 = CheckBox( parent, ID_SC1NOEFF, "Escludi effetto", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item142.SetName( "sc1noeff" )
+    item140.Add( item142, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+
+    item143 = CheckBox( parent, ID_SC1IVA, "Importo pari a tot.IVA", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item143.SetName( "sc1iva" )
+    item140.Add( item143, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+
+    item144 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    
+    item145 = wx.StaticText( parent, ID_TEXT, "Importo pari al", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item144.Add( item145, 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP, 5 )
+
+    item146 = NumCtrl( parent, integerWidth=3, allowNegative=False, groupDigits=False); item146.SetName("sc1perc")
+    item144.Add( item146, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+
+    item140.Add( item144, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item147 = wx.StaticText( parent, ID_TEXT, "% del totale documento", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item140.Add( item147, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+
+    item64.Add( item140, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item0.Add( item64, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item148 = wx.Panel( parent, ID_PANEL, wx.DefaultPosition, [520,10], 0 )
+    item0.Add( item148, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item0.AddGrowableCol( 0 )
 
@@ -488,8 +587,8 @@ def ModPagCardFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_LBL_SEARCHRESULTS = 16053
-ID_FILT_RIBA = 16054
+ID_LBL_SEARCHRESULTS = 16065
+ID_FILT_RIBA = 16066
 
 def ModPagSpecSearchFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -514,14 +613,14 @@ def ModPagSpecSearchFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_TXT_CODICE = 16055
-ID_TXT_ID = 16056
-ID_TXT_DESCRIZ = 16057
-ID_RADIOTIPO = 16058
-ID_RADIOMODO = 16059
-ID_LINE = 16060
-ID_TEXTCTRL = 16061
-ID_RADIO = 16062
+ID_TXT_CODICE = 16067
+ID_TXT_ID = 16068
+ID_TXT_DESCRIZ = 16069
+ID_RADIOTIPO = 16070
+ID_RADIOMODO = 16071
+ID_LINE = 16072
+ID_TEXTCTRL = 16073
+ID_RADIO = 16074
 
 def NewDialogFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )

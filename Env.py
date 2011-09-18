@@ -1774,6 +1774,9 @@ class Azienda(object):
                 cls.modpag.append([ col, "INT", 4, None,\
                                     "Giorni alla scadenza #%d" % n, None ])
             cls.modpag.append([ "ggextra", "INT", 2, None, "Giorni extra da aggiungere ad ogni scadenza", None ])
+            for n in range(1,13):
+                col = 'gem' + ("00%d" % n)[-2:]
+                cls.modpag.append([ col, "INT", 4, None, "Giorni extra per il mese #%d" % n, None ])
             
             cls.set_constraints(cls.TABNAME_MODPAG,
                                 ((cls.TABSETUP_CONSTR_PDC, 'id_pdcpi', cls.TABCONSTRAINT_TYPE_NOACTION),))

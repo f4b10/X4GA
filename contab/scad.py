@@ -89,6 +89,7 @@ class Scadenze(object):
         self.mp_sc1perc = None
         self.mp_ggextra = None
         self.mp_gg = None
+        self.mp_gem = None
         
         if id_modpag is None:
             return
@@ -98,7 +99,8 @@ class Scadenze(object):
 """mp.sc1noeff, mp.sc1iva, mp.sc1perc, mp.ggextra, """\
 """mp.gg01, mp.gg02, mp.gg03, mp.gg04, mp.gg05, mp.gg06, mp.gg07, mp.gg08, mp.gg09, mp.gg10, mp.gg11, mp.gg12,"""\
 """mp.gg13, mp.gg14, mp.gg15, mp.gg16, mp.gg17, mp.gg18, mp.gg19, mp.gg20, mp.gg21, mp.gg22, mp.gg23, mp.gg24,"""\
-"""mp.gg25, mp.gg26, mp.gg27, mp.gg28, mp.gg29, mp.gg30, mp.gg31, mp.gg32, mp.gg33, mp.gg34, mp.gg35, mp.gg36 """\
+"""mp.gg25, mp.gg26, mp.gg27, mp.gg28, mp.gg29, mp.gg30, mp.gg31, mp.gg32, mp.gg33, mp.gg34, mp.gg35, mp.gg36,"""\
+"""mp.gem01, mp.gem02, mp.gem03, mp.gem04, mp.gem05, mp.gem06, mp.gem07, mp.gem08, mp.gem09, mp.gem10, mp.gem11, mp.gem12 """\
 """FROM %s AS mp """\
 """WHERE mp.id=%%s""" % bt.TABNAME_MODPAG
         try:
@@ -131,8 +133,11 @@ class Scadenze(object):
             self.mp_gg = []
             mp_gg = rsmp[15:52]
             for gg in mp_gg:
-                if gg is None: gg = 0
-                self.mp_gg.append(gg)
+                self.mp_gg.append(gg or 0)
+            self.mp_gem = []
+            mp_gem = rsmp[51:64]
+            for gem in mp_gem:
+                self.mp_gem.append(gem or 0)
         if self.mp_id_pdcpi:
             cmd = \
                 """SELECT pdc.codice, pdc.descriz """\
@@ -214,7 +219,8 @@ class Scadenze(object):
                         imp = round(imptot/100*self.mp_sc1perc, NDEC)
                     if self.mp_sc1noeff:
                         riba = 0
-                scad.append([dscad + (self.mp_ggextra or 0), imp, riba, cass])
+                ggextra = self.mp_gem[dscad.month-1] or self.mp_ggextra or 0
+                scad.append([dscad+ggextra, imp, riba, cass])
             
             if scad:
                 ripn = 0
