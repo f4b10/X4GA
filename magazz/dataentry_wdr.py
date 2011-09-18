@@ -692,16 +692,16 @@ def DialogFunc( parent, call_fit = True, set_sizer = True ):
     item42 = wx.StaticBox( parent, -1, "boxanag" )
     item41 = wx.StaticBoxSizer( item42, wx.VERTICAL )
     
-    item43 = wx.BoxSizer( wx.HORIZONTAL )
+    item43 = wx.BoxSizer( wx.VERTICAL )
     
-    item44 = wx.StaticText( parent, ID_ANAGRS, "Anagrafica", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item44 = wx.StaticText( parent, ID_ANAGRS, "Anagrafica", wx.DefaultPosition, [300,-1], 0 )
     item44.SetFont( wx.Font( 10, wx.SWISS, wx.NORMAL, wx.BOLD ) )
     item44.SetName( "anagrs" )
-    item43.Add( item44, 0, wx.RIGHT, 5 )
+    item43.Add( item44, 0, wx.GROW|wx.RIGHT, 5 )
 
     item45 = wx.StaticText( parent, ID_ANAGADDR1, "Indirizzo", wx.DefaultPosition, wx.DefaultSize, 0 )
     item45.SetName( "anagaddr" )
-    item43.Add( item45, 0, 0, 5 )
+    item43.Add( item45, 0, wx.GROW, 5 )
 
     item41.Add( item43, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
@@ -737,9 +737,9 @@ def DialogFunc( parent, call_fit = True, set_sizer = True ):
     item53 = wx.StaticBox( parent, -1, "boxdest" )
     item52 = wx.StaticBoxSizer( item53, wx.VERTICAL )
     
-    item54 = wx.BoxSizer( wx.HORIZONTAL )
+    item54 = wx.BoxSizer( wx.VERTICAL )
     
-    item55 = wx.StaticText( parent, ID_DESTRS, "Destinazione", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item55 = wx.StaticText( parent, ID_DESTRS, "Destinazione", wx.DefaultPosition, [300,-1], 0 )
     item55.SetFont( wx.Font( 10, wx.SWISS, wx.NORMAL, wx.BOLD ) )
     item55.SetName( "destrs" )
     item54.Add( item55, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )

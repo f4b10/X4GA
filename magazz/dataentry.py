@@ -1278,7 +1278,7 @@ class MagazzPanel(aw.Panel,\
         ind = ''
         x = hcol["indirizzo"]
         if x:
-            ind += (' - %s' % x)
+            ind += ('%s' % x)
         x = hcol["cap"]
         if x:
             ind += (' - %s' % x)
@@ -1327,7 +1327,7 @@ class MagazzPanel(aw.Panel,\
                 cn("nocodedes_citta").SetValue(dcit or '')
                 cn("nocodedes_prov").SetValue(dprv or '')
         
-        d = (ddes or "")
+        d = ''
         if dind:
             if d:
                 d += ' - '
@@ -1341,7 +1341,7 @@ class MagazzPanel(aw.Panel,\
                 d += ' - '
             d += dcit
         if dprv:
-            d += (' (%s)' % dcap)
+            d += (' (%s)' % dprv)
         for name, field in (("destrs",      ddes or ""),\
                             ("destaddr",    d),\
                             ("destcontact", contact)):
