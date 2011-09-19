@@ -852,6 +852,8 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
         if self._helpInProgress:
             return out
         
+        self.HideFilterLinksTitle()
+        
         maxrows = GetMaxSqlCount()
         if maxrows:
             cmd, par = self.GetSqlSearch(obj, forceAll, exact, count=True)
@@ -991,7 +993,8 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
             if g:
                 cmd += (' '+g)
                 par += p
-            cmd += " ORDER BY %s" % self.GetSqlOrder(fltf)
+            if not count:
+                cmd += " ORDER BY %s" % self.GetSqlOrder(fltf)
         return cmd, par
     
     def GetSqlOrder(self, field):

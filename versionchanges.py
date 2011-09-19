@@ -29,6 +29,19 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.3.35', None, (
+         ("BET1108",
+         """Aggiunta possibilità di aggiungere giorni extra al calcolo delle scadenze,
+         in numero variabile a seconda del mese."""),
+        ),),
+    
+    ('1.3.34', None, (
+         ("BET1107",
+         """Aggiunta possibilità di inserimento di note relative al pagamento di
+         clienti/fornitori, che si visualizzano come testi scorrevoli nei dataentry
+         contabili e dei documenti."""),
+        ),),
+    
     ('1.3.33', None, (
          ("BET1106",
          """Aggiunto controllo di congruenza della data di registrazione rispetto

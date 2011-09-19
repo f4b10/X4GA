@@ -112,6 +112,8 @@ class ModPagPanel(ga.AnagPanel):
                     win.Enable(calc != "N")
         cn = self.FindWindowByName
         cn('ggextra').Enable(cn('id_pdcpi').GetValue() is None)
+        for n in range(1,13):
+            cn('gem%s' % str(n).zfill(2)).Enable(cn('id_pdcpi').GetValue() is None)
 
     def UpdateDataControls(self, recno):
         ga.AnagPanel.UpdateDataControls(self, recno)

@@ -62,6 +62,8 @@ if False:
     import magazz.dataentry_gw as gateway
 
 import contab
+from contab.util import SetWarningPag
+
 import anag
 import anag.prod as prod
 import anag.util as autil
@@ -1276,7 +1278,7 @@ class MagazzPanel(aw.Panel,\
         ind = ''
         x = hcol["indirizzo"]
         if x:
-            ind += (' - %s' % x)
+            ind += ('%s' % x)
         x = hcol["cap"]
         if x:
             ind += (' - %s' % x)
@@ -1325,7 +1327,7 @@ class MagazzPanel(aw.Panel,\
                 cn("nocodedes_citta").SetValue(dcit or '')
                 cn("nocodedes_prov").SetValue(dprv or '')
         
-        d = (ddes or "")
+        d = ''
         if dind:
             if d:
                 d += ' - '
@@ -1339,7 +1341,7 @@ class MagazzPanel(aw.Panel,\
                 d += ' - '
             d += dcit
         if dprv:
-            d += (' (%s)' % dcap)
+            d += (' (%s)' % dprv)
         for name, field in (("destrs",      ddes or ""),\
                             ("destaddr",    d),\
                             ("destcontact", contact)):
@@ -1497,6 +1499,7 @@ class MagazzPanel(aw.Panel,\
         warn = ''
         pdcid = doc.id_pdc
         if pdcid:
+            SetWarningPag(self.FindWindowByName('butattach'), pdcid)
             if s.Get(pdcid) and s.OneRow():
                 if s.sintesi.total_saldo_ins:
                     warn = "ATTENZIONE! Insoluti aperti per un totale di %s"\
@@ -2359,6 +2362,11 @@ class MagazzPanel(aw.Panel,\
         c["noteint"].Enable(en)
         c["notecli"].Enable(False)
         c["notecli2"].Enable(False)
+        h = self.FindWindowByName('workzone').GetPage(0)
+        for n in range(6):
+            l = n+1
+            s = h.FindWindowByName('sconto%d'%l)
+            s.Enable(en and (not (cfg.numsconti) or l<=cfg.numsconti))
     
     def EnableFootControls(self, enable=True):
         enable = enable and self.status == STATUS_EDITING

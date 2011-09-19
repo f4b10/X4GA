@@ -781,20 +781,19 @@ class LinkTableCliFor(_LinkTablePdcMixin, LinkTableHideSearchMixin):
 
     def GetSqlTextSearch(self, obj, forceAll, exact):
         cmd, par = LinkTable.GetSqlTextSearch(self, obj, forceAll, exact)
-        fltv = obj.GetValue()
-        if obj == self._ctrdes:
-            val = self._ctrdes.GetValue()
+        if obj == self._ctrdes and not forceAll:
+            val = obj.GetValue()
             if len(val) == 11 and val.isdigit():
                 cmd = OrApp(cmd, "(anacli.piva=%s OR anacli.codfisc=%s)")
                 cmd = OrApp(cmd, "(anafor.piva=%s OR anafor.codfisc=%s)")
-                par.append(fltv)
-                par.append(fltv)
-                par.append(fltv)
-                par.append(fltv)
+                par.append(val)
+                par.append(val)
+                par.append(val)
+                par.append(val)
             elif len(val) == 16:
                 cmd = OrApp(cmd, "(anacli.codfisc=%s OR anafor.codfisc=%s)")
-                par.append(fltv)
-                par.append(fltv)
+                par.append(val)
+                par.append(val)
         return cmd, par
     
     def HelpChoice(self, obj, *args, **kwargs):

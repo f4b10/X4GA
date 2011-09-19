@@ -1774,6 +1774,9 @@ class Azienda(object):
                 cls.modpag.append([ col, "INT", 4, None,\
                                     "Giorni alla scadenza #%d" % n, None ])
             cls.modpag.append([ "ggextra", "INT", 2, None, "Giorni extra da aggiungere ad ogni scadenza", None ])
+            for n in range(1,13):
+                col = 'gem' + ("00%d" % n)[-2:]
+                cls.modpag.append([ col, "INT", 4, None, "Giorni extra per il mese #%d" % n, None ])
             
             cls.set_constraints(cls.TABNAME_MODPAG,
                                 ((cls.TABSETUP_CONSTR_PDC, 'id_pdcpi', cls.TABCONSTRAINT_TYPE_NOACTION),))
@@ -1995,6 +1998,7 @@ class Azienda(object):
                 [ "chiusura",       "VARCHAR", 60, None, "Giorno di chiusura", None ],
                 [ "note",           "VARCHAR",ntw, None, "Annotazioni", None ],
                 [ "notedoc",        "VARCHAR",ntw, None, "Note da stampre sui documenti", None ],
+                [ "notepag",        "VARCHAR",ntw, None, "Note per i pagamenti", None ],
                 [ "fdr0doc",        "TINYINT",  3, None, "Num.scoperti fido non riba", None ],
                 [ "fdr0imp",        "DECIMAL",IVI,  DVI, "Imp.scoperti fido non riba", None ],
                 [ "fdr1doc",        "TINYINT",  3, None, "Num.scoperti fido riba", None ],
@@ -2141,6 +2145,7 @@ class Azienda(object):
                 [ "sconto5",        "DECIMAL",  5,    2, "Sconto perc.5", None ],
                 [ "sconto6",        "DECIMAL",  5,    2, "Sconto perc.6", None ],
                 [ "note",           "VARCHAR",ntw, None, "Annotazioni", None ],
+                [ "notepag",        "VARCHAR",ntw, None, "Note per i pagamenti", None ],
                 [ "id_stato",       "INT",    idw, None, "ID Stato", None ],
                 [ "id_pdc",         "INT",    idw, None, "ID P.d.C. associato", None ],
                 [ "id_valuta",      "INT",    idw, None, "ID Valuta", None ],

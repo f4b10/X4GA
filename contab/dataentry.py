@@ -1006,6 +1006,8 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
         self.totavere = 0
         #reset recordet dettaglio
         del self.regrsb[:]
+        #reset prefisso autotext registrazione con warning pagamenti
+        self.FindWindowByName('butattach').SetAutotextPS()
 
     def RegNew(self):
         if self.canins:

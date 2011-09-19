@@ -66,6 +66,8 @@ import anag.util as autil
 from anag.pdc import PdcDialog
 from anag.pdctip import PdcTipDialog
 
+from contab.util import SetWarningPag
+
 (GridSelectedEvent, EVT_GRIDSELECTED) = wx.lib.newevent.NewEvent()
 
 
@@ -1015,6 +1017,7 @@ class ContabPanelTipo_SC(ctb.ContabPanel):
             self._grid_pcf.AutoSizeColumns()
             self._grid_pcf.ClearSelection()
             self.UpdateTotPcf()
+        SetWarningPag(self.FindWindowByName('butattach'), self.id_pdcpa)
 
     def UpdateTotPcf(self):
         """
