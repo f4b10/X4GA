@@ -60,8 +60,8 @@ def _GetPdcClass(id_tipo, w_tipo, **kwargs):
         dbtip = adb.DbTable("pdctip", "tipo", writable=False)
         if dbtip.Get(id_tipo) and dbtip.RowsCount() == 1:
             tipo = dbtip.tipo
+    from anag.pdc import PdcPanel, PdcFrame, PdcDialog
     if tipo is not None:
-        from anag.pdc     import PdcPanel,     PdcFrame,     PdcDialog
         from anag.casse   import CassePanel,   CasseFrame,   CasseDialog
         from anag.banche  import BanchePanel,  BancheFrame,  BancheDialog
         from anag.effetti import EffettiPanel, EffettiFrame, EffettiDialog
@@ -74,7 +74,9 @@ def _GetPdcClass(id_tipo, w_tipo, **kwargs):
                     (EffettiPanel, EffettiFrame, EffettiDialog),\
                     (ClientiPanel, ClientiFrame, ClientiDialog),\
                     (FornitPanel,  FornitFrame,  FornitDialog))[tipibase.index(tipo)]
-    cls = clss[w_tipo]
+        cls = clss[w_tipo]
+    if cls is None:
+        cls = [PdcPanel, PdcFrame, PdcDialog][w_tipo]
     return cls
 
 

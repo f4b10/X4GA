@@ -29,6 +29,14 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.3.36', None, (
+         ("BUG1088",
+         """Risolto problema in inserimento sottoconti da griglie di dataentry
+         contabile: richiamando l'inserimento dalla selezione del sottoconto senza
+         aver selezionato il tipo anagrafico, scatenava eccezione e inibiva
+         l'inserimento."""),
+        ),),
+    
     ('1.3.35', None, (
          ("BET1108",
          """Aggiunta possibilità di aggiungere giorni extra al calcolo delle scadenze,
