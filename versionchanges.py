@@ -29,6 +29,14 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.3.37', None, (
+         ("BUG1089",
+         """Risolto problema in aggiornamento a video dei dati di testata del 
+         documento: se il documento aveva una aliquota iva in testata, riprendendo
+         a posteriori il documento questa non appariva, anche se era correttamente 
+         gestita."""),
+        ),),
+    
     ('1.3.36', None, (
          ("BUG1088",
          """Risolto problema in inserimento sottoconti da griglie di dataentry

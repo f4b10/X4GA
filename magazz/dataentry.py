@@ -2289,7 +2289,7 @@ class MagazzPanel(aw.Panel,\
         return out
     
     def UpdatePanelHead(self):
-        names = """id_pdc id_dest id_modpag id_agente id_zona id_valuta id_tiplist """\
+        names = """id_pdc id_dest id_modpag id_agente id_zona id_valuta id_tiplist id_aliqiva """\
                 """datrif numrif desrif noteint notedoc f_ann f_acq """\
                 """sconto1 sconto2 sconto3 sconto4 sconto5 sconto6""".split()
         if not self.dbdoc.cfgdoc.askmpnoeff:
