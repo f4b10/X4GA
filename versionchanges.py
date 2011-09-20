@@ -35,6 +35,9 @@ history = (
          documento: se il documento aveva una aliquota iva in testata, riprendendo
          a posteriori il documento questa non appariva, anche se era correttamente 
          gestita."""),
+         ("BUG1090",
+         """Riattivata funzionalità bottone di abilitazione sezione iva in dataentry
+         contabile fatture."""),
         ),),
     
     ('1.3.36', None, (
