@@ -65,7 +65,7 @@ class _SetupPanel(aw.Panel):
                 if db.Retrieve('setup.chiave=%s', name) and db.RowsCount() == 1:
                     if isinstance(ctr, (awradio.RadioBox, awcheck.CheckBox)):
                         val = db.flag
-                    elif isinstance(ctr, (int, long, lt.LinkTable, NumCtrl)):
+                    elif isinstance(ctr, (int, long, lt.LinkTable, NumCtrl, wx.Choice)):
                         val = db.importo
                     elif isinstance(ctr, DateCtrl):
                         val = db.data
@@ -90,7 +90,7 @@ class _SetupPanel(aw.Panel):
                         db.chiave = name
                     if isinstance(ctr, (awradio.RadioBox, awcheck.CheckBox)):
                         db.flag = val
-                    elif isinstance(ctr, (int, long, lt.LinkTable, NumCtrl)):
+                    elif isinstance(ctr, (int, long, lt.LinkTable, NumCtrl, wx.Choice)):
                         db.importo = val
                     elif isinstance(ctr, DateCtrl):
                         db.data = val
