@@ -1076,7 +1076,6 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
         if self.reg_id is None:
             if self.status == ctb.STATUS_EDITING:
                 newdd = self.controls["datreg"].GetValue(adapt_year=False)
-                print 'date: ', newdd
                 if self.reg_datreg != newdd:
                     self.reg_datreg = newdd
                     if newdd:
