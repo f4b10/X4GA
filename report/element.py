@@ -939,7 +939,7 @@ class immagine(rettangolo):
 #        if name is None:
 #            name = os.path.join(report.pathimg, 'noimage.jpg').replace('\\', '/')
         if name is not None and os.path.exists(name):
-            oCanvas.drawInlineImage(name,
+            oCanvas.drawInlineImage(str(name),
                                     x0+self.set_pen(),
                                     y0+self.set_pen(),
                                     dx-(self.set_pen()*2),
