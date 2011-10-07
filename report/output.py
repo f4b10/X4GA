@@ -332,8 +332,12 @@ class print_Report:
                 if not os.path.isdir(basePath):
                     os.makedirs(basePath)
             except:
-                awu.MsgDialog(None, 'Impossibile creare la cartella %s' % basePath, style=wx.ICON_ERROR)
-                return None
+                msg = 'Impossibile creare la cartella %s' % basePath
+                if messages:
+                    awu.MsgDialog(None, msg, style=wx.ICON_ERROR)
+                    return None
+                else:
+                    raise Exception, msg
         
         #impostazione multicopia
         multicopia = ['standard']
@@ -354,25 +358,39 @@ class print_Report:
                             mc[0] = mc[0][:-3]
                     if callable(multicopia_init):
                         multicopia_init(multicopia)
-                    d = MultiCopiaDialog(parentWindow, -1, 'MultiCopia', multicopia=multicopia)
-                    d.CenterOnParent()
-                    do = d.ShowModal() == wx.ID_OK
-                    c2p = d.GetCopieSelez()
-                    d.Destroy()
-                    if not do:
-                        return
-                    if callable(multicopia_reactor):
-                        multicopia_reactor(multicopia)
                     mc = multicopia
                     multicopia = []
-                    for c, p in mc:
-                        if c2p[c]:
-                            multicopia.append(c)
+                    if messages:
+                        d = MultiCopiaDialog(parentWindow, -1, 'MultiCopia', multicopia=multicopia)
+                        d.CenterOnParent()
+                        do = d.ShowModal() == wx.ID_OK
+                        c2p = d.GetCopieSelez()
+                        d.Destroy()
+                        if not do:
+                            return
+                        if callable(multicopia_reactor):
+                            multicopia_reactor(multicopia)
+                        for c, p in mc:
+                            if c2p[c]:
+                                multicopia.append(c)
+                    else:
+                        if callable(multicopia_reactor):
+                            multicopia_reactor(multicopia)
+                        for c, p in mc:
+                            if p:
+                                multicopia.append(c)
                     if len(multicopia) == 0:
-                        aw.awu.MsgDialog(parentWindow, "Definire almeno una copia")
-                        return
+                        msg = "Definire almeno una copia"
+                        if messages:
+                            aw.awu.MsgDialog(parentWindow, msg)
+                            return
+                        raise Exception, msg
                 except Exception, e:
-                    aw.awu.MsgDialog(parentWindow, repr(e.args))
+                    msg = repr(e.args)
+                    if messages:
+                        aw.awu.MsgDialog(parentWindow, msg)
+                        return
+                    raise Exception, msg
         
         if sys.platform == 'win32':
             nameXmlFile = nameXmlFile.replace('/', '\\')
@@ -502,9 +520,12 @@ class print_Report:
             
             statit = False
             if filtersPanel:
-                statit = awu.MsgDialog(parentWindow, "Vuoi stampare le selezioni?", style=wx.ICON_QUESTION|wx.YES_NO|wx.YES_DEFAULT) == wx.ID_YES
-                if statit:
-                    self.AddFiltersPanelTitleElements(filtersPanel)
+                if messages:
+                    statit = awu.MsgDialog(parentWindow, "Vuoi stampare le selezioni?", style=wx.ICON_QUESTION|wx.YES_NO|wx.YES_DEFAULT) == wx.ID_YES
+                    if statit:
+                        self.AddFiltersPanelTitleElements(filtersPanel)
+                else:
+                    statit = False
             
             doprogress = progressBar is None and progressBar.__class__.__name__ != 'NullProgress' and output != "STORE"
             if doprogress:
