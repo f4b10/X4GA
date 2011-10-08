@@ -359,7 +359,6 @@ class print_Report:
                     if callable(multicopia_init):
                         multicopia_init(multicopia)
                     mc = multicopia
-                    multicopia = []
                     if messages:
                         d = MultiCopiaDialog(parentWindow, -1, 'MultiCopia', multicopia=multicopia)
                         d.CenterOnParent()
@@ -370,12 +369,14 @@ class print_Report:
                             return
                         if callable(multicopia_reactor):
                             multicopia_reactor(multicopia)
+                        multicopia = []
                         for c, p in mc:
                             if c2p[c]:
                                 multicopia.append(c)
                     else:
                         if callable(multicopia_reactor):
                             multicopia_reactor(multicopia)
+                        multicopia = []
                         for c, p in mc:
                             if p:
                                 multicopia.append(c)
