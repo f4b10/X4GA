@@ -234,6 +234,8 @@ class GridMov(object):
         map(Totalizza, mov.GetRecordset())
         wx.EndBusyCursor()
         
+        mov._info.tots = tots
+        
         for field in tots:
             ctr = self.dlg.FindWindowByName('tot%s' % field)
             if ctr:
@@ -313,9 +315,12 @@ class GridMovEva(object):
                 filt = 'FALSE'
             mov.AddHaving(filt)
         
-        if not mov.Retrieve():
-            awu.MsgDialog(self.gridmov, message=repr(mov.GetError()))
-        
+        wx.BeginBusyCursor()
+        try:
+            if not mov.Retrieve():
+                awu.MsgDialog(self.gridmov, message=repr(mov.GetError()))
+        finally:
+            wx.EndBusyCursor()
         self.GridMovUpdate()
     
     def GridMovUpdate(self):
@@ -355,6 +360,8 @@ class GridMovEva(object):
         wx.BeginBusyCursor()
         map(Totalizza, mov.GetRecordset())
         wx.EndBusyCursor()
+        
+        mov._info.tots = tots
         
         for name, val in tots.iteritems():
             ctr = self.dlg.FindWindowByName(name)

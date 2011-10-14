@@ -98,6 +98,7 @@ class _ProdInterrMixin(object):
                 try:
                     parent = nb.GetPage(ntab)
                     self.panmastro = prodmas.ProdMastroPanel(parent, self)
+                    self.panmastro.gridmov.dlg = self.panmastro
                     self.panmastro.gridmov.UpdateMov(retrieve=False)
                     parent.AddSizedPanel(self.panmastro)
                     nb.ReSize()
@@ -109,18 +110,24 @@ class _ProdInterrMixin(object):
             
         elif "evas" in stab.lower():
             #Selezionato il tab evasioni
+            update = True
             if self.panevas is None:
                 #non è ancora presente, lo creo al volo
                 wx.BeginBusyCursor()
                 try:
                     parent = nb.GetPage(ntab)
                     self.panevas = prodmas.ProdMastroEvaPanel(parent, self)
+                    self.panevas.gridmov.dlg = self.panevas
+                    self.panevas.GridUpdate(prod=self.db_recid)
+                    self.panevas.gridmov.UpdateMov()
+                    update = False
                     parent.AddSizedPanel(self.panevas)
                     nb.ReSize()
                 finally:
                     wx.EndBusyCursor()
-            #lo aggiorno
-            self.panevas.GridUpdate(prod=self.db_recid)
+            if update:
+                #lo aggiorno
+                self.panevas.GridUpdate(prod=self.db_recid)
             
         elif "progress" in stab.lower():
             #selezionato il tab progressivi

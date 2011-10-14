@@ -32,6 +32,8 @@ dbm = maglib.dbm
 bt = dbm.Env.Azienda.BaseTab
 stdcolor = dbm.Env.Azienda.Colours
 
+import report as rpt
+
 
 class GridMov(maglib.GridMov):
     
@@ -176,6 +178,7 @@ class ProdMastroPanel(wx.Panel):
         self.Bind(EVT_LINKTABCHANGED, self.OnTipDocChanged, 
                   ci(wdr.ID_MASID_TIPDOC))
         self.Bind(gl.EVT_GRID_CELL_LEFT_DCLICK, self.OnCallDoc, self.gridmov.gridmov)
+        self.Bind(wx.EVT_BUTTON, self.OnPrintData, ci(wdr.ID_MASBUTPRT))
     
     def OnCallDoc(self, event):
         row = event.GetRow()
@@ -229,6 +232,15 @@ class ProdMastroPanel(wx.Panel):
             self.gridmov.dbmas.Get(prod)
         self.gridmov.GridMovUpdate()
         wx.EndBusyCursor()
+    
+    def OnPrintData(self, event):
+        self.PrintData()
+        event.Skip()
+    
+    def PrintData(self):
+        db = self.gridmov.dbmas.mov
+        db._info.dbprod = self.gridmov.dbmas
+        rpt.Report(self, db, "Lista movimenti prodotto")
 
 
 # ------------------------------------------------------------------------------
@@ -338,7 +350,7 @@ class GridMovEva(maglib.GridMovEva):
         
         ci = lambda x: parent.GetGrandParent().FindWindowById(x)
         
-        ci(wdr.ID_MASBUTUPD).Bind(wx.EVT_BUTTON, self.GridMovOnUpdateFilters)
+        ci(wdr.ID_EVABUTUPD).Bind(wx.EVT_BUTTON, self.GridMovOnUpdateFilters)
         
         map(lambda c:\
             grid.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
@@ -372,6 +384,7 @@ class ProdMastroEvaPanel(wx.Panel):
         wdr.ProdMastroEvaFunc(self)
         pp = self.FindWindowById(wdr.ID_MASPANMASTROEVA)
         self.gridmov = GridMovEva(pp, dlg)
+        self.Bind(wx.EVT_BUTTON, self.OnPrintData, self.FindWindowById(wdr.ID_EVABUTPRT))
     
     def GridUpdate(self, prod=None):
         wx.BeginBusyCursor()
@@ -379,3 +392,12 @@ class ProdMastroEvaPanel(wx.Panel):
             self.gridmov.dbmas.Get(prod)
         self.gridmov.GridMovUpdate()
         wx.EndBusyCursor()
+    
+    def OnPrintData(self, event):
+        self.PrintData()
+        event.Skip()
+    
+    def PrintData(self):
+        db = self.gridmov.dbmas.mov
+        db._info.dbprod = self.gridmov.dbmas
+        rpt.Report(self, db, 'Stato evasione prodotto')
