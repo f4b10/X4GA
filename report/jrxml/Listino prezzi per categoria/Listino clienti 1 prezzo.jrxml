@@ -35,7 +35,7 @@
 	<field name="id_zona" class="java.lang.Integer"/>
 
 	<variable name="riga" class="java.lang.Integer" resetType="None" incrementType="Column" calculation="Sum">
-		<variableExpression><![CDATA[$V{riga}+1]]></variableExpression>
+		<variableExpression><![CDATA[$V{riga}+1*int(bool(RS.GetPrintColValue(0)))]]></variableExpression>
 		<initialValueExpression><![CDATA[0]]></initialValueExpression>
 	</variable>
 

@@ -1464,6 +1464,27 @@ class ListiniPanel(aw.Panel, aw.awu.LimitiFiltersMixin):
         lis.ClearOrders()
         
         try:
+            
+            col = 'codice'
+            try:
+                if cn('ordinam').GetValue() == "D":
+                    col = 'descriz'
+                
+            except:
+                pass
+            raggruppam = cn('raggruppam').GetValue()
+            if raggruppam == "C":
+            
+                lis.AddOrder('catart.%s' % col)
+                
+            elif raggruppam == "G":
+                lis.AddOrder('catart.%s' % col)
+                lis.AddOrder('gruart.%s' % col)
+            
+        except:
+            pass
+        
+        try:
             ordinam = cn('ordinam').GetValue()
             if ordinam == "C":
                 lis.AddOrder('prod.codice')
@@ -1477,20 +1498,6 @@ class ListiniPanel(aw.Panel, aw.awu.LimitiFiltersMixin):
                 
             elif ordinam == "B":
                 lis.AddOrder('prod.barcode')
-            
-        except:
-            pass
-        
-        try:
-            
-            raggruppam = cn('raggruppam').GetValue()
-            if raggruppam == "C":
-            
-                lis.AddOrder('catart.codice')
-                
-            elif raggruppam == "G":
-                lis.AddOrder('catart.codice')
-                lis.AddOrder('gruart.codice')
             
         except:
             pass

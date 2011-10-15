@@ -336,7 +336,7 @@ def ListiniFunc( parent, call_fit = True, set_sizer = True ):
 
     item48.Add( item49, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item52 = ListinoPanel( parent, ID_PANGRIDLIS, wx.DefaultPosition, [-1,360], wx.SUNKEN_BORDER )
+    item52 = ListinoPanel( parent, ID_PANGRIDLIS, wx.DefaultPosition, [-1,280], wx.SUNKEN_BORDER )
     item52.SetName( "pangridlis" )
     item48.Add( item52, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
