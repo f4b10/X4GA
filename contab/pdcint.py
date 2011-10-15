@@ -1423,12 +1423,37 @@ class ClientiInterrPanel(anag.clienti.ClientiPanel, _PdcCliForInterrMixin):
     def __init__(self, *args, **kwargs):
         anag.clienti.ClientiPanel.__init__(self, *args, **kwargs)
         _PdcCliForInterrMixin.__init__(self, anag.clienti.ClientiPanel)
+        self.panacconti = None
     
     def InitControls(self, *args, **kwargs):
         _PdcCliForInterrMixin.InitControls(self, *args, **kwargs)
-
+        if bt.MAGGESACC:
+            self.InitAcconti()
+            self.LoadAcconti()
+    
+    def InitAcconti(self):
+        nb = self.FindWindowByName('workzone')
+        n = 0
+        while True:
+            if 'scadenzario' in nb.GetPageText(n).lower():
+                break
+            n += 1
+        from magazz.dataentry_b import SelezionaMovimentoAccontoPanel
+        p = SelezionaMovimentoAccontoPanel(nb)
+        rs = p.FindWindowByName('rsanag')
+        if rs is not None:
+            rs.Hide()
+        nb.InsertPage(n+1, p, 'Acconti')
+        self.panacconti = p
+    
+    def LoadAcconti(self):
+        if self.panacconti is not None:
+            self.panacconti.SetPdcId(self.db_recid)
+    
     def UpdateDataControls(self, *args, **kwargs):
-        return _PdcCliForInterrMixin.UpdateDataControls(self, *args, **kwargs)
+        out = _PdcCliForInterrMixin.UpdateDataControls(self, *args, **kwargs)
+        self.LoadAcconti()
+        return out
 
 
 # ------------------------------------------------------------------------------

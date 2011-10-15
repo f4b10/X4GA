@@ -3372,6 +3372,8 @@ def SelezionaMovimentoAccontoFunc( parent, call_fit = True, set_sizer = True ):
 
     item0.AddGrowableRow( 1 )
 
+    item0.AddGrowableRow( 3 )
+
     if set_sizer == True:
         parent.SetSizer( item0 )
         if call_fit == True:
