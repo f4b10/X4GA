@@ -1004,6 +1004,10 @@ class Azienda(object):
         MAGNUMRIC = 3        #numero di ricariche gestite
         MAGNUMLIS = 0        #numero di listini vendita
         MAGROWLIS = 0        #flag attivazione listino su righe dettaglio documento
+        MAGVLIFOR = 0        #flag listino variabile per fornitore
+        MAGVLIMAR = 0        #flag listino variabile per marca
+        MAGVLICAT = 0        #flag listino variabile per categoria
+        MAGVLIGRU = 0        #flag listino variabile per gruppo
         MAGDATLIS = False    #flag listini per data
         MAGFORLIS = False    #flag codice fornitore su manutenzione listini
         MAGBCOLIS = False    #flag barcode su manutenzione listini
@@ -1594,6 +1598,13 @@ class Azienda(object):
         TABSETUP_CONSTR_DOCSEMAIL = []
         TABVOICE_DOCSEMAIL = {1: ['email', ['l\'', 'una', 'dell\'', 'dall\'']],
                               2: ['email', ['le', 'delle', 'dalle']]}
+        
+        TABNAME_VARLIST = "varlist"
+        TABDESC_VARLIST = "Listini variabili"
+        TABSETUP_TABLE_VARLIST = numtab.next()
+        TABSETUP_CONSTR_VARLIST = []
+        TABVOICE_VARLIST = {1: ['listino variabile', ['il', 'un', 'del', 'dal']],
+                            2: ['listini variabili', ['i', 'dai', 'dai']]}
         
         tabelle = None
         
@@ -3504,6 +3515,23 @@ class Azienda(object):
                                       ["KEY",         "datcoda"], ]
             
             
+            cls.varlist =\
+               [ [ "id",             "INT",       idw, None, "ID Email", "AUTO_INCREMENT" ],
+                 [ "id_cliente",     "INT",       idw, None, "ID cliente", None ],
+                 [ "id_fornit",      "INT",       idw, None, "ID fornitore", None ],
+                 [ "id_marart",      "INT",       idw, None, "ID marca prodotto", None ],
+                 [ "id_catart",      "INT",       idw, None, "ID categoria merce", None ],
+                 [ "id_gruart",      "INT",       idw, None, "ID gruppo merce", None ],
+                 [ "id_tiplist",     "INT",       idw, None, "ID tipo listino", None ],
+             ]
+            
+#            cls.set_constraints(cls.TABNAME_VARLIST,
+#                                ((cls.TABSETUP_CONSTR_PDC, 'id_pdc', cls.TABCONSTRAINT_TYPE_CASCADE),))
+            
+            cls.varlist_indexes = [ ["PRIMARY KEY", "id"],
+                                    ["KEY",         "id_cliente"], ]
+            
+            
             cls.tabelle = [ 
                 (cls.TABNAME_BILMAS,    cls.TABDESC_BILMAS,    cls.bilmas,    cls.bilmas_indexes,    cls.TABSETUP_CONSTR_BILMAS,    cls.TABVOICE_BILMAS    ),
                 (cls.TABNAME_BILCON,    cls.TABDESC_BILCON,    cls.bilcon,    cls.bilcon_indexes,    cls.TABSETUP_CONSTR_BILCON,    cls.TABVOICE_BILCON    ),
@@ -3583,6 +3611,7 @@ class Azienda(object):
                 (cls.TABNAME_TIPEVENT,  cls.TABDESC_TIPEVENT,  cls.tipevent,  cls.tipevent_indexes,  cls.TABSETUP_CONSTR_TIPEVENT,  cls.TABVOICE_TIPEVENT  ),
                 (cls.TABNAME_EVENTI,    cls.TABDESC_EVENTI,    cls.eventi,    cls.eventi_indexes,    cls.TABSETUP_CONSTR_EVENTI,    cls.TABVOICE_EVENTI    ),
                 (cls.TABNAME_DOCSEMAIL, cls.TABDESC_DOCSEMAIL, cls.docsemail, cls.docsemail_indexes, cls.TABSETUP_CONSTR_DOCSEMAIL, cls.TABVOICE_DOCSEMAIL ),
+                (cls.TABNAME_VARLIST,   cls.TABDESC_VARLIST,   cls.varlist,   cls.varlist_indexes,   cls.TABSETUP_CONSTR_VARLIST,   cls.TABVOICE_VARLIST   ),
             ]
             
             #alterazioni strutture tabelle da applicazione personalizzata
@@ -3769,6 +3798,10 @@ class Azienda(object):
                 ('MAGNUMRIC',       'magnumric',          i, _int, None),
                 ('MAGNUMLIS',       'magnumlis',          i, _int, 'del numero di listini'),
                 ('MAGROWLIS',       'magrowlis',          f, _int, None),
+                ('MAGVLIFOR',       'magvlifor',          f, _int, None),
+                ('MAGVLIMAR',       'magvlimar',          f, _int, None),
+                ('MAGVLICAT',       'magvlicat',          f, _int, None),
+                ('MAGVLIGRU',       'magvligru',          f, _int, None),
                 ('MAGDATLIS',       'magdatlis',          f, _int, 'del flag di gestione dei listini per data'),
                 ('MAGFORLIS',       'magforlis',          f, _int, None),
                 ('MAGBCOLIS',       'magbcolis',          f, _int, None),

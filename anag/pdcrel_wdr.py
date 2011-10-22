@@ -223,6 +223,13 @@ class AziPerRadioBox(RadioBox):
         self.SetDataLink(values=("A", "P"))
 
 
+class CliComNotebook(wx.Notebook):
+    def __init__(self, *args, **kwargs):
+        wx.Notebook.__init__(self, *args, **kwargs)
+        self.SetName('commzone')
+
+
+
 
 # Window functions
 
@@ -2546,7 +2553,7 @@ def ScontiPanelFunc( parent, call_fit = True, set_sizer = True ):
     item1 = wx.StaticBox( parent, -1, "Scontistiche" )
     item0 = wx.StaticBoxSizer( item1, wx.VERTICAL )
     
-    item2 = wx.FlexGridSizer( 0, 3, 0, 0 )
+    item2 = wx.FlexGridSizer( 0, 6, 0, 0 )
     
     item3 = wx.BoxSizer( wx.VERTICAL )
     
@@ -2588,7 +2595,7 @@ def ScontiPanelFunc( parent, call_fit = True, set_sizer = True ):
     item12.Add( item13, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item14 = bt.GetMagScoNumCtrl(parent, ID_SCONTO4, 'sconto4')
-    item12.Add( item14, 0, wx.ALIGN_CENTER, 5 )
+    item12.Add( item14, 0, wx.ALIGN_CENTER|wx.LEFT, 5 )
 
     item2.Add( item12, 0, wx.ALIGN_CENTER, 5 )
 
@@ -2627,7 +2634,7 @@ ID_PANSCONTI = 14132
 ID_PANFIDI = 14133
 
 def ScontiFidiPanelFunc( parent, call_fit = True, set_sizer = True ):
-    item0 = wx.BoxSizer( wx.HORIZONTAL )
+    item0 = wx.BoxSizer( wx.VERTICAL )
     
     item1 = ScontiPanel( parent, ID_PANSCONTI, wx.DefaultPosition, wx.DefaultSize, 0 )
     item1.SetName( "pansconti" )
@@ -2635,7 +2642,7 @@ def ScontiFidiPanelFunc( parent, call_fit = True, set_sizer = True ):
 
     item2 = FidiPanel( parent, ID_PANFIDI, wx.DefaultPosition, wx.DefaultSize, 0 )
     item2.SetName( "panfidi" )
-    item0.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL|wx.LEFT, 5 )
+    item0.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
 
     if set_sizer == True:
         parent.SetSizer( item0 )
@@ -3850,6 +3857,7 @@ def CliForContattiFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
+ID_COMMZONE = 14184
 
 def ClientiCommFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 2, 0, 0 )
@@ -4045,24 +4053,60 @@ def ClientiCommFunc( parent, call_fit = True, set_sizer = True ):
 
     item38.Add( item53, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item37.Add( item38, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL|wx.ALL, 5 )
+    item37.Add( item38, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
 
-    item56 = ScontiFidiPanel( parent, ID_PANSCOFID, wx.DefaultPosition, wx.DefaultSize, 0 )
-    item56.SetName( "panscofid" )
-    item37.Add( item56, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
-
-    item57 = ScontiCategoriaPanel( parent, ID_PANSCONTICC, wx.DefaultPosition, wx.DefaultSize, 0 )
-    item37.Add( item57, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item57 = CliComNotebook( parent, ID_COMMZONE, wx.DefaultPosition, wx.DefaultSize, 0 )
+    item56 = item57
+    
+    item37.Add( item56, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
 
     item37.AddGrowableCol( 0 )
 
-    item37.AddGrowableRow( 2 )
+    item37.AddGrowableRow( 1 )
 
     item0.Add( item37, 0, wx.GROW, 5 )
 
     item0.AddGrowableCol( 0 )
 
     item0.AddGrowableCol( 1 )
+
+    item0.AddGrowableRow( 0 )
+
+    if set_sizer == True:
+        parent.SetSizer( item0 )
+        if call_fit == True:
+            item0.SetSizeHints( parent )
+    
+    return item0
+
+
+def ClientiScontiFidiFunc( parent, call_fit = True, set_sizer = True ):
+    item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    
+    item1 = ScontiFidiPanel( parent, ID_PANSCOFID, wx.DefaultPosition, wx.DefaultSize, 0 )
+    item1.SetName( "panscofid" )
+    item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item0.AddGrowableCol( 0 )
+
+    item0.AddGrowableRow( 0 )
+
+    if set_sizer == True:
+        parent.SetSizer( item0 )
+        if call_fit == True:
+            item0.SetSizeHints( parent )
+    
+    return item0
+
+
+def ClientiScontiCategoriaFunc( parent, call_fit = True, set_sizer = True ):
+    item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    
+    item1 = ScontiCategoriaPanel( parent, ID_PANSCONTICC, wx.DefaultPosition, wx.DefaultSize, 0 )
+    item1.SetName( "pansconticc" )
+    item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item0.AddGrowableCol( 0 )
 
     item0.AddGrowableRow( 0 )
 

@@ -635,6 +635,43 @@ class DocMag(adb.DbTable,\
         kwargs['sconti6'] = True
         return self.DefPrezzoSconti(*args, **kwargs)
     
+    def DefVarList(self, doc=None, prod=None):
+        """
+        Definizione listino variabile
+        """
+        if doc is None:
+            doc = self
+        if prod is None:
+            prod = doc.mov.prod
+        if bt.MAGROWLIS and doc.id_pdc is not None and prod.id is not None:
+            vli = adb.DbTable(bt.TABNAME_VARLIST, 'vli')
+            vli.Retrieve('vli.id_cliente=%s' % doc.id_pdc)
+            if not vli.IsEmpty():
+                c = []
+                if bt.MAGVLIMAR and prod.id_marart is not None:
+                    c.append(('id_marart', prod.id_marart))
+                if bt.MAGVLIFOR and prod.id_fornit is not None:
+                    c.append(('id_fornit', prod.id_fornit))
+                if bt.MAGVLICAT and prod.id_catart is not None:
+                    c.append(('id_catart', prod.id_catart))
+                if bt.MAGVLIGRU and prod.id_gruart is not None:
+                    c.append(('id_gruart', prod.id_gruart))
+                for start in range(len(c)):
+                    print 'start: %d su %d' % (start, len(c))
+                    for end in range(len(c), start, -1):
+                        print '    end: %s' % end
+                        def find(row):
+                            found = False
+                            for test in range(start, end+1, 1):
+                                found = getattr(row, c[test][0]) == c[test][1]
+                                print '        loop %d: test=%s, found=%s' % (test, '(field: %s) %s==%s' % (c[test][0], getattr(row, c[test][0]), c[test][1]), found)
+                                if not found:
+                                    break
+                            return found
+                        if vli.Locate(find):
+                            doc.mov.id_tiplist = vli.id_tiplist
+                            return
+    
     def GetDatoGriglia(self, col):
         grip = self._info.dbgrip
         grip.ClearFilters()
@@ -1318,9 +1355,11 @@ class DocMag(adb.DbTable,\
     def ApplicaListino(self):
         lisnul = []
         for mov in self.mov:
+            if bt.MAGROWLIS and mov.id_tiplist is not None:
+                continue
             if mov.id_prod:
-                prz, tipo, _, _, _, _, _, _ = self.DefPrezzoSconti()
-                if tipo == "L" and mov.id_tiplist is None:
+                prz, tipo, _, _, _, _, _, _ = self.DefPrezzoSconti6()
+                if tipo == "L":
                     if prz:
                         mov.prezzo = prz
                         ND = bt.VALINT_DECIMALS

@@ -903,6 +903,26 @@ class TabScontiCC(adb.DbTable):
 # ------------------------------------------------------------------------------
 
 
+class TabVarList(adb.DbTable):
+    def __init__(self):
+        adb.DbTable.__init__(self, bt.TABNAME_VARLIST, 'vli')
+        pdccli = self.AddJoin(bt.TABNAME_PDC, 'cliente', fields='id,codice,descriz')
+        pdcfor = self.AddJoin(bt.TABNAME_PDC, 'fornit', fields='id,codice,descriz', join=adb.JOIN_LEFT)
+        marart = self.AddJoin(bt.TABNAME_MARART, 'marart', fields='id,codice,descriz', join=adb.JOIN_LEFT)
+        catart = self.AddJoin(bt.TABNAME_CATART, 'catart', fields='id,codice,descriz', join=adb.JOIN_LEFT)
+        gruart = self.AddJoin(bt.TABNAME_GRUART, 'gruart', fields='id,codice,descriz', join=adb.JOIN_LEFT)
+        tiplist = self.AddJoin(bt.TABNAME_TIPLIST, 'tiplist', fields='id,codice,descriz', join=adb.JOIN_LEFT)
+        self.AddOrder('cliente.codice')
+        self.AddOrder('marart.codice')
+        self.AddOrder('fornit.codice')
+        self.AddOrder('catart.codice')
+        self.AddOrder('gruart.codice')
+        self.Reset()
+
+
+# ------------------------------------------------------------------------------
+
+
 class TabTipArt(adb.DbTable):
     def __init__(self):
         adb.DbTable.__init__(self, bt.TABNAME_TIPART, 'tipart')

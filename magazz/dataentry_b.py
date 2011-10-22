@@ -509,7 +509,7 @@ class GridBody(object):
         self.COL_QTA =     a((1, [m.RSMOV_QTA,       "Quantità",         _QTA, True]))
         
         if bt.MAGROWLIS and self.dbdoc.cfgdoc.rowlist == 'X':
-            self.COL_TIPLIST = a((40, [m.RSMOV_TIPLIST, "List.",         _STR, True]))
+            self.COL_codlist = a((40, [m.RSMOV_codlis, "List.",         _STR, True]))
         
         self.COL_PREZZO =  a((1, [m.RSMOV_PREZZO,    "Prezzo",           _PRE, True]))
         
@@ -698,7 +698,7 @@ class GridBody(object):
             from anag.tiplist import TipListDialog
             
             ltlis = dbglib.LinkTabAttr(bt.TABNAME_TIPLIST, #table
-                                       self.COL_TIPLIST,   #grid col
+                                       self.COL_codlist,   #grid col
                                        m.RSMOV_TIPLIST,    #rs col id
                                        m.RSMOV_codlis,     #rs col cod
                                        -1,                 #rs col des
@@ -1280,6 +1280,7 @@ class GridBody(object):
         elif col == m.RSMOV_codart:
             if self.dbprod.Get(value):
                 mov.id_prod = value
+                doc.DefVarList()
                 mov.descriz    = self.dbprod.descriz
                 mov.um         = self.dbprod.um
                 if mov.config.askvalori == 'T':
@@ -1362,7 +1363,8 @@ class GridBody(object):
             DefImporto()
             resetview = True
             
-        elif hasattr(self, 'COL_TIPLIST') and col == m.RSMOV_TIPLIST:
+        elif hasattr(self, 'COL_codlist') and col == m.RSMOV_codlis:
+            mov.id_tiplist = value
             if value is not None:
                 mov.prezzo, _, _, _, _, _, _, _ = doc.DefPrezzoSconti6(force_tiplist=value)
                 DefImporto()
@@ -1514,7 +1516,8 @@ class GridBody(object):
             #ddt, appenda confermo il numero doc. da inserire, viene richiamato
             #EndEdit della colonna tipmov (non ho idea del perché e da chi)
             return False
-        mov = self.dbdoc.mov
+        doc = self.dbdoc
+        mov = doc.mov
         mov.MoveNewRow()
         mov.AppendNewRow()
         mov.numriga = mov.RowsCount()
@@ -1529,6 +1532,8 @@ class GridBody(object):
             rsb.insert(before_row, r)
             for n, mov in enumerate(mov):
                 mov.numriga = n+1
+        if bt.MAGROWLIS:
+            doc.DefVarList()
         self.UpdateBodyButtons()
         return True
     

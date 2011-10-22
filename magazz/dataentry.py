@@ -1401,6 +1401,9 @@ class MagazzPanel(aw.Panel,\
         if name == 'id_pdc' and doc.id_pdc == value:
             return
         
+        if name == 'id_tiplist' and doc.id_tiplist == value:
+            return
+        
         if name in doc.GetFieldNames():
             doc.__setattr__(name, value)
             if name == "id_dest":
