@@ -158,6 +158,11 @@ class LinkTableProd(LinkTable, LinkTableHideSearchMixin):
                            None))
             if fl:
                 self.SetFilterLinks(fl)
+        if bt.MAGRETSEARCH and wx.Platform == '__WXMSW__':
+            self.retsearch_oncode = True
+            cc = self._ctrcod
+            s = cc.GetWindowStyle()
+            cc.SetWindowStyle(s | wx.TE_PROCESS_ENTER)
     
     def GetExtraToolTip(self):
         return LinkTableHideSearchMixin.GetExtraToolTip(self)

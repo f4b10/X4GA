@@ -264,6 +264,7 @@ class AziendaSetupPanel(_SetupPanel):
                    bt.GESFIDICLI,
                    bt.MAGIMGPROD,
                    bt.MAGDIGSEARCH,
+                   bt.MAGRETSEARCH,
                    bt.MAGEXCSEARCH,
                    bt.OPTDIGSEARCH,
                    bt.OPTTABSEARCH,
@@ -338,6 +339,7 @@ class AziendaSetupPanel(_SetupPanel):
             bt.GESFIDICLI = cn('setup_gesfidicli').GetValue()
             bt.MAGIMGPROD = cn('setup_magimgprod').GetValue()
             bt.MAGDIGSEARCH = bool(cn('setup_magdigsearch').GetValue())
+            bt.MAGRETSEARCH = bool(cn('setup_magretsearch').GetValue())
             bt.MAGEXCSEARCH = bool(cn('setup_magexcsearch').GetValue())
             bt.OPTDIGSEARCH = bool(cn('setup_optdigsearch').GetValue())
             bt.OPTTABSEARCH = bool(cn('setup_opttabsearch').GetValue())
@@ -415,6 +417,7 @@ class AziendaSetupPanel(_SetupPanel):
                 bt.GESFIDICLI,
                 bt.MAGIMGPROD,
                 bt.MAGDIGSEARCH,
+                bt.MAGRETSEARCH,
                 bt.MAGEXCSEARCH,
                 bt.OPTDIGSEARCH,
                 bt.OPTTABSEARCH,
