@@ -1571,33 +1571,32 @@ class DocMag(adb.DbTable,\
                 continue
             # determinazione imponibili x aliquota 
             # e ammontare sconti da ripartire
-            imp = mov.importo or 0
+            imp = RoundImp(mov.importo or 0)
             if mov.id is None or not mov.IsDeleted():
                 if not (mov.config.askvalori or ' ') in 'DQ':
                     tipo = mov.config.tipologia
                     if tipo == "I":
-                        totscrip += imp
-                        #totimpon -= mov.importo
+                        totscrip = RoundImp(totscrip+imp)
                     elif tipo not in "EDP":
                         if mov.qta and mov.prezzo:
-                            self.totscpra += RoundImp(mov.qta*mov.prezzo)-imp
+                            self.totscpra = RoundImp(self.totscpra+mov.qta*mov.prezzo-imp)
                         mi = mov.iva
                         if bt.TIPO_CONTAB == "O":
                             #ordinaria
                             i = TotIvaSearch(self, mi.id, mi.codice, mi.descriz,\
                                              mi.perciva, mi.percind, mi.tipo,\
                                              tipo == "O")
-                            totiva[i][coltot] += imp
+                            totiva[i][coltot] = RoundImp(totiva[i][coltot]+imp)
                             if sid:
-                                totivato += imp
+                                totivato = RoundImp(totivato+imp)
                                 if tipo != "O":
-                                    totivatx += imp
+                                    totivatx = RoundImp(totivatx+imp)
                             else:
-                                totimpon += imp
+                                totimpon = RoundImp(totimpon+imp)
                                 if tipo != "O":
-                                    totimpox += imp
+                                    totimpox = RoundImp(totimpox+imp)
                             if not tipo in "SO":
-                                totiva[i][m.RSIVA_IMPOSCR] += imp
+                                totiva[i][m.RSIVA_IMPOSCR] = RoundImp(totiva[i][m.RSIVA_IMPOSCR]+imp)
                             if tipo == "S":
                                 calspese = False
                             #determinazione sottconto di costo/ricavo
@@ -1616,9 +1615,9 @@ class DocMag(adb.DbTable,\
                                     pdccg_des = mov.config.movpdc.descriz
                                 i = _TotPdcSearch(self, tp, pdccg_id, pdccg_cod, pdccg_des, tipo)
                                 if sid:
-                                    tp[i][m.RSPDC_IMPORTO] += imp
+                                    tp[i][m.RSPDC_IMPORTO] = RoundImp(tp[i][m.RSPDC_IMPORTO]+imp)
                                     imp, _, _, _ = self.CalcolaIVA(mov.id_aliqiva, ivato=imp)
-                                tp[i][m.RSPDC_IMPONIB] += imp
+                                tp[i][m.RSPDC_IMPONIB] = RoundImp(tp[i][m.RSPDC_IMPONIB]+imp)
                                 if tipo in "S":#"OS":
                                     pdcnorip.append(i)
                                     tp[i][m.RSPDC_ISSPESA] = (tipo == "S")
@@ -1626,20 +1625,14 @@ class DocMag(adb.DbTable,\
                         else:
                             
                             #semplif.
-#                            i = TotIvaSearch(self, mi.id, mi.codice, mi.descriz,\
-#                                             mi.perciva, mi.percind, mi.tipo,\
-#                                             tipo == "O")
-#                            totiva[i][coltot] += imp
                             if sid:
-                                totivato += imp
+                                totivato = RoundImp(totivato+imp)
                                 if tipo != "O":
-                                    totivatx += imp
+                                    totivatx = RoundImp(totivatx+imp)
                             else:
-                                totimpon += imp
+                                totimpon = RoundImp(totimpon+imp)
                                 if tipo != "O":
-                                    totimpox += imp
-#                            if not tipo in "SO":
-#                                totiva[i][m.RSIVA_IMPOSCR] += imp
+                                    totimpox = RoundImp(totimpox+imp)
                             if tipo == "S":
                                 calspese = False
                             #determinazione sottconto di costo/ricavo
@@ -1658,9 +1651,9 @@ class DocMag(adb.DbTable,\
                                     pdccg_des = mov.config.movpdc.descriz
                                 i = _TotPdcSearch(self, tp, pdccg_id, pdccg_cod, pdccg_des, tipo, mi.id, mi.codice, mi.descriz, tipo == "O", mov.config.prtdestot)
                                 if sid:
-                                    tp[i][m.RSPDC_IMPORTO] += imp
+                                    tp[i][m.RSPDC_IMPORTO] = RoundImp(tp[i][m.RSPDC_IMPORTO]+imp)
                                     imp, _, _, _ = self.CalcolaIVA(mov.id_aliqiva, ivato=imp)
-                                tp[i][m.RSPDC_IMPONIB] += imp
+                                tp[i][m.RSPDC_IMPONIB] = RoundImp(tp[i][m.RSPDC_IMPONIB]+imp)
                                 if tipo in "OS":
                                     pdcnorip.append(i)
                                     tp[i][m.RSPDC_ISSPESA] = (tipo == "S")
@@ -1681,20 +1674,19 @@ class DocMag(adb.DbTable,\
             
             tipo = mov.config.tipologia
             if   tipo == "M":
-                self.totmerce += imp
-#                self.totscpra += (mov.qta*mov.prezzo)-imp
+                self.totmerce = RoundImp(self.totmerce+imp)
             elif tipo == "V":
-                self.totservi += imp
+                self.totservi = RoundImp(self.totservi+imp)
             elif tipo == "T":
-                self.tottrasp += imp
+                self.tottrasp = RoundImp(self.tottrasp+imp)
             elif tipo == "I":
-                self.totscrip += imp
+                self.totscrip = RoundImp(self.totscrip+imp)
             elif tipo == "E":
-                self.totscmce += imp
+                self.totscmce = RoundImp(self.totscmce+imp)
             elif tipo == "O":
-                self.totomagg += imp
+                self.totomagg = RoundImp(self.totomagg+imp)
             elif tipo == "S":
-                totspese = (totspese or 0) + imp
+                totspese = RoundImp((totspese or 0) + imp)
         
         if 0 <= _curmov < self.mov.RowsCount():
             self.mov.MoveRow(_curmov)
@@ -1818,19 +1810,19 @@ class DocMag(adb.DbTable,\
                     #importo -= imponib
                     #imponib = 0
                 i[m.RSIVA_IMPONIB] = imponib
-                i[m.RSIVA_IMPOSTA] = imposta+indeduc
+                i[m.RSIVA_IMPOSTA] = RoundImp(imposta+indeduc)
                 if i[m.RSIVA_ISOMAGG]:
                     i[m.RSIVA_IMPORTO] = imposta
                 else:
                     i[m.RSIVA_IMPORTO] = importo
-                self.totimposta += imposta+indeduc
+                self.totimposta = RoundImp(self.totimposta+imposta+indeduc)
                 if i[m.RSIVA_ISOMAGG]:
-                    self.totimporto += imposta
+                    self.totimporto = RoundImp(self.totimporto+imposta)
                 else:
-                    self.totimponib += imponib
-                    self.totimporto += importo
+                    self.totimponib = RoundImp(self.totimponib+imponib)
+                    self.totimporto = RoundImp(self.totimporto+importo)
             
-            self.totdare = self.totimporto - (self.totritacc or 0)
+            self.totdare = RoundImp(self.totimporto - (self.totritacc or 0))
         
         # ripartizione sconti su totali x pdc
         if totscrip and totpdc:
@@ -1854,9 +1846,9 @@ class DocMag(adb.DbTable,\
                             last = i
                     if ttx != tti and last is not None:
                         if ttx > tti:
-                            last[m.RSPDC_IMPONIB] -= (ttx-tti)
+                            last[m.RSPDC_IMPONIB] = RoundImp(last[m.RSPDC_IMPONIB]-(ttx-tti))
                         elif ttx < tti:
-                            last[m.RSPDC_IMPONIB] += (tti-ttx)
+                            last[m.RSPDC_IMPONIB] = RoundImp(last[m.RSPDC_IMPONIB]+(tti-ttx))
                 else:
                     ttx = sum([i[m.RSPDC_IMPORTO] for n,i in enumerate(totpdc) if not n in pdcnorip])
                     totsc = 0
@@ -1865,11 +1857,11 @@ class DocMag(adb.DbTable,\
                         if n not in pdcnorip:
                             sc = round(totscrip*i[m.RSPDC_IMPORTO]/ttx,
                                        bt.VALINT_DECIMALS)
-                            i[m.RSPDC_IMPORTO] -= sc
-                            totsc += sc
+                            i[m.RSPDC_IMPORTO] = RoundImp(i[m.RSPDC_IMPORTO]-sc)
+                            totsc = RoundImp(totsc+sc)
                             last = i
                     if totsc != totscrip and last is not None:
-                        last[m.RSPDC_IMPORTO] += totscrip-totsc
+                        last[m.RSPDC_IMPORTO] = RoundImp(last[m.RSPDC_IMPORTO]+totscrip-totsc)
             else:
                 #documento a calcolo - l'abbattimento sugli imponibili dei
                 #sottoconti viene fatto proporzionalmente in base all'ammontare
@@ -1880,13 +1872,12 @@ class DocMag(adb.DbTable,\
                 last = None
                 for n,i in enumerate(totpdc):
                     if n not in pdcnorip:
-                        sc = round(totscrip*i[m.RSPDC_IMPONIB]/ttx,
-                                   bt.VALINT_DECIMALS)
-                        i[m.RSPDC_IMPONIB] -= sc
-                        totsc += sc
+                        sc = RoundImp(totscrip*i[m.RSPDC_IMPONIB]/ttx)
+                        i[m.RSPDC_IMPONIB] = RoundImp(i[m.RSPDC_IMPONIB]-sc)
+                        totsc = RoundImp(totsc+sc)
                         last = i
                 if totsc != totscrip and last is not None:
-                    last[m.RSPDC_IMPONIB] += totscrip-totsc
+                    last[m.RSPDC_IMPONIB] = RoundImp(last[m.RSPDC_IMPONIB]+totscrip-totsc)
         
         if bt.TIPO_CONTAB == "O":
             #ordinaria
@@ -1944,8 +1935,8 @@ class DocMag(adb.DbTable,\
                     self.totimponib += imp
                     self.totimporto += mpr
                 
-            self.totdare = self.totimporto - (self.totritacc or 0)
-            
+            self.totdare = RoundImp(self.totimporto - (self.totritacc or 0))
+        
         #ridefinizione dei subtotali
         _t = {}
         for name in 'merce servi trasp spese'.split():
