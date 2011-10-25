@@ -2745,6 +2745,7 @@ class Azienda(object):
                 [ "prtdestot",    "CHAR",    15, None, "Descrizione riga totale pdc/iva (solo x semplif.)", None ],
                 [ "is_acconto",   "TINYINT",  1, None, "Flag acconto: incremento (fattura acconto)", None ],
                 [ "is_accstor",   "TINYINT",  1, None, "Flag acconto: decremento (storno acconto)", None ],
+                [ "acc_sepiva",   "TINYINT",  1, None, "Flag acconto: storno separato su totali iva", None ],
                 [ "canprezzo0",   "TINYINT",  1, None, "Flag permesso prezzo nullo", None ],
                 [ "modimpricalc", "CHAR",     1, None, "Flag tipo ricalcolo se modifica importo", None ],
             ]

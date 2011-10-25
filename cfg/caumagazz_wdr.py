@@ -1068,7 +1068,8 @@ ID_LABELPDC = 16116
 ID_CTRPDC = 16117
 ID_ISACCONTO = 16118
 ID_ISACCSTOR = 16119
-ID_PRTDESTOT = 16120
+ID_ACC_SEPIVA = 16120
+ID_PRTDESTOT = 16121
 
 def Mov1Func( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -1280,38 +1281,42 @@ def Mov1Func( parent, call_fit = True, set_sizer = True ):
     item54.SetName( "is_accstor" )
     item51.Add( item54, 0, wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
 
+    item55 = CheckBox( parent, ID_ACC_SEPIVA, "Separa Tot.IVA", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item55.SetName( "acc_sepiva" )
+    item51.Add( item55, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
     item46.Add( item51, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 
-    item56 = wx.StaticBox( parent, -1, "Tot.IVA (semplif.)" )
-    item55 = wx.StaticBoxSizer( item56, wx.VERTICAL )
+    item57 = wx.StaticBox( parent, -1, "Tot.IVA (semplif.)" )
+    item56 = wx.StaticBoxSizer( item57, wx.VERTICAL )
     
-    item57 = wx.StaticText( parent, ID_LABELPDC, "Descrizione del totale:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item55.Add( item57, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item58 = wx.StaticText( parent, ID_LABELPDC, "Descrizione del totale:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item56.Add( item58, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item58 = TextCtrl( parent, ID_PRTDESTOT, "", wx.DefaultPosition, [80,-1], 0 )
-    item58.SetName( "prtdestot" )
-    item55.Add( item58, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item59 = TextCtrl( parent, ID_PRTDESTOT, "", wx.DefaultPosition, [80,-1], 0 )
+    item59.SetName( "prtdestot" )
+    item56.Add( item59, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item46.Add( item55, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+    item46.Add( item56, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 
-    item60 = wx.StaticBox( parent, -1, "Totalizza Qta per:" )
-    item59 = wx.StaticBoxSizer( item60, wx.VERTICAL )
+    item61 = wx.StaticBox( parent, -1, "Totalizza Qta per:" )
+    item60 = wx.StaticBoxSizer( item61, wx.VERTICAL )
     
-    item61 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    item62 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
-    item62 = CheckBox( parent, ID_CHECKBOX, "Tot. Peso KG", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item62.SetName( "tqtaxpeso" )
-    item61.Add( item62, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item63 = CheckBox( parent, ID_CHECKBOX, "Tot. Peso KG", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item63.SetName( "tqtaxpeso" )
+    item62.Add( item63, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item63 = CheckBox( parent, ID_CHECKBOX, "Tot. Colli", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item63.SetName( "tqtaxcolli" )
-    item61.Add( item63, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item64 = CheckBox( parent, ID_CHECKBOX, "Tot. Colli", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item64.SetName( "tqtaxcolli" )
+    item62.Add( item64, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item61.AddGrowableCol( 0 )
+    item62.AddGrowableCol( 0 )
 
-    item59.Add( item61, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item60.Add( item62, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item46.Add( item59, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+    item46.Add( item60, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 
     item46.AddGrowableCol( 0 )
 
@@ -1342,7 +1347,7 @@ def Mov1Func( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_TXTEMAIL = 16121
+ID_TXTEMAIL = 16122
 
 def Doc3Func( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -1366,22 +1371,22 @@ def Doc3Func( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_AGGINI = 16122
-ID_AGGINIV = 16123
-ID_AGGCAR = 16124
-ID_AGGCARV = 16125
-ID_AGGSCA = 16126
-ID_AGGSCAV = 16127
-ID_AGGORDFOR = 16128
-ID_AGGORDCLI = 16129
-ID_AGGCVCCAR = 16130
-ID_AGGCVCSCA = 16131
-ID_AGGCVFCAR = 16132
-ID_AGGCVFSCA = 16133
-ID_STATFTCLI = 16134
-ID_STATCSCLI = 16135
-ID_MANCOSTO = 16136
-ID_STATFTFOR = 16137
+ID_AGGINI = 16123
+ID_AGGINIV = 16124
+ID_AGGCAR = 16125
+ID_AGGCARV = 16126
+ID_AGGSCA = 16127
+ID_AGGSCAV = 16128
+ID_AGGORDFOR = 16129
+ID_AGGORDCLI = 16130
+ID_AGGCVCCAR = 16131
+ID_AGGCVCSCA = 16132
+ID_AGGCVFCAR = 16133
+ID_AGGCVFSCA = 16134
+ID_STATFTCLI = 16135
+ID_STATCSCLI = 16136
+ID_MANCOSTO = 16137
+ID_STATFTFOR = 16138
 
 def Mov2Func( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )

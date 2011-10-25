@@ -99,8 +99,9 @@ fldap('statcscli');    defap(0);    RSMOV_STATCSCLI =    39
 fldap('prtdestot');    defap("");   RSMOV_PRTDESTOT =    40
 fldap('is_acconto');   defap(0);    RSMOV_ISACCONTO =    41
 fldap('is_accstor');   defap(0);    RSMOV_ISACCSTOR =    42
-fldap('canprezzo0');   defap(0);    RSMOV_CANPREZZO0 =   43
-fldap('modimpricalc'); defap(0);    RSMOV_MODIMPRICALC = 44
+fldap('acc_sepiva');   defap(0);    RSMOV_ACCSEPIVA =    43
+fldap('canprezzo0');   defap(0);    RSMOV_CANPREZZO0 =   44
+fldap('modimpricalc'); defap(0);    RSMOV_MODIMPRICALC = 45
 
 
 
@@ -394,6 +395,7 @@ class CauMagazzPanel(ga.AnagPanel):
                            ("vismargine", { True: 1,   False: 0  } ),
                            ("is_acconto", { True: 1,   False: 0  } ),
                            ("is_accstor", { True: 1,   False: 0  } ),
+                           ("acc_sepiva", { True: 1,   False: 0  } ),
                            ("canprezzo0", { True: 1,   False: 0  } ),
                            ):
             ctr = cn(name)

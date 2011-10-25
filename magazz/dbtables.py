@@ -1394,12 +1394,18 @@ class DocMag(adb.DbTable,\
         m = magazz
         if bt.TIPO_CONTAB == "O":
             def TotIvaSearch(self, aliqid, aliqcod, aliqdes, aliqprc, aliqind, aliqtip, isomagg):
-                try:
-                    i = ListSearch(self._info.totiva,\
-                                   lambda x: x[m.RSIVA_ID] == aliqid and x[m.RSIVA_ISOMAGG] == isomagg)
-                except IndexError:
+                add = (self.mov.config.is_accstor and self.mov.config.acc_sepiva)
+                if not add:
+                    try:
+                        i = ListSearch(self._info.totiva,\
+                                       lambda x: x[m.RSIVA_ID] == aliqid and x[m.RSIVA_ISOMAGG] == isomagg)
+                    except IndexError:
+                        add = True
+                if add:
                     if isomagg:
                         aliqdes = "OMAGGI"
+                    elif self.mov.config.is_accstor:
+                        aliqdes = "STORNO ACCONTO"
                     self._info.totiva.append(\
                         [aliqid,   #RSIVA_ID
                          aliqcod,  #RSIVA_codiva
