@@ -253,6 +253,225 @@ class Scadenze(object):
 # ------------------------------------------------------------------------------
 
 
+import stormdb as adb
+
+class Scadenze_Table(adb.DbTable):
+    """
+    Calcoli per scadenzari.
+    """
+    def __init__(self, **kwargs):
+        adb.DbTable.__init__(self, bt.TABNAME_MODPAG, 'modpag', **kwargs)
+        self.mp_id = None
+        self.mp_codice = None
+        self.mp_descriz = None
+        self.mp_tipo = None
+        self.mp_contrass = None
+        self.mp_modocalc = None
+        self.mp_finemese = None
+        self.mp_numscad = None
+        self.mp_mesi1 = None
+        self.mp_mesitra = None
+        self.mp_id_pdcpi = None
+        self.mp_sc1noeff = None
+        self.mp_sc1iva = None
+        self.mp_sc1perc = None
+        self.mp_gg = None
+        self.mp_pdcpi_cod = None
+        self.mp_pdcpi_des = None
+
+    def SetupModPag(self, id_modpag):
+        """
+        Calcola le scadenze di pagamento.
+        
+        @param datestart: data di partenza (data documento)
+        @type datestart: date
+        @param id_modpag: id modalità di pagamento
+        @type id_modpag: int
+        @param impot: importo totale (tot. documento)
+        
+        @return: elenco scadenze con data e importo
+        @rtype: nscad-tuple di 2-tuple (data scadenza, importo)
+        """
+        self.mp_id = None
+        self.mp_codice = None
+        self.mp_descriz = None
+        self.mp_tipo = None
+        self.mp_contrass = None
+        self.mp_modocalc = None
+        self.mp_finemese = None
+        self.mp_numscad = None
+        self.mp_mesi1 = None
+        self.mp_mesitra = None
+        self.mp_id_pdcpi = None
+        self.mp_sc1noeff = None
+        self.mp_sc1iva = None
+        self.mp_sc1perc = None
+        self.mp_ggextra = None
+        self.mp_gg = None
+        self.mp_gem = None
+        
+        if id_modpag is None:
+            return
+        cmd =\
+"""SELECT mp.codice, mp.descriz, mp.tipo, mp.contrass, mp.modocalc, """\
+"""mp.tipoper, mp.finemese, mp.numscad, mp.mesi1, mp.mesitra, mp.id_pdcpi, """\
+"""mp.sc1noeff, mp.sc1iva, mp.sc1perc, mp.ggextra, """\
+"""mp.gg01, mp.gg02, mp.gg03, mp.gg04, mp.gg05, mp.gg06, mp.gg07, mp.gg08, mp.gg09, mp.gg10, mp.gg11, mp.gg12,"""\
+"""mp.gg13, mp.gg14, mp.gg15, mp.gg16, mp.gg17, mp.gg18, mp.gg19, mp.gg20, mp.gg21, mp.gg22, mp.gg23, mp.gg24,"""\
+"""mp.gg25, mp.gg26, mp.gg27, mp.gg28, mp.gg29, mp.gg30, mp.gg31, mp.gg32, mp.gg33, mp.gg34, mp.gg35, mp.gg36,"""\
+"""mp.gem01, mp.gem02, mp.gem03, mp.gem04, mp.gem05, mp.gem06, mp.gem07, mp.gem08, mp.gem09, mp.gem10, mp.gem11, mp.gem12 """\
+"""FROM %s AS mp """\
+"""WHERE mp.id=%%s""" % bt.TABNAME_MODPAG
+        try:
+            self._info.db.Retrieve(cmd, (id_modpag,))
+            rsmp = self._info.db.rs[0]
+        except MySQLdb.Error, e:
+            util.MsgDialogDbError(None, e)
+        else:
+            self.mp_id = id_modpag
+            self.mp_codice,\
+            self.mp_descriz,\
+            self.mp_tipo,\
+            self.mp_contrass,\
+            self.mp_modocalc,\
+            self.mp_tipoper,\
+            self.mp_finemese,\
+            self.mp_numscad,\
+            self.mp_mesi1,\
+            self.mp_mesitra,\
+            self.mp_id_pdcpi,\
+            self.mp_sc1noeff,\
+            self.mp_sc1iva,\
+            self.mp_sc1perc,\
+            self.mp_ggextra = rsmp[:15]
+            self.mp_finemese = self.mp_finemese or False
+            self.mp_sc1noeff = self.mp_sc1noeff or False
+            if self.mp_numscad is None: self.mp_numscad = 0
+            if self.mp_mesi1 is None:   self.mp_mesi1 = 0
+            if self.mp_mesitra is None: self.mp_mesitra = 0
+            self.mp_gg = []
+            mp_gg = rsmp[15:52]
+            for gg in mp_gg:
+                self.mp_gg.append(gg or 0)
+            self.mp_gem = []
+            mp_gem = rsmp[51:64]
+            for gem in mp_gem:
+                self.mp_gem.append(gem or 0)
+        if self.mp_id_pdcpi:
+            cmd = \
+                """SELECT pdc.codice, pdc.descriz """\
+                """FROM %s AS pdc """\
+                """WHERE pdc.id=%%s""" % bt.TABNAME_PDC
+            try:
+                self.db_curs.execute(cmd, self.mp_id_pdcpi)
+                rs = self.db_curs.fetchone()
+            except:
+                rs = (None, None)
+            self.mp_pdcpi_cod = rs[0]
+            self.mp_pdcpi_des = rs[1]
+        else:
+            self.mp_pdcpi_cod = None
+            self.mp_pdcpi_des = None
+
+    def CalcolaScadenze(self, datestart, id_modpag, imptot = 0, impiva = 0):
+        """
+        Calcola le scadenze di pagamento.
+        
+        @param datestart: data di partenza (data documento)
+        @type datestart: date
+        @param id_modpag: id modalità di pagamento
+        @type id_modpag: int
+        @param imptot: importo totale (tot. documento)
+        @type imptot: float
+        @param impiva: importo iva
+        @type imptot: float
+        
+        @return: elenco scadenze con data e importo
+        @rtype: nscad-tuple di 4-tuple (data scadenza, importo, isriba, iscontrass)
+        """
+        scad = []
+        
+        if id_modpag != self.mp_id:
+            self.SetupModPag(id_modpag)
+        
+        NDEC = bt.VALINT_DECIMALS
+        
+        if id_modpag and datestart and self.mp_id_pdcpi is None:
+            
+            dscad = datestart
+            for numsca in range(self.mp_numscad):
+                
+                riba = 0
+                cass = 0
+                
+                #determino il periodo da aggiungere alla data precedente
+                if self.mp_modocalc == "S":
+                    if numsca == 0:
+                        periodi = self.mp_mesi1
+                    else:
+                        periodi = self.mp_mesitra
+                elif self.mp_modocalc == "D":
+                    periodi = self.mp_gg[numsca]
+                
+                #aggiungo il periodo alla data precedente
+                if self.mp_tipoper == "M":
+                    dscad = lib.AddMonths(dscad, periodi)
+                elif self.mp_tipoper == "G":
+                    dscad += dt.DateTimeDelta(days = periodi)
+                if self.mp_finemese == 1:
+                    dscad += dscad.GetDaysInMonth() - dscad.day
+                
+                #determino se la mp è una riba
+                if self.mp_tipo == "R":
+                    riba = 1
+                
+                #determino se la mp è un contrassegno
+                if self.mp_contrass:
+                    cass = 1
+                
+                #determino importo ed esclusione effetto su prima scadenza
+                imp = 0
+                if numsca == 0:
+                    if self.mp_sc1iva:
+                        imp = round(impiva, NDEC)
+                    elif self.mp_sc1perc:
+                        imp = round(imptot/100*self.mp_sc1perc, NDEC)
+                    if self.mp_sc1noeff:
+                        riba = 0
+                ggextra = self.mp_gem[dscad.month-1] or self.mp_ggextra or 0
+                scad.append([dscad+ggextra, imp, riba, cass])
+            
+            if scad:
+                ripn = 0
+                ripv = imptot
+                for s in scad:
+                    if s[1]:
+                        ripv -= s[1]
+                    else:
+                        ripn += 1
+                ripr = round(ripv/ripn, NDEC)
+                total = 0
+                for s in scad:
+                    if not s[1]: s[1] = ripr
+                    total = round(total+s[1], NDEC)
+                if total != imptot:
+                    scad[len(scad)-1][1] =\
+                        round(scad[len(scad)-1][1]+(imptot-total), NDEC)
+            
+        elif id_modpag is None:
+            #se la mod.pag. è vuota, genera cmq una scadenza in data documento
+            #o data elaborazione se data doc. vuota (che non dovrebbe accadere)
+            dscad = datestart
+            if dscad is None:
+                dscad = Env.Azienda.Login.dataElab
+            scad.append([dscad, imptot, 0, 0])
+        
+        return scad
+
+
+# ------------------------------------------------------------------------------
+
+
 if __name__ == "__main__":
     import locale
     locale.setlocale(locale.LC_ALL, 'it')

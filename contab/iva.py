@@ -161,7 +161,120 @@ class IVA(object):
         Passare solo id_aliquota e imposta (e indeducibile, facolt.).
         """
         return self.CalcolaIVA(id_aliq, imposta=x, indeduc=ind, decimals=decimals)
+
+
+# ---------------------------------------------------------------------------
+
+
+import stormdb as adb
+
+class IVA_Table(adb.DbTable):
     
+    def __init__(self, **kwargs):
+        adb.DbTable.__init__(self, bt.TABNAME_ALIQIVA, 'aliq', **kwargs)
+        self.Reset()
+    
+    def CalcolaIVA(self, id_aliq, 
+                   imponib=None, imposta=None, ivato=None, indeduc=None, decimals=None):
+        """
+        Calcolo dei imponibile, imposta e ivato a partire dal dato a
+        disposizione.
+        L'id dell'aliquota è ovviamente indispensabile, mentre il calcolo
+        effettuato dipende da quale dato si ha a disposizione; si può
+        partire da::
+            imponib - per determinare imposta e ivato
+            imposta - per determinare imponibile e ivato
+            ivato   - per determinare imponibile e imposta
+        Vengono comunque sempre restituiti i tre importi in tale ordine e
+        l'ammontare dell'eventuale iva indeducibile.
+        """
+        if id_aliq is None or\
+           (imponib is None and imposta is None and ivato is None):
+            return 0, 0, 0, 0
+        self.Get(id_aliq)
+        
+        if decimals is None:
+            decimals = bt.VALINT_DECIMALS
+        def R(n):
+            return round(n, decimals)
+        
+        cod = self.codice
+        des = self.descriz
+        perciva = (self.perciva or 0)/100
+        percind = (self.percind or 0)/100
+        
+        if imponib is not None:
+            #calcolo imposta e ivato da imponibile
+            imposta = self._Iva_CalcImposta(imponib, perciva, decimals)
+            ivato = R(imponib+imposta)
+            
+        elif ivato is not None:
+            #calcolo imponibile e imopsta da ivato
+            imponib = self._Iva_ScorpImponib(ivato, perciva, decimals)
+            imposta = R(ivato-imponib)
+            
+        elif imposta is not None:
+            #calcolo imponibile e ivato da imposta
+            imponib = self._Iva_CalcoliDaImposta(imposta, perciva, decimals)
+            ivato = R(imponib+imposta)
+        
+        indeduc = R(imposta*percind)
+        imposta = R(imposta-indeduc)
+        
+        return imponib, imposta, ivato, indeduc
+
+    def _Iva_CalcImposta(self, imponib, perciva, decimals=None):
+        """
+        Restituisce l'imposta dall'imponibile e percentuale passati.
+        """
+        if decimals is None:
+            decimals = bt.VALINT_DECIMALS
+        return round(imponib*perciva, decimals)
+
+    def _Iva_ScorpImponib(self, ivato, perciva, decimals=None):
+        """
+        Restituisce l'imponibile scorporando la percentuale dalla
+        cifra passata.
+        """
+        if decimals is None:
+            decimals = bt.VALINT_DECIMALS
+        imposta = round(ivato-ivato/(1+perciva), decimals)
+        return ivato-imposta
+        
+    
+    def _Iva_CalcoliDaImposta(self, imposta, perciva, decimals=None):
+        """
+        Determina imponibile e tot.ivato a partire da imposta e percentuale
+        passati.
+        """
+        if decimals is None:
+            decimals = bt.VALINT_DECIMALS
+        try:
+            return round(imposta/perciva, decimals)
+        except ZeroDivisionError:
+            return 0
+    
+    def CalcolaIva_DaImponibile(self, id_aliq, x, ind=0, decimals=None):
+        """
+        Wrapper per il metodo CalcolaIva.
+        Passare solo id_aliquota e imponibile (e indeducibile, facolt.).
+        """
+        return self.CalcolaIVA(id_aliq, imponib=x, indeduc=ind, decimals=decimals)
+    
+    def CalcolaIva_DaIvato(self, id_aliq, x, ind = 0, decimals=None):
+        """
+        Wrapper per il metodo CalcolaIva.
+        Passare solo id_aliquota e tot.ivato (e indeducibile, facolt.).
+        """
+        return self.CalcolaIVA(id_aliq, ivato=x, indeduc=ind, decimals=decimals)
+    
+    def CalcolaIva_DaImposta(self, id_aliq, x, ind=0, decimals=None):
+        """
+        Wrapper per il metodo CalcolaIva.
+        Passare solo id_aliquota e imposta (e indeducibile, facolt.).
+        """
+        return self.CalcolaIVA(id_aliq, imposta=x, indeduc=ind, decimals=decimals)
+
 
 # ---------------------------------------------------------------------------
 
