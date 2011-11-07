@@ -72,7 +72,7 @@ RSSCA_ISRIBA  =  9
 
 #campi della tabella scadenze
 scafields = ["id", "id_reg", "id_pcf", "datscad", "importo", "importo_ve",\
-             "note", "abbuono", "spesa", "f_riba"]
+             "note", "abbuono", "tipabb", "spesa", "f_riba"]
 
 
 def RegConFrameClass(id_reg):
