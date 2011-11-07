@@ -176,6 +176,7 @@ class DbInfo(object):
         self.limit_rows =         None
         self.flatView =           False
         self.flatViewGroups =     []
+        self.page_rows =          None
         self.waitDialog =         None
         self.debug =              False
     
@@ -2780,11 +2781,18 @@ class DbTable(object):
                 pr = kwargs.pop('page_rows')
             else:
                 pr = PAGE_ROWS
+            self.SetPageRows(pr)
             self.SetLimits(pr*(ps-1)+0, pr)
         return self.Retrieve(filterExpr, *filterParams, **kwargs)
     
+    def SetPageRows(self, pr):
+        self._info.page_rows = pr
+    
+    def GetPageRows(self):
+        return self._info.page_rows
+    
     def GetSqlPage(self):
-        return int(self._info.limit/PAGE_ROWS+.999)+1
+        return int(self._info.limit/self.GetPageRows()+.999)+1
     
     def GetSqlPagePrevious(self):
         return self.GetSqlPage()-1
@@ -2793,7 +2801,7 @@ class DbTable(object):
         return self.GetSqlPage()+1
     
     def GetSqlPages(self, **kwargs):
-        pt = int(float(self.GetSqlCount(**kwargs))/PAGE_ROWS+.999)+1
+        pt = int(float(self.GetSqlCount(**kwargs))/self.GetPageRows()+.999)+1
         pa = self.GetSqlPage()
         if pt<=NAVIGATION_PAGES:
             ps = 1
@@ -2807,7 +2815,7 @@ class DbTable(object):
         return range(ps, pe, 1)
     
     def GetSqlLastPage(self):
-        return int(float(self.GetSqlCount())/PAGE_ROWS+.999)
+        return int(float(self.GetSqlCount())/self.GetPageRows()+.999)
     
     def GetSqlPagesLast(self):
         return self.GetSqlPages()[-1]
