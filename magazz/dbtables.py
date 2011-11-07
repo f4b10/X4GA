@@ -78,8 +78,7 @@ class SendMailInfo(object):
 # ------------------------------------------------------------------------------
 
 
-class DocMag(adb.DbTable,\
-             iva.IVA):
+class DocMag(adb.DbTable):
     """
     DbTable documenti magazzino.
     Struttura:
@@ -109,8 +108,7 @@ class DocMag(adb.DbTable,\
                              bt.TABNAME_MOVMAG_H,  "doc",\
                              **kwargs)
         
-        dbcurs = adb.db.__database__.GetConnection().cursor()
-        iva.IVA.__init__(self, dbcurs)
+        self.dbiva = iva.IVA_Table()
         
         dbtdoc = self.AddJoin(\
             bt.TABNAME_CFGMAGDOC, "config",  idLeft="id_tipdoc")
@@ -392,6 +390,27 @@ class DocMag(adb.DbTable,\
         
         self.Get(-1)
     
+    def CalcolaIVA(self, *args, **kwargs):
+        return self.dbiva.CalcolaIVA(*args, **kwargs)
+    
+    def _Iva_CalcImposta(self, *args, **kwargs):
+        return self.dbiva._Iva_CalcImposta(*args, **kwargs)
+    
+    def _Iva_ScorpImponib(self, *args, **kwargs):
+        return self.dbiva._Iva_ScorpImponib(*args, **kwargs)
+    
+    def _Iva_CalcoliDaImposta(self, *args, **kwargs):
+        return self.dbiva._Iva_CalcoliDaImposta(*args, **kwargs)
+    
+    def CalcolaIva_DaImponibile(self, *args, **kwargs):
+        return self.dbiva.CalcolaIva_DaImponibile(*args, **kwargs)
+    
+    def CalcolaIva_DaIvato(self, *args, **kwargs):
+        return self.dbiva.CalcolaIva_DaIvato(*args, **kwargs)
+    
+    def CalcolaIva_DaImposta(self, *args, **kwargs):
+        return self.dbiva.CalcolaIva_DaImposta(*args, **kwargs)
+    
     def _GetNumDatLimits(self, magid, dreg):
         dbdoc = adb.DbTable(bt.TABNAME_MOVMAG_H, "doc")
         dbdoc.AddJoin(bt.TABNAME_CFGMAGDOC, "tipdoc")
@@ -586,7 +605,7 @@ class DocMag(adb.DbTable,\
                     if list.Retrieve() and list.RowsCount()>0:
                         prezzo = list.__getattr__("prezzo%s"\
                                                   % tiplist.tipoprezzo) or 0
-                        tipo = 'L'
+                        tipo = 'L%s' % tiplist.tipoprezzo
         
         if (tipo or '') in 'PL':
             if cfg.tipsconti == 'X':
@@ -4436,7 +4455,7 @@ class ListinoSintesi(adb.DbTable):
 # ------------------------------------------------------------------------------
 
 
-class ListiniAttuali(adb.DbMem, iva.IVA):
+class ListiniAttuali(adb.DbMem):
     """
     Listini in vigore alla data
     prod
@@ -4445,7 +4464,7 @@ class ListiniAttuali(adb.DbMem, iva.IVA):
     def __init__(self):
         adb.DbMem.__init__(self, fields=\
                            'tiplisid,tipliscod,listino,imponib,ivato,scprep,riccos,scol1,')
-        iva.IVA.__init__(self, adb.db.__database__._dbCon.cursor())
+        self.dbiva = iva.IVA_Table()
         self.SetRecordset([])
         self._info.dbtli = adb.DbTable(bt.TABNAME_TIPLIST, 'tiplis',
                                        writable=False)
@@ -4456,6 +4475,27 @@ class ListiniAttuali(adb.DbMem, iva.IVA):
                                        writable=False)
         self._info.dbtli.AddOrder("codice")
         self._info.dbtli.Retrieve("tipoprezzo IN ('1','2','3','4','5','6','7','8','9')")
+    
+    def CalcolaIVA(self, *args, **kwargs):
+        return self.dbiva.CalcolaIVA(*args, **kwargs)
+    
+    def _Iva_CalcImposta(self, *args, **kwargs):
+        return self.dbiva._Iva_CalcImposta(*args, **kwargs)
+    
+    def _Iva_ScorpImponib(self, *args, **kwargs):
+        return self.dbiva._Iva_ScorpImponib(*args, **kwargs)
+    
+    def _Iva_CalcoliDaImposta(self, *args, **kwargs):
+        return self.dbiva._Iva_CalcoliDaImposta(*args, **kwargs)
+    
+    def CalcolaIva_DaImponibile(self, *args, **kwargs):
+        return self.dbiva.CalcolaIva_DaImponibile(*args, **kwargs)
+    
+    def CalcolaIva_DaIvato(self, *args, **kwargs):
+        return self.dbiva.CalcolaIva_DaIvato(*args, **kwargs)
+    
+    def CalcolaIva_DaImposta(self, *args, **kwargs):
+        return self.dbiva.CalcolaIva_DaImposta(*args, **kwargs)
     
     def Determina(self, idprod, data=None):
         lis = self._info.dblis
