@@ -53,8 +53,7 @@ class _ScadWorker(adb.DbTable):
 # ------------------------------------------------------------------------------
 
 
-class DbRegCon(adb.DbTable,\
-               scad.Scadenze):
+class DbRegCon(adb.DbTable):
     """
     DbTable registrazioni contabili.
     Struttura:
@@ -75,12 +74,10 @@ class DbRegCon(adb.DbTable,\
     """
     def __init__(self, writable=True):
         
-        # main table reg (contab_h)
         adb.DbTable.__init__(self,\
             bt.TABNAME_CONTAB_H, "reg", writable=writable)
         
-        dbcurs = adb.db.__database__.GetConnection().cursor()
-        scad.Scadenze.__init__(self, dbcurs)
+        self.dbmpa = scad.Scadenze_Table()
         
         dbconfig = self.AddJoin(\
             bt.TABNAME_CFGCONTAB,"config",    idLeft="id_caus",\
@@ -145,7 +142,13 @@ class DbRegCon(adb.DbTable,\
                                        writable=True)
         
         self.Get(-1)
-
+    
+    def SetupModPag(self, *args, **kwargs):
+        self.dbmpa.SetupModPag(*args, **kwargs)
+        for c in dir(self.dbmpa):
+            if c.startswith('mp_'):
+                setattr(self, c, getattr(self.dbmpa, c))
+    
     def DeleteRow(self, *args, **kwargs):
         #previene l'aggiornamento delle tabelle collegate in caso di 
         #cancellazione di una riga (=registrazione) onde evitare di perdersi 
@@ -310,8 +313,7 @@ class DbRegCon(adb.DbTable,\
         return adb.DbTable.Reset(self, *args, **kwargs)
     
     def CalcolaScadenze(self, datdoc, idmp, timp, tiva):
-        newscad = scad.Scadenze.CalcolaScadenze(self,\
-                                                datdoc, idmp, timp, tiva)
+        newscad = self.dbmpa.CalcolaScadenze(datdoc, idmp, timp, tiva)
         dbsca = self.scad
         for s in dbsca:
             s.DeleteRow()
