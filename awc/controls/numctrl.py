@@ -147,7 +147,10 @@ class NumCtrl(masked.numctrl.NumCtrl, cmix.TextCtrlMixin):
                 dp = self._decimalpos+1
                 if ss == dp and se == len(wx.TextCtrl.GetValue(self)):
                     self.SetSelection(ss, ss)
-            return masked.numctrl.NumCtrl._OnChar(self, event)
+            try:
+                masked.numctrl.NumCtrl._OnChar(self, event)
+            except:
+                pass
     
     def OnTextChange( self, event ):
         if self.notifyChanges:
