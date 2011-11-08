@@ -4058,6 +4058,10 @@ def ClientiCommFunc( parent, call_fit = True, set_sizer = True ):
     item57 = CliComNotebook( parent, ID_COMMZONE, wx.DefaultPosition, wx.DefaultSize, 0 )
     item56 = item57
     
+    item58 = wx.Panel( item57, -1 )
+    ScontiFidiPanelFunc(item58, False)
+    item57.AddPage( item58, "Sconti e fido" )
+
     item37.Add( item56, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
 
     item37.AddGrowableCol( 0 )

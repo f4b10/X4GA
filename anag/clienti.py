@@ -373,18 +373,17 @@ class ClientiPanel(pdcrel._CliForPanel):
     def InitControls(self, *args, **kwargs):
         
         pdcrel._CliForPanel.InitControls(self, *args, **kwargs)
+        
         cn = self.FindWindowByName
-        
         nb = cn('commzone')
-        
-        t = 'Sconti'
-        if bt.GESFIDICLI:
-            t += ' e fido'
-        p = wdr.ScontiFidiPanel(nb)
-        c = p.FindWindowByName('_butfido')
-        if c:
-            self.Bind(wx.EVT_BUTTON, self.OnVediFido, c)
-        nb.AddPage(p, t)
+        for n in range(nb.GetPageCount()):
+            if nb.GetPageText(n) == 'Sconti e fido':
+                if bt.GESFIDICLI != '1':
+                    p = nb.GetPage(n)
+                    c = p.FindWindowByName('panfidi')
+                    if c:
+                        c.Hide()
+                    nb.SetPageText(n, 'Sconti')
         
         for n in range(9):
             if n+1>bt.MAGNUMSCO:
