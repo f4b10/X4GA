@@ -425,7 +425,7 @@ class ClientiPanel(pdcrel._CliForPanel):
             if bt.MAGSCOCAT:
                 self.LoadScontiCC()
                 self._grid_scc.SetGridCursor(0,1)
-            if bt.MAGROWLIS:
+            if bt.MAGROWLIS and (bt.MAGVLIFOR or bt.MAGVLIMAR or bt.MAGVLICAT or bt.MAGVLIGRU):
                 self.LoadVarList()
                 self._grid_vli.SetGridCursor(0,1)
     
@@ -501,21 +501,23 @@ class ClientiPanel(pdcrel._CliForPanel):
         self._grid_vli = VarListGrid(parent, self.dbvli)
     
     def LoadVarList(self):
-        vli = self.dbvli
-        if self.db_recid is None:
-            vli.Reset()
-        else:
-            vli.Retrieve('vli.id_cliente=%s', self.db_recid)
-            self._grid_vli.SetPdc(self.db_recid)
-        self._grid_vli.ResetView()
+        if bt.MAGROWLIS and (bt.MAGVLIFOR or bt.MAGVLIMAR or bt.MAGVLICAT or bt.MAGVLIGRU):
+            vli = self.dbvli
+            if self.db_recid is None:
+                vli.Reset()
+            else:
+                vli.Retrieve('vli.id_cliente=%s', self.db_recid)
+                self._grid_vli.SetPdc(self.db_recid)
+            self._grid_vli.ResetView()
     
     def WriteVarList(self):
-        vli = self.dbvli
-        for v in vli:
-            if v.id_cliente is None:
-                v.id_cliente = self.db_recid
-        if not vli.Save():
-            aw.awu.MsgDialog(self, message=repr(vli.GetError()))
+        if bt.MAGROWLIS and (bt.MAGVLIFOR or bt.MAGVLIMAR or bt.MAGVLICAT or bt.MAGVLIGRU):
+            vli = self.dbvli
+            for v in vli:
+                if v.id_cliente is None:
+                    v.id_cliente = self.db_recid
+            if not vli.Save():
+                aw.awu.MsgDialog(self, message=repr(vli.GetError()))
 
 
 # ------------------------------------------------------------------------------
