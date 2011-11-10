@@ -2027,10 +2027,15 @@ class ADB_Grid(DbGridColoriAlternati):
     
     def _CellEditAfterUpdate(self, row, gridcol, col, value):
         c = self._cols[gridcol]
-        db_table = c['db_table'] or self.db_table
-        if 0 <= col < len(db_table.GetFieldNames()):
-            db_table.MoveRow(row)
-            setattr(db_table, c['col_name'], value)
+        db_table = self.db_table
+        db_table.MoveRow(row)
+        if c['linktable_info'] is None:
+            col_name = c['col_name']
+            col_value = value
+        else:
+            col_name = db_table.GetFieldName(0)
+            col_value = getattr(db_table, col_name)
+        setattr(db_table, col_name, col_value)
         return self.CellEditAfterUpdate(row, gridcol, col, value)
     
     def OnContextMenu(self, event):
@@ -2066,10 +2071,9 @@ class ADB_Grid(DbGridColoriAlternati):
                 menu.Append(voice_id, voice_label)
                 menu.Enable(voice_id, voice_enabled)
             self.Bind(wx.EVT_MENU, voice_func, id=voice_id)
+        self.SetGridCursor(row, col)
         if self._context_menu_on_select == 'row':
             self.SelectRow(row)
-        elif self._context_menu_on_select == 'cell':
-            self.SetGridCursor(row, col)
         self.PopupMenu(menu, position)
         menu.Destroy()
     
@@ -2148,7 +2152,8 @@ class ADB_Grid(DbGridColoriAlternati):
         if 0 <= row < t.RowsCount():
             t.MoveRow(row)
             if t.id is not None:
-                t.Delete()
+                if not t.id in t._info.deletedRecords:
+                    t._info.deletedRecords.append(t.id)
             self.DeleteRows(row)
     
     def CellEditBeforeUpdate(self, row, gridcol, col, value):
