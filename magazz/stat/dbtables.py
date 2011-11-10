@@ -189,6 +189,7 @@ class _FatturatoVendite(adb.DbTable):
         tip = pro.AddJoin(bt.TABNAME_TIPART,      'tipart', join=adb.JOIN_LEFT)
         cat = pro.AddJoin(bt.TABNAME_CATART,      'catart', join=adb.JOIN_LEFT)
         gru = pro.AddJoin(bt.TABNAME_GRUART,      'gruart', join=adb.JOIN_LEFT)
+        gru = pro.AddJoin(bt.TABNAME_MARART,      'marart', join=adb.JOIN_LEFT)
         stt = pro.AddJoin(bt.TABNAME_STATART,     'statart',join=adb.JOIN_LEFT,
                           idLeft='id_status', idRight='id')
         
