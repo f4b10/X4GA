@@ -320,12 +320,14 @@ class DbRegCon(adb.DbTable):
         dbsca._info.recordCount = 0
         dbsca._info.recordNumber = -1
         for sca in newscad:
-            dbsca.MoveNewRow()
+#            dbsca.MoveNewRow()
+            dbsca.CreateNewRow()
             dbsca.datscad = sca[0]
             dbsca.importo = sca[1]
-            dbsca.AppendNewRow()
-            row = dbsca.RowsCount()-1
-            dbsca._info.rs[row][contab.RSSCA_ISRIBA] = sca[2]
+            dbsca.f_riba = sca[2]
+#            dbsca.AppendNewRow()
+#            row = dbsca.RowsCount()-1
+#            dbsca._info.rs[row][contab.RSSCA_ISRIBA] = sca[2]
     
     def PcfStorno(self):
         """

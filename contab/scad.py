@@ -357,21 +357,20 @@ class Scadenze_Table(adb.DbTable):
             mp_gem = rsmp[51:64]
             for gem in mp_gem:
                 self.mp_gem.append(gem or 0)
+        self.mp_pdcpi_cod = None
+        self.mp_pdcpi_des = None
         if self.mp_id_pdcpi:
             cmd = \
                 """SELECT pdc.codice, pdc.descriz """\
                 """FROM %s AS pdc """\
                 """WHERE pdc.id=%%s""" % bt.TABNAME_PDC
             try:
-                self.db_curs.execute(cmd, self.mp_id_pdcpi)
-                rs = self.db_curs.fetchone()
+                pdc = adb.DbTable(bt.TABNAME_PDC, 'pdc')
+                pdc.Get(self.mp_id_pdcpi)
+                self.mp_pdcpi_cod = pdc.codice
+                self.mp_pdcpi_des = pdc.descriz
             except:
-                rs = (None, None)
-            self.mp_pdcpi_cod = rs[0]
-            self.mp_pdcpi_des = rs[1]
-        else:
-            self.mp_pdcpi_cod = None
-            self.mp_pdcpi_des = None
+                pass
 
     def CalcolaScadenze(self, datestart, id_modpag, imptot = 0, impiva = 0):
         """
