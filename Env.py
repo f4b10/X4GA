@@ -3355,15 +3355,39 @@ class Azienda(object):
             
             
             cls.pdt_h =\
-               [ [ "id",      "INT",       idw, None, "ID", "AUTO_INCREMENT" ],
-                 [ "uid",     "CHAR",       32, None, "Identificativo sessione di lavoro", None ],
-                 [ "descriz", "VARCHAR",    64, None, "Descrizione riferimento cliente", None ],
-                 [ "pdtnum",  "INT",         3, None, "Numero terminalino pdt", None ],
-                 [ "datins",  "DATETIME", None, None, "Data ora inserimento letture", None ],
-                 [ "id_pdc",  "INT",       idw, None, "ID cliente", None ],
-                 [ "ready",   "TINYINT",     1, None, "Flag sessione letture conclusa", None ],
+               [ [ "id",            "INT",       idw, None, "ID", "AUTO_INCREMENT" ],
+                 [ "uid",           "CHAR",       32, None, "Identificativo sessione di lavoro", None ],
+                 [ "descriz",       "VARCHAR",    64, None, "Descrizione riferimento cliente", None ],
+                 [ "pdtnum",        "INT",         3, None, "Numero terminalino pdt", None ],
+                 [ "datins",        "DATETIME", None, None, "Data ora inserimento letture", None ],
+                 [ "datemis",       "DATETIME", None, None, "Data ora emissione documento", None ],
+                 [ "id_utente",     "INT",       idw, None, "ID utente", None ],
+                 [ "id_pdc",        "INT",       idw, None, "ID cliente", None ],
+                 [ "id_tiplist",    "INT",       idw, None, "ID tipo listino", None ],
+                 [ "id_aliqiva",    "INT",       idw, None, "ID aliquota predefinita", None ],
+                 [ "id_destin",     "INT",       idw, None, "ID destinatario", None ],
+                 [ "id_modpag",     "INT",       idw, None, "ID mod.pagamento", None ],
+                 [ "id_bancf",      "INT",       idw, None, "ID banca cliente", None ],
+                 [ "id_speinc",     "INT",       idw, None, "ID spese incasso", None ],
+                 [ "id_tracau",     "INT",       idw, None, "ID causale trasporto", None ],
+                 [ "id_tracur",     "INT",       idw, None, "ID trasporto cura", None ],
+                 [ "id_travet",     "INT",       idw, None, "ID vettore", None ],
+                 [ "id_traasp",     "INT",       idw, None, "ID aspetto beni", None ],
+                 [ "id_trapor",     "INT",       idw, None, "ID porto", None ],
+                 [ "id_tracon",     "INT",       idw, None, "ID tipo contrassegno", None ],
+                 [ "id_docdone",    "INT",       idw, None, "ID documento emesso", None ],
+                 [ "is_printed",    "TINYINT",     1, None, "Flag documento stampato", None ],
+                 [ "print_warning", "TINYINT",     1, None, "Warning stampa documento", None ],
+                 [ "totpeso",       "DECIMAL",     9,    3, "Tot.peso", None ],
+                 [ "totcolli",      "INT",         6, None, "Num.colli", None ],
+                 [ "initrasp",      "DATETIME", None, None, "Data ora inizio trasporto", None ],
+                 [ "notedoc",       "VARCHAR",   ntw, None, "Note in stampa documento", None ],
+                 [ "noteint",       "VARCHAR",   ntw, None, "Note interne documento", None ],
+                 [ "notevet",       "VARCHAR",   ntw, None, "Note vettore", None ],
+                 [ "acconto",       "DECIMAL",   IVI,  DVI, "Ammontare dell'acconto", None ],
+                 [ "accstor",       "DECIMAL",   IVI,  DVI, "Ammontare dello storno acconto", None ],
+                 [ "ready",         "TINYINT",     1, None, "Flag sessione letture conclusa", None ],
              ]
-            
             cls.set_constraints(cls.TABNAME_PDT_H,
                                 ((cls.TABSETUP_CONSTR_PDC, 'id_pdc', cls.TABCONSTRAINT_TYPE_CASCADE),))
             
@@ -3371,13 +3395,21 @@ class Azienda(object):
                                   ["KEY",  "uid"] ]
             
             
-            nd = cls.MAGQTA_DECIMALS
             cls.pdt_b =\
-               [ [ "id",      "INT",    idw, None, "ID", "AUTO_INCREMENT" ],
-                 [ "id_h",    "INT",    idw, None, "ID sessione", None ],
-                 [ "barcode", "CHAR",    32, None, "Barcode letto dal pdt", None ],
-                 [ "id_prod", "INT",    idw, None, "ID prodotto", None ],
-                 [ "qta",     "DECIMAL", nd, None, "Quantita'", None ],
+               [ [ "id",         "INT",     idw, None, "ID", "AUTO_INCREMENT" ],
+                 [ "id_h",       "INT",     idw, None, "ID sessione", None ],
+                 [ "numriga",    "INT",       4, None, "Num.riga", None ],
+                 [ "id_prod",    "INT",     idw, None, "ID prodotto", None ],
+                 [ "descriz",    "VARCHAR",  60, None, "Descrizione", None ],
+                 [ "barcode",    "CHAR",     32, None, "Barcode letto dal pdt", None ],
+                 [ "id_tiplist", "INT",     idw, None, "ID tipo listino", None ],
+                 [ "id_aliqiva", "INT",     idw, None, "ID aliquota iva", None ],
+                 [ "qta",        "DECIMAL", IQM,  DQM, "Quantita'", None ],
+                 [ "prezzo",     "DECIMAL", IPM,  DPM, "Prezzo", None ],
+                 [ "sconto1",    "DECIMAL",   5,    2, "Sconto 1", None ],
+                 [ "sconto2",    "DECIMAL",   5,    2, "Sconto 2", None ],
+                 [ "sconto3",    "DECIMAL",   5,    2, "Sconto 3", None ],
+                 [ "importo",    "DECIMAL",  10,  DVI, "Importo riga", None ],
              ]
             
             cls.set_constraints(cls.TABNAME_PDT_B,

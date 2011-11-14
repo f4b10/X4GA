@@ -29,6 +29,17 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.04', None, (
+         ("BET1110",
+         """Introdotta automazione del tipo di listino in funzione di marca, categoria, 
+         gruppo, fornitore."""),
+        ),),
+    
+    ('1.4.01', None, (
+         ("BET1109",
+         """Introdotta possibilità di listino diversificato per ogni riga del documento."""),
+        ),),
+    
     ('1.3.37', None, (
          ("BUG1089",
          """Risolto problema in aggiornamento a video dei dati di testata del 
