@@ -30,6 +30,11 @@ import mx.DateTime as dt
 history = (
     
     ('1.4.04', None, (
+         ("BUG1091",
+         """Corretto malfunzionamento in memorizzazione dati fido cliente."""),
+        ),),
+    
+    ('1.4.04', None, (
          ("BET1110",
          """Introdotta automazione del tipo di listino in funzione di marca, categoria, 
          gruppo, fornitore."""),
