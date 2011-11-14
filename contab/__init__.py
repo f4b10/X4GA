@@ -66,8 +66,9 @@ RSSCA_IMPORTO =  4
 RSSCA_IMPORVE =  5
 RSSCA_NOTE    =  6
 RSSCA_ABBUONO =  7
-RSSCA_SPESA   =  8
-RSSCA_ISRIBA  =  9
+RSSCA_TIPABB  =  8
+RSSCA_SPESA   =  9
+RSSCA_ISRIBA  = 10
 
 
 #campi della tabella scadenze
