@@ -32,6 +32,8 @@ history = (
     ('1.4.04', None, (
          ("BUG1091",
          """Corretto malfunzionamento in memorizzazione dati fido cliente."""),
+         ("BUG1092",
+         """Corretto bug in determinazione prezzo riga da listino variabile."""),
         ),),
     
     ('1.4.04', None, (

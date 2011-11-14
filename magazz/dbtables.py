@@ -681,7 +681,7 @@ class DocMag(adb.DbTable):
                         print '    end: %s' % end
                         def find(row):
                             found = False
-                            for test in range(start, end+1, 1):
+                            for test in range(start, end, 1):
                                 found = getattr(row, c[test][0]) == c[test][1]
                                 print '        loop %d: test=%s, found=%s' % (test, '(field: %s) %s==%s' % (c[test][0], getattr(row, c[test][0]), c[test][1]), found)
                                 if not found:
