@@ -378,8 +378,12 @@ class ClientiPanel(pdcrel._CliForPanel):
         nb = cn('commzone')
         for n in range(nb.GetPageCount()):
             if nb.GetPageText(n) == 'Sconti e fido':
-                if bt.GESFIDICLI != '1':
-                    p = nb.GetPage(n)
+                p = nb.GetPage(n)
+                if bt.GESFIDICLI == '1':
+                    c = p.FindWindowByName('_butfido')
+                    if c:
+                        self.Bind(wx.EVT_BUTTON, self.OnVediFido, c)
+                else:
                     c = p.FindWindowByName('panfidi')
                     if c:
                         c.Hide()

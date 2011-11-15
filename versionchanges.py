@@ -29,6 +29,12 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.05', None, (
+         ("BUG1093",
+         """Corretto bug in scheda cliente: il bottone della valutazione del fido non
+         portava a nessuna visualizzazione."""),
+        ),),
+    
     ('1.4.04', None, (
          ("BUG1091",
          """Corretto malfunzionamento in memorizzazione dati fido cliente."""),
@@ -36,7 +42,7 @@ history = (
          """Corretto bug in determinazione prezzo riga da listino variabile."""),
         ),),
     
-    ('1.4.04', None, (
+    ('1.4.02', None, (
          ("BET1110",
          """Introdotta automazione del tipo di listino in funzione di marca, categoria, 
          gruppo, fornitore."""),
