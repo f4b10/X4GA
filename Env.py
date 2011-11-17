@@ -3376,6 +3376,7 @@ class Azienda(object):
                  [ "id_trapor",     "INT",       idw, None, "ID porto", None ],
                  [ "id_tracon",     "INT",       idw, None, "ID tipo contrassegno", None ],
                  [ "id_docdone",    "INT",       idw, None, "ID documento emesso", None ],
+                 [ "do_print",      "TINYINT",     1, None, "Flag documento da stampare", None ],
                  [ "is_printed",    "TINYINT",     1, None, "Flag documento stampato", None ],
                  [ "print_warning", "TINYINT",     1, None, "Warning stampa documento", None ],
                  [ "totpeso",       "DECIMAL",     9,    3, "Tot.peso", None ],

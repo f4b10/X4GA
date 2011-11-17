@@ -29,6 +29,11 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.07', None, (
+         ("BET1111",
+         """Modificata struttura dati letture da pdt."""),
+        ),),
+    
     ('1.4.06', None, (
          ("BUG1093",
          """Corretto bug in scheda cliente: il bottone della valutazione del fido non
