@@ -1555,7 +1555,11 @@ class AziendaCopyPanel(aw.Panel):
                 for row in dbtfrom:
                     dbtdest.CreateNewRow()
                     for col in dbtdest._GetFieldNames():
-                        setattr(dbtdest, col, getattr(dbtfrom, col))
+                        try:
+                            value = getattr(dbtfrom, col)
+                        except:
+                            value = None
+                        setattr(dbtdest, col, value)
             dbtdest.WriteAll()
             if not dbtdest.Save():
                 raise Exception, repr(dbtdest.GetError())
