@@ -315,7 +315,7 @@ class print_Report:
         if not output in ["VIEW", "PRINT", "STORE"]:
             output="VIEW"
         
-        if nameOutputFile and type(nameOutputFile) is str:
+        if nameOutputFile and type(nameOutputFile) in (str, unicode):
             nameOutputFile = report.epura(nameOutputFile, True).replace('\\', '/')
 #            p = ''
 #            for pp in awu.up(nameOutputFile).split('/')[:-1]:
@@ -501,6 +501,8 @@ class print_Report:
                 else:
                     return
         
+        doprogress = progressBar is None and progressBar.__class__.__name__ != 'NullProgress' and output != "STORE"
+        
         for mc in multicopia:
             
             dbTable._info.report_nome_copia = mc
@@ -528,7 +530,6 @@ class print_Report:
                 else:
                     statit = False
             
-            doprogress = progressBar is None and progressBar.__class__.__name__ != 'NullProgress' and output != "STORE"
             if doprogress:
                 re_enable = awu.GetParentFrame(parentWindow).Disable()
                 wait = awu.WaitDialog(parentWindow, message=waitMessage,
