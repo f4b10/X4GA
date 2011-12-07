@@ -2550,78 +2550,85 @@ ID_SCONTO5 = 14130
 ID_SCONTO6 = 14131
 
 def ScontiPanelFunc( parent, call_fit = True, set_sizer = True ):
-    item1 = wx.StaticBox( parent, -1, "Scontistiche" )
-    item0 = wx.StaticBoxSizer( item1, wx.VERTICAL )
+    item0 = wx.FlexGridSizer( 0, 2, 0, 0 )
     
-    item2 = wx.FlexGridSizer( 0, 6, 0, 0 )
+    item2 = wx.StaticBox( parent, -1, "Scontistiche" )
+    item1 = wx.StaticBoxSizer( item2, wx.VERTICAL )
     
-    item3 = wx.BoxSizer( wx.VERTICAL )
+    item3 = wx.FlexGridSizer( 0, 6, 0, 0 )
     
-    item4 = wx.StaticText( parent, ID_TEXT, "%1", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item4.SetName( "labsco1" )
-    item3.Add( item4, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
-
-    item5 = bt.GetMagScoNumCtrl(parent, ID_SCONTO1, 'sconto1')
-    item3.Add( item5, 0, wx.ALIGN_CENTER, 5 )
-
-    item2.Add( item3, 0, wx.ALIGN_CENTER, 5 )
-
-    item6 = wx.BoxSizer( wx.VERTICAL )
+    item4 = wx.BoxSizer( wx.VERTICAL )
     
-    item7 = wx.StaticText( parent, ID_TEXT, "%2", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item7.SetName( "labsco2" )
-    item6.Add( item7, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item5 = wx.StaticText( parent, ID_TEXT, "%1", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item5.SetName( "labsco1" )
+    item4.Add( item5, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item8 = bt.GetMagScoNumCtrl(parent, ID_SCONTO2, 'sconto2')
-    item6.Add( item8, 0, wx.ALIGN_CENTER|wx.LEFT, 5 )
+    item6 = bt.GetMagScoNumCtrl(parent, ID_SCONTO1, 'sconto1')
+    item4.Add( item6, 0, wx.ALIGN_CENTER, 5 )
 
-    item2.Add( item6, 0, wx.ALIGN_CENTER, 5 )
+    item3.Add( item4, 0, wx.ALIGN_CENTER, 5 )
 
-    item9 = wx.BoxSizer( wx.VERTICAL )
+    item7 = wx.BoxSizer( wx.VERTICAL )
     
-    item10 = wx.StaticText( parent, ID_TEXT, "%3", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item10.SetName( "labsco3" )
-    item9.Add( item10, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item8 = wx.StaticText( parent, ID_TEXT, "%2", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item8.SetName( "labsco2" )
+    item7.Add( item8, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item11 = bt.GetMagScoNumCtrl(parent, ID_SCONTO3, 'sconto3')
-    item9.Add( item11, 0, wx.ALIGN_CENTER|wx.LEFT, 5 )
+    item9 = bt.GetMagScoNumCtrl(parent, ID_SCONTO2, 'sconto2')
+    item7.Add( item9, 0, wx.ALIGN_CENTER|wx.LEFT, 5 )
 
-    item2.Add( item9, 0, wx.ALIGN_CENTER, 5 )
+    item3.Add( item7, 0, wx.ALIGN_CENTER, 5 )
 
-    item12 = wx.BoxSizer( wx.VERTICAL )
+    item10 = wx.BoxSizer( wx.VERTICAL )
     
-    item13 = wx.StaticText( parent, ID_TEXT, "%4", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item13.SetName( "labsco4" )
-    item12.Add( item13, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item11 = wx.StaticText( parent, ID_TEXT, "%3", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item11.SetName( "labsco3" )
+    item10.Add( item11, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item14 = bt.GetMagScoNumCtrl(parent, ID_SCONTO4, 'sconto4')
-    item12.Add( item14, 0, wx.ALIGN_CENTER|wx.LEFT, 5 )
+    item12 = bt.GetMagScoNumCtrl(parent, ID_SCONTO3, 'sconto3')
+    item10.Add( item12, 0, wx.ALIGN_CENTER|wx.LEFT, 5 )
 
-    item2.Add( item12, 0, wx.ALIGN_CENTER, 5 )
+    item3.Add( item10, 0, wx.ALIGN_CENTER, 5 )
 
-    item15 = wx.BoxSizer( wx.VERTICAL )
+    item13 = wx.BoxSizer( wx.VERTICAL )
     
-    item16 = wx.StaticText( parent, ID_TEXT, "%5", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item16.SetName( "labsco5" )
-    item15.Add( item16, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item14 = wx.StaticText( parent, ID_TEXT, "%4", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item14.SetName( "labsco4" )
+    item13.Add( item14, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item17 = bt.GetMagScoNumCtrl(parent, ID_SCONTO5, 'sconto5')
-    item15.Add( item17, 0, wx.ALIGN_CENTER|wx.LEFT, 5 )
+    item15 = bt.GetMagScoNumCtrl(parent, ID_SCONTO4, 'sconto4')
+    item13.Add( item15, 0, wx.ALIGN_CENTER|wx.LEFT, 5 )
 
-    item2.Add( item15, 0, wx.ALIGN_CENTER, 5 )
+    item3.Add( item13, 0, wx.ALIGN_CENTER, 5 )
 
-    item18 = wx.BoxSizer( wx.VERTICAL )
+    item16 = wx.BoxSizer( wx.VERTICAL )
     
-    item19 = wx.StaticText( parent, ID_TEXT, "%6", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item19.SetName( "labsco6" )
-    item18.Add( item19, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item17 = wx.StaticText( parent, ID_TEXT, "%5", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item17.SetName( "labsco5" )
+    item16.Add( item17, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item20 = bt.GetMagScoNumCtrl(parent, ID_SCONTO6, 'sconto6')
-    item18.Add( item20, 0, wx.ALIGN_CENTER|wx.LEFT, 5 )
+    item18 = bt.GetMagScoNumCtrl(parent, ID_SCONTO5, 'sconto5')
+    item16.Add( item18, 0, wx.ALIGN_CENTER|wx.LEFT, 5 )
 
-    item2.Add( item18, 0, wx.ALIGN_CENTER, 5 )
+    item3.Add( item16, 0, wx.ALIGN_CENTER, 5 )
 
-    item0.Add( item2, 0, 0, 5 )
+    item19 = wx.BoxSizer( wx.VERTICAL )
+    
+    item20 = wx.StaticText( parent, ID_TEXT, "%6", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item20.SetName( "labsco6" )
+    item19.Add( item20, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item21 = bt.GetMagScoNumCtrl(parent, ID_SCONTO6, 'sconto6')
+    item19.Add( item21, 0, wx.ALIGN_CENTER|wx.LEFT, 5 )
+
+    item3.Add( item19, 0, wx.ALIGN_CENTER, 5 )
+
+    item1.Add( item3, 0, 0, 5 )
+
+    item0.Add( item1, 0, wx.ALIGN_CENTER, 5 )
+
+    item22 = ProvvigPanel( parent, ID_PANPROVVIG, wx.DefaultPosition, wx.DefaultSize, 0 )
+    item0.Add( item22, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
     if set_sizer == True:
         parent.SetSizer( item0 )
@@ -3280,13 +3287,14 @@ def CliForDesCardFunc( parent, call_fit = True, set_sizer = True ):
 ID_PERPRO = 14181
 
 def ProvvigPanelFunc( parent, call_fit = True, set_sizer = True ):
-    item0 = wx.BoxSizer( wx.VERTICAL )
+    item1 = wx.StaticBox( parent, -1, "Provv." )
+    item0 = wx.StaticBoxSizer( item1, wx.VERTICAL )
     
-    item1 = wx.StaticText( parent, ID_TEXT, "Provv.%:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item0.Add( item1, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item2 = wx.StaticText( parent, ID_TEXT, "Provv.%:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item0.Add( item2, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item2 = bt.GetMagScoNumCtrl(parent, ID_PERPRO, 'perpro')
-    item0.Add( item2, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+    item3 = bt.GetMagScoNumCtrl(parent, ID_PERPRO, 'perpro')
+    item0.Add( item3, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     if set_sizer == True:
         parent.SetSizer( item0 )

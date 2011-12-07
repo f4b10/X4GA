@@ -29,6 +29,12 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.08', None, (
+         ("BET1112",
+         """Riattivato il campo provvigione sulle schede anagrafiche di
+         clienti e prodotti."""),
+        ),),
+    
     ('1.4.07', None, (
          ("BET1111",
          """Modificata struttura dati letture da pdt."""),
