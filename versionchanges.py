@@ -29,6 +29,11 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.08', None, (
+         ("BET1112",
+         """Implementate stampe via google cloud printing."""),
+        ),),
+    
     ('1.4.07', None, (
          ("BET1111",
          """Modificata struttura dati letture da pdt."""),

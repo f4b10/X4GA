@@ -29,6 +29,7 @@ from awc.lib import ControllaPIVA, ControllaCodFisc
 import os, sys
 import subprocess
 from ZSI import FaultException
+from report import gcplib
 
 
 class _EntryCtrlMixin(wx.Window, cmix.ControlsMixin):
@@ -433,15 +434,54 @@ class FullPathFileEntryCtrl(FileEntryCtrl):
 # ------------------------------------------------------------------------------
 
 
+GCP_ENABLED = False
+GCP_USERNAME = None
+GCP_PASSWORD = None
+
+def EnableGoogleGloudPrinting(enable=True):
+    global GCP_ENABLED
+    GCP_ENABLED = enable
+
+def SetGoogleCloudPrintingUsername(username):
+    global GCP_USERNAME
+    GCP_USERNAME = username
+
+def SetGoogleCloudPrintingPassword(password):
+    global GCP_PASSWORD
+    GCP_PASSWORD = password
+
+
+# ------------------------------------------------------------------------------
+
+
 class PrintersComboBox(wx.ComboBox):
     
     names = None
     queues = None
     
     def __init__(self, *args, **kwargs):
+        
         wx.ComboBox.__init__(self, *args, **kwargs)
         self.names = []
         self.queues = []
+        self.types = []
+        
+        if GCP_ENABLED and GCP_USERNAME and GCP_PASSWORD:
+            wx.BeginBusyCursor()
+            try:
+                if gcplib.AUTH_TOKENS is None:
+                    gcplib.InitAuthTokens(GCP_USERNAME, GCP_PASSWORD)
+                printers = gcplib.GetPrinters()
+                for printer_id, printer in printers.items():
+                    name = printer['name']
+                    self.names.append('(GCP) %s' % name)
+                    self.queues.append('gcp://%s' % printer_id)
+                    self.types.append('gcp')
+                    self.Append('(GCP) %s' % name)
+            except Exception, e:
+                awu.MsgDialog(self.GetParent(), repr(e.args), style=wx.ICON_ERROR)
+            finally:
+                wx.EndBusyCursor()
         if sys.platform == 'win32':
             import win32print
             for tipo in (2,4):
@@ -455,6 +495,7 @@ class PrintersComboBox(wx.ComboBox):
                         p = c
                     self.names.append(b)
                     self.queues.append(p)
+                    self.types.append('true')
         else:
             import cups
             c = cups.Connection()
@@ -466,6 +507,7 @@ class PrintersComboBox(wx.ComboBox):
                 desc = printer['printer-info']
                 self.names.append(name)
                 self.queues.append(name)
+                self.types.append('true')
                 v = name
                 if desc != name:
                     v += (' - %s' % desc)
@@ -473,12 +515,16 @@ class PrintersComboBox(wx.ComboBox):
         self.Append('')
         self.names.append('')
         self.queues.append('')
+        self.types.append('dummy')
     
     def GetNames(self):
         return self.names
     
     def GetQueues(self):
         return self.queues
+    
+    def GetTypes(self):
+        return self.types
     
     def SetValue(self, v):
         if sys.platform == 'win32':

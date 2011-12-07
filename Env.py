@@ -941,6 +941,10 @@ class Azienda(object):
         OPTLNKCRDFOR = None  #inizializzazione focus su codice/descrizione in LinkTableFornit da scheda
         OPTLNKGRDFOR = None  #inizializzazione focus su codice/descrizione in LinkTableFornit da griglia
         
+        OPT_GC_PRINT = True  #flag abilitazione stampe su google cloud printing
+        OPT_GCP_USER = None  #nome utente google
+        OPT_GCP_PSWD = None  #password utente google
+        
         TIPO_CONTAB = None   #tipo di contabilità
         
         CONSOVGES = None     #chiusure con sovrapposizione o no
@@ -3705,7 +3709,6 @@ class Azienda(object):
         def ReadAziendaSetup(cls):
             
             cfg = adb.DbTable(cls.TABNAME_CFGSETUP, 'cfg', writable=False)
-            app = wx.GetApp()
             
             keys = cls.GetSetupKeys()
             for p in plugins:
@@ -3718,6 +3721,8 @@ class Azienda(object):
                     keys += custapp.GetSetupKeys(cls)
             except ImportError, e:
                 pass
+            
+            import awc.controls.entries as entries
             
             for name, key, col, conv, err in keys:
                 if cfg.Retrieve("cfg.chiave=%s", key):
@@ -3735,6 +3740,12 @@ class Azienda(object):
                             import awc.controls.linktable as lt
                             lt.LinkTable.SetRetSearchOnCode(True)
                             lt.LinkTable.SetRetSearchOnDescriz(v)
+                        elif name == 'OPT_GC_PRINT':
+                            entries.EnableGoogleGloudPrinting(v)
+                        elif name == 'OPT_GCP_USER':
+                            entries.SetGoogleCloudPrintingUsername(v)
+                        elif name == 'OPT_GCP_PSWD':
+                            entries.SetGoogleCloudPrintingPassword(v)
                         if cls != Azienda.BaseTab_base:
                             #se è stata sovrascritta la classe BaseTab, scrivo 
                             #gli stessi settaggi anche nella sua forma base,
@@ -3800,6 +3811,9 @@ class Azienda(object):
                 ('OPTLNKGRDFOR',    'optlnkgrdfor',       f, _int, None),
                 ('OPTNOTIFICHE',    'optnotifiche',       f, _int, None),
                 ('OPTBACKUPDIR',    'optbackupdir',       s, _str, None),
+                ('OPT_GC_PRINT',    'opt_gc_print',       f, _int, None),
+                ('OPT_GCP_USER',    'opt_gcp_user',       s, _str, None),
+                ('OPT_GCP_PSWD',    'opt_gcp_pswd',       s, _str, None),
                 ('MAGATTGRIP',      'magattgrip',         f, _int, None),
                 ('MAGATTGRIF',      'magattgrif',         f, _int, None),
                 ('MAGCDEGRIP',      'magcdegrip',         f, _int, None),

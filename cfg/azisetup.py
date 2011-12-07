@@ -277,6 +277,9 @@ class AziendaSetupPanel(_SetupPanel):
                    bt.OPTLNKGRDFOR,
                    bt.OPTNOTIFICHE,
                    bt.OPTBACKUPDIR,
+                   bt.OPT_GC_PRINT,
+                   bt.OPT_GCP_USER,
+                   bt.OPT_GCP_PSWD,
                    bt.MAGATTGRIP,
                    bt.MAGATTGRIF,
                    bt.MAGCDEGRIP,
@@ -352,6 +355,9 @@ class AziendaSetupPanel(_SetupPanel):
             bt.OPTLNKGRDFOR = bool(cn('setup_optlnkgrdfor').GetValue())
             bt.OPTNOTIFICHE = bool(cn('setup_optnotifiche').GetValue())
             bt.OPTBACKUPDIR = cn('setup_optbackupdir').GetValue()
+            bt.OPT_GC_PRINT = cn('setup_opt_gc_print').GetValue()
+            bt.OPT_GCP_USER = cn('setup_opt_gcp_user').GetValue()
+            bt.OPT_GCP_PSWD = cn('setup_opt_gcp_pswd').GetValue()
             bt.MAGATTGRIP = bool(cn('setup_magattgrip').GetValue())
             bt.MAGATTGRIF = bool(cn('setup_magattgrif').GetValue())
             bt.MAGCDEGRIP = bool(cn('setup_magcdegrip').GetValue())
@@ -430,6 +436,9 @@ class AziendaSetupPanel(_SetupPanel):
                 bt.OPTLNKGRDFOR,
                 bt.OPTNOTIFICHE,
                 bt.OPTBACKUPDIR,
+                bt.OPT_GC_PRINT,
+                bt.OPT_GCP_USER,
+                bt.OPT_GCP_PSWD,
                 bt.MAGATTGRIP,
                 bt.MAGATTGRIF,
                 bt.MAGCDEGRIP,

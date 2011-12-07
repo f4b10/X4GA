@@ -686,8 +686,12 @@ class print_Report:
                         else:
                             def RipristinaFocus():
                                 pass
-                        copies = copies or 1
-                        PdfPrint(os.path.abspath(nameOutputFile), printer, copies, RipristinaFocus)
+                        if printer.startswith('gcp://'):
+                            from report.pdfcloud import PdfCloudPrint
+                            PdfCloudPrint(os.path.abspath(nameOutputFile), printer[6:], RipristinaFocus)
+                        else:
+                            copies = copies or 1
+                            PdfPrint(os.path.abspath(nameOutputFile), printer, copies, RipristinaFocus)
                     else:
                         raise Exception, 'tipo di output non riconosciuto'
                 self.nameOutputFile = nameOutputFile
