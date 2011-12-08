@@ -503,6 +503,16 @@ class print_Report:
         
         doprogress = progressBar is None and progressBar.__class__.__name__ != 'NullProgress' and output != "STORE"
         
+        if doprogress:
+            re_enable = awu.GetParentFrame(parentWindow).Disable()
+            wait = awu.WaitDialog(parentWindow, message=waitMessage,
+                                  maximum=dbTable.RowsCount())
+            self.progressBar = progressBar = wait.progress
+            if messages:
+                focused_object = parentWindow.FindFocus()
+        else:
+            wait = None
+        
         for mc in multicopia:
             
             dbTable._info.report_nome_copia = mc
@@ -529,16 +539,6 @@ class print_Report:
                         self.AddFiltersPanelTitleElements(filtersPanel)
                 else:
                     statit = False
-            
-            if doprogress:
-                re_enable = awu.GetParentFrame(parentWindow).Disable()
-                wait = awu.WaitDialog(parentWindow, message=waitMessage,
-                                      maximum=dbTable.RowsCount())
-                self.progressBar = progressBar = wait.progress
-                if messages:
-                    focused_object = parentWindow.FindFocus()
-            else:
-                wait = None
             
             try:
                 r=0
@@ -626,7 +626,7 @@ class print_Report:
                     self.ejectPage()
                 
             finally:
-                if wait is not None:
+                if mc == multicopia[-1] and wait is not None:
                     wait.Destroy()
                     try:
                         del self.timer
