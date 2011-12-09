@@ -473,11 +473,13 @@ class PrintersComboBox(wx.ComboBox):
                     gcplib.InitAuthTokens(GCP_USERNAME, GCP_PASSWORD)
                 printers = gcplib.GetPrinters()
                 for printer_id, printer in printers.items():
-                    name = printer['name']
-                    self.names.append('(GCP) %s' % name)
-                    self.queues.append('gcp://%s' % printer_id)
-                    self.types.append('gcp')
-                    self.Append('(GCP) %s' % name)
+                    if len(printer_id) == 36:
+                        if printer_id[8]+printer_id[13]+printer_id[18]+printer_id[23] == '----':
+                            name = printer['name']
+                            self.names.append('(GCP) %s' % name)
+                            self.queues.append('gcp://%s' % printer_id)
+                            self.types.append('gcp')
+                            self.Append('(GCP) %s' % name)
             except Exception, e:
                 awu.MsgDialog(self.GetParent(), repr(e.args), style=wx.ICON_ERROR)
             finally:
@@ -542,6 +544,10 @@ class PrintersComboBox(wx.ComboBox):
             v = wx.ComboBox.GetValue(self)
             if len(v) == 0:
                 v = None
+            n = self.GetSelection()
+            if 0 <= n < len(self.queues):
+                if self.queues[n].startswith('gcp://'):
+                    v = self.queues[n]
         else:
             n = self.GetSelection()
             if n<len(self.queues):

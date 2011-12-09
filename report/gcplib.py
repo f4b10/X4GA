@@ -29,6 +29,8 @@ import time
 import string
 import base64
 
+import Env
+
 CRLF = '\r\n'
 BOUNDARY = mimetools.choose_boundary()
 
@@ -683,8 +685,14 @@ def SubmitJob(printerid, jobtype, jobsrc):
     # Make the title unique for each job, since the printer by default will name
     # the print job file the same as the title.
     
-    datehour = time.strftime('%b%d%H%M', time.localtime())
-    title = '%s%s' % (datehour, jobsrc)
+#    datehour = time.strftime('%b%d%H%M', time.localtime())
+#    title = '%s%s' % (datehour, jobsrc)
+    username = str(Env.Azienda.Login.username)
+    datehour = time.strftime('%d-%m-%Y %H-%M-%S', time.localtime())
+    title = jobsrc.replace('\\', '/')
+    if '/' in title:
+        title = title[title.rindex('/')+1:]
+    title = title[:-4] + (' (%s/%s)' % (username, datehour)) + title[-4:]
     """The following dictionaries expect a certain kind of data in jobsrc, depending on jobtype:
     jobtype               jobsrc
     ======================================
