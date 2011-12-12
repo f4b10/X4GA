@@ -1529,7 +1529,10 @@ class DbGridTable(gridlib.PyGridTableBase):
                     for row in range(len(self.data)):
                         rs = []
                         for col in range(self.grid.GetNumberCols()):
-                            val = self.GetDataValue(row, col)
+                            try:
+                                val = self.GetDataValue(row, col)
+                            except:
+                                val = self.GetValue(row, col)
                             rs.append(colmap[types[col]](val))
                         csvrs.append(rs)
                 

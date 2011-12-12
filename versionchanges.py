@@ -33,6 +33,9 @@ history = (
          ("BUG1094",
          """Corretto spesometro per filtro flag allegati non considerato in
          fase di estrazione delle registrazioni."""),
+         ("BUG1095",
+         """Corretta esportazione file csv da griglie: in alcune situazioni
+         originava eccezione e non generava il file."""),
          ("BET1113",
          """Aggiunto allo spesometro il flag blacklist per considerare o meno
          i clienti/fornitori blacklistati o appartenenti a stati 
