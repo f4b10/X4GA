@@ -29,6 +29,19 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.09', None, (
+         ("BUG1094",
+         """Corretto spesometro per filtro flag allegati non considerato in
+         fase di estrazione delle registrazioni."""),
+         ("BET1113",
+         """Aggiunto allo spesometro il flag blacklist per considerare o meno
+         i clienti/fornitori blacklistati o appartenenti a stati 
+         blacklistati."""),
+         ("BET1114",
+         """Aggiunta allo spesometro la visualizzazione dei totali relativi
+         all'anagrafica selezionata nella griglia."""),
+        ),),
+    
     ('1.4.08', None, (
          ("BET1112",
          """Riattivato il campo provvigione sulle schede anagrafiche di

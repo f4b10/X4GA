@@ -3335,7 +3335,7 @@ class Spesometro2011_AcquistiVendite(adb.DbMem):
         adb.DbMem.__init__(self, f.replace(' ', ','))
         self.Reset()
     
-    def GetData(self, param_list):
+    def GetData(self, param_list, solo_all=True, escludi_bl=True):
         p = self.MakeFiltersDict(param_list)
         filters = []
         AF = filters.append
@@ -3351,6 +3351,10 @@ class Spesometro2011_AcquistiVendite(adb.DbMem):
             anacf = bt.TABNAME_CLIENTI
         AF('reg.datreg>="%s"' % p['data1'])
         AF('reg.datreg<="%s"' % p['data2'])
+        if solo_all:
+            AF('anagcf.allegcf=1')
+        if escludi_bl:
+            AF('(anagcf.is_blacklisted IS NULL OR anagcf.is_blacklisted<>1) AND (stato.is_blacklisted IS NULL OR stato.is_blacklisted<>1)')
         filters = ' AND '.join(['(%s)' % f for f in filters])
         if bt.TIPO_CONTAB == 'O':
             righecon = '"C", "S"'
@@ -3437,6 +3441,8 @@ FROM contab_b bodyanag
 
 INNER JOIN pdc       anag    ON anag.id=bodyanag.id_pdcpa
 INNER JOIN %(anacf)s anagcf  ON anagcf.id=anag.id
+
+LEFT JOIN x4.stati   stato   ON stato.id=anagcf.id_stato
 
 INNER JOIN contab_h  reg     ON reg.id=bodyanag.id_reg
 INNER JOIN           regiva  ON regiva.id=reg.id_regiva
