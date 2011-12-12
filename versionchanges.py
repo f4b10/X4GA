@@ -29,6 +29,13 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.10', None, (
+         ("BUG1096",
+         """Corretto bug in interrogazione clienti, con untente privo dei permessi
+         di interrogazione dello scadenzario e gestione acconti attivata, originava
+         eccezione e non apriva la scheda di interrogazione del cliente."""),
+        ),),
+    
     ('1.4.09', None, (
          ("BUG1094",
          """Corretto spesometro per filtro flag allegati non considerato in

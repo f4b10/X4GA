@@ -1434,17 +1434,20 @@ class ClientiInterrPanel(anag.clienti.ClientiPanel, _PdcCliForInterrMixin):
     def InitAcconti(self):
         nb = self.FindWindowByName('workzone')
         n = 0
-        while True:
+        found = False
+        while n < nb.GetPageCount():
             if 'scadenzario' in nb.GetPageText(n).lower():
+                found = True
                 break
             n += 1
-        from magazz.dataentry_b import SelezionaMovimentoAccontoPanel
-        p = SelezionaMovimentoAccontoPanel(nb)
-        rs = p.FindWindowByName('rsanag')
-        if rs is not None:
-            rs.Hide()
-        nb.InsertPage(n+1, p, 'Acconti')
-        self.panacconti = p
+        if found:
+            from magazz.dataentry_b import SelezionaMovimentoAccontoPanel
+            p = SelezionaMovimentoAccontoPanel(nb)
+            rs = p.FindWindowByName('rsanag')
+            if rs is not None:
+                rs.Hide()
+            nb.InsertPage(n+1, p, 'Acconti')
+            self.panacconti = p
     
     def LoadAcconti(self):
         if self.panacconti is not None:
