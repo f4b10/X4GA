@@ -40,6 +40,8 @@ from cfg.cfgcontab import CfgContab
 import os
 import lib
 
+import crypt, base64
+
 
 FRAME_TITLE = "Setup azienda"
 
@@ -50,10 +52,21 @@ class _SetupPanel(aw.Panel):
         aw.Panel.__init__(self, *args, **kwargs)
         self.dbsetup = adb.DbTable(bt.TABNAME_CFGSETUP, 'setup')
     
-    def EncodeValue(self, value, name):
+    def EncodeValue(self, value, name, is_pswd=False):
+        if is_pswd:
+            c = crypt.encrypt_data(str(value))
+            enc = base64.b64encode(c)
+            return enc
         return value
     
-    def DecodeValue(self, value, name):
+    def DecodeValue(self, value, name, is_pswd=False):
+        if is_pswd:
+            try:
+                dec = base64.b64decode(value)
+                d = crypt.decrypt_data(dec)
+                return d
+            except:
+                pass
         return value
     
     def SetupRead(self):
@@ -70,7 +83,7 @@ class _SetupPanel(aw.Panel):
                     elif isinstance(ctr, DateCtrl):
                         val = db.data
                     else:
-                        val = self.DecodeValue(db.descriz, name)
+                        val = self.DecodeValue(db.descriz, name, ctr.GetWindowStyle() & wx.TE_PASSWORD == wx.TE_PASSWORD)
                     ctr.SetValue(val)
     
     def SetupWrite(self):
@@ -95,7 +108,7 @@ class _SetupPanel(aw.Panel):
                     elif isinstance(ctr, DateCtrl):
                         db.data = val
                     else:
-                        db.descriz = self.EncodeValue(val, name)
+                        db.descriz = self.EncodeValue(val, name, ctr.GetWindowStyle() & wx.TE_PASSWORD == wx.TE_PASSWORD)
                     if not db.Save():
                         aw.awu.MsgDialog(self, message="Problema in aggiornamento setup:\n%s" % repr(db.GetError()))
                         out = False

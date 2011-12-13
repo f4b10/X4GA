@@ -438,15 +438,15 @@ GCP_ENABLED = False
 GCP_USERNAME = None
 GCP_PASSWORD = None
 
-def EnableGoogleGloudPrinting(enable=True):
+def EnableGoogleCloudPrint(enable=True):
     global GCP_ENABLED
     GCP_ENABLED = enable
 
-def SetGoogleCloudPrintingUsername(username):
+def SetGoogleCloudPrintUsername(username):
     global GCP_USERNAME
     GCP_USERNAME = username
 
-def SetGoogleCloudPrintingPassword(password):
+def SetGoogleCloudPrintPassword(password):
     global GCP_PASSWORD
     GCP_PASSWORD = password
 

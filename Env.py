@@ -46,7 +46,7 @@ import os.path
 
 import stormdb as adb
 
-import crypt
+import crypt, base64
 
 import sys, getopt
 
@@ -3741,11 +3741,17 @@ class Azienda(object):
                             lt.LinkTable.SetRetSearchOnCode(True)
                             lt.LinkTable.SetRetSearchOnDescriz(v)
                         elif name == 'OPT_GC_PRINT':
-                            entries.EnableGoogleGloudPrinting(v)
+                            entries.EnableGoogleCloudPrint(v)
                         elif name == 'OPT_GCP_USER':
-                            entries.SetGoogleCloudPrintingUsername(v)
+                            entries.SetGoogleCloudPrintUsername(v)
                         elif name == 'OPT_GCP_PSWD':
-                            entries.SetGoogleCloudPrintingPassword(v)
+                            p = v
+                            try:
+                                dec = base64.b64decode(v)
+                                p = crypt.decrypt_data(dec)
+                            except:
+                                pass
+                            entries.SetGoogleCloudPrintPassword(p)
                         if cls != Azienda.BaseTab_base:
                             #se è stata sovrascritta la classe BaseTab, scrivo 
                             #gli stessi settaggi anche nella sua forma base,
