@@ -29,9 +29,38 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.11', None, (
+         ("BET1115",
+         """Implementate stampe via google cloud printing."""),
+        ),),
+
+    ('1.4.10', None, (
+         ("BUG1096",
+         """Corretto bug in interrogazione clienti, con untente privo dei permessi
+         di interrogazione dello scadenzario e gestione acconti attivata, originava
+         eccezione e non apriva la scheda di interrogazione del cliente."""),
+        ),),
+    
+    ('1.4.09', None, (
+         ("BUG1094",
+         """Corretto spesometro per filtro flag allegati non considerato in
+         fase di estrazione delle registrazioni."""),
+         ("BUG1095",
+         """Corretta esportazione file csv da griglie: in alcune situazioni
+         originava eccezione e non generava il file."""),
+         ("BET1113",
+         """Aggiunto allo spesometro il flag blacklist per considerare o meno
+         i clienti/fornitori blacklistati o appartenenti a stati 
+         blacklistati."""),
+         ("BET1114",
+         """Aggiunta allo spesometro la visualizzazione dei totali relativi
+         all'anagrafica selezionata nella griglia."""),
+        ),),
+    
     ('1.4.08', None, (
          ("BET1112",
-         """Implementate stampe via google cloud printing."""),
+         """Riattivato il campo provvigione sulle schede anagrafiche di
+         clienti e prodotti."""),
         ),),
     
     ('1.4.07', None, (

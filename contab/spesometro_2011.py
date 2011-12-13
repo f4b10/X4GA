@@ -237,7 +237,9 @@ class SpesometroPanel(aw.Panel):
         wx.BeginBusyCursor()
         spe = self.dbspe
         try:
-            spe.GetData([(name, cn(name).GetValue()) for name in 'acqvencor data1 data2'.split()])
+            spe.GetData([(name, cn(name).GetValue()) for name in 'acqvencor data1 data2'.split()], 
+                        solo_all=cn('solo_all').IsChecked(),
+                        escludi_bl=cn('escludi_bl').IsChecked())
             self.anno = cn('data1').GetValue().year
             self.gridspe.ChangeData(spe.GetRecordset())
         except Exception, e:
@@ -247,6 +249,7 @@ class SpesometroPanel(aw.Panel):
         self.SetModo(self.MODO_AGGIORNA)
     
     def EstraiReg(self):
+        cn = self.FindWindowByName
         if self.modo == self.MODO_AGGIORNA:
             #modalità aggiornamento, eseguo estrazione da massimali
             wx.BeginBusyCursor()
@@ -275,6 +278,8 @@ class SpesometroGrid(dbgrid.ADB_Grid):
         dbgrid.ADB_Grid.__init__(self, parent, db_table=dbspe, can_edit=True, on_menu_select='row')
         
         self.current_pdc = None
+        
+        self.sel_pdccod = None # per totalizzazione registrazioni del cliente/fornitore
         
         s = dbspe
         _float = self.TypeFloat(6, bt.VALINT_DECIMALS)
@@ -389,8 +394,49 @@ class SpesometroGrid(dbgrid.ADB_Grid):
         self.Refresh()
     
     def OnCellSelected(self, event):
-        self.SelectRow(event.GetRow())
+        row = event.GetRow()
+        self.SelectRow(row)
+        det = self.db_table
+        if det.RowNumber() != row:
+            det.MoveRow(row)
+            self.UpdateTotAnag(det.Anag_Cod)
         event.Skip()
+    
+    def UpdateTotAnag(self, pdc_cod):
+        det = self.db_table
+        rs = det.GetRecordset()
+        row = det.RowNumber()
+        tot_imp = tot_iva = tot_tot = 0
+        if det.IsEmpty():
+            desana = '-'
+        else:
+            desana = rs[row][self._col_pdcdes]
+            row0 = det.LocateRS(lambda r: r[self._col_pdccod] == pdc_cod)
+            if row0 is not None:
+                row = row0
+                col_totimp = det._GetFieldIndex('IVA_AllImpo')
+                col_totiva = det._GetFieldIndex('IVA_Imposta')
+                col_tottot = det._GetFieldIndex('IVA_Totale')
+                while row < len(rs) and rs[row][self._col_pdccod] == pdc_cod:
+                    tot_imp += rs[row][col_totimp]
+                    tot_iva += rs[row][col_totiva]
+                    tot_tot += rs[row][col_tottot]
+                    row += 1
+        f = aw.awu.GetParentFrame(self)
+        cn = f.FindWindowByName
+        cn('totanades').SetLabel(desana)
+        cn('totanaimp').SetLabel(det.sepnvi(tot_imp))
+        cn('totanaiva').SetLabel(det.sepnvi(tot_iva))
+        cn('totanatot').SetLabel(det.sepnvi(tot_tot))
+    
+    def ChangeData(self, new_rs):
+        dbgrid.ADB_Grid.ChangeData(self, new_rs)
+        if len(new_rs) == 0:
+            pdc_cod = None
+        else:
+            pdc_cod = new_rs[0][self._col_pdccod]
+        self.db_table.MoveFirst()
+        self.UpdateTotAnag(pdc_cod)
     
     def OnCellDoubleClicked(self, event):
         det = self.db_table
