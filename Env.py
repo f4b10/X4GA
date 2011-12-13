@@ -3752,6 +3752,7 @@ class Azienda(object):
                             except:
                                 pass
                             entries.SetGoogleCloudPrintPassword(p)
+                            cls.OPT_GCP_PSWD = p
                         if cls != Azienda.BaseTab_base:
                             #se è stata sovrascritta la classe BaseTab, scrivo 
                             #gli stessi settaggi anche nella sua forma base,
