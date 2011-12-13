@@ -31,7 +31,7 @@ history = (
     
     ('1.4.11', None, (
          ("BET1115",
-         """Implementate stampe via google cloud printing."""),
+         """Implementate stampe via google cloud print."""),
         ),),
 
     ('1.4.10', None, (

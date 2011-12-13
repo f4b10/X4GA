@@ -688,7 +688,7 @@ class print_Report:
                                 pass
                         if printer.startswith('gcp://'):
                             wx.BeginBusyCursor()
-                            w = awu.WaitDialog(parentWindow, message="Invio stampa a Google Cloud Printing")
+                            w = awu.WaitDialog(parentWindow, message="Invio stampa a Google Cloud Print")
                             from report.pdfcloud import PdfCloudPrint
                             try:
                                 PdfCloudPrint(os.path.abspath(nameOutputFile), printer[6:], RipristinaFocus)

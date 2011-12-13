@@ -941,7 +941,7 @@ class Azienda(object):
         OPTLNKCRDFOR = None  #inizializzazione focus su codice/descrizione in LinkTableFornit da scheda
         OPTLNKGRDFOR = None  #inizializzazione focus su codice/descrizione in LinkTableFornit da griglia
         
-        OPT_GC_PRINT = True  #flag abilitazione stampe su google cloud printing
+        OPT_GC_PRINT = True  #flag abilitazione stampe su google cloud print
         OPT_GCP_USER = None  #nome utente google
         OPT_GCP_PSWD = None  #password utente google
         
