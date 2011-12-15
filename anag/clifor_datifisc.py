@@ -64,22 +64,28 @@ class _CliFor_DatiFiscaliGrid(dbgrid.ADB_Grid):
         AC(anag, 'aziper', label='A/P', col_width=50, is_editable=True)
         
         self.CreateGrid()
-        
+    
+    def ApriScheda(self, row):
+        anag = self.dbana
+        anag.MoveRow(row)
+        dlg = self._AnagClass(None, onecodeonly=anag.id)
+        dlg.OneCardOnly(anag.id)
+        dlg.CenterOnScreen()
+        dlg.ShowModal()
+        dlg.Destroy()
+        anag.Retrieve()
+        self.ChangeData(anag.GetRecordset())
+    
+    def OnCellDoubleClicked(self, event):
+        row = event.GetRow()
+        self.ApriScheda(row)
+    
     def ShowContextMenu(self, position, row, col):
         
         self.ResetContextMenu()
         
         def ApriScheda(event):
-            anag = self.dbana
-            anag.MoveRow(row)
-            dlg = self._AnagClass(None, onecodeonly=anag.id)
-            dlg.OneCardOnly(anag.id)
-            dlg.CenterOnScreen()
-            dlg.ShowModal()
-            dlg.Destroy()
-            anag.Retrieve()
-            self.ChangeData(anag.GetRecordset())
-        
+            self.ApriScheda(row)
         self.AppendContextMenuVoice('Apri scheda anagrafica', ApriScheda)
         
         return dbgrid.ADB_Grid.ShowContextMenu(self, position, row, col)

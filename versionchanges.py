@@ -37,6 +37,9 @@ history = (
          ("BET1117",
          """Implementata la generazione del file dello spesometro secondo il
          tracciato ministeriale."""),
+         ("BET1118",
+         """Implementata la manutenzione in griglia dei dati fiscali di clienti 
+         e fornitori."""),
         ),),
     
     ('1.4.11', None, (
