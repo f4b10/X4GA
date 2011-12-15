@@ -393,6 +393,8 @@ class XFrame(aw.Frame):
             (self.OnGestGrpFor,                ID_GESGRPFOR),
             (self.OnPrintGrpCli,               ID_STAGRPCLI),
             (self.OnPrintGrpFor,               ID_STAGRPFOR),
+            (self.OnGestDatiFiscaliClienti,    ID_GESDATIFISC_CLI),
+            (self.OnGestDatiFiscaliFornitori,  ID_GESDATIFISC_FOR),
             
             #gestione tabelle organizzazione maazzino/vendite
             (self.OnGestZone,                  ID_GESTZONE),
@@ -983,6 +985,10 @@ class XFrame(aw.Frame):
         from anag.clienti import ClientiFrame
         self.LaunchFrame(ClientiFrame)
     
+    def OnGestDatiFiscaliClienti(self, event):
+        from anag.clifor_datifisc import Clienti_DatiFiscaliFrame
+        self.LaunchFrame(Clienti_DatiFiscaliFrame)
+    
     def OnGestCatFor(self, event):
         from anag.catfor import CatForFrame
         self.LaunchFrame(CatForFrame)
@@ -994,6 +1000,10 @@ class XFrame(aw.Frame):
     def OnGestFornit(self, event):
         from anag.fornit import FornitFrame
         self.LaunchFrame(FornitFrame)
+    
+    def OnGestDatiFiscaliFornitori(self, event):
+        from anag.clifor_datifisc import Fornitori_DatiFiscaliFrame
+        self.LaunchFrame(Fornitori_DatiFiscaliFrame)
     
     def OnGestProd(self, event):
         from anag.prod import ProdFrame

@@ -118,7 +118,8 @@ class SpesometroPanel(aw.Panel):
         self.gridspe.Bind(dbgrid.gridlib.EVT_GRID_CMD_SELECT_CELL, self.OnRegSpyRowChanged)
         
         for name, func in (('butupdate', self.OnUpdateButton),
-                           ('butestrai', self.OnEstraiButton),):
+                           ('butestrai', self.OnEstraiButton),
+                           ('butgenera', self.OnGeneraButton),):
             self.Bind(wx.EVT_BUTTON, func, cn(name))
     
     def SetModo(self, modo):
@@ -152,6 +153,10 @@ class SpesometroPanel(aw.Panel):
     
     def OnEstraiButton(self, event):
         self.EstraiReg()
+        event.Skip()
+    
+    def OnGeneraButton(self, event):
+        self.dbspe.Esegui_GeneraFile('C:\\UnicoOnLine\\Art21Prog\\Temp\\test.TArt21')
         event.Skip()
     
     def OnRegSpyChanged(self, event):
@@ -197,6 +202,10 @@ class SpesometroPanel(aw.Panel):
     def SetDates(self):
         cn = self.FindWindowByName
         year = cn('anno').GetValue()
+        try:
+            self.dbspe.Chiedi_MassimaliAnno(year)
+        except:
+            pass
         Date = Env.DateTime.Date
         for name, month, day in (('data1', 1,  1),
                                  ('data2', 12, 31),):
@@ -213,8 +222,10 @@ class SpesometroPanel(aw.Panel):
         wms = ''
         for err, msg in ((not 2010 <= anno <= 2011,       "L'anno è errato"),
                          (data1 is None or data2 is None, "Le date non possono essere nulle"),
-                         (data1.year != anno,             "La data di partenza si riferisce ad altro anno"),
-                         (data2.year != anno,             "La data di fine si riferisce ad altro anno"),
+                         (data1 is not None 
+                          and data1.year != anno,         "La data di partenza si riferisce ad altro anno"),
+                         (data2 is not None
+                          and data2.year != anno,         "La data di fine si riferisce ad altro anno"),
                          (data2 < data1,                  "Le date sono invertite"),):
             if err:
                 wms = msg
@@ -227,7 +238,10 @@ class SpesometroPanel(aw.Panel):
             TTS(b, wms)
             b.Enable(valid)
         if valid:
-            acqvencor = "acquisto vendita corrispettivi".split()[cn('acqvencor').GetSelection()]
+            try:
+                acqvencor = "acquisto vendita corrispettivi".split()[cn('acqvencor').GetSelection()]
+            except:
+                acqvencor = "qualsiasi acquisto o vendita"
             TTS(cn('butupdate'), "Estrae tutte le operazioni di %(acqvencor)s del periodo, ordinate per cliente." % locals())
             TTS(cn('butestrai'), "Raggruppa, ove indicato, le operazioni di %(acqvencor)s ed estrae solo quelle eccedenti i massimali impostati per il %(anno)s." % locals())
         return valid
@@ -239,7 +253,8 @@ class SpesometroPanel(aw.Panel):
         try:
             spe.GetData([(name, cn(name).GetValue()) for name in 'acqvencor data1 data2'.split()], 
                         solo_all=cn('solo_all').IsChecked(),
-                        escludi_bl=cn('escludi_bl').IsChecked())
+                        escludi_bl_anag=cn('escludi_bla').IsChecked(),
+                        escludi_bl_stato=cn('escludi_bls').IsChecked(),)
             self.anno = cn('data1').GetValue().year
             self.gridspe.ChangeData(spe.GetRecordset())
         except Exception, e:
@@ -335,8 +350,19 @@ class SpesometroGrid(dbgrid.ADB_Grid):
         self.COL_TIVA_ESE = self.AddColumn(s, 'IVA_Esente',     'Esente', col_type=_float)
         self.COL_TIVA_FCA = self.AddColumn(s, 'IVA_FuoriCampo', 'Fuori Campo', col_type=_float)
         self.COL_REG_ID =   self.AddColumn(s, 'Reg_Id',         '#reg', col_width=1)
+        
         self.SetColorsByColumn(self.COL_ANAG_COD)
+        
         self.CreateGrid()
+        
+        self.SetRowLabelSize(40)
+        self.SetRowLabelAlignment(wx.ALIGN_RIGHT, wx.ALIGN_BOTTOM)
+        self.SetRowDynLabel(self.GetRowLabel)
+    
+    def GetRowLabel(self, row):
+        if 0 <= row < self.db_table.RowsCount():
+            return str(row+2)
+        return ''
     
     def IsRowOfPdcOrFree(self, row):
         return self.current_pdc is None or self.db_table.GetRecordset()[row][self._col_pdccod] == self.current_pdc

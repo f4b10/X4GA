@@ -3328,14 +3328,18 @@ class Spesometro2011_AcquistiVendite(adb.DbMem):
 #        assert bt.TIPO_CONTAB == "O"
         f = 'Reg_Id Reg_Link RegIva_Id RegIva_Cod RegIva_Descriz RegIva_Tipo'
         f += ' Anag_Id Anag_Cod Anag_Descriz Anag_AziPer Anag_CodFisc Anag_Nazione Anag_PIVA'
+        f += ' Anag_Cognome Anag_Nome Anag_NascDat Anag_NascPrv Anag_NascCom Anag_SedeInd Anag_SedeCit Anag_SedeStt Anag_Associa'
         f += ' Reg_Data Cau_Id Cau_Cod Cau_Descriz Reg_NumDoc Reg_DatDoc Reg_NumIva'
         f += ' Totale_DAV DAV_Merce DAV_Servizi DAV_Altro'
         f += ' IVA_AllImpo IVA_Imponib IVA_Imposta IVA_Totale IVA_NonImponib IVA_Esente IVA_FuoriCampo'
         f += ' selected'
         adb.DbMem.__init__(self, f.replace(' ', ','))
         self.Reset()
+        self._anno = None
+        self._max_azi = None
+        self._max_pri = None
     
-    def GetData(self, param_list, solo_all=True, escludi_bl=True):
+    def GetData(self, param_list, solo_all=True, escludi_bl_anag=True, escludi_bl_stato=True):
         p = self.MakeFiltersDict(param_list)
         filters = []
         AF = filters.append
@@ -3346,41 +3350,53 @@ class Spesometro2011_AcquistiVendite(adb.DbMem):
         else:
             if p['acqvencor'] == "V":
                 AF('regiva.tipo="V"')
-            else:
+            elif p['acqvencor'] == "C":
                 AF('regiva.tipo="C"')
             anacf = bt.TABNAME_CLIENTI
         AF('reg.datreg>="%s"' % p['data1'])
         AF('reg.datreg<="%s"' % p['data2'])
+        self._anno = p['data1'].year
         if solo_all:
-            AF('anagcf.allegcf=1')
-        if escludi_bl:
-            AF('(anagcf.is_blacklisted IS NULL OR anagcf.is_blacklisted<>1) AND (stato.is_blacklisted IS NULL OR stato.is_blacklisted<>1)')
+            AF('IF(tipana.tipo="C", anagcli.allegcf=1, anagfor.allegcf=1)')
+        if escludi_bl_anag:
+            AF('IF(tipana.tipo="C", anagcli.is_blacklisted IS NULL OR anagcli.is_blacklisted<>1, anagfor.is_blacklisted IS NULL OR anagfor.is_blacklisted<>1)')
+        if escludi_bl_stato:
+            AF('IF(tipana.tipo="C", statocli.is_blacklisted IS NULL OR statocli.is_blacklisted<>1, statofor.is_blacklisted IS NULL OR statofor.is_blacklisted<>1)')
         filters = ' AND '.join(['(%s)' % f for f in filters])
         if bt.TIPO_CONTAB == 'O':
             righecon = '"C", "S"'
         else:
             righecon = '"C", "S", "I"'
         cmd = """
-SELECT reg.id            'Reg_Id', 
-       reg.sm_link       'Reg_Link',
-       regiva.id         'RegIva_Id',
-       regiva.codice     'RegIva_Cod',
-       regiva.descriz    'RegIva_Descriz',
-       regiva.tipo       'RegIva_Tipo',
-       anag.id           'Anag_Id',
-       anag.codice       'Anag_Cod',
-       anag.descriz      'Anag_Descriz',
-       anagcf.aziper     'Anag_AziPer',
-       anagcf.codfisc    'Anag_CodFisc',
-       anagcf.nazione    'Anag_Nazione',
-       anagcf.piva       'Anag_PIVA',
-       reg.datreg        'Reg_Data',
-       causale.id        'Cau_Id',
-       causale.codice    'Cau_Cod',
-       causale.descriz   'Cau_Descriz',
-       reg.numdoc        'Reg_NumDoc',
-       reg.datdoc        'Reg_DatDoc',
-       reg.numiva        'Reg_NumIva',
+SELECT reg.id              'Reg_Id', 
+       reg.sm_link         'Reg_Link',
+       regiva.id           'RegIva_Id',
+       regiva.codice       'RegIva_Cod',
+       regiva.descriz      'RegIva_Descriz',
+       regiva.tipo         'RegIva_Tipo',
+       anag.id             'Anag_Id',
+       anag.codice         'Anag_Cod',
+       anag.descriz        'Anag_Descriz',
+       IF(tipana.tipo="C", anagcli.aziper,       anagfor.aziper)       'Anag_AziPer',
+       IF(tipana.tipo="C", anagcli.codfisc,      anagfor.codfisc)      'Anag_CodFisc',
+       IF(tipana.tipo="C", anagcli.nazione,      anagfor.nazione)      'Anag_Nazione',
+       IF(tipana.tipo="C", anagcli.piva,         anagfor.piva)         'Anag_PIVA',
+       IF(tipana.tipo="C", anagcli.sm11_cognome, anagfor.sm11_cognome) 'Anag_Cognome',
+       IF(tipana.tipo="C", anagcli.sm11_nome,    anagfor.sm11_nome)    'Anag_Nome',
+       IF(tipana.tipo="C", anagcli.sm11_nascdat, anagfor.sm11_nascdat) 'Anag_NascDat',
+       IF(tipana.tipo="C", anagcli.sm11_nascprv, anagfor.sm11_nascprv) 'Anag_NascPrv',
+       IF(tipana.tipo="C", anagcli.sm11_nasccom, anagfor.sm11_nasccom) 'Anag_NascCom',
+       IF(tipana.tipo="C", anagcli.sm11_sedeind, anagfor.sm11_sedeind) 'Anag_SedeInd',
+       IF(tipana.tipo="C", anagcli.sm11_sedecit, anagfor.sm11_sedecit) 'Anag_SedeCit',
+       IF(tipana.tipo="C", anagcli.sm11_sedestt, anagfor.sm11_sedestt) 'Anag_SedeStt',
+       IF(tipana.tipo="C", anagcli.sm11_associa, anagfor.sm11_associa) 'Anag_Associa',
+       reg.datreg          'Reg_Data',
+       causale.id          'Cau_Id',
+       causale.codice      'Cau_Cod',
+       causale.descriz     'Cau_Descriz',
+       reg.numdoc          'Reg_NumDoc',
+       reg.datdoc          'Reg_DatDoc',
+       reg.numiva          'Reg_NumIva',
        
        SUM(bodycri.importo
            *IF(bodycri.tipriga IN (%(righecon)s), 1, 0)
@@ -3440,9 +3456,12 @@ SELECT reg.id            'Reg_Id',
 FROM contab_b bodyanag
 
 INNER JOIN pdc       anag    ON anag.id=bodyanag.id_pdcpa
-INNER JOIN %(anacf)s anagcf  ON anagcf.id=anag.id
+INNER JOIN pdctip    tipana  ON tipana.id=anag.id_tipo
+ LEFT JOIN clienti   anagcli ON anagcli.id=anag.id
+ LEFT JOIN fornit    anagfor ON anagfor.id=anag.id
 
-LEFT JOIN x4.stati   stato   ON stato.id=anagcf.id_stato
+ LEFT JOIN x4.stati  statocli ON statocli.id=anagcli.id_stato
+ LEFT JOIN x4.stati  statofor ON statofor.id=anagcli.id_stato
 
 INNER JOIN contab_h  reg     ON reg.id=bodyanag.id_reg
 INNER JOIN           regiva  ON regiva.id=reg.id_regiva
@@ -3455,8 +3474,8 @@ INNER JOIN pdc       pdccer  ON pdccer.id=bodycri.id_pdcpa
 
 WHERE %(filters)s
 
-GROUP BY anag.descriz, anag.codice, anagcf.aziper, reg.sm_link, reg.datdoc, reg.numdoc, regiva.tipo, regiva.codice
-ORDER BY anag.descriz, anag.codice, anagcf.aziper, reg.sm_link, reg.datdoc, reg.numdoc, regiva.tipo, regiva.codice
+GROUP BY anag.descriz, reg.sm_link, reg.datdoc, reg.numdoc, regiva.tipo, regiva.codice
+ORDER BY anag.descriz, reg.sm_link, reg.datdoc, reg.numdoc, regiva.tipo, regiva.codice
         """ % locals()
         
         db = adb.db.__database__
@@ -3509,10 +3528,15 @@ ORDER BY anag.descriz, anag.codice, anagcf.aziper, reg.sm_link, reg.datdoc, reg.
             key = (db.rs[0][0] or 0) + 1
         return key
     
+    def Chiedi_MassimaliAnno(self, anno):
+        mass = Spesometro2011_Massimali()
+        self._max_azi, self._max_pri = mass.Chiedi_PrendiMassimaliPerLAnno(anno)
+    
     def Chiedi_NuovoRecordsetDaMassimali(self, anno):
         
         mass = Spesometro2011_Massimali()
         maxazi, maxpri = mass.Chiedi_PrendiMassimaliPerLAnno(anno)
+        self._max_azi, self._max_pri = maxazi, maxpri
         
         colkey = self._GetFieldIndex('Reg_Link')
         colapr = self._GetFieldIndex('Anag_AziPer')
@@ -3589,6 +3613,234 @@ ORDER BY anag.descriz, anag.codice, anagcf.aziper, reg.sm_link, reg.datdoc, reg.
                 reg_id = self.Reg_Id
                 cmd = """UPDATE %(tab_name)s SET sm_link=NULL WHERE sm_link=%(sm_link)s""" % locals()
                 db.Execute(cmd)
+    
+    def Esegui_GeneraFile(self, filename):
+        
+        def Z(num, len):
+            return str(num).zfill(len)
+        
+        def F(val, len):
+            val = (val or '').encode('ascii', 'replace').upper()
+            return (val+' '*len)[:len]
+        
+        def D(dat):
+            if dat is None:
+                return '0'*8
+            return Z(dat.day, 2)+Z(dat.month, 2)+Z(dat.year, 4)
+        
+        def V(val):
+            return abs(int(val))
+        
+        def get_pagamento(data):
+            if data.Anag_AziPer == "P":
+                #privati
+                if data.IVA_Totale < self._max_pri:
+                    #importo frazionato
+                    return '2'
+                else:
+                    #importo non frazionato
+                    return '1'
+            else:
+                #aziende
+                if data.IVA_AllImpo < self._max_azi:
+                    #importo frazionato
+                    return '2'
+                else:
+                    #importo non frazionato
+                    return '1'
+        
+        def get_tipo_operazione(data):
+            if data.RegIva_Tipo in 'VC':
+                #Cessione e/o prestazione
+                return '1'
+            #Acquisto e/o prestazione ricevuta
+            return '2'
+        
+        stati = adb.DbTable('x4.stati', 'stato')
+        
+        def get_stato_sede(data):
+            if data.Anag_SedeStt is not None:
+                stati.Get(data.Anag_SedeStt)
+                return F(stati.codunico, 3)
+            return F('', 3)
+        
+        obb_codfisc = Env.Azienda.codfisc
+        obb_piva = Env.Azienda.piva
+        obb_ragsoc = Env.Azienda.descrizione
+        obb_comune = Env.Azienda.citta
+        obb_prov = Env.Azienda.prov
+        
+        anno = self._anno
+        invio_num = 1
+        invio_tot = 1
+        
+        def record_testa_piede(tipo_rec):
+            row =  tipo_rec             #Tipo Record (0=Testata, 9=Piede)
+            row += 'ART21'              #Codice identificativo della fornitura
+            row += '47'                 #Codice numerico della fornitura
+            row += '0'                  #Tipologia di invio (invio ordinario)
+            row += Z(0, 17)             #Protocollo telematico da sostituire o annullare
+            row += Z(0, 6)              #Protocollo documento
+            row += F(obb_codfisc, 16)   #Codice Fiscale
+            row += Z(obb_piva, 11)      #Partita IVA
+            row += F(obb_ragsoc, 60)    #Denominazione
+            row += F(obb_comune, 40)    #Comune del domicilio fiscale
+            row += F(obb_prov, 2)       #Provincia del domicilio fiscale
+            row += F('', 24)            #Cognome
+            row += F('', 20)            #Nome
+            row += ' '                  #Sesso
+            row += D(None)              #Data di nascita
+            row += F('', 40)            #Comune o Stato estero di nascita
+            row += F('', 2)             #Provincia di nascita
+            row += Z(anno, 4)           #Anno di riferimento
+            row += '0'                  #Comunicazioni dati di società incorporata (Comunicazione riferita esclusivamente al soggetto che comunica)
+            row += Z(invio_num, 4)      #Progressivo invio
+            row += Z(invio_tot, 4)      #Totale invii
+            row += ' '*16               #Codice fiscale dell'intermediario che effettua la trasmissione
+            row += Z(0, 5)              #Numero di iscrizione all'albo del C.A.F.
+            row += '0'                  #Impegno a trasmettere in via telematica la comunicazione
+            row += D(None)              #Data dell'impegno
+            row += F('', 1498)          #Filler
+            row += 'A'                  #Carattere di controllo
+            return row
+        
+        def record_testa():
+            return record_testa_piede('0')
+        
+        def record_piede():
+            return record_testa_piede('9')
+        
+        def record_residente_azienda(data):
+            row =  '2'                          #Tipo Record
+            row += F(data.Anag_PIVA, 11)        #Partita IVA
+            row += D(data.Reg_DatDoc)           #Data dell'operazione
+            row += F(data.Reg_NumDoc, 15)       #Numero della Fattura
+            row += get_pagamento(data)          #Modalità di pagamento (Frazionato, non frazionato, corrispettivi periodici)
+            row += Z(V(data.IVA_AllImpo), 9)    #Importo dovuto (Importo dell'operazione al netto dell'Imposta)
+            row += Z(V(data.IVA_Imposta), 9)    #Imposta
+            row += get_tipo_operazione(data)    #Tipologia dell'operazione
+            row += F('', 1742)                  #Filler
+            row += 'A'                          #Carattere di controllo
+            return row
+        
+        def record_residente_notavariazione(data):
+            if data.RegIva_Tipo == "A":
+                #note credito ricevuta: per me è un credito
+                tipovar = "C"
+            else:
+                #note credito emessa: per me è un debito
+                tipovar = "D"
+            piva = data.Anag_PIVA
+            codfisc = data.Anag_CodFisc
+            if len(piva or '')>0:
+                codfisc = ''
+            row =  '4'                          #Tipo Record
+            row += F(piva, 11)                  #Partita IVA
+            row += F(codfisc, 16)               #Codice fiscale
+            row += D(data.Reg_DatDoc)           #Data dell'operazione
+            row += F(data.Reg_NumDoc, 15)       #Numero della Nota di Variazione
+            row += Z(V(data.IVA_AllImpo), 9)    #Imponibile della nota di Variazione
+            row += Z(V(data.IVA_Imposta), 9)    #Imposta sul Valore Aggiunto della Nota di Variazione
+            row += '3112%s' % anno              #Data della Fattura da rettificare
+            row += F('', 15)                    #Numero della Fattura da rettificare
+            row += tipovar                      #Variazione dell'imponibile a credito o a debito
+            row += tipovar                      #Variazione dell'imposta a credito o a debito
+            row += F('', 1703)                  #Filler
+            row += 'A'                          #Carattere di controllo
+            return row
+        
+        def record_residente_privato(data):
+            row =  '1'                          #Tipo Record
+            row += F(data.Anag_CodFisc, 16)     #Codice Fiscale
+            row += D(data.Reg_DatDoc)           #Data dell'operazione
+            row += get_pagamento(data)          #Modalità di pagamento (Frazionato, non frazionato, corrispettivi periodici)
+            row += Z(V(data.IVA_Totale), 9)     #Importo dovuto
+            row += F('', 1762)                  #Filler
+            row += 'A'                          #Carattere di controllo
+            return row
+        
+        def record_nonresidente(data):
+            row =  '3'                          #Tipo Record
+            row += F(data.Anag_Cognome, 24)     #Cognome
+            row += F(data.Anag_Nome, 20)        #Nome
+            row += D(data.Anag_NascDat)         #Data di nascita
+            row += F(data.Anag_NascCom, 40)     #Comune o Stato estero di nascita
+            row += F(data.Anag_NascPrv, 2)      #Provincia di nascita
+            row += get_stato_sede(data)         #Stato estero del domicilio
+            row += F(data.Anag_Descriz, 60)     #Denominazione, Ditta o ragione sociale
+            row += F(data.Anag_SedeCit, 40)     #Città estera della sede legale
+            row += get_stato_sede(data)         #Stato estero della sede legale
+            row += F(data.Anag_SedeInd, 40)     #Indirizzo estero della sede legale
+            row += D(data.Reg_DatDoc)           #Data dell'operazione
+            row += F(data.Reg_NumDoc, 15)       #Numero della Nota di variazione
+            row += get_pagamento(data)          #Modalità di pagamento (Frazionato, non frazionato, corrispettivi periodici)
+            row += Z(V(data.IVA_AllImpo), 9)    #Importo dovuto (Importo dell'operazione al netto dell'Imposta)
+            row += Z(V(data.IVA_Imposta), 9)    #Imposta
+            row += get_tipo_operazione(data)    #Tipologia dell'operazione
+            row += F('', 1513)                  #Filler
+            row += 'A'                          #Carattere di controllo
+            return row
+        
+        def record_nonresidente_notavariazione(data):
+            if data.RegIva_Tipo == "A":
+                #note credito ricevuta: per me è un credito
+                tipovar = "C"
+            else:
+                #note credito emessa: per me è un debito
+                tipovar = "D"
+            row =  '5'                          #Tipo Record
+            row += F(data.Anag_Cognome, 24)     #Cognome
+            row += F(data.Anag_Nome, 20)        #Nome
+            row += D(data.Anag_NascDat)         #Data di nascita
+            row += F(data.Anag_NascCom, 40)     #Comune o Stato estero di nascita
+            row += F(data.Anag_NascPrv, 2)      #Provincia di nascita
+            row += get_stato_sede(data)         #Stato estero del domicilio
+            row += F(data.Anag_Descriz, 60)     #Denominazione, Ditta o ragione sociale
+            row += F(data.Anag_SedeCit, 40)     #Città estera della sede legale
+            row += get_stato_sede(data)         #Stato estero della sede legale
+            row += F(data.Anag_SedeInd, 40)     #Indirizzo estero della sede legale
+            row += D(data.Reg_DatDoc)           #Data dell'operazione
+            row += F(data.Reg_NumDoc, 15)       #Numero della Nota di variazione
+            row += Z(V(data.IVA_AllImpo), 9)    #Imponibile della nota di Variazione
+            row += Z(V(data.IVA_Imposta), 9)    #Imposta sul Valore Aggiunto della Nota di Variazione
+            row += '3112%s' % anno              #Data della Fattura da rettificare
+            row += F('', 15)                    #Numero della Fattura da rettificare
+            row += tipovar                      #Variazione dell'imponibile a credito o a debito
+            row += tipovar                      #Variazione dell'imposta a credito o a debito
+            row += F('', 1490)                  #Filler
+            row += 'A'                          #Carattere di controllo
+            return row
+        
+        f = open(filename, 'w')
+        
+        def write_row(row):
+            return f.write('%s\n' % row)
+        
+        #riga 0 - testata
+        write_row(record_testa())
+        
+        for data in self:
+            if (data.Anag_Nazione or "IT") == "IT":
+                if data.IVA_AllImpo < 0:
+                    row = record_residente_notavariazione(data)
+                else:
+                    if data.Anag_AziPer == "A":
+                        row = record_residente_azienda(data)
+                    else:
+                        row = record_residente_privato(data)
+            else:
+                if data.IVA_AllImpo < 0:
+                    row = record_nonresidente_notavariazione(data)
+                else:
+                    row = record_nonresidente(data)
+            write_row(row)
+        
+        #riga 9 - piede
+        write_row(record_piede())
+        
+        f.close()
+        
+        return True
 
 
 # ------------------------------------------------------------------------------
