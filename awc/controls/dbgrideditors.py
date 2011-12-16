@@ -233,6 +233,7 @@ class DateCellEditor(gridlib.PyGridCellEditor, CellEditorsMixin):
                     rscol = table.rsColumns[col]
                     if rscol>=0:
                         table.data[row][rscol] = val
+                    table.ForceResetView()
                     changed = True
                     # callback successivo all'aggiornamento del recordset
                     table.TestAfterEdit(CELLEDIT_AFTER_UPDATE, row, col, val)
@@ -723,6 +724,7 @@ class NumericCellEditor(gridlib.PyGridCellEditor, CellEditorsMixin):
                     if rscol>=0:
                         #data[row][rscol] = val
                         data[row][rscol] = self._tc.GetValue() #potrebbe essere stato variato dai callback
+                    table.ForceResetView()
                     changed = True
                     # callback successivo all'aggiornamento del recordset
                     table.TestAfterEdit(CELLEDIT_AFTER_UPDATE, row, col, val)
