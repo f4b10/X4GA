@@ -29,11 +29,24 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.12', None, (
+         ("BET1116",
+         """Integrati i dati necessari alla compilazione dello spesometro per
+         le operazioni con soggetti non residenti per i quali è necessario
+         specificare gli estremi della nascita."""),
+         ("BET1117",
+         """Implementata la generazione del file dello spesometro secondo il
+         tracciato ministeriale."""),
+         ("BET1118",
+         """Implementata la manutenzione in griglia dei dati fiscali di clienti 
+         e fornitori."""),
+        ),),
+    
     ('1.4.11', None, (
          ("BET1115",
          """Implementate stampe via google cloud print."""),
         ),),
-
+    
     ('1.4.10', None, (
          ("BUG1096",
          """Corretto bug in interrogazione clienti, con untente privo dei permessi

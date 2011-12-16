@@ -50,6 +50,7 @@ class StatiSearchResultsGrid(ga.SearchResultsGrid):
         return (( 50, (cn('stati_codice'),         "Cod.",        _STR, True)),
                 (300, (cn('stati_descriz'),        "Descrizione", _STR, True)),
                 (200, (cn('stati_desceng'),        "Description", _STR, True)),
+                ( 60, (cn('stati_codunico'),       "Unico",       _STR, True)),
                 ( 50, (cn('stati_is_cee'),         "CEE",         _CHK, True)),
                 ( 50, (cn('stati_is_blacklisted'), "B.L.",        _CHK, True)),
                 (  1, (cn('stati_id'),             "#stt",        _STR, True)),
@@ -81,6 +82,7 @@ class StatiPanel(ga.AnagPanel):
               [ "desceng",        "VARCHAR",  60, None, "Descrizione in inglese", None ],
               [ "is_cee",         "TINYINT",   1, None, "Flag CEE", None ],
               [ "is_blacklisted", "TINYINT",   1, None, "Flag Blacklist", None ],
+              [ "codunico",       "CHAR",      3, None, "Cod.stato da nomenclatura unico", None ],
           ]
         self.SetDbOrderColumns((("Codice",      ('stati.codice',)),
                                 ("Descrizione", ('stati.descriz',)),))

@@ -888,6 +888,47 @@ UPDATE `cfgsetup`
                 except Exception, e:
                     pass
         
+            # -------------------------------------------------------------------------------------
+            
+            if oldver<'1.4.12' and ok:
+                
+                #adeguamento struttura tabella stati per aggiunta codice stato 
+                #nella codifica del modello unico di dichiarazione dei redditi
+                if db.Execute(r"""ALTER TABLE `x4`.`stati` 
+                                    ADD COLUMN `codunico` CHAR(3) AFTER `is_blacklisted`"""):
+                    for stato_desc, cod_unico in \
+                        (("AUSTRIA",         "008"),
+                         ("BELGIO",          "009"),
+                         ("BULGARIA",        "012"),
+                         ("CIPRO",           "101"),
+                         ("DANIMARCA",       "021"),
+                         ("ESTONIA",         "257"),
+                         ("FINLANDIA",       "028"),
+                         ("FRANCIA",         "029"),
+                         ("GERMANIA",        "094"),
+                         ("GRAN BRETAGNA",   "031"),
+                         ("GRECIA",          "032"),
+                         ("IRLANDA",         "040"),
+                         ("LETTONIA",        "258"),
+                         ("LITUANIA",        "259"),
+                         ("LUSSEMBURGO",     "092"),
+                         ("MALTA",           "105"),
+                         ("OLANDA",          "050"),
+                         ("POLONIA",         "054"),
+                         ("PORTOGALLO",      "055"),
+                         ("REPUBBLICA CECA", "275"),
+                         ("ROMANIA",         "061"),
+                         ("SLOVACCHIA",      "276"),
+                         ("SLOVENIA",        "260"),
+                         ("SPAGNA",          "067"),
+                         ("SVEZIA",          "068"),
+                         ("UNGHERIA",        "077"),
+                         ("SAN MARINO",      "037"),
+                         ("MONACO",          "091"),
+                         ("SVIZZERA",        "071"),):
+                        db.Execute(r"""UPDATE `x4`.`stati` 
+                        SET codunico=%s WHERE descriz=%s""", (cod_unico, stato_desc))
+        
         if ok:
             self.PerformExternalAdaptations()
         
