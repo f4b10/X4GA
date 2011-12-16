@@ -2828,6 +2828,7 @@ class Azienda(object):
                 [ "id_aliqiva",           "INT",       idw, None, "ID Aliquota IVA particolare", None ],
                 [ "id_reg",               "INT",       idw, None, "ID Registrazione contabile", None ],
                 [ "id_doctra",            "INT",       idw, None, "ID documento generato per trasferimento", None ],
+                [ "id_docaccfor",         "INT",       idw, None, "ID documento per il quale questo documento è un acconto", None ],
                 [ "f_ann",                "TINYINT",     1, None, "Flag documento annullato", "NOT NULL DEFAULT 0" ],
                 [ "f_acq",                "TINYINT",     1, None, "Flag documento acquisito", "NOT NULL DEFAULT 0" ],
                 [ "f_genrag",             "TINYINT",     1, None, "Flag documento generato da raggruppamento", "NOT NULL DEFAULT 0" ],
