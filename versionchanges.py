@@ -29,6 +29,13 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.13', None, (
+         ("BET1119",
+         """Perfezionamenti spesometro: possibilità di selezione automatica 
+         di tutte le registrazioni del sottoconto selezionato, richiesta nome 
+         file da generare e controllo sovrascrittura."""),
+        ),),
+    
     ('1.4.12', None, (
          ("BET1116",
          """Integrati i dati necessari alla compilazione dello spesometro per

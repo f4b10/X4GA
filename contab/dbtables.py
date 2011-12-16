@@ -3586,6 +3586,18 @@ ORDER BY anag.descriz, reg.sm_link, reg.datdoc, reg.numdoc, regiva.tipo, regiva.
     
     # modifica dati
     
+    def Esegui_SelezionaRighePdc(self, id_pdc, seleziona=1):
+        colid = self._GetFieldIndex('Anag_Id')
+        row = self.LocateRS(lambda r: r[colid] == id_pdc)
+        if row is not None:
+            self.MoveRow(row)
+            while self.Anag_Id == id_pdc:
+                self.selected = seleziona
+                self.MoveNext()
+    
+    def Esegui_DeselezionaRighePdc(self, id_pdc):
+        self.Esegui_SelezionaRighePdc(id_pdc, seleziona=0)
+    
     def Esegui_AbbinaRighe(self, righe_sel):
         keys = self.Chiedi_QualiChiaviCiSonoNelleRighe(righe_sel)
         if len(keys) == 0:
@@ -3849,12 +3861,18 @@ ORDER BY anag.descriz, reg.sm_link, reg.datdoc, reg.numdoc, regiva.tipo, regiva.
 class Spesometro2011_Massimali(adb.DbTable):
     
     _key = 'spesometro'
+    _des = 'Massimali spesometro'
     
     def __init__(self):
         adb.DbTable.__init__(self, bt.TABNAME_CFGPROGR, 'progr')
         self.AddBaseFilter('progr.codice=%s', self._key)
         self.AddOrder('progr.keydiff')
         self.Retrieve()
+    
+    def CreateNewRow(self):
+        adb.DbTable.CreateNewRow(self)
+        self.codice = self._key
+        self.descriz = self._des
     
     def Chiedi_PrendiMassimaliPerLAnno(self, anno):
         self.Retrieve('progr.keydiff=%s', anno)

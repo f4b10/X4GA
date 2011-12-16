@@ -52,16 +52,19 @@ class _CliFor_DatiFiscaliGrid(dbgrid.ADB_Grid):
         
         self.dbana = anag = dbana
         pdc = anag.pdc
+        stato = anag.stato
         
         dbgrid.ADB_Grid.__init__(self, parent, db_table=dbana, can_edit=True, on_menu_select='row')
         
         AC = self.AddColumn
-        AC(pdc,  'descriz', label='Descrizione', col_width=300, is_fittable=True)
-        AC(anag, 'nazione', label='Stato', col_width=60)
-        AC(anag, 'piva', label='P.IVA', col_width=100, is_editable=True)
-        AC(anag, 'codfisc', label='Cod.Fiscale', col_width=140, is_editable=True)
-        AC(anag, 'allegcf', label='All.', col_width=50, col_type=self.TypeCheck())
-        AC(anag, 'aziper', label='A/P', col_width=50, is_editable=True)
+        AC(pdc,   'descriz', label='Descrizione', col_width=300, is_fittable=True)
+        AC(stato, 'codice', label='Stato', col_width=60)
+        AC(anag,  'nazione', label='St.PI', col_width=60)
+        AC(anag,  'piva', label='P.IVA', col_width=100, is_editable=True)
+        AC(anag,  'codfisc', label='Cod.Fiscale', col_width=140, is_editable=True)
+        AC(anag,  'allegcf', label='All.', col_width=50, col_type=self.TypeCheck())
+        AC(anag,  'aziper', label='A/P', col_width=50, is_editable=True)
+        AC(anag,  'is_blacklisted', label='B/L', col_width=50, col_type=self.TypeCheck())
         
         self.CreateGrid()
     
@@ -139,6 +142,7 @@ class _CliFor_DatiFiscaliPanel(aw.Panel):
         
         self.dbana = adb.DbTable(self.tabanag, 'anag')
         self.dbana.AddJoin(bt.TABNAME_PDC, 'pdc', idLeft='id')
+        self.dbana.AddJoin('x4.stati', 'stato', join=adb.JOIN_LEFT)
         self.dbana.AddOrder('pdc.descriz')
         self.dbana.Retrieve()
         

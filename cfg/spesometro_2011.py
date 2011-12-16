@@ -60,7 +60,7 @@ class MassimaliSpesometroGrid(dbgrid.ADB_Grid):
         dbgrid.ADB_Grid.__init__(self, parent, db_table=dbmsm, can_edit=True, can_insert=True)
         
         msm = dbmsm
-        self.AddColumn(msm, 'keydiff',   'Anno', is_fittable=True)
+        self.AddColumn(msm, 'keydiff',   'Anno', col_width=60, is_editable=True)
         self.AddColumn(msm, 'progrimp1', 'Aziende', col_type=self.TypeFloat(9, 2), is_editable=True)
         self.AddColumn(msm, 'progrimp2', 'Privati', col_type=self.TypeFloat(9, 2), is_editable=True)
         self.CreateGrid()

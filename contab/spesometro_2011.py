@@ -22,6 +22,7 @@
 # ------------------------------------------------------------------------------
 
 import wx
+import os
 
 import awc.controls.windows as aw
 import awc.controls.dbgrid as dbgrid
@@ -138,6 +139,7 @@ class SpesometroPanel(aw.Panel):
         cn = self.FindWindowByName
         cn('gridtitle').SetLabel(label_title)
         cn('butestrai').SetLabel(label_button)
+        cn('butgenera').Enable(modo == self.MODO_ESTRAI)
     
     def OnYearChanged(self, event):
         self.SetDates()
@@ -156,8 +158,36 @@ class SpesometroPanel(aw.Panel):
         event.Skip()
     
     def OnGeneraButton(self, event):
-        self.dbspe.Esegui_GeneraFile('C:\\UnicoOnLine\\Art21Prog\\Temp\\test.TArt21')
+        self.GeneraFile()
         event.Skip()
+    
+    def GeneraFile(self):
+        defaultFile = '%s.TArt21' % Env.Azienda.piva
+        filename = None
+        dlg = wx.FileDialog(self,
+                            message="Digita il nome del file da generare",
+#                            defaultDir=pathname,
+                            defaultFile=defaultFile,
+                            wildcard="File di esportazione (*.TArt21)|*.TArt21",
+                            style=wx.SAVE)
+        if dlg.ShowModal() == wx.ID_OK:
+            filename = dlg.GetPath()
+        dlg.Destroy()
+        if filename:
+            if os.path.exists(filename):
+                if aw.awu.MsgDialog(self, "Il file indicato è già esistente.\nVuoi sovrascriverlo ?", 
+                                    style=wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT) != wx.ID_YES:
+                    return
+            wait = aw.awu.WaitDialog(self, "Generazione file in corso")
+            err = None
+            try:
+                self.dbspe.Esegui_GeneraFile(filename)
+            except Exception, e:
+                err = repr(e.args)
+            finally:
+                wait.Destroy()
+            if err:
+                aw.awu.MsgDialog(self, err, style=wx.ICON_ERROR)
     
     def OnRegSpyChanged(self, event):
         grid = self.gridspe
@@ -275,6 +305,8 @@ class SpesometroPanel(aw.Panel):
                 grid = self.gridspe
                 grid.ChangeData(rs)
                 grid.ResetView()
+            except Exception, e:
+                aw.awu.MsgDialog(self, repr(e.args), style=wx.ICON_ERROR)
             finally:
                 wx.EndBusyCursor()
             self.SetModo(self.MODO_ESTRAI)
@@ -294,11 +326,10 @@ class SpesometroGrid(dbgrid.ADB_Grid):
         
         self.current_pdc = None
         
-        self.sel_pdccod = None # per totalizzazione registrazioni del cliente/fornitore
-        
         s = dbspe
         _float = self.TypeFloat(6, bt.VALINT_DECIMALS)
         
+        self._col_pdc_id = s._GetFieldIndex('Anag_Id')
         self._col_pdccod = s._GetFieldIndex('Anag_Cod')
         self._col_pdcdes = s._GetFieldIndex('Anag_Descriz')
         self._col_smlink = s._GetFieldIndex('Reg_Link')
@@ -365,7 +396,9 @@ class SpesometroGrid(dbgrid.ADB_Grid):
         return ''
     
     def IsRowOfPdcOrFree(self, row):
-        return self.current_pdc is None or self.db_table.GetRecordset()[row][self._col_pdccod] == self.current_pdc
+        if row >= self.db_table.RowsCount():
+            return True
+        return self.current_pdc is None or self.db_table.GetRecordset()[row][self._col_pdc_id] == self.current_pdc
     
     def AlterColor(self, color, delta):
         
@@ -407,13 +440,15 @@ class SpesometroGrid(dbgrid.ADB_Grid):
         return attr
     
     def _SwapCheckValue(self, row, col):
+        if col != self.COL_SELECTED:
+            return
         if not self.IsRowOfPdcOrFree(row):
             return
         checked = dbgrid.ADB_Grid._SwapCheckValue(self, row, col)
         if checked:
             det = self.db_table
             det.MoveRow(row)
-            self.current_pdc = det.Anag_Cod
+            self.current_pdc = det.Anag_Id
         else:
             if not self.db_table.Locate(lambda det: det.selected is True):
                 self.current_pdc = None
@@ -425,10 +460,10 @@ class SpesometroGrid(dbgrid.ADB_Grid):
         det = self.db_table
         if det.RowNumber() != row:
             det.MoveRow(row)
-            self.UpdateTotAnag(det.Anag_Cod)
+            self.UpdateTotAnag(det.Anag_Id)
         event.Skip()
     
-    def UpdateTotAnag(self, pdc_cod):
+    def UpdateTotAnag(self, pdc_id):
         det = self.db_table
         rs = det.GetRecordset()
         row = det.RowNumber()
@@ -437,13 +472,13 @@ class SpesometroGrid(dbgrid.ADB_Grid):
             desana = '-'
         else:
             desana = rs[row][self._col_pdcdes]
-            row0 = det.LocateRS(lambda r: r[self._col_pdccod] == pdc_cod)
+            row0 = det.LocateRS(lambda r: r[self._col_pdc_id] == pdc_id)
             if row0 is not None:
                 row = row0
                 col_totimp = det._GetFieldIndex('IVA_AllImpo')
                 col_totiva = det._GetFieldIndex('IVA_Imposta')
                 col_tottot = det._GetFieldIndex('IVA_Totale')
-                while row < len(rs) and rs[row][self._col_pdccod] == pdc_cod:
+                while row < len(rs) and rs[row][self._col_pdc_id] == pdc_id:
                     tot_imp += rs[row][col_totimp]
                     tot_iva += rs[row][col_totiva]
                     tot_tot += rs[row][col_tottot]
@@ -458,11 +493,12 @@ class SpesometroGrid(dbgrid.ADB_Grid):
     def ChangeData(self, new_rs):
         dbgrid.ADB_Grid.ChangeData(self, new_rs)
         if len(new_rs) == 0:
-            pdc_cod = None
+            pdc_id = None
         else:
-            pdc_cod = new_rs[0][self._col_pdccod]
+            pdc_id = new_rs[0][self._col_pdc_id]
         self.db_table.MoveFirst()
-        self.UpdateTotAnag(pdc_cod)
+        self.UpdateTotAnag(pdc_id)
+        self.current_pdc = None
     
     def OnCellDoubleClicked(self, event):
         det = self.db_table
@@ -476,7 +512,7 @@ class SpesometroGrid(dbgrid.ADB_Grid):
             if K:
                 wx.BeginBusyCursor()
                 try:
-                    dlg = K(self, onecodeonly=id_pdc)
+                    dlg = K(None, onecodeonly=id_pdc)
                     dlg.OneCardOnly(id_pdc)
                 finally:
                     wx.EndBusyCursor()
@@ -513,6 +549,24 @@ class SpesometroGrid(dbgrid.ADB_Grid):
             
             riga_ok = row in righe_sel
             
+            det.MoveRow(row)
+            if len(righe_sel) == 0 and det.Anag_Associa:
+                def AssociaTutte(event):
+                    det.MoveRow(row)
+                    self.current_pdc = det.Anag_Id
+                    det.Esegui_SelezionaRighePdc(det.Anag_Id)
+                    self.ResetView()
+                ACM('Seleziona tutte le righe del sottoconto', AssociaTutte)
+            
+            det.MoveRow(row)
+            if len(righe_sel) > 0 and det.Anag_Id == self.current_pdc:
+                def DeselezionaRighe(event):
+                    det.Esegui_DeselezionaRighePdc(det.Anag_Id)
+                    self.current_pdc = None
+                    self.ResetView()
+                ACM('Deseleziona righe', DeselezionaRighe)
+            
+            det.MoveRow(row)
             if det.Chiedi_MancanoChiaviNelleRighe(righe_sel):
                 
                 def AbbinaRighe(event):
@@ -521,6 +575,7 @@ class SpesometroGrid(dbgrid.ADB_Grid):
                     event.Skip()
                 ACM('Abbina righe', AbbinaRighe, riga_ok)
                 
+            det.MoveRow(row)
             if det.Chiedi_CiSonoChiaviNelleRighe(righe_sel):
                 def ResettaChiavi(event):
                     det.Esegui_ResettaChiaviNelleRighe(righe_sel)
