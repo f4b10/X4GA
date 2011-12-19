@@ -29,6 +29,13 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.14', None, (
+         ("BUG1097",
+         """Correzione problema in fatturazione differita, richiedendo la
+         separazione delle fatture per destinazione diversa originava 
+         segnalazione di variabile inesistente e non proseguiva."""),
+        ),),
+    
     ('1.4.13', None, (
          ("BET1119",
          """Perfezionamenti spesometro: possibilità di selezione automatica 

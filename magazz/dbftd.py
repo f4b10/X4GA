@@ -406,7 +406,7 @@ class FtDif(adb.DbTable):
             #test necessità di nuovo documento
             if idmag != lastmag or d.id_pdc != lastpdc or sepall or\
                (sepmp and d.id_modpag != lastmp) or \
-               (sepdest and d.id_destin != lastdest):
+               (sepdest and d.id_dest != lastdest):
                 
                 #creazione testata
                 
