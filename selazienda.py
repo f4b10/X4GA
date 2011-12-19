@@ -350,7 +350,7 @@ class SelAziendaPanel(aw.Panel):
         c = self.x4conn.cursor()
         if (c.execute("SELECT psw FROM utenti WHERE descriz=%s", user)>0):
             psw_memo = c.fetchone()[0]
-            c.execute("select old_password('%s');" % psw)
+            c.execute("select old_password(%s)", psw)
             psw_digi=c.fetchone()[0]
         else:
             psw_memo='1'
