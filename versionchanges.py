@@ -29,6 +29,14 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.15', None, (
+         ("BUG1098",
+         """Corretta totalizzazione documento in presenza di righe configurate
+         come aumento dei costo di acquisto, originava eccezione."""),
+         ("BUG1099",
+         """Corretta interrogazione sottoscorta."""),
+        ),),
+    
     ('1.4.14', None, (
          ("BUG1097",
          """Correzione problema in fatturazione differita, richiedendo la
