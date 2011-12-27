@@ -1565,12 +1565,12 @@ class DocMag(adb.DbTable):
                 if mov.importo is not None:
                     if mov.qta is not None and mov.prezzo is not None:
                         mov.importo = RoundImp(mov.qta*mov.prezzo\
-                                               *(100-mov.sconto1)/100\
-                                               *(100-mov.sconto2)/100\
-                                               *(100-mov.sconto3)/100\
-                                               *(100-mov.sconto4)/100\
-                                               *(100-mov.sconto5)/100\
-                                               *(100-mov.sconto6)/100)
+                                               *(100-(mov.sconto1 or 0))/100\
+                                               *(100-(mov.sconto2 or 0))/100\
+                                               *(100-(mov.sconto3 or 0))/100\
+                                               *(100-(mov.sconto4 or 0))/100\
+                                               *(100-(mov.sconto5 or 0))/100\
+                                               *(100-(mov.sconto6 or 0))/100)
                         totim += mov.importo
             if self.totaumpr>0:
                 totau = 0
