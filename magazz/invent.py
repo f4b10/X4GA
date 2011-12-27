@@ -321,7 +321,10 @@ class InventPanel(aw.Panel):
     
     def SetTipoInv(self):
         ci = self.FindWindowById
-        invdata = ci(wdr.ID_INVDATA).IsChecked()
+        try:
+            invdata = ci(wdr.ID_INVDATA).IsChecked()
+        except:
+            invdata = True
         if invdata:
             self.dbinv = self.dbinvdat
             s = True
