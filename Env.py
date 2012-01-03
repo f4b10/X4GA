@@ -3419,6 +3419,7 @@ class Azienda(object):
                  [ "barcode",    "CHAR",     32, None, "Barcode letto dal pdt", None ],
                  [ "id_tiplist", "INT",     idw, None, "ID tipo listino", None ],
                  [ "id_aliqiva", "INT",     idw, None, "ID aliquota iva", None ],
+                 [ "um",         "CHAR",      5, None, "Unità di misura", None ],
                  [ "qta",        "DECIMAL", IQM,  DQM, "Quantita'", None ],
                  [ "prezzo",     "DECIMAL", IPM,  DPM, "Prezzo", None ],
                  [ "sconto1",    "DECIMAL",   5,    2, "Sconto 1", None ],
