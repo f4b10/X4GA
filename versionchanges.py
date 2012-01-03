@@ -29,6 +29,12 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.16', None, (
+         ("BUG1100",
+         """Eliminati messaggi di errore in caso di difficoltà di collegamento
+         al google cloud print."""),
+        ),),
+    
     ('1.4.15', None, (
          ("BUG1098",
          """Corretta totalizzazione documento in presenza di righe configurate

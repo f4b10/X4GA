@@ -687,16 +687,21 @@ class print_Report:
                             def RipristinaFocus():
                                 pass
                         if printer.startswith('gcp://'):
-                            wx.BeginBusyCursor()
-                            w = awu.WaitDialog(parentWindow, message="Invio stampa a Google Cloud Print")
+                            if messages:
+                                wx.BeginBusyCursor()
+                                w = awu.WaitDialog(parentWindow, message="Invio stampa a Google Cloud Print")
                             from report.pdfcloud import PdfCloudPrint
                             try:
                                 PdfCloudPrint(os.path.abspath(nameOutputFile), printer[6:], RipristinaFocus)
                             except Exception, e:
-                                aw.awu.MsgDialog(parentWindow, repr(e.args), style=wx.ICON_ERROR)
+                                if messages:
+                                    aw.awu.MsgDialog(parentWindow, repr(e.args), style=wx.ICON_ERROR)
+                                else:
+                                    raise Exception, repr(e.args)
                             finally:
-                                wx.EndBusyCursor()
-                                w.Destroy()
+                                if messages:
+                                    wx.EndBusyCursor()
+                                    w.Destroy()
                         else:
                             copies = copies or 1
                             PdfPrint(os.path.abspath(nameOutputFile), printer, copies, RipristinaFocus)

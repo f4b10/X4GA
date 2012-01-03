@@ -77,9 +77,13 @@ def SetAuthTokens(tokens):
     AUTH_TOKENS = tokens
 
 def InitAuthTokens(user, pswd):
-    tokens = GetAuthTokens(user, pswd)
-    SetAuthTokens(tokens)
-
+    try:
+        tokens = GetAuthTokens(user, pswd)
+        SetAuthTokens(tokens)
+        return True
+    except:
+        pass
+    return False
 
 def EncodeMultiPart(fields, files, file_type='application/xml'):
     """Encodes list of parameters and files for HTTP multipart format.

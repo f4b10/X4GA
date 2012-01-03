@@ -481,7 +481,7 @@ class PrintersComboBox(wx.ComboBox):
                             self.types.append('gcp')
                             self.Append('(GCP) %s' % name)
             except Exception, e:
-                awu.MsgDialog(self.GetParent(), repr(e.args), style=wx.ICON_ERROR)
+                pass#awu.MsgDialog(self.GetParent(), repr(e.args), style=wx.ICON_ERROR)
             finally:
                 wx.EndBusyCursor()
         if sys.platform == 'win32':
