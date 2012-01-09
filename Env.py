@@ -3403,6 +3403,16 @@ class Azienda(object):
                  [ "accstor",       "DECIMAL",   IVI,  DVI, "Ammontare dello storno acconto", None ],
                  [ "ready",         "TINYINT",     1, None, "Flag sessione letture conclusa", None ],
              ]
+            
+            if cls.MAGNOCODEDES:
+                cls.pdt_h += [\
+                [ "nocodedes_descriz",    "VARCHAR",    60, None, "Destinatario non codificato: Descrizione", None ],
+                [ "nocodedes_indirizzo",  "VARCHAR",    60, None, "Destinatario non codificato: Indirizzo", None ],
+                [ "nocodedes_cap",        "CHAR",        5, None, "Destinatario non codificato: CAP", None ],
+                [ "nocodedes_citta",      "VARCHAR",    60, None, "Destinatario non codificato: Città", None ],
+                [ "nocodedes_prov",       "CHAR",        2, None, "Destinatario non codificato: Provincia", None ],
+                [ "nocodedes_id_stato",   "INT",       idw, None, "Destinatario non codificato: ID stato", None ], ]
+            
             cls.set_constraints(cls.TABNAME_PDT_H,
                                 ((cls.TABSETUP_CONSTR_PDC, 'id_pdc', cls.TABCONSTRAINT_TYPE_CASCADE),))
             
