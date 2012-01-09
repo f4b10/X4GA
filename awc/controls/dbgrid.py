@@ -466,8 +466,11 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
         
         tab = self.GetTable()
         
-        dummy = wx.TextCtrl(self, -1)
-        dummy.Hide()
+        try:
+            dummy = wx.TextCtrl(self, -1)
+            dummy.Hide()
+        except:
+            dummy = None
         
         for col, size in self._csize.iteritems():
             
@@ -514,7 +517,7 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
             else:
                 _len = None
             
-            if _len:
+            if _len and dummy is not None:
                 dummy.SetFont(self.colFont[col])
                 sizing_text = 'M' * _len
                 if wx.Platform != "__WXMSW__":   # give it a little extra space
@@ -531,7 +534,8 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
             self.SetColMinimalWidth(col, 15)
             self.SetColSize(col, size)
         
-        dummy.Destroy()
+        if dummy is not None:
+            dummy.Destroy()
         
         fit = True
         if self._anchor_column is not None:

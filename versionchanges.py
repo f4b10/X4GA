@@ -29,6 +29,12 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.17', None, (
+         ("BUG1101",
+         """Rimossa eccezione sporadica in creazione dialog su piattaforme
+         a 64 bit."""),
+        ),),
+    
     ('1.4.16', None, (
          ("BUG1100",
          """Eliminati messaggi di errore in caso di difficoltà di collegamento
