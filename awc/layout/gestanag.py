@@ -539,6 +539,8 @@ class AnagPanel(aw.Panel):
                           (ID_BTNPRINT,        self.OnPrint)):
             self.Bind(wx.EVT_BUTTON, func, id=cid)
         
+        self.FindWindowById(ID_BTN_RECNEW).Bind(wx.EVT_RIGHT_UP, self.OnCopyToDuplicate)
+        
         if self.complete:
             self.SetAcceleratorKey('V', ID_SSV,             'SSV',   'Abilita o disabilita la visualizzazione degli elementi con status nascosto')
             self.SetAcceleratorKey('C', ID_SEARCHBTN,       'Cerca', 'Cerca quanto digitato')
@@ -1009,7 +1011,34 @@ class AnagPanel(aw.Panel):
                             self.db_datalink[n][1].SetValue(v)
                     except IndexError:
                         pass
-        self.SetFirstFocus()   
+            self.TestRecordValuesAfterCopy(idcopy)
+            self.SetFirstFocus()
+            return True
+        return False
+    
+    def OnCopyToDuplicate(self, event):
+        if self.db_recid is not None:
+            self.CopyTo_Duplicate()
+            if self.db_recid is None:
+                aw.awu.MsgDialog(self, "Stai lavorando su un record duplicato, effettua le modifiche", style=wx.ICON_INFORMATION)
+        event.Skip()
+    
+    def CopyTo_Duplicate(self):
+        
+        out = False
+        
+        if self.db_recid is not None:
+            
+            idcopy = self.db_recid
+            self.SetInsertMode()
+            self._panelcard.Enable()
+            
+            out = self.CopyFrom_DoCopy(idcopy)
+        
+        return out
+    
+    def TestRecordValuesAfterCopy(self, idcopyfrom):
+        pass
     
     def GetLinkTableClass(self):
         return linktable.LinkTable

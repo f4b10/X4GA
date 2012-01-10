@@ -29,6 +29,17 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.18', None, (
+         ("BET1120",
+         """Introdotta funzionalità di duplicazione del record nelle gestioni
+         anagrafiche mediante tasto destro del mouse sul bottone di 
+         inserimento."""),
+         ("BUG1102",
+         """Modificata funzionalità di copia del prodotto in fase di inserimento,
+         ora non copia l'eventuale barcode associato al prodotto che si intende
+         copiare."""),
+        ),),
+    
     ('1.4.17', None, (
          ("BUG1101",
          """Rimossa eccezione sporadica in creazione dialog su piattaforme
