@@ -824,6 +824,10 @@ class ProdPanel(ga.AnagPanel):
         
         self.HelpBuilder_SetDir('anag.prod')
     
+    def TestRecordValuesAfterCopy(self, idcopyfrom):
+        cn = self.FindWindowByName
+        cn('barcode').SetValue(None)
+    
     def GetLinkTableClass(self):
         return alib.LinkTableProd
     
