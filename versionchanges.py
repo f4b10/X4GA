@@ -34,10 +34,15 @@ history = (
          """Introdotta funzionalità di duplicazione del record nelle gestioni
          anagrafiche mediante tasto destro del mouse sul bottone di 
          inserimento."""),
+         ("BET1121",
+         """Recupero di aliquota iva e importo dell'acconto in dataentry magazzino
+         su righe di storno acconto."""),
          ("BUG1102",
          """Modificata funzionalità di copia del prodotto in fase di inserimento,
          ora non copia l'eventuale barcode associato al prodotto che si intende
          copiare."""),
+         ("BUG1103",
+         """Esclusione dei documenti annullati nel calcolo degli storni acconti."""),
         ),),
     
     ('1.4.17', None, (

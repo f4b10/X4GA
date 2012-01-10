@@ -979,7 +979,12 @@ class GridBody(object):
             dbacc = dlg.panel.dbacc
             mov.descriz = "STORNO ACCONTO FT. N. %s DEL %s" % (dbacc.accodoc_numdoc,
                                                                doc.dita(dbacc.accodoc_datdoc))
+            mov.importo = min(dbacc.accomov_importo, doc.totimponib)
+            if doc.cfgdoc.caucon.pasegno != "A":
+                mov.importo = -mov.importo
+            mov.id_aliqiva = dbacc.accoiva_id
             mov.id_movacc = dbacc.accomov_id
+            self.MakeTotals()
             self.gridbody.ForceRefresh()
     
     def GridBodyOnUnlinkFromAcconto(self, event):
