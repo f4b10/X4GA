@@ -539,9 +539,10 @@ class AnagPanel(aw.Panel):
                           (ID_BTNPRINT,        self.OnPrint)):
             self.Bind(wx.EVT_BUTTON, func, id=cid)
         
-        self.FindWindowById(ID_BTN_RECNEW).Bind(wx.EVT_RIGHT_UP, self.OnCopyToDuplicate)
-        
         if self.complete:
+            
+            self.FindWindowById(ID_BTN_RECNEW).Bind(wx.EVT_RIGHT_UP, self.OnCopyToDuplicate)
+            
             self.SetAcceleratorKey('V', ID_SSV,             'SSV',   'Abilita o disabilita la visualizzazione degli elementi con status nascosto')
             self.SetAcceleratorKey('C', ID_SEARCHBTN,       'Cerca', 'Cerca quanto digitato')
             self.SetAcceleratorKey('O', ID_SEARCHORD,       None,    'Cambia l\'ordinamento dell\'elenco risultati')
@@ -979,7 +980,7 @@ class AnagPanel(aw.Panel):
         dlg = CopyFromDialog(p, -1, pos=pos, style=wx.SIMPLE_BORDER, 
                              linktable_class_cb=self.GetLinkTableClass,
                              linktable_tab_name=self.db_tabname,
-                             linktable_dlgclass=self.__class__,
+                             linktable_dlgclass=None,
                              linktable_last_ins=self.CopyFrom_GetLastInserted())
         idcopy = None
         wx.CallAfter(lambda: dlg.FindWindowByName('copyfrom').SetFocus())
