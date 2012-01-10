@@ -4755,7 +4755,8 @@ class PdcSituazioneAcconti(adb.DbMem):
     
                SELECT SUM(ABS(stormov.importo))
                  FROM movmag_b stormov
-                WHERE stormov.id_movacc=accomov.id %(dexfilter)s
+                 JOIN movmag_h stordoc ON stordoc.id=stormov.id_doc
+                WHERE stormov.id_movacc=accomov.id %(dexfilter)s AND (stormov.f_ann IS NULL OR stormov.f_ann != 1) AND (stordoc.f_ann IS NULL OR stordoc.f_ann != 1)
             
             ) AS total_storno""" % locals()
     
@@ -4845,7 +4846,8 @@ class PdcTotaleAcconti(PdcSituazioneAcconti):
     
                SELECT SUM(ABS(stormov.importo))
                  FROM movmag_b stormov
-                WHERE stormov.id_movacc=accomov.id %(dexfilter)s
+                 JOIN movmag_h stordoc ON stordoc.id=stormov.id_doc
+                WHERE stormov.id_movacc=accomov.id %(dexfilter)s AND (stormov.f_ann IS NULL OR stormov.f_ann != 1) AND (stordoc.f_ann IS NULL OR stordoc.f_ann != 1)
             
             )) AS total_storno""" % locals()
 
@@ -4857,6 +4859,7 @@ class PdcSituazioneStorniAcconto(ElencoMovim):
     
     def __init__(self):
         ElencoMovim.__init__(self, writable=True)
+        self.AddBaseFilter('(mov.f_ann IS NULL OR mov.f_ann<>1) AND (doc.f_ann IS NULL OR doc.f_ann<>1)')
         self.AddField('0.0', 'acconto_disponib')
         self.Reset()
 
