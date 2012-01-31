@@ -29,6 +29,13 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.19', None, (
+         ("BET1122",
+         """Modificata la ricerca dei prodotti: digitando il codice, la ricerca per
+         codice fornitore e per barcode avviene ora confrontando il termine esatto
+         invece che la parte iniziale."""),
+        ),),
+    
     ('1.4.18', None, (
          ("BET1120",
          """Introdotta funzionalità di duplicazione del record nelle gestioni
