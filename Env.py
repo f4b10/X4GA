@@ -3403,6 +3403,8 @@ class Azienda(object):
                  [ "accstor",       "DECIMAL",   IVI,  DVI, "Ammontare dello storno acconto", None ],
                  [ "ready",         "TINYINT",     1, None, "Flag sessione letture conclusa", None ],
                  [ "ddtstapre",     "TINYINT",     1, None, "Flag stampa prezzi su ddt", None ],
+                 [ "numdoc",        "INT",        10, None, "Numero documento da generare", None ],
+                 [ "datdoc",        "DATE",     None, None, "Data documento da generare", None ],
              ]
             
             if cls.MAGNOCODEDES:

@@ -29,6 +29,11 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.20', None, (
+         ("INT1003",
+         """Aggiunti numero e data documento da generare in tabella testate pdt."""),
+        ),),
+    
     ('1.4.19', None, (
          ("BET1122",
          """Modificata la ricerca dei prodotti: digitando il codice, la ricerca per
