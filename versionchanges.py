@@ -29,6 +29,12 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.21', None, (
+         ("BET1123",
+         """Implementata numerazione documenti magazzino (ddt) indipendente dal
+         magazzino associato al documento."""),
+        ),),
+    
     ('1.4.20', None, (
          ("INT1003",
          """Aggiunti numero e data documento da generare in tabella testate pdt."""),

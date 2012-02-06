@@ -851,7 +851,8 @@ class MagazzPanel(aw.Panel,\
             dbdoc.AddFilter("tipdoc.docfam=%s", self.dbdoc.config.docfam)
         else:
             dbdoc.AddFilter("doc.id_tipdoc=%s", self.cauid)
-        dbdoc.AddFilter("doc.id_magazz=%s", magid)
+        if not self.dbdoc.config.nonumxmag:
+            dbdoc.AddFilter("doc.id_magazz=%s", magid)
         if dreg is None:
             dreg = Env.Azienda.Login.dataElab
         dbdoc.AddFilter("YEAR(doc.datdoc)=%s", dreg.year)
