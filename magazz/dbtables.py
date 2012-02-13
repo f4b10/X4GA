@@ -418,7 +418,7 @@ class DocMag(adb.DbTable):
             dbdoc.AddFilter("tipdoc.docfam=%s", self.config.docfam)
         else:
             dbdoc.AddFilter("doc.id_tipdoc=%s", self.id_tipdoc)
-        if not self.dbdoc.config.nonumxmag:
+        if not self.config.nonumxmag:
             dbdoc.AddFilter("doc.id_magazz=%s", magid)
         if dreg is None:
             dreg = Env.Azienda.Login.dataElab

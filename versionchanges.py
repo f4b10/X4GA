@@ -29,6 +29,11 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.22', None, (
+         ("BUG1104",
+         """Corretto bug determinazione numero documento."""),
+        ),),
+    
     ('1.4.21', None, (
          ("BET1123",
          """Implementata numerazione documenti magazzino (ddt) indipendente dal
