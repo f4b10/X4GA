@@ -48,7 +48,7 @@ class XApp(wx.App):
         cls.appcode = appcode
     @classmethod
     def GetAppCode(cls):
-        return self.appcode
+        return cls.appcode
     
     db = None
     dbcon = None

@@ -29,6 +29,11 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.23', dt.Date(2012,2,16), (
+         ("INT1004",
+         """Aggiunto campo note su corpo letture pdt."""),
+        ),),
+    
     ('1.4.22', None, (
          ("BUG1104",
          """Corretto bug determinazione numero documento."""),

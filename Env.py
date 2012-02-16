@@ -3440,6 +3440,7 @@ class Azienda(object):
                  [ "sconto2",    "DECIMAL",   5,    2, "Sconto 2", None ],
                  [ "sconto3",    "DECIMAL",   5,    2, "Sconto 3", None ],
                  [ "importo",    "DECIMAL",  10,  DVI, "Importo riga", None ],
+                 [ "note",       "VARCHAR", ntw, None, "Note della riga", None ],
              ]
             
             cls.set_constraints(cls.TABNAME_PDT_B,
