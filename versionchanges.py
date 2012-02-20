@@ -29,6 +29,12 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.24', dt.Date(2012,2,20), (
+         ("BUG1105",
+         """Corretto aggancio ad acconto, prelevava l'acconto iniziale
+         invece che quello disponibile."""),
+        ),),
+    
     ('1.4.23', dt.Date(2012,2,16), (
          ("INT1004",
          """Aggiunto campo note su corpo letture pdt."""),
