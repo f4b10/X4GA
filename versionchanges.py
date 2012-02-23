@@ -29,6 +29,12 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.25', dt.Date(2012,2,23), (
+         ("BUG1106",
+         """Adeguati i meccanismi per la determinazione del saldo iniziale 
+         sui sottoconti a quelli utilizzati per il mastro movimenti."""),
+        ),),
+    
     ('1.4.24', dt.Date(2012,2,20), (
          ("BUG1105",
          """Corretto aggancio ad acconto, prelevava l'acconto iniziale

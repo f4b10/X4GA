@@ -29,7 +29,6 @@ from awc.lib import ControllaPIVA, ControllaCodFisc
 import os, sys
 import subprocess
 from ZSI import FaultException
-from report import gcplib
 
 
 class _EntryCtrlMixin(wx.Window, cmix.ControlsMixin):
@@ -465,6 +464,8 @@ class PrintersComboBox(wx.ComboBox):
         self.names = []
         self.queues = []
         self.types = []
+        
+        from report import gcplib
         
         if GCP_ENABLED and GCP_USERNAME and GCP_PASSWORD:
             wx.BeginBusyCursor()

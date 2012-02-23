@@ -559,6 +559,8 @@ class PdcMastro(_PdcMovimMixin):
             join=adb.JOIN_LEFT, fields=None)
         _pdc = saldini.AddJoin(bt.TABNAME_PDC, 'pdc', idLeft='id_pdcpa', fields=None)
         _mas = _pdc.AddJoin(bt.TABNAME_BILMAS, 'bilmas', idLeft='id_bilmas', fields=None)
+        _reg = saldini.AddJoin(bt.TABNAME_CONTAB_H, 'reg', idLeft="id_reg", idRight="id", fields=None)
+        _cau = _reg.AddJoin(bt.TABNAME_CFGCONTAB, 'caus', idLeft='id_caus', fields=None)
         saldini.AddGroupOn("saldini.id_pdcpa")
         saldini.AddTotalOf("IF(saldini.segno='D',saldini.importo,0)", "dare")
         saldini.AddTotalOf("IF(saldini.segno='A',saldini.importo,0)", "avere")
