@@ -2054,6 +2054,8 @@ class DocMag(adb.DbTable):
 #        else:
 #            pdcivaid = None
         
+        gestiva = reg.config.tipo == 'I' or reg.config.tipo == 'C' and self.config.noivaprof != 1
+        
         pdcivaid = self.GetPdcIva(reg)
         
         if reg.config.tipo in 'IC':
@@ -2073,7 +2075,7 @@ class DocMag(adb.DbTable):
             body.id_pdcpa =    self.id_pdc
             numriga += 1
         
-        if reg.config.tipo in 'IC':
+        if gestiva:
             #riga contabile "A" - iva
             if self.totimposta:
                 body.CreateNewRow()
@@ -2093,6 +2095,20 @@ class DocMag(adb.DbTable):
         
         if bt.TIPO_CONTAB == "O":
             
+            def arr(x):
+                return round(x, bt.VALINT_DECIMALS)
+            
+            if reg.config.tipo == 'C' and self.config.noivaprof:
+                ti = 0
+                for n, tpdc in enumerate(self._info.totpdc):
+                    if n == len(self._info.totpdc)-1:
+                        i = self.totimposta-ti
+                    else:
+                        c = tpdc[magazz.RSPDC_IMPONIB]/self.totimponib
+                        i = arr(self.totimposta*c)
+                    tpdc[magazz.RSPDC_IMPORTO] = arr(tpdc[magazz.RSPDC_IMPONIB]+i)
+                    ti += i
+            
             if reg.config.tipo in 'IC':
                 #ordinaria
                 #righe contabili "C"
@@ -2100,7 +2116,7 @@ class DocMag(adb.DbTable):
                     body.CreateNewRow()
                     body.numriga =     numriga
                     body.tipriga =     "C"
-                    if True:#reg.config.tipo == 'I':
+                    if gestiva:
                         body.importo = abs(tpdc[magazz.RSPDC_IMPONIB])
                     else:
                         body.importo = abs(tpdc[magazz.RSPDC_IMPORTO])

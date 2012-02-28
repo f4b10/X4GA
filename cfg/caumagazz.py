@@ -398,6 +398,7 @@ class CauMagazzPanel(ga.AnagPanel):
                            ("acc_sepiva", { True: 1,   False: 0  } ),
                            ("canprezzo0", { True: 1,   False: 0  } ),
                            ("nonumxmag",  { True: 1,   False: 0  } ),
+                           ("noivaprof",  { True: 1,   False: 0  } ),
                            ):
             ctr = cn(name)
             ctr.SetDataLink(name, val)

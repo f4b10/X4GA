@@ -2692,6 +2692,7 @@ class Azienda(object):
                 [ "askstaint",  "CHAR",     1, None, "Flag richiesta stampa intestazioni in stampa", None ],
                 [ "numsconti",  "TINYINT",  1, None, "Numero di sconti da gestire se diverso da setup azienda", None ],
                 [ "nonumxmag",  "TINYINT",  1, None, "Flag numerazione non dipendente da magazzino", None ],
+                [ "noivaprof",  "TINYINT",  1, None, "Flag accorpamento iva su c/partita se causale non iva in reg. contabile", None ],
             ]
             
             cls.set_constraints(cls.TABNAME_CFGMAGDOC,

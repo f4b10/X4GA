@@ -29,6 +29,13 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.26', dt.Date(2012,2,28), (
+         ("BET1124",
+         """Introdotta possibilità di accorpamento dell'imposta sui sottoconti
+         di costo/ricavo nel collegamento contabile da documenti magazzino su
+         causali contabili composte non iva."""),
+        ),),
+    
     ('1.4.25', dt.Date(2012,2,23), (
          ("BUG1106",
          """Adeguati i meccanismi per la determinazione del saldo iniziale 
