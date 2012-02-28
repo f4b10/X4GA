@@ -30,6 +30,11 @@ import mx.DateTime as dt
 history = (
     
     ('1.4.26', dt.Date(2012,2,28), (
+         ("BUG1107",
+         """Corretto malfunzionamento nell'applicazione di un diverso listino
+         sulla testata del documento, anche in seguito alla richiesta di
+         applicazione del nuovo listino sulle righe già presenti i prezzi non
+         venivano adeguati."""),
          ("BET1124",
          """Introdotta possibilità di accorpamento dell'imposta sui sottoconti
          di costo/ricavo nel collegamento contabile da documenti magazzino su

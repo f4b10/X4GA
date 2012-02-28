@@ -1379,7 +1379,7 @@ class DocMag(adb.DbTable):
                 continue
             if mov.id_prod:
                 prz, tipo, _, _, _, _, _, _ = self.DefPrezzoSconti6()
-                if tipo == "L":
+                if (tipo or '').startswith("L"):
                     if prz:
                         mov.prezzo = prz
                         ND = bt.VALINT_DECIMALS
