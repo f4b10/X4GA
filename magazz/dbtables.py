@@ -306,6 +306,8 @@ class DocMag(adb.DbTable):
         i.pdtreadann = [] #lista id letture pdt da annullare in fase di conf.doc
         i.righep0 = [] #lista dei numeri di riga con prezzo nullo, aggiornata in totalizzazione
         
+        i.stampadiff = False #flag stampa differita, se True GetAnagPrint non considera destinazioni
+        
         DQ = bt.MAGQTA_DECIMALS; q = 'mov.qta'
         DI = bt.VALINT_DECIMALS; v = 'mov.importo'
         
@@ -2417,7 +2419,7 @@ class DocMag(adb.DbTable):
 #        assert isinstance(anag, adb.DbTable)
 #        assert isinstance(dest, adb.DbTable)
         try:
-            if self.config.askdatiacc == 'X':
+            if self.config.askdatiacc == 'X' and not self._info.stampadiff:
                 #dati accompagnatori richiesti
                 if getattr(self, 'enable_nocodedes', False):
                     #considero il estemporaneo
@@ -2565,6 +2567,10 @@ class DocMag(adb.DbTable):
 
 
 class DocMag_Differiti(DocMag):
+    
+    def __init__(self, *args, **kwargs):
+        DocMag.__init__(self, *args, **kwargs)
+        self._info.stampadiff = True
     
     def GetPrintFileName(self):
         def cap(x):

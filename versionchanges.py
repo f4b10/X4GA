@@ -40,6 +40,10 @@ history = (
          ("BET1126",
          """Possibilità di cercare per contenuto anche con lo spazio (" ")
          al posto del doppo punto ("..")."""),
+         ("BET1127",
+         """Dati anagrafici in stampa differita documenti, ora considera 
+         quelli del cliente anche se sulla causale è indicata la gestione
+         della destinazione diversa."""),
         ),),
     
     ('1.4.26', dt.Date(2012,2,28), (
