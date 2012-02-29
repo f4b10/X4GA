@@ -1509,6 +1509,8 @@ class AnagPanel(aw.Panel):
         if val:
             #valore digitato nel box di ricerca
             val = val.replace('..', '%')
+            if bt.OPTSPASEARCH:
+                val = val.replace(' ', '%')
             tab = self.db_tabname
             #test su codice (inizia con)
             flt = "%s.codice LIKE %%s" % tab
@@ -1570,6 +1572,8 @@ class AnagPanel(aw.Panel):
             if type(val) in (str, unicode):
                 val = val.replace(r'%', '')
                 val = val.replace('..', r'%')
+                if bt.OPTSPASEARCH:
+                    val = val.replace(' ', r'%')
                 endby = val.startswith("*")
                 if endby:
                     val = "%%%s" % val[1:]

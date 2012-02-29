@@ -282,6 +282,7 @@ class AziendaSetupPanel(_SetupPanel):
                    bt.OPTDIGSEARCH,
                    bt.OPTTABSEARCH,
                    bt.OPTRETSEARCH,
+                   bt.OPTSPASEARCH,
                    bt.OPTLNKCRDPDC,
                    bt.OPTLNKGRDPDC,
                    bt.OPTLNKCRDCLI,
@@ -360,6 +361,7 @@ class AziendaSetupPanel(_SetupPanel):
             bt.OPTDIGSEARCH = bool(cn('setup_optdigsearch').GetValue())
             bt.OPTTABSEARCH = bool(cn('setup_opttabsearch').GetValue())
             bt.OPTRETSEARCH = bool(cn('setup_optretsearch').GetValue())
+            bt.OPTSPASEARCH = bool(cn('setup_optspasearch').GetValue())
             bt.OPTLNKCRDPDC = bool(cn('setup_optlnkcrdpdc').GetValue())
             bt.OPTLNKGRDPDC = bool(cn('setup_optlnkgrdpdc').GetValue())
             bt.OPTLNKCRDCLI = bool(cn('setup_optlnkcrdcli').GetValue())
@@ -441,6 +443,7 @@ class AziendaSetupPanel(_SetupPanel):
                 bt.OPTDIGSEARCH,
                 bt.OPTTABSEARCH,
                 bt.OPTRETSEARCH,
+                bt.OPTSPASEARCH,
                 bt.OPTLNKCRDPDC,
                 bt.OPTLNKGRDPDC,
                 bt.OPTLNKCRDCLI,

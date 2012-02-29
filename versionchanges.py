@@ -34,6 +34,9 @@ history = (
          """Introdotto nuovo metodo di stampa diretta tramite indicazione
          del programma da usare ed uso della sintassi:
          <programma_reader> /t <file_pdf> <nome_stampante>."""),
+         ("BET1126",
+         """Possibilità di cercare per contenuto anche con lo spazio (" ")
+         al posto del doppo punto ("..")."""),
         ),),
     
     ('1.4.26', dt.Date(2012,2,28), (

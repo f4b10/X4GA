@@ -165,6 +165,8 @@ class GridMov(object):
             val = c.GetValue()
             if val:
                 val = '%%%s%%' % val.replace('..', r'%')
+                if bt.OPTSPASEARCH:
+                    val = val.replace(' ', r'%')
                 mov.AddFilter("mov.descriz LIKE %s", val)
         
         if cn('escdocacq').GetValue():
