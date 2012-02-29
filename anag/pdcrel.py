@@ -892,7 +892,7 @@ class DatiBancariMixin(object):
             if key == 'numcc':
                 if tipo == 'bban' or xban.startswith('IT'):
                     v = ''
-                    for x in val:
+                    for x in str(val):
                         if str.isdigit(x):
                             v += x
                     val = str(v).zfill(lun)

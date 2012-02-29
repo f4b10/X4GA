@@ -193,6 +193,14 @@ class LinkTable(wx.Control,\
     def SetCodExclusive(self, ce):
         self.codexclusive = ce
     
+    space_search = False
+    @classmethod
+    def SetSpaceSearch(cls, s):
+        cls.space_search = s
+    @classmethod
+    def GetSpaceSearch(cls):
+        return cls.space_search
+    
     codice_fieldname = 'codice'
     def SetCodiceFieldName(self, fn):
         self.codice_fieldname = fn
@@ -696,7 +704,10 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
             return
         if obj is self._ctrdes and (not self.digitsearch_ondescriz and obj.GetValue()):
             return
-        if not self._helpInProgress and obj.IsEditable() and not '..' in (obj.GetValue() or ''):
+        search_x_content = '..' in (obj.GetValue() or '')
+        if not search_x_content and self.space_search:
+            search_x_content = ' ' in (obj.GetValue() or '')
+        if not self._helpInProgress and obj.IsEditable() and not search_x_content:
             if obj.notifyChanges:
                 if obj.GetValue():
                     #codice/descriz con contenuto, attivo ricerca x
@@ -960,6 +971,8 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
                     if type(val) in (str, unicode):
                         val = val.replace(r'%', '')
                         val = val.replace('..', r'%')
+                        if self.space_search:
+                            val = val.replace(' ', r'%')
                         endby = val.startswith("*")
                         if endby:
                             val = "%%%s" % val[1:]
@@ -1023,13 +1036,8 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
             #filtro da valore digitato in codice o descrizione
             if fltv:
                 fltv = fltv.replace('..', r'%')
-                #endby = fltv.startswith("*")
-                #if endby:
-                    #fltv = "%%%s" % fltv[1:]
-                #if fltv.endswith("*"):
-                    #fltv = fltv[:-1]
-                #if not exact and not endby:
-                    #fltv += "%"
+                if self.space_search:
+                    fltv = fltv.replace(' ', r'%')
                 if expand and not fltv.endswith('%'):
                     fltv += '%'
                 f = "%s LIKE %%s" % fltf

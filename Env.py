@@ -936,6 +936,7 @@ class Azienda(object):
         OPTDIGSEARCH = True  #flag ricerca immediata in digitazione codice/descrizione
         OPTTABSEARCH = True  #flag attivazione ricerche anche con il tasto Tab
         OPTRETSEARCH = True  #flag attivazione ricerche anche con il tasto Return
+        OPTSPASEARCH = False #flag ricerca per contenuto anche con spazio, come punto punto
         OPTNOTIFICHE = False #flag attivazione notifiche eventi
         OPTBACKUPDIR = None  #cartella predefinita per i backup
         OPTLNKCRDPDC = None  #inizializzazione focus su codice/descrizione in LinkTablePdc da scheda
@@ -3771,6 +3772,9 @@ class Azienda(object):
                             import awc.controls.linktable as lt
                             lt.LinkTable.SetRetSearchOnCode(True)
                             lt.LinkTable.SetRetSearchOnDescriz(v)
+                        elif name == 'OPTSPASEARCH':
+                            import awc.controls.linktable as lt
+                            lt.LinkTable.SetSpaceSearch(v)
                         elif name == 'OPT_GC_PRINT':
                             entries.EnableGoogleCloudPrint(v)
                         elif name == 'OPT_GCP_USER':
@@ -3849,6 +3853,7 @@ class Azienda(object):
                 ('OPTDIGSEARCH',    'optdigsearch',       f, _int, None),
                 ('OPTTABSEARCH',    'opttabsearch',       f, _int, None),
                 ('OPTRETSEARCH',    'optretsearch',       f, _int, None),
+                ('OPTSPASEARCH',    'optspasearch',       f, _int, None),
                 ('OPTLNKCRDPDC',    'optlnkcrdpdc',       f, _int, None),
                 ('OPTLNKGRDPDC',    'optlnkgrdpdc',       f, _int, None),
                 ('OPTLNKCRDCLI',    'optlnkcrdcli',       f, _int, None),

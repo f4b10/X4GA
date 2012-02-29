@@ -1170,6 +1170,8 @@ class ProdPanel(ga.AnagPanel):
         if val:
             #valore digitato nel box di ricerca
             val = val.replace('..', '%')
+            if bt.OPTSPASEARCH:
+                val = val.replace(' ', '%')
             tab = self.db_tabname
             #test su codice (inizia con)
             flt = "%s.codice LIKE %%s" % tab
