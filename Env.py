@@ -3780,6 +3780,14 @@ class Azienda(object):
                                 pass
                             entries.SetGoogleCloudPrintPassword(p)
                             cls.OPT_GCP_PSWD = p
+                        elif name.endswith('_PASSWORD'):
+                            p = v
+                            try:
+                                dec = base64.b64decode(v)
+                                p = crypt.decrypt_data(dec)
+                            except:
+                                pass
+                            setattr(cls, name, p)
                         if cls != Azienda.BaseTab_base:
                             #se è stata sovrascritta la classe BaseTab, scrivo 
                             #gli stessi settaggi anche nella sua forma base,
