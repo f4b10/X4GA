@@ -30,6 +30,9 @@ import mx.DateTime as dt
 history = (
     
     ('1.4.27', dt.Date(2012,3,1), (
+         ("BUG1108",
+         """Corretto il calcolo delle coordinate BBAN/IBAN, in presenza di
+         tutti i dati occorrenti generava eccezione."""),
          ("BET1125",
          """Introdotto nuovo metodo di stampa diretta tramite indicazione
          del programma da usare ed uso della sintassi:
