@@ -271,6 +271,7 @@ class GeneralSetup(Setup):
                   ('output',  './report/pdf'),          #cartella output files pdf
                   ('images',  './report/immagini'),     #cartella immagini dei report
                   ('dde',     '1'),                     #flag attivazione DDE x Adobe Reader
+                  ('cmdprint','0'),                     #flag stampa diretta da command line
                   ('action',  'view'),                  #azione di default: view/print
                   ('pdfcmd',  ''),                      #comando apertura pdf a fine stampa
                   ('prtdef',  ''),                      #nome stampante di default
@@ -350,6 +351,9 @@ class GeneralSetup(Setup):
                 
             elif opt == 'dde':
                 report.SetDDE(val == '1')
+                
+            elif opt == 'cmdprint':
+                report.SetDirectPrint(val == '1')
                 
             elif opt == 'prtdef':
                 report.SetPrinterName((val or '').replace('/', '\\'))

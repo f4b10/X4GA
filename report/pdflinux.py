@@ -27,7 +27,7 @@ import subprocess
 import awc.util as awu
 
 
-def PdfPrint(filename, printer, copies=1, cbex=None):
+def PdfPrint(filename, printer, copies=1, cbex=None, usedde=False, cmdprint=False, pdfcmd=None):
     
     out = False
     

@@ -51,6 +51,11 @@ class DDECheckBox(CheckBox):
         CheckBox.__init__(self, *args, **kwargs)
         self.SetDataLink(values={True: '1', False: '0'})
 
+class CmdPrintCheckBox(CheckBox):
+    def __init__(self, *args, **kwargs):
+        CheckBox.__init__(self, *args, **kwargs)
+        self.SetDataLink(values={True: '1', False: '0'})
+
 class PrintPreviewRadioBox(RadioBox):
     def __init__(self, *args, **kwargs):
         RadioBox.__init__(self, *args, **kwargs)
@@ -292,8 +297,9 @@ ID_PDFDPERS = 15023
 ID_PDFCMD = 15024
 ID_PRTDEF = 15025
 ID_LABELER = 15026
-ID_RPTDDE = 15027
-ID_RPTACTION = 15028
+ID_RPTACTION = 15027
+ID_RPTDDE = 15028
+ID_RPTCMDPRINT = 15029
 
 def Report( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -380,19 +386,31 @@ def Report( parent, call_fit = True, set_sizer = True ):
 
     item22 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
-    item24 = wx.StaticBox( parent, -1, "DDE" )
-    item23 = wx.StaticBoxSizer( item24, wx.VERTICAL )
+    item23 = PrintPreviewRadioBox( parent, ID_RPTACTION, "Di default proponi:", wx.DefaultPosition, wx.DefaultSize, 
+        ["Anteprima di stampa","Stampa diretta"] , 1, wx.RA_SPECIFY_COLS )
+    item23.SetName( "Report_action" )
+    item22.Add( item23, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+
+    item24 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
-    item25 = DDECheckBox( parent, ID_RPTDDE, "Attiva (richiede Adobe Reader)", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item25.SetName( "Report_dde" )
-    item23.Add( item25, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+    item26 = wx.StaticBox( parent, -1, "Modo di stampa diretta" )
+    item25 = wx.StaticBoxSizer( item26, wx.VERTICAL )
+    
+    item27 = DDECheckBox( parent, ID_RPTDDE, "Attiva DDE (richiede Adobe Reader - deprecato)", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item27.SetName( "Report_dde" )
+    item25.Add( item27, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
 
-    item22.Add( item23, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL|wx.ALL, 5 )
+    item28 = CmdPrintCheckBox( parent, ID_RPTCMDPRINT, "Usa programma apertura con /t per stampare direttamente", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item28.SetName( "Report_cmdprint" )
+    item25.Add( item28, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
 
-    item26 = PrintPreviewRadioBox( parent, ID_RPTACTION, "Comportamento di default del pannello di stampa:", wx.DefaultPosition, wx.DefaultSize, 
-        ["Anteprima di stampa","Stampa diretta"] , 1, wx.RA_SPECIFY_ROWS )
-    item26.SetName( "Report_action" )
-    item22.Add( item26, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+    item24.Add( item25, 0, wx.GROW|wx.ALL, 5 )
+
+    item24.AddGrowableCol( 0 )
+
+    item24.AddGrowableRow( 0 )
+
+    item22.Add( item24, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item22.AddGrowableCol( 1 )
 
@@ -407,9 +425,9 @@ def Report( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_SITENAME = 15029
-ID_SITEFOLDER = 15030
-ID_SITEREMOTE = 15031
+ID_SITENAME = 15030
+ID_SITEFOLDER = 15031
+ID_SITEREMOTE = 15032
 
 def SiteConfig( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -447,10 +465,10 @@ def SiteConfig( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_CSVSEPARATOR = 15032
-ID_CSVDELIMITER = 15033
-ID_CSVEXCELZERO = 15034
-ID_CSVQUOTING = 15035
+ID_CSVSEPARATOR = 15033
+ID_CSVDELIMITER = 15034
+ID_CSVEXCELZERO = 15035
+ID_CSVQUOTING = 15036
 
 def CSVFormatFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -740,19 +758,31 @@ def SetupReportFunc( parent, call_fit = True, set_sizer = True ):
 
     item19 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
-    item21 = wx.StaticBox( parent, -1, "DDE" )
-    item20 = wx.StaticBoxSizer( item21, wx.VERTICAL )
+    item20 = PrintPreviewRadioBox( parent, ID_RPTACTION, "Di default proponi:", wx.DefaultPosition, wx.DefaultSize, 
+        ["Anteprima di stampa","Stampa diretta"] , 1, wx.RA_SPECIFY_COLS )
+    item20.SetName( "Report_action" )
+    item19.Add( item20, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+
+    item21 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
-    item22 = DDECheckBox( parent, ID_RPTDDE, "Attiva (richiede Adobe Reader)", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item22.SetName( "Report_dde" )
-    item20.Add( item22, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+    item23 = wx.StaticBox( parent, -1, "Modo di stampa diretta" )
+    item22 = wx.StaticBoxSizer( item23, wx.VERTICAL )
+    
+    item24 = DDECheckBox( parent, ID_RPTDDE, "Attiva DDE (richiede Adobe Reader - deprecato)", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item24.SetName( "Report_dde" )
+    item22.Add( item24, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
 
-    item19.Add( item20, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+    item25 = CmdPrintCheckBox( parent, ID_RPTCMDPRINT, "Usa programma apertura con /t per stampare direttamente", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item25.SetName( "Report_cmdprint" )
+    item22.Add( item25, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
 
-    item23 = PrintPreviewRadioBox( parent, ID_RPTACTION, "Comportamento di default del pannello di stampa:", wx.DefaultPosition, wx.DefaultSize, 
-        ["Anteprima di stampa","Stampa diretta"] , 1, wx.RA_SPECIFY_ROWS )
-    item23.SetName( "Report_action" )
-    item19.Add( item23, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+    item21.Add( item22, 0, wx.GROW|wx.ALL, 5 )
+
+    item21.AddGrowableCol( 0 )
+
+    item21.AddGrowableRow( 0 )
+
+    item19.Add( item21, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item19.AddGrowableCol( 1 )
 

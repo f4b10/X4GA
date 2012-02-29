@@ -110,10 +110,25 @@ def SetDDE(d):
 def GetDDE():
     return dde
 
+directprint = True
+def SetDirectPrint(d):
+    assert type(d) is bool
+    global directprint
+    directprint = d
+def GetDirectPrint():
+    return directprint
+
 pdfcmd = None
 def SetPdfCommand(c):
     global pdfcmd
     pdfcmd = c
+
+def can_direct_print():
+    if dde:
+        return True
+    if directprint and bool(pdfcmd):
+        return True
+    return False
 
 
 class MultiReportStandardDialog(wx.Dialog):
@@ -134,13 +149,14 @@ class MultiReportStandardDialog(wx.Dialog):
         self.CenterOnScreen()
         def cn(x):
             return self.FindWindowByName(x)
-        if (actiondefault == 'view' or not dde) and self._can_preview:
+        
+        if (actiondefault == 'view' or not can_direct_print()) and self._can_preview:
             cn('btnpreview').SetDefault()
             self._action = 'VIEW'
-        elif (actiondefault == 'print' and dde) and self._can_print:
+        elif (actiondefault == 'print' and can_direct_print()) and self._can_print:
             cn('btnprint').SetDefault()
             self._action = 'PRINT'
-        if not dde:
+        if not can_direct_print():
             for name in 'btnprint printername numcopie'.split():
                 cn(name).Disable()
         self.Bind(wx.EVT_LISTBOX, self.OnHiLite, id=wdr.ID_REPORTS)
@@ -216,7 +232,7 @@ class MultiReportStandardDialog(wx.Dialog):
     
     def _SetOutput(self, tipo):
         self._action = tipo
-        if not dde:
+        if not can_direct_print():
             self.EndModal(wx.ID_OK)
         reports, printers, copies = map(lambda x: self.FindWindowByName(x), 
                                 'reports printername numcopie'.split())
@@ -431,6 +447,7 @@ class Report:
             p['rowFilter'] = rowFilter
             p['messages'] = messages
             p['dde'] = dde
+            p['cmdprint'] = directprint
             p['printer'] = printer
             p['labeler'] = labelername
             p['copies'] = copies
@@ -468,6 +485,7 @@ class Report:
         rowFilter = p['rowFilter']
         messages = p['messages']
         dde = p['dde']
+        cmdprint = p['cmdprint']
         printer = p['printer']
         labeler = p['labeler']
         copies = p['copies']
@@ -484,6 +502,7 @@ class Report:
                         rowFilter=rowFilter, 
                         messages=messages, 
                         usedde=dde,
+                        cmdprint=cmdprint,
                         printer=printer,
                         labeler=labeler,
                         copies=copies,
