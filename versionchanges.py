@@ -29,6 +29,13 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.27', dt.Date(2012,3,1), (
+         ("BET1125",
+         """Introdotto nuovo metodo di stampa diretta tramite indicazione
+         del programma da usare ed uso della sintassi:
+         <programma_reader> /t <file_pdf> <nome_stampante>."""),
+        ),),
+    
     ('1.4.26', dt.Date(2012,2,28), (
          ("BUG1107",
          """Corretto malfunzionamento nell'applicazione di un diverso listino

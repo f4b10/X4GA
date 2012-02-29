@@ -26,27 +26,39 @@ import os, sys
 import wx
 
 
-def PdfPrint(filename, printer, copies=1, cbex=None):
+def PdfPrint(filename, printer, copies=1, cbex=None, usedde=False, cmdprint=False, pdfcmd=None):
     """ print a pdf """
-    ## create a DDE connection and open acrobat if possible
-    res = _checkAcrobatOpen(1, cbex)
-
-    if not res:
-        return
     
-    ddeServer = res[0]
-    ddeConv = res[1]
+    out = False
+    if usedde:
+        
+        ## create a DDE connection and open acrobat if possible
+        res = _checkAcrobatOpen(1, cbex)
     
-    try:
-        for n in range(copies):
-            if n>0:
-                wx.Sleep(1)
-            ddeConv.Exec('[FilePrintTo("%s", "%s")]' % (filename, printer))
-        out = True
-    except:
-        out = False
+        if not res:
+            return
+        
+        ddeServer = res[0]
+        ddeConv = res[1]
+        
+        try:
+            for n in range(copies):
+                if n>0:
+                    wx.Sleep(1)
+                ddeConv.Exec('[FilePrintTo("%s", "%s")]' % (filename, printer))
+            out = True
+        except:
+            pass
+        
+        ddeServer.Destroy()
     
-    ddeServer.Destroy()
+    if cmdprint and bool(pdfcmd):
+        import subprocess
+        try:
+            subprocess.Popen([pdfcmd, '/t', filename, printer])
+            out = True
+        except:
+            pass
     
     if cbex:
         cbex()

@@ -299,6 +299,7 @@ class print_Report:
                  endFunc=None,
                  messages=True,
                  usedde=False,
+                 cmdprint=False,
                  printer=None,
                  labeler=None,
                  copies=None,
@@ -704,7 +705,7 @@ class print_Report:
                                     w.Destroy()
                         else:
                             copies = copies or 1
-                            PdfPrint(os.path.abspath(nameOutputFile), printer, copies, RipristinaFocus)
+                            PdfPrint(os.path.abspath(nameOutputFile), printer, copies, RipristinaFocus, usedde=usedde, cmdprint=cmdprint, pdfcmd=pdfcmd)
                     else:
                         raise Exception, 'tipo di output non riconosciuto'
                 self.nameOutputFile = nameOutputFile
