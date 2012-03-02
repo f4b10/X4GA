@@ -2568,10 +2568,6 @@ class DocMag(adb.DbTable):
 
 class DocMag_Differiti(DocMag):
     
-    def __init__(self, *args, **kwargs):
-        DocMag.__init__(self, *args, **kwargs)
-        self._info.stampadiff = True
-    
     def GetPrintFileName(self):
         def cap(x):
             c = True
