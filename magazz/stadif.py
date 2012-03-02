@@ -141,6 +141,7 @@ class StaDifPanel(aw.Panel):
             self.Layout()
         
         self.dbdocs = dbm.DocMag_Differiti()
+        self.dbdocs._info.stampadiff = True
         self.dbdocs.ShowDialog(self)
         self.dbdocs.AddField('0.0', 'dastampare')
         self.dbdocs.Get(-1) #aggiorna i puntatori alle colonne dopo aggiunta col
