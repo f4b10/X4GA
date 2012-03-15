@@ -87,7 +87,7 @@
 					<textElement textAlignment="Left" verticalAlignment="Bottom" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="12" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.Integer"><![CDATA[RS._info.dbcee.GetDescrizOf('sezione', codcee=RS.cee)]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.Integer"><![CDATA[RS._info.dbcee.GetDescrizOf('sezione', codcee=RS.cee).replace("STATO PATRIMONIALE - STATO PATRIMONIALE", "STATO PATRIMONIALE")]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
@@ -138,9 +138,9 @@
 					<reportElement
 						mode="Transparent"
 						x="96"
-						y="6"
+						y="1"
 						width="324"
-						height="20"
+						height="27"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						key="textField-38"/>
@@ -152,7 +152,7 @@
 					<textElement textAlignment="Right" verticalAlignment="Bottom" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica-BoldOblique" size="12" isBold="true" isItalic="true" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.Integer"><![CDATA["TOTALE %s:" % RS._info.dbcee.GetDescrizOf('sezione', codcee=RS.cee)]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.Integer"><![CDATA["TOTALE %s:" % RS._info.dbcee.GetDescrizOf('sezione', codcee=RS.cee).replace("STATO PATRIMONIALE - STATO PATRIMONIALE", "STATO PATRIMONIALE")]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -585,7 +585,7 @@
 			<groupExpression><![CDATA[RS.cee[:6]]]></groupExpression>
 			<groupHeader>
 			<band height="20"  isSplitAllowed="true" >
-				<printWhenExpression><![CDATA[bool((RS.cee[2:6] or '').strip()) and RS.gry == 0]]></printWhenExpression>
+				<printWhenExpression><![CDATA[RS.gry == 0]]></printWhenExpression>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
