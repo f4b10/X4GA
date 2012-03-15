@@ -545,8 +545,11 @@ class ContabPanel(aw.Panel,\
         c.Enable(ena)
         c.SetToolTipString(tip)
         
+        canreg = getattr(Env.Azienda.Login.userdata, 'can_contabins', None) == 1
+        
         self.controls["button_modify"].Enable(enable and\
                                               self.canedit and\
+                                              canreg and\
                                               not(self.reg_st_regiva) and\
                                               not(self.reg_st_giobol) and\
                                               status == STATUS_DISPLAY)

@@ -29,6 +29,13 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.28', None, (
+         ("BUG1109",
+         """Corretto il menu principale e il dataentry contabile per
+         inibizione inserimento/modifica registrazioni se il relativo
+         permesso sull'utente non lo consente."""),
+        ),),
+    
     ('1.4.27', dt.Date(2012,3,1), (
          ("BUG1108",
          """Corretto il calcolo delle coordinate BBAN/IBAN, in presenza di

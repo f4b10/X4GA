@@ -641,6 +641,15 @@ class XFrame(aw.Frame):
         except Exception, e:
             pass
         
+        #controllo permesso contabilità: inserimento
+        try:
+            if datute.can_contabins != 1:
+                item = menubar.FindItemById(ID_MENUCONTINS)
+                if item:
+                    item.GetMenu().Delete(ID_MENUCONTINS)
+        except Exception, e:
+            pass
+        
         #controllo permesso contabilità: interrogazioni
         try:
             if datute.can_contabint != 1:
