@@ -86,7 +86,7 @@ def AziendaSetup( parent, call_fit = True, set_sizer = True ):
 
     item4 = wx.Panel( item2, -1 ); item4.SetName('contabpanel')
     ContabSetup(item4, False)
-    item2.AddPage( item4, "ContabilitÃ " )
+    item2.AddPage( item4, "Contabilità" )
 
     item5 = wx.Panel( item2, -1 ); item5.SetName('magazzpanel')
     MagazzSetup(item5, False)
@@ -176,7 +176,7 @@ def ContabSetup( parent, call_fit = True, set_sizer = True ):
     item11.SetName( "setup_tipo_contab" )
     item9.Add( item11, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item12 = RadioBox( parent, ID_RADIOBOX, "PeriodicitÃ  di liquidazione IVA", wx.DefaultPosition, wx.DefaultSize, 
+    item12 = RadioBox( parent, ID_RADIOBOX, "Periodicità di liquidazione IVA", wx.DefaultPosition, wx.DefaultSize, 
         ["Mensile","Trimestrale"] , 1, wx.RA_SPECIFY_COLS )
     item12.SetName( "setup_liqiva_periodic" )
     item9.Add( item12, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
@@ -348,7 +348,7 @@ def MagazzSetup( parent, call_fit = True, set_sizer = True ):
     
     item9 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
-    item10 = wx.StaticText( parent, ID_TEXT, "QuantitÃ :", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item10 = wx.StaticText( parent, ID_TEXT, "Quantità:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item9.Add( item10, 0, wx.ALIGN_CENTER|wx.TOP|wx.BOTTOM, 5 )
 
     item11 = NumCtrl( parent, integerWidth=2, allowNegative=False); item11.SetName('setup_magdec_qta')
@@ -401,12 +401,12 @@ def MagazzSetup( parent, call_fit = True, set_sizer = True ):
     item23 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
     item24 = ScorpIvaRadioBox( parent, ID_MAGSCORPCOS, "I costi su scheda prodotto sono:", wx.DefaultPosition, wx.DefaultSize, 
-        ["Imponibili: l'IVA sarÃ  aggiunta","Ivati: l'IVA sarÃ  scorporata"] , 1, wx.RA_SPECIFY_COLS )
+        ["Imponibili: l'IVA sarà aggiunta","Ivati: l'IVA sarà scorporata"] , 1, wx.RA_SPECIFY_COLS )
     item24.SetName( "setup_magscorpcos" )
     item23.Add( item24, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item25 = ScorpIvaRadioBox( parent, ID_MAGSCORPPRE, "I prezzi su scheda prodotto sono:", wx.DefaultPosition, wx.DefaultSize, 
-        ["Imponibili: l'IVA sarÃ  aggiunta","Ivati: l'IVA sarÃ  scorporata"] , 1, wx.RA_SPECIFY_COLS )
+        ["Imponibili: l'IVA sarà aggiunta","Ivati: l'IVA sarà scorporata"] , 1, wx.RA_SPECIFY_COLS )
     item25.SetName( "setup_magscorppre" )
     item23.Add( item25, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
 
@@ -841,10 +841,10 @@ def MagazzSetup( parent, call_fit = True, set_sizer = True ):
     item140.SetName( "setup_magprovmov" )
     item134.Add( item140, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 
-    item142 = wx.StaticBox( parent, -1, "Gerarchia ereditarietÃ " )
+    item142 = wx.StaticBox( parent, -1, "Gerarchia ereditarietà" )
     item141 = wx.StaticBoxSizer( item142, wx.HORIZONTAL )
     
-    item143 = wx.StaticText( parent, ID_TEXT, "Sequenza prioritÃ  provvig.:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item143 = wx.StaticText( parent, ID_TEXT, "Sequenza priorità provvig.:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item141.Add( item143, 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
 
     item144 = wx.TextCtrl( parent, ID_MAGPROVSEQ, "", wx.DefaultPosition, [80,-1], 0 )
@@ -1062,7 +1062,7 @@ def DatiAziendaFunc( parent, call_fit = True, set_sizer = True ):
     item11.SetName( "setup_azienda_indirizzo" )
     item7.Add( item11, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item12 = wx.StaticText( parent, ID_TEXT, "CAP, CittÃ , Prov.:", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
+    item12 = wx.StaticText( parent, ID_TEXT, "CAP, Città, Prov.:", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
     item7.Add( item12, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
 
     item13 = wx.FlexGridSizer( 1, 0, 0, 0 )
@@ -1159,7 +1159,7 @@ def DatiAziendaFunc( parent, call_fit = True, set_sizer = True ):
     item34 = wx.StaticText( parent, ID_TEXT, "Logo:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item33.Add( item34, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
-    item35 = wx.StaticText( parent, ID_TEXT, "Descrizione attivitÃ :", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item35 = wx.StaticText( parent, ID_TEXT, "Descrizione attività:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item33.Add( item35, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
     item36 = PhotoContainerPanel( parent, ID_AZIENDA_LOGO, wx.DefaultPosition, [128,128], wx.SUNKEN_BORDER )
