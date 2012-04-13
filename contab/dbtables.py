@@ -3533,12 +3533,17 @@ ORDER BY anag.descriz, reg.sm_link, reg.datdoc, reg.numdoc, regiva.tipo, regiva.
     def Chiedi_MassimaliAnno(self, anno):
         mass = Spesometro2011_Massimali()
         self._max_azi, self._max_pri = mass.Chiedi_PrendiMassimaliPerLAnno(anno)
+        return self._max_azi, self._max_pri
     
-    def Chiedi_NuovoRecordsetDaMassimali(self, anno):
+    def Chiedi_NuovoRecordsetDaMassimali(self, anno, maxazi=None, maxpri=None):
         
-        mass = Spesometro2011_Massimali()
-        maxazi, maxpri = mass.Chiedi_PrendiMassimaliPerLAnno(anno)
-        self._max_azi, self._max_pri = maxazi, maxpri
+        if maxazi is not None and maxpri is not None:
+            self._max_azi = maxazi
+            self._max_pri = maxpri
+        else:
+            mass = Spesometro2011_Massimali()
+            maxazi, maxpri = mass.Chiedi_PrendiMassimaliPerLAnno(anno)
+            self._max_azi, self._max_pri = maxazi, maxpri
         
         colkey = self._GetFieldIndex('Reg_Link')
         colapr = self._GetFieldIndex('Anag_AziPer')

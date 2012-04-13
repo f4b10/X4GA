@@ -34,6 +34,18 @@ history = (
          """Corretto il menu principale e il dataentry contabile per
          inibizione inserimento/modifica registrazioni se il relativo
          permesso sull'utente non lo consente."""),
+         ("BUG1110",
+         """Corretto il ripristino dei backup adb, in caso di valori
+         testuali con caratteri particolati generava eccezione in quanto
+         non convertiva nella codifica utf8 al momento dell'inserimento
+         nel database."""),
+         ("BET1128",
+         """Implementata nello spesometro la possibilità di estrazione
+         globale delle operazioni (trasmissione di tutte le operazioni
+         di acquisto/vendita) e di estrazione in base ai massimali per
+         l'anno, eventualmente modificabili.  Migliorata la relativa
+         stampa con l'aggiunta di codice fiscale e partita iva del
+         cliente/fornitore."""),
         ),),
     
     ('1.4.27', dt.Date(2012,3,1), (

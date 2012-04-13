@@ -101,6 +101,8 @@ class SpesometroPanel(aw.Panel):
         
         self.regspy = None
         self.anno = None
+        self.maxazi = None
+        self.maxpri = None
         
         anno, data1, data2 = map(lambda label: cn(label), 'anno data1 data2'.split())
         anno.SetValue(Env.Azienda.Login.dataElab.year)
@@ -118,10 +120,18 @@ class SpesometroPanel(aw.Panel):
         
         self.gridspe.Bind(dbgrid.gridlib.EVT_GRID_CMD_SELECT_CELL, self.OnRegSpyRowChanged)
         
+        self.Bind(wx.EVT_RADIOBOX, self.OnTipValoriChanged, cn('tipvalori'))
+        
         for name, func in (('butupdate', self.OnUpdateButton),
                            ('butestrai', self.OnEstraiButton),
                            ('butgenera', self.OnGeneraButton),):
             self.Bind(wx.EVT_BUTTON, func, cn(name))
+    
+    def OnTipValoriChanged(self, event):
+        cn = self.FindWindowByName
+        for name in 'maxazi maxpri'.split():
+            cn(name).Enable(cn('tipvalori').GetValue() == "M")
+        event.Skip()
     
     def SetModo(self, modo):
         assert modo in (self.MODO_AGGIORNA, self.MODO_ESTRAI)
@@ -143,7 +153,17 @@ class SpesometroPanel(aw.Panel):
     
     def OnYearChanged(self, event):
         self.SetDates()
+        self.SetMassimali(event.GetEventObject().GetValue())
         event.Skip()
+    
+    def SetMassimali(self, anno):
+        try:
+            azi, pri = self.dbspe.Chiedi_MassimaliAnno(anno)
+        except:
+            azi = pri = 0
+        cn = self.FindWindowByName
+        cn('maxazi').SetValue(azi)
+        cn('maxpri').SetValue(pri)
     
     def OnDateChanged(self, event):
         self.Validate()
@@ -296,11 +316,16 @@ class SpesometroPanel(aw.Panel):
     def EstraiReg(self):
         cn = self.FindWindowByName
         if self.modo == self.MODO_AGGIORNA:
-            #modalità aggiornamento, eseguo estrazione da massimali
+            #modalità aggiornamento, eseguo estrazione globale o da massimali
             wx.BeginBusyCursor()
             try:
+                if cn('tipvalori').GetValue() == "T":
+                    self.maxazi = self.maxpri = -10**9
+                else:
+                    self.maxazi = cn('maxazi').GetValue()
+                    self.maxpri = cn('maxpri').GetValue()
                 spe = self.dbspe
-                rs = spe.Chiedi_NuovoRecordsetDaMassimali(self.anno)
+                rs = spe.Chiedi_NuovoRecordsetDaMassimali(self.anno, self.maxazi, self.maxpri)
                 spe.SetRecordset(rs)
                 grid = self.gridspe
                 grid.ChangeData(rs)
@@ -573,7 +598,7 @@ class SpesometroGrid(dbgrid.ADB_Grid):
                     det.Esegui_AbbinaRighe(righe_sel)
                     Reset()
                     event.Skip()
-                ACM('Abbina righe', AbbinaRighe, riga_ok)
+                ACM('Aggrega righe', AbbinaRighe, riga_ok)
                 
             det.MoveRow(row)
             if det.Chiedi_CiSonoChiaviNelleRighe(righe_sel):
@@ -581,7 +606,7 @@ class SpesometroGrid(dbgrid.ADB_Grid):
                     det.Esegui_ResettaChiaviNelleRighe(righe_sel)
                     Reset()
                     event.Skip()
-                ACM('Resetta abbinamenti', ResettaChiavi, riga_ok)
+                ACM('Resetta aggregazioni', ResettaChiavi, riga_ok)
             
         finally:
             wx.EndBusyCursor()

@@ -29,6 +29,12 @@ class AcquistiVenditeCorrispettiviRadioBox(RadioBox):
         self.SetDataLink(values=["A", "V", "C", "T"])
 
 
+class TipValoriRadioBox(RadioBox):
+    def __init__(self, *args, **kwargs):
+        RadioBox.__init__(self, *args, **kwargs)
+        self.SetDataLink(values=["T", "M"])
+
+
 
 # Window functions
 
@@ -48,9 +54,12 @@ ID_TOTANADES = 10012
 ID_TOTANAIMP = 10013
 ID_TOTANAIVA = 10014
 ID_TOTANATOT = 10015
-ID_WARNING = 10016
-ID_BUTESTRAI = 10017
-ID_BUTGENERA = 10018
+ID_TIPVALORI = 10016
+ID_MAXAZI = 10017
+ID_MAXPRI = 10018
+ID_WARNING = 10019
+ID_BUTESTRAI = 10020
+ID_BUTGENERA = 10021
 
 def SpesometroPanelFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -58,17 +67,17 @@ def SpesometroPanelFunc( parent, call_fit = True, set_sizer = True ):
     item1 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
     item2 = AcquistiVenditeCorrispettiviRadioBox( parent, ID_ACQVENCOR, "Tipo", wx.DefaultPosition, wx.DefaultSize, 
-        ["Acquisti","Vendite","Corrisp.","TUTTO"] , 1, wx.RA_SPECIFY_ROWS )
+        ["Acquisti","Vendite","Corrisp.","TUTTO"] , 2, wx.RA_SPECIFY_ROWS )
     item2.SetName( "acqvencor" )
     item1.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL|wx.ALL, 5 )
 
     item4 = wx.StaticBox( parent, -1, "Periodo" )
     item3 = wx.StaticBoxSizer( item4, wx.VERTICAL )
     
-    item5 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    item5 = wx.FlexGridSizer( 0, 4, 0, 0 )
     
     item6 = wx.StaticText( parent, ID_TEXT, "Anno:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item5.Add( item6, 0, wx.ALIGN_CENTER|wx.LEFT|wx.BOTTOM, 5 )
+    item5.Add( item6, 0, wx.ALIGN_CENTER|wx.BOTTOM, 5 )
 
     item7 = NumCtrl(parent, ID_ANNO, integerWidth=4, fractionWidth=0, groupDigits=False); item7.SetName('anno')
     item5.Add( item7, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
@@ -78,16 +87,18 @@ def SpesometroPanelFunc( parent, call_fit = True, set_sizer = True ):
 
     item9 = DateCtrl( parent, ID_DATA1, "", wx.DefaultPosition, [80,-1], 0 )
     item9.SetName( "data1" )
-    item5.Add( item9, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item5.Add( item9, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+
+    item5.Add( [ 2, 20 ] , 0, wx.ALIGN_CENTER, 5 )
+
+    item5.Add( [ 20, 2 ] , 0, wx.ALIGN_CENTER, 5 )
 
     item10 = wx.StaticText( parent, ID_TEXT, "al:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item5.Add( item10, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item5.Add( item10, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
 
     item11 = DateCtrl( parent, ID_DATA2, "", wx.DefaultPosition, [80,-1], 0 )
     item11.SetName( "data2" )
-    item5.Add( item11, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item5.AddGrowableCol( 5 )
+    item5.Add( item11, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
 
     item3.Add( item5, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
@@ -104,7 +115,7 @@ def SpesometroPanelFunc( parent, call_fit = True, set_sizer = True ):
     item15 = wx.StaticLine( parent, ID_LINE, wx.DefaultPosition, [20,-1], wx.LI_HORIZONTAL )
     item12.Add( item15, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item16 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    item16 = wx.FlexGridSizer( 0, 2, 0, 0 )
     
     item17 = wx.StaticText( parent, ID_TEXT, "Escludi blacklist:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item16.Add( item17, 0, wx.ALIGN_CENTER|wx.RIGHT, 5 )
@@ -112,12 +123,16 @@ def SpesometroPanelFunc( parent, call_fit = True, set_sizer = True ):
     item18 = wx.CheckBox( parent, ID_ESCLUDI_BLA, "Anagr.", wx.DefaultPosition, wx.DefaultSize, 0 )
     item18.SetValue( True )
     item18.SetName( "escludi_bla" )
-    item16.Add( item18, 0, wx.ALIGN_CENTER, 5 )
+    item16.Add( item18, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item16.Add( [ 2, 2 ] , 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
     item19 = wx.CheckBox( parent, ID_ESCLUDI_BLS, "Stato", wx.DefaultPosition, wx.DefaultSize, 0 )
     item19.SetValue( True )
     item19.SetName( "escludi_bls" )
-    item16.Add( item19, 0, wx.ALIGN_CENTER, 5 )
+    item16.Add( item19, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP, 5 )
+
+    item16.AddGrowableCol( 1 )
 
     item12.Add( item16, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
@@ -153,67 +168,106 @@ def SpesometroPanelFunc( parent, call_fit = True, set_sizer = True ):
     
     item26 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
-    item27 = wx.FlexGridSizer( 0, 4, 0, 0 )
+    item27 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
-    item28 = wx.StaticText( parent, ID_TEXT, "Anagrafica", wx.DefaultPosition, [400,-1], wx.ST_NO_AUTORESIZE )
-    item27.Add( item28, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+    item29 = wx.StaticBox( parent, -1, "Totali anagrafica" )
+    item28 = wx.StaticBoxSizer( item29, wx.VERTICAL )
+    
+    item30 = wx.FlexGridSizer( 0, 4, 0, 0 )
+    
+    item31 = wx.StaticText( parent, ID_TEXT, "Anagrafica", wx.DefaultPosition, [250,-1], wx.ST_NO_AUTORESIZE )
+    item30.Add( item31, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
-    item29 = wx.StaticText( parent, ID_TEXT, "Tot.Operazioni", wx.DefaultPosition, [100,-1], wx.ST_NO_AUTORESIZE|wx.ALIGN_RIGHT )
-    item27.Add( item29, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+    item32 = wx.StaticText( parent, ID_TEXT, "Tot.Operazioni", wx.DefaultPosition, [80,-1], wx.ST_NO_AUTORESIZE|wx.ALIGN_RIGHT )
+    item30.Add( item32, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
-    item30 = wx.StaticText( parent, ID_TEXT, "Tot.Imposta", wx.DefaultPosition, [100,-1], wx.ST_NO_AUTORESIZE|wx.ALIGN_RIGHT )
-    item27.Add( item30, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+    item33 = wx.StaticText( parent, ID_TEXT, "Tot.Imposta", wx.DefaultPosition, [80,-1], wx.ST_NO_AUTORESIZE|wx.ALIGN_RIGHT )
+    item30.Add( item33, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
-    item31 = wx.StaticText( parent, ID_TEXT, "Tot.Op.+IVA", wx.DefaultPosition, [100,-1], wx.ST_NO_AUTORESIZE|wx.ALIGN_RIGHT )
-    item27.Add( item31, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+    item34 = wx.StaticText( parent, ID_TEXT, "Tot.Op.+IVA", wx.DefaultPosition, [80,-1], wx.ST_NO_AUTORESIZE|wx.ALIGN_RIGHT )
+    item30.Add( item34, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
-    item32 = wx.StaticText( parent, ID_TOTANADES, "-", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item32.SetFont( wx.Font( 10, wx.SWISS, wx.NORMAL, wx.BOLD ) )
-    item32.SetName( "totanades" )
-    item27.Add( item32, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item33 = wx.StaticText( parent, ID_TOTANAIMP, "0", wx.DefaultPosition, [100,-1], wx.ST_NO_AUTORESIZE|wx.ALIGN_RIGHT )
-    item33.SetFont( wx.Font( 10, wx.SWISS, wx.NORMAL, wx.BOLD ) )
-    item33.SetName( "totanaimp" )
-    item27.Add( item33, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item34 = wx.StaticText( parent, ID_TOTANAIVA, "0", wx.DefaultPosition, [100,-1], wx.ST_NO_AUTORESIZE|wx.ALIGN_RIGHT )
-    item34.SetFont( wx.Font( 10, wx.SWISS, wx.NORMAL, wx.BOLD ) )
-    item34.SetName( "totanaiva" )
-    item27.Add( item34, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item35 = wx.StaticText( parent, ID_TOTANATOT, "0", wx.DefaultPosition, [100,-1], wx.ST_NO_AUTORESIZE|wx.ALIGN_RIGHT )
+    item35 = wx.StaticText( parent, ID_TOTANADES, "-", wx.DefaultPosition, [-1,30], wx.ST_NO_AUTORESIZE )
     item35.SetFont( wx.Font( 10, wx.SWISS, wx.NORMAL, wx.BOLD ) )
-    item35.SetName( "totanatot" )
-    item27.Add( item35, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item35.SetName( "totanades" )
+    item30.Add( item35, 0, wx.GROW|wx.LEFT|wx.RIGHT, 5 )
+
+    item36 = wx.StaticText( parent, ID_TOTANAIMP, "0", wx.DefaultPosition, [80,-1], wx.ST_NO_AUTORESIZE|wx.ALIGN_RIGHT )
+    item36.SetFont( wx.Font( 10, wx.SWISS, wx.NORMAL, wx.BOLD ) )
+    item36.SetName( "totanaimp" )
+    item30.Add( item36, 0, wx.ALIGN_RIGHT|wx.LEFT|wx.RIGHT, 5 )
+
+    item37 = wx.StaticText( parent, ID_TOTANAIVA, "0", wx.DefaultPosition, [80,-1], wx.ST_NO_AUTORESIZE|wx.ALIGN_RIGHT )
+    item37.SetFont( wx.Font( 10, wx.SWISS, wx.NORMAL, wx.BOLD ) )
+    item37.SetName( "totanaiva" )
+    item30.Add( item37, 0, wx.ALIGN_RIGHT|wx.LEFT|wx.RIGHT, 5 )
+
+    item38 = wx.StaticText( parent, ID_TOTANATOT, "0", wx.DefaultPosition, [80,-1], wx.ST_NO_AUTORESIZE|wx.ALIGN_RIGHT )
+    item38.SetFont( wx.Font( 10, wx.SWISS, wx.NORMAL, wx.BOLD ) )
+    item38.SetName( "totanatot" )
+    item30.Add( item38, 0, wx.ALIGN_RIGHT|wx.LEFT|wx.RIGHT, 5 )
+
+    item30.AddGrowableCol( 0 )
+
+    item28.Add( item30, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item27.Add( item28, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item39 = TipValoriRadioBox( parent, ID_TIPVALORI, "Valori", wx.DefaultPosition, wx.DefaultSize, 
+        ["Tutte le operazioni","Solo eccedenti i massimali"] , 1, wx.RA_SPECIFY_COLS )
+    item39.SetName( "tipvalori" )
+    item27.Add( item39, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item41 = wx.StaticBox( parent, -1, "Massimali" )
+    item40 = wx.StaticBoxSizer( item41, wx.VERTICAL )
+    
+    item42 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    
+    item43 = wx.StaticText( parent, ID_TEXT, "Aziende:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item42.Add( item43, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item44 = NumCtrl(parent, ID_MAXAZI, integerWidth=10, fractionWidth=2); item44.SetName('maxazi'); item44.Disable()
+    item42.Add( item44, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+
+    item45 = wx.StaticText( parent, ID_TEXT, "Privati:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item42.Add( item45, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+
+    item46 = NumCtrl(parent, ID_MAXPRI, integerWidth=10, fractionWidth=2); item46.SetName('maxpri'); item46.Disable()
+    item42.Add( item46, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item40.Add( item42, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item27.Add( item40, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item27.AddGrowableCol( 0 )
 
     item26.Add( item27, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item36 = wx.StaticLine( parent, ID_LINE, wx.DefaultPosition, [20,-1], wx.LI_HORIZONTAL )
-    item26.Add( item36, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+    item47 = wx.StaticLine( parent, ID_LINE, wx.DefaultPosition, [20,-1], wx.LI_HORIZONTAL )
+    item26.Add( item47, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
-    item37 = wx.StaticText( parent, ID_WARNING, "-", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item37.SetForegroundColour( wx.RED )
-    item37.SetFont( wx.Font( 12, wx.SWISS, wx.NORMAL, wx.BOLD ) )
-    item37.SetName( "warning" )
-    item26.Add( item37, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+    item48 = wx.StaticText( parent, ID_WARNING, "-", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item48.SetForegroundColour( wx.RED )
+    item48.SetFont( wx.Font( 12, wx.SWISS, wx.NORMAL, wx.BOLD ) )
+    item48.SetName( "warning" )
+    item26.Add( item48, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
     item26.AddGrowableCol( 0 )
 
     item25.Add( item26, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item38 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    item49 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
-    item39 = wx.Button( parent, ID_BUTESTRAI, "&Estrai", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item39.SetName( "butestrai" )
-    item39.Enable(False)
-    item38.Add( item39, 0, wx.ALIGN_RIGHT|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item50 = wx.Button( parent, ID_BUTESTRAI, "&Estrai", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item50.SetName( "butestrai" )
+    item50.Enable(False)
+    item49.Add( item50, 0, wx.ALIGN_RIGHT|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
 
-    item40 = wx.Button( parent, ID_BUTGENERA, "Genera file", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item40.SetName( "butgenera" )
-    item38.Add( item40, 0, wx.ALIGN_RIGHT|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item51 = wx.Button( parent, ID_BUTGENERA, "Genera file", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item51.SetName( "butgenera" )
+    item49.Add( item51, 0, wx.ALIGN_RIGHT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item25.Add( item38, 0, wx.ALIGN_CENTER_HORIZONTAL, 5 )
+    item25.Add( item49, 0, wx.ALIGN_CENTER_HORIZONTAL, 5 )
 
     item25.AddGrowableCol( 0 )
 
@@ -230,11 +284,11 @@ def SpesometroPanelFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_CAUSALE = 10019
-ID_DATREG = 10020
-ID_NUMDOC = 10021
-ID_DATDOC = 10022
-ID_PANGRIDBODY = 10023
+ID_CAUSALE = 10022
+ID_DATREG = 10023
+ID_NUMDOC = 10024
+ID_DATDOC = 10025
+ID_PANGRIDBODY = 10026
 
 def RegSpyPanelFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -298,12 +352,12 @@ def RegSpyPanelFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_RAGSOC = 10024
-ID_COMUNE = 10025
-ID_PROV = 10026
-ID_CODFISC = 10027
-ID_PIVA = 10028
-ID_BUTGEN = 10029
+ID_RAGSOC = 10027
+ID_COMUNE = 10028
+ID_PROV = 10029
+ID_CODFISC = 10030
+ID_PIVA = 10031
+ID_BUTGEN = 10032
 
 def GeneraFileFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
