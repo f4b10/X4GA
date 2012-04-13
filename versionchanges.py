@@ -29,7 +29,7 @@ import mx.DateTime as dt
 
 history = (
     
-    ('1.4.28', None, (
+    ('1.4.28', dt.Date(2012,4,13), (
          ("BUG1109",
          """Corretto il menu principale e il dataentry contabile per
          inibizione inserimento/modifica registrazioni se il relativo
