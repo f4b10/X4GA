@@ -640,12 +640,13 @@ class DB(object):
     def ADB_DecodeValue(self, x, conv=None):
         if callable(conv):
             x = conv(x)
-        if type(x) is str:
+        if type(x) in (str, unicode):
             if x.startswith('!BASE64|'):
                 v = base64.b64decode(x.split('|')[1])
             else:
                 v = x.replace('&lt; ', '<').replace('&gt; ', '>').replace('&quot; ', '"').replace('&amp; ', '&')
 #                    v = v.decode('utf-8')#.encode('latin-1')
+            v = v.encode('utf8')
         else:
             return x
         return v
