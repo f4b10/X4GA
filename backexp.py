@@ -396,7 +396,9 @@ class BackupExplorerPanel(wx.Panel):
                 del self.timer
                 wait.Destroy()
             
-            aw.awu.MsgDialog(self, 'Il file di backup è stato generato correttamente:\n%s' % filename, style=wx.ICON_INFORMATION)
+            msg = u'Il file di backup è stato generato correttamente:\n'
+            msg += filename
+            aw.awu.MsgDialog(self, msg, style=wx.ICON_INFORMATION)
         
         self.UpdateContent()
     
