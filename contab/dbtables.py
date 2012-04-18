@@ -3329,7 +3329,7 @@ class Spesometro2011_AcquistiVendite(adb.DbMem):
     def __init__(self):
 #        assert bt.TIPO_CONTAB == "O"
         f = 'Reg_Id Reg_Rif Reg_Link RegIva_Id RegIva_Cod RegIva_Descriz RegIva_Tipo'
-        f += ' Anag_Id Anag_Cod Anag_Descriz Anag_AziPer Anag_CodFisc Anag_Nazione Anag_PIVA'
+        f += ' Anag_Id Anag_Cod Anag_Descriz Anag_AziPer Anag_CodFisc Anag_Nazione Anag_PIVA Anag_AllegCF'
         f += ' Anag_Cognome Anag_Nome Anag_NascDat Anag_NascPrv Anag_NascCom Anag_SedeInd Anag_SedeCit Anag_SedeStt Anag_Associa'
         f += ' Reg_Data Cau_Id Cau_Cod Cau_Descriz Reg_NumDoc Reg_DatDoc Reg_NumIva'
         f += ' Totale_DAV DAV_Merce DAV_Servizi DAV_Altro'
@@ -3346,6 +3346,7 @@ class Spesometro2011_AcquistiVendite(adb.DbMem):
         filters = []
         AF = filters.append
         AF('bodyanag.numriga=1')
+        AF('aliq.sm11_no IS NULL OR aliq.sm11_no != 1')
         if p['acqvencor'] == "A":
             AF('regiva.tipo="A"')
             anacf = bt.TABNAME_FORNIT
@@ -3384,6 +3385,7 @@ SELECT reg.id              'Reg_Id',
        IF(tipana.tipo="C", anagcli.codfisc,      anagfor.codfisc)      'Anag_CodFisc',
        IF(tipana.tipo="C", anagcli.nazione,      anagfor.nazione)      'Anag_Nazione',
        IF(tipana.tipo="C", anagcli.piva,         anagfor.piva)         'Anag_PIVA',
+       IF(tipana.tipo="C", anagcli.allegcf,      anagfor.allegcf)      'Anag_AllegCF',
        IF(tipana.tipo="C", anagcli.sm11_cognome, anagfor.sm11_cognome) 'Anag_Cognome',
        IF(tipana.tipo="C", anagcli.sm11_nome,    anagfor.sm11_nome)    'Anag_Nome',
        IF(tipana.tipo="C", anagcli.sm11_nascdat, anagfor.sm11_nascdat) 'Anag_NascDat',

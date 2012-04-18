@@ -29,6 +29,13 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.30', dt.Date(2012,4,18), (
+         ("BET1129",
+         """Implemento flag di esclusione da spesometro sulla tabella
+         delle aliquote IVA, aggiunta colonna 'in allegato' su griglia
+         spesometro."""),
+        ),),
+    
     ('1.4.28', dt.Date(2012,4,13), (
          ("BUG1109",
          """Corretto il menu principale e il dataentry contabile per

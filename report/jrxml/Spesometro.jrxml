@@ -70,6 +70,7 @@
 			</groupHeader>
 			<groupFooter>
 			<band height="14"  isSplitAllowed="true" >
+				<printWhenExpression><![CDATA[RS.Reg_Link is not None]]></printWhenExpression>
 				<staticText>
 					<reportElement
 						mode="Transparent"
