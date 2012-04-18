@@ -358,6 +358,7 @@ class SpesometroGrid(dbgrid.ADB_Grid):
         self._col_pdccod = s._GetFieldIndex('Anag_Cod')
         self._col_pdcdes = s._GetFieldIndex('Anag_Descriz')
         self._col_smlink = s._GetFieldIndex('Reg_Link')
+        self._col_smrrif = s._GetFieldIndex('Reg_Rif')
         
         self.COL_SELECTED = self.AddColumn(s, 'selected', 'Sel.', 
                                            col_width=40, col_type=self.TypeCheck(), 
@@ -365,16 +366,18 @@ class SpesometroGrid(dbgrid.ADB_Grid):
         
         def GetLinkIndicator(row, col):
             none =   ''
-            first =  'abb.'
-            center = 'abb..'
-            last =   'abb.*'
+            first =  'AGGR.'
+            center = 'aggr.'
+            last =   'aggr*'
             rs = self.db_table.GetRecordset()
             value = rs[row][col]
             smlink = rs[row][self._col_smlink]
             if smlink is None:
                 return none
             if row > 0 and rs[row-1][self._col_smlink] != smlink:
-                return first
+                if rs[row][self._col_smrrif] == 1:
+                    return first
+                return center
             if row < (len(s.GetRecordset())-1) and rs[row+1][self._col_smlink] != smlink:
                 return last
             return center
@@ -575,7 +578,7 @@ class SpesometroGrid(dbgrid.ADB_Grid):
             riga_ok = row in righe_sel
             
             det.MoveRow(row)
-            if len(righe_sel) == 0 and det.Anag_Associa:
+            if len(righe_sel) == 0:# and det.Anag_Associa:
                 def AssociaTutte(event):
                     det.MoveRow(row)
                     self.current_pdc = det.Anag_Id
@@ -607,6 +610,14 @@ class SpesometroGrid(dbgrid.ADB_Grid):
                     Reset()
                     event.Skip()
                 ACM('Resetta aggregazioni', ResettaChiavi, riga_ok)
+            
+            det.MoveRow(row)
+            if det.Reg_Link is not None:
+                def SetMainReg(event):
+                    det.Esegui_SetMainReg()
+                    Reset()
+                    event.Skip()
+                ACM('Imposta come riferimento per le registrazioni aggregate', SetMainReg, det.Reg_Rif != 1)
             
         finally:
             wx.EndBusyCursor()

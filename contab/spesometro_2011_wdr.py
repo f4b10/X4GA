@@ -32,7 +32,7 @@ class AcquistiVenditeCorrispettiviRadioBox(RadioBox):
 class TipValoriRadioBox(RadioBox):
     def __init__(self, *args, **kwargs):
         RadioBox.__init__(self, *args, **kwargs)
-        self.SetDataLink(values=["T", "M"])
+        self.SetDataLink(values=["M", "T"])
 
 
 
@@ -214,7 +214,7 @@ def SpesometroPanelFunc( parent, call_fit = True, set_sizer = True ):
     item27.Add( item28, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item39 = TipValoriRadioBox( parent, ID_TIPVALORI, "Valori", wx.DefaultPosition, wx.DefaultSize, 
-        ["Tutte le operazioni","Solo eccedenti i massimali"] , 1, wx.RA_SPECIFY_COLS )
+        ["Solo eccedenti i massimali","Tutte le operazioni"] , 1, wx.RA_SPECIFY_COLS )
     item39.SetName( "tipvalori" )
     item27.Add( item39, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
 

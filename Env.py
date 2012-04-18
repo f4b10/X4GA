@@ -2255,6 +2255,7 @@ class Azienda(object):
                 [ "id_modpag",  "INT",    idw, None, "ID Modalità di pagamento", None ],
                 [ "nocalciva",  "TINYINT",  1, None, "Flag inibizione calcolo dav/iva", None ],
                 [ "sm_link",    "INT",      6, None, "Chiave di raggruppamento registrazioni per spesometro", None ],
+                [ "sm_regrif",  "TINYINT",  1, None, "Flag spesometro registrazione di riferimento per aggregazioni", None ],
             ]
             
             cls.set_constraints(cls.TABNAME_CONTAB_H,

@@ -3328,7 +3328,7 @@ class Spesometro2011_AcquistiVendite(adb.DbMem):
     
     def __init__(self):
 #        assert bt.TIPO_CONTAB == "O"
-        f = 'Reg_Id Reg_Link RegIva_Id RegIva_Cod RegIva_Descriz RegIva_Tipo'
+        f = 'Reg_Id Reg_Rif Reg_Link RegIva_Id RegIva_Cod RegIva_Descriz RegIva_Tipo'
         f += ' Anag_Id Anag_Cod Anag_Descriz Anag_AziPer Anag_CodFisc Anag_Nazione Anag_PIVA'
         f += ' Anag_Cognome Anag_Nome Anag_NascDat Anag_NascPrv Anag_NascCom Anag_SedeInd Anag_SedeCit Anag_SedeStt Anag_Associa'
         f += ' Reg_Data Cau_Id Cau_Cod Cau_Descriz Reg_NumDoc Reg_DatDoc Reg_NumIva'
@@ -3371,6 +3371,7 @@ class Spesometro2011_AcquistiVendite(adb.DbMem):
             righecon = '"C", "S", "I"'
         cmd = """
 SELECT reg.id              'Reg_Id', 
+       reg.sm_regrif       'Reg_Rif',
        reg.sm_link         'Reg_Link',
        regiva.id           'RegIva_Id',
        regiva.codice       'RegIva_Cod',
@@ -3476,8 +3477,8 @@ INNER JOIN pdc       pdccer  ON pdccer.id=bodycri.id_pdcpa
 
 WHERE %(filters)s
 
-GROUP BY anag.descriz, reg.sm_link, reg.datdoc, reg.numdoc, regiva.tipo, regiva.codice
-ORDER BY anag.descriz, reg.sm_link, reg.datdoc, reg.numdoc, regiva.tipo, regiva.codice
+GROUP BY anag.descriz, reg.sm_regrif, reg.sm_link, reg.datdoc, reg.numdoc, regiva.tipo, regiva.codice
+ORDER BY anag.descriz, reg.sm_regrif, reg.sm_link, reg.datdoc, reg.numdoc, regiva.tipo, regiva.codice
         """ % locals()
         
         db = adb.db.__database__
@@ -3630,8 +3631,19 @@ ORDER BY anag.descriz, reg.sm_link, reg.datdoc, reg.numdoc, regiva.tipo, regiva.
                 sm_link = self.Reg_Link
                 self.Reg_Link = None
                 reg_id = self.Reg_Id
-                cmd = """UPDATE %(tab_name)s SET sm_link=NULL WHERE sm_link=%(sm_link)s""" % locals()
+                cmd = """UPDATE %(tab_name)s SET sm_link=NULL, sm_regrif=NULL WHERE sm_link=%(sm_link)s""" % locals()
                 db.Execute(cmd)
+    
+    def Esegui_SetMainReg(self):
+        db = adb.db.__database__
+        tab_name = bt.TABNAME_CONTAB_H
+        sm_link = self.Reg_Link
+        self.Reg_Link = None
+        reg_id = self.Reg_Id
+        cmd = """UPDATE %(tab_name)s SET sm_regrif=2 WHERE sm_link=%(sm_link)s""" % locals()
+        db.Execute(cmd)
+        cmd = """UPDATE %(tab_name)s SET sm_regrif=1 WHERE %(tab_name)s.id=%(reg_id)s""" % locals()
+        db.Execute(cmd)
     
     def Esegui_GeneraFile(self, filename):
         
@@ -3645,28 +3657,37 @@ ORDER BY anag.descriz, reg.sm_link, reg.datdoc, reg.numdoc, regiva.tipo, regiva.
         def D(dat):
             if dat is None:
                 return '0'*8
+            if type(dat) is str:
+                #yyyy-mm-dd
+                return dat[-2:]+dat[5:7]+dat[:4]
             return Z(dat.day, 2)+Z(dat.month, 2)+Z(dat.year, 4)
         
         def V(val):
             return abs(int(val))
         
         def get_pagamento(data):
-            if data.Anag_AziPer == "P":
-                #privati
-                if data.IVA_Totale < self._max_pri:
-                    #importo frazionato
-                    return '2'
-                else:
-                    #importo non frazionato
-                    return '1'
+#            if data.Anag_AziPer == "P":
+#                #privati
+#                if data.IVA_Totale < self._max_pri:
+#                    #importo frazionato
+#                    return '2'
+#                else:
+#                    #importo non frazionato
+#                    return '1'
+#            else:
+#                #aziende
+#                if data.IVA_AllImpo < self._max_azi:
+#                    #importo frazionato
+#                    return '2'
+#                else:
+#                    #importo non frazionato
+#                    return '1'
+            if data.Reg_Link is None:
+                #importo non frazionato
+                return '1'
             else:
-                #aziende
-                if data.IVA_AllImpo < self._max_azi:
-                    #importo frazionato
-                    return '2'
-                else:
-                    #importo non frazionato
-                    return '1'
+                #importo frazionato
+                return '2'
         
         def get_tipo_operazione(data):
             if data.RegIva_Tipo in 'VC':
@@ -3692,6 +3713,8 @@ ORDER BY anag.descriz, reg.sm_link, reg.datdoc, reg.numdoc, regiva.tipo, regiva.
         anno = self._anno
         invio_num = 1
         invio_tot = 1
+        
+        t_imponib = t_imposta = t_totale = numdoc = datdoc = None
         
         def record_testa_piede(tipo_rec):
             row =  tipo_rec             #Tipo Record (0=Testata, 9=Piede)
@@ -3732,11 +3755,11 @@ ORDER BY anag.descriz, reg.sm_link, reg.datdoc, reg.numdoc, regiva.tipo, regiva.
         def record_residente_azienda(data):
             row =  '2'                          #Tipo Record
             row += F(data.Anag_PIVA, 11)        #Partita IVA
-            row += D(data.Reg_DatDoc)           #Data dell'operazione
-            row += F(data.Reg_NumDoc, 15)       #Numero della Fattura
+            row += D(datdoc)                    #Data dell'operazione
+            row += F(numdoc, 15)                #Numero della Fattura
             row += get_pagamento(data)          #Modalità di pagamento (Frazionato, non frazionato, corrispettivi periodici)
-            row += Z(V(data.IVA_AllImpo), 9)    #Importo dovuto (Importo dell'operazione al netto dell'Imposta)
-            row += Z(V(data.IVA_Imposta), 9)    #Imposta
+            row += Z(V(t_imponib), 9)           #Importo dovuto (Importo dell'operazione al netto dell'Imposta)
+            row += Z(V(t_imposta), 9)           #Imposta
             row += get_tipo_operazione(data)    #Tipologia dell'operazione
             row += F('', 1742)                  #Filler
             row += 'A'                          #Carattere di controllo
@@ -3756,10 +3779,10 @@ ORDER BY anag.descriz, reg.sm_link, reg.datdoc, reg.numdoc, regiva.tipo, regiva.
             row =  '4'                          #Tipo Record
             row += F(piva, 11)                  #Partita IVA
             row += F(codfisc, 16)               #Codice fiscale
-            row += D(data.Reg_DatDoc)           #Data dell'operazione
-            row += F(data.Reg_NumDoc, 15)       #Numero della Nota di Variazione
-            row += Z(V(data.IVA_AllImpo), 9)    #Imponibile della nota di Variazione
-            row += Z(V(data.IVA_Imposta), 9)    #Imposta sul Valore Aggiunto della Nota di Variazione
+            row += D(datdoc)                    #Data dell'operazione
+            row += F(numdoc, 15)                #Numero della Nota di Variazione
+            row += Z(V(t_imponib), 9)           #Imponibile della nota di Variazione
+            row += Z(V(t_imposta), 9)           #Imposta sul Valore Aggiunto della Nota di Variazione
             row += '3112%s' % anno              #Data della Fattura da rettificare
             row += F('', 15)                    #Numero della Fattura da rettificare
             row += tipovar                      #Variazione dell'imponibile a credito o a debito
@@ -3771,9 +3794,9 @@ ORDER BY anag.descriz, reg.sm_link, reg.datdoc, reg.numdoc, regiva.tipo, regiva.
         def record_residente_privato(data):
             row =  '1'                          #Tipo Record
             row += F(data.Anag_CodFisc, 16)     #Codice Fiscale
-            row += D(data.Reg_DatDoc)           #Data dell'operazione
+            row += D(datdoc)                    #Data dell'operazione
             row += get_pagamento(data)          #Modalità di pagamento (Frazionato, non frazionato, corrispettivi periodici)
-            row += Z(V(data.IVA_Totale), 9)     #Importo dovuto
+            row += Z(V(t_importo), 9)            #Importo dovuto
             row += F('', 1762)                  #Filler
             row += 'A'                          #Carattere di controllo
             return row
@@ -3790,11 +3813,11 @@ ORDER BY anag.descriz, reg.sm_link, reg.datdoc, reg.numdoc, regiva.tipo, regiva.
             row += F(data.Anag_SedeCit, 40)     #Città estera della sede legale
             row += get_stato_sede(data)         #Stato estero della sede legale
             row += F(data.Anag_SedeInd, 40)     #Indirizzo estero della sede legale
-            row += D(data.Reg_DatDoc)           #Data dell'operazione
-            row += F(data.Reg_NumDoc, 15)       #Numero della Nota di variazione
+            row += D(datdoc)                    #Data dell'operazione
+            row += F(numdoc, 15)                #Numero della Nota di variazione
             row += get_pagamento(data)          #Modalità di pagamento (Frazionato, non frazionato, corrispettivi periodici)
-            row += Z(V(data.IVA_AllImpo), 9)    #Importo dovuto (Importo dell'operazione al netto dell'Imposta)
-            row += Z(V(data.IVA_Imposta), 9)    #Imposta
+            row += Z(V(t_imponib), 9)           #Importo dovuto (Importo dell'operazione al netto dell'Imposta)
+            row += Z(V(t_imposta), 9)           #Imposta
             row += get_tipo_operazione(data)    #Tipologia dell'operazione
             row += F('', 1513)                  #Filler
             row += 'A'                          #Carattere di controllo
@@ -3818,10 +3841,10 @@ ORDER BY anag.descriz, reg.sm_link, reg.datdoc, reg.numdoc, regiva.tipo, regiva.
             row += F(data.Anag_SedeCit, 40)     #Città estera della sede legale
             row += get_stato_sede(data)         #Stato estero della sede legale
             row += F(data.Anag_SedeInd, 40)     #Indirizzo estero della sede legale
-            row += D(data.Reg_DatDoc)           #Data dell'operazione
-            row += F(data.Reg_NumDoc, 15)       #Numero della Nota di variazione
-            row += Z(V(data.IVA_AllImpo), 9)    #Imponibile della nota di Variazione
-            row += Z(V(data.IVA_Imposta), 9)    #Imposta sul Valore Aggiunto della Nota di Variazione
+            row += D(datdoc)                    #Data dell'operazione
+            row += F(numdoc, 15)                #Numero della Nota di variazione
+            row += Z(V(t_imponib), 9)           #Imponibile della nota di Variazione
+            row += Z(V(t_imposta), 9)           #Imposta sul Valore Aggiunto della Nota di Variazione
             row += '3112%s' % anno              #Data della Fattura da rettificare
             row += F('', 15)                    #Numero della Fattura da rettificare
             row += tipovar                      #Variazione dell'imponibile a credito o a debito
@@ -3838,9 +3861,32 @@ ORDER BY anag.descriz, reg.sm_link, reg.datdoc, reg.numdoc, regiva.tipo, regiva.
         #riga 0 - testata
         write_row(record_testa())
         
+        last_link = None
+        
         for data in self:
+            
+            if data.Reg_Link is not None and data.Reg_Link == last_link:
+                continue
+            
+            numdoc = data.Reg_NumDoc
+            datdoc = data.Reg_DatDoc
+            t_imponib = data.IVA_AllImpo
+            t_imposta = data.IVA_Imposta
+            t_importo = data.IVA_Totale
+            
+            if data.Reg_Link is not None:
+                move_to = data.RowNumber()
+                sm_link = data.Reg_Link
+                while True:
+                    if not data.MoveNext() or data.Reg_Link != sm_link:
+                        break
+                    t_imponib += (data.IVA_AllImpo or 0)
+                    t_imposta += (data.IVA_Imposta or 0)
+                    t_importo += (data.IVA_Totale or 0)
+                data.MoveRow(move_to)
+            
             if (data.Anag_Nazione or "IT") == "IT":
-                if data.IVA_AllImpo < 0:
+                if t_imponib < 0:
                     row = record_residente_notavariazione(data)
                 else:
                     if data.Anag_AziPer == "A":
@@ -3848,11 +3894,12 @@ ORDER BY anag.descriz, reg.sm_link, reg.datdoc, reg.numdoc, regiva.tipo, regiva.
                     else:
                         row = record_residente_privato(data)
             else:
-                if data.IVA_AllImpo < 0:
+                if t_imponib < 0:
                     row = record_nonresidente_notavariazione(data)
                 else:
                     row = record_nonresidente(data)
             write_row(row)
+            last_link = data.Reg_Link
         
         #riga 9 - piede
         write_row(record_piede())
