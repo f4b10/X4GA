@@ -29,6 +29,12 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.31', dt.Date(2012,4,19), (
+         ("BUG1111",
+         """Corrette le totalizzazioni delle operazioni aggregate nella
+         stampa dello spesometro."""),
+        ),),
+    
     ('1.4.30', dt.Date(2012,4,18), (
          ("BET1129",
          """Implemento flag di esclusione da spesometro sulla tabella

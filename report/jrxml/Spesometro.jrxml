@@ -38,34 +38,48 @@
 	<field name="id_zona" class="java.lang.Integer"/>
 
 	<variable name="TotImponib" class="java.lang.Float" resetType="Group" incrementType="Column" resetGroup="reg_link" calculation="Sum">
-		<variableExpression><![CDATA[$V{TotImponib} + (RS.IVA_Imponib or 0)]]></variableExpression>
+		<variableExpression><![CDATA[$V{TotImponib} + RS.iif(RS.Reg_Link is None, 0, (RS.IVA_Imponib or 0))]]></variableExpression>
 		<initialValueExpression><![CDATA[0]]></initialValueExpression>
 	</variable>
 	<variable name="TotImposta" class="java.lang.Float" resetType="Group" incrementType="Column" resetGroup="reg_link" calculation="Sum">
-		<variableExpression><![CDATA[$V{TotImposta} + (RS.IVA_Imposta or 0)]]></variableExpression>
+		<variableExpression><![CDATA[$V{TotImposta} + RS.iif(RS.Reg_Link is None, 0, (RS.IVA_Imposta or 0))]]></variableExpression>
 		<initialValueExpression><![CDATA[0]]></initialValueExpression>
 	</variable>
 	<variable name="TotNonImponib" class="java.lang.Float" resetType="Group" incrementType="Column" resetGroup="reg_link" calculation="Sum">
-		<variableExpression><![CDATA[$V{TotNonImponib} + (RS.IVA_NonImponib or 0)]]></variableExpression>
+		<variableExpression><![CDATA[$V{TotNonImponib} + RS.iif(RS.Reg_Link is None, 0, (RS.IVA_NonImponib or 0))]]></variableExpression>
 		<initialValueExpression><![CDATA[0]]></initialValueExpression>
 	</variable>
 	<variable name="TotEsente" class="java.lang.Float" resetType="Group" incrementType="Column" resetGroup="reg_link" calculation="Sum">
-		<variableExpression><![CDATA[$V{TotEsente} + (RS.IVA_Esente or 0)]]></variableExpression>
+		<variableExpression><![CDATA[$V{TotEsente} + RS.iif(RS.Reg_Link is None, 0, (RS.IVA_Esente or 0))]]></variableExpression>
 		<initialValueExpression><![CDATA[0]]></initialValueExpression>
 	</variable>
 	<variable name="TotFuoriCampo" class="java.lang.Float" resetType="Group" incrementType="Column" resetGroup="reg_link" calculation="Sum">
-		<variableExpression><![CDATA[$V{TotFuoriCampo} + (RS.IVA_FuoriCampo or 0)]]></variableExpression>
+		<variableExpression><![CDATA[$V{TotFuoriCampo} + RS.iif(RS.Reg_Link is None, 0, (RS.IVA_FuoriCampo or 0))]]></variableExpression>
 		<initialValueExpression><![CDATA[0]]></initialValueExpression>
 	</variable>
 	<variable name="TotTotale" class="java.lang.Float" resetType="Group" incrementType="Column" resetGroup="reg_link" calculation="Sum">
-		<variableExpression><![CDATA[$V{TotTotale} + (RS.IVA_Totale or 0)]]></variableExpression>
+		<variableExpression><![CDATA[$V{TotTotale} + RS.iif(RS.Reg_Link is None, 0, (RS.IVA_Totale or 0))]]></variableExpression>
 		<initialValueExpression><![CDATA[0]]></initialValueExpression>
 	</variable>
 
 		<group  name="reg_link" >
 			<groupExpression><![CDATA[RS.Reg_Link]]></groupExpression>
 			<groupHeader>
-			<band height="0"  isSplitAllowed="true" >
+			<band height="5"  isSplitAllowed="true" >
+				<line direction="TopDown">
+					<reportElement
+						mode="Opaque"
+						x="0"
+						y="3"
+						width="782"
+						height="1"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="line-2"/>
+					<graphicElement stretchType="NoStretch" fill="Solid" >
+					<pen lineWidth="0.25" lineStyle="Solid"/>
+</graphicElement>
+				</line>
 			</band>
 			</groupHeader>
 			<groupFooter>
@@ -377,8 +391,8 @@
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
-					<textElement textAlignment="Center" verticalAlignment="Bottom" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Helvetica" size="10" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="10" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[Transazioni Spesometro]]></textFieldExpression>
 				</textField>

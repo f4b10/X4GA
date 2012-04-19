@@ -150,6 +150,7 @@ class SpesometroPanel(aw.Panel):
         cn('gridtitle').SetLabel(label_title)
         cn('butestrai').SetLabel(label_button)
         cn('butgenera').Enable(modo == self.MODO_ESTRAI)
+        self.gridspe.set_can_modify(modo == self.MODO_AGGIORNA)
     
     def OnYearChanged(self, event):
         self.SetDates()
@@ -345,6 +346,10 @@ class SpesometroPanel(aw.Panel):
 
 class SpesometroGrid(dbgrid.ADB_Grid):
     
+    _can_modify = True
+    def set_can_modify(self, can_modify):
+        self._can_modify = can_modify
+    
     def __init__(self, parent, dbspe):
         
         dbgrid.ADB_Grid.__init__(self, parent, db_table=dbspe, can_edit=True, on_menu_select='row')
@@ -488,7 +493,8 @@ class SpesometroGrid(dbgrid.ADB_Grid):
         self.SelectRow(row)
         det = self.db_table
         if det.RowNumber() != row:
-            det.MoveRow(row)
+            if 0 <= row < det.RowsCount():
+                det.MoveRow(row)
             self.UpdateTotAnag(det.Anag_Id)
         event.Skip()
     
@@ -552,6 +558,10 @@ class SpesometroGrid(dbgrid.ADB_Grid):
         event.Skip()
     
     def ShowContextMenu(self, position, row, col):
+        
+        if not self._can_modify:
+            aw.awu.MsgDialog(self, "Aggiornare i dati per apportare modifiche", style=wx.ICON_INFORMATION)
+            return
         
         det = self.db_table
         if not 0 <= row < det.RowsCount():
