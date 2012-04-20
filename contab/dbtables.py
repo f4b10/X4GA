@@ -3562,25 +3562,30 @@ ORDER BY anag.descriz, reg.sm_regrif, reg.sm_link, reg.datdoc, reg.numdoc, regiv
         rs2 = []
         
         def TestImporti(row, first_row_of_links):
-            link = rs1[row][colkey]
-            azip = rs1[row][colapr]
-            if link is None:
-                totimp = rs1[row][colimp]
-                tottot = rs1[row][coltot]
-            else:
-                totimp = tottot = 0
-                if first_row_of_links is None:
-                    first_row_of_links = row
-                row_test = first_row_of_links
-                while True:
-                    totimp += rs1[row_test][colimp]
-                    tottot += rs1[row_test][coltot]
-                    if row == self.RowsCount()-1 or rs1[row_test+1][colkey] != link:
-                        break
-                    row_test += 1
-            if azip == "A":
-                return totimp > maxazi, first_row_of_links
-            return tottot > maxpri, first_row_of_links
+            try:
+                link = rs1[row][colkey]
+                azip = rs1[row][colapr]
+                if link is None:
+                    totimp = rs1[row][colimp]
+                    tottot = rs1[row][coltot]
+                else:
+                    totimp = tottot = 0
+                    if first_row_of_links is None:
+                        first_row_of_links = row
+                    row_test = first_row_of_links
+                    while True:
+                        totimp += (rs1[row_test][colimp] or 0)
+                        tottot += (rs1[row_test][coltot] or 0)
+                        if row_test == self.RowsCount()-1:
+                            break
+                        if row_test <= self.RowsCount()-2 and rs1[row_test+1][colkey] != link:
+                            break
+                        row_test += 1
+                if azip == "A":
+                    return totimp > maxazi, first_row_of_links
+                return tottot > maxpri, first_row_of_links
+            except Exception, e:
+                pass
         
         lastkey = None
         for n, r in enumerate(rs1):

@@ -29,6 +29,12 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.32', dt.Date(2012,4,20), (
+         ("BUG1112",
+         """Corretto bug in estrazione dati spesometro: in caso di ultime
+         righe della griglia aggregate, generava eccezione."""),
+        ),),
+    
     ('1.4.31', dt.Date(2012,4,19), (
          ("BUG1111",
          """Corrette le totalizzazioni delle operazioni aggregate nella
