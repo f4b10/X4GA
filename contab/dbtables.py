@@ -3582,8 +3582,8 @@ ORDER BY anag.descriz, reg.sm_regrif, reg.sm_link, reg.datdoc, reg.numdoc, regiv
                             break
                         row_test += 1
                 if azip == "A":
-                    return totimp > maxazi, first_row_of_links
-                return tottot > maxpri, first_row_of_links
+                    return totimp > maxazi and totimp != 0, first_row_of_links
+                return tottot > maxpri and tottot != 0, first_row_of_links
             except Exception, e:
                 pass
         

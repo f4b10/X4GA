@@ -29,6 +29,14 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.33', dt.Date(2012,4,23), (
+         ("BUG1113",
+         """Corretta estrazione valori da spesometro: in caso di estrazione
+         globale di tutte le registrazioni, non testava che la parte imponibile
+         fosse significativa, conglobando quindi anche le operazioni con parte
+         imponibile nulla."""),
+        ),),
+    
     ('1.4.32', dt.Date(2012,4,20), (
          ("BUG1112",
          """Corretto bug in estrazione dati spesometro: in caso di ultime
