@@ -29,6 +29,9 @@ import awc.controls.dbgrid as dbglib
 import magazz
 import magazz.dbtables as dbm
 
+import Env
+bt = Env.Azienda.BaseTab
+
 
 class GridTable(dbglib.DbGridTable):
     
@@ -194,9 +197,15 @@ class GridMov(object):
         
         if retrieve:
             
-            if not mov.Retrieve():
-                awu.MsgDialog(self.gridmov, message=repr(mov.GetError()))
-            
+            err = None
+            wx.BeginBusyCursor()
+            try:
+                if not mov.Retrieve():
+                    err = repr(mov.GetError())
+            finally:
+                wx.EndBusyCursor()
+            if err:
+                awu.MsgDialog(self.gridmov, message=err)
             self.GridMovUpdate()
     
     def GridMovUpdate(self):

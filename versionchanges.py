@@ -29,6 +29,12 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.34', dt.Date(2012,5,9), (
+         ("BUG1114",
+         """Corretta interrogazione movimenti magazzino, digitando il 
+         contenuto della descrizione dei movimenti originava eccezione."""),
+        ),),
+    
     ('1.4.33', dt.Date(2012,4,23), (
          ("BUG1113",
          """Corretta estrazione valori da spesometro: in caso di estrazione
