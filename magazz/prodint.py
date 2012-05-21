@@ -304,52 +304,12 @@ class ProdIntMagPanel(aw.Panel):
         self.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged,
                   id=wdr.ID_STATZONE)
     
-    def OnMagPrint(self, event):
-        self.MagPrint()
-        event.Skip()
-    
-    def MagPrint(self):
-        ci = lambda x: self.FindWindowById(x)
-        sel = ci(wdr.ID_WORKZONE).GetSelection()
-        label = ci(wdr.ID_WORKZONE).GetPageText(sel).lower()
-        if 'prodotti' in label:
-            rpt.Report(self, self.dbfta, 'Scheda vendite cliente')
-        elif 'documenti' in label:
-            rpt.Report(self, self.dbdoc, 'Lista documenti magazzino')
-        elif 'movimenti' in label:
-            self.dbmov.pro = self.dbmov.prod
-            rpt.Report(self, self.dbmov, 'Lista movimenti magazzino')
-        elif 'fatturato' in label:
-            self.FatturatoPrint()
-    
-    def FatturatoPrint(self):
-        d = FatturatoPrintSel(self)
-        ok = d.ShowModal() == wx.ID_OK
-        d.Destroy()
-        if ok:
-            if d.report_type == 'cat':
-                db = self.dbfatcat
-                report = 'Fatturato cliente per categoria merce'
-            elif d.report_type == 'pro':
-                db = self.dbfatpro
-                report = 'Fatturato cliente per prodotto'
-            else:
-                db = None
-            if db:
-                rpt.Report(self, db, report)
-            
     def OnPageChanged(self, event):
         self.UpdateFilters(event.GetSelection())
         event.Skip()
     
     def TestSelDoc(self):
-        ci = lambda x: self.FindWindowById(x)
-        cn = lambda x: self.FindWindowByName(x)
-        #page = ci(wdr.ID_WORKZONE).GetSelection()
-        #enable = not 'prodotti fatturati' in \
-               #ci(wdr.ID_WORKZONE).GetPageText(page).lower()
-        #for name in 'id_magazz,id_tipdoc,nodocacq,nodocann'.split(','):
-            #cn(name).Enable(enable)
+        pass
         
     def GetOrdInverso(self):
         return self.ordinverso
