@@ -4003,7 +4003,7 @@ class Azienda(object):
         
         @classmethod
         def GetMagQtaIntegersDisplay(cls):
-            return 6
+            return 9
         
         @classmethod
         def GetMagQtaMaskInfo(cls, numint=None, numdec=None):
