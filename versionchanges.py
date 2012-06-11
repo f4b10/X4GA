@@ -29,6 +29,18 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.36', None, (
+         ("BUG1115",
+         """Corretta determinazione esercizio da stampare sul giornale:
+         se tutte le registrazioni dell'esercizio in corso sono già
+         state stampate."""),
+        ),),
+    
+    ('1.4.35', None, (
+         ("BET1130",
+         """Numero di cifre intere delle quantità portato da 6 a 9."""),
+        ),),
+    
     ('1.4.34', dt.Date(2012,5,9), (
          ("BUG1114",
          """Corretta interrogazione movimenti magazzino, digitando il 
