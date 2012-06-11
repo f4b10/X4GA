@@ -52,7 +52,7 @@ class SelEsercizioChoice(awch.Choice):
         self.esercizi = list()
         self.ReadEsercizi()
     
-    def ReadEsercizi(self, regfilter=None):
+    def ReadEsercizi(self, regfilter=None, force_esercizio=None):
         prg = self.dbprg
         if prg.Retrieve('codice=%s', 'ccg_esercizio') and prg.OneRow():
             ec = prg.progrnum
@@ -77,13 +77,20 @@ class SelEsercizioChoice(awch.Choice):
                 d += ' (in corso)'
             self.Append(d)
             e.append(int(reg.esercizio))
+        if force_esercizio is not None and not force_esercizio in e:
+            d = str(force_esercizio).zfill(4)
+            if force_esercizio == ec:
+                d += ' (in corso)'
+            self.Append(d)
+            e.append(force_esercizio)
         if self.GetCount():
             self.SetSelection(0)
     
     def ReadEserciziNoStampaGiornale(self):
-        self.ReadEsercizi("(reg.st_giobol IS NULL or reg.st_giobol<>1) AND reg.tipreg<>'E'")
+        ec = self.dbese.GetEsercizioInCorso()
+        self.ReadEsercizi("(reg.st_giobol IS NULL or reg.st_giobol<>1) AND reg.tipreg<>'E'", force_esercizio=ec)
         if self.GetCount():
-            self.SetValue(self.dbese.GetEsercizioInCorso())
+            self.SetValue(ec)
     
     def ReadEserciziSiStampaGiornale(self):
         self.ReadEsercizi("(reg.st_giobol=1) AND reg.tipreg<>'E'")
