@@ -108,8 +108,8 @@ class _automatmixin(object):
                 else:
                     dberr = e.args
             if dberr:
-               awu.MsgDialog(self, repr(dberr))
-               break
+                awu.MsgDialog(self, repr(dberr))
+                break
         return (dberr is None)
     
     def UpdateDataRecord(self):
