@@ -2,7 +2,7 @@
 <!-- Created with iReport - A designer for JasperReports -->
 <!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
 <jasperReport
-		 name="Bilancio Gestionale Strutturato"
+		 name="Bilancio Gestionale Strutturato con progressivi"
 		 columnCount="1"
 		 printOrder="Vertical"
 		 orientation="Portrait"
@@ -1237,9 +1237,9 @@
 				<line direction="TopDown">
 					<reportElement
 						mode="Opaque"
-						x="30"
+						x="19"
 						y="18"
-						width="504"
+						width="515"
 						height="0"
 						forecolor="#000000"
 						backcolor="#FFFFFF"

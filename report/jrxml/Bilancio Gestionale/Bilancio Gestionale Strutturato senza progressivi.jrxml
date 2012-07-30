@@ -1105,9 +1105,9 @@
 				<line direction="TopDown">
 					<reportElement
 						mode="Opaque"
-						x="30"
+						x="19"
 						y="18"
-						width="504"
+						width="515"
 						height="0"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
