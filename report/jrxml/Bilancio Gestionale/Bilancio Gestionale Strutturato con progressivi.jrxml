@@ -695,9 +695,9 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="407"
+						x="402"
 						y="6"
-						width="59"
+						width="65"
 						height="9"
 						forecolor="#666666"
 						backcolor="#FFFFFF"
@@ -710,7 +710,7 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right" verticalAlignment="Bottom" rotation="None" lineSpacing="Single">
-						<font fontName="Courier New" pdfFontName="Courier-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Courier New" pdfFontName="Courier-Bold" size="7" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.Integer"><![CDATA[RS.sepnvi($V{TotProTipD})]]></textFieldExpression>
 				</textField>
@@ -719,7 +719,7 @@
 						mode="Transparent"
 						x="469"
 						y="6"
-						width="59"
+						width="65"
 						height="9"
 						forecolor="#666666"
 						backcolor="#FFFFFF"
@@ -732,16 +732,16 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right" verticalAlignment="Bottom" rotation="None" lineSpacing="Single">
-						<font fontName="Courier New" pdfFontName="Courier-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Courier New" pdfFontName="Courier-Bold" size="7" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.Integer"><![CDATA[RS.sepnvi($V{TotProTipA})]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="283"
+						x="268"
 						y="6"
-						width="59"
+						width="65"
 						height="9"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -754,16 +754,16 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right" verticalAlignment="Bottom" rotation="None" lineSpacing="Single">
-						<font fontName="Courier New" pdfFontName="Courier-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Courier New" pdfFontName="Courier-Bold" size="7" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.Integer"><![CDATA[RS.sepnvi($V{TotSalTipD}-$V{TotSalTipA})]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="345"
+						x="335"
 						y="6"
-						width="59"
+						width="65"
 						height="9"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -776,7 +776,7 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right" verticalAlignment="Bottom" rotation="None" lineSpacing="Single">
-						<font fontName="Courier New" pdfFontName="Courier-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Courier New" pdfFontName="Courier-Bold" size="7" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.Integer"><![CDATA[RS.sepnvi($V{TotSalTipA}-$V{TotSalTipD})]]></textFieldExpression>
 				</textField>
@@ -850,9 +850,9 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="119"
+						x="99"
 						y="7"
-						width="160"
+						width="165"
 						height="9"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -888,9 +888,9 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="407"
+						x="402"
 						y="4"
-						width="59"
+						width="65"
 						height="9"
 						forecolor="#666666"
 						backcolor="#FFFFFF"
@@ -903,7 +903,7 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right" verticalAlignment="Bottom" rotation="None" lineSpacing="Single">
-						<font fontName="Courier New" pdfFontName="Courier-BoldOblique" size="8" isBold="true" isItalic="true" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Courier New" pdfFontName="Courier-BoldOblique" size="7" isBold="true" isItalic="true" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.Integer"><![CDATA[RS.sepnvi($V{TotProMasD})]]></textFieldExpression>
 				</textField>
@@ -912,7 +912,7 @@
 						mode="Transparent"
 						x="469"
 						y="4"
-						width="59"
+						width="65"
 						height="9"
 						forecolor="#666666"
 						backcolor="#FFFFFF"
@@ -925,16 +925,16 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right" verticalAlignment="Bottom" rotation="None" lineSpacing="Single">
-						<font fontName="Courier New" pdfFontName="Courier-BoldOblique" size="8" isBold="true" isItalic="true" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Courier New" pdfFontName="Courier-BoldOblique" size="7" isBold="true" isItalic="true" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.Integer"><![CDATA[RS.sepnvi($V{TotProMasA})]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="283"
+						x="268"
 						y="4"
-						width="59"
+						width="65"
 						height="9"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -947,16 +947,16 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right" verticalAlignment="Bottom" rotation="None" lineSpacing="Single">
-						<font fontName="Courier New" pdfFontName="Courier-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Courier New" pdfFontName="Courier-Bold" size="7" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.Integer"><![CDATA[RS.sepnvi($V{TotSalMasD}-$V{TotSalMasA})]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="345"
+						x="335"
 						y="4"
-						width="59"
+						width="65"
 						height="9"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -969,14 +969,14 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right" verticalAlignment="Bottom" rotation="None" lineSpacing="Single">
-						<font fontName="Courier New" pdfFontName="Courier-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Courier New" pdfFontName="Courier-Bold" size="7" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.Integer"><![CDATA[RS.sepnvi($V{TotSalMasA}-$V{TotSalMasD})]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="91"
+						x="71"
 						y="4"
 						width="25"
 						height="9"
@@ -996,9 +996,9 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="119"
+						x="99"
 						y="4"
-						width="160"
+						width="165"
 						height="9"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -1045,7 +1045,7 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="30"
+						x="20"
 						y="5"
 						width="25"
 						height="9"
@@ -1065,9 +1065,9 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="119"
+						x="99"
 						y="5"
-						width="160"
+						width="165"
 						height="9"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -1089,9 +1089,9 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="407"
+						x="402"
 						y="6"
-						width="59"
+						width="65"
 						height="9"
 						forecolor="#666666"
 						backcolor="#FFFFFF"
@@ -1104,7 +1104,7 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right" verticalAlignment="Bottom" rotation="None" lineSpacing="Single">
-						<font fontName="Courier New" pdfFontName="Courier-Oblique" size="8" isBold="false" isItalic="true" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Courier New" pdfFontName="Courier-Oblique" size="7" isBold="false" isItalic="true" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.Integer"><![CDATA[RS.sepnvi($V{TotProConD})]]></textFieldExpression>
 				</textField>
@@ -1113,7 +1113,7 @@
 						mode="Transparent"
 						x="469"
 						y="6"
-						width="59"
+						width="65"
 						height="9"
 						forecolor="#666666"
 						backcolor="#FFFFFF"
@@ -1126,16 +1126,16 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right" verticalAlignment="Bottom" rotation="None" lineSpacing="Single">
-						<font fontName="Courier New" pdfFontName="Courier-Oblique" size="8" isBold="false" isItalic="true" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Courier New" pdfFontName="Courier-Oblique" size="7" isBold="false" isItalic="true" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.Integer"><![CDATA[RS.sepnvi($V{TotProConA})]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="283"
+						x="268"
 						y="6"
-						width="59"
+						width="65"
 						height="9"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -1148,16 +1148,16 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right" verticalAlignment="Bottom" rotation="None" lineSpacing="Single">
-						<font fontName="Courier New" pdfFontName="Courier" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Courier New" pdfFontName="Courier" size="7" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.Integer"><![CDATA[RS.sepnvi($V{TotSalConD}-$V{TotSalConA})]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="345"
+						x="335"
 						y="6"
-						width="59"
+						width="65"
 						height="9"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -1170,14 +1170,14 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right" verticalAlignment="Bottom" rotation="None" lineSpacing="Single">
-						<font fontName="Courier New" pdfFontName="Courier" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Courier New" pdfFontName="Courier" size="7" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.Integer"><![CDATA[RS.sepnvi($V{TotSalConA}-$V{TotSalConD})]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="91"
+						x="71"
 						y="6"
 						width="25"
 						height="9"
@@ -1197,9 +1197,9 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="119"
+						x="99"
 						y="6"
-						width="160"
+						width="165"
 						height="9"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -1217,7 +1217,7 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="30"
+						x="20"
 						y="6"
 						width="25"
 						height="9"
@@ -1456,9 +1456,9 @@
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="407"
+						x="402"
 						y="1"
-						width="59"
+						width="65"
 						height="10"
 						forecolor="#666666"
 						backcolor="#FFFFFF"
@@ -1478,7 +1478,7 @@
 						mode="Transparent"
 						x="469"
 						y="1"
-						width="59"
+						width="65"
 						height="10"
 						forecolor="#666666"
 						backcolor="#FFFFFF"
@@ -1496,47 +1496,7 @@
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="3"
-						y="1"
-						width="25"
-						height="10"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="element-101"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Left" verticalAlignment="Bottom" rotation="None" lineSpacing="Single">
-						<font fontName="Times New Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
-					</textElement>
-				<text><![CDATA[Mastro]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						mode="Transparent"
-						x="30"
-						y="1"
-						width="25"
-						height="10"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="element-102"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Left" verticalAlignment="Bottom" rotation="None" lineSpacing="Single">
-						<font fontName="Times New Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
-					</textElement>
-				<text><![CDATA[Conto]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						mode="Transparent"
-						x="56"
+						x="36"
 						y="1"
 						width="34"
 						height="10"
@@ -1556,9 +1516,9 @@
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="119"
+						x="99"
 						y="1"
-						width="160"
+						width="165"
 						height="10"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -1576,9 +1536,9 @@
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="283"
+						x="268"
 						y="1"
-						width="59"
+						width="65"
 						height="10"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -1596,9 +1556,9 @@
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="345"
+						x="335"
 						y="1"
-						width="59"
+						width="65"
 						height="10"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -1616,7 +1576,7 @@
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="91"
+						x="71"
 						y="1"
 						width="25"
 						height="10"
@@ -1640,9 +1600,9 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="407"
+						x="402"
 						y="2"
-						width="59"
+						width="65"
 						height="9"
 						forecolor="#666666"
 						backcolor="#FFFFFF"
@@ -1664,7 +1624,7 @@
 						mode="Transparent"
 						x="469"
 						y="2"
-						width="59"
+						width="65"
 						height="9"
 						forecolor="#666666"
 						backcolor="#FFFFFF"
@@ -1684,51 +1644,7 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="3"
-						y="2"
-						width="27"
-						height="9"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="textField-30">
-							<printWhenExpression><![CDATA[False]]></printWhenExpression>
-						</reportElement>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Left" verticalAlignment="Bottom" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
-					</textElement>
-				<textFieldExpression   class="java.lang.Integer"><![CDATA[RS.mas]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						mode="Transparent"
-						x="30"
-						y="2"
-						width="25"
-						height="9"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="textField-31">
-							<printWhenExpression><![CDATA[False]]></printWhenExpression>
-						</reportElement>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Left" verticalAlignment="Bottom" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
-					</textElement>
-				<textFieldExpression   class="java.lang.Integer"><![CDATA[RS.con]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						mode="Transparent"
-						x="56"
+						x="36"
 						y="2"
 						width="34"
 						height="9"
@@ -1748,9 +1664,9 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="119"
+						x="99"
 						y="2"
-						width="160"
+						width="165"
 						height="9"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -1768,9 +1684,9 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="283"
+						x="268"
 						y="2"
-						width="59"
+						width="65"
 						height="9"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -1790,9 +1706,9 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="345"
+						x="335"
 						y="2"
-						width="59"
+						width="65"
 						height="9"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -1812,7 +1728,7 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="91"
+						x="71"
 						y="2"
 						width="25"
 						height="9"
