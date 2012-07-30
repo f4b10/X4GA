@@ -29,6 +29,11 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.37', dt.Date(2012,7,30), (
+         ("BET1131",
+         """Aggiunta stampa strutturata bilancio gestionale."""),
+        ),),
+    
     ('1.4.36', dt.Date(2012,6,20), (
          ("BUG1115",
          """Corretta determinazione esercizio da stampare sul giornale:
