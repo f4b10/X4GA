@@ -108,7 +108,7 @@ class _BilGrid(dbglib.DbGridColoriAlternati):
         self.SetDefaultRowSize(20)
         
         self.dbbil =   dbbil
-        self.rsbil =   ()
+        self.rsbil =   []
         self.colors =  False
         self.intesta = True
         self.totali =  {}
@@ -405,6 +405,12 @@ class _BilGrid(dbglib.DbGridColoriAlternati):
                                        pid=pid, pdc=pdc, tpi=tpi, tpa=tpa, des=des,\
                                        prd=rowd, pra=rowa)
                     
+                    if dototpdc and r[nctpt] in "CF" and not parms['detcf'] and\
+                        TestZero(rowd, rowa):
+                        self.AppendRow(tip,\
+                                       pid=pid, pdc="***", tpi=tpi, tpa=tpa, des="SOTTOCONTI ACCORPATI",\
+                                       prd=rowd, pra=rowa, accorpa=r[nctpt])
+                    
                 elif not r[nctpt] in "CF" or parms['detcf'] and\
                      TestZero(rowd, rowa):
                     self.AppendRow(tip, mas=mas, con=con,\
@@ -434,7 +440,7 @@ class _BilGrid(dbglib.DbGridColoriAlternati):
     
     def AppendRow(self, tip,\
                   mas=None, con=None, pid=None, pdc=None, tpi=None, tpa=None, des=None,\
-                  prd=None, pra=None):
+                  prd=None, pra=None, accorpa=None):
         
         if prd is None or pra is None:
             sld, sla = None, None
@@ -448,18 +454,37 @@ class _BilGrid(dbglib.DbGridColoriAlternati):
         if sld == 0: sld = None
         if sla == 0: sla = None
         
-        self.rsbil.append((tip,  #GRIDCOL_TIPBIL
-                           mas,  #GRIDCOL_CODMAS
-                           con,  #GRIDCOL_CODCON
-                           tpi,  #GRIDCOL_IDTIP
-                           tpa,  #GRIDCOL_CODTIP
-                           pid,  #GRIDCOL_IDPDC
-                           pdc,  #GRIDCOL_CODPDC
-                           des,  #GRIDCOL_DESC
-                           prd,  #GRIDCOL_PROGRD
-                           pra,  #GRIDCOL_PROGRA
-                           sld,  #GRIDCOL_SALDOD
-                           sla)) #GRIDCOL_SALDOA
+        app = True
+        if accorpa is not None:
+            try:
+                if self.rsbil[-1][6] == "***":
+                    lr = self.rsbil[-1]
+                    lr[8] = (self.rsbil[-1][8] or 0)+(prd or 0)
+                    lr[9] = (self.rsbil[-1][9] or 0)+(pra or 0)
+                    if lr[8] >= lr[9]:
+                        lr[10], lr[11] = lr[8]-lr[9], None
+                    else:
+                        lr[10], lr[11] = None, lr[9]-lr[8]
+                    app = False
+            except:
+                pass
+        if app:
+            if accorpa == "C":
+                des = "*** CLIENTI VARI ***"
+            elif accorpa == "F":
+                des = "*** FORNITORI VARI ***"
+            self.rsbil.append([tip,  #GRIDCOL_TIPBIL
+                               mas,  #GRIDCOL_CODMAS
+                               con,  #GRIDCOL_CODCON
+                               tpi,  #GRIDCOL_IDTIP
+                               tpa,  #GRIDCOL_CODTIP
+                               pid,  #GRIDCOL_IDPDC
+                               pdc,  #GRIDCOL_CODPDC
+                               des,  #GRIDCOL_DESC
+                               prd,  #GRIDCOL_PROGRD
+                               pra,  #GRIDCOL_PROGRA
+                               sld,  #GRIDCOL_SALDOD
+                               sla]) #GRIDCOL_SALDOA
         return self.rsbil[-1]
     
 
@@ -993,7 +1018,41 @@ class BilGestPanel(_BilPanel):
                          +self.gridbil.grids[1].rsbil
                          +self.gridbil.grids[2].rsbil)
         bil._info.printfilters = self.dbbil._info.printfilters
-        rpt.Report(self, bil, self.report)
+        def adegua(rptname, report):
+            dbt = bil
+            if 'strutt' in rptname.lower():
+                bil2 = DbMemBil(self, 'tip,mas,con,tpi,tpa,pid,pdc,des,prd,pra,sld,sla,dmas,dcon')
+                l_tip = l_mas = l_con = None
+                ldmas = ldcon = None
+                for b in bil:
+                    if b.con is not None:
+                        l_con = b.con
+                        ldcon = b.des
+                    if b.mas is not None:
+                        l_mas = b.mas
+                        ldmas = b.des
+                        l_con = None
+                    if b.tip is not None and b.pdc is not None and b.mas is None and b.con is None:
+                        l_tip = b.tip
+                    if b.pdc is not None:
+                        bil2.CreateNewRow()
+                        bil2.tip = bil.tip
+                        bil2.mas = l_mas
+                        bil2.con = l_con
+                        bil2.tpi = b.tpi
+                        bil2.tpa = b.tpa
+                        bil2.pid = b.pid
+                        bil2.pdc = b.pdc
+                        bil2.des = b.des
+                        bil2.prd = b.prd
+                        bil2.pra = b.pra
+                        bil2.sld = b.sld
+                        bil2.sla = b.sla
+                        bil2.dmas = ldmas
+                        bil2.dcon = ldcon
+                dbt = bil2
+            return dbt
+        rpt.Report(self, bil, self.report, dbfunc=adegua)
 
 
 # ------------------------------------------------------------------------------
