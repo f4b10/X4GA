@@ -4213,11 +4213,13 @@ if __name__ == '__main__':
     def ExportCSV(tab, tmpname, headings=None):
         import csv
         tmpfile = open(tmpname, 'wb')
-        writer = csv.writer(tmpfile)
-        d = writer.dialect
-        d.delimiter = ";"
-        d.quotechar = '"'
-        #d.quoting = int(CSVFORMAT_QUOTING)
+        writer = csv.writer(tmpfile,
+                            delimiter=';',
+                            quotechar='"',
+                            doublequote=True,
+                            skipinitialspace=False,
+                            lineterminator='\r\n',
+                            quoting=csv.QUOTE_NONNUMERIC)
         csvrs = []
         if headings:
             csvrs.append([h for h in headings])
