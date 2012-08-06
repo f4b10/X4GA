@@ -2476,7 +2476,21 @@ class DocMag(adb.DbTable):
         dd = N(self.pdc.descriz)
         filename = "%s n. %s - %s (%s)" % (td, self.numdoc, dd.upper(), self.pdc.codice)
         return filename
-        
+    
+    def GetSegnaColli(self, totcolli=None):
+        dbsc = SegnaColli()
+        dbsc.dbdoc = self
+        totcolli = totcolli or self.totcolli or 0
+        if totcolli:
+            for n in range(totcolli):
+                dbsc.CreateNewRow()
+                dbsc.id_doc = self.id
+                dbsc.collonum = n+1
+                dbsc.totcolli = totcolli
+            if getattr(self._info, 'anag', None) is None:
+                self._info.anag = self.GetAnag()
+        return dbsc
+    
     def SendMail_Prepare(self):
         sei = self._info.sendmail_info
         sei.clear()
@@ -4880,6 +4894,16 @@ class PdcSituazioneStorniAcconto(ElencoMovim):
         ElencoMovim.__init__(self, writable=True)
         self.AddBaseFilter('(mov.f_ann IS NULL OR mov.f_ann<>1) AND (doc.f_ann IS NULL OR doc.f_ann<>1)')
         self.AddField('0.0', 'acconto_disponib')
+        self.Reset()
+
+
+# ------------------------------------------------------------------------------
+
+
+class SegnaColli(adb.DbMem):
+    
+    def __init__(self):
+        adb.DbMem.__init__(self, 'id_doc,collonum,totcolli')
         self.Reset()
 
 

@@ -2700,6 +2700,7 @@ class Azienda(object):
                 [ "numsconti",  "TINYINT",  1, None, "Numero di sconti da gestire se diverso da setup azienda", None ],
                 [ "nonumxmag",  "TINYINT",  1, None, "Flag numerazione non dipendente da magazzino", None ],
                 [ "noivaprof",  "TINYINT",  1, None, "Flag accorpamento iva su c/partita se causale non iva in reg. contabile", None ],
+                [ "rptcolli",   "TINYINT",  1, None, "Flag stampa segnacolli", None ],
             ]
             
             cls.set_constraints(cls.TABNAME_CFGMAGDOC,

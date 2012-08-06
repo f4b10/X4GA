@@ -1590,7 +1590,17 @@ class MagazzPanel(aw.Panel,\
             c.SetValue(now)
             c.SetFocus()
         
+        elif name == 'butrptcolli':
+            self.PrintSegnaColli()
+        
         event.Skip()
+    
+    def PrintSegnaColli(self):
+        cn = self.FindWindowByName
+        totcolli = (cn('totcolli').GetValue() or 0)
+        if totcolli > 0:
+            dbsc = self.dbdoc.GetSegnaColli(totcolli)
+            rpt.Report(self, dbsc, 'Etichette Segnacollo')
     
     def OnDocNew( self, event ):
         if self.status == STATUS_SELCAUS:
@@ -2415,6 +2425,7 @@ class MagazzPanel(aw.Panel,\
             ctrls[name].Enable(self.status == STATUS_EDITING and enab)
         cn = self.FindWindowByName
         cn('butinitraspnow').Enable(self.status == STATUS_EDITING and not bool(cn('initrasp').GetValue()))
+        cn('butrptcolli').Show((cn('totcolli').GetValue() or 0) > 0)
         #abilitazione campi destinatario non codificato
         e = (bt.MAGNOCODEDES and self.status == STATUS_EDITING and enab and cfgdoc.askdatiacc == 'X' and cfgdoc.askdestin == 'X' and doc.id_dest is None)
         self.FindWindowByName('enable_nocodedes').Enable(e)
