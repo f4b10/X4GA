@@ -29,6 +29,12 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.39', dt.Date(2012,8,28), (
+         ("BUG1116",
+         """Bottone stampa segnacolli non reagiva correttamente
+         alla variazione del numero totale di colli."""),
+        ),),
+    
     ('1.4.38', dt.Date(2012,8,24), (
          ("BET1132",
          """Aggiunta stampa segnacolli in documento magazzino."""),
