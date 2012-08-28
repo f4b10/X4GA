@@ -29,7 +29,7 @@ import mx.DateTime as dt
 
 history = (
     
-    ('1.4.38', None, (
+    ('1.4.38', dt.Date(2012,8,24), (
          ("BET1132",
          """Aggiunta stampa segnacolli in documento magazzino."""),
         ),),

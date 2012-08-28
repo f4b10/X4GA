@@ -507,6 +507,7 @@ class MagazzPanel(aw.Panel,\
         
         self.Bind(wx.EVT_CHECKBOX, self.OnVariaDestin, cn('enable_nocodedes'))
         self.Bind(wx.EVT_CHECKBOX, self.OnVariaVettore, cn('enable_nocodevet'))
+        self.Bind(wx.EVT_TEXT, self.OnVariaColli, cn('numcolli'))
         
         self.Bind(wx.EVT_SIZE, self.OnResize)
         
@@ -546,6 +547,11 @@ class MagazzPanel(aw.Panel,\
         else:
             f = self.FindWindowByName('id_travet')
         wx.CallAfter(lambda: f.SetFocus())
+        event.Skip()
+    
+    def OnVariaColli(self, event):
+        cn = self.FindWindowByName
+        cn('butrptcolli').Enable((cn('totcolli').GetValue() or 0) > 0)
         event.Skip()
     
     def SetFieldsMaxLength(self):
