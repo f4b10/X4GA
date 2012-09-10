@@ -29,6 +29,14 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.40', dt.Date(2012,9,10), (
+         ("BUG1117",
+         """Corretto filtro magazzini su sottoscorta."""),
+         ("BUG1118",
+         """Corretta inizializzazione e memorizzazione dell'ultima
+         stampante e/o etichettatrice utilizzata."""),
+        ),),
+    
     ('1.4.39', dt.Date(2012,8,28), (
          ("BUG1116",
          """Bottone stampa segnacolli non reagiva correttamente

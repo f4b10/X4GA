@@ -3362,7 +3362,7 @@ class InventarioDaMovim(_InventarioMixin):
         if type(m) in (int, long, float):
             tab.AddFilter("doc.id_magazz=%s", m)
         elif type(m) in (list, tuple):
-            tab.AddFilter("doc.id_magazz IN ('%s')" % ','.join(map(str, m)))
+            tab.AddFilter("doc.id_magazz IN (%s)" % ','.join(map(lambda x: "'%s'" % str(x), m)))
         if self._info.g_datalastchi is not None:
             tab.AddFilter("doc.datreg>%s", self._info.g_datalastchi)
         if self._info.g_data is not None:

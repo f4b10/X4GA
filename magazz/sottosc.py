@@ -115,6 +115,12 @@ class SottoscortaGrid(inv.GridInv):
         sz.SetSizeHints(self.parent)
         self.gridinv = grid
     
+    def ResetTotals(self):
+        for t in ('ini', 'car', 'sca', 'giac'):
+            for tipo in ('', 'v'):
+                name = "%s%s" % (t, tipo)
+                self.totals[name] = 0
+    
     def Update(self, dlg, dbinv, parms):
         
         wait = aw.awu.WaitDialog(dlg,

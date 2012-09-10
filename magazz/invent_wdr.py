@@ -571,6 +571,8 @@ def ProdRiProFunc( parent, call_fit = True, set_sizer = True ):
     return item0
 
 ID_LISTBOX = 14060
+ID_TOTSSC = 14061
+ID_TOTFAB = 14062
 
 def SottoscortaFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -712,19 +714,19 @@ def SottoscortaFunc( parent, call_fit = True, set_sizer = True ):
     item44 = wx.StaticText( parent, ID_TEXT, "Giacenza", wx.DefaultPosition, wx.DefaultSize, 0 )
     item41.Add( item44, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item45 = masked.NumCtrl(parent, integerWidth=12, fractionWidth=bt.MAGQTA_DECIMALS); item45.SetName("totini"); item45.SetEditable(False)
+    item45 = masked.NumCtrl(parent, integerWidth=12, fractionWidth=bt.MAGQTA_DECIMALS); item45.SetName("totgia"); item45.SetEditable(False)
     item41.Add( item45, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item46 = wx.StaticText( parent, ID_TEXT, "Scorta minima:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item41.Add( item46, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item47 = masked.NumCtrl(parent, integerWidth=12, fractionWidth=bt.MAGQTA_DECIMALS); item47.SetName("totini"); item47.SetEditable(False)
+    item47 = masked.NumCtrl(parent, integerWidth=12, fractionWidth=bt.MAGQTA_DECIMALS); item47.SetName("totssc"); item47.SetEditable(False)
     item41.Add( item47, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item48 = wx.StaticText( parent, ID_TEXT, "Fabbisogno:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item41.Add( item48, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item49 = masked.NumCtrl(parent, integerWidth=12, fractionWidth=bt.MAGQTA_DECIMALS); item49.SetName("totini"); item49.SetEditable(False)
+    item49 = masked.NumCtrl(parent, integerWidth=12, fractionWidth=bt.MAGQTA_DECIMALS); item49.SetName("totfab"); item49.SetEditable(False)
     item41.Add( item49, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item39.Add( item41, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
@@ -755,13 +757,13 @@ def SottoscortaFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_CHECKGIAC = 14061
-ID_CHECKOFOR = 14062
-ID_CHECKOCLI = 14063
-ID_CHECKGPIN = 14064
-ID_TIPOBACKORD = 14065
-ID_BUTUPDATE = 14066
-ID_BUTPRINT = 14067
+ID_CHECKGIAC = 14063
+ID_CHECKOFOR = 14064
+ID_CHECKOCLI = 14065
+ID_CHECKGPIN = 14066
+ID_TIPOBACKORD = 14067
+ID_BUTUPDATE = 14068
+ID_BUTPRINT = 14069
 
 def InventarioPresuntoFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -913,7 +915,7 @@ def InventarioPresuntoFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_SPLITORD = 14068
+ID_SPLITORD = 14070
 
 def InventarioPresuntoBackordersFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -938,8 +940,8 @@ def InventarioPresuntoBackordersFunc( parent, call_fit = True, set_sizer = True 
     
     return item0
 
-ID_PROD = 14069
-ID_PANBACKORD = 14070
+ID_PROD = 14071
+ID_PANBACKORD = 14072
 
 def InventarioPresuntoBackordersDetOrdFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -975,7 +977,7 @@ def InventarioPresuntoBackordersDetOrdFunc( parent, call_fit = True, set_sizer =
     
     return item0
 
-ID_PANBACKEVA = 14071
+ID_PANBACKEVA = 14073
 
 def InventarioPresuntoBackordersDetEvaFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -1000,9 +1002,9 @@ def InventarioPresuntoBackordersDetEvaFunc( parent, call_fit = True, set_sizer =
     
     return item0
 
-ID_SSV = 14072
-ID_BUTVER = 14073
-ID_PANGRIDRIEP = 14074
+ID_SSV = 14074
+ID_BUTVER = 14075
+ID_PANGRIDRIEP = 14076
 
 def ProdRiCosFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -1058,7 +1060,7 @@ def ProdRiCosFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_INVDATA = 14075
+ID_INVDATA = 14077
 
 def InventFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
