@@ -1606,7 +1606,7 @@ class MagazzPanel(aw.Panel,\
         totcolli = (cn('totcolli').GetValue() or 0)
         if totcolli > 0:
             dbsc = self.dbdoc.GetSegnaColli(totcolli)
-            rpt.Report(self, dbsc, 'Etichette Segnacollo')
+            rpt.ReportLabels(self, dbsc, 'Etichette Segnacollo')
     
     def OnDocNew( self, event ):
         if self.status == STATUS_SELCAUS:

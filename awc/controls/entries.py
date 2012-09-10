@@ -489,6 +489,8 @@ class PrintersComboBox(wx.ComboBox):
             import win32print
             for tipo in (2,4):
                 for a,b,c,d in win32print.EnumPrinters(tipo):
+                    if '/' in c:
+                        c = c.replace('/', '\\')
                     self.Append(c)
                     if b.startswith('\\\\'):
                         p = b
@@ -496,6 +498,8 @@ class PrintersComboBox(wx.ComboBox):
                             p = p.split(',')[0]
                     else:
                         p = c
+                    if '/' in p:
+                        p = c.replace('/', '\\')
                     self.names.append(b)
                     self.queues.append(p)
                     self.types.append('true')

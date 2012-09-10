@@ -2,7 +2,7 @@
 <!-- Created with iReport - A designer for JasperReports -->
 <!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
 <jasperReport
-		 name="Codici a barre su A4 (8x4)"
+		 name="Etichette Segnacollo"
 		 columnCount="1"
 		 printOrder="Vertical"
 		 orientation="Landscape"
@@ -72,7 +72,7 @@
 					<reportElement
 						x="209"
 						y="115"
-						width="63"
+						width="61"
 						height="26"
 						forecolor="#BDBDBD"
 						key="rectangle-3"/>
@@ -96,7 +96,7 @@
 					<reportElement
 						x="12"
 						y="12"
-						width="260"
+						width="258"
 						height="87"
 						forecolor="#BDBDBD"
 						key="rectangle-1"/>
@@ -273,7 +273,7 @@
 					<reportElement
 						x="12"
 						y="44"
-						width="260"
+						width="258"
 						height="0"
 						forecolor="#BDBDBD"
 						key="line-1"/>
@@ -285,7 +285,7 @@
 					<reportElement
 						x="12"
 						y="71"
-						width="260"
+						width="258"
 						height="0"
 						forecolor="#BDBDBD"
 						key="line-2"/>
@@ -414,7 +414,7 @@
 						mode="Transparent"
 						x="242"
 						y="115"
-						width="32"
+						width="25"
 						height="10"
 						key="staticText-11"/>
 					<box></box>
@@ -460,7 +460,7 @@
 						mode="Transparent"
 						x="242"
 						y="123"
-						width="32"
+						width="25"
 						height="16"
 						forecolor="#000000"
 						backcolor="#FFFFFF"

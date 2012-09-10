@@ -359,7 +359,7 @@ class Report:
                     copies = 1
                     break
                 if not printer:
-                    printer = printername
+                    printer = self.get_default_printer()
                     SetUpdateLastPrinter(True)
                 if self.messages:
                     rptdef, printer, def_output, copies = self.GetMultiReport(parent, test, rptdef, printer, copies, emailbutton, multi_default=multi_default, otherquestions_filler=otherquestions_filler, can_preview=can_preview, can_print=can_print)
@@ -457,7 +457,13 @@ class Report:
             self.usedReport = self.StartReport()
             
             if updatelastprinter:
-                SetPrinterName(printer)
+                self.set_default_printer(printer)
+    
+    def get_default_printer(self):
+        return GetPrinterName()
+    
+    def set_default_printer(self, printer):
+        SetPrinterName(printer)
     
     def StartReport(self, rptout=None):
         p = self.parameters
@@ -605,6 +611,12 @@ class ReportLabels(Report):
     ChoiceDialog = MultiReportLabelsDialog
     row0 = 1
     col0 = 1
+    
+    def get_default_printer(self):
+        return GetLabelerName()
+    
+    def set_default_printer(self, printer):
+        SetLabelerName(printer)
     
     def GetLabelOffsetRow(self):
         return self.row0
