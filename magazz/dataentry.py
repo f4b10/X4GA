@@ -2431,7 +2431,7 @@ class MagazzPanel(aw.Panel,\
             ctrls[name].Enable(self.status == STATUS_EDITING and enab)
         cn = self.FindWindowByName
         cn('butinitraspnow').Enable(self.status == STATUS_EDITING and not bool(cn('initrasp').GetValue()))
-        cn('butrptcolli').Show((cn('totcolli').GetValue() or 0) > 0)
+        cn('butrptcolli').Show(cfgdoc.rptcolli == 1)
         #abilitazione campi destinatario non codificato
         e = (bt.MAGNOCODEDES and self.status == STATUS_EDITING and enab and cfgdoc.askdatiacc == 'X' and cfgdoc.askdestin == 'X' and doc.id_dest is None)
         self.FindWindowByName('enable_nocodedes').Enable(e)

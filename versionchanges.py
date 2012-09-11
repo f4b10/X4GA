@@ -29,7 +29,13 @@ import mx.DateTime as dt
 
 history = (
     
-    ('1.4.40', dt.Date(2012,9,10), (
+    ('1.4.41', dt.Date(2012,9,10), (
+         ("BUG1119",
+         """Visualizzazione bottone stampa segnacolli subordinata
+         a flag su tipo documento."""),
+        ),),
+    
+    ('1.4.40', None, (
          ("BUG1117",
          """Corretto filtro magazzini su sottoscorta."""),
          ("BUG1118",
