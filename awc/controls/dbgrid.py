@@ -1971,14 +1971,7 @@ class ADB_Grid(DbGridColoriAlternati):
         
         db_table = self.db_table
         
-        grid = self
-        class GridTable(DbGridTable):
-            def GetValue(self, row, col):
-                stru = grid._cols[col]
-                if stru['get_cell_func']:
-                    return stru['get_cell_func'](row, col)
-                return DbGridTable.GetValue(self, row, col)
-        self.tableClass = GridTable
+        self.tableClass = self.GetGridTableClass()
         
         self.SetData(db_table.GetRecordset(), colmap, canedit, canins,
                      linktables or None, afteredit or None, self.CreateNewRow, editors) 
@@ -2001,6 +1994,19 @@ class ADB_Grid(DbGridColoriAlternati):
         parent = self.GetParent()
         parent.SetSizer(sizer)
         sizer.SetSizeHints(parent)
+    
+    def GetGridTableClass(self):
+        
+        grid = self
+        
+        class GridTable(DbGridTable):
+            def GetValue(self, row, col):
+                stru = grid._cols[col]
+                if stru['get_cell_func']:
+                    return stru['get_cell_func'](row, col)
+                return DbGridTable.GetValue(self, row, col)
+        
+        return GridTable
     
     def _OnCellSelected(self, event):
         

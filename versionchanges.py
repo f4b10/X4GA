@@ -29,6 +29,11 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.42', None, (
+         ("INT1005",
+         """Modifica interna controlli di tipo griglia."""),
+        ),),
+    
     ('1.4.41', dt.Date(2012,9,10), (
          ("BUG1119",
          """Visualizzazione bottone stampa segnacolli subordinata
