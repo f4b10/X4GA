@@ -929,6 +929,13 @@ UPDATE `cfgsetup`
                         db.Execute(r"""UPDATE `x4`.`stati` 
                         SET codunico=%s WHERE descriz=%s""", (cod_unico, stato_desc))
         
+            if oldver<'1.4.43' and ok:
+                
+                #adeguamento struttura tabella stati per aggiunta codice stato 
+                #nella codifica del modello unico di dichiarazione dei redditi
+                db.Execute(r"""ALTER TABLE `x4`.`cfgmail` 
+                                    ADD COLUMN `authtls` TINYINT(1) AFTER `authpswd`""")
+        
         if ok:
             self.PerformExternalAdaptations()
         

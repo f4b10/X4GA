@@ -121,7 +121,7 @@ class EmailSetupPanel(_CommSetupPanel):
     
     def OnTestSend(self, event):
         keys = {}
-        for key in 'smtpaddr smtpport sender authreq authuser authpswd'.split():
+        for key in 'smtpaddr smtpport sender authreq authuser authpswd authtls'.split():
             keys[key] = self.FindWindowByName(key).GetValue()
         miss = False
         for key in keys:
@@ -133,7 +133,7 @@ class EmailSetupPanel(_CommSetupPanel):
             return
         s = smtp.SendMail(keys['smtpaddr'], keys['smtpport'])
         if keys['authreq']:
-            s.set_auth(keys['authuser'], keys['authpswd'])
+            s.set_auth(keys['authuser'], keys['authpswd'], keys['authtls'])
         p = aw.awu.WaitDialog(self, message='Invio messaggio in corso')
         msg = "Messaggio inviato con successo"
         try:
@@ -153,6 +153,7 @@ class EmailSetupPanel(_CommSetupPanel):
         smtp.SetSMTP_Port(cn('smtpport').GetValue())
         smtp.SetAUTH_User(cn('authuser').GetValue())
         smtp.SetAUTH_Pswd(cn('authpswd').GetValue())
+        smtp.SetAUTH_TLS(cn('authtls').GetValue())
     
     def Validate(self):
         out = True

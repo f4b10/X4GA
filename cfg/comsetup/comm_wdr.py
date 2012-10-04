@@ -42,7 +42,7 @@ class EmailAuthCheckBox(CheckBox):
         def cn(name):
             return f.FindWindowByName(name)
         sf = False
-        for name in 'authuser authpswd'.split():
+        for name in 'authuser authpswd authtls'.split():
             c = cn(name)
             c.Enable(e)
             if e and sf:
@@ -64,10 +64,11 @@ ID_SMTPADDR = 16001
 ID_SENDER = 16002
 ID_SMTPPORT = 16003
 ID_AUTHREQ = 16004
-ID_AUTHUSER = 16005
-ID_AUTHPSWD = 16006
-ID_BTNTEST = 16007
-ID_BTNOK = 16008
+ID_AUTHTLS = 16005
+ID_AUTHUSER = 16006
+ID_AUTHPSWD = 16007
+ID_BTNTEST = 16008
+ID_BTNOK = 16009
 
 def EmailConfigFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -94,14 +95,18 @@ def EmailConfigFunc( parent, call_fit = True, set_sizer = True ):
     item8 = wx.StaticText( parent, ID_TEXT, u"Porta (25):", wx.DefaultPosition, wx.DefaultSize, 0 )
     item3.Add( item8, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item9 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    item9 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
     item10 = NumCtrl(parent, ID_SMTPPORT, integerWidth=4, allowNegative=False, groupDigits=False); item10.SetName("smtpport")
     item9.Add( item10, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item11 = EmailAuthCheckBox( parent, ID_AUTHREQ, u"Autenticazione necessaria", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item11 = EmailAuthCheckBox( parent, ID_AUTHREQ, u"Effettua il login", wx.DefaultPosition, wx.DefaultSize, 0 )
     item11.SetName( "authreq" )
     item9.Add( item11, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item12 = UnoZeroCheckBox( parent, ID_AUTHTLS, u"Usa TLS (porta=587)", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item12.SetName( "authtls" )
+    item9.Add( item12, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item3.Add( item9, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
@@ -111,42 +116,42 @@ def EmailConfigFunc( parent, call_fit = True, set_sizer = True ):
 
     item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item13 = wx.StaticBox( parent, -1, u"Parametri per l'autenticazione, se necessari" )
-    item12 = wx.StaticBoxSizer( item13, wx.VERTICAL )
+    item14 = wx.StaticBox( parent, -1, u"Parametri per l'autenticazione, se necessari" )
+    item13 = wx.StaticBoxSizer( item14, wx.VERTICAL )
     
-    item14 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    item15 = wx.FlexGridSizer( 0, 2, 0, 0 )
     
-    item15 = wx.StaticText( parent, ID_TEXT, u"Utente:", wx.DefaultPosition, [100,-1], wx.ALIGN_RIGHT )
-    item14.Add( item15, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item16 = wx.StaticText( parent, ID_TEXT, u"Utente:", wx.DefaultPosition, [100,-1], wx.ALIGN_RIGHT )
+    item15.Add( item16, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item16 = TextCtrl_LC( parent, ID_AUTHUSER, "", wx.DefaultPosition, [300,-1], 0 )
-    item16.SetName( "authuser" )
-    item14.Add( item16, 0, wx.GROW|wx.ALIGN_BOTTOM|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item17 = TextCtrl_LC( parent, ID_AUTHUSER, "", wx.DefaultPosition, [300,-1], 0 )
+    item17.SetName( "authuser" )
+    item15.Add( item17, 0, wx.GROW|wx.ALIGN_BOTTOM|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item17 = wx.StaticText( parent, ID_TEXT, u"Password:", wx.DefaultPosition, [100,-1], wx.ALIGN_RIGHT )
-    item14.Add( item17, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item18 = wx.StaticText( parent, ID_TEXT, u"Password:", wx.DefaultPosition, [100,-1], wx.ALIGN_RIGHT )
+    item15.Add( item18, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item18 = TextCtrl_LC( parent, ID_AUTHPSWD, "", wx.DefaultPosition, [300,-1], wx.TE_PASSWORD )
-    item18.SetName( "authpswd" )
-    item14.Add( item18, 0, wx.GROW|wx.ALIGN_BOTTOM|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item19 = TextCtrl_LC( parent, ID_AUTHPSWD, "", wx.DefaultPosition, [300,-1], wx.TE_PASSWORD )
+    item19.SetName( "authpswd" )
+    item15.Add( item19, 0, wx.GROW|wx.ALIGN_BOTTOM|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item14.AddGrowableCol( 1 )
+    item15.AddGrowableCol( 1 )
 
-    item12.Add( item14, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item13.Add( item15, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item0.Add( item12, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item0.Add( item13, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item19 = wx.BoxSizer( wx.HORIZONTAL )
+    item20 = wx.BoxSizer( wx.HORIZONTAL )
     
-    item20 = wx.Button( parent, ID_BTNTEST, u"Test", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item20.SetName( "btntest" )
-    item19.Add( item20, 0, wx.ALIGN_CENTER|wx.LEFT|wx.BOTTOM, 5 )
+    item21 = wx.Button( parent, ID_BTNTEST, u"Test", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item21.SetName( "btntest" )
+    item20.Add( item21, 0, wx.ALIGN_CENTER|wx.LEFT|wx.BOTTOM, 5 )
 
-    item21 = wx.Button( parent, ID_BTNOK, u"OK", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item21.SetName( "btnok" )
-    item19.Add( item21, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item22 = wx.Button( parent, ID_BTNOK, u"OK", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item22.SetName( "btnok" )
+    item20.Add( item22, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item0.Add( item19, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item0.Add( item20, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item0.AddGrowableCol( 0 )
 
@@ -157,9 +162,9 @@ def EmailConfigFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_XMPPADDR = 16009
-ID_XMPPPORT = 16010
-ID_ONLINEONLY = 16011
+ID_XMPPADDR = 16010
+ID_XMPPPORT = 16011
+ID_ONLINEONLY = 16012
 
 def XmppConfigFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )

@@ -75,6 +75,11 @@ def SetAUTH_Pswd(x):
     global AUTH_PSWD
     AUTH_PSWD = x
 
+AUTH_TLS = False
+def SetAUTH_TLS(x):
+    global AUTH_TLS
+    AUTH_TLS = x
+
 SENDER = ""
 def SetSender(x):
     global SENDER
@@ -107,25 +112,28 @@ class SendMail(object):
     
     AuthUser =    None  #Nome utente per autenticazione server
     AuthPswd =    None  #Password per autenticazione server
-    
+    AuthTLS =     None  #Flag autenticazione con TLS
     msg =         None  #Oggetto smtp
     error =       None  #Specifiche errore invio
     
-    def __init__(self, smtpServer=None, smtpPort=None, authUser=None, authPswd=None, sendFrom=None):
+    def __init__(self, smtpServer=None, smtpPort=None, authUser=None, authPswd=None, authTLS=None, sendFrom=None):
         object.__init__(self)
         self.smtpServer = smtpServer or SMTP_ADDR
         self.SmtpPort = smtpPort or SMTP_PORT
         if authUser:
             self.AuthUser = authUser
             self.AuthPswd = authPswd
+            self.AuthTLS = authTLS
         else:
             self.AuthUser = AUTH_USER
             self.AuthPswd = AUTH_PSWD
+            self.AuthTLS = False
         self.SendFrom = sendFrom
     
-    def set_auth(self, user=None, pswd=None):
+    def set_auth(self, user=None, pswd=None, tls=False):
         self.AuthUser = user
         self.AuthPswd = pswd
+        self.AuthTLS = tls
     
     def send(self, 
              SendFrom=None, 
@@ -156,22 +164,26 @@ class SendMail(object):
         
         self.msg.attach(MIMEText(Message))
         
-        for file in self.Attachments:
-            f = open(file, 'rb')
+        for attach in self.Attachments:
+            f = open(attach, 'rb')
             part = MIMEBase('application', "octet-stream")
             part.set_payload(f.read())
             Encoders.encode_base64(part)
             part.add_header('Content-Disposition', 'attachment; filename="%s"'
-                            % os.path.basename(file))
+                            % os.path.basename(attach))
             f.close()
             self.msg.attach(part)
         
         try:
-            smtp = smtplib.SMTP(self.smtpServer)
+            smtp = smtplib.SMTP(self.smtpServer, self.SmtpPort)
             if self.AuthUser:
+                if self.AuthTLS:
+                    smtp.ehlo()
+                    smtp.starttls()
+                    smtp.ehlo()
                 if not smtp.login(self.AuthUser, self.AuthPswd):
                     raise AuthFailedException, 'Autenticazione fallita'
-            x = smtp.sendmail(self.SendFrom, self.SendTo, self.msg.as_string() )
+            smtp.sendmail(self.SendFrom, self.SendTo, self.msg.as_string() )
             smtp.close()
         except Exception, e:
             self.error = repr(e.args)

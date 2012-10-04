@@ -29,6 +29,12 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.43', None, (
+         ("BET1133",
+         """Spedizione email compatibile con SMTP login basato su TLS
+         (GMail)."""),
+        ),),
+    
     ('1.4.42', None, (
          ("INT1005",
          """Modifica interna controlli di tipo griglia."""),

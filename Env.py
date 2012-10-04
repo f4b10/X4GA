@@ -3930,6 +3930,7 @@ class Azienda(object):
                 smtp.SetSMTP_Port(e.smtpport)
                 smtp.SetAUTH_User(e.authuser)
                 smtp.SetAUTH_Pswd(e.GetAuthPassword())
+                smtp.SetAUTH_TLS(e.usetls)
                 smtp.SetSender(e.sender)
             except:
                 pass

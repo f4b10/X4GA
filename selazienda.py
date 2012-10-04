@@ -888,6 +888,7 @@ class SelAziendaPanel(aw.Panel):
           `authreq`  tinyint(1) default NULL COMMENT 'Autorizzazione richiesta',
           `authuser` char(128)  default NULL COMMENT 'Nome utente per login smtp',
           `authpswd` char(128)  default NULL COMMENT 'Password per login smtp',
+          `authtls`  tinyint(1) default NULL COMMENT 'Flag uso TLS per login smtp',
           PRIMARY KEY  (`id`),
           UNIQUE KEY `index1` (`azienda`)
         ) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='Setup SMTP'
