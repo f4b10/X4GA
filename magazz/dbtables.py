@@ -2541,15 +2541,19 @@ class DocMag(adb.DbTable):
         sub = "Recapito elettronico documento: %s del %s" % (os.path.split(filename)[1], self.dita(self.datdoc))
         from comm.comsmtp import SendDocumentMail
         sm = SendDocumentMail()
-        sm.send(SendFrom=sei.sendfrom,
-                SendTo=sei.sendto,
-                Subject=sub,
-                Message=sei.message,
-                Attachments=[filename,])
-        self.f_emailed = 1
-        cmd = "UPDATE %s SET f_emailed=1 WHERE id=%s" % (bt.TABNAME_MOVMAG_H, self.id)
-        self._info.db.Execute(cmd)
-        sm.storicizza('Documento', self.id_pdc, self.id)
+        sendto = sei.sendto
+        if not sendto.startswith("<") and sendto.endswith(">"):
+            _, sendto = sendto[:-1].split("<")
+        if sm.send(SendFrom=sei.sendfrom,
+                    SendTo=sendto,#sei.sendto,
+                    Subject=sub,
+                    Message=sei.message,
+                    Attachments=[filename,]):
+            self.f_emailed = 1
+            cmd = "UPDATE %s SET f_emailed=1 WHERE id=%s" % (bt.TABNAME_MOVMAG_H, self.id)
+            self._info.db.Execute(cmd)
+            sm.storicizza('Documento', self.id_pdc, self.id)
+        return sm
     
     def GetTraVetInlineDescription(self):
         if getattr(self, 'enable_nocodevet', False):

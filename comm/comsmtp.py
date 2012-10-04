@@ -123,10 +123,12 @@ class SendMail(object):
         if authUser:
             self.AuthUser = authUser
             self.AuthPswd = authPswd
-            self.AuthTLS = authTLS
         else:
             self.AuthUser = AUTH_USER
             self.AuthPswd = AUTH_PSWD
+        if self.AuthUser:
+            self.AuthTLS = authTLS or AUTH_TLS
+        else:
             self.AuthTLS = False
         self.SendFrom = sendFrom
     
@@ -175,7 +177,7 @@ class SendMail(object):
             self.msg.attach(part)
         
         try:
-            smtp = smtplib.SMTP(self.smtpServer, self.SmtpPort)
+            smtp = smtplib.SMTP(self.smtpServer, int(self.SmtpPort or 0))
             if self.AuthUser:
                 if self.AuthTLS:
                     smtp.ehlo()
