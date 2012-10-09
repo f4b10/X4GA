@@ -33,6 +33,9 @@ history = (
          ("BET1133",
          """Spedizione email compatibile con SMTP login basato su TLS
          (GMail)."""),
+         ("BUG1120",
+         """Corretta determinazione dati anagrafica spedizione su 
+         etichette segnacollo."""),
         ),),
     
     ('1.4.42', None, (

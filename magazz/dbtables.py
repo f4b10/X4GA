@@ -2487,8 +2487,7 @@ class DocMag(adb.DbTable):
                 dbsc.id_doc = self.id
                 dbsc.collonum = n+1
                 dbsc.totcolli = totcolli
-            if getattr(self._info, 'anag', None) is None:
-                self._info.anag = self.GetAnag()
+            self._info.anag = self.GetAnag()
         return dbsc
     
     def SendMail_Prepare(self):
