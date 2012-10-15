@@ -905,7 +905,10 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
             db = adb.db.__database__
             if w:
                 wx.BeginBusyCursor()
-                wx.Yield()
+                try:
+                    wx.Yield()
+                except:
+                    pass
             try:
                 if db.Retrieve(cmd, par):
                     rs = db.rs
