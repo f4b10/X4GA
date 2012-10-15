@@ -33,7 +33,6 @@ import awc.controls.windows as aw
 import awc.controls.radiobox as awradio
 
 import cfg.license_wdr as wdr
-import X_wdr
 from cfg.wksetup import ConfigPanel, ConfigDialog
 
 import stormdb as adb
