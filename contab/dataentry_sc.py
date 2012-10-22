@@ -1152,6 +1152,8 @@ LEFT JOIN %s AS mpa ON pcf.id_modpag=mpa.id
             out = self.ScadStorno()
             if out:
                 out = self.ScadWrite()
+        if out:
+            self.ReportFineReg()
         return out
     
     def RegDelete(self):

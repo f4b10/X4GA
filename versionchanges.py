@@ -29,6 +29,12 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.44', None, (
+         ("BET1134",
+         """Introdotta possibilità di richiamo stampa a fine registrazione
+         contabile."""),
+        ),),
+    
     ('1.4.43', None, (
          ("BET1133",
          """Spedizione email compatibile con SMTP login basato su TLS

@@ -1158,6 +1158,8 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
             out = self.ScadStorno()
             if out:
                 out = self.ScadWrite()
+        if out:
+            self.ReportFineReg()
         return out
     
     def RegDelete(self):

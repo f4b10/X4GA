@@ -35,6 +35,10 @@ from awc.controls.datectrl import DateCtrl
 from awc.controls.linktable import LinkTable
 
 import Env
+from stormdb.dbtable import DbTable
+from contab.dbtables import DbRegCon
+import report as rpt
+from stormdb import JOIN_LEFT
 Esercizio = Env.Azienda.Esercizio
 bt = Env.Azienda.BaseTab
 
@@ -646,6 +650,23 @@ class ContabPanel(aw.Panel,\
                 else:
                     self.RegDelete()
         return out
+    
+    def ReportFineReg(self):
+        cfgreg = DbTable(bt.TABNAME_CFGCONTAB, 'caucon')
+        if cfgreg.Get(self.reg_cau_id) and cfgreg.OneRow():
+            if cfgreg.rptname:
+                reg = DbRegCon()
+                scad = reg['scad']
+                caus = scad.pcf.AddJoin("cfgcontab", "caus", idLeft="id_caus", idRight="id", join=JOIN_LEFT)
+                pdc = scad.pcf.AddJoin("pdc", idLeft="id_pdc", idRight="id", join=JOIN_LEFT)
+                tip = pdc.AddJoin("pdctip", "tipana", idLeft="id_tipo", idRight="id", join=JOIN_LEFT)
+                reg.Get(self.reg_id)
+                if tip.tipo == "C":
+                    pdc.AddJoin("clienti", "anag", idLeft="id", idRight="id", join=JOIN_LEFT)
+                else:
+                    pdc.AddJoin("fornit", "anag", idLeft="id", idRight="id", join=JOIN_LEFT)
+                if reg.Get(self.reg_id) and reg.OneRow():
+                    rpt.Report(self, reg, cfgreg.rptname)
     
     def GeneraEvento(self, newreg):
         from contab.dbtables import DbRegCon

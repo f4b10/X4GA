@@ -1899,6 +1899,7 @@ class Azienda(object):
                 [ "davscorp",    "TINYINT",   1, None, "Flag colonna importo da scorporare su dare/avere", None ], 
                 [ "id_tipevent", "INT",     idw, None, "ID Tipo evento", None ], 
                 [ "event_msg",   "VARCHAR",1024, None, "Messaggio evento", None ], 
+                [ "rptname",     "VARCHAR",  64, None, "Nome report da proporre a fine registrazione", None ], 
             ]
             
             cls.set_constraints(cls.TABNAME_CFGCONTAB,
