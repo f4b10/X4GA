@@ -440,6 +440,7 @@ class XFrame(aw.Frame):
             (self.OnScadGlobalEffettiEmessi,   ID_SCAD_GLOBAL_EFFETTIEMESSI),
             (self.OnScadGlobalEffettiInsoluti, ID_SCAD_GLOBAL_EFFETTIINSOLUTI),
             (self.OnQuadPcfCont,               ID_SCAD_CTRQUAD),
+            (self.OnCalcIntPcf,                ID_SCAD_CALCINT),
             (self.OnCtrCassa,                  ID_CTR_CASSA),
             (self.OnIntRegCon,                 ID_INTREGCON),
             (self.OnEmiEffetti,                ID_EMIEFF),
@@ -1249,6 +1250,10 @@ class XFrame(aw.Frame):
     def OnScadGlobal(self, event):
         from contab.scadglobal import ScadGlobalFrame
         self.LaunchFrame(ScadGlobalFrame)
+    
+    def OnCalcIntPcf(self, event):
+        from contab.calcintpcf import CalcIntPcfFrame
+        self.LaunchFrame(CalcIntPcfFrame)
     
     def OnScadGlobalIncassi(self, event):
         from contab.scadglobal import ScadGlobalIncassiFrame

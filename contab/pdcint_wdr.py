@@ -43,6 +43,8 @@ from anag.bilcon import BilConDialog
 from anag.pdctip import PdcTipDialog
 from anag.catcli import CatCliDialog
 
+import anag.lib as alib
+
 from contab.awcontrols import SelEsercizioChoice
 
 
@@ -3258,6 +3260,149 @@ def DocsEmailPreviewFunc( parent, call_fit = True, set_sizer = True ):
     item0.AddGrowableCol( 0 )
 
     item0.AddGrowableRow( 5 )
+
+    if set_sizer == True:
+        parent.SetSizer( item0 )
+        if call_fit == True:
+            item0.SetSizeHints( parent )
+    
+    return item0
+
+ID_DATSCA1 = 10221
+ID_DATSCA2 = 10222
+ID_MODPAG1 = 10223
+ID_MODPAG2 = 10224
+ID_GIORNIRIT = 10225
+ID_PERCINT = 10226
+ID_BUTUPDATE = 10227
+ID_PANGRIDPCF = 10228
+
+def InteressiPartiteScaduteFunc( parent, call_fit = True, set_sizer = True ):
+    item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    
+    item1 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    
+    item3 = wx.StaticBox( parent, -1, "Periodo" )
+    item2 = wx.StaticBoxSizer( item3, wx.VERTICAL )
+    
+    item4 = wx.FlexGridSizer( 3, 0, 0, 0 )
+    
+    item5 = wx.StaticText( parent, ID_TEXT, "", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item4.Add( item5, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item6 = wx.StaticText( parent, ID_TEXT, "Documento:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item4.Add( item6, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+
+    item7 = wx.StaticText( parent, ID_TEXT, "Scadenza:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item4.Add( item7, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+
+    item8 = wx.StaticText( parent, ID_TEXT, "Dal:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item4.Add( item8, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+
+    item9 = DateCtrl( parent, ID_DATDOC1, "", wx.DefaultPosition, [80,-1], 0 )
+    item9.SetName( "datdoc1" )
+    item4.Add( item9, 0, wx.ALIGN_CENTER|wx.LEFT|wx.BOTTOM, 5 )
+
+    item10 = DateCtrl( parent, ID_DATSCA1, "", wx.DefaultPosition, [80,-1], 0 )
+    item10.SetName( "datsca1" )
+    item4.Add( item10, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item11 = wx.StaticText( parent, ID_TEXT, "Al:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item4.Add( item11, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+
+    item12 = DateCtrl( parent, ID_DATDOC2, "", wx.DefaultPosition, [80,-1], 0 )
+    item12.SetName( "datdoc2" )
+    item4.Add( item12, 0, wx.ALIGN_CENTER|wx.LEFT|wx.BOTTOM, 5 )
+
+    item13 = DateCtrl( parent, ID_DATSCA2, "", wx.DefaultPosition, [80,-1], 0 )
+    item13.SetName( "datsca2" )
+    item4.Add( item13, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item2.Add( item4, 0, wx.ALIGN_CENTER, 5 )
+
+    item1.Add( item2, 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+
+    item15 = wx.StaticBox( parent, -1, "Selezioni" )
+    item14 = wx.StaticBoxSizer( item15, wx.VERTICAL )
+    
+    item16 = wx.FlexGridSizer( 3, 0, 0, 0 )
+    
+    item17 = wx.StaticText( parent, ID_TEXT, "", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item16.Add( item17, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item18 = wx.StaticText( parent, ID_TEXT, "Cliente:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item16.Add( item18, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+
+    item19 = wx.StaticText( parent, ID_TEXT, "Mod.Pagamento:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item16.Add( item19, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+
+    item20 = wx.StaticText( parent, ID_TEXT, "Dal:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item16.Add( item20, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+
+    item21 = alib.LinkTableCliente(parent, ID_PDC1, 'id_pdc1')
+    item16.Add( item21, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+
+    item22 = alib.LinkTableModPag(parent, ID_MODPAG1, 'id_modpag1')
+    item16.Add( item22, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+
+    item23 = wx.StaticText( parent, ID_TEXT, "Al:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item16.Add( item23, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+
+    item24 = alib.LinkTableCliente(parent, ID_PDC2, 'id_pdc2')
+    item16.Add( item24, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+
+    item25 = alib.LinkTableModPag(parent, ID_MODPAG2, 'id_modpag2')
+    item16.Add( item25, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+
+    item16.AddGrowableCol( 1 )
+
+    item16.AddGrowableCol( 2 )
+
+    item14.Add( item16, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item1.Add( item14, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+
+    item27 = wx.StaticBox( parent, -1, "Valori" )
+    item26 = wx.StaticBoxSizer( item27, wx.HORIZONTAL )
+    
+    item28 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    
+    item29 = wx.StaticText( parent, ID_TEXT, "Giorni ritardo >=", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item28.Add( item29, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+
+    item30 = NumCtrl(parent, ID_GIORNIRIT, integerWidth=5); item30.SetName('giornirit')
+    item28.Add( item30, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item31 = wx.StaticText( parent, ID_TEXT, "% interesse:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item28.Add( item31, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+
+    item32 = NumCtrl(parent, ID_PERCINT, integerWidth=2, fractionWidth=2); item32.SetName("percint")
+    item28.Add( item32, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item26.Add( item28, 0, wx.ALIGN_BOTTOM, 5 )
+
+    item1.Add( item26, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+
+    item33 = wx.Button( parent, ID_BUTUPDATE, "Aggiorna", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item33.SetDefault()
+    item33.SetName( "butupdate" )
+    item1.Add( item33, 0, wx.ALIGN_BOTTOM|wx.ALIGN_CENTER_HORIZONTAL|wx.ALL, 5 )
+
+    item1.AddGrowableCol( 1 )
+
+    item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item34 = wx.StaticText( parent, ID_TEXT, "Elenco delle partite scadute", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item34.SetForegroundColour( wx.BLUE )
+    item0.Add( item34, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+
+    item35 = wx.Panel( parent, ID_PANGRIDPCF, wx.DefaultPosition, [900,500], wx.SUNKEN_BORDER )
+    item35.SetName( "pangridpcf" )
+    item0.Add( item35, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item0.AddGrowableCol( 0 )
+
+    item0.AddGrowableRow( 2 )
 
     if set_sizer == True:
         parent.SetSizer( item0 )

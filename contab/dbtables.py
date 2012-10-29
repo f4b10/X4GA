@@ -3940,3 +3940,41 @@ class Spesometro2011_Massimali(adb.DbTable):
         if self.IsEmpty():
             raise Exception, "Massimali non definiti per l'anno %d" % anno
         return self.progrimp1, self.progrimp2
+
+
+# ------------------------------------------------------------------------------
+
+
+class CalcIntPcf(adb.DbTable):
+    
+    _percint = None
+    def SetPercInt(self, p):
+        self._percint = p
+    
+    def __init__(self):
+        adb.DbTable.__init__(self, bt.TABNAME_PCF, 'pcf')
+        _pdc = self.AddJoin(bt.TABNAME_PDC, 'pdc', idLeft='id_pdc')
+        _tpa = _pdc.AddJoin(bt.TABNAME_PDCTIP, 'tipana', idLeft='id_tipo')
+        _cli = _pdc.AddJoin(bt.TABNAME_CLIENTI, 'anag', idLeft='id')
+        _cau = self.AddJoin(bt.TABNAME_CFGCONTAB, 'caus', idLeft='id_caus')
+        _mpa = self.AddJoin(bt.TABNAME_MODPAG, 'modpag', idLeft='id_modpag')
+        today = Env.DateTime.today()
+        self.AddField("pcf.imptot-pcf.imppar", "saldo")
+        self.AddField("DATEDIFF(CAST(\"%s\" AS DATE), pcf.datscad)" % today.isoformat(), "ritardo")
+        self.AddField("0.0", "interessi")
+        self.AddBaseFilter("tipana.tipo=%s", "C")
+        self.AddBaseFilter("pcf.datscad<\"%s\"" % today.isoformat())
+        self.AddBaseFilter("pcf.imptot>pcf.imppar")
+        self.AddOrder('pdc.descriz')
+        self.AddOrder('pcf.datscad')
+        self.Reset()
+    
+    def Retrieve(self, *args, **kwargs):
+        today = Env.DateTime.today()
+        out = adb.DbTable.Retrieve(self, *args, **kwargs)
+        if out:
+            for _self in self:
+#                self.ritardo = (today-self.datscad).days
+                if self._percint:
+                    self.interessi = round(self.saldo*float(self.ritardo)/365*self._percint/100, 2)
+        return out
