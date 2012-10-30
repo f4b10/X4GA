@@ -2638,6 +2638,7 @@ class Azienda(object):
                 [ "askmagazz",  "CHAR",     1, None, "Flag richiesta magazzino", None ],
                 [ "id_magazz",  "INT",    idw, None, "ID magazzino fisso", None ],
                 [ "askmodpag",  "CHAR",     1, None, "Flag richiesta mod.pagamento", None ],
+                [ "id_modpag",  "INT",    idw, None, "ID Mod.Pagamento", None ],
                 [ "askmpnoeff", "CHAR",     1, None, "Flag inibizione mod.pagamento di tipo effetto", None ],
                 [ "askdestin",  "CHAR",     1, None, "Flag richiesta destinatario", None ],
                 [ "askrifdesc", "CHAR",     1, None, "Flag richiesta descrizione riferimento", None ],

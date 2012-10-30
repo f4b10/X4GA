@@ -1243,7 +1243,12 @@ class MagazzPanel(aw.Panel,\
             if anag is None:
                 value = None
             else:
-                value = anag.GetValue(field)
+                if field == 'id_modpag' and doc.cfgdoc.id_modpag is not None:
+                    value = doc.cfgdoc.id_modpag
+                    self.controls[field].SetValue(value)
+                    continue
+                else:
+                    value = anag.GetValue(field)
             hcol[field] = value
             if self.controls.has_key(field):
                 c = self.controls[field]

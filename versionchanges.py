@@ -29,6 +29,13 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.46', None, (
+         ("BET1136",
+         """Introdotta possibilità di settare una determinata 
+         modalità di pagamento sulla configurazione dei documenti
+         di magazzino."""),
+        ),),
+    
     ('1.4.45', None, (
          ("BET1135",
          """Introdotta versione preliminare analisi partite clienti
