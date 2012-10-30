@@ -2773,6 +2773,7 @@ class Azienda(object):
                 [ "acc_sepiva",   "TINYINT",  1, None, "Flag acconto: storno separato su totali iva", None ],
                 [ "canprezzo0",   "TINYINT",  1, None, "Flag permesso prezzo nullo", None ],
                 [ "modimpricalc", "CHAR",     1, None, "Flag tipo ricalcolo se modifica importo", None ],
+                [ "nomastroprod", "TINYINT",  1, None, "Flag esclusione movimenti in mastro prodotto", None ],
             ]
             
             cls.set_constraints(cls.TABNAME_CFGMAGMOV,

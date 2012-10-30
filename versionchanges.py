@@ -30,10 +30,20 @@ import mx.DateTime as dt
 history = (
     
     ('1.4.46', None, (
+         ("BUG1121",
+         """Corretti bug in evasione documenti: originava eccezione cambiando 
+         un dato qualsiasi della riga in acquisizione, non settava il tipo di 
+         movimento di default dopo conferma evasione."""),
          ("BET1136",
          """Introdotta possibilità di settare una determinata 
          modalità di pagamento sulla configurazione dei documenti
          di magazzino."""),
+         ("BET1137",
+         """Introdotta possibilità di escludere determinate righe dal mastro
+         del prodotto mediante opportuno flag su tipo movimento."""),
+         ("BET1138",
+         """Visualizzazione dati di riferimento del documento su mastro 
+         prodotto."""),
         ),),
     
     ('1.4.45', None, (

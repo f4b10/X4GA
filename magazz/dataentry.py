@@ -2735,6 +2735,9 @@ class MagazzPanel(aw.Panel,\
                 #segno x contrassegnare, in fase di scrittura, il documento
                 #acquisito come 'acquisito'
                 doc._info.acqdocacq.append(acqdocid)
+            if self.lastmovid is None:
+                doc.mov.MoveLast()
+                self.lastmovid = doc.mov.id_tipmov
         dlgacq.Destroy()
         self.MakeTotals()
 

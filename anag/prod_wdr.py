@@ -1081,31 +1081,32 @@ ID_MASID_PDC = 14093
 ID_MASID_ALIQIVA = 14094
 ID_MASESCACQ = 14095
 ID_MASESCANN = 14096
-ID_SOLOPRMANCA = 14097
-ID_LABMASNUM1 = 14098
-ID_LABMASDAT1 = 14099
-ID_LABMASNUM2 = 14100
-ID_LABMASDAT2 = 14101
-ID_MASNUMDOC1 = 14102
-ID_MASDATDOC1 = 14103
-ID_MASNUMDOC2 = 14104
-ID_MASDATDOC2 = 14105
-ID_LABMASREG = 14106
-ID_MASNUMREG1 = 14107
-ID_MASDATREG1 = 14108
-ID_MASNUMREG2 = 14109
-ID_MASDATREG2 = 14110
-ID_LABMASRIF = 14111
-ID_MASNUMRIF1 = 14112
-ID_MASDATRIF1 = 14113
-ID_MASNUMRIF2 = 14114
-ID_MASDATRIF2 = 14115
-ID_ORDINV = 14116
-ID_MASBUTUPD = 14117
-ID_MASBUTPRT = 14118
-ID_LABMASTOTDOCQ = 14119
-ID_TOTNUMMOV = 14120
-ID_TOTIMPORTO = 14121
+ID_MASESCNAS = 14097
+ID_SOLOPRMANCA = 14098
+ID_LABMASNUM1 = 14099
+ID_LABMASDAT1 = 14100
+ID_LABMASNUM2 = 14101
+ID_LABMASDAT2 = 14102
+ID_MASNUMDOC1 = 14103
+ID_MASDATDOC1 = 14104
+ID_MASNUMDOC2 = 14105
+ID_MASDATDOC2 = 14106
+ID_LABMASREG = 14107
+ID_MASNUMREG1 = 14108
+ID_MASDATREG1 = 14109
+ID_MASNUMREG2 = 14110
+ID_MASDATREG2 = 14111
+ID_LABMASRIF = 14112
+ID_MASNUMRIF1 = 14113
+ID_MASDATRIF1 = 14114
+ID_MASNUMRIF2 = 14115
+ID_MASDATRIF2 = 14116
+ID_ORDINV = 14117
+ID_MASBUTUPD = 14118
+ID_MASBUTPRT = 14119
+ID_LABMASTOTDOCQ = 14120
+ID_TOTNUMMOV = 14121
+ID_TOTIMPORTO = 14122
 
 def ProdMastro1Func( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -1159,10 +1160,10 @@ def ProdMastro1Func( parent, call_fit = True, set_sizer = True ):
 
     item2.Add( item4, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item17 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    item17 = wx.FlexGridSizer( 0, 3, 0, 0 )
     
     item18 = wx.StaticText( parent, ID_TEXT, "Escludi:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item17.Add( item18, 0, wx.ALIGN_CENTER|wx.RIGHT, 5 )
+    item17.Add( item18, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 
     item19 = wx.CheckBox( parent, ID_MASESCACQ, "Doc. acquisiti", wx.DefaultPosition, wx.DefaultSize, 0 )
     item19.SetValue( True )
@@ -1174,158 +1175,169 @@ def ProdMastro1Func( parent, call_fit = True, set_sizer = True ):
     item20.SetName( "escdocann" )
     item17.Add( item20, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
 
-    item21 = wx.CheckBox( parent, ID_MASESCANN, "Mov. annullati", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item21.SetValue( True )
-    item21.SetName( "escmovann" )
-    item17.Add( item21, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+    item21 = wx.StaticText( parent, ID_TEXT, "", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item17.Add( item21, 0, wx.ALIGN_CENTER, 5 )
+
+    item22 = wx.CheckBox( parent, ID_MASESCANN, "Mov. annullati", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item22.SetValue( True )
+    item22.SetName( "escmovann" )
+    item17.Add( item22, 0, wx.ALIGN_CENTER_VERTICAL|wx.TOP, 5 )
+
+    item23 = wx.CheckBox( parent, ID_MASESCNAS, "Mov. nascosti", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item23.SetValue( True )
+    item23.SetName( "escmovnas" )
+    item17.Add( item23, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+
+    item24 = wx.StaticText( parent, ID_TEXT, "Includi:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item17.Add( item24, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item25 = wx.CheckBox( parent, ID_SOLOPRMANCA, "Solo righe con prezzo mancante", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item25.SetName( "soloprmanca" )
+    item17.Add( item25, 0, wx.ALIGN_CENTER_VERTICAL|wx.TOP, 5 )
 
     item2.Add( item17, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item22 = wx.CheckBox( parent, ID_SOLOPRMANCA, "Solo righe con prezzo mancante", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item22.SetName( "soloprmanca" )
-    item2.Add( item22, 0, wx.ALIGN_CENTER_VERTICAL|wx.TOP, 5 )
-
     item1.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item23 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    item26 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
-    item25 = wx.StaticBox( parent, -1, "Periodo" )
-    item24 = wx.StaticBoxSizer( item25, wx.VERTICAL )
+    item28 = wx.StaticBox( parent, -1, "Periodo" )
+    item27 = wx.StaticBoxSizer( item28, wx.VERTICAL )
     
-    item26 = wx.FlexGridSizer( 0, 5, 0, 0 )
+    item29 = wx.FlexGridSizer( 0, 5, 0, 0 )
     
-    item27 = wx.StaticText( parent, ID_TEXT, "", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item26.Add( item27, 0, wx.ALIGN_CENTER|wx.TOP, 5 )
+    item30 = wx.StaticText( parent, ID_TEXT, "", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item29.Add( item30, 0, wx.ALIGN_CENTER|wx.TOP, 5 )
 
-    item28 = wx.StaticText( parent, ID_LABMASNUM1, "Da numero:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item26.Add( item28, 0, wx.ALIGN_BOTTOM|wx.LEFT, 5 )
+    item31 = wx.StaticText( parent, ID_LABMASNUM1, "Da numero:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item29.Add( item31, 0, wx.ALIGN_BOTTOM, 5 )
 
-    item29 = wx.StaticText( parent, ID_LABMASDAT1, "Da data:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item26.Add( item29, 0, wx.ALIGN_BOTTOM|wx.LEFT, 5 )
+    item32 = wx.StaticText( parent, ID_LABMASDAT1, "Da data:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item29.Add( item32, 0, wx.ALIGN_BOTTOM|wx.LEFT, 5 )
 
-    item30 = wx.StaticText( parent, ID_LABMASNUM2, "A numero:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item26.Add( item30, 0, wx.ALIGN_BOTTOM|wx.LEFT, 5 )
+    item33 = wx.StaticText( parent, ID_LABMASNUM2, "A numero:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item29.Add( item33, 0, wx.ALIGN_BOTTOM|wx.LEFT, 5 )
 
-    item31 = wx.StaticText( parent, ID_LABMASDAT2, "A data:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item26.Add( item31, 0, wx.ALIGN_BOTTOM|wx.LEFT, 5 )
+    item34 = wx.StaticText( parent, ID_LABMASDAT2, "A data:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item29.Add( item34, 0, wx.ALIGN_BOTTOM|wx.LEFT, 5 )
 
-    item32 = wx.StaticText( parent, ID_LABMASDOC, "Documento", wx.DefaultPosition, wx.DefaultSize, wx.ST_NO_AUTORESIZE|wx.ALIGN_RIGHT )
-    item26.Add( item32, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 5 )
+    item35 = wx.StaticText( parent, ID_LABMASDOC, "Documento", wx.DefaultPosition, wx.DefaultSize, wx.ST_NO_AUTORESIZE|wx.ALIGN_RIGHT )
+    item29.Add( item35, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 5 )
 
-    item33 = TextCtrl( parent, ID_MASNUMDOC1, "", wx.DefaultPosition, [60,-1], 0 )
-    item33.SetName( "masnumdoc1" )
-    item26.Add( item33, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item36 = TextCtrl( parent, ID_MASNUMDOC1, "", wx.DefaultPosition, [60,-1], 0 )
+    item36.SetName( "masnumdoc1" )
+    item29.Add( item36, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
 
-    item34 = DateCtrl( parent, ID_MASDATDOC1, "", wx.DefaultPosition, [80,-1], 0 )
-    item34.SetName( "masdatdoc1" )
-    item26.Add( item34, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item37 = DateCtrl( parent, ID_MASDATDOC1, "", wx.DefaultPosition, [80,-1], 0 )
+    item37.SetName( "masdatdoc1" )
+    item29.Add( item37, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item35 = TextCtrl( parent, ID_MASNUMDOC2, "", wx.DefaultPosition, [60,-1], 0 )
-    item35.SetName( "masnumdoc2" )
-    item26.Add( item35, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item38 = TextCtrl( parent, ID_MASNUMDOC2, "", wx.DefaultPosition, [60,-1], 0 )
+    item38.SetName( "masnumdoc2" )
+    item29.Add( item38, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item36 = DateCtrl( parent, ID_MASDATDOC2, "", wx.DefaultPosition, [80,-1], 0 )
-    item36.SetName( "masdatdoc2" )
-    item26.Add( item36, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item39 = DateCtrl( parent, ID_MASDATDOC2, "", wx.DefaultPosition, [80,-1], 0 )
+    item39.SetName( "masdatdoc2" )
+    item29.Add( item39, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item37 = wx.StaticText( parent, ID_LABMASREG, "Registrazione", wx.DefaultPosition, wx.DefaultSize, wx.ST_NO_AUTORESIZE|wx.ALIGN_RIGHT )
-    item26.Add( item37, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 5 )
+    item40 = wx.StaticText( parent, ID_LABMASREG, "Registrazione", wx.DefaultPosition, wx.DefaultSize, wx.ST_NO_AUTORESIZE|wx.ALIGN_RIGHT )
+    item29.Add( item40, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 5 )
 
-    item38 = TextCtrl( parent, ID_MASNUMREG1, "", wx.DefaultPosition, [60,-1], 0 )
-    item38.SetName( "masnumreg1" )
-    item26.Add( item38, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item41 = TextCtrl( parent, ID_MASNUMREG1, "", wx.DefaultPosition, [60,-1], 0 )
+    item41.SetName( "masnumreg1" )
+    item29.Add( item41, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
 
-    item39 = DateCtrl( parent, ID_MASDATREG1, "", wx.DefaultPosition, [80,-1], 0 )
-    item39.SetName( "masdatreg1" )
-    item26.Add( item39, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item42 = DateCtrl( parent, ID_MASDATREG1, "", wx.DefaultPosition, [80,-1], 0 )
+    item42.SetName( "masdatreg1" )
+    item29.Add( item42, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item40 = TextCtrl( parent, ID_MASNUMREG2, "", wx.DefaultPosition, [60,-1], 0 )
-    item40.SetName( "masnumreg2" )
-    item26.Add( item40, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item43 = TextCtrl( parent, ID_MASNUMREG2, "", wx.DefaultPosition, [60,-1], 0 )
+    item43.SetName( "masnumreg2" )
+    item29.Add( item43, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item41 = DateCtrl( parent, ID_MASDATREG2, "", wx.DefaultPosition, [80,-1], 0 )
-    item41.SetName( "masdatreg2" )
-    item26.Add( item41, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item44 = DateCtrl( parent, ID_MASDATREG2, "", wx.DefaultPosition, [80,-1], 0 )
+    item44.SetName( "masdatreg2" )
+    item29.Add( item44, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item42 = wx.StaticText( parent, ID_LABMASRIF, "Riferimento", wx.DefaultPosition, wx.DefaultSize, wx.ST_NO_AUTORESIZE|wx.ALIGN_RIGHT )
-    item26.Add( item42, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 5 )
+    item45 = wx.StaticText( parent, ID_LABMASRIF, "Riferimento", wx.DefaultPosition, wx.DefaultSize, wx.ST_NO_AUTORESIZE|wx.ALIGN_RIGHT )
+    item29.Add( item45, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 5 )
 
-    item43 = TextCtrl( parent, ID_MASNUMRIF1, "", wx.DefaultPosition, [60,-1], 0 )
-    item43.SetName( "masnumrif1" )
-    item26.Add( item43, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+    item46 = TextCtrl( parent, ID_MASNUMRIF1, "", wx.DefaultPosition, [60,-1], 0 )
+    item46.SetName( "masnumrif1" )
+    item29.Add( item46, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item44 = DateCtrl( parent, ID_MASDATRIF1, "", wx.DefaultPosition, [80,-1], 0 )
-    item44.SetName( "masdatrif1" )
-    item26.Add( item44, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+    item47 = DateCtrl( parent, ID_MASDATRIF1, "", wx.DefaultPosition, [80,-1], 0 )
+    item47.SetName( "masdatrif1" )
+    item29.Add( item47, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
 
-    item45 = TextCtrl( parent, ID_MASNUMRIF2, "", wx.DefaultPosition, [60,-1], 0 )
-    item45.SetName( "masnumrif2" )
-    item26.Add( item45, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+    item48 = TextCtrl( parent, ID_MASNUMRIF2, "", wx.DefaultPosition, [60,-1], 0 )
+    item48.SetName( "masnumrif2" )
+    item29.Add( item48, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
 
-    item46 = DateCtrl( parent, ID_MASDATRIF2, "", wx.DefaultPosition, [80,-1], 0 )
-    item46.SetName( "masdatrif2" )
-    item26.Add( item46, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+    item49 = DateCtrl( parent, ID_MASDATRIF2, "", wx.DefaultPosition, [80,-1], 0 )
+    item49.SetName( "masdatrif2" )
+    item29.Add( item49, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
 
-    item26.AddGrowableCol( 0 )
+    item29.AddGrowableCol( 0 )
 
-    item24.Add( item26, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
+    item27.Add( item29, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item47 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    item50 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
-    item48 = wx.StaticLine( parent, ID_LINE, wx.DefaultPosition, [20,-1], wx.LI_HORIZONTAL )
-    item47.Add( item48, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 5 )
+    item51 = wx.StaticLine( parent, ID_LINE, wx.DefaultPosition, [20,-1], wx.LI_HORIZONTAL )
+    item50.Add( item51, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 5 )
 
-    item49 = wx.CheckBox( parent, ID_ORDINV, "Ordine inverso di data", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item49.SetName( "ordinv" )
-    item47.Add( item49, 0, wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
+    item52 = wx.CheckBox( parent, ID_ORDINV, "Ordine inverso di data", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item52.SetName( "ordinv" )
+    item50.Add( item52, 0, wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item47.AddGrowableCol( 0 )
+    item50.AddGrowableCol( 0 )
 
-    item24.Add( item47, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item27.Add( item50, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item23.Add( item24, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
+    item26.Add( item27, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
 
-    item50 = wx.BoxSizer( wx.HORIZONTAL )
+    item53 = wx.BoxSizer( wx.HORIZONTAL )
     
-    item51 = wx.Button( parent, ID_MASBUTUPD, "Applica", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item51.SetDefault()
-    item50.Add( item51, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+    item54 = wx.Button( parent, ID_MASBUTUPD, "Applica", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item54.SetDefault()
+    item53.Add( item54, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
 
-    item52 = wx.Button( parent, ID_MASBUTPRT, "Stampa", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item50.Add( item52, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+    item55 = wx.Button( parent, ID_MASBUTPRT, "Stampa", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item53.Add( item55, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
-    item23.Add( item50, 0, wx.ALIGN_RIGHT, 5 )
+    item26.Add( item53, 0, wx.ALIGN_RIGHT, 5 )
 
-    item54 = wx.StaticBox( parent, -1, "Totali" )
-    item53 = wx.StaticBoxSizer( item54, wx.VERTICAL )
+    item57 = wx.StaticBox( parent, -1, "Totali" )
+    item56 = wx.StaticBoxSizer( item57, wx.VERTICAL )
     
-    item55 = wx.FlexGridSizer( 0, 3, 0, 0 )
+    item58 = wx.FlexGridSizer( 0, 3, 0, 0 )
     
-    item56 = wx.StaticText( parent, ID_TEXT, "", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item55.Add( item56, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+    item59 = wx.StaticText( parent, ID_TEXT, "", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item58.Add( item59, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
 
-    item57 = wx.StaticText( parent, ID_LABMASTOTDOCQ, "Num.", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item55.Add( item57, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+    item60 = wx.StaticText( parent, ID_LABMASTOTDOCQ, "Num.", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item58.Add( item60, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
 
-    item58 = wx.StaticText( parent, ID_LABMASTOTDOCQ, "Importo", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item55.Add( item58, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.TOP, 5 )
+    item61 = wx.StaticText( parent, ID_LABMASTOTDOCQ, "Importo", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item58.Add( item61, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.TOP, 5 )
 
-    item59 = wx.StaticText( parent, ID_LABMASMOV, "Righe di movimento:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item55.Add( item59, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item62 = wx.StaticText( parent, ID_LABMASMOV, "Righe trovate:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item58.Add( item62, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item60 = NumCtrl(parent, integerWidth=8); item60.SetName("totnummov"); item60.SetReadOnly()
-    item55.Add( item60, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT, 5 )
+    item63 = NumCtrl(parent, integerWidth=8); item63.SetName("totnummov"); item63.SetReadOnly()
+    item58.Add( item63, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT, 5 )
 
-    item61 = NumCtrl(parent, integerWidth=11, fractionWidth=bt.VALINT_DECIMALS); item61.SetName("totimporto"); item61.SetReadOnly()
-    item55.Add( item61, 0, wx.ALIGN_CENTER, 5 )
+    item64 = NumCtrl(parent, integerWidth=11, fractionWidth=bt.VALINT_DECIMALS); item64.SetName("totimporto"); item64.SetReadOnly()
+    item58.Add( item64, 0, wx.ALIGN_CENTER, 5 )
 
-    item55.AddGrowableCol( 0 )
+    item58.AddGrowableCol( 0 )
 
-    item53.Add( item55, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item56.Add( item58, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item23.Add( item53, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
+    item26.Add( item56, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item1.Add( item23, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item1.Add( item26, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item1.AddGrowableCol( 0 )
 
@@ -1342,7 +1354,7 @@ def ProdMastro1Func( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_MASPANMASTRO = 14122
+ID_MASPANMASTRO = 14123
 
 def ProdMastro2Func( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -1373,8 +1385,8 @@ def ProdMastro2Func( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_BUTVEDIPREVIGCLI = 14123
-ID_PANGRIDGRC = 14124
+ID_BUTVEDIPREVIGCLI = 14124
+ID_PANGRIDGRC = 14125
 
 def GriglieCliFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -1407,8 +1419,8 @@ def GriglieCliFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_BUTVEDIPREVIGFOR = 14125
-ID_PANGRIDGRF = 14126
+ID_BUTVEDIPREVIGFOR = 14126
+ID_PANGRIDGRF = 14127
 
 def GriglieForFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -1441,8 +1453,8 @@ def GriglieForFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_PANELSTRU = 14127
-ID_PRINT = 14128
+ID_PANELSTRU = 14128
+ID_PRINT = 14129
 
 def InvStruFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -1478,37 +1490,37 @@ def InvStruFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_GRUPREZ = 14129
-ID_PDCACQ = 14130
-ID_PDCVEN = 14131
-ID_COSTO = 14132
-ID_LABELPREZZO = 14133
-ID_PREZZO = 14134
-ID_BTNRICALC = 14135
-ID_BTNRICLIS = 14136
-ID_PANPROMO1 = 14137
-ID_LABELRIC1 = 14138
-ID_LABELRIC2 = 14139
-ID_LABELRIC3 = 14140
-ID_RICAR1 = 14141
-ID_RICAR2 = 14142
-ID_RICAR3 = 14143
-ID_RICAR4 = 14144
-ID_RICAR5 = 14145
-ID_RICAR6 = 14146
-ID_LABELSC1 = 14147
-ID_LABELSC2 = 14148
-ID_LABELSC3 = 14149
-ID_SCONTO1 = 14150
-ID_SCONTO2 = 14151
-ID_SCONTO4 = 14152
-ID_SCONTO5 = 14153
-ID_SCONTO6 = 14154
-ID_PANPROMO2 = 14155
-ID_PANPROVVIG = 14156
-ID_LISTINIPANEL = 14157
-ID_GRIGLIECLIPANEL = 14158
-ID_GRIGLIEFORPANEL = 14159
+ID_GRUPREZ = 14130
+ID_PDCACQ = 14131
+ID_PDCVEN = 14132
+ID_COSTO = 14133
+ID_LABELPREZZO = 14134
+ID_PREZZO = 14135
+ID_BTNRICALC = 14136
+ID_BTNRICLIS = 14137
+ID_PANPROMO1 = 14138
+ID_LABELRIC1 = 14139
+ID_LABELRIC2 = 14140
+ID_LABELRIC3 = 14141
+ID_RICAR1 = 14142
+ID_RICAR2 = 14143
+ID_RICAR3 = 14144
+ID_RICAR4 = 14145
+ID_RICAR5 = 14146
+ID_RICAR6 = 14147
+ID_LABELSC1 = 14148
+ID_LABELSC2 = 14149
+ID_LABELSC3 = 14150
+ID_SCONTO1 = 14151
+ID_SCONTO2 = 14152
+ID_SCONTO4 = 14153
+ID_SCONTO5 = 14154
+ID_SCONTO6 = 14155
+ID_PANPROMO2 = 14156
+ID_PANPROVVIG = 14157
+ID_LISTINIPANEL = 14158
+ID_GRIGLIECLIPANEL = 14159
+ID_GRIGLIEFORPANEL = 14160
 
 def ListGriFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -1764,7 +1776,7 @@ def ListGriFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_MASTROEVAZONE = 14160
+ID_MASTROEVAZONE = 14161
 
 def ProdMastroEvaFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -1793,24 +1805,24 @@ def ProdMastroEvaFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_NODOCANN = 14161
-ID_NODOCACQ = 14162
-ID_NOMOVANN = 14163
-ID_EVABUTUPD = 14164
-ID_EVABUTPRT = 14165
-ID_EVAPARZ = 14166
-ID_EVANONE = 14167
-ID_EVACHIUSI = 14168
-ID_MASTOTNUMMOV = 14169
-ID_LABMASTOTDOCV = 14170
-ID_MASTOTDOCQ = 14171
-ID_MASTOTDOCV = 14172
-ID_LABMASACQ = 14173
-ID_MASTOTACQQ = 14174
-ID_MASTOTACQV = 14175
-ID_LABMASRES = 14176
-ID_MASTOTRESQ = 14177
-ID_MASTOTRESV = 14178
+ID_NODOCANN = 14162
+ID_NODOCACQ = 14163
+ID_NOMOVANN = 14164
+ID_EVABUTUPD = 14165
+ID_EVABUTPRT = 14166
+ID_EVAPARZ = 14167
+ID_EVANONE = 14168
+ID_EVACHIUSI = 14169
+ID_MASTOTNUMMOV = 14170
+ID_LABMASTOTDOCV = 14171
+ID_MASTOTDOCQ = 14172
+ID_MASTOTDOCV = 14173
+ID_LABMASACQ = 14174
+ID_MASTOTACQQ = 14175
+ID_MASTOTACQV = 14176
+ID_LABMASRES = 14177
+ID_MASTOTRESQ = 14178
+ID_MASTOTRESV = 14179
 
 def ProdMastroEvaFunc1( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -2097,7 +2109,7 @@ def ProdMastroEvaFunc1( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_MASPANMASTROEVA = 14179
+ID_MASPANMASTROEVA = 14180
 
 def ProdMastroEvaFunc2( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -2128,7 +2140,7 @@ def ProdMastroEvaFunc2( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_PPRPANPROPRO = 14180
+ID_PPRPANPROPRO = 14181
 
 def ProdProgr1Func( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -2151,7 +2163,7 @@ def ProdProgr1Func( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_PANGRIDLATT = 14181
+ID_PANGRIDLATT = 14182
 
 def ProdAnagListiniFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -2174,7 +2186,7 @@ def ProdAnagListiniFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_PANGRIDGIAC = 14182
+ID_PANGRIDGIAC = 14183
 
 def ProdAnagGiacenzeFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -2220,7 +2232,7 @@ def ProdAnagNoteFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_PANIMAGE = 14183
+ID_PANIMAGE = 14184
 
 def ProdAnagFotoFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -2240,12 +2252,12 @@ def ProdAnagFotoFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_FATDATMIN = 14184
-ID_FATDATMAX = 14185
-ID_FATORDER = 14186
-ID_BTNFATUPD = 14187
-ID_BTNFATPRT = 14188
-ID_STATZONE = 14189
+ID_FATDATMIN = 14185
+ID_FATDATMAX = 14186
+ID_FATORDER = 14187
+ID_BTNFATUPD = 14188
+ID_BTNFATPRT = 14189
+ID_STATZONE = 14190
 
 def ProdIntMagPanelFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -2314,7 +2326,7 @@ def ProdIntMagPanelFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_PANGRIDFATCLI = 14190
+ID_PANGRIDFATCLI = 14191
 
 def ProdIntMagPaneFatCliFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -2338,8 +2350,8 @@ def ProdIntMagPaneFatCliFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_PANEL = 14191
-ID_PANGRIDLIS = 14192
+ID_PANEL = 14192
+ID_PANGRIDLIS = 14193
 
 def ListiniFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -2365,10 +2377,10 @@ def ListiniFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_LABELFROMDATA = 14193
-ID_FROMDATLIS = 14194
-ID_BTNLISTNEW = 14195
-ID_BTNLISTDEL = 14196
+ID_LABELFROMDATA = 14194
+ID_FROMDATLIS = 14195
+ID_BTNLISTNEW = 14196
+ID_BTNLISTDEL = 14197
 
 def ListiniDataFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -2407,9 +2419,9 @@ def ListiniDataFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_PANGRIDPROMO = 14197
-ID_BUTPRINT = 14198
-ID_BUTSAVE = 14199
+ID_PANGRIDPROMO = 14198
+ID_BUTPRINT = 14199
+ID_BUTSAVE = 14200
 
 def ProdPromoFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -2447,10 +2459,10 @@ def ProdPromoFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_PROMOLINE1 = 14200
-ID_LABELPROMO = 14201
-ID_PROMOPRZ = 14202
-ID_BUTCHGPROMO = 14203
+ID_PROMOLINE1 = 14201
+ID_LABELPROMO = 14202
+ID_PROMOPRZ = 14203
+ID_BUTCHGPROMO = 14204
 
 def Promo1PanelFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.BoxSizer( wx.VERTICAL )
@@ -2488,13 +2500,13 @@ def Promo1PanelFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_PROMOLINE2 = 14204
-ID_PROMOSC1 = 14205
-ID_PROMOSC2 = 14206
-ID_PROMOSC3 = 14207
-ID_PROMOSC4 = 14208
-ID_PROMOSC5 = 14209
-ID_PROMOSC6 = 14210
+ID_PROMOLINE2 = 14205
+ID_PROMOSC1 = 14206
+ID_PROMOSC2 = 14207
+ID_PROMOSC3 = 14208
+ID_PROMOSC4 = 14209
+ID_PROMOSC5 = 14210
+ID_PROMOSC6 = 14211
 
 def Promo2PanelFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.BoxSizer( wx.VERTICAL )
@@ -2594,10 +2606,10 @@ def Promo2PanelFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_DATMIN = 14211
-ID_DATMAX = 14212
-ID_BUTCANCPROMO = 14213
-ID_BUTSAVEPROMO = 14214
+ID_DATMIN = 14212
+ID_DATMAX = 14213
+ID_BUTCANCPROMO = 14214
+ID_BUTSAVEPROMO = 14215
 
 def DatiPromoFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -2730,7 +2742,7 @@ def DatiPromoFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_PERPRO = 14215
+ID_PERPRO = 14216
 
 def ProvvigPanelFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 2, 0, 0 )
@@ -2753,9 +2765,9 @@ def ProvvigPanelFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_PROD_TOOLBAR = 14216
-ID_GIAC_SELMAG = 14217
-ID_SOLOGIAC = 14218
+ID_PROD_TOOLBAR = 14217
+ID_GIAC_SELMAG = 14218
+ID_SOLOGIAC = 14219
 
 def ProdToolBarFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 1, 0, 0, 0 )

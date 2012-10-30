@@ -102,6 +102,7 @@ fldap('is_accstor');   defap(0);    RSMOV_ISACCSTOR =    42
 fldap('acc_sepiva');   defap(0);    RSMOV_ACCSEPIVA =    43
 fldap('canprezzo0');   defap(0);    RSMOV_CANPREZZO0 =   44
 fldap('modimpricalc'); defap(0);    RSMOV_MODIMPRICALC = 45
+fldap('nomastroprod'); defap(0);    RSMOV_NOPRODMASTRO = 46
 
 
 
@@ -397,6 +398,7 @@ class CauMagazzPanel(ga.AnagPanel):
                            ("is_accstor", { True: 1,   False: 0  } ),
                            ("acc_sepiva", { True: 1,   False: 0  } ),
                            ("canprezzo0", { True: 1,   False: 0  } ),
+                           ("nomastroprod",{True: 1,   False: 0  } ),
                            ("nonumxmag",  { True: 1,   False: 0  } ),
                            ("noivaprof",  { True: 1,   False: 0  } ),
                            ("rptcolli",   { True: 1,   False: 0  } ),

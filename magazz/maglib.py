@@ -178,6 +178,11 @@ class GridMov(object):
             mov.AddFilter('(doc.f_ann IS NULL OR doc.f_ann<>1)')
         if cn('escmovann').GetValue():
             mov.AddFilter('(mov.f_ann IS NULL OR mov.f_ann<>1)')
+        try:
+            if cn('escmovnas').GetValue():
+                mov.AddFilter('(tipmov.nomastroprod IS NULL OR tipmov.nomastroprod<>1)')
+        except:
+            pass
         
         for name in ("num", "dat"):
             for tipo in ("doc", "reg", "rif"):

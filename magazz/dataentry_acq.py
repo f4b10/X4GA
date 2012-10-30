@@ -300,7 +300,7 @@ class AcqDocGrid(dbglib.DbGrid):
         class GridTable(dbglib.DbGridTable):
             def GetValue(self, row, col):
                 rscol = self.rsColumns[col]
-                if rscol == -1: #qta residua
+                if rscol == -1 and 0 <= row < len(self.data): #qta residua
                     qta = self.data[row][colqta] or 0
                     eva = self.data[row][coleva] or 0
                     p = r"%." + "%d" % bt.MAGQTA_DECIMALS + "f"
@@ -388,31 +388,34 @@ class AcqDocGrid(dbglib.DbGrid):
     
     def GetAttr(self, row, col, rscol, attr=gl.GridCellAttr):
         #blocco editazione su cella ID
-        askvcol = self.dbacq.tipmov._GetFieldIndex("askvalori", inline=True)
-        askv = self.dbacq.GetRecordset()[row][askvcol]
-        if   askv == "T": cols = [7,8,9,10,11,13]
-        elif askv == "Q": cols = [7,13]
-        elif askv == "V": cols = [12,13]
-        elif askv == "D": cols = [2,13]
-        else:             cols = []
-        readonly = not col in cols
-        acqcol = self.dbacq._GetFieldIndex("acquis", inline=True)
-        clscol = self.dbacq._GetFieldIndex("closed", inline=True)
         rs = self.dbacq.GetRecordset()
-        acq = rs[row][acqcol]
-        cls = rs[row][clscol]
-        if acq:
-            fgcol, bgcol = self.colors['acquis']
-        elif cls:
-            fgcol, bgcol = self.colors['closed']
-            readonly = True
+        if 0 <= row < len(rs):
+            askvcol = self.dbacq.tipmov._GetFieldIndex("askvalori", inline=True)
+            askv = self.dbacq.GetRecordset()[row][askvcol]
+            if   askv == "T": cols = [7,8,9,10,11,13]
+            elif askv == "Q": cols = [7,13]
+            elif askv == "V": cols = [12,13]
+            elif askv == "D": cols = [2,13]
+            else:             cols = []
+            readonly = not col in cols
+            acqcol = self.dbacq._GetFieldIndex("acquis", inline=True)
+            clscol = self.dbacq._GetFieldIndex("closed", inline=True)
+            acq = rs[row][acqcol]
+            cls = rs[row][clscol]
+            if acq:
+                fgcol, bgcol = self.colors['acquis']
+            elif cls:
+                fgcol, bgcol = self.colors['closed']
+                readonly = True
+            else:
+                fgcol, bgcol = self.colors['normal']
+            if not readonly and col in (7,13) and self.modoacq == "A":
+                readonly = True
+            attr.SetTextColour(fgcol)
+            attr.SetBackgroundColour(bgcol)
         else:
-            fgcol, bgcol = self.colors['normal']
-        if not readonly and col in (7,13) and self.modoacq == "A":
             readonly = True
         attr.SetReadOnly(readonly)
-        attr.SetTextColour(fgcol)
-        attr.SetBackgroundColour(bgcol)
         return attr
 
     def TestEditedValues(self, row, col, rscol, value):
