@@ -259,7 +259,9 @@ class MultiReportStandardDialog(wx.Dialog):
         if os.path.isdir(path):
             searchReportDef += "/*"
         searchReportDef += ".jrxml"
-        for n, r in enumerate(glob.glob(searchReportDef)):
+        files = glob.glob(searchReportDef)
+        files.sort()
+        for n, r in enumerate(files):
             r = r.replace('\\', '/')
             name = r[r.rfind('/')+1:-6]
             if name == multi_default or (sel is None and multi_default is None):
