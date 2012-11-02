@@ -458,9 +458,7 @@ class SelAziendaPanel(aw.Panel):
             db._dbCon = conn
             db.connected = True
             db = adb.DbTable(Env.Azienda.BaseTab.TABNAME_CFGSETUP, 'setup', db=db)
-            for key in ('indirizzo', 'cap', 'citta', 'prov',
-                        'codfisc', 'stato', 'piva',
-                        'numtel', 'numfax', 'email'):
+            for key in 'indirizzo cap citta prov codfisc stato piva numtel numfax email titprivacy'.split():
                 if db.Retrieve('setup.chiave=%s',
                                'azienda_%s' % key) and db.RowsCount() == 1:
                     if db.flag:
