@@ -892,6 +892,10 @@ class PdcScadenzarioPanel(aw.Panel,
         self.gridpcf = GridScadenzario(pp, self.dbscad)
         self.pdcid = None
         
+        a = adb.DbTable(bt.TABNAME_CFGSETUP)
+        if a.Retrieve('chiave=%s', 'scadord') and a.OneRow():
+            ci(wdr.ID_PCFORDERSCA).SetValue(a.flag)
+        
         ScadenzarioColorsPanelMixin.__init__(self, self.gridpcf)
         
         for cid, evt, func in (
@@ -943,6 +947,15 @@ class PdcScadenzarioPanel(aw.Panel,
                            ('pcfonlyinso', 'insoluto=1'),):
             if self.FindWindowByName(name).IsChecked():
                 pdc.AddPcfFilter(filt)
+        
+        pcf = pdc.mastro
+        pcf.ClearOrders()
+        if self.FindWindowByName('pcfordersca').GetValue() == "D":
+            pcf.AddOrder('mastro.datdoc')
+        else:
+            pcf.AddOrder('mastro.datscad')
+        pcf.AddOrder('mastro.numdoc')
+        pcf.AddOrder('mastro.numdoc')
     
     def UpdateGrid(self, pdcid=None):
         if True:#pdcid is not None:

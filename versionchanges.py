@@ -29,6 +29,12 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.47', None, (
+         ("BET1139",
+         """Introdotta possibilità di ordinare gli scadenzari clienti/fornitori
+         per data documento invece che per data di scadenza."""),
+        ),),
+    
     ('1.4.46', None, (
          ("BUG1121",
          """Corretti bug in evasione documenti: originava eccezione cambiando 

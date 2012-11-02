@@ -219,8 +219,12 @@ class ScadenzarioPanel(aw.Panel):
         cbn = lambda x: self.FindWindowByName(x)
         cbi = lambda x: self.FindWindowById(x)
         
-        for name, val, init in (('pcftipocf', "CFG", "C"),\
-                                ('pcforder',  "CD", "D")):
+        a = adb.DbTable(bt.TABNAME_CFGSETUP)
+        a.Retrieve('chiave=%s', 'scadord')
+        
+        for name, val, init in (('pcftipocf',   "CFG", "C"),
+                                ('pcforder',    "CD",  "D"),
+                                ('pcfordersca', "SD",  a.flag or "S"),):
             c = cbn(name)
             if c:
                 c.SetDataLink(name, val)
@@ -606,7 +610,10 @@ class ScadenzarioPanel(aw.Panel):
             pdc.AddOrder('descriz')
         
         pdc.mastro.ClearOrders()
-        pdc.mastro.AddOrder('datscad')
+        if cn('pcfordersca').GetValue() == "D":
+            pdc.mastro.AddOrder('datdoc')
+        else:
+            pdc.mastro.AddOrder('datscad')
         
         pdc.sintesi.ClearHavings()
         if cn('pcfnozero').IsChecked():
