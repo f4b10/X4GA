@@ -739,7 +739,8 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
             #FRECCIA GIU' richiama elenco
             self._fromkeydown = True
             self.HelpChoice(obj, exact=False, resetFields=False)
-            del self._fromkeydown
+            if hasattr(self, '_fromkeydown'):
+                del self._fromkeydown
             
         elif event.GetKeyCode() == wx.WXK_TAB and not event.ControlDown():
             #TAB controllo prossimo focus

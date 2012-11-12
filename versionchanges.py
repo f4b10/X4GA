@@ -29,12 +29,15 @@ import mx.DateTime as dt
 
 history = (
     
-    ('1.4.48', None, (
+    ('1.4.48', dt.Date(2012,11,12), (
          ("BUG1122",
          """Corretta l'interrogazione dello stato di evasione movimenti:
          ora si può avviare solo dopo avere selezionato un tipo di documento,
          filtrato in base alla presenza di altri documenti che lo possono
          evadere."""),
+         ("BUG1123",
+         """Eliminato messaggio di errore che compariva in alcune circostanze
+         durante la ricerca di informazioni."""),
          ("BET1140",
          """Limitata agli ultimi 100 movimenti la griglia di storico
          movimentazione cliente/prodotto in dataentry documento magazzino."""),
