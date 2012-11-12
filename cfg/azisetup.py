@@ -323,6 +323,8 @@ class AziendaSetupPanel(_SetupPanel):
                    bt.MAGNUMSCO,
                    bt.MAGNUMRIC,
                    bt.MAGNUMLIS,
+                   bt.MAGRICLIS,
+                   bt.MAGSCOLIS,
                    bt.MAGROWLIS,
                    bt.MAGVLIFOR,
                    bt.MAGVLIMAR,
@@ -402,6 +404,8 @@ class AziendaSetupPanel(_SetupPanel):
             bt.MAGNUMSCO = int(cn('setup_magnumsco').GetValue())
             bt.MAGNUMRIC = int(cn('setup_magnumric').GetValue())
             bt.MAGNUMLIS = int(cn('setup_magnumlis').GetValue())
+            bt.MAGRICLIS = int(cn('setup_magriclis').GetValue())
+            bt.MAGSCOLIS = int(cn('setup_magscolis').GetValue())
             bt.MAGROWLIS = int(cn('setup_magrowlis').GetValue())
             bt.MAGVLIFOR = int(cn('setup_magvlifor').GetValue())
             bt.MAGVLIMAR = int(cn('setup_magvlimar').GetValue())
@@ -484,6 +488,8 @@ class AziendaSetupPanel(_SetupPanel):
                 bt.MAGNUMSCO,
                 bt.MAGNUMRIC,
                 bt.MAGNUMLIS,
+                bt.MAGRICLIS,
+                bt.MAGSCOLIS,
                 bt.MAGROWLIS,
                 bt.MAGVLIFOR,
                 bt.MAGVLIMAR,

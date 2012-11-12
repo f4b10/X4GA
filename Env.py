@@ -1013,6 +1013,8 @@ class Azienda(object):
         MAGNUMSCO = 3        #numero di sconti gestiti
         MAGNUMRIC = 3        #numero di ricariche gestite
         MAGNUMLIS = 0        #numero di listini vendita
+        MAGRICLIS = 0        #numero di ricariche su listini vendita
+        MAGSCOLIS = 0        #numero di scontistiche su listini vendita
         MAGROWLIS = 0        #flag attivazione listino su righe dettaglio documento
         MAGVLIFOR = 0        #flag listino variabile per fornitore
         MAGVLIMAR = 0        #flag listino variabile per marca
@@ -2557,6 +2559,24 @@ class Azienda(object):
                 [ "prezzo7",    "DECIMAL", IPM,  DPM, "Prezzo di vendita #7", None ],
                 [ "prezzo8",    "DECIMAL", IPM,  DPM, "Prezzo di vendita #8", None ],
                 [ "prezzo9",    "DECIMAL", IPM,  DPM, "Prezzo di vendita #9", None ],
+                [ "scolis1",    "DECIMAL",  5,    2, "Sconto #1", None ],
+                [ "scolis2",    "DECIMAL",  5,    2, "Sconto #2", None ],
+                [ "scolis3",    "DECIMAL",  5,    2, "Sconto #3", None ],
+                [ "scolis4",    "DECIMAL",  5,    2, "Sconto #4", None ],
+                [ "scolis5",    "DECIMAL",  5,    2, "Sconto #5", None ],
+                [ "scolis6",    "DECIMAL",  5,    2, "Sconto #6", None ],
+                [ "scolis7",    "DECIMAL",  5,    2, "Sconto #7", None ],
+                [ "scolis8",    "DECIMAL",  5,    2, "Sconto #8", None ],
+                [ "scolis9",    "DECIMAL",  5,    2, "Sconto #9", None ],
+                [ "riclis1",    "DECIMAL",  5,    2, "Ricarica #1", None ],
+                [ "riclis2",    "DECIMAL",  5,    2, "Ricarica #2", None ],
+                [ "riclis3",    "DECIMAL",  5,    2, "Ricarica #3", None ],
+                [ "riclis4",    "DECIMAL",  5,    2, "Ricarica #4", None ],
+                [ "riclis5",    "DECIMAL",  5,    2, "Ricarica #5", None ],
+                [ "riclis6",    "DECIMAL",  5,    2, "Ricarica #6", None ],
+                [ "riclis7",    "DECIMAL",  5,    2, "Ricarica #7", None ],
+                [ "riclis8",    "DECIMAL",  5,    2, "Ricarica #8", None ],
+                [ "riclis9",    "DECIMAL",  5,    2, "Ricarica #9", None ],
                 [ "note",       "VARCHAR", ntw, None, "Note", None ], ]
             
             cls.set_constraints(cls.TABNAME_LISTINI,
@@ -3904,6 +3924,8 @@ class Azienda(object):
                 ('MAGNUMSCO',       'magnumsco',          i, _int, None),
                 ('MAGNUMRIC',       'magnumric',          i, _int, None),
                 ('MAGNUMLIS',       'magnumlis',          i, _int, 'del numero di listini'),
+                ('MAGRICLIS',       'magriclis',          i, _int, None),
+                ('MAGSCOLIS',       'magscolis',          i, _int, None),
                 ('MAGROWLIS',       'magrowlis',          f, _int, None),
                 ('MAGVLIFOR',       'magvlifor',          f, _int, None),
                 ('MAGVLIMAR',       'magvlimar',          f, _int, None),

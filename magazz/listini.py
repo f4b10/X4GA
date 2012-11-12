@@ -460,6 +460,13 @@ class ListiniGrid(dbglib.DbGridColoriAlternati):
         
         for l in range(1,bt.MAGNUMLIS+1):
             
+            if l <= bt.MAGRICLIS:
+                n = 'riclis%d'%l
+                C((wp, n, (cn(lis, n), "Ric.L#%d"%l, _PRR, False)))
+            if l <= bt.MAGSCOLIS:
+                n = 'scolis%d'%l
+                C((wp, n, (cn(lis, n), "Sc.L#%d"%l, _PRC, False)))
+            
             n = 'prezzo%d'%l
             C((wp, n, (cn(lis, n), "Listino #%d"%l, _PRE, False)))
             
@@ -919,12 +926,13 @@ class ListiniGrid(dbglib.DbGridColoriAlternati):
         if gridcol is None:
             gridcol = self.colnames.index(namecol)
         try:
-            if self.listcols[gridcol] in 'p_costo,p_prezzo'.split(','):
+            c = self.listcols[gridcol]
+            if c in 'p_costo p_prezzo'.split() or c.startswith('riclis') or c.startswith('scolis'):
                 lis = self.dblis
                 self.promod[lis.prod.id] = [lis.p_costo, lis.p_prezzo]
-                if self.autoricalc:
+                if self.autoricalc and c in 'p_costo p_prezzo'.split():
                     self.RicalcolaPC(row, exclude=self.listcols[gridcol])
-                if self.autolistino:
+                if self.autolistino and (c.startswith('riclis') or c.startswith('scolis')):
                     self.RicalcolaListini(row)
             else:
                 lis = self.dblis

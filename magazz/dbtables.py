@@ -4366,11 +4366,15 @@ class Prodotti(adb.DbTable):
             p = None
             if gpr.calclis == 'C':
                 #listini da costo di acquisto e ricariche
-                r = getattr(gpr, 'prclisric%d' % n)
+                r = getattr(lis, 'riclis%d' % n)
+                if not r:
+                    r = getattr(gpr, 'prclisric%d' % n)
                 p = round(self.costo*(100+(r or 0))/100, bt.MAGPRE_DECIMALS)
             elif gpr.calclis == 'P':
                 #listini da prezzo al pubblico e sconti
-                s = getattr(gpr, 'prclissco%d' % n)
+                s = getattr(lis, 'scolis%d' % n)
+                if not s:
+                    s = getattr(gpr, 'prclissco%d' % n)
                 p = round(self.prezzo*(100-(s or 0))/100, bt.MAGPRE_DECIMALS)
             elif gpr.calclis == 'V':
                 #listini a calcolo variabile

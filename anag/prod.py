@@ -1454,6 +1454,8 @@ class ProdPanel(ga.AnagPanel):
         _FLT = bt.GetMagPreMaskInfo()
         _NUM = gl.GRID_VALUE_NUMBER
         _STR = gl.GRID_VALUE_STRING
+        _PRR = bt.GetMagRicMaskInfo()
+        _PRS = bt.GetMagScoMaskInfo()
         
         cols = []
         self.edcols = []
@@ -1474,32 +1476,21 @@ class ProdPanel(ga.AnagPanel):
         
         pw = 90
         
-        if bt.MAGNUMLIS >= 1:
-            self.COL_PRZ1 = b(( pw, (cn('prezzo1'), "Listino #1",  _FLT, True)))
+        self.prccols = []
         
-        if bt.MAGNUMLIS >= 2:
-            self.COL_PRZ2 = b(( pw, (cn('prezzo2'), "Listino #2",  _FLT, True)))
-        
-        if bt.MAGNUMLIS >= 3:
-            self.COL_PRZ3 = b(( pw, (cn('prezzo3'), "Listino #3",  _FLT, True)))
-        
-        if bt.MAGNUMLIS >= 4:
-            self.COL_PRZ4 = b(( pw, (cn('prezzo4'), "Listino #4",  _FLT, True)))
-        
-        if bt.MAGNUMLIS >= 5:
-            self.COL_PRZ5 = b(( pw, (cn('prezzo5'), "Listino #5",  _FLT, True)))
-        
-        if bt.MAGNUMLIS >= 6:
-            self.COL_PRZ6 = b(( pw, (cn('prezzo6'), "Listino #6",  _FLT, True)))
-        
-        if bt.MAGNUMLIS >= 7:
-            self.COL_PRZ7 = b(( pw, (cn('prezzo7'), "Listino #7",  _FLT, True)))
-        
-        if bt.MAGNUMLIS >= 8:
-            self.COL_PRZ8 = b(( pw, (cn('prezzo8'), "Listino #8",  _FLT, True)))
-        
-        if bt.MAGNUMLIS >= 9:
-            self.COL_PRZ9 = b(( pw, (cn('prezzo9'), "Listino #9",  _FLT, True)))
+        for l in range(1, bt.MAGNUMLIS+1, 1):
+            
+            if bt.MAGNUMLIS >= l:
+                if bt.MAGRICLIS >= l:
+                    c = b(( pw, (cn('riclis%d'%l), "Ric.L#%d"%l, _PRR, True)))
+                    setattr(self, 'COL_RICLIS%d'%l, c)
+                    self.prccols.append(c)
+                if bt.MAGSCOLIS >= l:
+                    c = b(( pw, (cn('ricsco%d'%l), "Sc.L#%d"%l, _PRS, True)))
+                    setattr(self, 'COL_SCOLIS%d'%l, c)
+                    self.prccols.append(c)
+                c = b(( pw, (cn('prezzo%d'%l), "Listino #%d"%l,  _FLT, True)))
+                setattr(self, 'COL_PRZ%d'%l, c)
         
         if not bt.MAGDATLIS:
             self.COL_DATA = b(( 80, (cn('data'),    "Data",        _DAT, True)))
@@ -1567,6 +1558,8 @@ class ProdPanel(ga.AnagPanel):
         lis.MoveRow(row)
         #lis.data = Env.Azienda.Login.dataElab
         lis._UpdateTableVars()
+        if gridcol in self.prccols: 
+            self.RicalcolaListini()
         #if col in (RSLIS_PREZZO1, RSLIS_PREZZO2, RSLIS_PREZZO3,\
                    #RSLIS_PREZZO4, RSLIS_PREZZO5, RSLIS_PREZZO6,\
                    #RSLIS_PREZZO7, RSLIS_PREZZO8, RSLIS_PREZZO9):

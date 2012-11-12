@@ -38,6 +38,10 @@ history = (
          ("BET1140",
          """Limitata agli ultimi 100 movimenti la griglia di storico
          movimentazione cliente/prodotto in dataentry documento magazzino."""),
+         ("BET1141",
+         """Aggiunta la possibilità di specificare ricarica e/o sconto per
+         ogni listino di ogni prodotto, prioritari rispetto a quelli indicati
+         sul relativo gruppo prezzi."""),
         ),),
     
     ('1.4.47', None, (
