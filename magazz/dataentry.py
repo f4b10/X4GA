@@ -205,6 +205,7 @@ class PdcProdHistoryGrid(dbglib.DbGrid):
                 mov.ClearOrders()
                 mov.AddOrder('doc.datreg', adb.ORDER_DESCENDING)
                 mov.AddOrder('doc.numdoc', adb.ORDER_DESCENDING)
+                mov.SetLimits(100)
                 mas.Get(idprod)
                 rs = mov.GetRecordset()
                 self._cache_history[key] = rs

@@ -35,6 +35,9 @@ history = (
          ora si può avviare solo dopo avere selezionato un tipo di documento,
          filtrato in base alla presenza di altri documenti che lo possono
          evadere."""),
+         ("BET1140",
+         """Limitata agli ultimi 100 movimenti la griglia di storico
+         movimentazione cliente/prodotto in dataentry documento magazzino."""),
         ),),
     
     ('1.4.47', None, (
