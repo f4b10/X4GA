@@ -332,9 +332,29 @@ class EvaIntPanel(aw.Panel):
         aw.Panel.__init__(self, *args, **kwargs)
         
         wdr.EvaMagFunc(self)
+        cn = self.FindWindowByName
         
         pp = self.FindWindowById(wdr.ID_PANGRIDMOV)
         self.gridmov = GridMov(pp, self)
+        
+        ids = []
+        tpd = dbm.adb.DbTable(bt.TABNAME_CFGMAGDOC, 'tipdoc')
+        tpd.Retrieve()
+        for tpd in tpd:
+            for n in range(1,5,1):
+                if getattr(tpd, 'tipacq%d'%n) == "E":
+                    i = getattr(tpd, 'id_acqdoc%d'%n)
+                    if i is not None and not i in ids:
+                        ids.append(i)
+        c = cn('masid_tipdoc')
+        if not ids:
+            aw.awu.MsgDialog(self, "Nessun documento configurato per l'evasione", style=wx.ICON_INFORMATION)
+            c.SetFilter('0')
+        else:
+            c.SetFilter('id IN (%s)' % ','.join(map(str, ids)))
+        b = cn('masbutupd')
+        b.Disable()
+        self.Bind(EVT_LINKTABCHANGED, self.OnTipDocChanged, c)
         
         for cid, func in ((wdr.ID_MASBUTUPD, self.gridmov.GridMovOnUpdateFilters),
                           (wdr.ID_MASBUTPRT, self.OnPrint)):
@@ -344,7 +364,6 @@ class EvaIntPanel(aw.Panel):
             return self.FindWindowById(x)
         
         o = ci(wdr.ID_MASID_TIPDOC)
-        o.Bind(EVT_LINKTABCHANGED, self.OnTipDocChanged)
     
     def OnEvaMov(self, event):
         self.TestEvaControls()
@@ -355,6 +374,8 @@ class EvaIntPanel(aw.Panel):
         event.Skip()
     
     def OnTipDocChanged(self, event):
+        cn = self.FindWindowByName
+        cn('masbutupd').Enable(cn('masid_tipdoc').GetValue() is not None)
         docid = event.GetSelection()
         cfg = dbm.adb.DbTable(dbm.bt.TABNAME_CFGMAGDOC)
         cfg.Get(docid)

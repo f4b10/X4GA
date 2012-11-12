@@ -669,9 +669,11 @@ def EvaMagFunc( parent, call_fit = True, set_sizer = True ):
     
     item49 = wx.Button( parent, ID_MASBUTUPD, "Applica", wx.DefaultPosition, wx.DefaultSize, 0 )
     item49.SetDefault()
+    item49.SetName( "masbutupd" )
     item48.Add( item49, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 
     item50 = wx.Button( parent, ID_MASBUTPRT, "&Lista", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item50.SetName( "masbutprt" )
     item48.Add( item50, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
 
     item24.Add( item48, 0, wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM, 5 )

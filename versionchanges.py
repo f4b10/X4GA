@@ -29,6 +29,14 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.48', None, (
+         ("BUG1122",
+         """Corretta l'interrogazione dello stato di evasione movimenti:
+         ora si può avviare solo dopo avere selezionato un tipo di documento,
+         filtrato in base alla presenza di altri documenti che lo possono
+         evadere."""),
+        ),),
+    
     ('1.4.47', None, (
          ("BET1139",
          """Introdotta possibilità di ordinare gli scadenzari clienti/fornitori
