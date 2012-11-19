@@ -2535,10 +2535,10 @@ def ScadenzarioGruppoFunc( parent, call_fit = True, set_sizer = True ):
     
     item4 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
-    item5 = RadioBox( parent, ID_PCFORDER, "Ordinamento", wx.DefaultPosition, wx.DefaultSize, 
+    item5 = RadioBox( parent, ID_PCFORDER, "Ord.Anagr.", wx.DefaultPosition, wx.DefaultSize, 
         ["Codice","Descrizione"] , 1, wx.RA_SPECIFY_COLS )
     item5.SetName( "pcforder" )
-    item4.Add( item5, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+    item4.Add( item5, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item6 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
@@ -2559,7 +2559,7 @@ def ScadenzarioGruppoFunc( parent, call_fit = True, set_sizer = True ):
 
     item7.Add( [ 300, 1 ] , 0, wx.ALIGN_CENTER, 5 )
 
-    item6.Add( item7, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+    item6.Add( item7, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
     item13 = wx.StaticBox( parent, -1, "" )
     item12 = wx.StaticBoxSizer( item13, wx.VERTICAL )
@@ -2585,8 +2585,23 @@ def ScadenzarioGruppoFunc( parent, call_fit = True, set_sizer = True ):
 
     item3.Add( item4, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item16 = PcfTotaliPanel(parent, ID_PCFTOTALI)
-    item3.Add( item16, 0, wx.ALIGN_RIGHT|wx.RIGHT|wx.TOP, 5 )
+    item16 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    
+    item17 = OrdPartiteRadioBox( parent, ID_PCFORDERSCA, "Ord.Partite", wx.DefaultPosition, wx.DefaultSize, 
+        ["Scadenza","Data doc."] , 1, wx.RA_SPECIFY_COLS )
+    item17.SetName( "pcfordersca" )
+    item16.Add( item17, 0, wx.LEFT|wx.RIGHT, 5 )
+
+    item18 = PcfTotaliPanel(parent, ID_PCFTOTALI)
+    item16.Add( item18, 0, wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM, 5 )
+
+    item16.Add( [ 20, 20 ] , 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+    item16.AddGrowableCol( 1 )
+
+    item16.AddGrowableRow( 0 )
+
+    item3.Add( item16, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item3.AddGrowableCol( 0 )
 
@@ -2594,125 +2609,125 @@ def ScadenzarioGruppoFunc( parent, call_fit = True, set_sizer = True ):
 
     item2.Add( item3, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL, 5 )
 
-    item17 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    item19 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
-    item18 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    item20 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
-    item20 = wx.StaticBox( parent, -1, "Selezioni" )
-    item19 = wx.StaticBoxSizer( item20, wx.VERTICAL )
+    item22 = wx.StaticBox( parent, -1, "Selezioni" )
+    item21 = wx.StaticBoxSizer( item22, wx.VERTICAL )
     
-    item21 = wx.FlexGridSizer( 0, 3, 0, 0 )
+    item23 = wx.FlexGridSizer( 0, 3, 0, 0 )
     
-    item22 = wx.StaticText( parent, ID_TEXT, "", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item21.Add( item22, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+    item24 = wx.StaticText( parent, ID_TEXT, "", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item23.Add( item24, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
 
-    item23 = wx.StaticText( parent, ID_TEXT, "Da:", wx.DefaultPosition, [180,-1], 0 )
-    item21.Add( item23, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+    item25 = wx.StaticText( parent, ID_TEXT, "Da:", wx.DefaultPosition, [180,-1], 0 )
+    item23.Add( item25, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
 
-    item24 = wx.StaticText( parent, ID_TEXT, "A:", wx.DefaultPosition, [180,-1], 0 )
-    item21.Add( item24, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+    item26 = wx.StaticText( parent, ID_TEXT, "A:", wx.DefaultPosition, [180,-1], 0 )
+    item23.Add( item26, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
 
-    item25 = wx.StaticText( parent, ID_TEXT, "Documento:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item21.Add( item25, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item27 = wx.StaticText( parent, ID_TEXT, "Documento:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item23.Add( item27, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item26 = DateCtrl( parent, ID_PCFDATDOC1, "", wx.DefaultPosition, [80,-1], 0 )
-    item26.SetName( "pcfdatdoc1" )
-    item21.Add( item26, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item28 = DateCtrl( parent, ID_PCFDATDOC1, "", wx.DefaultPosition, [80,-1], 0 )
+    item28.SetName( "pcfdatdoc1" )
+    item23.Add( item28, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item27 = DateCtrl( parent, ID_PCFDATDOC2, "", wx.DefaultPosition, [80,-1], 0 )
-    item27.SetName( "pcfdatdoc2" )
-    item21.Add( item27, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item29 = DateCtrl( parent, ID_PCFDATDOC2, "", wx.DefaultPosition, [80,-1], 0 )
+    item29.SetName( "pcfdatdoc2" )
+    item23.Add( item29, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item28 = wx.StaticText( parent, ID_TEXT, "Scadenza:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item21.Add( item28, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item30 = wx.StaticText( parent, ID_TEXT, "Scadenza:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item23.Add( item30, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item29 = DateCtrl( parent, ID_PCFDATSCA1, "", wx.DefaultPosition, [80,-1], 0 )
-    item29.SetName( "pcfdatsca1" )
-    item21.Add( item29, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item31 = DateCtrl( parent, ID_PCFDATSCA1, "", wx.DefaultPosition, [80,-1], 0 )
+    item31.SetName( "pcfdatsca1" )
+    item23.Add( item31, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item30 = DateCtrl( parent, ID_PCFDATSCA2, "", wx.DefaultPosition, [80,-1], 0 )
-    item30.SetName( "pcfdatsca2" )
-    item21.Add( item30, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item32 = DateCtrl( parent, ID_PCFDATSCA2, "", wx.DefaultPosition, [80,-1], 0 )
+    item32.SetName( "pcfdatsca2" )
+    item23.Add( item32, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item31 = wx.StaticText( parent, ID_PCFLABPDC, "Sottoconto:", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
-    item21.Add( item31, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item33 = wx.StaticText( parent, ID_PCFLABPDC, "Sottoconto:", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
+    item23.Add( item33, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item32 = LinkTable(parent, ID_PCFPDC1 ); item32.SetDataLink( bt.TABNAME_PDC, "pcfpdc1", None)
-    item21.Add( item32, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item34 = LinkTable(parent, ID_PCFPDC1 ); item34.SetDataLink( bt.TABNAME_PDC, "pcfpdc1", None)
+    item23.Add( item34, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item33 = LinkTable(parent, ID_PCFPDC2 ); item33.SetDataLink( bt.TABNAME_PDC, "pcfpdc2", None)
-    item21.Add( item33, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item35 = LinkTable(parent, ID_PCFPDC2 ); item35.SetDataLink( bt.TABNAME_PDC, "pcfpdc2", None)
+    item23.Add( item35, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item34 = wx.StaticText( parent, ID_PCFLABCAU, "Causale:", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
-    item21.Add( item34, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item36 = wx.StaticText( parent, ID_PCFLABCAU, "Causale:", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
+    item23.Add( item36, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item35 = LinkTable(parent, ID_PCFCAUS1 ); item35.SetDataLink( bt.TABNAME_CFGCONTAB, "pcfcau1", None)
-    item21.Add( item35, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item37 = LinkTable(parent, ID_PCFCAUS1 ); item37.SetDataLink( bt.TABNAME_CFGCONTAB, "pcfcau1", None)
+    item23.Add( item37, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item36 = LinkTable(parent, ID_PCFCAUS2 ); item36.SetDataLink( bt.TABNAME_CFGCONTAB, "pcfcau2", None)
-    item21.Add( item36, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item38 = LinkTable(parent, ID_PCFCAUS2 ); item38.SetDataLink( bt.TABNAME_CFGCONTAB, "pcfcau2", None)
+    item23.Add( item38, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item37 = wx.StaticText( parent, ID_PCFLABPDC, "Zona:", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
-    item21.Add( item37, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item39 = wx.StaticText( parent, ID_PCFLABPDC, "Zona:", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
+    item23.Add( item39, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item38 = LinkTable(parent, ID_PCFZONA1 ); item38.SetDataLink( bt.TABNAME_ZONE, "pcfzona1", ZoneDialog)
-    item21.Add( item38, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item40 = LinkTable(parent, ID_PCFZONA1 ); item40.SetDataLink( bt.TABNAME_ZONE, "pcfzona1", ZoneDialog)
+    item23.Add( item40, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item39 = LinkTable(parent, ID_PCFZONA2 ); item39.SetDataLink( bt.TABNAME_ZONE, "pcfzona2", ZoneDialog)
-    item21.Add( item39, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item41 = LinkTable(parent, ID_PCFZONA2 ); item41.SetDataLink( bt.TABNAME_ZONE, "pcfzona2", ZoneDialog)
+    item23.Add( item41, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item40 = wx.StaticText( parent, ID_TEXT, "Agente:", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
-    item21.Add( item40, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item42 = wx.StaticText( parent, ID_TEXT, "Agente:", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
+    item23.Add( item42, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item41 = LinkTable(parent, ID_PCFAGENTE1 ); item41.SetDataLink( bt.TABNAME_AGENTI, "pcfage1", AgentiDialog)
-    item21.Add( item41, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item43 = LinkTable(parent, ID_PCFAGENTE1 ); item43.SetDataLink( bt.TABNAME_AGENTI, "pcfage1", AgentiDialog)
+    item23.Add( item43, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item42 = LinkTable(parent, ID_PCFAGENTE2 ); item42.SetDataLink( bt.TABNAME_AGENTI, "pcfage2", AgentiDialog)
-    item21.Add( item42, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item44 = LinkTable(parent, ID_PCFAGENTE2 ); item44.SetDataLink( bt.TABNAME_AGENTI, "pcfage2", AgentiDialog)
+    item23.Add( item44, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item43 = wx.StaticText( parent, ID_TEXT, "Cat.Anag.:", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
-    item21.Add( item43, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item45 = wx.StaticText( parent, ID_TEXT, "Cat.Anag.:", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
+    item23.Add( item45, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item44 = LinkTable(parent, ID_PCFCATANA1 ); item44.SetDataLink( bt.TABNAME_CATCLI, "pcfcatana1", CatCliDialog)
-    item21.Add( item44, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item46 = LinkTable(parent, ID_PCFCATANA1 ); item46.SetDataLink( bt.TABNAME_CATCLI, "pcfcatana1", CatCliDialog)
+    item23.Add( item46, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item45 = LinkTable(parent, ID_PCFCATANA2 ); item45.SetDataLink( bt.TABNAME_CATCLI, "pcfcatana2", CatCliDialog)
-    item21.Add( item45, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item47 = LinkTable(parent, ID_PCFCATANA2 ); item47.SetDataLink( bt.TABNAME_CATCLI, "pcfcatana2", CatCliDialog)
+    item23.Add( item47, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item21.AddGrowableCol( 1 )
+    item23.AddGrowableCol( 1 )
 
-    item21.AddGrowableCol( 2 )
+    item23.AddGrowableCol( 2 )
 
-    item19.Add( item21, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item21.Add( item23, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item18.Add( item19, 0, wx.GROW|wx.RIGHT, 5 )
+    item20.Add( item21, 0, wx.GROW|wx.RIGHT, 5 )
 
-    item18.AddGrowableCol( 0 )
+    item20.AddGrowableCol( 0 )
 
-    item17.Add( item18, 0, wx.GROW, 5 )
+    item19.Add( item20, 0, wx.GROW, 5 )
 
-    item46 = wx.Button( parent, ID_PCFBUTUPD, "Aggiorna", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item46.SetDefault()
-    item46.SetName( "btnupdate_pcf" )
-    item17.Add( item46, 0, wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM|wx.ALL, 5 )
+    item48 = wx.Button( parent, ID_PCFBUTUPD, "Aggiorna", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item48.SetDefault()
+    item48.SetName( "btnupdate_pcf" )
+    item19.Add( item48, 0, wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM|wx.ALL, 5 )
 
-    item17.AddGrowableCol( 0 )
+    item19.AddGrowableCol( 0 )
 
-    item17.AddGrowableRow( 1 )
+    item19.AddGrowableRow( 1 )
 
-    item2.Add( item17, 0, wx.GROW, 5 )
+    item2.Add( item19, 0, wx.GROW, 5 )
 
     item2.AddGrowableCol( 1 )
 
     item1.Add( item2, 0, wx.GROW|wx.LEFT|wx.BOTTOM, 5 )
 
-    item47 = wx.SplitterWindow( parent, ID_PCFGRIDZONE, wx.DefaultPosition, [-1,320], wx.SP_BORDER|wx.SP_3D|wx.CLIP_CHILDREN )
-    item48 = wx.Panel( item47, -1 )
-    ScadenzarioTotFunc( item48, False, True )
-    item49 = wx.Panel( item47, -1 )
-    ScadenzarioDetFunc( item49, False, True )
-    item47.SplitVertically( item48, item49 )
-    item1.Add( item47, 0, wx.GROW|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item49 = wx.SplitterWindow( parent, ID_PCFGRIDZONE, wx.DefaultPosition, [-1,320], wx.SP_BORDER|wx.SP_3D|wx.CLIP_CHILDREN )
+    item50 = wx.Panel( item49, -1 )
+    ScadenzarioTotFunc( item50, False, True )
+    item51 = wx.Panel( item49, -1 )
+    ScadenzarioDetFunc( item51, False, True )
+    item49.SplitVertically( item50, item51 )
+    item1.Add( item49, 0, wx.GROW|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item1.AddGrowableCol( 0 )
 

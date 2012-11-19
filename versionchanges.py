@@ -29,6 +29,13 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.49', dt.Date(2012,11,19), (
+         ("BUG1124",
+         """Corretto bug in scadenzario di gruppo a seguito implementazione
+         ordinamento per data scadenza o data documento su scadenzario
+         clienti/fornitori."""),
+        ),),
+    
     ('1.4.48', dt.Date(2012,11,12), (
          ("BUG1122",
          """Corretta l'interrogazione dello stato di evasione movimenti:
