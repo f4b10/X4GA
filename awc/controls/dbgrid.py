@@ -2168,6 +2168,9 @@ class ADB_Grid(DbGridColoriAlternati):
                 if not t.id in t._info.deletedRecords:
                     t._info.deletedRecords.append(t.id)
             self.DeleteRows(row)
+            t._info.recordCount = len(t._info.rs)
+            if t._info.recordNumber >= t._info.recordCount:
+                t._info.t._info.recordNumber = t._info.recordCount
     
     def CellEditBeforeUpdate(self, row, gridcol, col, value):
         return True
