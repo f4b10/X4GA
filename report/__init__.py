@@ -649,6 +649,29 @@ def epura(name, isfile=False):
 # ------------------------------------------------------------------------------
 
 
+def get_paths():
+    paths = []
+    if len(pathsub)>0:
+        paths.append(pathsub)
+    for p in pathalt:
+        paths.append(p)
+    paths.append(pathrpt)
+    return paths
+
+def get_report(rptdef):
+    for pathsrc in get_paths():
+        test = "%s/%s" % (pathsrc, rptdef)
+        if os.path.isdir(test):
+            return 'folder', test
+        test += '.jrxml'
+        if os.path.isfile(test):
+            return 'report', test
+    return None, 'not found'
+
+
+# ------------------------------------------------------------------------------
+
+
 if __name__ == "__main__":
    
     class TryReport(wx.App):

@@ -314,7 +314,8 @@ def AnagToolbarSearchFunc( parent, call_fit = True, set_sizer = True ):
     return item0
 
 ID_SEARCHPANGRID = 12024
-ID_BTNPRINT = 12025
+ID_BUTETIC = 12025
+ID_BTNPRINT = 12026
 
 def SearchResultsFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -324,8 +325,13 @@ def SearchResultsFunc( parent, call_fit = True, set_sizer = True ):
 
     item2 = wx.BoxSizer( wx.HORIZONTAL )
     
-    item3 = wx.Button( parent, ID_BTNPRINT, "&Lista", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item2.Add( item3, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item3 = wx.Button( parent, ID_BUTETIC, "&Etichette", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item3.SetName( "butetic" )
+    item2.Add( item3, 0, wx.ALIGN_CENTER|wx.BOTTOM, 5 )
+
+    item4 = wx.Button( parent, ID_BTNPRINT, "&Lista", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item4.SetName( "butprint" )
+    item2.Add( item4, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item0.Add( item2, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 
@@ -340,9 +346,9 @@ def SearchResultsFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_SEARCHNUM = 12026
-ID_ORDERDOWN = 12027
-ID_BTNORDER = 12028
+ID_SEARCHNUM = 12027
+ID_ORDERDOWN = 12028
+ID_BTNORDER = 12029
 
 def SeachOrderFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -366,10 +372,10 @@ def SeachOrderFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_COPYFROM = 12029
-ID_LINKTAB1 = 12030
-ID_LINKTAB2 = 12031
-ID_BUTCOPY = 12032
+ID_COPYFROM = 12030
+ID_LINKTAB1 = 12031
+ID_LINKTAB2 = 12032
+ID_BUTCOPY = 12033
 
 def CopyFromFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
