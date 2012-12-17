@@ -592,11 +592,68 @@ class AnagPanel(aw.Panel):
     def GetSpecializedSearchPanel(self, parent):
         return None
     
+    def GetMultiEticReportName(self):
+        if getattr(self, 'db_report', None):
+            return '%s - Etichette' % self.db_report
+        return None
+    
     def GetSearchResultsPanel(self, parent):
         panel = aw.Panel(parent, style=wx.RAISED_BORDER)
         SearchResultsFunc(panel)
         self.InitSearchGrid()
+        show = False
+        be = panel.FindWindowByName('butetic')
+        if be:
+            if getattr(self, 'db_report', None):
+                test = '%s - Etichette' % self.db_report
+                import report
+                tipo, nome = report.get_report(test)
+                if tipo:
+                    show = True
+            be.Show(show)
+            if show:
+                self.Bind(wx.EVT_BUTTON, self.OnPrintListEtic, be)
         return panel
+    
+    def OnPrintListEtic(self, event):
+        rptname = self.GetMultiEticReportName()
+        if rptname:
+            db = self.GetDbPrint()
+            db.ShowDialog(self)
+            if self.db_filter:
+                db.AddFilter(self.db_filter, *self.db_parms)
+            if self.db_orderdirection == 1:
+                ot = adb.ORDER_DESCENDING
+            else:
+                ot = adb.ORDER_ASCENDING
+            n = self.GetOrderNumber()
+            db.ClearOrders()
+            db._info.ragexpr = '1'
+            db._info.ragprint = None
+            for of in self.db_ordercolumns[n][1]:
+                db.AddOrder(of, ot)
+            if db.Retrieve():
+                def GetMultiEticTable(rptdef, _rpt):
+                    rows = cols = 1
+                    if '(' in rptdef:
+                        x = rptdef[rptdef.rindex('(')+1:]
+                        if x.endswith(')'):
+                            x = x[:-1]
+                        if 'x' in x:
+                            rows, cols = map(int,x.split('x'))
+                    row0 = _rpt.GetLabelOffsetRow()
+                    col0 = _rpt.GetLabelOffsetCol()
+                    me = adb.dbtable.MultiEticList(db)
+                    wait = aw.awu.WaitDialog(self, message="Costruzione etichette in corso.")
+                    try:
+                        t = me.GetPrintTable(rptdef, rows, cols, row0, col0)
+                    finally:
+                        wait.Destroy()
+                    return t
+                rpt.ReportLabels(self, db, rptname, dbfunc=GetMultiEticTable)
+            else:
+                MsgDialog(self, repr(db.GetError()))
+        event.Skip()
     
     def GetSearchResultsGrid(self, parent):
         grid = SearchResultsGrid(parent, ID_SEARCHGRID, 

@@ -3253,7 +3253,7 @@ class SplittedTable(DbMem):
         for r, row in enumerate(dbt):
             try:
                 q = int(getattr(dbt, qtacol))
-            except TypeError:
+            except:
                 if qtadefault is not None:
                     q = qtadefault
                 else:
@@ -3273,3 +3273,91 @@ class SplittedTable(DbMem):
                 self._info.rs.append(newrow)
         self._info.recordCount = len(self._info.rs)
         self.MoveFirst()
+
+
+# ------------------------------------------------------------------------------
+
+
+class SplittedMultiEticTable(DbMem):
+    
+    def __init__(self, dbt, qtacol, colonne=1, func=None, qtadefault=None):
+        assert isinstance(dbt, DbTable)
+        dbs = dbt._GetITables()
+        fields = dbt._MakeSQL_Fields(dbs).replace(' ', '').replace('.','_').split(',')
+        mycols = []
+        for n in range(colonne):
+            for c in fields:
+                mycols.append('%s_%d' % (c, n))
+        DbMem.__init__(self, ','.join(mycols))
+        self._info.colonne = colonne
+        self._info.currentcol = 0
+        self._info.recordoffset = 0
+        rs = dbt.GetRecordset()
+        nc = 0
+        newrow = []
+        for r, row in enumerate(dbt):
+            try:
+                q = int(getattr(dbt, qtacol))
+            except:
+                if qtadefault is not None:
+                    q = qtadefault
+                else:
+                    q = 0
+            for c in range(q):
+                newrow += copy.deepcopy(rs[r])
+                nc += 1
+                if nc >= colonne:
+                    self._info.rs.append(newrow)
+                    newrow = []
+                    nc = 0
+            if func is not None:
+                func(r)
+        if len(newrow)>0:
+            if nc>0:
+                newrow += (None,)*(len(mycols)*(colonne-nc))
+                self._info.rs.append(newrow)
+        self._info.recordCount = len(self._info.rs)
+        self.MoveFirst()
+
+
+# ------------------------------------------------------------------------------
+
+
+class MultiEticList(DbMem):
+    
+    def __init__(self, dbEtic, colonne=1):
+        dbs = dbEtic._GetITables()
+        fields = dbEtic._MakeSQL_Fields(dbs).replace(' ', '').replace('.','_').split(',')
+        DbMem.__init__(self, ','.join(fields), 'id')
+        self._info.dbetic = dbEtic
+        self._info.colonne = colonne
+    
+#    def __setattr__(self, name, val, **kw):
+#        adb.DbMem.__setattr__(self, name, val, **kw)
+#        if name == 'id' and hasattr(self._info, 'dbetic'):
+#            p = self._info.dbetic
+#            if p.Get(val):
+#                rs = self.GetRecordset()
+#                for col in p.GetAllColumnsNames():
+#                    if not col in ('id', 'qtaetic'):
+#                        setattr(self, col, getattr(p, col))
+#    
+    def GetPrintTable(self, rptdef, rows, cols, row0, col0,
+                      startFunc=None, progrFunc=None, endFunc=None):
+        rsp = copy.deepcopy(self.GetRecordset())
+        self._info.colonne = cols
+        if callable(startFunc):
+            startFunc(self)
+        pt = None
+        try:
+            if row0>1 or col0>1:
+                rs = [None]*len(rsp[0])
+                rs = [rs]*(cols*(row0-1)+col0-1)
+                self.SetRecordset(rs+rsp)
+            pt = SplittedMultiEticTable(self._info.dbetic, 'qtaetic', self._info.colonne, 
+                                        progrFunc, qtadefault=1)
+        finally:
+            if callable(endFunc):
+                endFunc(self)
+        self.SetRecordset(rsp)
+        return pt

@@ -29,6 +29,11 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.50', dt.Date(2012,12,17), (
+         ("BET1142",
+         """Introdotto aggancio a stampa etichette su gestioni anagrafiche."""),
+        ),),
+    
     ('1.4.49', dt.Date(2012,11,19), (
          ("BUG1124",
          """Corretto bug in scadenzario di gruppo a seguito implementazione
