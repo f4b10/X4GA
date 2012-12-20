@@ -119,6 +119,10 @@ class SearchResultsGrid(dbglib.DbGridColoriAlternati):
         fields = fields.replace(' ', '')
         self.db = adb.DbMem(fields=fields)
         
+        if 'status_hidesearch' in self.db.GetFieldNames():
+            col = self.db._GetFieldIndex('status_hidesearch')
+            self.AddConditionalColor(col, 1, fg='yellow', bg='burlywood')
+        
         cols = self.GetDbColumns()
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]

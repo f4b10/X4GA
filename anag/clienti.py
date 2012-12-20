@@ -298,6 +298,8 @@ class ClientiPanel(pdcrel._CliForPanel):
                bt.TABNAME_PDC,
            )
         
+        self._sqlrelcol += ', status.hidesearch'
+        
         self._valfilters['agente'] =   ['agente.codice',    None, None]
         self._valfilters['zona'] =     ['zona.codice',      None, None]
         self._valfilters['stato'] =    ['stato.codice',     None, None]

@@ -749,6 +749,7 @@ class ProdPanel(ga.AnagPanel):
         self._sqlrelcol += ', tipart.id, tipart.codice, tipart.descriz'
         self._sqlrelcol += ', marart.id, marart.codice, marart.descriz'
         self._sqlrelcol += ', pdc.id, pdc.codice, pdc.descriz'
+        self._sqlrelcol += ', status.hidesearch'
         
         self._sqlrelfrm =\
             " LEFT JOIN %s AS tipart ON %s.id_tipart=tipart.id"\

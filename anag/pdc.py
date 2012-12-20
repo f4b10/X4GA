@@ -126,6 +126,7 @@ class PdcPanel(ga.AnagPanel, _PdcRangeCode):
         self._sqlrelcol += ", bilcon.id, bilcon.codice, bilcon.descriz"
         self._sqlrelcol += ", tipana.id, tipana.codice, tipana.descriz"
         self._sqlrelcol += ", bilcee.id, bilcee.codice, bilcee.descriz, bilcee.sezione, bilcee.voce, bilcee.capitolo, bilcee.dettaglio, bilcee.subdett"
+        self._sqlrelcol += ', status.hidesearch'
         
         self._sqlrelfrm =\
             " LEFT JOIN %s AS bilmas ON pdc.id_bilmas=bilmas.id"\

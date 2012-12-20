@@ -1654,13 +1654,21 @@ class DbGrid2Colori(DbGridColored):
 
 
 class DbGridColoriAlternati(DbGrid2Colori):
+    
+    cond_color = None
+    def AddConditionalColor(self, testcol, value, fg, bg):
+        if not testcol in self.cond_color:
+            self.cond_color[testcol] = []
+        self.cond_color[testcol].append([value, fg, bg])
+    
     def __init__(self, *args, **kwargs):
         DbGrid2Colori.__init__(self, *args, **kwargs)
         self._getattr_keys = {}
         self._getattr_index = 0
         self._getattr_column = None
         self.SetRatioFactor(2)
-    
+        self.cond_color = {}
+        
     def SetColorsByColumn(self, column):
         self._getattr_column = column
     
@@ -1687,6 +1695,16 @@ class DbGridColoriAlternati(DbGrid2Colori):
         fg, bg = self._colors[n]
         attr.SetTextColour(fg)
         attr.SetBackgroundColour(bg)
+        
+        if self.cond_color:
+            rs = self.GetTable().data
+            if 0 <= row < len(rs):
+                for testcol in self.cond_color:
+                    value = rs[row][testcol]
+                    for testvalue, fg, bg in self.cond_color[testcol]:
+                        if value == testvalue:
+                            attr.SetTextColour(fg)
+                            attr.SetBackgroundColour(bg)
         
         attr.SetReadOnly()
         

@@ -75,6 +75,8 @@ class FornitPanel(pdcrel._CliForPanel):
                bt.TABNAME_PDC,
            )
         
+        self._sqlrelcol += ', status.hidesearch'
+        
         self._valfilters['zona'] =     ['zona.codice',      None, None]
         self._valfilters['stato'] =    ['stato.codice',     None, None]
         self._valfilters['categ'] =    ['categ.codice',     None, None]
