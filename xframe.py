@@ -487,7 +487,7 @@ class XFrame(aw.Frame):
             (self.OnStatFatCatArt,             ID_STATFATCATART),
             (self.OnStatValCosAcq,             ID_STATCOSACQ),
             (self.OnStatValPreApp,             ID_STATPREAPP),
-            #(self.OnStatFatAge,                ID_STATFATAGE),
+            (self.OnStatReddVend,              ID_STATREDDVEND),
             
             #setup
             (self.OnCfgLicense,                ID_CFGLICENSE),
@@ -1555,6 +1555,10 @@ class XFrame(aw.Frame):
     def OnStatValPreApp(self, event):
         from magazz.stat.valpreapp import ValutaPrezziFrame
         self.LaunchFrame(ValutaPrezziFrame)
+    
+    def OnStatReddVend(self, event):
+        from magazz.stat.reddvend import ReddVendFrame
+        self.LaunchFrame(ReddVendFrame)
     
     def OnPdcIntMagCli(self, event):
         from contab.pdcint import ClientiInterrFrame

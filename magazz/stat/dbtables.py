@@ -338,3 +338,13 @@ class MovimentiPrezzi(dbm.Movim):
         dbm.Movim.__init__(self, *args, **kwargs)
         self.AddField('mov.importo/IF(mov.qta IS NULL or mov.qta=0,1,mov.qta)', 'presco')
         self.Reset()
+
+
+# ------------------------------------------------------------------------------
+
+
+class ReddVend(adb.DbTable):
+    
+    def __init__(self):
+        adb.DbTable.__init__(self, 'stat_reddvend', 'rv', primaryKey='doc_id')
+        self.Reset()

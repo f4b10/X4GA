@@ -29,6 +29,11 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.52', dt.Date(2012,12,28), (
+         ("BET1144",
+         """Aggiunta consultazione statistica redditività vendite"""),
+        ),),
+    
     ('1.4.51', dt.Date(2012,12,20), (
          ("BET1143",
          """Colorazione righe in status nascosto su prodotti, clienti, fornitori, 

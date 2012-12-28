@@ -936,6 +936,34 @@ UPDATE `cfgsetup`
                 db.Execute(r"""ALTER TABLE `x4`.`cfgmail` 
                                     ADD COLUMN `authtls` TINYINT(1) AFTER `authpswd`""")
         
+#            if oldver<'1.4.52' and ok:
+            if ok:
+                
+                #crea vista per analisi utile, ricarica e marginalità su vendite
+                db.Execute(r"""
+CREATE VIEW stat_reddvend AS
+SELECT  tpd.codice 'causale_cod',
+        tpd.descriz 'causale',
+        doc.numdoc 'doc_numero',
+        doc.datdoc 'doc_data',
+        pdc.codice 'cliente_cod',
+        pdc.descriz 'cliente',
+        doc.totimponib*IF(tpd.clasdoc="vencli",1,-1) 'ricavo',
+        SUM(mov.costot)*IF(tpd.clasdoc="vencli",1,-1) 'costo',
+        (doc.totimponib-IF(SUM(mov.costot) IS NULL, 0, SUM(mov.costot)))*IF(tpd.clasdoc="vencli",1,-1) 'utile',
+        IF(SUM(mov.costot) IS NULL, 100, 100*(doc.totimponib-SUM(mov.costot))/SUM(mov.costot))*IF(tpd.clasdoc="vencli",1,-1) 'ricarica',
+        IF(SUM(mov.costot) IS NULL, 100, 100*(doc.totimponib-SUM(mov.costot))/doc.totimponib)*IF(tpd.clasdoc="vencli",1,-1) 'margine',
+        YEAR(doc.datdoc) 'anno',
+        MONTH(doc.datdoc) 'mese',
+        tpd.id 'causale_id',
+        doc.id 'doc_id',
+        pdc.id 'cliente_id'
+FROM movmag_h doc
+JOIN cfgmagdoc tpd ON tpd.id=doc.id_tipdoc
+JOIN movmag_b mov ON mov.id_doc=doc.id
+JOIN pdc ON pdc.id=doc.id_pdc
+WHERE tpd.clasdoc IN ("vencli", "rescli") AND (doc.f_ann IS NULL OR doc.f_ann<>1)
+GROUP BY doc.id""")
         if ok:
             self.PerformExternalAdaptations()
         
