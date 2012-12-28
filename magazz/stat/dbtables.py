@@ -206,7 +206,7 @@ class _FatturatoVendite(adb.DbTable):
     def ClearBaseFilters(self):
         adb.DbTable.ClearBaseFilters(self)
         self.AddBaseFilter('tipmov.%s IN (1,-1)' % self._statcol)
-        self.AddBaseFilter('(doc.f_ann IS NULL OR doc.f_ann<>1 AND doc.f_acq IS NULL OR doc.f_acq<>1) AND (mov.f_ann IS NULL OR mov.f_ann<>1)')
+        self.AddBaseFilter('(doc.f_ann IS NULL OR doc.f_ann<>1) AND (doc.f_acq IS NULL OR doc.f_acq<>1) AND (mov.f_ann IS NULL OR mov.f_ann<>1)')
 
 
 # ------------------------------------------------------------------------------
