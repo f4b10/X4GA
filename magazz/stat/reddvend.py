@@ -107,8 +107,14 @@ class ReddVendPanel(wx.Panel):
             t['totric'] = totric = totric or 0
             t['totcos'] = totcos = totcos or 0
             t['totuti'] = totric-totcos
-            t['prcmar'] = prcmar = 100*(totric-totcos)/totric
-            t['prcric'] = prcric = 100*(totric-totcos)/totcos
+            if totric:
+                t['prcmar'] = prcmar = 100*(totric-totcos)/totric
+            else:
+                t['prcmar'] = prcmar = 100
+            if totcos:
+                t['prcric'] = prcric = 100*(totric-totcos)/totcos
+            else:
+                t['prcric'] = prcric = 100
             cn('totricavo').SetValue(totric)
             cn('totcosto').SetValue(totcos)
             cn('totutile').SetValue(totric-totcos)
