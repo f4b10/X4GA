@@ -3450,6 +3450,90 @@ def InteressiPartiteScaduteFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
+ID_AGENTE = 10230
+ID_CLIFID_ALL = 10231
+ID_CLIFID_SCO = 10232
+ID_CLIFID_PCF = 10233
+ID_CLIFID_ESP = 10234
+ID_CLIFID_GGS = 10235
+ID_PANGRIDFID = 10236
+
+def SitFidiClientiFunc( parent, call_fit = True, set_sizer = True ):
+    item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    
+    item1 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    
+    item3 = wx.StaticBox( parent, -1, "Selezioni" )
+    item2 = wx.StaticBoxSizer( item3, wx.VERTICAL )
+    
+    item4 = wx.StaticText( parent, ID_TEXT, "Agente:", wx.DefaultPosition, [250,-1], 0 )
+    item2.Add( item4, 0, wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP, 5 )
+
+    item5 = alib.LinkTableAgente(parent, ID_AGENTE, 'id_agente')
+    item2.Add( item5, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+
+    item1.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item7 = wx.StaticBox( parent, -1, "Estrai i clienti affidati:" )
+    item6 = wx.StaticBoxSizer( item7, wx.VERTICAL )
+    
+    item8 = wx.CheckBox( parent, ID_CLIFID_ALL, "Tutti", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item8.SetValue( True )
+    item8.SetName( "clifid_all" )
+    item6.Add( item8, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+
+    item9 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    
+    item10 = wx.CheckBox( parent, ID_CLIFID_SCO, "In esubero dello scoperto attuale", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item10.SetValue( True )
+    item10.SetName( "clifid_sco" )
+    item9.Add( item10, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+
+    item11 = wx.CheckBox( parent, ID_CLIFID_PCF, "In esubero del numero di scadenze aperte", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item11.SetValue( True )
+    item11.SetName( "clifid_pcf" )
+    item9.Add( item11, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+
+    item12 = wx.CheckBox( parent, ID_CLIFID_ESP, "In esubero dell'esposizione complessiva", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item12.SetValue( True )
+    item12.SetName( "clifid_esp" )
+    item9.Add( item12, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+
+    item13 = wx.CheckBox( parent, ID_CLIFID_GGS, "In esubero del numero massimo di giorni di ritardo", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item13.SetValue( True )
+    item13.SetName( "clifid_ggs" )
+    item9.Add( item13, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+
+    item6.Add( item9, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item1.Add( item6, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
+
+    item14 = wx.Button( parent, ID_BUTUPDATE, "Aggiorna", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item14.SetDefault()
+    item14.SetName( "butupdate" )
+    item1.Add( item14, 0, wx.ALIGN_BOTTOM|wx.ALIGN_CENTER_HORIZONTAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
+
+    item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item15 = wx.StaticText( parent, ID_TEXT, "Affidamenti clienti:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item15.SetForegroundColour( wx.BLUE )
+    item0.Add( item15, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+
+    item16 = wx.Panel( parent, ID_PANGRIDFID, wx.DefaultPosition, [900,500], wx.SUNKEN_BORDER )
+    item16.SetName( "pangridfid" )
+    item0.Add( item16, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item0.AddGrowableCol( 0 )
+
+    item0.AddGrowableRow( 2 )
+
+    if set_sizer == True:
+        parent.SetSizer( item0 )
+        if call_fit == True:
+            item0.SetSizeHints( parent )
+    
+    return item0
+
 # Menubar functions
 
 # Toolbar functions

@@ -441,6 +441,7 @@ class XFrame(aw.Frame):
             (self.OnScadGlobalEffettiInsoluti, ID_SCAD_GLOBAL_EFFETTIINSOLUTI),
             (self.OnQuadPcfCont,               ID_SCAD_CTRQUAD),
             (self.OnCalcIntPcf,                ID_SCAD_CALCINT),
+            (self.OnSituazioneFidiClienti,     ID_SCAD_SITFIDO),
             (self.OnCtrCassa,                  ID_CTR_CASSA),
             (self.OnIntRegCon,                 ID_INTREGCON),
             (self.OnEmiEffetti,                ID_EMIEFF),
@@ -574,6 +575,13 @@ class XFrame(aw.Frame):
         #rimozione voce x gestione acconti se non gestito
         if bt.MAGGESACC != 1:
             cid = ID_INTMAGACC
+            item = menubar.FindItemById(cid)
+            if item:
+                item.GetMenu().Remove(cid)
+        
+        #rimozione voce x situazione fidi clienti
+        if not bt.GESFIDICLI:
+            cid = ID_SCAD_SITFIDO
             item = menubar.FindItemById(cid)
             if item:
                 item.GetMenu().Remove(cid)
@@ -1254,6 +1262,10 @@ class XFrame(aw.Frame):
     def OnCalcIntPcf(self, event):
         from contab.calcintpcf import CalcIntPcfFrame
         self.LaunchFrame(CalcIntPcfFrame)
+    
+    def OnSituazioneFidiClienti(self, event):
+        from contab.sitfidicli import SitFidiClientiFrame
+        self.LaunchFrame(SitFidiClientiFrame)
     
     def OnScadGlobalIncassi(self, event):
         from contab.scadglobal import ScadGlobalIncassiFrame

@@ -2773,6 +2773,34 @@ class CtrFidoCliente(adb.DbTable):
         return out
 
 
+class SituazioneFidiClienti(adb.DbTable):
+    
+    def __init__(self):
+        adb.DbTable.__init__(self, 'pdc', fields='id,codice,descriz')
+        self.AddJoin('clienti', 'anag', idLeft='id', idRight='id')
+        self.AddField("0.0", "fido_pcfatt")
+        self.AddField("0.0", "fido_ggsatt")
+        self.AddField("0.0", "fido_scoatt")
+        self.AddField("0.0", "fido_espatt")
+        self.AddOrder("pdc.descriz")
+        self.AddBaseFilter("anag.fido_maximp>0 OR anag.fido_maxesp>0 OR anag.fido_maxpcf>0 OR anag.fido_maxggs>0")
+        self.Reset()
+    
+    def Retrieve(self, *args, **kwargs):
+        progr_func = kwargs.pop('progr_func', None)
+        out = adb.DbTable.Retrieve(self, *args, **kwargs)
+        f = CtrFidoCliente()
+        for _ in self:
+            f.CheckFido(self.id)
+            self.fido_pcfatt = f._pap
+            self.fido_ggsatt = f._ggs
+            self.fido_scoatt = f._sco
+            self.fido_espatt = f._esp
+            if callable(progr_func):
+                progr_func()
+        return out
+
+
 # ------------------------------------------------------------------------------
 
 
