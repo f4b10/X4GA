@@ -38,8 +38,10 @@ ID_TEXT = 15005
 ID_LASTPRTNUM = 15006
 ID_LASTPRTDAT = 15007
 ID_TEXTCTRL = 15008
-ID_INTANNO = 15009
-ID_INTPAG = 15010
+ID_NUMDOCANN = 15009
+ID_NUMDOCTEST = 15010
+ID_INTANNO = 15011
+ID_INTPAG = 15012
 
 def RegIvaCardFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -107,35 +109,65 @@ def RegIvaCardFunc( parent, call_fit = True, set_sizer = True ):
 
     item0.Add( item13, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item21 = wx.StaticBox( parent, -1, "Stampa registro" )
+    item21 = wx.StaticBox( parent, -1, "Definizione del numero documento in stampa:" )
     item20 = wx.StaticBoxSizer( item21, wx.VERTICAL )
     
-    item22 = wx.FlexGridSizer( 0, 3, 0, 0 )
+    item22 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
-    item23 = wx.StaticText( parent, ID_TEXT, "Intestazione registro", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item22.Add( item23, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+    item23 = wx.StaticText( parent, ID_TEXT, "Aggiungi sezione: /", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item22.Add( item23, 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
 
-    item24 = wx.StaticText( parent, ID_TEXT, "Anno", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item22.Add( item24, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP, 5 )
+    item24 = TextCtrl( parent, ID_TEXTCTRL, "", wx.DefaultPosition, [50,-1], 0 )
+    item24.SetName( "numdocsez" )
+    item22.Add( item24, 0, wx.ALIGN_CENTER|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
 
-    item25 = wx.StaticText( parent, ID_TEXT, "Pag.", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item22.Add( item25, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP, 5 )
+    item25 = UnoZeroCheckBox( parent, ID_NUMDOCANN, "Aggiungi /ANNO", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item25.SetName( "numdocann" )
+    item22.Add( item25, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item26 = TextCtrl( parent, ID_TEXTCTRL, "", wx.DefaultPosition, [400,-1], 0 )
-    item26.SetName( "intestaz" )
-    item22.Add( item26, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item26 = wx.StaticText( parent, ID_TEXT, "Esempio:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item22.Add( item26, 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
 
-    item27 = NumCtrl( parent, integerWidth=4, allowNegative=False, groupDigits=False); item27.SetName("intanno")
-    item22.Add( item27, 0, wx.ALIGN_CENTER|wx.RIGHT|wx.BOTTOM, 5 )
+    item27 = wx.StaticText( parent, ID_NUMDOCTEST, "-", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item27.SetFont( wx.Font( 10, wx.SCRIPT, wx.NORMAL, wx.BOLD ) )
+    item27.SetName( "_numdoctest" )
+    item22.Add( item27, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
-    item28 = NumCtrl( parent, integerWidth=4, allowNegative=False, groupDigits=True); item28.SetName("intpag")
-    item22.Add( item28, 0, wx.ALIGN_CENTER|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item22.AddGrowableCol( 0 )
+    item22.AddGrowableCol( 2 )
 
     item20.Add( item22, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item0.Add( item20, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item29 = wx.StaticBox( parent, -1, "Stampa registro" )
+    item28 = wx.StaticBoxSizer( item29, wx.VERTICAL )
+    
+    item30 = wx.FlexGridSizer( 0, 3, 0, 0 )
+    
+    item31 = wx.StaticText( parent, ID_TEXT, "Intestazione registro", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item30.Add( item31, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+
+    item32 = wx.StaticText( parent, ID_TEXT, "Anno", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item30.Add( item32, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP, 5 )
+
+    item33 = wx.StaticText( parent, ID_TEXT, "Pag.", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item30.Add( item33, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP, 5 )
+
+    item34 = TextCtrl( parent, ID_TEXTCTRL, "", wx.DefaultPosition, [400,-1], 0 )
+    item34.SetName( "intestaz" )
+    item30.Add( item34, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item35 = NumCtrl( parent, integerWidth=4, allowNegative=False, groupDigits=False); item35.SetName("intanno")
+    item30.Add( item35, 0, wx.ALIGN_CENTER|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item36 = NumCtrl( parent, integerWidth=4, allowNegative=False, groupDigits=True); item36.SetName("intpag")
+    item30.Add( item36, 0, wx.ALIGN_CENTER|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item30.AddGrowableCol( 0 )
+
+    item28.Add( item30, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item0.Add( item28, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item0.AddGrowableCol( 0 )
 

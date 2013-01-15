@@ -53,7 +53,25 @@ class _ScadWorker(adb.DbTable):
 # ------------------------------------------------------------------------------
 
 
-class DbRegCon(adb.DbTable):
+class _ExtendedNumDoc_mixin_:
+    
+    def get_regiva(self):
+        raise Exception, 'Classe non istanziabile'
+    
+    def get_numdoc_print(self):
+        numdoc = '%s' % self.numdoc
+        if self.datdoc:
+            if self.datdoc.year >= 2013:
+                regiva = self.get_regiva()
+                if regiva.numdocsez:
+                    numdoc += ('/%s' % regiva.numdocsez)
+                if regiva.numdocann:
+                    numdoc += ('/%s' % self.datdoc.year)
+        return numdoc
+
+
+class DbRegCon(adb.DbTable,
+               _ExtendedNumDoc_mixin_):
     """
     DbTable registrazioni contabili.
     Struttura:
@@ -72,6 +90,10 @@ class DbRegCon(adb.DbTable):
        |---->> scad: scadenze associate alla registrazione
                   +--> pcf: partita associata alla scadenza
     """
+    
+    def get_regiva(self):
+        return self.regiva
+    
     def __init__(self, writable=True):
         
         adb.DbTable.__init__(self,\
@@ -1516,7 +1538,8 @@ class PdcSaldiGiornalieri(_PdcMovimMixin):
 # ------------------------------------------------------------------------------
 
 
-class RegIva(adb.DbTable):
+class RegIva(adb.DbTable,
+             _ExtendedNumDoc_mixin_):
     """
     Registro IVA.
     reg:contab_h
@@ -1544,6 +1567,9 @@ class RegIva(adb.DbTable):
     tipana = None
     segnop = None
     segnom = None
+    
+    def get_regiva(self):
+        return self.rei
     
     def __init__(self, rivid, *args, **kwargs):
         """

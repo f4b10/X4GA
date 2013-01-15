@@ -392,6 +392,11 @@ class DocMag(adb.DbTable):
         
         self.Get(-1)
     
+    def get_numdoc_print(self):
+        if self.regcon.id:
+            return self.regcon.get_numdoc_print()
+        return self.numdoc
+    
     def CalcolaIVA(self, *args, **kwargs):
         return self.dbiva.CalcolaIVA(*args, **kwargs)
     

@@ -29,6 +29,12 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.55', None, (
+         ("BET1146",
+         """Aggiunti parametri di configurazione per definizione numero documento
+         su registri iva: possibilità di inclusione di "/sezione" e "/anno"."""),
+        ),),
+    
     ('1.4.54', None, (
          ("BET1145",
          """Aggiunta consultazione affidamenti clienti"""),

@@ -85,12 +85,12 @@
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[RS.numiva]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="153"
+						x="143"
 						y="0"
-						width="40"
+						width="50"
 						height="8"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -103,7 +103,7 @@
 					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[RS.numdoc]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.get_numdoc_print()]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -150,7 +150,7 @@
 						mode="Transparent"
 						x="71"
 						y="0"
-						width="80"
+						width="70"
 						height="8"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -331,7 +331,7 @@
 						mode="Transparent"
 						x="71"
 						y="3"
-						width="80"
+						width="70"
 						height="8"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -349,9 +349,9 @@
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="153"
+						x="143"
 						y="3"
-						width="40"
+						width="50"
 						height="8"
 						forecolor="#000000"
 						backcolor="#FFFFFF"

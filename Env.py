@@ -1865,6 +1865,8 @@ class Azienda(object):
                 [ "noprot",     "TINYINT",  1, None, "Flag inibizione numero protocollo", None ], 
                 [ "rieponly",   "TINYINT",  1, None, "Flag registro riepilogativo", None ], 
                 [ "stacosric",  "TINYINT",  1, None, "Flag stampa costi/ricavi in semplificata", None ], 
+                [ "numdocsez",  "CHAR",     4, None, "Sezione per stampa sezione su numero documento", None ], 
+                [ "numdocann",  "TINYINT",  1, None, "Flag per stampa anno su numero documento", None ], 
             ]
             
             cls.regiva_indexes = cls.std_indexes

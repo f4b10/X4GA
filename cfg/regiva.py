@@ -51,7 +51,8 @@ class RegIvaSearchResultsGrid(ga.SearchResultsGrid):
         return (( 40, (cn('regiva_codice'),     "Cod.",       _STR, True)),
                 (240, (cn('regiva_descriz'),    "Mastro",     _STR, True)),
                 ( 40, (cn('regiva_tipo'),       "Tipo",       _STR, True)),
-                ( 50, (cn('regiva_rieponly'),   "Riep.",      _CHK, True)),
+                ( 50, (cn('regiva_numdocsez'),  "/sez",       _STR, True)),
+                ( 50, (cn('regiva_rieponly'),   "/anno",      _CHK, True)),
                 (110, (cn('regiva_lastprtdat'), "Ult.Stampa", _DAT, True)),
                 ( 80, (cn('regiva_lastprtnum'), "Ult.Prot.",  _NUM, True)),
                 ( 60, (cn('regiva_intanno'),    "Anno St.",   _STR, True)),
@@ -82,7 +83,24 @@ class RegIvaPanel(ga.AnagPanel):
                                         "C"]) #riepilogativo
         cn("rieponly").SetDataLink(values=(1,0))
         self.Bind(wx.EVT_RADIOBOX, self.OnRiepChanged, cn('rieponly'))
+        self.Bind(wx.EVT_TEXT, self.OnNumDocTest, cn('numdocsez'))
+        self.Bind(wx.EVT_CHECKBOX, self.OnNumDocTest, cn('numdocann'))
         return p
+    
+    def OnNumDocTest(self, event):
+        self.NumDocTest()
+        event.Skip()
+    
+    def NumDocTest(self):
+        cn = self.FindWindowByName
+        test = '12345'
+        sez = cn('numdocsez').GetValue()
+        if sez:
+            test += ('/%s' % sez)
+        if cn('numdocann').IsChecked():
+            test += ('/%s' % Azienda.Login.dataElab.year)
+        cn('_numdoctest').SetLabel(test)
+        self.Layout()
     
     def OnRiepChanged(self, event):
         self.TestRiepilogat()
@@ -97,6 +115,7 @@ class RegIvaPanel(ga.AnagPanel):
     def UpdateDataControls(self, *args, **kwargs):
         ga.AnagPanel.UpdateDataControls(self, *args, **kwargs)
         self.TestRiepilogat()
+        self.NumDocTest()
     
     def GetSearchResultsGrid(self, parent):
         grid = RegIvaSearchResultsGrid(parent, ga.ID_SEARCHGRID, 
