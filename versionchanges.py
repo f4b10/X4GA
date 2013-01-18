@@ -38,6 +38,8 @@ history = (
          ("BET1146",
          """Aggiunti parametri di configurazione per definizione numero documento
          su registri iva: possibilità di inclusione di "/sezione" e "/anno"."""),
+         ("BET1147",
+         """Aggiunta colonna mod.pagamento su griglia situazione fidi clienti"""),
         ),),
     
     ('1.4.54', None, (
