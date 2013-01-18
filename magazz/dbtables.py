@@ -2782,7 +2782,8 @@ class SituazioneFidiClienti(adb.DbTable):
     
     def __init__(self):
         adb.DbTable.__init__(self, 'pdc', fields='id,codice,descriz')
-        self.AddJoin('clienti', 'anag', idLeft='id', idRight='id')
+        anag = self.AddJoin('clienti', 'anag', idLeft='id', idRight='id')
+        mpag = anag.AddJoin('modpag', idLeft='id_modpag', join=adb.JOIN_LEFT)
         self.AddField("0.0", "fido_pcfatt")
         self.AddField("0.0", "fido_ggsatt")
         self.AddField("0.0", "fido_scoatt")
