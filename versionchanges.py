@@ -29,6 +29,11 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.56', dt.Date(2013,1,18), (
+         ("BET1147",
+         """Aggiunta colonna mod.pagamento su griglia situazione fidi clienti"""),
+        ),),
+    
     ('1.4.55', None, (
          ("BET1146",
          """Aggiunti parametri di configurazione per definizione numero documento

@@ -39,6 +39,7 @@ class SitFidiClientiGrid(dbgrid.ADB_Grid):
         
         self.dbfid = fid = dbfid
         cli = fid.anag
+        mpa = cli.modpag
         
         dbgrid.ADB_Grid.__init__(self, parent, db_table=dbfid, can_edit=False, on_menu_select='row')
         
@@ -47,6 +48,8 @@ class SitFidiClientiGrid(dbgrid.ADB_Grid):
         N = self.TypeInteger(5)
         self.COL_CLICOD = AC(fid, 'codice', label='Cod.', col_width=50)
         self.COL_CLIDES = AC(fid, 'descriz', label='Cliente', col_width=200, is_fittable=True)
+        self.COL_CLICOD = AC(mpa, 'codice', label='C.', col_width=50)
+        self.COL_CLIDES = AC(mpa, 'descriz', label='Mod.Pag.', col_width=120)
         self.COL_SCOATT = AC(fid, 'fido_scoatt', label='Scoperto', col_type=I)
         self.COL_SCOMAX = AC(cli, 'fido_maximp', label='Scop.MAX', col_type=I)
         self.COL_ESPATT = AC(fid, 'fido_espatt', label='Esposiz.', col_type=I)
