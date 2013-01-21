@@ -580,7 +580,7 @@ class XFrame(aw.Frame):
                 item.GetMenu().Remove(cid)
         
         #rimozione voce x situazione fidi clienti
-        if not bt.GESFIDICLI:
+        if bt.GESFIDICLI != '1':
             cid = ID_SCAD_SITFIDO
             item = menubar.FindItemById(cid)
             if item:
