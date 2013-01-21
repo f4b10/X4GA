@@ -29,6 +29,13 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.57', dt.Date(2013,1,21), (
+         ("BET1148",
+         """Aggiunta stampa in affidamenti clienti e possibilità di apertura della
+         scheda cliente e di richiamo della consultazione dettagliata del fido del
+         cliente selezionato."""),
+        ),),
+    
     ('1.4.56', dt.Date(2013,1,18), (
          ("BET1147",
          """Aggiunta colonna mod.pagamento su griglia situazione fidi clienti"""),
