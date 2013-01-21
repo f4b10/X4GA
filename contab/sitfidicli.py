@@ -34,6 +34,9 @@ bt = Env.Azienda.BaseTab
 
 import report as rpt
 
+import contab.pdcint as pdcint
+from magazz.dataentry import DisplayFidoDialog
+
 
 class SitFidiClientiGrid(dbgrid.ADB_Grid):
     
@@ -63,11 +66,40 @@ class SitFidiClientiGrid(dbgrid.ADB_Grid):
         self.COL_CLI_ID = AC(fid, 'id', label='#pdc', col_width=1)
         
         self.CreateGrid()
-        
-#        def gfi(tab, col):
-#            return tab._GetFieldIndex(col, inline=True)
-#        self.AddTotalsRow(self.COL_DESCLI, 'Totali', (gfi(pcf, 'saldo'),
-#                                                      gfi(pcf, 'interessi'),))
+    
+    def OnContextMenu(self, event):
+        self.ResetContextMenu()
+        row = event.GetRow()
+        def on_scheda_cliente(event):
+            dlg = None
+            self.dbfid.MoveRow(row)
+            wx.BeginBusyCursor()
+            try:
+                dlg = pdcint.ClientiInterrDialog(self, onecodeonly=self.dbfid.id)
+                dlg.OneCardOnly(self.dbfid.id)
+                dlg.DisplayTab('mastro')
+            finally:
+                wx.EndBusyCursor()
+            if dlg:
+                dlg.ShowModal()
+                dlg.Destroy()
+        self.AppendContextMenuVoice("Apri scheda cliente", on_scheda_cliente)
+        def on_apri_fido(event):
+            dlg = None
+            self.dbfid.MoveRow(row)
+            wx.BeginBusyCursor()
+            try:
+                f = dbm.CtrFidoCliente()
+                f.CheckFido(self.dbfid.id)
+                dlg = DisplayFidoDialog(self)
+                dlg.UpdateValues(f)
+            finally:
+                wx.EndBusyCursor()
+            if dlg:
+                dlg.ShowModal()
+                dlg.Destroy()
+        self.AppendContextMenuVoice("Dettaglio affidamento", on_apri_fido)
+        return dbgrid.ADB_Grid.OnContextMenu(self, event)
 
 
 class SitFidiClientiPanel(aw.Panel):
