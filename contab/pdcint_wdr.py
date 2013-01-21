@@ -3519,9 +3519,13 @@ def SitFidiClientiFunc( parent, call_fit = True, set_sizer = True ):
     item15.SetForegroundColour( wx.BLUE )
     item0.Add( item15, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
 
-    item16 = wx.Panel( parent, ID_PANGRIDFID, wx.DefaultPosition, [900,500], wx.SUNKEN_BORDER )
+    item16 = wx.Panel( parent, ID_PANGRIDFID, wx.DefaultPosition, [900,400], wx.SUNKEN_BORDER )
     item16.SetName( "pangridfid" )
     item0.Add( item16, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item17 = wx.Button( parent, ID_BUTPRINT, "Stampa", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item17.SetName( "butprint" )
+    item0.Add( item17, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item0.AddGrowableCol( 0 )
 

@@ -32,6 +32,8 @@ import magazz.dbtables as dbm
 import Env
 bt = Env.Azienda.BaseTab
 
+import report as rpt
+
 
 class SitFidiClientiGrid(dbgrid.ADB_Grid):
     
@@ -78,7 +80,7 @@ class SitFidiClientiPanel(aw.Panel):
         self.gridfid = SitFidiClientiGrid(cn('pangridfid'), self.dbfid)
 #        self.UpdateData()
         self.Bind(wx.EVT_BUTTON, self.OnUpdateData, cn('butupdate'))
-#        self.Bind(wx.EVT_BUTTON, self.OnPrintData, cn('butprint'))
+        self.Bind(wx.EVT_BUTTON, self.OnPrintData, cn('butprint'))
     
     def OnUpdateData(self, event):
         self.UpdateData()
@@ -121,12 +123,19 @@ class SitFidiClientiPanel(aw.Panel):
             wx.EndBusyCursor()
             w.Destroy()
         self.gridfid.ChangeData(fid.GetRecordset())
+    
+    def OnPrintData(self, event):
+        self.PrintData()
+        event.Skip()
+    
+    def PrintData(self):
+        rpt.Report(self, self.dbfid, "Affidamenti clienti")
 
 
 class SitFidiClientiFrame(aw.Frame):
     
     def __init__(self, *args, **kwargs):
-        kwargs['title'] = 'Calcolo interessi partite scadute clienti'
+        kwargs['title'] = 'Affidamenti clienti'
         aw.Frame.__init__(self, *args, **kwargs)
         self.panel = SitFidiClientiPanel(self)
         self.AddSizedPanel(self.panel)
