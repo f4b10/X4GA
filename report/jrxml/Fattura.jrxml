@@ -107,7 +107,7 @@
 						mode="Opaque"
 						x="33"
 						y="209"
-						width="233"
+						width="253"
 						height="19"
 						forecolor="#FFFFFF"
 						backcolor="#F2F2F2"
@@ -243,7 +243,7 @@
 						mode="Transparent"
 						x="238"
 						y="208"
-						width="26"
+						width="46"
 						height="9"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -261,7 +261,7 @@
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="270"
+						x="290"
 						y="208"
 						width="21"
 						height="9"
@@ -1390,9 +1390,9 @@
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="295"
+						x="315"
 						y="208"
-						width="92"
+						width="72"
 						height="9"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -1561,7 +1561,7 @@
 						mode="Transparent"
 						x="238"
 						y="215"
-						width="26"
+						width="46"
 						height="12"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -1574,7 +1574,7 @@
 					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="10" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[RS.numdoc]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA["%s/%s" % (RS.numdoc, RS.datdoc.year)]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -1719,7 +1719,7 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="270"
+						x="290"
 						y="215"
 						width="21"
 						height="12"
@@ -1839,9 +1839,9 @@
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="295"
+						x="315"
 						y="215"
-						width="92"
+						width="72"
 						height="12"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
