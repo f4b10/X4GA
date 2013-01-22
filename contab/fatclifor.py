@@ -48,7 +48,7 @@ class FatturatoContabileClientiFornitGrid(dbglib.DbGridColoriAlternati):
     
     valwidth = 110
     
-    def __init__(self, parent, dbfat):
+    def __init__(self, parent, dbfat, detail=False):
         """
         Parametri:
         parent griglia  (wx.Panel)
@@ -62,28 +62,38 @@ class FatturatoContabileClientiFornitGrid(dbglib.DbGridColoriAlternati):
         
         _STR = gl.GRID_VALUE_STRING
         _CHK = gl.GRID_VALUE_BOOL+":1,0"
+        _DAT = gl.GRID_VALUE_DATETIME
         _VAL = bt.GetValIntMaskInfo()
-        
         def cn(col):
             return fat._GetFieldIndex(col, inline=True)
         
         w = self.valwidth
         
-        cols = (( 50, (cn('pdc_codice'),       "Cod.",           _STR, True)),
-                (240, (cn('pdc_descriz'),      "Cliente",        _STR, True)),
-                ( 40, (cn('anag_stato'),       "Stato",          _STR, True)),
-                (100, (cn('anag_piva'),        "P.IVA",          _STR, True)),
-                (130, (cn('anag_codfisc'),     "Cod.Fiscale",    _STR, True)),
-                ( 30, (cn('anag_statocee'),    "CEE",            _CHK, True)),
-                ( 30, (cn('anag_statobl'),     "SBL",            _CHK, True)),
-                ( 30, (cn('anag_anagbl'),      "ABL",            _CHK, True)),
-                (  w, (cn('total_operazioni'), "Tot.Operazioni", _VAL, True)),
-                (  w, (cn('total_imponibile'), "Imponibile",     _VAL, True)),
-                (  w, (cn('total_impostaiva'), "Imposta",        _VAL, True)),
-                (  w, (cn('total_nonimponib'), "Non Imponib.",   _VAL, True)),
-                (  w, (cn('total_esente_iva'), "Esente",         _VAL, True)),
-                (  w, (cn('total_fuoricampo'), "Fuori campo",    _VAL, True)),
-                (  1, (cn('pdc_id'),           "#pdc",           _STR, True)),)
+        cols = []
+        AC = cols.append
+        AC(( 50, (cn('pdc_codice'),       "Cod.",           _STR, True)))
+        AC((240, (cn('pdc_descriz'),      "Cliente",        _STR, True)))
+        AC(( 40, (cn('anag_stato'),       "Stato",          _STR, True)))
+        AC((100, (cn('anag_piva'),        "P.IVA",          _STR, True)))
+        AC((130, (cn('anag_codfisc'),     "Cod.Fiscale",    _STR, True)))
+        AC(( 30, (cn('anag_statocee'),    "CEE",            _CHK, True)))
+        AC(( 30, (cn('anag_statobl'),     "SBL",            _CHK, True)))
+        AC(( 30, (cn('anag_anagbl'),      "ABL",            _CHK, True)))
+        if detail:
+            AC(( 40, (cn('cau_codice'),   "Cod.",           _STR, True)))
+            AC((120, (cn('cau_descriz'),  "Causale",        _STR, True)))
+            AC(( 60, (cn('reg_numdoc'),   "Num.Doc.",       _STR, True)))
+            AC(( 80, (cn('reg_datdoc'),   "Data",           _DAT, True)))
+            AC(( 40, (cn('aliq_codice'),  "IVA",            _STR, True)))
+        AC((  w, (cn('total_operazioni'), "Tot.Operazioni", _VAL, True)))
+        AC((  w, (cn('total_imponibile'), "Imponibile",     _VAL, True)))
+        AC((  w, (cn('total_impostaiva'), "Imposta",        _VAL, True)))
+        AC((  w, (cn('total_nonimponib'), "Non Imponib.",   _VAL, True)))
+        AC((  w, (cn('total_esente_iva'), "Esente",         _VAL, True)))
+        AC((  w, (cn('total_fuoricampo'), "Fuori campo",    _VAL, True)))
+        if detail:
+            AC((120, (cn('aliq_descriz'), "Aliquota IVA",   _STR, True)))
+        AC((  1, (cn('pdc_id'),           "#pdc",           _STR, True)))
         
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
@@ -121,6 +131,7 @@ class FatturatoContabileClientiFornitPanel(aw.Panel):
     def __init__(self, *args, **kwargs):
         
         aw.Panel.__init__(self, *args, **kwargs)
+        self.detail = False
         wdr.FatturatoContabileClientiFornitFunc(self)
         cn = self.FindWindowByName
         self.dbfat = dbc.FatturatoContabileClienti() #cambia in base a radiobox acquisti/vendite
@@ -182,10 +193,11 @@ class FatturatoContabileClientiFornitPanel(aw.Panel):
         cn = self.FindWindowByName
         av, qa, d1, d2, ss, si, sc, sx, ct = map(lambda x: cn(x).GetValue(), 
                                                  'acqven qualianag datmin datmax id_stato stati_ita stati_cee stati_ext congr_tipana'.split())
+        self.detail = dr = cn('detail').IsChecked()
         if av == 'A':
-            fat = self.dbfat = dbc.FatturatoContabileFornitori()
+            fat = self.dbfat = dbc.FatturatoContabileFornitori(detail=dr)
         else:
-            fat = self.dbfat = dbc.FatturatoContabileClienti()
+            fat = self.dbfat = dbc.FatturatoContabileClienti(detail=dr)
         fat.ClearFilters()
         ri = []
         regs = cn('registri')
@@ -231,8 +243,9 @@ class FatturatoContabileClientiFornitPanel(aw.Panel):
                 return False
         finally:
             wx.EndBusyCursor()
-        grid = self.gridfat
-        grid.ChangeData(fat.GetRecordset())
+        self.gridfat.Destroy()
+        self.gridfat = FatturatoContabileClientiFornitGrid(cn('pangridfat'), fat, detail=dr)
+        self.gridfat.ChangeData(fat.GetRecordset())
     
     def OnPrintData(self, event):
         self.PrintData()
@@ -245,7 +258,10 @@ class FatturatoContabileClientiFornitPanel(aw.Panel):
             fat.SetPrintValue(name, cn(name).GetValue())
         
         fat._info.titolo = ''
-        rpt.Report(self, fat, 'Fatturato Contabile Acquisti-Vendite')
+        name = 'Fatturato Contabile Acquisti-Vendite'
+        if self.detail:
+            name = 'Dettaglio %s' % name
+        rpt.Report(self, fat, name)
 
 
 # ------------------------------------------------------------------------------

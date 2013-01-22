@@ -29,6 +29,12 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.58', None, (
+         ("BET1149",
+         """Implementata possibilità di estrazione dettagliata per aliquota iva
+         nel fatturato contabile."""),
+        ),),
+    
     ('1.4.57', dt.Date(2013,1,21), (
          ("BET1148",
          """Aggiunta stampa in affidamenti clienti e possibilità di apertura della
