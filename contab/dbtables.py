@@ -3278,6 +3278,8 @@ class FatturatoContabileClienti(adb.DbTable):
     def __init__(self, **kwargs):
         
         kwargs['fields'] = None
+        detail = kwargs.pop('detail', False)
+        
         adb.DbTable.__init__(self, bt.TABNAME_CONTAB_B, 'mov', **kwargs)
         
         mov = self
@@ -3292,7 +3294,14 @@ class FatturatoContabileClienti(adb.DbTable):
         frn = pdc.AddJoin(bt.TABNAME_FORNIT,   'fornit',    fields=None, idLeft='id', idRight='id', join=adb.JOIN_LEFT)
         stf = frn.AddJoin('x4.stati',          'stato_for', fields=None, idLeft='id_stato', idRight='id', join=adb.JOIN_LEFT)
         
-        AG = self.AddGroupOn
+        if detail:
+            AG = AT = self.AddField
+            tp = 'total_'
+        else:
+            AG = self.AddGroupOn
+            AT = self.AddTotalOf
+            tp = ''
+        
         AG('movpdc.id_pdcpa', 'pdc_id')
         AG('pdc.codice',      'pdc_codice')
         AG('pdc.descriz',     'pdc_descriz')
@@ -3303,6 +3312,17 @@ class FatturatoContabileClienti(adb.DbTable):
         AG('IF(tipana.tipo="C", stato_cli.is_blacklisted, stato_for.is_blacklisted)', 'anag_statobl')
         AG('IF(tipana.tipo="C", cliente.is_blacklisted,   fornit.is_blacklisted)',    'anag_anagbl')
         
+        if detail:
+            reg.AddJoin(bt.TABNAME_CFGCONTAB, 'caus', fields=None, idLeft='id_caus', idRight='id', join=adb.JOIN_LEFT)
+            AG('reg.id', 'reg_id')
+            AG('reg.datreg', 'reg_datreg')
+            AG('reg.datdoc', 'reg_datdoc')
+            AG('reg.numdoc', 'reg_numdoc')
+            AG('caus.codice', 'cau_codice')
+            AG('caus.descriz', 'cau_descriz')
+            AG('aliq.codice', 'aliq_codice')
+            AG('aliq.descriz', 'aliq_descriz')
+        
         if self.clifor == "C":
             segno = 'A'
             riflt = 'regiva.tipo IN ("V", "C")'
@@ -3310,23 +3330,20 @@ class FatturatoContabileClienti(adb.DbTable):
             segno = 'D'
             riflt = 'regiva.tipo="A"'
         
-        self.AddTotalOf('IF(aliq.modo="I", mov.imponib*IF(mov.segno="%(segno)s",1,-1), 0)' % locals(), 
-                        'imponibile')
-        self.AddTotalOf('IF(aliq.modo="N", mov.imponib*IF(mov.segno="%(segno)s",1,-1), 0)' % locals(), 
-                        'nonimponib')
-        self.AddTotalOf('IF(aliq.modo="E", mov.imponib*IF(mov.segno="%(segno)s",1,-1), 0)' % locals(), 
-                        'esente_iva')
-        self.AddTotalOf('IF(aliq.modo="F", mov.imponib*IF(mov.segno="%(segno)s",1,-1), 0)' % locals(), 
-                        'fuoricampo')
-        self.AddTotalOf('mov.imponib*IF(mov.segno="%(segno)s",1,-1)' % locals(), 
-                        'operazioni')
-        self.AddTotalOf('(mov.imposta+mov.indeduc)*IF(mov.segno="%(segno)s",1,-1)' % locals(), 
-                        'impostaiva')
+        AT('IF(aliq.modo="I", mov.imponib*IF(mov.segno="%(segno)s",1,-1), 0)' % locals(), '%simponibile'%tp)
+        AT('IF(aliq.modo="N", mov.imponib*IF(mov.segno="%(segno)s",1,-1), 0)' % locals(), '%snonimponib'%tp)
+        AT('IF(aliq.modo="E", mov.imponib*IF(mov.segno="%(segno)s",1,-1), 0)' % locals(), '%sesente_iva'%tp)
+        AT('IF(aliq.modo="F", mov.imponib*IF(mov.segno="%(segno)s",1,-1), 0)' % locals(), '%sfuoricampo'%tp)
+        AT('mov.imponib*IF(mov.segno="%(segno)s",1,-1)' % locals(),                       '%soperazioni'%tp)
+        AT('(mov.imposta+mov.indeduc)*IF(mov.segno="%(segno)s",1,-1)' % locals(),         '%simpostaiva'%tp)
         
         self.AddBaseFilter(riflt)
         self.AddBaseFilter('mov.tipriga IN ("I", "E", "O")')
         
         self.AddOrder('pdc.descriz')
+        self.AddOrder('reg.datreg')
+        self.AddOrder('reg.id')
+        self.AddOrder('mov.numriga')
         
         self.Reset()
     
