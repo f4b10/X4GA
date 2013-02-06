@@ -1211,8 +1211,9 @@ class AnagPanel(aw.Panel):
     def DeleteDataRecord( self ):
         out = False
         try:
-            self.db_curs.execute( "DELETE FROM %s WHERE id=%d;"  
-                                  % ( self.db_tabname, 
+            self.db_curs.execute( "DELETE FROM %s%s WHERE id=%d;"  
+                                  % ( self.db_schema,
+                                      self.db_tabname, 
                                       self.db_recid ) )
             self.db_rs = self.db_rs[:self.db_recno] +\
                          self.db_rs[self.db_recno+1:]
