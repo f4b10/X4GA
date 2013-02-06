@@ -758,15 +758,15 @@ def AboutProgramPanelFunc( parent, call_fit = True, set_sizer = True ):
     
     item10 = wx.BoxSizer( wx.HORIZONTAL )
     
-    item11 = wx.StaticText( parent, ID_LABELMOD, "mod:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item11 = wx.StaticText( parent, ID_LABELMOD, "cust.", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item11.SetForegroundColour( wx.LIGHT_GREY )
     item11.SetName( "labelmod" )
     item10.Add( item11, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
-    item12 = wx.StaticText(parent, ID_MODNAME,  version.MODVERSION_NAME); item12.SetName('modname');     item12.SetFont( wx.Font( 13, wx.ROMAN, wx.NORMAL, wx.BOLD ) )
-
+    item12 = wx.StaticText(parent, ID_MODNAME,  version.MODVERSION_NAME); item12.SetName('modname'); item12.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD)); item12.SetForegroundColour('gray')
     item10.Add( item12, 0, wx.ALIGN_CENTER|wx.RIGHT, 5 )
 
-    item13 = wx.StaticText(parent, ID_MODVERSION,  version.__modversion__); item13.SetName('modversion'); item13.SetFont(wx.Font( 12, wx.SWISS, wx.NORMAL, wx.BOLD ))
+    item13 = wx.StaticText(parent, ID_MODVERSION,  version.__modversion__); item13.SetName('modversion'); item13.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD)); item13.SetForegroundColour('gray')
     item10.Add( item13, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 
     item9.Add( item10, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
