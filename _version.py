@@ -21,8 +21,14 @@
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
 
+import versionchanges
+for ver, date, info in versionchanges.history:
+    if date:
+        year = date.year
+        break
+
 apptype = "community"
 appType = "Community Edition"
-appinfo = "(C) Copyright 2011 by Astra S.r.l. - All rights reserved."
+appinfo = "(C) Copyright 2005-%d Astra S.r.l." % year
 appinfo += " "*4
 appinfo += "Build realizzata in collaborazione con la comunità."
