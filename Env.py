@@ -1785,6 +1785,7 @@ class Azienda(object):
                 [ "askspese",   "TINYINT",  1, None, "Flag richiesta spese", None ],\
                 [ "modocalc",   "CHAR",     1, None, "Modalità di calcolo Sintetico/Dettagliato", None ],\
                 [ "tipoper",    "CHAR",     1, None, "Tipo periodi", None ],\
+                [ "finemese0",  "TINYINT",  1, None, "Flag fine mese su inizio calcolo", None ],\
                 [ "finemese",   "TINYINT",  1, None, "Flag calcolo fine mese", None ],\
                 [ "numscad",    "INT",      2, None, "Numero di scadenze", None ],\
                 [ "mesi1",      "INT",      2, None, "Num. di mesi alla prima scadenza", None ],\

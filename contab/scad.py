@@ -48,6 +48,7 @@ class Scadenze(object):
         self.mp_tipo = None
         self.mp_contrass = None
         self.mp_modocalc = None
+        self.mp_finemese0 = None
         self.mp_finemese = None
         self.mp_numscad = None
         self.mp_mesi1 = None
@@ -79,6 +80,7 @@ class Scadenze(object):
         self.mp_tipo = None
         self.mp_contrass = None
         self.mp_modocalc = None
+        self.mp_finemese0 = None
         self.mp_finemese = None
         self.mp_numscad = None
         self.mp_mesi1 = None
@@ -95,7 +97,7 @@ class Scadenze(object):
             return
         cmd =\
 """SELECT mp.codice, mp.descriz, mp.tipo, mp.contrass, mp.modocalc, """\
-"""mp.tipoper, mp.finemese, mp.numscad, mp.mesi1, mp.mesitra, mp.id_pdcpi, """\
+"""mp.tipoper, mp.finemese0, mp.finemese, mp.numscad, mp.mesi1, mp.mesitra, mp.id_pdcpi, """\
 """mp.sc1noeff, mp.sc1iva, mp.sc1perc, mp.ggextra, """\
 """mp.gg01, mp.gg02, mp.gg03, mp.gg04, mp.gg05, mp.gg06, mp.gg07, mp.gg08, mp.gg09, mp.gg10, mp.gg11, mp.gg12,"""\
 """mp.gg13, mp.gg14, mp.gg15, mp.gg16, mp.gg17, mp.gg18, mp.gg19, mp.gg20, mp.gg21, mp.gg22, mp.gg23, mp.gg24,"""\
@@ -116,6 +118,7 @@ class Scadenze(object):
             self.mp_contrass,\
             self.mp_modocalc,\
             self.mp_tipoper,\
+            self.mp_finemese0,\
             self.mp_finemese,\
             self.mp_numscad,\
             self.mp_mesi1,\
@@ -124,18 +127,19 @@ class Scadenze(object):
             self.mp_sc1noeff,\
             self.mp_sc1iva,\
             self.mp_sc1perc,\
-            self.mp_ggextra = rsmp[:15]
+            self.mp_ggextra = rsmp[:16]
+            self.mp_finemese0 = self.mp_finemese0 or False
             self.mp_finemese = self.mp_finemese or False
             self.mp_sc1noeff = self.mp_sc1noeff or False
             if self.mp_numscad is None: self.mp_numscad = 0
             if self.mp_mesi1 is None:   self.mp_mesi1 = 0
             if self.mp_mesitra is None: self.mp_mesitra = 0
             self.mp_gg = []
-            mp_gg = rsmp[15:52]
+            mp_gg = rsmp[16:53]
             for gg in mp_gg:
                 self.mp_gg.append(gg or 0)
             self.mp_gem = []
-            mp_gem = rsmp[51:64]
+            mp_gem = rsmp[52:65]
             for gem in mp_gem:
                 self.mp_gem.append(gem or 0)
         if self.mp_id_pdcpi:
@@ -180,6 +184,9 @@ class Scadenze(object):
         if id_modpag and datestart and self.mp_id_pdcpi is None:
             
             dscad = datestart
+            if self.mp_finemese0:
+                dscad += dscad.GetDaysInMonth() - dscad.day
+            
             for numsca in range(self.mp_numscad):
                 
                 riba = 0
@@ -267,6 +274,7 @@ class Scadenze_Table(adb.DbTable):
         self.mp_tipo = None
         self.mp_contrass = None
         self.mp_modocalc = None
+        self.mp_finemese0 = None
         self.mp_finemese = None
         self.mp_numscad = None
         self.mp_mesi1 = None
@@ -298,6 +306,7 @@ class Scadenze_Table(adb.DbTable):
         self.mp_tipo = None
         self.mp_contrass = None
         self.mp_modocalc = None
+        self.mp_finemese0 = None
         self.mp_finemese = None
         self.mp_numscad = None
         self.mp_mesi1 = None
@@ -314,7 +323,7 @@ class Scadenze_Table(adb.DbTable):
             return
         cmd =\
 """SELECT mp.codice, mp.descriz, mp.tipo, mp.contrass, mp.modocalc, """\
-"""mp.tipoper, mp.finemese, mp.numscad, mp.mesi1, mp.mesitra, mp.id_pdcpi, """\
+"""mp.tipoper, mp.finemese0, mp.finemese, mp.numscad, mp.mesi1, mp.mesitra, mp.id_pdcpi, """\
 """mp.sc1noeff, mp.sc1iva, mp.sc1perc, mp.ggextra, """\
 """mp.gg01, mp.gg02, mp.gg03, mp.gg04, mp.gg05, mp.gg06, mp.gg07, mp.gg08, mp.gg09, mp.gg10, mp.gg11, mp.gg12,"""\
 """mp.gg13, mp.gg14, mp.gg15, mp.gg16, mp.gg17, mp.gg18, mp.gg19, mp.gg20, mp.gg21, mp.gg22, mp.gg23, mp.gg24,"""\
@@ -335,6 +344,7 @@ class Scadenze_Table(adb.DbTable):
             self.mp_contrass,\
             self.mp_modocalc,\
             self.mp_tipoper,\
+            self.mp_finemese0,\
             self.mp_finemese,\
             self.mp_numscad,\
             self.mp_mesi1,\
@@ -343,18 +353,19 @@ class Scadenze_Table(adb.DbTable):
             self.mp_sc1noeff,\
             self.mp_sc1iva,\
             self.mp_sc1perc,\
-            self.mp_ggextra = rsmp[:15]
+            self.mp_ggextra = rsmp[:16]
+            self.mp_finemese0 = self.mp_finemese0 or False
             self.mp_finemese = self.mp_finemese or False
             self.mp_sc1noeff = self.mp_sc1noeff or False
             if self.mp_numscad is None: self.mp_numscad = 0
             if self.mp_mesi1 is None:   self.mp_mesi1 = 0
             if self.mp_mesitra is None: self.mp_mesitra = 0
             self.mp_gg = []
-            mp_gg = rsmp[15:52]
+            mp_gg = rsmp[16:53]
             for gg in mp_gg:
                 self.mp_gg.append(gg or 0)
             self.mp_gem = []
-            mp_gem = rsmp[51:64]
+            mp_gem = rsmp[52:65]
             for gem in mp_gem:
                 self.mp_gem.append(gem or 0)
         self.mp_pdcpi_cod = None
@@ -398,6 +409,9 @@ class Scadenze_Table(adb.DbTable):
         if id_modpag and datestart and self.mp_id_pdcpi is None:
             
             dscad = datestart
+            if self.mp_finemese0:
+                dscad += dscad.GetDaysInMonth() - dscad.day
+            
             for numsca in range(self.mp_numscad):
                 
                 riba = 0

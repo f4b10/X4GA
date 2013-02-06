@@ -87,7 +87,8 @@ class ModPagPanel(ga.AnagPanel):
             self.FindWindowById(cid).SetDataLink(name, opt)
             self.Bind(wx.EVT_RADIOBOX, evt, id=cid)
         
-        for cid, name in ((wdr.ID_FINEMESE, 'finemese'),
+        for cid, name in ((wdr.ID_FINEMESE, 'finemese0'),
+                          (wdr.ID_FINEMESE, 'finemese'),
                           (wdr.ID_SC1NOEFF, 'sc1noeff'),
                           (wdr.ID_SC1IVA,   'sc1iva',),
                           (wdr.ID_CONTRASS, 'contrass'),
