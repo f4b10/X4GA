@@ -915,6 +915,7 @@ CREATE TABLE IF NOT EXISTS `x4`.`stati` (
   `desceng`        VARCHAR(60) DEFAULT NULL COMMENT 'Denominazione Stato in lingua inglese',
   `is_cee`         TINYINT(1)  DEFAULT NULL COMMENT 'Flag Stato CEE',
   `is_blacklisted` TINYINT(1)  DEFAULT NULL COMMENT 'Flag Blacklist acquisti/vendite',
+  `codunico`       CHAR(3)     DEFAULT NULL COMMENT 'Codice Unico',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `index1` (`codice`),
   UNIQUE KEY `index2` (`descriz`)
