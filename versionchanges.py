@@ -29,11 +29,19 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.60', None, (
+         ("BUG1127",
+         """Corretto bug che impediva la cancellazione nella tabella stati."""),
+        ),),
+    
     ('1.4.59', None, (
          ("BUG1126",
          """Ordinamento e controlli per anno su registro iva, richiedendone 
          l'estrazione in un periodo a cavallo di più anni ordinava in modo errato
          e segnalava problemi di numerazione non veri."""),
+         ("BET1150",
+         """Implementata possibilità di calcolo scadenze a partire da fine mese
+         della data documento."""),
         ),),
     
     ('1.4.58', None, (
