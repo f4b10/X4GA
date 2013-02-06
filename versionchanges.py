@@ -29,6 +29,13 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.59', None, (
+         ("BUG1126",
+         """Ordinamento e controlli per anno su registro iva, richiedendone 
+         l'estrazione in un periodo a cavallo di più anni ordinava in modo errato
+         e segnalava problemi di numerazione non veri."""),
+        ),),
+    
     ('1.4.58', None, (
          ("BET1149",
          """Implementata possibilità di estrazione dettagliata per aliquota iva

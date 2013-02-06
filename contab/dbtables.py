@@ -1657,6 +1657,7 @@ class RegIva(adb.DbTable,
         #self._lastprot = None
         
         #self.AddOrder("reg.datreg")
+        self.AddOrder("YEAR(reg.datreg)")
         self.AddOrder("reg.numiva")
         self.AddOrder("reg.datreg")
         
@@ -1822,7 +1823,7 @@ class RegIva(adb.DbTable,
             if ldat is not None:
                 if dat<ldat:
                     return 'Protocollo fuori sequenza', niv, dat
-                elif not self.rei.noprot and niv != (lniv+1):
+                elif not self.rei.noprot and niv != (lniv+1) and getattr(dat, 'year', None) == getattr(ldat, 'year', None):
                     return 'Protocollo mancante', lniv+1, ldat
             ldat = dat
             lniv = niv
