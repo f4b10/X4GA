@@ -263,7 +263,10 @@ class ContabPanel(aw.Panel,\
     
     def OnRegNew( self, event ):
         if self.status == STATUS_SELCAUS:
-            self.RegNew()
+            if self.controls['causale'].GetValue() is None:
+                aw.awu.MsgDialog(self, "Seleziona la causale", style=wx.ICON_ERROR)
+            else:
+                self.RegNew()
     
     def OnRegSearch( self, event ):
         if self.status == STATUS_SELCAUS:
@@ -681,6 +684,12 @@ class ContabPanel(aw.Panel,\
         msg = None
         stl = wx.ICON_ERROR
         
+        cc = self.controls['causale'].GetValue()
+        if not cc:
+            #test causale
+            msg = "La causale è obbligatoria"
+            gvalid = False
+        
         dr = self.controls['datreg'].GetValue()
         if not dr:
             #test data registrazione
@@ -1035,13 +1044,15 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
 
     def RegNew(self):
         if self.canins:
-            self.newreg = True
-            self.RegReset()
-            self.DefaultValues()
-            #self.UpdatePanelHead()
-            self.SetRegStatus(STATUS_EDITING)
-            self.controls["datreg"].SetFocus()
-
+            if self.controls['causale'].GetValue() is None:
+                aw.awu.MsgDialog(self, "Seleziona la causale", style=wx.ICON_ERROR)
+            else:
+                self.newreg = True
+                self.RegReset()
+                self.DefaultValues()
+                self.SetRegStatus(STATUS_EDITING)
+                self.controls["datreg"].SetFocus()
+    
     def DefaultValues(self):
         
         if self.reg_datreg is None:

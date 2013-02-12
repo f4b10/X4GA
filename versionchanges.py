@@ -29,6 +29,12 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.61', None, (
+         ("BUG1128",
+         """Corretto bug in dataentry contabile, in alcune circostanze
+         permetteva la memorizzazione di registrazione priva di causale."""),
+        ),),
+    
     ('1.4.60', None, (
          ("BUG1127",
          """Corretto bug che impediva la cancellazione nella tabella stati."""),
