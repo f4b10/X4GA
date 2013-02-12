@@ -645,8 +645,7 @@ class DB(object):
                 v = base64.b64decode(x.split('|')[1])
             else:
                 v = x.replace('&lt; ', '<').replace('&gt; ', '>').replace('&quot; ', '"').replace('&amp; ', '&')
-#                    v = v.decode('utf-8')#.encode('latin-1')
-            v = v.encode('utf8')
+                v = v.encode('utf8')
         else:
             return x
         return v
