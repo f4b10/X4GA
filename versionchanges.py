@@ -29,7 +29,7 @@ import mx.DateTime as dt
 
 history = (
     
-    ('1.4.61', None, (
+    ('1.4.61', dt.Date(2013,1,21), (
          ("BUG1128",
          """Corretto bug in dataentry contabile, in alcune circostanze
          permetteva la memorizzazione di registrazione priva di causale."""),
