@@ -29,6 +29,12 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.62', dt.Date(2013,2,15), (
+         ("BET1151",
+         """Eliminato messaggio per valore numerico eccedente il massimo
+         consentito, in tal caso il valore viene azzerato senza segnalazioni."""),
+        ),),
+    
     ('1.4.61', dt.Date(2013,1,21), (
          ("BUG1128",
          """Corretto bug in dataentry contabile, in alcune circostanze

@@ -110,7 +110,7 @@ class NumCtrl(masked.numctrl.NumCtrl, cmix.TextCtrlMixin):
             out = masked.numctrl.NumCtrl.SetValue(self, n)
             self.is_too_big = False
         except ValueError, e:
-            aw.awu.MsgDialog(self.GetParent(), "Il valore è troppo grande per essere editato: sono permesse al massimo %d cifre intere.\nIl valore sarà azzerato.\n(%s)" % (self._integerWidth, self.GetName()), "Valore non editabile", style=wx.ICON_ERROR)
+#            aw.awu.MsgDialog(self.GetParent(), "Il valore è troppo grande per essere editato: sono permesse al massimo %d cifre intere.\nIl valore sarà azzerato.\n(%s)" % (self._integerWidth, self.GetName()), "Valore non editabile", style=wx.ICON_ERROR)
             masked.numctrl.NumCtrl.SetValue(self, 0)
             self.is_too_big = True
             out = False
