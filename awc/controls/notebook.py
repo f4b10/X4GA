@@ -58,6 +58,17 @@ class Notebook(wx.Notebook, mixin.ContainersMixin):
         self._RecalcSize(page)
         return out
     
+    def GetPageWithText(self, text, exact=True):
+        for n in range(self.GetPageCount()):
+            t = self.GetPageText(n)
+            if exact:
+                found = (t == text)
+            else:
+                found = (text.lower() in t.lower())
+            if found:
+                return self.GetPage(n)
+        return None
+    
     def _RecalcSize(self, page):
         page.Fit()
         pw, ph = page.GetSize()

@@ -1086,7 +1086,7 @@ class MagazzPanel(aw.Panel,\
         if self.interrpdc:
             self.InterrPdc()
         if self._testload:
-            if not doc.config.ctrnum and doc.id is None:
+            if not doc.config.ctrnum and doc.id is None and doc.datdoc:
                 ds = self._docsearch
                 if ds.Retrieve(r'doc.id_tipdoc=%s AND doc.id_pdc=%s AND YEAR(doc.datdoc)=%s AND doc.numdoc=%s',
                                doc.id_tipdoc, doc.id_pdc, doc.datdoc.year, doc.numdoc):
@@ -1960,7 +1960,9 @@ class MagazzPanel(aw.Panel,\
         ci(wdr.ID_PDC).SetFilterValue(cfg.id_pdctip)
         ci(wdr.ID_PDC).SetFilter(filt)
         self.GridBodySetTipMovFilter()
-        self.FindWindowByName('workzone').GetPage(3).Enable(cfg.askdatiacc == "X")
+        p = self.FindWindowByName('workzone').GetPageWithText('accomp', exact=False)
+        if p:
+            p.Enable(cfg.askdatiacc == "X")
         self.Freeze()
         try:
             for name in 'dati tot'.split():
@@ -2388,7 +2390,7 @@ class MagazzPanel(aw.Panel,\
         c["noteint"].Enable(en)
         c["notecli"].Enable(False)
         c["notecli2"].Enable(False)
-        h = self.FindWindowByName('workzone').GetPage(0)
+        h = self.FindWindowByName('workzone').GetPageWithText('testa', exact=False)
         for n in range(6):
             l = n+1
             s = h.FindWindowByName('sconto%d'%l)
@@ -2480,7 +2482,8 @@ class MagazzPanel(aw.Panel,\
             if name is not None:
                 out = not c.GetName().startswith('butprod')
             return out
-        self.EnableControls(enable, nb.GetPage(1), test)
+        p = nb.GetPageWithText('Corpo')
+        self.EnableControls(enable, p, test)
         self.gridbody.Refresh()
         self.UpdateBodyButtons()
         show = enable and self.status == STATUS_EDITING
