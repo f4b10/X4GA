@@ -29,6 +29,11 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.63', None, (
+         ("BUG1129",
+         """Corretto test anno data documento in immissione documenti."""),
+        ),),
+    
     ('1.4.62', dt.Date(2013,2,15), (
          ("BET1151",
          """Eliminato messaggio per valore numerico eccedente il massimo
