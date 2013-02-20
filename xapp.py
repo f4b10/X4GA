@@ -156,8 +156,8 @@ class XApp(wx.App):
             if ver.VERSION_STRING < azidbver:
                 version_problems.append(['X4 Gestione Aziendale', ver.VERSION_STRING, azidbver])
             checkm = False
-            if len(bt.__min_compat_mod__)>0:
-                checkm = bt.__min_compat_mod__ > azidbmod
+            if len(ver.__min_compat_mod__)>0:
+                checkm = ver.__min_compat_mod__ > azidbmod
                 if ver.MODVERSION_STRING < azidbmod:
                     version_problems.append(['mod %s' % ver.MODVERSION_NAME, ver.MODVERSION_STRING, azidbmod])
             if not checkm:
@@ -187,24 +187,28 @@ class XApp(wx.App):
                     """Per memorizzare le impostazioni occorre procedere al """\
                     """controllo di struttura delle tabelle dell'azienda."""
             elif checkv:
-                msg =\
-                    """La versione delle tabelle di questa """\
-                    """azienda (%s) non è compatibile con la """\
-                    """versione attuale del programma (%s).\n"""\
-                    """Per proseguire occorre adeguare le """\
-                    """strutture necessarie."""\
-                    % (azidbver, ver.__version__,)
+                try:
+                    msg =\
+                        """La versione delle tabelle di questa """\
+                        """azienda (%s) non e' compatibile con la """\
+                        """versione attuale del programma (%s).\n"""\
+                        """Per proseguire occorre adeguare le """\
+                        """strutture necessarie."""\
+                        % (str(azidbver), ver.__version__,)
+                except:
+                    print azidbver, type(azidbver)
+                    print ver.__version__, type(ver.__version__)
             elif checkm:
                 msg =\
                     """La versione delle tabelle di questa """\
-                    """azienda (%s) non è compatibile con la """\
+                    """azienda (%s) non e' compatibile con la """\
                     """mod attuale del programma (%s).\n"""\
                     """Per proseguire occorre adeguare le """\
                     """strutture necessarie."""\
                     % (azidbmod, ver.__modversion__,)
             elif checkp:
                 msg =\
-                    """La versione delle tabelle di questa azienda non è """\
+                    """La versione delle tabelle di questa azienda non e' """\
                     """compatibile con la versione di uno o più plugin.\n"""\
                     """Per proseguire occorre adeguare le strutture """\
                     """necessarie."""
@@ -223,15 +227,15 @@ class XApp(wx.App):
             else:
                 if force:
                     msg =\
-                        """Non è possibile memorizzare queste impostazioni """\
+                        """Non e' possibile memorizzare queste impostazioni """\
                         """senza procedere al controllo di struttura """\
                         """delle tabelle dell'azienda"""
                 else:
                     msg =\
                         """Le versioni sono incompatibili, non """\
-                        """sarà possibile operare su questa """\
+                        """sara' possibile operare su questa """\
                         """azienda fino a quando la struttura del """\
-                        """database non risulterà allineata alla """\
+                        """database non risultera' allineata alla """\
                         """corrente versione di programma %s"""\
                         % Env.__version__
                     if bt.__min_compat_mod__:
