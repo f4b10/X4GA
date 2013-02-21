@@ -29,7 +29,7 @@ import mx.DateTime as dt
 
 history = (
     
-    ('1.4.63', None, (
+    ('1.4.63', dt.Date(2013,2,21), (
          ("BUG1129",
          """Corretto test anno data documento in immissione documenti."""),
         ),),
