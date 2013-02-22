@@ -937,7 +937,7 @@ class DB(object):
                     v = v[1:]
                     v = v[:-1]
                     if s == 'type':
-                        if v.startswith('int') or v.startswith('tinyint'):
+                        if v.startswith('int') or v.startswith('tinyint') or v.startswith('bigint'):
                             t = int
                         elif v.startswith('decimal'):
                             t = float
