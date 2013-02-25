@@ -585,9 +585,11 @@ class DataLinkCellEditor(gridlib.PyGridCellEditor, CellEditorsMixin):
                 c = self._tc._ctrcod
             else:
                 c = self._tc._ctrdes
-            c.SetValue('')
-            c.SetValue(ch)
-            wx.CallAfter(lambda: c.SetInsertionPointEnd())
+            def startedit():
+                c.SetValue('')
+                c.SetValue(ch)
+                wx.CallAfter(lambda: c.SetInsertionPointEnd())
+            wx.CallAfter(startedit)
         #else:
         evt.Skip()
 
