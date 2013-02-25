@@ -29,6 +29,12 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.64', dt.Date(2013,2,25), (
+         ("BUG1130",
+         """Corretto bug in ripristino backup per problema di codifica 
+         dei caratteri impostata sul server."""),
+        ),),
+    
     ('1.4.63', dt.Date(2013,2,21), (
          ("BUG1129",
          """Corretto test anno data documento in immissione documenti."""),

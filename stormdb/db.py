@@ -644,8 +644,8 @@ class DB(object):
             if x.startswith('!BASE64|'):
                 v = base64.b64decode(x.split('|')[1])
             else:
+                v = x.decode('utf8')
                 v = x.replace('&lt; ', '<').replace('&gt; ', '>').replace('&quot; ', '"').replace('&amp; ', '&')
-                v = v.encode('utf8')
         else:
             return x
         return v
@@ -946,7 +946,7 @@ class DB(object):
                         elif v.startswith('date'):
                             t = str2date
                         elif v.startswith('char') or v.startswith('varchar') or v.startswith('text') or v.startswith('mediumtext') or v.startswith('longtext') or v.startswith('blob') or v.startswith('longblob') or v.startswith('varbinary'):
-                            t = str
+                            t = unicode
                         else:
                             print "unknown lom type: %s" % v
                             pass
