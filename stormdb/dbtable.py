@@ -702,7 +702,18 @@ class DbTable(object):
             raise Exception,\
                   """Cannot synthetize here, make sure aggregations """\
                   """do not preceed this method"""
-        dbs = [self] + self._info.iChildrens
+        dbs = []
+        def addchildrens(dbs, tab):
+            dbs.append(tab)
+            if tab._info.iChildrens:
+                for i in tab._info.iChildrens:
+                    cld = addchildrens(dbs, i)
+                    if type(cld) is list:
+                        dbs += cld
+                return dbs
+            return None
+        addchildrens(dbs, self)
+        
         for db in dbs:
             del db._info.fieldNames[:]
             db._info.fieldNames = []
