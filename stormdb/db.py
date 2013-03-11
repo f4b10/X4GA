@@ -628,13 +628,12 @@ class DB(object):
     def ADB_EncodeValue(self, x, base64_encoded=None):
         if base64_encoded:
             return '!BASE64|%s|' % base64_encoded
-        x = str(x)
-#        try:
-#            x = x.encode('utf-8')
-#        except:
-#            x = x.decode('latin-1').encode('utf-8')
-        if '\n' in x or '"' in x or '=' in x:
-            return '!BASE64|%s|' % base64.b64encode(x)
+        if type(x) in (str, unicode):
+            if '\n' in x or '"' in x or '=' in x:
+                return '!BASE64|%s|' % base64.b64encode(x)
+            x = x.encode('utf-8')
+        else:
+            x = str(x)
         return x.replace('<', '&lt; ').replace('>', '&gt; ').replace('"', '&quot; ').replace('&', '&amp; ')
     
     def ADB_DecodeValue(self, x, conv=None):
@@ -644,8 +643,8 @@ class DB(object):
             if x.startswith('!BASE64|'):
                 v = base64.b64decode(x.split('|')[1])
             else:
-                v = x.decode('utf8')
-                v = x.replace('&lt; ', '<').replace('&gt; ', '>').replace('&quot; ', '"').replace('&amp; ', '&')
+                v = x.decode('utf-8')
+                v = v.replace('&lt; ', '<').replace('&gt; ', '>').replace('&quot; ', '"').replace('&amp; ', '&')
         else:
             return x
         return v
@@ -654,7 +653,7 @@ class DB(object):
                        tab_classes=None, special_encoders=None, 
                        on_table_init=None, on_table_read=None, on_table_row=None, on_table_end=None):
         
-        ADBVER = 2
+        ADBVER = 3
         
         f = open(filename, 'w')
         
