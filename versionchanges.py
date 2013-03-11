@@ -1728,4 +1728,8 @@ history = (
 # ------------------------------------------------------------------------------
 
 
-historymod = ()
+try:
+    cvc = __import__("custverchanges", fromlist=True)
+    historymod = cvc.historymod
+except:
+    historymod = ()

@@ -110,7 +110,7 @@ class AboutPanel(wx.Panel):
         event.Skip()
     
     def OnVerInfo(self, event):
-        dlg = aw.Dialog(self, -1, 'X4 :: Informazioni sulla versione')
+        dlg = aw.Dialog(self, -1, 'X4GA :: Informazioni sulla versione')
         p = aw.Panel(dlg)
         VersionChangesFunc(p)
         cn = self.FindWindowByName
@@ -135,8 +135,11 @@ class AboutPanel(wx.Panel):
             vertxt = cn(name)
             vertxt.SetValue(txt)
             vertxt.SetEditable(False)
-        if not historymod:
-            nb = cn('workzone')
+        nb = cn('workzone')
+        nb.SetPageText(0, 'X4GA')
+        if historymod:
+            nb.SetPageText(1, 'cust. %s' % version.MODVERSION_NAME)
+        else:
             nb.RemovePage(1)
         dlg.AddSizedPanel(p)
         dlg.Bind(wx.EVT_BUTTON, lambda *x: dlg.EndModal(wx.ID_OK))
