@@ -1475,14 +1475,19 @@ class DbGridTable(gridlib.PyGridTableBase):
                                     quoting=int(CSVFORMAT_QUOTING))
                 csvrs = []
                 #intestazioni di colonna
-                csvrs.append([self.grid.GetColLabelValue(col) 
+                csvrs.append([self.grid.GetColLabelValue(col).encode('utf-8') 
                               for col in range(self.grid.GetNumberCols())])
                 
                 #generazione recordset csv
                 if CSVFORMAT_ASGRID:
                     #formato come valori presentati in griglia, nessuna conversione
+                    def f(x):
+                        try:
+                            return x.encode('utf-8')
+                        except:
+                            return x
                     for row in range(len(self.data)):
-                        csvrs.append([self.GetValue(row, col) 
+                        csvrs.append([f(self.GetValue(row, col)) 
                                       for col in range(self.grid.GetNumberCols())])
                     
                 else:
@@ -1501,9 +1506,9 @@ class DbGridTable(gridlib.PyGridTableBase):
                     def strbool(x):
                         if x is None: return ''
                         return [' ', 'X'][int(bool(x))]
-                    def strstr(x):
+                    def strunicode(x):
                         if x is None: return ''
-                        x = unicode(x)
+                        x = x.encode('utf-8')
                         if CSVFORMAT_EXCELZERO and (x or ' ')[0].isdigit():
                             x = '="%s"' % x
                         return x
@@ -1514,8 +1519,8 @@ class DbGridTable(gridlib.PyGridTableBase):
                               gridlib.GRID_VALUE_LONG:             strnum,
                               gridlib.GRID_VALUE_BOOL:             strbool,
                               gridlib.GRID_VALUE_CHOICE:           strbool,
-                              gridlib.GRID_VALUE_STRING:           strstr,
-                              gridlib.GRID_VALUE_TEXT:             strstr,
+                              gridlib.GRID_VALUE_STRING:           strunicode,
+                              gridlib.GRID_VALUE_TEXT:             strunicode,
                           }                               
                     types = []
                     for col in range(self.grid.GetNumberCols()):
