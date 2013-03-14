@@ -29,6 +29,12 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.67', dt.Date(2013, 3, 14), (
+         ("BET1153",
+         """Attivata documentazione cambiamenti della versione 
+         personalizzata."""),
+        ),),
+    
     ('1.4.66', dt.Date(2013, 3, 11), (
          ("BUG1131",
          """Corretto bug encoding caratteri su backup/ripristino."""),
@@ -1728,13 +1734,3 @@ history = (
         ),),
     
 )
-
-
-# ------------------------------------------------------------------------------
-
-
-try:
-    cvc = __import__("custverchanges", fromlist=True)
-    historymod = cvc.historymod
-except:
-    historymod = ()
