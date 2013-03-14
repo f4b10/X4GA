@@ -114,7 +114,12 @@ class AboutPanel(wx.Panel):
         p = aw.Panel(dlg)
         VersionChangesFunc(p)
         cn = self.FindWindowByName
-        from versionchanges import history, historymod
+        from versionchanges import history
+        try:
+            cvc = __import__("custverchanges", fromlist=True)
+            historymod = cvc.historymod
+        except:
+            historymod = ()
         for name, hist in (('changes',    history),
                            ('modchanges', historymod),):
             txt = ''

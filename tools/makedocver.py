@@ -62,7 +62,8 @@ def gendoc(path='local/'):
     
     
     for history, vtag, filename in ((vc.history,    'Versione', 'verchg.txt'),
-                                    (vc.historymod, 'Mod',      'modchg.txt')):
+#                                    (vc.historymod, 'Mod',      'modchg.txt'),
+                                    ):
         
         text = ""
         
