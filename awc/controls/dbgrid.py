@@ -1608,26 +1608,26 @@ class DbGrid2Colori(DbGridColored):
     
     def __init__(self, *args, **kwargs):
         DbGridColored.__init__(self, *args, **kwargs)
-        self._colors = [[None, None],[None, None]]
-#        self._SetSysColors(0, wx.SYS_COLOUR_WINDOWTEXT, wx.SYS_COLOUR_WINDOW)
-#        self._SetSysColors(1, wx.SYS_COLOUR_WINDOWTEXT, wx.SYS_COLOUR_WINDOWFRAME)
-        if wx.Platform == '__WXMSW__':
-            c = wx.SYS_COLOUR_MENU
-        else:
-            c = wx.SYS_COLOUR_WINDOW
-        self._SetSysColors(0, wx.SYS_COLOUR_WINDOWTEXT, c)
-        fg1, bg1 = self._colors[0]
-        fg2 = fg1
-        r = bg1.red
-        g = bg1.green
-        b = bg1.blue
-        d = 32
-        r -= d; r %= 256
-        g -= d; g %= 256
-        b -= d; b %= 256
-        bg2 = wx.Colour(r, g, b)
-        self._colors[1][0] = fg2
-        self._colors[1][1] = bg2
+        self._colors = [['black', 'ivory2'],['black', 'ivory3']]
+##        self._SetSysColors(0, wx.SYS_COLOUR_WINDOWTEXT, wx.SYS_COLOUR_WINDOW)
+##        self._SetSysColors(1, wx.SYS_COLOUR_WINDOWTEXT, wx.SYS_COLOUR_WINDOWFRAME)
+#        if wx.Platform == '__WXMSW__':
+#            c = wx.SYS_COLOUR_MENU
+#        else:
+#            c = wx.SYS_COLOUR_WINDOW
+#        self._SetSysColors(0, wx.SYS_COLOUR_WINDOWTEXT, c)
+#        fg1, bg1 = self._colors[0]
+#        fg2 = fg1
+#        r = bg1.red
+#        g = bg1.green
+#        b = bg1.blue
+#        d = 32
+#        r -= d; r %= 256
+#        g -= d; g %= 256
+#        b -= d; b %= 256
+#        bg2 = wx.Colour(r, g, b)
+#        self._colors[1][0] = fg2
+#        self._colors[1][1] = bg2
         self.DrawLines()
     
     def SetData(self, *args, **kwargs):
@@ -1684,13 +1684,16 @@ class DbGridColoriAlternati(DbGrid2Colori):
     
     def GetAttr(self, row, col, rscol, attr=gridlib.GridCellAttr):
         
+        rs = self.GetTable().data
+        
         if self._getattr_column is None:
             n = row % 2
             
         else:
-            
-            key = self.GetTable().GetValue(row, self._getattr_column)
-            
+            try:
+                key = rs[row][self._getattr_column]
+            except:
+                key = None
             if not key in self._getattr_keys:
                 self._getattr_index = 1-self._getattr_index
                 self._getattr_keys[key] = self._getattr_index
@@ -1698,18 +1701,17 @@ class DbGridColoriAlternati(DbGrid2Colori):
             n = self._getattr_keys[key]
         
         fg, bg = self._colors[n]
+        
         attr.SetTextColour(fg)
         attr.SetBackgroundColour(bg)
         
-        if self.cond_color:
-            rs = self.GetTable().data
-            if 0 <= row < len(rs):
-                for testcol in self.cond_color:
-                    value = rs[row][testcol]
-                    for testvalue, fg, bg in self.cond_color[testcol]:
-                        if value == testvalue:
-                            attr.SetTextColour(fg)
-                            attr.SetBackgroundColour(bg)
+        if self.cond_color and 0 <= row < len(rs):
+            for testcol in self.cond_color:
+                value = rs[row][testcol]
+                for testvalue, fg, bg in self.cond_color[testcol]:
+                    if value == testvalue:
+                        attr.SetTextColour(fg)
+                        attr.SetBackgroundColour(bg)
         
         attr.SetReadOnly()
         
