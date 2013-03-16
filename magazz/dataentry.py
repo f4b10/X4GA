@@ -2790,7 +2790,9 @@ class GridSearchDoc(dbglib.DbGridColoriAlternati):
         sz.SetSizeHints(parent)
     
     def MakeDbDocs(self):
-        dbdocs = dbm.DocMag()
+#        dbdocs = dbm.DocMag()
+        dbdocs = dbm.ElencoDocum()
+        dbdocs.config = dbdocs.tipdoc
         if bt.MAGNOCODEDES:
             destfield = 'IF(doc.enable_nocodedes=1 AND doc.nocodedes_descriz IS NOT NULL AND doc.nocodedes_descriz<>"", CONCAT(doc.nocodedes_descriz, " ", doc.nocodedes_indirizzo, " ", doc.nocodedes_cap, " ", doc.nocodedes_citta, " ", doc.nocodedes_prov), "")'
         else:
