@@ -80,6 +80,15 @@ dummy_app.splash.Show()
 try:
     #aggancio personalizzazione
     import custapp
+    import version
+    if hasattr(version, '__min_require_x4__'):
+        if version.__min_require_x4__ > version.VERSION_STRING:
+            import awc.controls.windows as aw
+            msg = "La versione di X4GA non offre funzionalita' sufficienti a questa personalizzazione.\n\n"
+            msg += "E' richiesta almeno la versione %s, e' installata la %s.\n\n"\
+                        % (version.__min_require_x4__, version.VERSION_STRING)
+            msg += "Alcune parti del programma potrebbero avere problemi, aggiornare X4GA quanto prima."
+            aw.awu.MsgDialog(None, msg, caption="Questa versione di X4GA è obsoleta!", style=wx.ICON_WARNING)
 except ImportError, e:
     if not 'custapp' in repr(e.args):
         import awc.util as awu
