@@ -2147,7 +2147,7 @@ class ADB_Grid(DbGridColoriAlternati):
             _, values = ctype.split(':')
             v1, v0 = map(eval, values.split(','))
             db_table = stru['db_table'] or self.db_table
-            if 0 <= col < db_table.RowsCount():
+            if 0 <= row < db_table.RowsCount():
                 self.db_table.MoveRow(row)
                 cur_value = getattr(db_table, cname)
                 if cur_value == v1:
