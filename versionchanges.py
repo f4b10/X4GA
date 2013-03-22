@@ -29,6 +29,14 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.68', dt.Date(2013, 3, 22), (
+         ("BUG1132",
+         """Corretto bug su colonne tipo checkbox in griglie dati."""),
+         ("BET1154",
+         """Attivata possibilità di test della versione minima di X4GA
+         richiesta dalla personalizzazione."""),
+        ),),
+    
     ('1.4.67', dt.Date(2013, 3, 14), (
          ("BET1153",
          """Attivata documentazione cambiamenti della versione 
