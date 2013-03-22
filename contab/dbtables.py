@@ -1225,11 +1225,11 @@ class Bilancio(SaldiBilancio):
     def _SetGroups(self):
         self.AddGroupOn("""IF(bilmas.tipo='P', 0,"""\
                         """IF(bilmas.tipo='E', 1,"""\
-                        """IF(bilmas.tipo='O', 2, 3)))""", 'tipobil')
-        self.AddGroupOn("""bilmas.codice""",               'mastro')
-        self.AddGroupOn("""bilcon.codice""",               'conto')
-        self.AddGroupOn("""IF(tipana.tipo IN ('C','F'),"""\
-                        """pdc.descriz,pdc.codice)""",     'sottoconto')
+                        """IF(bilmas.tipo='O', 2, 3)))""",         'tipobil')
+        self.AddGroupOn("""bilmas.codice""",                       'mastro')
+        self.AddGroupOn("""bilcon.codice""",                       'conto')
+        self.AddGroupOn("""CONCAT(IF(tipana.tipo IN ('C','F'),"""\
+                        """pdc.descriz,pdc.codice), pdc.id)""",    'sottoconto')
 
 
 # ------------------------------------------------------------------------------
