@@ -1508,7 +1508,7 @@ class DbGridTable(gridlib.PyGridTableBase):
                         return [' ', 'X'][int(bool(x))]
                     def strunicode(x):
                         if x is None: return ''
-                        x = x.encode('utf-8')
+                        x = unicode(x).encode('utf-8')
                         if CSVFORMAT_EXCELZERO and (x or ' ')[0].isdigit():
                             x = '="%s"' % x
                         return x

@@ -29,6 +29,12 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.69', dt.Date(2013, 3, 24), (
+         ("BUG1133",
+         """Corretto bug in esportazione csv da griglie, originava eccezione
+         in presenza di colonne numeriche visualizzate come testo."""),
+        ),),
+    
     ('1.4.68', dt.Date(2013, 3, 22), (
          ("BUG1132",
          """Corretto bug su colonne tipo checkbox in griglie dati."""),
