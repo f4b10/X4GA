@@ -293,22 +293,51 @@ class XFrame(aw.Frame):
         
         c = self.GetMenuPers('menu')
         if c:
-            menubar = wx.MenuBar()
             err = False
+            menubar = wx.MenuBar()
             for g in c.getElementsByTagName("group"):
                 menu = wx.Menu()
                 for v in g.getElementsByTagName("voice"):
                     mid = wx.NewId()
                     menu.Append(mid, v.getAttribute('menu'))
+                    err = None
                     try:
-                        sf = v.getAttribute('frame')
-                        fc = eval(sf)
-                        self.menupers[mid] = fc
+                        sf, mv, md = map(lambda x: v.getAttribute(x),
+                                         'frame menu desc'.split())
+                        n = sf.rindex('.')
+                        sm, sf = sf[:n], sf[n+1:]
+                        cm = __import__(sm, fromlist=True)
+                        if hasattr(cm, sf):
+                            fc = getattr(cm, sf)
+                            self.menupers[mid] = {'frame': fc,
+                                                  'voice': mv,
+                                                  'desc': md,}
+                        else:
+                            err = "Frame non trovato: %s" % sf
+                        if not err:
+                            tb = v.getAttribute('toolbar')
+                            if tb:
+                                n = tb.rindex('.')
+                                tm, ti = tb[:n], tb[n+1:]
+                                im = __import__(tm, fromlist=True)
+                                if not hasattr(im, ti):
+                                    err = "Immagine toolbar non trovata: %s" % ti
+                                else:
+                                    tid = wx.NewId()
+                                    self.toolpers[tid] = {'image': getattr(im, ti),
+                                                          'frame': fc,
+                                                          'voice': mv,
+                                                          'desc': md,}
                     except Exception, e:
-                        awu.MsgDialog(self, "Configurazione voce menu errata: %s" % repr(e.args))
+                        err = "Configurazione voce menu errata: %s" % repr(e.args)
                         err = True
                         break
-                    self.Bind(wx.EVT_MENU, self.OnMenuPers, id=mid)
+                    except ImportError, e:
+                        err = "Modulo non trovato: %s" % sm
+                    if err:
+                        awu.MsgDialog(self, err, style=wx.ICON_ERROR)
+                    else:
+                        self.Bind(wx.EVT_MENU, self.OnMenuPers, id=mid)
                 if err:
                     break
                 menubar.Append(menu, g.getAttribute('name'))
@@ -891,16 +920,21 @@ class XFrame(aw.Frame):
                         return
     
     def OnMenuPers(self, event):
-        self._LaunchExternal(self.menupers, event.GetId())
-        event.Skip()
+        self.LaunchMenuPers(event.GetId())
+        #event.Skip()
+    
+    def LaunchMenuPers(self, menuid):
+        if menuid in self.menupers:
+            fc = self.menupers[menuid]['frame']
+            self.LaunchFrame(fc)
     
     def OnToolPers(self, event):
-        self._LaunchExternal(self.toolpers, event.GetId())
+        self.LaunchToolPers(event.GetId())
         event.Skip()
     
-    def _LaunchExternal(self, menu, menuid):
-        if menuid in menu:
-            fc = menu[menuid]
+    def LaunchToolPers(self, toolid):
+        if toolid in self.toolpers:
+            fc = self.toolpers[toolid]['frame']
             self.LaunchFrame(fc)
     
     def CreateStdToolBar(self):
@@ -913,30 +947,39 @@ class XFrame(aw.Frame):
         return tb
     
     def CreateXToolBar(self):
-        tb = None
-        c = self.GetMenuPers('toolbar')
-        if c:
+        if self.toolpers:
+            tb = self.CreateStdToolBar()
             err = False
-            tools = c.getElementsByTagName("tool")
-            for t in tools:
-                tid = wx.NewId()
-                voice = t.getAttribute('voice')
-                try:
-                    image = t.getAttribute('image')
-                    bmp = eval(image)
-                except:
-                    bmp = images.getTB_GenericBitmap()
-                try:
-                    sf = t.getAttribute('frame')
-                    fc = eval(sf)
-                    self.toolpers[tid] = fc
-                except Exception, e:
-                    awu.MsgDialog(self, "Configurazione strumento toolbar errata: %s" % repr(e.args))
-                    break
-                if tb is None:
-                    tb = self.CreateStdToolBar()
-                tb.AddLabelTool(tid, voice, bmp, wx.NullBitmap, wx.ITEM_NORMAL, "")
+            for tid in self.toolpers:
+                tp = self.toolpers[tid]
+                voice = tp['voice']
+                desc = tp['desc']
+                bmp = tp['image']
+                t = tb.AddLabelTool(tid, voice, bmp(), wx.NullBitmap, wx.ITEM_NORMAL, "")
+                print voice
+                #t.SetToolTipString(tp['desc'])
                 self.Bind(wx.EVT_TOOL, self.OnToolPers, id=tid)
+                
+#            tools = c.getElementsByTagName("tool")
+#            for t in tools:
+#                tid = wx.NewId()
+#                voice = t.getAttribute('voice')
+#                try:
+#                    image = t.getAttribute('image')
+#                    bmp = eval(image)
+#                except:
+#                    bmp = images.getTB_GenericBitmap()
+#                try:
+#                    sf = t.getAttribute('frame')
+#                    fc = eval(sf)
+#                    self.toolpers[tid] = fc
+#                except Exception, e:
+#                    awu.MsgDialog(self, "Configurazione strumento toolbar errata: %s" % repr(e.args))
+#                    break
+#                if tb is None:
+#                    tb = self.CreateStdToolBar()
+#                tb.AddLabelTool(tid, voice, bmp, wx.NullBitmap, wx.ITEM_NORMAL, "")
+#                self.Bind(wx.EVT_TOOL, self.OnToolPers, id=tid)
         else:
             
             from imgfac import ToolbarImagesFactory
