@@ -161,18 +161,20 @@ class XFrame(aw.Frame):
         
         aw.Frame.__init__(self, parent, id, title, pos, size, style)
         
-        show_promem = True
-        show_feeds = True
+        show_promem = show_feeds = True
         
-#        icon = wx.EmptyIcon()
-#        icon.CopyFromBitmap(images.getIconBitmap())
-#        self.SetIcon(icon)
+        self.custom_info = None
+        frame_info = self.GetFrameInfo()
+        if frame_info:
+            show_promem = frame_info.get('promemoria', True)
+            show_feeds = frame_info.get('feeds', True)
         
         self.menuext = []
         self.ftdif = []
         
         self.menupers = {}
         self.toolpers = {}
+        self.toollist = []
         
         self.CreateMenuBar()
         
@@ -187,16 +189,18 @@ class XFrame(aw.Frame):
         sizer.AddGrowableCol(0)
         sizer.AddGrowableRow(0)
         
-        self.workzone = nb = wx.Notebook(self, -1)
-        sizer.Add(nb, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 0)
-        
-        if show_promem:
-            rp = promem.PromemPanel(nb, -1)
-            nb.AddPage(rp, 'Promemoria')
-        
-        if show_feeds:
-            import rss
-            rss.AddNotebookFeedPage(nb, 'Notizie (beta)', "http://www.ilsole24ore.com/rss/norme-e-tributi/fisco.xml")
+        if show_promem or show_feeds:
+            
+            self.workzone = nb = wx.Notebook(self, -1)
+            sizer.Add(nb, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 0)
+            
+            if show_promem:
+                rp = promem.PromemPanel(nb, -1)
+                nb.AddPage(rp, 'Promemoria')
+            
+            if show_feeds:
+                import rss
+                rss.AddNotebookFeedPage(nb, 'Notizie (beta)', "http://www.ilsole24ore.com/rss/norme-e-tributi/fisco.xml")
         
         self.SetSizer(sizer)
         sizer.SetSizeHints(self)
@@ -270,28 +274,49 @@ class XFrame(aw.Frame):
         self.CreateXToolBar()
         event.Skip()
     
-    def GetMenuPers(self, section):
-        assert section in 'menu toolbar'.split()
-        out = None
-        p = Env.config_base_path
-        p = opj(p, 'menu')
-        p = opj(p, Env.Azienda.codice)
-        for f in (Env.Azienda.Login.username, '__allusers__'):
-            f = '%s.xml' % opj(p, f)
-            if os.path.exists(f):
-                menubar = wx.MenuBar()
-                m = xml.dom.minidom.parse(f)
-                try:
-                    out = m.getElementsByTagName(section)[0]
-                except:
-                    pass
-        return out
+    def GetFrameCustomInfo(self):
+        if self.custom_info is None:
+            p = Env.config_base_path
+            p = opj(p, 'cust')
+            p = opj(p, 'frame')
+            p = opj(p, Env.Azienda.codice)
+            for f in (Env.Azienda.Login.username, '__allusers__'):
+                f = '%s.x4f' % opj(p, f)
+                if os.path.exists(f):
+                    try:
+                        self.custom_info = xml.dom.minidom.parse(f)
+                        break
+                    except:
+                        pass
+        return self.custom_info
+    
+    def GetMenuPers(self):
+        i = self.GetFrameCustomInfo()
+        if i:
+            try:
+                return i.getElementsByTagName('menu')[0]
+            except:
+                pass
+        return None
+    
+    def GetFrameInfo(self):
+        i = self.GetFrameCustomInfo()
+        if i:
+            try:
+                f = i.getElementsByTagName('customize_frame')[0]
+                o = {}
+                for name in 'promemoria feeds'.split():
+                    o[name] = int(f.getAttribute(name) or 1)
+                return o
+            except:
+                pass
+        return None
     
     def CreateXMenuBar(self):
         
         menubar = None
         
-        c = self.GetMenuPers('menu')
+        c = self.GetMenuPers()
         if c:
             err = False
             menubar = wx.MenuBar()
@@ -328,6 +353,7 @@ class XFrame(aw.Frame):
                                                           'frame': fc,
                                                           'voice': mv,
                                                           'desc': md,}
+                                    self.toollist.append(tid)
                     except Exception, e:
                         err = "Configurazione voce menu errata: %s" % repr(e.args)
                         err = True
@@ -950,13 +976,12 @@ class XFrame(aw.Frame):
         if self.toolpers:
             tb = self.CreateStdToolBar()
             err = False
-            for tid in self.toolpers:
+            for tid in self.toollist:
                 tp = self.toolpers[tid]
                 voice = tp['voice']
                 desc = tp['desc']
                 bmp = tp['image']
                 t = tb.AddLabelTool(tid, voice, bmp(), wx.NullBitmap, wx.ITEM_NORMAL, "")
-                print voice
                 #t.SetToolTipString(tp['desc'])
                 self.Bind(wx.EVT_TOOL, self.OnToolPers, id=tid)
                 
