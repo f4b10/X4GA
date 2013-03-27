@@ -166,8 +166,19 @@ class XFrame(aw.Frame):
         self.custom_info = None
         frame_info = self.GetFrameInfo()
         if frame_info:
-            show_promem = frame_info.get('promemoria', True)
-            show_feeds = frame_info.get('feeds', True)
+            def _int(n):
+                try:
+                    return int(n or 0)
+                except:
+                    return 0
+            show_promem = _int(frame_info.get('promemoria', 1))
+            show_feeds = _int(frame_info.get('feeds', 1))
+            frame_width = _int(frame_info.get('width', 0))
+            frame_height = _int(frame_info.get('height', 0))
+            if frame_width and frame_height:
+                def set_size():
+                    self.SetSize((frame_width, frame_height))
+                wx.CallAfter(set_size)
         
         self.menuext = []
         self.ftdif = []
@@ -276,6 +287,19 @@ class XFrame(aw.Frame):
     
     def GetFrameCustomInfo(self):
         if self.custom_info is None:
+            ua = adb.DbTable('x4.diritti', 'ua')
+            ua.Reset()
+            if hasattr(ua, 'customize_frame'):
+                aa = adb.DbTable('x4.aziende', 'aa')
+                if aa.Retrieve('aa.codice=%s', Env.Azienda.codice) and aa.OneRow():
+                    if ua.Retrieve('ua.id_azienda=%s AND ua.id_utente=%s AND ua.attivo=1', 
+                                   aa.id, Env.Azienda.Login.userid) and ua.OneRow():
+                        if ua.customize_frame:
+                            try:
+                                self.custom_info = xml.dom.minidom.parseString(ua.customize_frame)
+                                return self.custom_info
+                            except Exception, e:
+                                pass
             p = Env.config_base_path
             p = opj(p, 'cust')
             p = opj(p, 'frame')
@@ -305,8 +329,8 @@ class XFrame(aw.Frame):
             try:
                 f = i.getElementsByTagName('customize_frame')[0]
                 o = {}
-                for name in 'promemoria feeds'.split():
-                    o[name] = int(f.getAttribute(name) or 1)
+                for name in f.attributes.keys():
+                    o[name] = f.getAttribute(name)
                 return o
             except:
                 pass
@@ -323,47 +347,56 @@ class XFrame(aw.Frame):
             for g in c.getElementsByTagName("group"):
                 menu = wx.Menu()
                 for v in g.getElementsByTagName("voice"):
-                    mid = wx.NewId()
-                    menu.Append(mid, v.getAttribute('menu'))
-                    err = None
-                    try:
-                        sf, mv, md = map(lambda x: v.getAttribute(x),
-                                         'frame menu desc'.split())
-                        n = sf.rindex('.')
-                        sm, sf = sf[:n], sf[n+1:]
-                        cm = __import__(sm, fromlist=True)
-                        if hasattr(cm, sf):
-                            fc = getattr(cm, sf)
-                            self.menupers[mid] = {'frame': fc,
-                                                  'voice': mv,
-                                                  'desc': md,}
+                    keys = v.attributes.keys()
+                    if 'menu' in keys:
+                        mid = wx.NewId()
+                        menu.Append(mid, v.getAttribute('menu'))
+                        err = None
+                        try:
+                            sf, mv, md = map(lambda x: v.getAttribute(x),
+                                             'frame menu desc'.split())
+                            n = sf.rindex('.')
+                            sm, sf = sf[:n], sf[n+1:]
+                            cm = __import__(sm, fromlist=True)
+                            if hasattr(cm, sf):
+                                fc = getattr(cm, sf)
+                                self.menupers[mid] = {'frame': fc,
+                                                      'voice': mv,
+                                                      'desc': md,}
+                            else:
+                                err = "Frame non trovato: %s" % sf
+                            if not err:
+                                tb = v.getAttribute('toolbar')
+                                if tb:
+                                    n = tb.rindex('.')
+                                    tm, ti = tb[:n], tb[n+1:]
+                                    im = __import__(tm, fromlist=True)
+                                    if not hasattr(im, ti):
+                                        err = "Immagine toolbar non trovata: %s" % ti
+                                    else:
+                                        tid = wx.NewId()
+                                        self.toolpers[tid] = {'image': getattr(im, ti),
+                                                              'frame': fc,
+                                                              'voice': mv,
+                                                              'desc': md,}
+                                        self.toollist.append(tid)
+                        except Exception, e:
+                            err = "Configurazione voce menu errata: %s" % repr(e.args)
+                            err = True
+                            break
+                        except ImportError, e:
+                            err = "Modulo non trovato: %s" % sm
+                        if err:
+                            awu.MsgDialog(self, err, style=wx.ICON_ERROR)
                         else:
-                            err = "Frame non trovato: %s" % sf
-                        if not err:
-                            tb = v.getAttribute('toolbar')
-                            if tb:
-                                n = tb.rindex('.')
-                                tm, ti = tb[:n], tb[n+1:]
-                                im = __import__(tm, fromlist=True)
-                                if not hasattr(im, ti):
-                                    err = "Immagine toolbar non trovata: %s" % ti
-                                else:
-                                    tid = wx.NewId()
-                                    self.toolpers[tid] = {'image': getattr(im, ti),
-                                                          'frame': fc,
-                                                          'voice': mv,
-                                                          'desc': md,}
-                                    self.toollist.append(tid)
-                    except Exception, e:
-                        err = "Configurazione voce menu errata: %s" % repr(e.args)
-                        err = True
-                        break
-                    except ImportError, e:
-                        err = "Modulo non trovato: %s" % sm
-                    if err:
-                        awu.MsgDialog(self, err, style=wx.ICON_ERROR)
-                    else:
-                        self.Bind(wx.EVT_MENU, self.OnMenuPers, id=mid)
+                            self.Bind(wx.EVT_MENU, self.OnMenuPers, id=mid)
+                    elif 'separator' in keys:
+                        if 'menu' in v.getAttribute('separator'):
+                            menu.AppendSeparator()
+                        if 'toolbar' in v.getAttribute('separator'):
+                            if not -1 in self.toolpers:
+                                self.toolpers[-1] = {'separator': True,}
+                            self.toollist.append(-1)
                 if err:
                     break
                 menubar.Append(menu, g.getAttribute('name'))
@@ -978,33 +1011,19 @@ class XFrame(aw.Frame):
             err = False
             for tid in self.toollist:
                 tp = self.toolpers[tid]
-                voice = tp['voice']
-                desc = tp['desc']
-                bmp = tp['image']
-                t = tb.AddLabelTool(tid, voice, bmp(), wx.NullBitmap, wx.ITEM_NORMAL, "")
-                #t.SetToolTipString(tp['desc'])
-                self.Bind(wx.EVT_TOOL, self.OnToolPers, id=tid)
-                
-#            tools = c.getElementsByTagName("tool")
-#            for t in tools:
-#                tid = wx.NewId()
-#                voice = t.getAttribute('voice')
-#                try:
-#                    image = t.getAttribute('image')
-#                    bmp = eval(image)
-#                except:
-#                    bmp = images.getTB_GenericBitmap()
-#                try:
-#                    sf = t.getAttribute('frame')
-#                    fc = eval(sf)
-#                    self.toolpers[tid] = fc
-#                except Exception, e:
-#                    awu.MsgDialog(self, "Configurazione strumento toolbar errata: %s" % repr(e.args))
-#                    break
-#                if tb is None:
-#                    tb = self.CreateStdToolBar()
-#                tb.AddLabelTool(tid, voice, bmp, wx.NullBitmap, wx.ITEM_NORMAL, "")
-#                self.Bind(wx.EVT_TOOL, self.OnToolPers, id=tid)
+                if 'voice' in tp:
+                    try:
+                        voice = tp['voice']
+                        desc = tp['desc']
+                        bmp = tp['image']
+                        t = tb.AddLabelTool(tid, voice, bmp(), wx.NullBitmap, wx.ITEM_NORMAL, "")
+                        #t.SetToolTipString(tp['desc'])
+                        self.Bind(wx.EVT_TOOL, self.OnToolPers, id=tid)
+                    except:
+                        pass
+                elif 'separator' in tp:
+                    if tp['separator']:
+                        tb.AddSeparator()
         else:
             
             from imgfac import ToolbarImagesFactory
