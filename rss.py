@@ -224,7 +224,7 @@ class RSSFeedPanel(aw.Panel):
 
         
 def AddNotebookFeedPage(notebook, feed_title, feed_url, update_now=False):
-    page = RSSFeedPanel(notebook, feed_title=feed_title, feed_url=feed_url)
+    page = RSSFeedPanel(notebook, feed_title=feed_title, feed_url=feed_url, size=(500,240))
     notebook.AddPage(page, feed_title)
     if update_now:
         page.UpdateFeed()
