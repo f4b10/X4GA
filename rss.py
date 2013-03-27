@@ -24,7 +24,7 @@
 
 import os
 import urllib2
-from xml.dom import minidom
+import feedparser
 
 import stormdb as adb
 
@@ -47,21 +47,13 @@ class RSSFeed:
         
         try:
             
-            file_request = urllib2.Request(self.url)
-            file_opener = urllib2.build_opener()
-            file_feed = file_opener.open(file_request).read()
-            file_xml = minidom.parseString(file_feed)
+            fp = feedparser.parse(self.url)
     
-            item_node = file_xml.getElementsByTagName("item")
-    
-            for item in item_node:
-                title = item.childNodes[0].firstChild.data
-                link = item.childNodes[1].firstChild.data
-    
-                linkdata.append((title, link))
+            for item in fp['entries']:
+                linkdata.append((item['title'], item['link']))
             
-        except:
-            pass
+        except Exception, e:
+            print repr(e.args)
         
         return linkdata
 

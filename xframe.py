@@ -25,6 +25,7 @@ import sys
 import wx
 import lib
 import stormdb as adb
+import rss
 
 appl = wx.GetApp()
 __app__ = (appl is not None)
@@ -210,8 +211,16 @@ class XFrame(aw.Frame):
                 nb.AddPage(rp, 'Promemoria')
             
             if show_feeds:
-                import rss
-                rss.AddNotebookFeedPage(nb, 'Notizie (beta)', "http://www.ilsole24ore.com/rss/norme-e-tributi/fisco.xml")
+                feeds = [['Notizie (beta)', "http://www.ilsole24ore.com/rss/norme-e-tributi/fisco.xml"]]
+                i = self.custom_info
+                for ff in i.getElementsByTagName('feeds'):
+                    for f in ff.getElementsByTagName('feed'):
+                        try:
+                            feeds.append([f.getAttribute('title'), f.getAttribute('url')])
+                        except:
+                            pass
+                for title, url in feeds:
+                    rss.AddNotebookFeedPage(nb, title, url)
         
         self.SetSizer(sizer)
         sizer.SetSizeHints(self)
