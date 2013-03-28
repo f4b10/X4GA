@@ -2862,6 +2862,9 @@ class Movim(adb.DbTable):
         
         bancf = doc.AddJoin(\
             bt.TABNAME_BANCF,     "bancf", join=adb.JOIN_LEFT)
+        
+        dest = doc.AddJoin(\
+            bt.TABNAME_DESTIN,    "dest", idLeft='id_dest', join=adb.JOIN_LEFT)
     
     def TotEvasQta(self):
         """
