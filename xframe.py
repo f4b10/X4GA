@@ -213,12 +213,13 @@ class XFrame(aw.Frame):
             if show_feeds:
                 feeds = [['Notizie (beta)', "http://www.ilsole24ore.com/rss/norme-e-tributi/fisco.xml"]]
                 i = self.custom_info
-                for ff in i.getElementsByTagName('feeds'):
-                    for f in ff.getElementsByTagName('feed'):
-                        try:
-                            feeds.append([f.getAttribute('title'), f.getAttribute('url')])
-                        except:
-                            pass
+                if i:
+                    for ff in i.getElementsByTagName('feeds'):
+                        for f in ff.getElementsByTagName('feed'):
+                            try:
+                                feeds.append([f.getAttribute('title'), f.getAttribute('url')])
+                            except:
+                                pass
                 for title, url in feeds:
                     rss.AddNotebookFeedPage(nb, title, url)
         
