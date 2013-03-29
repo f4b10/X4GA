@@ -197,7 +197,7 @@ def Doc1Func( parent, call_fit = True, set_sizer = True ):
     item7 = wx.StaticText( parent, ID_TEXT, "Descrizione dell'anagrafica:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item6.Add( item7, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP, 5 )
 
-    item8 = TextCtrl( parent, ID_DESCANAG, "", wx.DefaultPosition, [140,-1], 0 )
+    item8 = TextCtrl_LC( parent, ID_DESCANAG, "", wx.DefaultPosition, [140,-1], 0 )
     item8.SetName( "descanag" )
     item6.Add( item8, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
 
