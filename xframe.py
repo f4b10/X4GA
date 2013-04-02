@@ -163,23 +163,40 @@ class XFrame(aw.Frame):
         aw.Frame.__init__(self, parent, id, title, pos, size, style)
         
         show_promem = show_feeds = True
+        show_pages = []
         
         self.custom_info = None
-        frame_info = self.GetFrameInfo()
-        if frame_info:
-            def _int(n):
-                try:
-                    return int(n or 0)
-                except:
-                    return 0
-            show_promem = _int(frame_info.get('promemoria', 1))
-            show_feeds = _int(frame_info.get('feeds', 1))
-            frame_width = _int(frame_info.get('width', 0))
-            frame_height = _int(frame_info.get('height', 0))
-            if frame_width and frame_height:
-                def set_size():
-                    self.SetSize((frame_width, frame_height))
-                wx.CallAfter(set_size)
+        ci = self.GetFrameCustomInfo()
+        if ci:
+            try:
+                f = ci.getElementsByTagName('customize_frame')[0]
+                def _int(n, d):
+                    try:
+                        return int(n)
+                    except:
+                        return d
+                show_promem = _int(f.getAttribute('promemoria'), 1)
+                show_feeds = _int(f.getAttribute('feeds'), 1)
+                frame_width = _int(f.getAttribute('width'), 0)
+                frame_height = _int(f.getAttribute('height'), 0)
+                if frame_width and frame_height:
+                    def set_size():
+                        self.SetSize((frame_width, frame_height))
+                    wx.CallAfter(set_size)
+            except:
+                pass
+            
+            
+            for pages in ci.getElementsByTagName('pages'):
+                for page in pages.getElementsByTagName('page'):
+                    pt = page.getAttribute('title')
+                    pp = page.getAttribute('panel')
+                    if pp and pt:
+                        n = pp.rindex('.')
+                        pm, pc = pp[:n], pp[n+1:]
+                        m = __import__(pm, fromlist=True)
+                        if hasattr(m, pc):
+                            show_pages.append((pt, getattr(m, pc)))
         
         self.menuext = []
         self.ftdif = []
@@ -201,7 +218,7 @@ class XFrame(aw.Frame):
         sizer.AddGrowableCol(0)
         sizer.AddGrowableRow(0)
         
-        if show_promem or show_feeds:
+        if show_promem or show_feeds or show_pages:
             
             self.workzone = nb = wx.Notebook(self, -1)
             sizer.Add(nb, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 0)
@@ -222,11 +239,13 @@ class XFrame(aw.Frame):
                                 pass
                 for title, url in feeds:
                     rss.AddNotebookFeedPage(nb, title, url)
+            
+            for title, Panel in show_pages:
+                nb.AddPage(Panel(nb), title)
         
         self.SetSizer(sizer)
         sizer.SetSizeHints(self)
         
-        #self.CenterOnScreen()
         self.Fit()
         self.Layout()
         
@@ -296,6 +315,8 @@ class XFrame(aw.Frame):
         event.Skip()
     
     def GetFrameCustomInfo(self):
+        if not hasattr(self, 'custom_info'):
+            self.custom_info = None
         if self.custom_info is None:
             ua = adb.DbTable('x4.diritti', 'ua')
             ua.Reset()
@@ -308,7 +329,7 @@ class XFrame(aw.Frame):
                             try:
                                 self.custom_info = xml.dom.minidom.parseString(ua.customize_frame)
                                 return self.custom_info
-                            except Exception, e:
+                            except:
                                 pass
             p = Env.config_base_path
             p = opj(p, 'cust')
@@ -320,8 +341,8 @@ class XFrame(aw.Frame):
                     try:
                         self.custom_info = xml.dom.minidom.parse(f)
                         break
-                    except:
-                        pass
+                    except Exception, e:
+                        aw.awu.MsgDialog(self, repr(e.args), style=wx.ICON_ERROR)
         return self.custom_info
     
     def GetMenuPers(self):
@@ -373,6 +394,9 @@ class XFrame(aw.Frame):
                                 self.menupers[mid] = {'frame': fc,
                                                       'voice': mv,
                                                       'desc': md,}
+                                for key in keys:
+                                    if key.startswith('frame_'):
+                                        self.menupers[mid][key] = v.getAttribute(key)
                             else:
                                 err = "Frame non trovato: %s" % sf
                             if not err:
@@ -392,12 +416,10 @@ class XFrame(aw.Frame):
                                         self.toollist.append(tid)
                         except Exception, e:
                             err = "Configurazione voce menu errata: %s" % repr(e.args)
-                            err = True
-                            break
                         except ImportError, e:
                             err = "Modulo non trovato: %s" % sm
                         if err:
-                            awu.MsgDialog(self, err, style=wx.ICON_ERROR)
+                            aw.awu.MsgDialog(self, err, style=wx.ICON_ERROR)
                         else:
                             self.Bind(wx.EVT_MENU, self.OnMenuPers, id=mid)
                     elif 'separator' in keys:
@@ -411,7 +433,7 @@ class XFrame(aw.Frame):
                     break
                 menubar.Append(menu, g.getAttribute('name'))
         
-        if menubar is None:
+        if menubar is None and not self.menupers:
             menubar = XMenuBarFunc()
         
         return menubar
@@ -994,8 +1016,13 @@ class XFrame(aw.Frame):
     
     def LaunchMenuPers(self, menuid):
         if menuid in self.menupers:
-            fc = self.menupers[menuid]['frame']
-            self.LaunchFrame(fc)
+            mp = self.menupers[menuid]
+            fc = mp['frame']
+            kw = {}
+            for key in mp.keys():
+                if key.startswith('frame_'):
+                    kw[key] = mp[key]
+            self.LaunchFrame(fc, **kw)
     
     def OnToolPers(self, event):
         self.LaunchToolPers(event.GetId())
@@ -1016,6 +1043,7 @@ class XFrame(aw.Frame):
         return tb
     
     def CreateXToolBar(self):
+        tb = None
         if self.toolpers:
             tb = self.CreateStdToolBar()
             err = False
@@ -1034,7 +1062,7 @@ class XFrame(aw.Frame):
                 elif 'separator' in tp:
                     if tp['separator']:
                         tb.AddSeparator()
-        else:
+        elif not self.menupers:
             
             from imgfac import ToolbarImagesFactory
             fac = ToolbarImagesFactory()
@@ -1754,7 +1782,7 @@ class XFrame(aw.Frame):
         if quit:
             event.Skip()
     
-    def LaunchFrame(self, frameclass, size=None, show=True, centered=False):
+    def LaunchFrame(self, frameclass, size=None, show=True, centered=False, **kwargs):
 #        wait = awu.WaitDialog(self, message="Caricamento modulo in corso.",
 #                              style=wx.SIMPLE_BORDER)
         wx.BeginBusyCursor()
@@ -1762,7 +1790,7 @@ class XFrame(aw.Frame):
         err = None
         try:
             if True:#try:
-                frame = frameclass(self)
+                frame = frameclass(self, **kwargs)
                 if size:
                     frame.SetSize(size)
                 if centered:

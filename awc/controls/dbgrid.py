@@ -1822,8 +1822,8 @@ class ADB_Grid(DbGridColoriAlternati):
         if id is None:
             id = wx.NewId()
         
-        DbGridColoriAlternati.__init__(self, parent, id, 
-                                       size=parent.GetClientSizeTuple(), **kwargs)
+        kwargs['size'] = parent.GetClientSizeTuple()
+        DbGridColoriAlternati.__init__(self, parent, id, **kwargs)
         
         self.db_table = db_table
         self.is_editable = can_edit
