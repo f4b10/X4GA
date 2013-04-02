@@ -29,6 +29,12 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.70', None, (
+         ("BET1155",
+         """Implementata possibilità di personalizzazione della finestra
+         principale e del menu."""),
+        ),),
+    
     ('1.4.69', dt.Date(2013, 3, 24), (
          ("BUG1133",
          """Corretto bug in esportazione csv da griglie, originava eccezione

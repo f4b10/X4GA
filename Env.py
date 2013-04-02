@@ -662,7 +662,8 @@ class Azienda(object):
     params = {'password-length': 6,
               'onexit-execute': '',
               'redirect-output': 0,
-              'show-syspath': 0,}
+              'show-syspath': 0,
+              'custom-menu': '',}
     try:
         optlist, args = getopt.getopt(args, '', ['%s=' % key for key in params])
         for opt, val in optlist:

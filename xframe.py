@@ -331,12 +331,25 @@ class XFrame(aw.Frame):
                                 return self.custom_info
                             except:
                                 pass
-            p = Env.config_base_path
+            p = None
+            try:
+                p = Env.Azienda.config.get('Site', 'folder')
+            except:
+                pass
+            if not p:
+                p = Env.config_base_path
             p = opj(p, 'cust')
             p = opj(p, 'frame')
             p = opj(p, Env.Azienda.codice)
-            for f in (Env.Azienda.Login.username, '__allusers__'):
-                f = '%s.x4f' % opj(p, f)
+            names = []
+            if Env.Azienda.params['custom-menu']:
+                names.append(Env.Azienda.params['custom-menu'])
+            names.append(Env.Azienda.Login.username)
+            names.append('__allusers__')
+            for f in names:
+                f = opj(p, f)
+                if not f.endswith('.x4f'):
+                    f += '.x4f'
                 if os.path.exists(f):
                     try:
                         self.custom_info = xml.dom.minidom.parse(f)
