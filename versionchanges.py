@@ -29,7 +29,7 @@ import mx.DateTime as dt
 
 history = (
     
-    ('1.4.70', None, (
+    ('1.4.70', dt.Date(2013, 4, 2), (
          ("BET1155",
          """Implementata possibilità di personalizzazione della finestra
          principale e del menu."""),
