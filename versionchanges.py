@@ -29,6 +29,13 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.71', None, (
+         ("BET1156",
+         """Potenziata ricerca documenti in dataentry documento magazzino con
+         possibilità di esclusione di documenti acquisiti e/o annullati e di
+         memorizzazione delle selezioni impostate o meno."""),
+        ),),
+    
     ('1.4.70', dt.Date(2013, 4, 2), (
          ("BET1155",
          """Implementata possibilità di personalizzazione della finestra

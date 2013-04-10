@@ -89,6 +89,9 @@ datregsrc2 = today
 datdocsrc1 = datdocsrc2 = None
 magsearch = None
 pdcsearch = None
+acqsearch = True
+annsearch = True
+ricsearch = True
 
 def DbgMsg(x):
     #print x
@@ -2865,7 +2868,7 @@ class GridSearchDoc(dbglib.DbGridColoriAlternati):
             attr.SetReadOnly(True)
         return attr
     
-    def UpdateGrid(self, td, dr1, dr2, dd1, dd2, mag, pdc):
+    def UpdateGrid(self, td, dr1, dr2, dd1, dd2, mag, pdc, acq, ann):
         """
         Aggiorna i dati della griglia di ricerca.
         Passare:
@@ -2886,6 +2889,8 @@ class GridSearchDoc(dbglib.DbGridColoriAlternati):
         if dr2: docs.AddFilter("doc.datreg<=%s", dr2)
         if dd1: docs.AddFilter("doc.datdoc>=%s", dd1)
         if dd2: docs.AddFilter("doc.datdoc<=%s", dd2)
+        if not acq: docs.AddFilter("doc.f_acq IS NULL OR doc.f_acq<>1")
+        if not ann: docs.AddFilter("doc.f_ann IS NULL OR doc.f_ann<>1")
         docs.Retrieve()
         self.ChangeData(docs.GetRecordset())
 
@@ -2914,13 +2919,16 @@ class DocSearch(wx.Dialog):
         self.gridsrc = GridSearchDoc(pangrid)
         self.gridsrc.EnableColors((tipnum or '') in '23')
         
-        for ctrdatid, val in ((wdr.ID_SRCDATREG1, datregsrc1),
-                              (wdr.ID_SRCDATREG2, datregsrc2),
-                              (wdr.ID_SRCDATDOC1, datdocsrc1),
-                              (wdr.ID_SRCDATDOC2, datdocsrc2),
-                              (wdr.ID_SRCPDC,     pdcsearch),
-                              (wdr.ID_SRCMAGAZZ,  magsearch)):
-            c = self.FindWindowById(ctrdatid)
+        for name, val in (('srcdatreg1', datregsrc1),
+                          ('srcdatreg2', datregsrc2),
+                          ('srcdatdoc1', datdocsrc1),
+                          ('srcdatdoc2', datdocsrc2),
+                          ('id_magazz',  pdcsearch),
+                          ('id_pdc',     magsearch),
+                          ('acqsearch',  acqsearch),
+                          ('annsearch',  annsearch),
+                          ('ricordasel', ricsearch),):
+            c = self.FindWindowByName(name)
             c.SetValue(val)
             
         self.CenterOnScreen()
@@ -2957,16 +2965,11 @@ class DocSearch(wx.Dialog):
         event.Skip()
     
     def UpdateSearch(self):
-        dr1, dr2, dd1, dd2, magid, pdcid =\
-            map(lambda x: self.FindWindowById(x).GetValue(),
-                (wdr.ID_SRCDATREG1,
-                 wdr.ID_SRCDATREG2,
-                 wdr.ID_SRCDATDOC1,
-                 wdr.ID_SRCDATDOC2,
-                 wdr.ID_SRCMAGAZZ,
-                 wdr.ID_SRCPDC))
+        dr1, dr2, dd1, dd2, magid, pdcid, acq, ann =\
+            map(lambda x: self.FindWindowByName(x).GetValue(),
+                'srcdatreg1 srcdatreg2 srcdatdoc1 srcdatdoc2 id_magazz id_pdc acqsearch annsearch'.split())
         
-        self.gridsrc.UpdateGrid(self.tdocid, dr1, dr2, dd1, dd2, magid, pdcid)
+        self.gridsrc.UpdateGrid(self.tdocid, dr1, dr2, dd1, dd2, magid, pdcid, acq, ann)
         if self.gridsrc.dbdocs.IsEmpty():
             f = self.FindWindowById(wdr.ID_SRCDATREG1)
         else:
@@ -2974,13 +2977,6 @@ class DocSearch(wx.Dialog):
         def SetFocus():
             f.SetFocus()
         wx.CallAfter(SetFocus)
-        
-        global datregsrc1; datregsrc1 = dr1
-        global datregsrc2; datregsrc2 = dr2
-        global datdocsrc1; datdocsrc1 = dd1
-        global datdocsrc2; datdocsrc2 = dd2
-        global pdcsearch;  pdcsearch = pdcid
-        global magsearch;  magsearch = magid
 
     def OnDocSelected(self, event):
         self.DocSelected()
@@ -2993,6 +2989,21 @@ class DocSearch(wx.Dialog):
             docid = self.gridsrc.dbdocs.id
         except:
             pass
+        
+        global ricsearch; ricsearch = self.FindWindowByName('ricordasel').IsChecked()
+        if ricsearch:
+            dr1, dr2, dd1, dd2, magid, pdcid, acq, ann =\
+                map(lambda x: self.FindWindowByName(x).GetValue(),
+                    'srcdatreg1 srcdatreg2 srcdatdoc1 srcdatdoc2 id_magazz id_pdc acqsearch annsearch'.split())
+            global datregsrc1; datregsrc1 = dr1
+            global datregsrc2; datregsrc2 = dr2
+            global datdocsrc1; datdocsrc1 = dd1
+            global datdocsrc2; datdocsrc2 = dd2
+            global pdcsearch;  pdcsearch = pdcid
+            global magsearch;  magsearch = magid
+            global acqsearch;  acqsearch = acq
+            global annsearch;  annsearch = ann
+        
         self.EndModal(docid)
     
     def ShowModal(self):
