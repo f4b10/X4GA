@@ -29,7 +29,7 @@ import mx.DateTime as dt
 
 history = (
     
-    ('1.4.71', None, (
+    ('1.4.71', dt.Date(2013, 4, 16), (
          ("BET1156",
          """Potenziata ricerca documenti in dataentry documento magazzino con
          possibilità di esclusione di documenti acquisiti e/o annullati e di
