@@ -29,6 +29,12 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.72', dt.Date(2013, 4, 18), (
+         ("BUG1134",
+         """Risolto bug su alcune griglie che scatenavano ripetute
+         eccezioni dovute a problemi di impostazione dei colori."""),
+        ),),
+    
     ('1.4.71', dt.Date(2013, 4, 16), (
          ("BET1156",
          """Potenziata ricerca documenti in dataentry documento magazzino con

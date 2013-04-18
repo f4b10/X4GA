@@ -1574,7 +1574,8 @@ class DbGridTable(gridlib.PyGridTableBase):
 
 
 class DbGridColored(DbGrid):
-    _fgbgcol = None
+    
+    _fgbgcol = 'black', 'ivory2'
 
     def __init__(self, *args, **kwargs):
         DbGrid.__init__(self, *args, **kwargs)
