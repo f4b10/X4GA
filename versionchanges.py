@@ -29,6 +29,12 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.73', dt.Date(2013, 4, 22), (
+         ("BET1157",
+         """Aggiunto flag su configurazione documento per evitare copia
+         note documento da anagrafica."""),
+        ),),
+    
     ('1.4.72', dt.Date(2013, 4, 18), (
          ("BUG1134",
          """Risolto bug su alcune griglie che scatenavano ripetute

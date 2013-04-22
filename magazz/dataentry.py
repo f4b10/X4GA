@@ -1071,7 +1071,8 @@ class MagazzPanel(aw.Panel,\
                 """id_pdc id_dest id_modpag id_bancf id_speinc id_agente """\
                 """id_zona id_valuta id_tiplist id_aliqiva desrif numrif """\
                 """datrif noteint notedoc sconto1 sconto2 sconto3 sconto4 sconto5 sconto6""".split():
-                setattr(doc, name, cn(name).GetValue())
+                if name != 'notedoc' or doc.cfgdoc.aanotedoc != 1:
+                    setattr(doc, name, cn(name).GetValue())
             if bt.MAGNUMLIS > 0:
                 if doc.mov.RowsCount()>0 and doc.id_tiplist is not None\
                    and self.oldlist is not None and doc.id_tiplist != self.oldlist:
@@ -1265,7 +1266,7 @@ class MagazzPanel(aw.Panel,\
         if anag is not None:
             if 'note' in anag.GetFieldNames():
                 nc = anag.note or ''
-            if 'notedoc' in anag.GetFieldNames():
+            if 'notedoc' in anag.GetFieldNames() and doc.cfgdoc.aanotedoc != 1:
                 nd = anag.notedoc or ''
         self.controls['notecli'].SetValue(nc)
         self.controls['notecli2'].SetValue(nc)
@@ -1279,7 +1280,7 @@ class MagazzPanel(aw.Panel,\
             except:
                 pass
             self.controls['id_dest'].SetValue(destid)
-            if nd and doc.id is None:
+            if doc.id is None:
                 self.controls["notedoc"].SetValue(nd)
             if not doc.cfgdoc.askmpnoeff:
                 banid = None
@@ -2327,8 +2328,9 @@ class MagazzPanel(aw.Panel,\
             names.append("id_bancf")
             names.append("id_speinc")
         for name in names:
-            self.controls[name].SetValueSilent(\
-                self.dbdoc.__getattr__(name))
+            if name != 'notedoc' or self.dbdoc.cfgdoc.aanotedoc != 1:
+                self.controls[name].SetValueSilent(\
+                    self.dbdoc.__getattr__(name))
         self.FindWindowById(wdr.ID_STATUSACQ).UpdateText(self.dbdoc)
         self.UpdateHeadAnag()
         self.UpdateHeadDest()

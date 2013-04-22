@@ -402,6 +402,7 @@ class CauMagazzPanel(ga.AnagPanel):
                            ("nonumxmag",  { True: 1,   False: 0  } ),
                            ("noivaprof",  { True: 1,   False: 0  } ),
                            ("rptcolli",   { True: 1,   False: 0  } ),
+                           ("aanotedoc",  { True: 1,   False: 0  } ),
                            ):
             ctr = cn(name)
             ctr.SetDataLink(name, val)
