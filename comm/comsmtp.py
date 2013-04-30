@@ -164,7 +164,7 @@ class SendMail(object):
         self.msg['Date'] = formatdate(localtime=True)
         self.msg['Subject'] = Subject
         
-        self.msg.attach(MIMEText(Message))
+        self.msg.attach(MIMEText(Message, _charset='utf-8'))
         
         for attach in self.Attachments:
             f = open(attach, 'rb')

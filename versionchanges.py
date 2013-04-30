@@ -29,6 +29,12 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.74', None, (
+         ("BUG1135",
+         """Corretta spedizione email, settato l'encoding del messaggio
+         ad utf-8."""),
+        ),),
+    
     ('1.4.73', dt.Date(2013, 4, 22), (
          ("BET1157",
          """Aggiunto flag su configurazione documento per evitare copia
