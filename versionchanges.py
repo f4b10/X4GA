@@ -29,10 +29,13 @@ import mx.DateTime as dt
 
 history = (
     
-    ('1.4.74', None, (
+    ('1.4.74', dt.Date(2013, 5, 6), (
          ("BUG1135",
          """Corretta spedizione email, settato l'encoding del messaggio
          ad utf-8."""),
+         ("BUG1136",
+         """Corretta stampa etichette, originava eccezione se si richiedeva
+         la stampa a partire da riga/colonna diversi da 1/1."""),
         ),),
     
     ('1.4.73', dt.Date(2013, 4, 22), (

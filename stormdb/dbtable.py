@@ -3355,7 +3355,8 @@ class MultiEticList(DbMem):
 #    
     def GetPrintTable(self, rptdef, rows, cols, row0, col0,
                       startFunc=None, progrFunc=None, endFunc=None):
-        rsp = copy.deepcopy(self.GetRecordset())
+        rs0 = self._info.dbetic.GetRecordset()
+        rsp = copy.deepcopy(rs0)
         self._info.colonne = cols
         if callable(startFunc):
             startFunc(self)
@@ -3364,11 +3365,12 @@ class MultiEticList(DbMem):
             if row0>1 or col0>1:
                 rs = [None]*len(rsp[0])
                 rs = [rs]*(cols*(row0-1)+col0-1)
-                self.SetRecordset(rs+rsp)
+                self._info.dbetic.SetRecordset(rs+rsp)
             pt = SplittedMultiEticTable(self._info.dbetic, 'qtaetic', self._info.colonne, 
                                         progrFunc, qtadefault=1)
         finally:
             if callable(endFunc):
                 endFunc(self)
         self.SetRecordset(rsp)
+        self._info.dbetic.SetRecordset(rs0)
         return pt
