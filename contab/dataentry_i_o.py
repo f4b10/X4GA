@@ -580,6 +580,11 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
         grid.Bind(gl.EVT_GRID_CELL_LEFT_CLICK, self._GridEdit_Iva_OnLeftClick)
         
         self._grid_iva = grid
+        
+        self._db_pdc = DbTable('pdc')
+        self._db_pdc.AddJoin('bilmas', idLeft='id_bilmas')
+        self._db_pdc.AddJoin('bilcon', idLeft='id_bilcon')
+        self._db_pdc.Reset()
     
     def _GridEdit_Iva_OnLeftClick(self, event):
         if self.status != ctb.STATUS_EDITING or not self.reg_nocalciva:
@@ -655,9 +660,14 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
                 if id2 is None:
                     for n, rsb in enumerate(self.regrsb):
                         if n>0 and rsb[ctb.RSDET_TIPRIGA] == 'C':
-                            id2 =  rsb[ctb.RSDET_PDCPA_ID]
-                            cod2 = rsb[ctb.RSDET_PDCPA_cod]
-                            des2 = rsb[ctb.RSDET_PDCPA_des]
+                            self._db_pdc.Get(rsb[ctb.RSDET_PDCPA_ID])
+                            if self._db_pdc.bilmas.tipo == "E":
+                                #prende il primo sottoconto di tipo economico presente
+                                #nel dettaglio della registrazione
+                                id2 =  rsb[ctb.RSDET_PDCPA_ID]
+                                cod2 = rsb[ctb.RSDET_PDCPA_cod]
+                                des2 = rsb[ctb.RSDET_PDCPA_des]
+                                break
                 rsi[RSIVA_pdcind_id] = id2
                 rsi[RSIVA_pdcind_cod] = cod2
                 rsi[RSIVA_pdcind_des] = des2

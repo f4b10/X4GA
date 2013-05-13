@@ -29,6 +29,15 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.75', dt.Date(2013, 5, 13), (
+         ("BUG1137",
+         """Corretta la determinazione del conto di costo da utilizzare nel dataentry
+         contabile delle registrazioni iva per la parte indeducibile dell'imposta in 
+         caso di mancanza dell'automatismo del sottoconto iva indeducibile: ora viene 
+         considerato il primo sottoconto di contropartita appartenente a mastro di 
+         tipo economico."""),
+        ),),
+    
     ('1.4.74', dt.Date(2013, 5, 6), (
          ("BUG1135",
          """Corretta spedizione email, settato l'encoding del messaggio
