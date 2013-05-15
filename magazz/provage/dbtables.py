@@ -45,10 +45,10 @@ class ProvvigAgentiDetTable(adb.DbTable):
         
         self._AddGroups()
         
-        self.AddTotalOf('mov.importo*(tipdoc.provvig)',                'vendita')
-        self.AddAverageOf('mov.perpro',                                'perpro')
-        self.AddTotalOf('mov.importo*mov.perpro*(tipdoc.provvig)/100', 'provvig')
-        self.AddTotalOf('pcf.imptot-pcf.imppar',                       'saldo')
+        self.AddTotalOf('mov.importo*(tipdoc.provvig)', 'vendita')
+        self.AddAverageOf('IF(mov.perpro IS NULL, prod.perpro, mov.perpro)', 'perpro')
+        self.AddTotalOf('mov.importo*IF(mov.perpro IS NULL, prod.perpro, mov.perpro)*(tipdoc.provvig)/100', 'provvig')
+        self.AddTotalOf('pcf.imptot-pcf.imppar', 'saldo')
         
         self.AddBaseFilter('tipdoc.provvig IN (1, -1)')
         self.AddBaseFilter('tipmov.noprovvig IS NULL OR tipmov.noprovvig<>1')
