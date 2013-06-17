@@ -1376,6 +1376,9 @@ class DocMag(adb.DbTable):
                         pass
             self.UpdateMovExternalRead()
     
+    def _InitTotalizzaRighe(self):
+        pass
+    
     def _TotalizzaRiga(self, mov):
         return True
     
@@ -1598,6 +1601,8 @@ class DocMag(adb.DbTable):
                 if totau != self.totaumpr and lastm is not None:
                     self.mov.MoveRow(lastm)
                     self.mov.importo = RoundImp(self.mov.importo+self.totaumpr-totau)
+        
+        self._InitTotalizzaRighe()
         
         for mov in self.mov:
             if not self._TotalizzaRiga(mov):

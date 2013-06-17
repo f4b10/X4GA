@@ -29,6 +29,12 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.76', dt.Date(2013, 6, 18), (
+         ("BET1158",
+         """Aumentate classificazioni su mod.pagamento: aggiunte cambiale/altro, con
+         garanzia/senza."""),
+        ),),
+    
     ('1.4.75', dt.Date(2013, 5, 13), (
          ("BUG1137",
          """Corretta la determinazione del conto di costo da utilizzare nel dataentry

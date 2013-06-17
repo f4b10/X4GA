@@ -81,11 +81,13 @@ class ModPagPanel(ga.AnagPanel):
         wdr.ModPagCardFunc( p, True )
         
         for cid, name, opt, evt in (\
-            (wdr.ID_TIPOMP,   'tipo',     'CBRI', self.OnChanged),
-            (wdr.ID_MODOCALC, 'modocalc', 'SDN',  self.OnCalcChanged),
-            (wdr.ID_PERIODI,  'tipoper',  'MG',   self.OnCalcChanged)):
+            (wdr.ID_TIPOMP,   'tipo',     'CBRIXY', self.OnChanged),
+            (wdr.ID_MODOCALC, 'modocalc', 'SDN',    self.OnCalcChanged),
+            (wdr.ID_PERIODI,  'tipoper',  'MG',     self.OnCalcChanged)):
             self.FindWindowById(cid).SetDataLink(name, opt)
             self.Bind(wx.EVT_RADIOBOX, evt, id=cid)
+        
+        self.FindWindowByName('congar').SetDataLink(values=[1, 0])
         
         for cid, name in ((wdr.ID_FINEMESE, 'finemese0'),
                           (wdr.ID_FINEMESE, 'finemese'),
