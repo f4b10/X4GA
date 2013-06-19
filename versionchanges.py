@@ -29,6 +29,11 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.77', dt.Date(2013, 6, 19), (
+         ("BET1159",
+         """Implementata provincia nel file di emissione riba."""),
+        ),),
+    
     ('1.4.76', dt.Date(2013, 6, 18), (
          ("BET1158",
          """Aumentate classificazioni su mod.pagamento: aggiunte cambiale/altro, con

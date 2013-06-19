@@ -682,6 +682,13 @@ class EmiEffettiPanel(wx.Panel):
             else:
                 out = s(cli.spdind,30)+s(cli.spdcap,5)+s(cli.spdcit,20)
             return out
+        def addrcli2(eff):
+            cli = eff.pdc.anag
+            if not cli.spdind:
+                out = s(cli.indirizzo,30)+s(cli.cap,5)+s(cli.citta,22)+' '+s(cli.prov or '', 2)
+            else:
+                out = s(cli.spdind,30)+s(cli.spdcap,5)+s(cli.spdcit,22)+' '+s(cli.spdpro or '', 2)
+            return out
         def rifdoc(eff):
             return eff.rifdoc()
         eff = self.dbeff
