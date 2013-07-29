@@ -1781,7 +1781,7 @@ class Azienda(object):
                 [ "codice",     "CHAR",    10, None, "Codice", None ],
                 [ "descriz",    "VARCHAR", 60, None, "Descrizione", None ],\
                 [ "tipo",       "CHAR",     1, None, "Tipologia", None ],\
-                [ "congar",     "CHAR",     1, None, "Flag con o senza garanzia", None ],\
+                [ "congar",     "TINYINT",  1, None, "Flag con o senza garanzia", None ],\
                 [ "contrass",   "TINYINT",  1, None, "Flag contrassegno", None ],\
                 [ "askbanca",   "TINYINT",  1, None, "Flag richiesta banca", None ],\
                 [ "askspese",   "TINYINT",  1, None, "Flag richiesta spese", None ],\

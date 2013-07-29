@@ -29,6 +29,11 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.78', dt.Date(2013, 7, 8), (
+         ("BUG1138",
+         """Flag "con garanzia" su partite di tipo numerico."""),
+        ),),
+    
     ('1.4.77', dt.Date(2013, 6, 19), (
          ("BET1159",
          """Implementata provincia nel file di emissione riba."""),
