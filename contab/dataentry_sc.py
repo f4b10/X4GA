@@ -32,6 +32,7 @@ from mx import DateTime
 
 import Env
 from Env import Azienda
+from anag.util import GetPdcDialogClass
 bt = Azienda.BaseTab
 stdcolor = Env.Azienda.Colours
 
@@ -67,6 +68,9 @@ from anag.pdc import PdcDialog
 from anag.pdctip import PdcTipDialog
 
 from contab.util import SetWarningPag
+
+import stormdb as adb
+
 
 (GridSelectedEvent, EVT_GRIDSELECTED) = wx.lib.newevent.NewEvent()
 
@@ -532,17 +536,33 @@ class ScaGrid(dbglib.DbGrid):
                 pass
             def _MastroPcf(*args):
                 pass
+            def _CalcolaAbbuono(*args):
+                r = self.regrss[row]
+                x = ["A", "P"]
+                if self.owner._cfg_pasegno == "D":
+                    x = ["P", "A"]
+                d = r[RSSCA_IMPSALDO]-r[RSSCA_IMPORTO]
+                r[RSSCA_ABBUONO] = abs(d)
+                r[RSSCA_TIPABB] = x[int(d>0)]
+                r[RSSCA_IMPORTO] += d
+                self.UpdateSaldi(row)
+                self.owner._grid_sca.ResetView()
+                self.owner._grid_dav.UpdateDav()
+                self.owner.UpdatePanelDav()
             self.SelectRow(row)
             deleteId = wx.NewId()
             schedaId = wx.NewId()
             mastroId = wx.NewId()
+            calcabId = wx.NewId()
             menu = wx.Menu()
             menu.Append(deleteId, "Elimina riga")
             menu.Append(schedaId, "Apri la scheda della partita")
             menu.Append(mastroId, "Visualizza il mastro della partita")
+            menu.Append(calcabId, "Calcola abbuono")
             menu.Enable(schedaId, False)
             menu.Enable(mastroId, False)
             self.pansca.Bind(wx.EVT_MENU, _DeleteRow, id=deleteId)
+            self.pansca.Bind(wx.EVT_MENU, _CalcolaAbbuono, id=calcabId)
             xo, yo = event.GetPosition()
             self.pansca.PopupMenu(menu, (xo, yo))
             menu.Destroy()
@@ -855,6 +875,22 @@ class ContabPanelTipo_SC(ctb.ContabPanel):
         self._grid_pcf.Bind(gl.EVT_GRID_CELL_LEFT_DCLICK, self.OnSalda)
         self._grid_pcf.Bind(gl.EVT_GRID_RANGE_SELECT, self.OnPcfSelected)
         self.Bind(wx.EVT_CHECKBOX, self._OnSaldo0, id=wdr.ID_CHKPCFOPEN)
+        cn = self.FindWindowByName
+        self.Bind(wx.EVT_BUTTON, self.OnSchedaCliFor, cn('butanag'))
+    
+    def OnSchedaCliFor(self, event):
+        if len(self.regrsb) > 0:
+            id_pdc = self.regrsb[0][ctb.RSDET_PDCPA_ID]
+            pdc = adb.DbTable('pdc')
+            pdc.AddJoin('pdctip', 'tipo')
+            if pdc.Get(id_pdc) and pdc.OneRow():
+                PdcClass = GetPdcDialogClass(pdc.id_tipo)
+                if PdcClass:
+                    dlg = PdcClass(self, onecodeonly=id_pdc)
+                    dlg.OneCardOnly(id_pdc)
+                    dlg.ShowModal()
+                    dlg.Destroy()
+        event.Skip()
     
     def OnDatDocChanged(self, event):
         self.reg_datdoc = self.controls["datdoc"].GetValue()

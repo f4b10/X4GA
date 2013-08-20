@@ -60,23 +60,19 @@ def _GetPdcClass(id_tipo, w_tipo, **kwargs):
         dbtip = adb.DbTable("pdctip", "tipo", writable=False)
         if dbtip.Get(id_tipo) and dbtip.RowsCount() == 1:
             tipo = dbtip.tipo
-    from anag.pdc import PdcPanel, PdcFrame, PdcDialog
+    from contab.pdcint import PdcInterrPanel, PdcInterrFrame, PdcInterrDialog
     if tipo is not None:
-        from anag.casse   import CassePanel,   CasseFrame,   CasseDialog
-        from anag.banche  import BanchePanel,  BancheFrame,  BancheDialog
-        from anag.effetti import EffettiPanel, EffettiFrame, EffettiDialog
-        from anag.clienti import ClientiPanel, ClientiFrame, ClientiDialog
-        from anag.fornit  import FornitPanel,  FornitFrame,  FornitDialog
-        clss = [PdcPanel, PdcFrame, PdcDialog]
+        from contab.pdcint import CasseInterrPanel, CasseInterrFrame, CasseInterrDialog, BancheInterrPanel, BancheInterrFrame, BancheInterrDialog, EffettiInterrPanel, EffettiInterrFrame, EffettiInterrDialog, ClientiInterrPanel, ClientiInterrFrame, ClientiInterrDialog, FornitInterrPanel, FornitInterrFrame, FornitInterrDialog
+        clss = [PdcInterrPanel, PdcInterrFrame, PdcInterrDialog]
         if tipo in tipibase:
-            clss = ((CassePanel,   CasseFrame,   CasseDialog),\
-                    (BanchePanel,  BancheFrame,  BancheDialog),\
-                    (EffettiPanel, EffettiFrame, EffettiDialog),\
-                    (ClientiPanel, ClientiFrame, ClientiDialog),\
-                    (FornitPanel,  FornitFrame,  FornitDialog))[tipibase.index(tipo)]
+            clss = ((CasseInterrPanel,   CasseInterrFrame,   CasseInterrDialog),\
+                    (BancheInterrPanel,  BancheInterrFrame,  BancheInterrDialog),\
+                    (EffettiInterrPanel, EffettiInterrFrame, EffettiInterrDialog),\
+                    (ClientiInterrPanel, ClientiInterrFrame, ClientiInterrDialog),\
+                    (FornitInterrPanel,  FornitInterrFrame,  FornitInterrDialog))[tipibase.index(tipo)]
         cls = clss[w_tipo]
     if cls is None:
-        cls = [PdcPanel, PdcFrame, PdcDialog][w_tipo]
+        cls = [PdcInterrPanel, PdcInterrFrame, PdcInterrDialog][w_tipo]
     return cls
 
 

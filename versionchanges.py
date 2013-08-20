@@ -29,6 +29,12 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.79', None, (
+         ("BET1160",
+         """Richiamo videate di interrogazione da bottone scheda
+         anagrafica di elementi derivanti dal piano dei conti."""),
+        ),),
+    
     ('1.4.78', dt.Date(2013, 7, 8), (
          ("BUG1138",
          """Flag "con garanzia" su partite di tipo numerico."""),
