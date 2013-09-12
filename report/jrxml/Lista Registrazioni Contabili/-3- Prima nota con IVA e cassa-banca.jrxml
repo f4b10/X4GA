@@ -18,7 +18,7 @@
 		 isTitleNewPage="false"
 		 isSummaryNewPage="false">
 	<property name="py_righe_i" value="RS.VediRighe_I(True)" />
-	<property name="EnqueueReport" value="&apos;Riepilogo Iva&apos;" />
+	<property name="EnqueueReport" value="&apos;_Riepilogo Iva&apos;" />
 	<property name="EnqueueTable" value="RS._info.riepiva" />
 	<property name="ireport.scriptlethandling" value="0" />
 	<property name="ireport.encoding" value="UTF-8" />

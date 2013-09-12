@@ -29,7 +29,18 @@ import mx.DateTime as dt
 
 history = (
     
-    ('1.4.79', None, (
+    ('1.4.80', dt.Date(2013, 9, 12), (
+         ("BUG1139",
+         """Corretta stampa prima nota con iva, ripeteva il
+         sottoconto della prima riga sulle righe iva."""),
+         """Corretta stampa prima nota con iva e cassa banca, 
+         errore su riepilogo iva iva."""),
+         ("BET1161",
+         """Possibilità di inclusione costi e ricavi su stampa
+         registri iva."""),
+        ),),
+    
+    ('1.4.79', dt.Date(2013, 8, 20), (
          ("BET1160",
          """Richiamo videate di interrogazione da bottone scheda
          anagrafica di elementi derivanti dal piano dei conti."""),

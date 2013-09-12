@@ -1189,7 +1189,7 @@
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						key="con_dare">
-							<printWhenExpression><![CDATA[RS.id_pdcpa != RS._info.id_pdc_hilite]]></printWhenExpression>
+							<printWhenExpression><![CDATA[not RS.tipriga in ('I','E','O') and RS.id_pdcpa != RS._info.id_pdc_hilite]]></printWhenExpression>
 						</reportElement>
 					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1211,7 +1211,7 @@
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						key="con_avere">
-							<printWhenExpression><![CDATA[RS.id_pdcpa != RS._info.id_pdc_hilite]]></printWhenExpression>
+							<printWhenExpression><![CDATA[not RS.tipriga in ('I','E','O') and RS.id_pdcpa != RS._info.id_pdc_hilite]]></printWhenExpression>
 						</reportElement>
 					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1233,7 +1233,7 @@
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						key="con_note">
-							<printWhenExpression><![CDATA[RS.tipriga != 'I' and RS.note is not None]]></printWhenExpression>
+							<printWhenExpression><![CDATA[not RS.tipriga in ('I','E','O') and RS.tipriga != 'I' and RS.note is not None]]></printWhenExpression>
 						</reportElement>
 					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1255,7 +1255,7 @@
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						key="con_codana">
-							<printWhenExpression><![CDATA[RS.id_pdcpa != RS._info.id_pdc_hilite]]></printWhenExpression>
+							<printWhenExpression><![CDATA[not RS.tipriga in ('I','E','O') and RS.id_pdcpa != RS._info.id_pdc_hilite]]></printWhenExpression>
 						</reportElement>
 					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1277,7 +1277,7 @@
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						key="con_sottoconto">
-							<printWhenExpression><![CDATA[RS.id_pdcpa != RS._info.id_pdc_hilite]]></printWhenExpression>
+							<printWhenExpression><![CDATA[not RS.tipriga in ('I','E','O') and RS.id_pdcpa != RS._info.id_pdc_hilite]]></printWhenExpression>
 						</reportElement>
 					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1299,7 +1299,7 @@
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						key="iva_aliqcod">
-							<printWhenExpression><![CDATA[RS.tipriga == 'I']]></printWhenExpression>
+							<printWhenExpression><![CDATA[RS.tipriga in ('I','E','O')]]></printWhenExpression>
 						</reportElement>
 					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1321,7 +1321,7 @@
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						key="iva_aliqdes">
-							<printWhenExpression><![CDATA[RS.tipriga == 'I']]></printWhenExpression>
+							<printWhenExpression><![CDATA[RS.tipriga in ('I','E','O')]]></printWhenExpression>
 						</reportElement>
 					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1343,7 +1343,7 @@
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						key="iva_imponib">
-							<printWhenExpression><![CDATA[RS.tipriga == 'I' and bool(RS.imponib)]]></printWhenExpression>
+							<printWhenExpression><![CDATA[RS.tipriga in ('I','E','O') and bool(RS.imponib)]]></printWhenExpression>
 						</reportElement>
 					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1365,7 +1365,7 @@
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						key="iva_imposta">
-							<printWhenExpression><![CDATA[RS.tipriga == 'I' and bool(RS.imposta)]]></printWhenExpression>
+							<printWhenExpression><![CDATA[RS.tipriga in ('I','E','O') and bool(RS.imposta)]]></printWhenExpression>
 						</reportElement>
 					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1387,7 +1387,7 @@
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						key="iva_indeduc">
-							<printWhenExpression><![CDATA[RS.tipriga == 'I' and bool(RS.indeduc)]]></printWhenExpression>
+							<printWhenExpression><![CDATA[RS.tipriga in ('I','E','O') and bool(RS.indeduc)]]></printWhenExpression>
 						</reportElement>
 					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1409,7 +1409,7 @@
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						key="iva_note">
-							<printWhenExpression><![CDATA[RS.tipriga == 'I']]></printWhenExpression>
+							<printWhenExpression><![CDATA[RS.tipriga in ('I','E','O')]]></printWhenExpression>
 						</reportElement>
 					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1431,7 +1431,7 @@
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						key="con_codana-1">
-							<printWhenExpression><![CDATA[RS.id_pdcpa == RS._info.id_pdc_hilite]]></printWhenExpression>
+							<printWhenExpression><![CDATA[not RS.tipriga in ('I','E','O') and RS.id_pdcpa == RS._info.id_pdc_hilite]]></printWhenExpression>
 						</reportElement>
 					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1453,7 +1453,7 @@
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						key="con_sottoconto-1">
-							<printWhenExpression><![CDATA[RS.id_pdcpa == RS._info.id_pdc_hilite]]></printWhenExpression>
+							<printWhenExpression><![CDATA[not RS.tipriga in ('I','E','O') and RS.id_pdcpa == RS._info.id_pdc_hilite]]></printWhenExpression>
 						</reportElement>
 					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1475,7 +1475,7 @@
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						key="con_dare-1">
-							<printWhenExpression><![CDATA[RS.id_pdcpa == RS._info.id_pdc_hilite]]></printWhenExpression>
+							<printWhenExpression><![CDATA[not RS.tipriga in ('I','E','O') and RS.id_pdcpa == RS._info.id_pdc_hilite]]></printWhenExpression>
 						</reportElement>
 					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1497,7 +1497,7 @@
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						key="con_avere-1">
-							<printWhenExpression><![CDATA[RS.id_pdcpa == RS._info.id_pdc_hilite]]></printWhenExpression>
+							<printWhenExpression><![CDATA[not RS.tipriga in ('I','E','O') and RS.id_pdcpa == RS._info.id_pdc_hilite]]></printWhenExpression>
 						</reportElement>
 					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>

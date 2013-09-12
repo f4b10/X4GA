@@ -1591,6 +1591,9 @@ class RegIva(adb.DbTable,
         self._intestaz = r.intestaz
         self._intanno = r.intanno
         self._intpag = r.intpag
+#=======================================stampa controp.su registi================================
+        self._stacosric=r.stacosric
+#=======================================stampa controp.su registi================================
         
         if r.tipo in "VC":
             self._info.segnop = "D"
@@ -1606,12 +1609,20 @@ class RegIva(adb.DbTable,
         
         mov = self.AddMultiJoin(\
             bt.TABNAME_CONTAB_B,  "mov")
-        mov.AddFilter("mov.tipriga IN ('I', 'E', 'O')")
         
         s = self._info.segnom
-        mov.AddField("mov.imponib*IF(mov.segno='%s',1,-1)" % s, "total_imponib")
-        mov.AddField("mov.imposta*IF(mov.segno='%s',1,-1)" % s, "total_imposta")
-        mov.AddField("mov.indeduc*IF(mov.segno='%s',1,-1)" % s, "total_indeduc")
+#=======================================stampa controp.su registi================================
+        if bt.TIPO_CONTAB=='O' and self._stacosric:
+            mov.AddFilter("mov.tipriga IN ('I', 'E', 'O', 'C')")
+            mov.AddField("mov.imponib*IF(mov.segno='%s',1,-1)*IF(mov.tipriga='C',0,1)" % s, "total_imponib")
+            mov.AddField("mov.imposta*IF(mov.segno='%s',1,-1)*IF(mov.tipriga='C',0,1)" % s, "total_imposta")
+            mov.AddField("mov.indeduc*IF(mov.segno='%s',1,-1)*IF(mov.tipriga='C',0,1)" % s, "total_indeduc")
+        else:
+            mov.AddFilter("mov.tipriga IN ('I', 'E', 'O')")
+            mov.AddField("mov.imponib*IF(mov.segno='%s',1,-1)" % s, "total_imponib")
+            mov.AddField("mov.imposta*IF(mov.segno='%s',1,-1)" % s, "total_imposta")
+            mov.AddField("mov.indeduc*IF(mov.segno='%s',1,-1)" % s, "total_indeduc")
+#=======================================stampa controp.su registi================================
         
         bodycf = self.AddJoin(\
             bt.TABNAME_CONTAB_B,  "bcf", idLeft="id", idRight="id_reg",\
@@ -1636,8 +1647,14 @@ class RegIva(adb.DbTable,
         self.AddTotalOf("tot.imposta*IF(tot.segno='%s',1,-1)" % s, "imposta")
         self.AddTotalOf("tot.indeduc*IF(tot.segno='%s',1,-1)" % s, "indeduc")
         
-        iva = mov.AddJoin(\
-            bt.TABNAME_ALIQIVA,   "iva")
+#=======================================stampa controp.su registi================================
+        if bt.TIPO_CONTAB=='O' and self._stacosric:
+            iva = mov.AddJoin(\
+                bt.TABNAME_ALIQIVA,   "iva", join=adb.JOIN_LEFT)
+        else:
+            iva = mov.AddJoin(\
+                bt.TABNAME_ALIQIVA,   "iva")
+#=======================================stampa controp.su registi================================
         
         pdp = mov.AddJoin(\
             bt.TABNAME_PDC,       "pdcpa", idLeft='id_pdcpa', join=adb.JOIN_LEFT)
