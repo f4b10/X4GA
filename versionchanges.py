@@ -33,8 +33,9 @@ history = (
          ("BUG1139",
          """Corretta stampa prima nota con iva, ripeteva il
          sottoconto della prima riga sulle righe iva."""),
+         ("BUG1140",                
          """Corretta stampa prima nota con iva e cassa banca, 
-         errore su riepilogo iva iva."""),
+         dava errore su riepilogo iva."""),
          ("BET1161",
          """Possibilità di inclusione costi e ricavi su stampa
          registri iva."""),
