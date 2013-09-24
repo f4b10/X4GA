@@ -29,6 +29,13 @@ import mx.DateTime as dt
 
 history = (
     
+    ('1.4.81', dt.Date(2013, 9, 19), (
+         ("BUG1141",                
+         """Corretta liquidazione iva, se il risultato della 
+         liquidazione era zero, originava eccezione nel componimento
+         del messaggio."""),
+        ),),
+    
     ('1.4.80', dt.Date(2013, 9, 12), (
          ("BUG1139",
          """Corretta stampa prima nota con iva, ripeteva il

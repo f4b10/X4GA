@@ -740,6 +740,9 @@ class LiqIvaPanel(aw.Panel):
                             """Con questa liquidazione non c'è da versare nulla.\n"""\
                             """Il credito di Euro %s verrà riportato nella prossima liquidazione."""\
                             % Env.StrImp(cred)
+                else:
+                    message =\
+                            """Questa liquidazione è a zero."""
             message += """\n\nConfermi l'operazione?"""
             r = awu.MsgDialog(self, message, "Conferma liquidazione",
                               style=wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT)
