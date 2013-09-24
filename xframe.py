@@ -26,6 +26,7 @@ import wx
 import lib
 import stormdb as adb
 import rss
+import strumenti
 
 appl = wx.GetApp()
 __app__ = (appl is not None)
@@ -668,6 +669,8 @@ class XFrame(aw.Frame):
             (self.OnChiusMagazzGenMoviIni,     ID_CHIUSMAGAZZ_GENMOVINI),
             
             (self.OnBackupExplorer,            ID_BACKUPEXPLORER),
+
+            (self.OnChangeIva,                 ID_CHANGEIVA),
             
             (self.OnHelp,                      ID_HELP),
             (self.OnAbout,                     ID_ABOUT),
@@ -1761,6 +1764,11 @@ class XFrame(aw.Frame):
     def OnBackupExplorer(self, event):
         from backexp import BackupExplorerFrame
         self.LaunchFrame(BackupExplorerFrame)
+    
+    def OnChangeIva(self, event):
+        from strumenti.changeiva import ChangeIvaFrame
+        self.LaunchFrame(ChangeIvaFrame)            
+            
     
     def OnHelp(self, event):
         a = wx.GetApp()

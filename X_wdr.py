@@ -1376,9 +1376,11 @@ ID_CHIUSMAGAZZ_GENMOVINI = 10254
 ID_MENUCHIUSMAGAZZ = 10255
 ID_MENUCHIUSURE = 10256
 ID_BACKUPEXPLORER = 10257
-ID_MENUSTRUMENTI = 10258
-ID_ABOUT = 10259
-ID_UPDATES = 10260
+ID_CHANGEIVA = 10258
+ID_UTILITY = 10259
+ID_MENUSTRUMENTI = 10260
+ID_ABOUT = 10261
+ID_UPDATES = 10262
 
 def XMenuBarFunc():
     item0 = wx.MenuBar(wx.MB_DOCKABLE)
@@ -1779,17 +1781,23 @@ def XMenuBarFunc():
     item40.AppendMenu( ID_MENUCHIUSURE, "Chiusure", item49 )
 
     item40.Append( ID_BACKUPEXPLORER, "Backup Explorer\tAlt-Ctrl-B", "Backup e Restore del database dell'azienda" )
-    item0.Append( item40, "Strumenti" )
+    item40.AppendSeparator()
     
     item53 = wx.Menu()
-    item53.Append( ID_ABOUT, "Informazioni sulla versione\tCtrl-?", "" )
-    item53.Append( ID_UPDATES, "Verifica disponibilità aggiornamenti", "" )
-    item0.Append( item53, "?" )
+    item53.Append( ID_CHANGEIVA, "Modifica Cod.Iva su prodotti", "" )
+    item40.AppendMenu( ID_UTILITY, "Utilità", item53 )
+
+    item0.Append( item40, "Strumenti" )
+    
+    item54 = wx.Menu()
+    item54.Append( ID_ABOUT, "Informazioni sulla versione\tCtrl-?", "" )
+    item54.Append( ID_UPDATES, "Verifica disponibilità aggiornamenti", "" )
+    item0.Append( item54, "?" )
     
     return item0
 
 ID_INTMAGSRCDES = 5013
-ID_HELP = 10261
+ID_HELP = 10263
 
 def XLiteMenuBar():
     item0 = wx.MenuBar()
