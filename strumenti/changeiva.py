@@ -93,23 +93,58 @@ class ChangeIvaPanel(aw.Panel):
     def OnAbort(self, event):
         event.Skip()
         
-        
+    def CreateNewSpeInc(self, oldIva, newIva, r):
+        oldId=r[0]
+        oldCodice=r[1]
+        oldDescriz=r[2]
+        oldImporto=r[3]
+        oldId_aliqiva=r[4]
+        db = adb.db.__database__
+        cmd="select perciva FROM %s where id=%s" % (bt.TABNAME_ALIQIVA, newIva)
+        db.Retrieve(cmd)
+        newAliqIva=int(db.rs[0][0])
+        newCodice='%s.%s' % (oldCodice, newAliqIva)
+        newDescriz='%s.%s' % (oldDescriz, newAliqIva)
+        cmd="INSERT INTO %s (codice, descriz, importo, id_aliqiva) VALUES ('%s', '%s', %s, %s)" % (bt.TABNAME_SPEINC, newCodice, newDescriz, oldImporto, newIva)
+        db.Retrieve(cmd)
+        cmd="select id FROM %s where codice='%s'" % (bt.TABNAME_SPEINC, newCodice)        
+        db.Retrieve(cmd)
+        return db.rs[0][0]
         
     def ChangeIva(self, oldIva, newIva):
         db = adb.db.__database__
+        db1 = adb.db.__database__
+        cmd="select COUNT(*) FROM %s where id_aliqiva=%s" % (bt.TABNAME_SPEINC, oldIva)
+        db.Retrieve(cmd)
+        speinc=db.rs
+        nCliSpeChg=0
+        if speinc[0][0]>0:
+            db.Retrieve('select * FROM %s where id_aliqiva=%s' % (bt.TABNAME_SPEINC, oldIva))
+            speinc=db.rs
+            for x in speinc:
+                oldIdSpe=x[0]
+                newIdSpe=self.CreateNewSpeInc(oldIva, newIva, x )
+                cmd="select COUNT(*) FROM %s where id_speinc=%s" % (bt.TABNAME_CLIENTI, oldIdSpe)
+                db1.Retrieve(cmd)                
+                nCliSpeChg=nCliSpeChg+db1.rs[0][0]
+                cmd = "UPDATE %s SET id_speinc=%s WHERE id_speinc=%s" % (bt.TABNAME_CLIENTI, newIdSpe, oldIdSpe)
+                db1.Execute(cmd)
         cmd="select COUNT(*) FROM %s where id_aliqiva=%s" % (bt.TABNAME_PROD, oldIva)
         db.Retrieve(cmd)
         prod=db.rs
+        nProdChg=prod[0][0]
         cmd="select COUNT(*) FROM %s where id_aliqiva=%s" % (bt.TABNAME_CLIENTI, oldIva)
         db.Retrieve(cmd)
         cli=db.rs
+        nCliChg=cli[0][0]
         cmd = "UPDATE %s SET id_aliqiva=%s WHERE id_aliqiva=%s" % (bt.TABNAME_PROD, newIva, oldIva)
         db.Execute(cmd)
         cmd = "UPDATE %s SET id_aliqiva=%s WHERE id_aliqiva=%s" % (bt.TABNAME_CLIENTI, newIva, oldIva)
         db.Execute(cmd)
         msg="L'elaborazione ha modificato:\n"
-        msg=msg+"%s Articoli\n" % prod[0][0]
-        msg=msg+"%s Anagrafiche Clienti\n" % cli[0][0]
+        msg=msg+"%s Articoli\n" % nProdChg
+        msg=msg+"%s Anagrafiche Clienti con Aliquota Preimpostata\n" % nCliChg
+        msg=msg+"%s Anagrafiche Clienti soggette a spese di incasso\n" % nCliSpeChg
         aw.awu.MsgDialog(self, msg)
         
 

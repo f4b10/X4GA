@@ -28,6 +28,14 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
+    ('1.4.82', dt.Date(2013, 9, 30), (
+         ("BET1161",
+         """Aggiunta elaborazione per gestire il cambio delle aliquote IVA.
+         La funzione si fa carico di assegnare la nuova aliquota Iva ai prodotti assoggettati alla vecchia aliquota Iva.
+         Inoltre provvede a cambiare conseguentemente eventuali anagrafiche clienti in cui fosse stata specificata l'aliquota IVA prevalente.
+         Provvede inoltre a definire, se necessario nuove scaglioni di spese di incasso ed attribuirle conseguentemente ai clienti."""),
+        ),),
+    
     
     ('1.4.81', dt.Date(2013, 9, 19), (
          ("BUG1141",                
