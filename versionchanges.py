@@ -28,6 +28,14 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
+    ('1.4.83', dt.Date(2013, 10, 10), (
+         ("BET1162",
+         """Consentita estrazione registrazioni in consultazione spesometro
+         anche per l'anno 2012, al fine di evidenziare le registrazioni
+         considerate e i dati a corredo delle anagrafiche coinvolte, pur
+         con i meccanismi dello spesometro 2012 per l'anno 2011."""),
+        ),),
+    
     ('1.4.82', dt.Date(2013, 9, 30), (
          ("BET1161",
          """Aggiunta elaborazione per gestire il cambio delle aliquote IVA.
@@ -35,7 +43,6 @@ history = (
          Inoltre provvede a cambiare conseguentemente eventuali anagrafiche clienti in cui fosse stata specificata l'aliquota IVA prevalente.
          Provvede inoltre a definire, se necessario nuove scaglioni di spese di incasso ed attribuirle conseguentemente ai clienti."""),
         ),),
-    
     
     ('1.4.81', dt.Date(2013, 9, 19), (
          ("BUG1141",                

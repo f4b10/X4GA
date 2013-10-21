@@ -271,7 +271,7 @@ class SpesometroPanel(aw.Panel):
         cn = self.FindWindowByName
         anno, data1, data2 = map(lambda label: cn(label).GetValue(), 'anno data1 data2'.split())
         wms = ''
-        for err, msg in ((not 2010 <= anno <= 2011,       "L'anno è errato"),
+        for err, msg in ((not 2010 <= anno <= 2012,       "L'anno è errato"),
                          (data1 is None or data2 is None, "Le date non possono essere nulle"),
                          (data1 is not None 
                           and data1.year != anno,         "La data di partenza si riferisce ad altro anno"),
