@@ -2552,7 +2552,14 @@ class DbTable(object):
         new += eanbc.Ean13BarcodeWidget._checkdigit(new)
         return new
     
-    def ExportCSV(self, filename, progrfunc=None, expidcol=False):
+    def ExportCSV(self, filename, progrfunc=None, expidcol=False, headings=True,
+                  delimiter=None, quotechar=None,
+                  doublequote=None, quoting=None):
+        
+        if delimiter is None: delimiter = CSVFORMAT_DELIMITER
+        if quotechar is None: quotechar = CSVFORMAT_QUOTECHAR
+        if doublequote is None: doublequote = True
+        if quoting is None: quoting = int(CSVFORMAT_QUOTING)
         
         def strdate(x):
             if x is None: return ''
@@ -2585,7 +2592,10 @@ class DbTable(object):
             else:
                 pass
         
-        fh = open(filename, 'wb')
+        if hasattr(filename, 'write'):
+            fh = filename
+        else:
+            fh = open(filename, 'wb')
         
 #        writer = csv.writer(fh)
 #        
@@ -2595,22 +2605,23 @@ class DbTable(object):
 #        d.quoting = int(CSVFORMAT_QUOTING)
         
         writer = csv.writer(fh,
-                            delimiter=CSVFORMAT_DELIMITER,
-                            quotechar=CSVFORMAT_QUOTECHAR,
-                            doublequote=True,
+                            delimiter=delimiter,
+                            quotechar=quotechar,
+                            doublequote=doublequote,
                             skipinitialspace=False,
                             lineterminator='\r\n',
-                            quoting=int(CSVFORMAT_QUOTING))
+                            quoting=quoting)
         
         csvrs = []
         
         rs = self.GetRecordset()
         pkc = self._info.primaryCol
         
-        #intestazioni di colonna
-        csvrs.append([self.GetFieldName(col) 
-                      for col in range(self.GetFieldCount())
-                      if col != pkc or expidcol])
+        if headings:
+            #intestazioni di colonna
+            csvrs.append([self.GetFieldName(col) 
+                          for col in range(self.GetFieldCount())
+                          if col != pkc or expidcol])
         
         for row, rec in enumerate(rs):
             crs = []
@@ -2623,7 +2634,9 @@ class DbTable(object):
                 progrfunc(row, rec)
         
         writer.writerows(csvrs)
-        fh.close()
+        
+        if fh != filename:
+            fh.close()
     
     def MakeFiltersDict(self, filters):
         assert isinstance(filters, (list, tuple))
