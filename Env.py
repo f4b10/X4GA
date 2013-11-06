@@ -652,12 +652,27 @@ class Azienda(object):
     email = ""
     titprivacy = ""
     infatti = ""
+    codateco = ""
+    
+    @classmethod
+    def read_dati_azienda(cls, db=None):
+        setup = adb.DbTable(cls.BaseTab.TABNAME_CFGSETUP, 'setup', db=db)
+        for key in 'indirizzo cap citta prov codfisc stato piva numtel numfax email titprivacy infatti codateco'.split():
+            if setup.Retrieve('setup.chiave=%s',
+                           'azienda_%s' % key) and setup.RowsCount() == 1:
+                if setup.flag:
+                    setattr(cls, key, setup.flag)
+                elif setup.importo:
+                    setattr(cls, key, setup.importo)
+                elif setup.descriz:
+                    setattr(cls, key, setup.descriz)
+    
     reportPath = ""
     tempPath = ""
     pdfPath = ""
     imagePath = ""
     defaults = {}
-
+    
     args = sys.argv[1:]
     params = {'password-length': 6,
               'onexit-execute': '',
