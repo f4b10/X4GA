@@ -457,16 +457,18 @@ class SelAziendaPanel(aw.Panel):
             db = adb.DB()
             db._dbCon = conn
             db.connected = True
-            db = adb.DbTable(Env.Azienda.BaseTab.TABNAME_CFGSETUP, 'setup', db=db)
-            for key in 'indirizzo cap citta prov codfisc stato piva numtel numfax email titprivacy infatti'.split():
-                if db.Retrieve('setup.chiave=%s',
-                               'azienda_%s' % key) and db.RowsCount() == 1:
-                    if db.flag:
-                        setattr(Env.Azienda, key, db.flag)
-                    elif db.importo:
-                        setattr(Env.Azienda, key, db.importo)
-                    elif db.descriz:
-                        setattr(Env.Azienda, key, db.descriz)
+#             db = adb.DbTable(Env.Azienda.BaseTab.TABNAME_CFGSETUP, 'setup', db=db)
+#             for key in 'indirizzo cap citta prov codfisc stato piva numtel numfax email titprivacy infatti codateco'.split():
+#                 if db.Retrieve('setup.chiave=%s',
+#                                'azienda_%s' % key) and db.RowsCount() == 1:
+#                     if db.flag:
+#                         setattr(Env.Azienda, key, db.flag)
+#                     elif db.importo:
+#                         setattr(Env.Azienda, key, db.importo)
+#                     elif db.descriz:
+#                         setattr(Env.Azienda, key, db.descriz)
+            Env.Azienda.read_dati_azienda(db)
+            Env.Azienda.BaseTab.ReadAziendaSetup()
             wx.GetApp().dbcon = conn
             #conn.close()
             
