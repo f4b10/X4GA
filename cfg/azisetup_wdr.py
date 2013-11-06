@@ -130,142 +130,165 @@ ID_TEXT = 15002
 ID_ESERCIZIOGG = 15003
 ID_ESERCIZIOMM = 15004
 ID_ESERCIZIOERR = 15005
-ID_CONSOVGES = 15006
-ID_RADIOBOX = 15007
-ID_CONTABVAL = 15008
-ID_CONTABDECIMP = 15009
-ID_CHECKBOX = 15010
-ID_CONBILRICL = 15011
-ID_CONBILRCEE = 15012
-ID_CONATTRITACC = 15013
-ID_CONPERRITACC = 15014
-ID_CONCOMRITACC = 15015
-ID_SCADORD = 15016
+ID_CODATECO = 15006
+ID_CONSOVGES = 15007
+ID_RADIOBOX = 15008
+ID_CONTABVAL = 15009
+ID_CONTABDECIMP = 15010
+ID_CHECKBOX = 15011
+ID_CONBILRICL = 15012
+ID_CONBILRCEE = 15013
+ID_CONATTRITACC = 15014
+ID_CONPERRITACC = 15015
+ID_CONCOMRITACC = 15016
+ID_SCADORD = 15017
 
 def ContabSetup( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
-    item2 = wx.StaticBox( parent, -1, "Esercizio contabile" )
-    item1 = wx.StaticBoxSizer( item2, wx.VERTICAL )
+    item1 = wx.FlexGridSizer( 0, 2, 0, 0 )
     
-    item3 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    item3 = wx.StaticBox( parent, -1, "Esercizio contabile" )
+    item2 = wx.StaticBoxSizer( item3, wx.VERTICAL )
     
-    item4 = wx.StaticText( parent, ID_TEXT, "Giorno e mese di inizio dell'esercizio contabile:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item3.Add( item4, 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
-
-    item5 = NumCtrl( parent, integerWidth=2, allowNegative=False); item5.SetName('setup_esercizio_startgg')
-    item3.Add( item5, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
-
-    item6 = wx.StaticText( parent, ID_TEXT, "/", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item3.Add( item6, 0, wx.ALIGN_CENTER|wx.TOP|wx.BOTTOM, 5 )
-
-    item7 = NumCtrl( parent, integerWidth=2, allowNegative=False); item7.SetName('setup_esercizio_startmm')
-    item3.Add( item7, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
-
-    item8 = wx.StaticText( parent, ID_ESERCIZIOERR, "", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item8.SetForegroundColour( wx.RED )
-    item8.SetName( "esercizio_err" )
-    item3.Add( item8, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
-
-    item3.AddGrowableCol( 4 )
-
-    item1.Add( item3, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
-
-    item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
-
-    item9 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    item4 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
-    item10 = SovrapposizioneRadioBox( parent, ID_CONSOVGES, "Chiusure contabili", wx.DefaultPosition, wx.DefaultSize, 
+    item5 = wx.StaticText( parent, ID_TEXT, "Giorno e mese di inizio dell'esercizio contabile:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item4.Add( item5, 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+
+    item6 = NumCtrl( parent, integerWidth=2, allowNegative=False); item6.SetName('setup_esercizio_startgg')
+    item4.Add( item6, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item7 = wx.StaticText( parent, ID_TEXT, "/", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item4.Add( item7, 0, wx.ALIGN_CENTER|wx.TOP|wx.BOTTOM, 5 )
+
+    item8 = NumCtrl( parent, integerWidth=2, allowNegative=False); item8.SetName('setup_esercizio_startmm')
+    item4.Add( item8, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item9 = wx.StaticText( parent, ID_ESERCIZIOERR, "", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item9.SetForegroundColour( wx.RED )
+    item9.SetName( "esercizio_err" )
+    item4.Add( item9, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item4.AddGrowableCol( 4 )
+
+    item2.Add( item4, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item1.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item11 = wx.StaticBox( parent, -1, "Spesometro" )
+    item10 = wx.StaticBoxSizer( item11, wx.VERTICAL )
+    
+    item12 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    
+    item13 = wx.StaticText( parent, ID_TEXT, "Cod.Attività Ateco2007:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item12.Add( item13, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+
+    item14 = TextCtrl( parent, ID_CODATECO, "", wx.DefaultPosition, [80,-1], 0 )
+    item14.SetName( "setup_azienda_codateco" )
+    item12.Add( item14, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+    item10.Add( item12, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item1.Add( item10, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
+
+    item1.AddGrowableCol( 0 )
+
+    item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item15 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    
+    item16 = SovrapposizioneRadioBox( parent, ID_CONSOVGES, "Chiusure contabili", wx.DefaultPosition, wx.DefaultSize, 
         ["Senza sovrapposizione d'esercizio","Con sovrapposizione d'esercizio"] , 1, wx.RA_SPECIFY_COLS )
-    item10.SetName( "setup_consovges" )
-    item9.Add( item10, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item16.SetName( "setup_consovges" )
+    item15.Add( item16, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item11 = RadioBox( parent, ID_RADIOBOX, "Tipo di gestione dell'IVA", wx.DefaultPosition, wx.DefaultSize, 
+    item17 = RadioBox( parent, ID_RADIOBOX, "Tipo di gestione dell'IVA", wx.DefaultPosition, wx.DefaultSize, 
         ["Ordinaria","Semplificata"] , 1, wx.RA_SPECIFY_COLS )
-    item11.SetName( "setup_tipo_contab" )
-    item9.Add( item11, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item17.SetName( "setup_tipo_contab" )
+    item15.Add( item17, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item12 = RadioBox( parent, ID_RADIOBOX, "Periodicità di liquidazione IVA", wx.DefaultPosition, wx.DefaultSize, 
+    item18 = RadioBox( parent, ID_RADIOBOX, "Periodicità di liquidazione IVA", wx.DefaultPosition, wx.DefaultSize, 
         ["Mensile","Trimestrale"] , 1, wx.RA_SPECIFY_COLS )
-    item12.SetName( "setup_liqiva_periodic" )
-    item9.Add( item12, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
+    item18.SetName( "setup_liqiva_periodic" )
+    item15.Add( item18, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item9.AddGrowableCol( 0 )
-
-    item9.AddGrowableCol( 1 )
-
-    item0.Add( item9, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
-
-    item14 = wx.StaticBox( parent, -1, "Impostazione valuta di conto" )
-    item13 = wx.StaticBoxSizer( item14, wx.VERTICAL )
-    
-    item15 = wx.FlexGridSizer( 0, 2, 0, 0 )
-    
-    item16 = wx.StaticText( parent, ID_TEXT, "Valuta di conto:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item15.Add( item16, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
-
-    item17 = LinkTable(parent, ID_CONTABVAL ); item17.SetDataLink( bt.TABNAME_VALUTE, "setup_contab_valcon", None); item17.SetObligatory(True)
-    item15.Add( item17, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
-
-    item18 = wx.StaticText( parent, ID_TEXT, "Numero di decimali su importi:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item15.Add( item18, 0, wx.ALIGN_CENTER|wx.LEFT|wx.BOTTOM, 5 )
-
-    item19 = NumCtrl( parent, integerWidth=2, allowNegative=False); item19.SetName('setup_contab_decimp')
-    item15.Add( item19, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item15.AddGrowableCol( 0 )
 
     item15.AddGrowableCol( 1 )
 
-    item13.Add( item15, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item0.Add( item15, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item0.Add( item13, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item21 = wx.StaticBox( parent, -1, "Gestione fidi clienti" )
-    item20 = wx.StaticBoxSizer( item21, wx.VERTICAL )
+    item20 = wx.StaticBox( parent, -1, "Impostazione valuta di conto" )
+    item19 = wx.StaticBoxSizer( item20, wx.VERTICAL )
     
-    item22 = UnoZeroCheckBox( parent, ID_CHECKBOX, "Attiva la gestione dei fidi sui clienti", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item22.SetName( "setup_gesfidicli" )
-    item20.Add( item22, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
-
-    item0.Add( item20, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item24 = wx.StaticBox( parent, -1, "Bilanci" )
-    item23 = wx.StaticBoxSizer( item24, wx.HORIZONTAL )
+    item21 = wx.FlexGridSizer( 0, 2, 0, 0 )
     
-    item25 = UnoZeroCheckBox( parent, ID_CONBILRICL, "Attiva riclassificazioni di bilancio", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item25.SetName( "setup_conbilricl" )
-    item23.Add( item25, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+    item22 = wx.StaticText( parent, ID_TEXT, "Valuta di conto:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item21.Add( item22, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
 
-    item26 = UnoZeroCheckBox( parent, ID_CONBILRCEE, "Attiva riclassificazioni CEE", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item26.SetName( "setup_conbilrcee" )
-    item23.Add( item26, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+    item23 = LinkTable(parent, ID_CONTABVAL ); item23.SetDataLink( bt.TABNAME_VALUTE, "setup_contab_valcon", None); item23.SetObligatory(True)
+    item21.Add( item23, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item0.Add( item23, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item24 = wx.StaticText( parent, ID_TEXT, "Numero di decimali su importi:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item21.Add( item24, 0, wx.ALIGN_CENTER|wx.LEFT|wx.BOTTOM, 5 )
 
-    item28 = wx.StaticBox( parent, -1, "Ritenute d'Acconto" )
-    item27 = wx.StaticBoxSizer( item28, wx.HORIZONTAL )
+    item25 = NumCtrl( parent, integerWidth=2, allowNegative=False); item25.SetName('setup_contab_decimp')
+    item21.Add( item25, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item21.AddGrowableCol( 1 )
+
+    item19.Add( item21, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item0.Add( item19, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item27 = wx.StaticBox( parent, -1, "Gestione fidi clienti" )
+    item26 = wx.StaticBoxSizer( item27, wx.VERTICAL )
     
-    item29 = RitAccCheckBox( parent, ID_CONATTRITACC, "Attiva gestione", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item29.SetName( "setup_conattritacc" )
-    item27.Add( item29, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+    item28 = UnoZeroCheckBox( parent, ID_CHECKBOX, "Attiva la gestione dei fidi sui clienti", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item28.SetName( "setup_gesfidicli" )
+    item26.Add( item28, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item30 = wx.StaticText( parent, ID_TEXT, "Calcolo %:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item27.Add( item30, 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+    item0.Add( item26, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item31 = NumCtrl( parent, integerWidth=2, fractionWidth=2, allowNegative=False); item31.SetName('setup_conperritacc')
-    item27.Add( item31, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+    item30 = wx.StaticBox( parent, -1, "Bilanci" )
+    item29 = wx.StaticBoxSizer( item30, wx.HORIZONTAL )
+    
+    item31 = UnoZeroCheckBox( parent, ID_CONBILRICL, "Attiva riclassificazioni di bilancio", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item31.SetName( "setup_conbilricl" )
+    item29.Add( item31, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
-    item32 = wx.StaticText( parent, ID_TEXT, "da applicare all'imponibile in % del:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item27.Add( item32, 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+    item32 = UnoZeroCheckBox( parent, ID_CONBILRCEE, "Attiva riclassificazioni CEE", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item32.SetName( "setup_conbilrcee" )
+    item29.Add( item32, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
-    item33 = NumCtrl( parent, integerWidth=3, fractionWidth=2, allowNegative=False); item33.SetName('setup_concomritacc')
-    item27.Add( item33, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+    item0.Add( item29, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item0.Add( item27, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item34 = wx.StaticBox( parent, -1, "Ritenute d'Acconto" )
+    item33 = wx.StaticBoxSizer( item34, wx.HORIZONTAL )
+    
+    item35 = RitAccCheckBox( parent, ID_CONATTRITACC, "Attiva gestione", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item35.SetName( "setup_conattritacc" )
+    item33.Add( item35, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
-    item34 = OrdPartiteRadioBox( parent, ID_SCADORD, "Ordinameno scadenzari clienti/fornitori", wx.DefaultPosition, wx.DefaultSize, 
+    item36 = wx.StaticText( parent, ID_TEXT, "Calcolo %:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item33.Add( item36, 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+
+    item37 = NumCtrl( parent, integerWidth=2, fractionWidth=2, allowNegative=False); item37.SetName('setup_conperritacc')
+    item33.Add( item37, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item38 = wx.StaticText( parent, ID_TEXT, "da applicare all'imponibile in % del:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item33.Add( item38, 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+
+    item39 = NumCtrl( parent, integerWidth=3, fractionWidth=2, allowNegative=False); item39.SetName('setup_concomritacc')
+    item33.Add( item39, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item0.Add( item33, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item40 = OrdPartiteRadioBox( parent, ID_SCADORD, "Ordinameno scadenzari clienti/fornitori", wx.DefaultPosition, wx.DefaultSize, 
         ["Data scadenza","Data documento"] , 1, wx.RA_SPECIFY_ROWS )
-    item34.SetName( "setup_scadord" )
-    item0.Add( item34, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item40.SetName( "setup_scadord" )
+    item0.Add( item40, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item0.AddGrowableCol( 0 )
 
@@ -276,66 +299,66 @@ def ContabSetup( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_MAGDEFAULT = 15017
-ID_magdec_qta = 15018
-ID_magdec_prez = 15019
-ID_magricpre = 15020
-ID_MAGPZCONF = 15021
-ID_MAGPZGRIP = 15022
-ID_MAGSCORPCOS = 15023
-ID_MAGSCORPPRE = 15024
-ID_FOREIGN = 15025
-ID_MAGSCOCAT = 15026
-ID_MAGGESACC = 15027
-ID_MAGEANPREFIX = 15028
-ID_MAGDATCHI = 15029
-ID_MAGNUMLIS = 15030
-ID_MAGDATLIS = 15031
-ID_MAGBCOLIS = 15032
-ID_MAGFORLIS = 15033
-ID_MAGROWLIS = 15034
-ID_MAGVLIFOR = 15035
-ID_MAGVLIMAR = 15036
-ID_MAGVLICAT = 15037
-ID_MAGVLIGRU = 15038
-ID_MAGRICLIS = 15039
-ID_MAGSCOLIS = 15040
-ID_MAGPPROMO = 15041
-ID_MAGVRGLIS = 15042
-ID_MAGVSGLIS = 15043
-ID_MAGREPLIS = 15044
-ID_MAGRELLIS = 15045
-ID_MAGSEPLIS = 15046
-ID_MAGSELLIS = 15047
-ID_MAGERPLIS = 15048
-ID_MAGESPLIS = 15049
-ID_MAGATTGRIP = 15050
-ID_MAGCDEGRIP = 15051
-ID_LINE = 15052
-ID_MAGATTGRIF = 15053
-ID_MAGCDEGRIF = 15054
-ID_MAGAGGGRIP = 15055
-ID_MAGALWGRIP = 15056
-ID_MAGDATGRIP = 15057
-ID_MAGNOCODEVET = 15058
-ID_MAGNOCDEFVET = 15059
-ID_MAGEXTRAVET = 15060
-ID_MAGNOCODEDES = 15061
-ID_MAGNOCDEFDES = 15062
-ID_MAGIMGPROD = 15063
-ID_MAGDIGSEARCH = 15064
-ID_MAGRETSEARCH = 15065
-ID_MAGEXCSEARCH = 15066
-ID_MAGVISGIA = 15067
-ID_MAGVISCOS = 15068
-ID_MAGVISPRE = 15069
-ID_MAGVISCPF = 15070
-ID_MAGVISBCD = 15071
-ID_MAGPROVATT = 15072
-ID_MAGPROVCLI = 15073
-ID_MAGPROVPRO = 15074
-ID_MAGPROVMOV = 15075
-ID_MAGPROVSEQ = 15076
+ID_MAGDEFAULT = 15018
+ID_magdec_qta = 15019
+ID_magdec_prez = 15020
+ID_magricpre = 15021
+ID_MAGPZCONF = 15022
+ID_MAGPZGRIP = 15023
+ID_MAGSCORPCOS = 15024
+ID_MAGSCORPPRE = 15025
+ID_FOREIGN = 15026
+ID_MAGSCOCAT = 15027
+ID_MAGGESACC = 15028
+ID_MAGEANPREFIX = 15029
+ID_MAGDATCHI = 15030
+ID_MAGNUMLIS = 15031
+ID_MAGDATLIS = 15032
+ID_MAGBCOLIS = 15033
+ID_MAGFORLIS = 15034
+ID_MAGROWLIS = 15035
+ID_MAGVLIFOR = 15036
+ID_MAGVLIMAR = 15037
+ID_MAGVLICAT = 15038
+ID_MAGVLIGRU = 15039
+ID_MAGRICLIS = 15040
+ID_MAGSCOLIS = 15041
+ID_MAGPPROMO = 15042
+ID_MAGVRGLIS = 15043
+ID_MAGVSGLIS = 15044
+ID_MAGREPLIS = 15045
+ID_MAGRELLIS = 15046
+ID_MAGSEPLIS = 15047
+ID_MAGSELLIS = 15048
+ID_MAGERPLIS = 15049
+ID_MAGESPLIS = 15050
+ID_MAGATTGRIP = 15051
+ID_MAGCDEGRIP = 15052
+ID_LINE = 15053
+ID_MAGATTGRIF = 15054
+ID_MAGCDEGRIF = 15055
+ID_MAGAGGGRIP = 15056
+ID_MAGALWGRIP = 15057
+ID_MAGDATGRIP = 15058
+ID_MAGNOCODEVET = 15059
+ID_MAGNOCDEFVET = 15060
+ID_MAGEXTRAVET = 15061
+ID_MAGNOCODEDES = 15062
+ID_MAGNOCDEFDES = 15063
+ID_MAGIMGPROD = 15064
+ID_MAGDIGSEARCH = 15065
+ID_MAGRETSEARCH = 15066
+ID_MAGEXCSEARCH = 15067
+ID_MAGVISGIA = 15068
+ID_MAGVISCOS = 15069
+ID_MAGVISPRE = 15070
+ID_MAGVISCPF = 15071
+ID_MAGVISBCD = 15072
+ID_MAGPROVATT = 15073
+ID_MAGPROVCLI = 15074
+ID_MAGPROVPRO = 15075
+ID_MAGPROVMOV = 15076
+ID_MAGPROVSEQ = 15077
 
 def MagazzSetup( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -903,20 +926,20 @@ def MagazzSetup( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_OPTNOTIFICHE = 15077
-ID_OPTTABSEARCH = 15078
-ID_OPTDIGSEARCH = 15079
-ID_OPTSPASEARCH = 15080
-ID_OPTLNKCRDPDC = 15081
-ID_OPTLNKGRDPDC = 15082
-ID_OPTLNKCRDCLI = 15083
-ID_OPTLNKGRDCLI = 15084
-ID_OPTLNKCRDFOR = 15085
-ID_OPTLNKGRDFOR = 15086
-ID_BACKUPDIR = 15087
-ID_GCP_USER = 15088
-ID_GCP_PSWD = 15089
-ID_GC_PRINT = 15090
+ID_OPTNOTIFICHE = 15078
+ID_OPTTABSEARCH = 15079
+ID_OPTDIGSEARCH = 15080
+ID_OPTSPASEARCH = 15081
+ID_OPTLNKCRDPDC = 15082
+ID_OPTLNKGRDPDC = 15083
+ID_OPTLNKCRDCLI = 15084
+ID_OPTLNKGRDCLI = 15085
+ID_OPTLNKCRDFOR = 15086
+ID_OPTLNKGRDFOR = 15087
+ID_BACKUPDIR = 15088
+ID_GCP_USER = 15089
+ID_GCP_PSWD = 15090
+ID_GC_PRINT = 15091
 
 def OpzioniFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -1060,8 +1083,8 @@ def OpzioniFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_TEXTCTRL = 15091
-ID_AZIENDA_LOGO = 15092
+ID_TEXTCTRL = 15092
+ID_AZIENDA_LOGO = 15093
 
 def DatiAziendaFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )

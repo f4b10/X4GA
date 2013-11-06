@@ -202,6 +202,48 @@ class MagRegIvaDialog(aw.Dialog):
 # ------------------------------------------------------------------------------
 
 
+class CauContabSearchResultsTable(ga.dbglib.DbGridTable):
+    
+    def GetValue(self, row, col):
+        value = ga.dbglib.DbGridTable.GetValue(self, row, col)
+        if col == self.grid.COL_PRALCF:
+            if value == 1:
+                value = "+ SOMMA"
+            elif value == -1:
+                value = "- sottrae"
+            else:
+                value = ''
+        return value
+
+
+class CauContabSearchResultsGrid(ga.SearchResultsGrid):
+    
+    tableClass = CauContabSearchResultsTable
+    
+    def GetDbColumns(self):
+        _NUM = gl.GRID_VALUE_NUMBER
+        _STR = gl.GRID_VALUE_STRING
+        _DAT = gl.GRID_VALUE_DATETIME
+        _PRC = bt.GetPerGenMaskInfo()
+        cn = lambda x: self.db._GetFieldIndex(x)
+        
+        self.COL_PRALCF = 4
+        
+        return (( 35, (cn('cfgcontab_codice'),  "Cod.",          _STR, True)),
+                (240, (cn('cfgcontab_descriz'), "Causale",       _STR, True)),
+                ( 35, (cn('regiva_codice'),     "Cod.",          _STR, True)),
+                (240, (cn('regiva_descriz'),    "Registro IVA",  _STR, True)),
+                (150, (cn('cfgcontab_pralcf'),  "Segno Spesom.", _STR, True)),
+                (  1, (cn('cfgcontab_id'),      "#cau",          _STR, True)),
+            )
+    
+    def SetColumn2Fit(self):
+        self.SetFitColumn(1)
+
+
+# ------------------------------------------------------------------------------
+
+
 class CauContabPanel(ga.AnagPanel):
     """
     Gestione tabella Causali contabilità.
@@ -210,6 +252,11 @@ class CauContabPanel(ga.AnagPanel):
         
         ga.AnagPanel.__init__(self, *args, **kwargs)
         self.SetDbSetup( bt.tabelle[ bt.TABSETUP_TABLE_CFGCONTAB ] )
+        
+        self._sqlrelcol += ', regiva.id, regiva.codice, regiva.descriz'
+        
+        self._sqlrelfrm =\
+            " LEFT JOIN %s AS regiva ON regiva.id=cfgcontab.id_regiva" % bt.TABNAME_REGIVA
         
         mag = adb.DbTable(bt.TABNAME_MAGAZZ, 'magazz', writable=False)
         mag.AddOrder('magazz.codice')
@@ -247,9 +294,15 @@ class CauContabPanel(ga.AnagPanel):
         cn('tipo').Bind(wx.EVT_RADIOBOX, self.OnTipoChanged)
         cn('regivadyn').Bind(wx.EVT_RADIOBOX, self.OnRegIvaDyn)
         cn('_regiva_detmag').Bind(wx.EVT_BUTTON, self.OnDetMag)
-        cn('pralcf').SetDataLink('pralcf', (0, 1, -1))
+        
+        cn('pralcf').SetDataLink(values=(0, 1, -1))
         
         return p
+    
+    def GetSearchResultsGrid(self, parent):
+        grid = CauContabSearchResultsGrid(parent, ga.ID_SEARCHGRID, 
+                                          self.db_tabname, self.GetSqlColumns())
+        return grid
     
     def OnTipoChanged(self, event):
         self.TestRegIva()

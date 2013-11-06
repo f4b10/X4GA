@@ -3388,21 +3388,37 @@ class FatturatoContabileFornitori(FatturatoContabileClienti):
 class Spesometro2011_AcquistiVendite(adb.DbMem):
     
     def __init__(self):
-#        assert bt.TIPO_CONTAB == "O"
+        
         f = 'Reg_Id Reg_Rif Reg_Link RegIva_Id RegIva_Cod RegIva_Descriz RegIva_Tipo'
-        f += ' Anag_Id Anag_Cod Anag_Descriz Anag_AziPer Anag_CodFisc Anag_Nazione Anag_PIVA Anag_AllegCF'
+        f += ' Anag_Id Anag_Cod Anag_Descriz Anag_AziPer Anag_CodFisc Anag_Nazione Anag_Citta Anag_Indirizzo Anag_StatUnico Anag_PIVA Anag_AllegCF'
         f += ' Anag_Cognome Anag_Nome Anag_NascDat Anag_NascPrv Anag_NascCom Anag_SedeInd Anag_SedeCit Anag_SedeStt Anag_Associa'
         f += ' Reg_Data Cau_Id Cau_Cod Cau_Descriz Reg_NumDoc Reg_DatDoc Reg_NumIva'
         f += ' Totale_DAV DAV_Merce DAV_Servizi DAV_Altro'
         f += ' IVA_AllImpo IVA_Imponib IVA_Imposta IVA_Totale IVA_NonImponib IVA_Esente IVA_FuoriCampo'
         f += ' selected'
+        
+        #quadro FA - dati x attività
+        f += ' fa_att_cnt fa_att_tot fa_att_iva fa_att_ine fa_att_var fa_att_viv'
+        #quadro FA - dati x passività
+        f += ' fa_pas_cnt fa_pas_tot fa_pas_iva fa_pas_ine fa_pas_var fa_pas_viv'
+        
+        #quadro BL - dati x attività
+        f += ' bl_att_cnt bl_att_tot bl_att_iva'
+        #quadro BL - dati x passività
+        f += ' bl_pas_cnt bl_pas_tot bl_pas_iva'
+        
+        #quadro SA - dati x attività
+        f += ' sa_att_cnt sa_att_tot'
+        
         adb.DbMem.__init__(self, f.replace(' ', ','))
+        
         self.Reset()
         self._anno = None
         self._max_azi = None
         self._max_pri = None
     
-    def GetData(self, param_list, solo_all=True, escludi_bl_anag=True, escludi_bl_stato=True):
+    def GetData(self, param_list, solo_anag_all=True, solo_caus_all=True, 
+                escludi_bl_anag=True, escludi_bl_stato=True):
         p = self.MakeFiltersDict(param_list)
         filters = []
         AF = filters.append
@@ -3420,8 +3436,10 @@ class Spesometro2011_AcquistiVendite(adb.DbMem):
         AF('reg.datreg>="%s"' % p['data1'])
         AF('reg.datreg<="%s"' % p['data2'])
         self._anno = p['data1'].year
-        if solo_all:
+        if solo_anag_all:
             AF('IF(tipana.tipo="C", anagcli.allegcf=1, anagfor.allegcf=1)')
+        if solo_caus_all:
+            AF('causale.pralcf IN (1, -1)')
         if escludi_bl_anag:
             AF('IF(tipana.tipo="C", anagcli.is_blacklisted IS NULL OR anagcli.is_blacklisted<>1, anagfor.is_blacklisted IS NULL OR anagfor.is_blacklisted<>1)')
         if escludi_bl_stato:
@@ -3444,7 +3462,14 @@ SELECT reg.id              'Reg_Id',
        anag.descriz        'Anag_Descriz',
        IF(tipana.tipo="C", anagcli.aziper,       anagfor.aziper)       'Anag_AziPer',
        IF(tipana.tipo="C", anagcli.codfisc,      anagfor.codfisc)      'Anag_CodFisc',
-       IF(tipana.tipo="C", anagcli.nazione,      anagfor.nazione)      'Anag_Nazione',
+       IF(tipana.tipo="C", 
+          IF(anagcli.nazione IS NULL OR anagcli.nazione="",
+             "IT", anagcli.nazione),
+          IF(anagfor.nazione IS NULL OR anagfor.nazione="",
+             "IT", anagfor.nazione))                                   'Anag_Nazione',
+       IF(tipana.tipo="C", anagcli.citta,        anagfor.citta)        'Anag_Citta',
+       IF(tipana.tipo="C", anagcli.indirizzo,    anagfor.indirizzo)    'Anag_Indirizzo',
+       IF(tipana.tipo="C", statocli.codunico,    statofor.codunico)    'Anag_StatUnico',
        IF(tipana.tipo="C", anagcli.piva,         anagfor.piva)         'Anag_PIVA',
        IF(tipana.tipo="C", anagcli.allegcf,      anagfor.allegcf)      'Anag_AllegCF',
        IF(tipana.tipo="C", anagcli.sm11_cognome, anagfor.sm11_cognome) 'Anag_Cognome',
@@ -3485,7 +3510,6 @@ SELECT reg.id              'Reg_Id',
                OR bodycri.f_sermer IN ("M", "S"), 0, 1))                        'DAV_Altro',
        
        SUM(bodycri.imponib
-           *IF(bodycri.tipriga="I", 1, 0)
            *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, -1)) 'IVA_AllImpo',
            
        SUM(bodycri.imponib
@@ -3494,7 +3518,7 @@ SELECT reg.id              'Reg_Id',
            *IF(aliq.modo="I",1,0))                                              'IVA_Imponib',
        
        SUM(bodycri.imposta
-           *IF(bodycri.tipriga="I", 1, 0)
+           *IF(bodycri.tipriga IN ("I", "O"), 1, 0)
            *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, -1)
            *IF(aliq.modo="I",1,0))                                              'IVA_Imposta',
            
@@ -3517,7 +3541,149 @@ SELECT reg.id              'Reg_Id',
            *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, -1)
            *IF(aliq.modo="F",1,0))                                              'IVA_FuoriCampo',
        
-       0                                                                        'selected'
+       0                                                                        'selected',
+       
+       SUM(1
+           *IF((regiva.tipo="V" AND causale.pralcf= 1)
+             OR(regiva.tipo="A" AND causale.pralcf=-1), 1, 0)
+           *IF((tipana.tipo="C" AND statocli.id IS NULL or statocli.codice="IT")
+             OR(tipana.tipo="F" AND statofor.id IS NULL or statofor.codice="IT"), 1, 0)
+           *IF(bodycri.tipriga="I", 1, 0))                                      'fa_att_cnt',
+       
+       SUM(bodycri.imponib
+           *causale.pralcf
+           *IF(regiva.tipo="V", 1, 0)
+           *IF((tipana.tipo="C" AND statocli.id IS NULL or statocli.codice="IT")
+             OR(tipana.tipo="F" AND statofor.id IS NULL or statofor.codice="IT"), 1, 0)
+           *IF(bodycri.tipriga="I", 1, 0)
+           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, 0))  'fa_att_tot',
+       
+       SUM((bodycri.imposta+IF(bodycri.indeduc IS NULL, 0, bodycri.indeduc))
+           *causale.pralcf
+           *IF(regiva.tipo="V", 1, 0)
+           *IF((tipana.tipo="C" AND statocli.id IS NULL or statocli.codice="IT")
+             OR(tipana.tipo="F" AND statofor.id IS NULL or statofor.codice="IT"), 1, 0)
+           *IF(bodycri.tipriga IN ("I", "O"), 1, 0)
+           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, 0))  'fa_att_iva',
+       
+       0                                                                        'fa_att_ine',
+       
+       SUM(bodycri.imponib
+           *IF(causale.pralcf=-1, 1, 0)
+           *IF(regiva.tipo="A", 1, 0)
+           *IF((tipana.tipo="C" AND statocli.id IS NULL or statocli.codice="IT")
+             OR(tipana.tipo="F" AND statofor.id IS NULL or statofor.codice="IT"), 1, 0)
+           *IF(bodycri.tipriga="I", 1, 0)
+           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 0, 1))  'fa_att_vim',
+       
+       SUM((bodycri.imposta+IF(bodycri.indeduc IS NULL, 0, bodycri.indeduc))
+           *IF(causale.pralcf=-1, 1, 0)
+           *IF(regiva.tipo="A", 1, 0)
+           *IF((tipana.tipo="C" AND statocli.id IS NULL or statocli.codice="IT")
+             OR(tipana.tipo="F" AND statofor.id IS NULL or statofor.codice="IT"), 1, 0)
+           *IF(bodycri.tipriga="I", 1, 0)
+           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 0, 1))  'fa_att_viv',
+       
+       SUM(1
+           *IF((regiva.tipo="A" AND causale.pralcf= 1)
+             OR(regiva.tipo="V" AND causale.pralcf=-1), 1, 0)
+           *IF((tipana.tipo="C" AND statocli.id IS NULL or statocli.codice="IT")
+             OR(tipana.tipo="F" AND statofor.id IS NULL or statofor.codice="IT"), 1, 0)
+           *IF(bodycri.tipriga="I", 1, 0))                                      'fa_pas_cnt',
+       
+       SUM(bodycri.imponib
+           *causale.pralcf
+           *IF(regiva.tipo="A", 1, 0)
+           *IF((tipana.tipo="C" AND statocli.id IS NULL or statocli.codice="IT")
+             OR(tipana.tipo="F" AND statofor.id IS NULL or statofor.codice="IT"), 1, 0)
+           *IF(bodycri.tipriga="I", 1, 0)
+           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, 0))  'fa_pas_tot',
+       
+       SUM((bodycri.imposta+IF(bodycri.indeduc IS NULL, 0, bodycri.indeduc))
+           *causale.pralcf
+           *IF(regiva.tipo="A", 1, 0)
+           *IF((tipana.tipo="C" AND statocli.id IS NULL or statocli.codice="IT")
+             OR(tipana.tipo="F" AND statofor.id IS NULL or statofor.codice="IT"), 1, 0)
+           *IF(bodycri.tipriga IN ("I", "O"), 1, 0)
+           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, 0))  'fa_pas_iva',
+       
+       0                                                                        'fa_pas_ine',
+       
+       SUM(bodycri.imponib
+           *IF(causale.pralcf=-1, 1, 0)
+           *IF(regiva.tipo="V", 1, 0)
+           *IF((tipana.tipo="C" AND statocli.id IS NULL or statocli.codice="IT")
+             OR(tipana.tipo="F" AND statofor.id IS NULL or statofor.codice="IT"), 1, 0)
+           *IF(bodycri.tipriga="I", 1, 0)
+           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 0, 1))  'fa_pas_vim',
+       
+       SUM((bodycri.imposta+IF(bodycri.indeduc IS NULL, 0, bodycri.indeduc))
+           *IF(causale.pralcf=-1, 1, 0)
+           *IF(regiva.tipo="V", 1, 0)
+           *IF((tipana.tipo="C" AND statocli.id IS NULL or statocli.codice="IT")
+             OR(tipana.tipo="F" AND statofor.id IS NULL or statofor.codice="IT"), 1, 0)
+           *IF(bodycri.tipriga="I", 1, 0)
+           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 0, 1))  'fa_pas_viv',
+           
+       SUM(1
+           *IF((regiva.tipo="V" AND causale.pralcf= 1)
+             OR(regiva.tipo="A" AND causale.pralcf=-1), 1, 0)
+           *IF((tipana.tipo="C" AND statocli.codice != "IT")
+             OR(tipana.tipo="F" AND statofor.codice != "IT"), 1, 0)
+           *IF(bodycri.tipriga="I", 1, 0))                                      'bl_att_cnt',
+       
+       SUM(bodycri.imponib
+           *causale.pralcf
+           *IF(regiva.tipo="V", 1, 0)
+           *IF((tipana.tipo="C" AND statocli.codice != "IT")
+             OR(tipana.tipo="F" AND statofor.codice != "IT"), 1, 0)
+           *IF(bodycri.tipriga="I", 1, 0)
+           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, 0))  'bl_att_tot',
+       
+       SUM((bodycri.imposta+IF(bodycri.indeduc IS NULL, 0, bodycri.indeduc))
+           *causale.pralcf
+           *IF(regiva.tipo="V", 1, 0)
+           *IF((tipana.tipo="C" AND statocli.codice != "IT")
+             OR(tipana.tipo="F" AND statofor.codice != "IT"), 1, 0)
+           *IF(bodycri.tipriga IN ("I", "O"), 1, 0)
+           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, 0))  'bl_att_iva',
+            
+       SUM(1
+           *IF((regiva.tipo="A" AND causale.pralcf= 1)
+             OR(regiva.tipo="V" AND causale.pralcf=-1), 1, 0)
+           *IF((tipana.tipo="C" AND statocli.codice != "IT")
+             OR(tipana.tipo="F" AND statofor.codice != "IT"), 1, 0)
+           *IF(bodycri.tipriga="I", 1, 0))                                      'bl_pas_cnt',
+       
+       SUM(bodycri.imponib
+           *causale.pralcf
+           *IF(regiva.tipo="A", 1, 0)
+           *IF((tipana.tipo="C" AND statocli.codice != "IT")
+             OR(tipana.tipo="F" AND statofor.codice != "IT"), 1, 0)
+           *IF(bodycri.tipriga="I", 1, 0)
+           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, 0))  'bl_pas_tot',
+       
+       SUM((bodycri.imposta+IF(bodycri.indeduc IS NULL, 0, bodycri.indeduc))
+           *causale.pralcf
+           *IF(regiva.tipo="A", 1, 0)
+           *IF((tipana.tipo="C" AND statocli.codice != "IT")
+             OR(tipana.tipo="F" AND statofor.codice != "IT"), 1, 0)
+           *IF(bodycri.tipriga IN ("I", "O"), 1, 0)
+           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, 0))  'bl_pas_iva',
+           
+       SUM(1
+           *IF((regiva.tipo="C" AND causale.pralcf= 1), 1, 0)
+           *IF((tipana.tipo="C" AND statocli.id IS NULL or statocli.codice="IT")
+             OR(tipana.tipo="F" AND statofor.id IS NULL or statofor.codice="IT"), 1, 0)
+           *IF(bodycri.tipriga="I", 1, 0))                                      'sa_att_cnt',
+       
+       SUM(bodycri.importo
+           *causale.pralcf
+           *IF((regiva.tipo="C" AND causale.pralcf= 1), 1, 0)
+           *IF((tipana.tipo="C" AND statocli.id IS NULL or statocli.codice="IT")
+             OR(tipana.tipo="F" AND statofor.id IS NULL or statofor.codice="IT"), 1, 0)
+           *IF(bodycri.tipriga="I", 1, 0)
+           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, 0))  'sa_att_tot'
 
 FROM contab_b bodyanag
 
@@ -3543,7 +3709,7 @@ WHERE %(filters)s
 GROUP BY anag.descriz, reg.sm_regrif, reg.sm_link, reg.datdoc, reg.numdoc, regiva.tipo, regiva.codice
 ORDER BY anag.descriz, reg.sm_regrif, reg.sm_link, reg.datdoc, reg.numdoc, regiva.tipo, regiva.codice
         """ % locals()
-        
+#         print cmd
         db = adb.db.__database__
         if not db.Retrieve(cmd):
             raise Exception, repr(db.dbError.description)
@@ -4039,3 +4205,422 @@ class CalcIntPcf(adb.DbTable):
                 if self._percint:
                     self.interessi = round(self.saldo*float(self.ritardo)/365*self._percint/100, 2)
         return out
+
+
+class DbMemDynamic(adb.DbMem):
+    
+    _fields = []
+    def add_field(self, field, value=None):
+        self._fields.append(field)
+        return value
+
+
+
+import StringIO
+
+class Quadro_00(adb.DbMem):
+    
+    tipo_record = None
+    anno = None
+    cf_contr = None
+    tipo_com = None
+    cod_attiv = None
+    period = None
+    form_com = None
+    
+    def __init__(self):
+        fields = []; a = fields.append
+        a('tipo_record')
+        a('anno')
+        a('cf_contr')
+        a('tipo_com')
+        a('cod_attiv')
+        a('period')
+        a('form_com')
+        adb.DbMem.__init__(self, fields=fields)
+
+
+class Quadro_FA(adb.DbMem):
+    """
+    Quadro FA
+    Acquisti/Vendite con fattura con soggetti italiani
+    """
+    
+    tipo_record = None
+    anno = None
+    cf_contr = None
+    piva_clifor = None
+    cf_clifor = None
+    doc_riep = None
+    opatt_numtot = None
+    oppas_numtot = None
+    opatt_importo = None
+    opatt_imposta = None
+    opatt_ivanesp = None
+    opatt_notevar = None
+    opatt_ivanvar = None
+    oppas_importo = None
+    oppas_imposta = None
+    oppas_ivanesp = None
+    oppas_notevar = None
+    oppas_ivanvar = None
+    
+    def __init__(self):
+        fields = []; a = fields.append
+        a('tipo_record')
+        a('anno')
+        a('cf_contr')
+        a('piva_clifor')
+        a('cf_clifor')
+        a('doc_riep')
+        a('opatt_numtot')
+        a('oppas_numtot')
+        a('is_noleas')
+        a('opatt_importo')
+        a('opatt_imposta')
+        a('opatt_ivanesp')
+        a('opatt_notevar')
+        a('opatt_ivanvar')
+        a('oppas_importo')
+        a('oppas_imposta')
+        a('oppas_ivanesp')
+        a('oppas_notevar')
+        a('oppas_ivanvar')
+        adb.DbMem.__init__(self, fields=fields)
+
+
+class Quadro_BL(adb.DbMem):
+    """
+    Quadro BL
+    Acquisti/Vendite con fattura con soggetti italiani
+    """
+    
+    tipo_record = None
+    anno = None
+    cf_contr = None
+    cognome = None
+    nome = None
+    data_nasc = None
+    comstaest_nasc = None
+    provest_nasc = None
+    statest_dom = None
+    ragsoc = None
+    cittaest_sede = None
+    statest_sede = None
+    indirest_sede = None
+    identif_iva = None
+    cognome_rap = None
+    nome_rap = None
+    data_nasc_rap = None
+    comstaest_nasc_rap = None
+    provest_nasc_rap = None
+    statest_dom_rap = None
+    opatt_importo = None
+    opatt_imposta = None
+    oppas_importo = None
+    oppas_imposta = None
+    
+    def __init__(self):
+        fields = []; a = fields.append
+        a('tipo_record')
+        a('anno')
+        a('cf_contr')
+        a('cognome')
+        a('nome')
+        a('data_nasc')
+        a('comstaest_nasc')
+        a('provest_nasc')
+        a('statest_dom')
+        a('ragsoc')
+        a('cittaest_sede')
+        a('statest_sede')
+        a('indirest_sede')
+        a('identif_iva')
+        a('cognome_rap')
+        a('nome_rap')
+        a('data_nasc_rap')
+        a('comstaest_nasc_rap')
+        a('provest_nasc_rap')
+        a('statest_dom_rap')
+        a('opatt_importo')
+        a('opatt_imposta')
+        a('oppas_importo')
+        a('oppas_imposta')
+        adb.DbMem.__init__(self, fields=fields)
+
+
+class Quadro_SA(adb.DbMem):
+    """
+    Quadro SA
+    Vendite senza fattura (corrispettivi) a soggetti italiani
+    """
+    
+    tipo_record = None
+    anno = None
+    cf_contr = None
+    cf_clifor = None
+    opatt_numtot = None
+    opatt_importo = None
+    
+    def __init__(self):
+        fields = []; a = fields.append
+        a('tipo_record')
+        a('anno')
+        a('cf_contr')
+        a('cf_clifor')
+        a('opatt_numtot')
+        a('opatt_importo')
+        adb.DbMem.__init__(self, fields=fields)
+
+
+class Spesometro2013_AcquistiVendite(Spesometro2011_AcquistiVendite):
+    
+    def Chiedi_NuovoRecordsetDaMassimali(self, anno, maxazi=None, maxpri=None):
+        
+        if maxazi is not None and maxpri is not None:
+            self._max_azi = maxazi
+            self._max_pri = maxpri
+        else:
+            mass = Spesometro2011_Massimali()
+            maxazi, maxpri = mass.Chiedi_PrendiMassimaliPerLAnno(anno)
+            self._max_azi, self._max_pri = maxazi, maxpri
+        
+#         colkey = self._GetFieldIndex('Reg_Link')
+        coltri = self._GetFieldIndex('RegIva_Tipo')
+        colpdc = self._GetFieldIndex('Anag_Id')
+        coldes = self._GetFieldIndex('Anag_Descriz')
+        colapr = self._GetFieldIndex('Anag_AziPer')
+        colriv = self._GetFieldIndex('RegIva_Cod')
+        colniv = self._GetFieldIndex('Reg_NumIva')
+        colndc = self._GetFieldIndex('Reg_NumDoc')
+        colimp = self._GetFieldIndex('IVA_Imponib')    #imponibile
+        coliva = self._GetFieldIndex('IVA_Imposta')    #imposta
+        colali = self._GetFieldIndex('IVA_AllImpo')    #sommatoria di imponibile, non imp, esente, fuori campo
+        coltot = self._GetFieldIndex('IVA_Totale')     #sommatoria di cui sopra più l'imposta
+        colnim = self._GetFieldIndex('IVA_NonImponib') #non imponibile
+        colese = self._GetFieldIndex('IVA_Esente')     #non esente
+        colfci = self._GetFieldIndex('IVA_FuoriCampo') #fuori campo
+        colact = self._GetFieldIndex('fa_att_cnt')     #quadro FA op.attive - num. operazioni
+        colatt = self._GetFieldIndex('fa_att_tot')     #quadro FA op.attive - totale imponibile, non imponibile, esente
+        colaiv = self._GetFieldIndex('fa_att_iva')     #quadro FA op.attive - imposta
+        colain = self._GetFieldIndex('fa_att_ine')     #quadro FA op.attive - iva non esposta
+        colava = self._GetFieldIndex('fa_att_var')     #quadro FA op.attive - tot.note variazione
+        colavi = self._GetFieldIndex('fa_att_viv')     #quadro FA op.attive - tot.imposta note variazione
+        colpct = self._GetFieldIndex('fa_pas_cnt')     #quadro FA op.passive - num. operazioni
+        colptt = self._GetFieldIndex('fa_pas_tot')     #quadro FA op.passive - totale imponibile, non imponibile, esente
+        colpiv = self._GetFieldIndex('fa_pas_iva')     #quadro FA op.passive - imposta
+        colpin = self._GetFieldIndex('fa_pas_ine')     #quadro FA op.passive - iva non esposta
+        colpva = self._GetFieldIndex('fa_pas_var')     #quadro FA op.passive - tot.note variazione
+        colpvi = self._GetFieldIndex('fa_pas_viv')     #quadro FA op.passive - tot.imposta note variazione
+        colean = self._GetFieldIndex('bl_att_cnt')     #quadro BL op.attive - num. operazioni
+        coleat = self._GetFieldIndex('bl_att_tot')     #quadro BL op.attive - totale imponibile, non imponibile, esente
+        coleai = self._GetFieldIndex('bl_att_iva')     #quadro BL op.attive - imposta
+        colepn = self._GetFieldIndex('bl_pas_cnt')     #quadro BL op.passive - num. operazioni
+        colept = self._GetFieldIndex('bl_pas_tot')     #quadro BL op.passive - totale imponibile, non imponibile, esente
+        colepi = self._GetFieldIndex('bl_pas_iva')     #quadro BL op.passive - imposta
+        colsan = self._GetFieldIndex('sa_att_cnt')     #quadro SA op.attive - num. operazioni
+        colsat = self._GetFieldIndex('sa_att_tot')     #quadro SA op.attive - totale imponibile, non imponibile, esente, imposta
+        
+        def get_key(regiva_tipo, anag_descriz):
+            return '%s-%s' % (regiva_tipo, anag_descriz)
+        
+        rs1 = self.GetRecordset()
+        rs2 = []
+        
+        _coltot = []
+        _coltot.append(colimp)
+        _coltot.append(coliva)
+        _coltot.append(colali)
+        _coltot.append(coltot)
+        _coltot.append(colnim)
+        _coltot.append(colese)
+        _coltot.append(colfci)
+        _coltot.append(colatt)
+        _coltot.append(colaiv)
+        _coltot.append(colain)
+        _coltot.append(colava)
+        _coltot.append(colavi)
+        _coltot.append(colptt)
+        _coltot.append(colpiv)
+        _coltot.append(colpin)
+        _coltot.append(colpva)
+        _coltot.append(colpvi)
+        _coltot.append(coleat)
+        _coltot.append(coleai)
+        _coltot.append(colept)
+        _coltot.append(colepi)
+        _coltot.append(colsat)
+        
+        lastkey = None
+        for _n, r in enumerate(rs1):
+            
+            if r[colact] == 0 and r[colpct] == 0\
+           and r[colean] == 0 and r[colepn] == 0\
+           and r[colsat] == 0:
+                continue
+            
+            #test massimali
+            if (r[colapr] == "A" and r[colimp] < maxazi) or (r[colapr] == "P" and r[colsat] < maxpri):
+                continue
+            
+            key = get_key(r[coltri], r[coldes])
+            if key != lastkey:
+                rs2.append([]+r)
+                rs2[-1][coltri] = r[coltri]
+                rs2[-1][colriv] = ''
+                rs2[-1][colniv] = 0
+                
+                for ct in _coltot:
+                    rs2[-1][ct] = 0
+                for ct in (colact, colpct, colean, colepn):
+                    rs2[-1][ct] = 0
+            
+            for ct in _coltot:
+                rs2[-1][ct] += (r[ct] or 0)
+            for ct in (colact, colpct, colean, colepn):
+                if r[ct] > 0:
+                    rs2[-1][ct] += 1
+                elif r[ct] < 0:
+                    rs2[-1][ct] -= 1
+            
+            rs2[-1][colndc] = '%d(A)/%d(P)' % (rs2[-1][colact], rs2[-1][colpct])
+            
+            lastkey = key
+        
+        return rs2
+    
+    def genera_file(self, filename):
+        
+        def fmt_data(data):
+            if data:
+                return data.strftime('%d%m%Y')
+            return ''
+        
+        def fmt_importo(importo):
+            if not importo:
+                return ''
+            return ('%.2f' % importo).replace('.', ',')
+        
+        def fmt_string(msg):
+            return (msg or '').encode('ascii', errors='replace')
+        
+        quadri = []
+        q_00 = Quadro_00(); quadri.append(q_00)
+        q_fa = Quadro_FA(); quadri.append(q_fa)
+        q_bl = Quadro_BL(); quadri.append(q_bl)
+        q_sa = Quadro_SA(); quadri.append(q_sa)
+        
+        q_00.CreateNewRow()
+        q_00.tipo_record = "B"
+        q_00.anno = self._anno
+        q_00.cf_contr = Env.Azienda.codfisc
+        q_00.tipo_com = "O"
+        q_00.cod_attiv = Env.Azienda.codateco
+        
+        setup = adb.DbTable('cfgsetup')
+        setup.Retrieve('chiave=%s', 'liqiva_periodic')
+        q_00.period = setup.flag
+        
+        q_00.form_com = "2"
+        
+        for _ in self:
+            
+            if self.fa_att_cnt != 0 or self.fa_pas_cnt != 0:
+                
+                #operazione con fattura (acquisto/vendita) soggetti italani
+                
+                q_fa.CreateNewRow()
+                q_fa.tipo_record = "M"
+                q_fa.anno = self._anno
+                q_fa.cf_contr = Env.Azienda.codfisc
+                if len(self.Anag_PIVA or '') > 0 and len(self.Anag_CodFisc or '') > 0:
+                    if self.Anag_AziPer == "A":
+                        q_fa.piva_clifor = self.Anag_PIVA
+                    else:
+                        q_fa.cf_clifor = self.Anag_CodFisc
+                else:
+                    if len(self.Anag_PIVA or '') > 0:
+                        q_fa.piva_clifor = self.Anag_PIVA
+                    elif len(self.Anag_CodFisc or '') > 0:
+                        q_fa.cf_clifor = self.Anag_CodFisc
+                    else:
+                        q_fa.doc_riep = "S"
+                q_fa.is_noleas = ''
+                q_fa.opatt_numtot = str(self.fa_att_cnt)
+                q_fa.oppas_numtot = str(self.fa_pas_cnt)
+                q_fa.opatt_importo = fmt_importo(self.fa_att_tot)
+                q_fa.opatt_imposta = fmt_importo(self.fa_att_iva)
+                q_fa.opatt_ivanesp = fmt_importo(self.fa_att_ine)
+                q_fa.opatt_notevar = fmt_importo(self.fa_att_var)
+                q_fa.opatt_ivanvar = fmt_importo(self.fa_att_viv)
+                q_fa.oppas_importo = fmt_importo(self.fa_pas_tot)
+                q_fa.oppas_imposta = fmt_importo(self.fa_pas_iva)
+                q_fa.oppas_ivanesp = fmt_importo(self.fa_pas_ine)
+                q_fa.oppas_notevar = fmt_importo(self.fa_pas_var)
+                q_fa.oppas_ivanvar = fmt_importo(self.fa_pas_viv)
+            
+            if self.Anag_Nazione != "IT":
+                
+                #operazione con fattura (acquisto/vendita) soggetti esteri
+                
+                q_bl.CreateNewRow()
+                q_bl.tipo_record = "O"
+                q_bl.anno = self._anno
+                q_bl.cf_contr = Env.Azienda.codfisc
+                
+                if self.Anag_AziPer == "P":
+                    q_bl.cognome = self.Anag_Cognome or ''
+                    q_bl.nome = self.Anag_Nome or ''
+                    if self.Anag_NascDat:
+                        q_bl.data_nasc = fmt_data(self.Anag_NascDat)
+                    q_bl.comstaest_nasc = fmt_string(self.Anag_NascCom or '')
+                    q_bl.provest_nasc = fmt_string(self.Anag_NascPrv or '')
+                    if q_bl.cognome:
+                        q_bl.statest_dom = fmt_string(self.Anag_StatUnico)
+                
+                q_bl.ragsoc = fmt_string(self.Anag_Descriz)
+                q_bl.cittaest_sede = fmt_string(self.Anag_Citta)
+                q_bl.statest_sede = fmt_string(self.Anag_StatUnico)
+                q_bl.indirest_sede = fmt_string(self.Anag_Indirizzo)
+                q_bl.identif_iva = '%s%s' % (self.Anag_Nazione or '', self.Anag_PIVA)
+                
+                if self.Anag_AziPer == "A":
+                    q_bl.cognome_rap = fmt_string(self.Anag_Cognome or '')
+                    q_bl.nome_rap = fmt_string(self.Anag_Nome or '')
+                    if self.Anag_NascDat:
+                        q_bl.data_nasc_rap = fmt_data(self.Anag_NascDat)
+                    q_bl.comstaest_nasc_rap = fmt_string(self.Anag_NascCom or '')
+                    q_bl.provest_nasc_rap = fmt_string(self.Anag_NascPrv or '')
+                    if q_bl.cognome_rap:
+                        q_bl.statest_dom_rap = fmt_string(self.Anag_StatUnico)
+                
+                q_bl.opatt_importo = fmt_importo(self.bl_att_tot)
+                q_bl.opatt_imposta = fmt_importo(self.bl_att_iva)
+                q_bl.oppas_importo = fmt_importo(self.bl_pas_tot)
+                q_bl.oppas_imposta = fmt_importo(self.bl_pas_iva)
+        
+            elif self.sa_att_cnt != 0:
+                
+                #operazione senza fattura (vendita con corrispettivo) a soggetti italani
+                
+                q_sa.CreateNewRow()
+                q_sa.tipo_record = "N"
+                q_sa.anno = self._anno
+                q_sa.cf_contr = Env.Azienda.codfisc
+                q_sa.cf_clifor = self.Anag_CodFisc
+                
+                q_sa.opatt_numtot = str(int(self.sa_att_cnt))
+                q_sa.opatt_importo = fmt_importo(self.sa_att_tot)
+        
+        stream = ''
+        for q in quadri:
+            h = StringIO.StringIO()
+            q.ExportCSV(h, delimiter=';', headings=False)
+            stream += h.getvalue()
+            h.close()
+        
+        h = open(filename, 'w')
+        try:
+            h.write(stream)
+        finally:
+            h.close()

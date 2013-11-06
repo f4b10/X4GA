@@ -226,6 +226,7 @@ class AziendaSetupPanel(_SetupPanel):
                                 aw.awu.MsgDialog(self, repr(e.args))
             
                 bt.ReadAziendaSetup()
+                Env.Azienda.read_dati_azienda()
             
         return out
     
@@ -509,6 +510,7 @@ class AziendaSetupPanel(_SetupPanel):
         if out:
             cfg = CfgContab()
             cfg.SetEsercizio(Env.Azienda.Login.dataElab)
+        
         return out
     
     def TestEsercizio(self):
