@@ -196,10 +196,10 @@ def SpesometroPanelFunc( parent, call_fit = True, set_sizer = True ):
     item37 = wx.StaticText( parent, ID_TEXT, "Tot.Op.+IVA", wx.DefaultPosition, wx.DefaultSize, 0 )
     item33.Add( item37, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
-    item38 = wx.StaticText( parent, ID_TOTANADES, "-", wx.DefaultPosition, [-1,30], wx.ST_NO_AUTORESIZE )
+    item38 = wx.StaticText( parent, ID_TOTANADES, "-", wx.DefaultPosition, [250,30], wx.ST_NO_AUTORESIZE )
     item38.SetFont( wx.Font( 10, wx.SWISS, wx.NORMAL, wx.BOLD ) )
     item38.SetName( "totanades" )
-    item33.Add( item38, 0, wx.GROW|wx.LEFT|wx.RIGHT, 5 )
+    item33.Add( item38, 0, wx.LEFT|wx.RIGHT, 5 )
 
     item39 = wx.StaticText( parent, ID_TOTANAIMP, "0", wx.DefaultPosition, wx.DefaultSize, 0 )
     item39.SetFont( wx.Font( 10, wx.SWISS, wx.NORMAL, wx.BOLD ) )

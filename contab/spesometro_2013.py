@@ -400,9 +400,9 @@ class SpesometroGrid(dbgrid.ADB_Grid):
         self.COL_ANAG_DES = self.AddColumn(s, 'Anag_Descriz',   'Cliente', col_width=300)
         self.COL_ANAG_APF = self.AddColumn(s, 'Anag_AziPer',    'A/P', col_width=35)
         self.COL_ANAG_ALL = self.AddColumn(s, 'Anag_AllegCF',   'All', col_type=self.TypeCheck(), col_width=35)
-        self.COL_ANAG_CFS = self.AddColumn(s, 'Anag_CodFisc',   'Cod.Fiscale', col_width=130)
+        self.COL_ANAG_CFS = self.AddColumn(s, 'Anag_CodFisc',   'Cod.Fiscale', col_width=140)
         self.COL_ANAG_STT = self.AddColumn(s, 'Anag_Nazione',   'Naz.', col_width=40)
-        self.COL_ANAG_PIV = self.AddColumn(s, 'Anag_PIVA',      'P.IVA', col_width=90)
+        self.COL_ANAG_PIV = self.AddColumn(s, 'Anag_PIVA',      'P.IVA', col_width=100)
         
         self.COL_DOCU_DAT = self.AddColumn(s, 'Reg_DatDoc',     'Doc.', col_type=self.TypeDate())
         self.COL_DOCU_NUM = self.AddColumn(s, 'Reg_NumDoc',     'Num.', col_width=60)
