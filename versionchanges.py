@@ -28,6 +28,11 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
+    ('1.4.84', dt.Date(2013, 11, 7), (
+         ("BET1163",
+         """Implementazione Spesometro 2013."""),
+        ),),
+    
     ('1.4.83', dt.Date(2013, 10, 10), (
          ("BET1162",
          """Consentita estrazione registrazioni in consultazione spesometro
