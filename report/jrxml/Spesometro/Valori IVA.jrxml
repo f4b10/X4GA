@@ -2,7 +2,7 @@
 <!-- Created with iReport - A designer for JasperReports -->
 <!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
 <jasperReport
-		 name="Spesometro"
+		 name="Valori IVA"
 		 columnCount="1"
 		 printOrder="Vertical"
 		 orientation="Landscape"
@@ -37,79 +37,52 @@
 	<field name="prov" class="java.lang.String"/>
 	<field name="id_zona" class="java.lang.Integer"/>
 
-	<variable name="TotImponib" class="java.lang.Float" resetType="Group" incrementType="Column" resetGroup="reg_link" calculation="Sum">
-		<variableExpression><![CDATA[$V{TotImponib} + RS.iif(RS.Reg_Link is None, 0, (RS.IVA_Imponib or 0))]]></variableExpression>
+	<variable name="TotImponib" class="java.lang.Float" resetType="Group" incrementType="Column" resetGroup="globale" calculation="Sum">
+		<variableExpression><![CDATA[$V{TotImponib} + (RS.IVA_Imponib or 0)]]></variableExpression>
 		<initialValueExpression><![CDATA[0]]></initialValueExpression>
 	</variable>
-	<variable name="TotImposta" class="java.lang.Float" resetType="Group" incrementType="Column" resetGroup="reg_link" calculation="Sum">
-		<variableExpression><![CDATA[$V{TotImposta} + RS.iif(RS.Reg_Link is None, 0, (RS.IVA_Imposta or 0))]]></variableExpression>
+	<variable name="TotImposta" class="java.lang.Float" resetType="Group" incrementType="Column" resetGroup="globale" calculation="Sum">
+		<variableExpression><![CDATA[$V{TotImposta} + (RS.IVA_Imposta or 0)]]></variableExpression>
 		<initialValueExpression><![CDATA[0]]></initialValueExpression>
 	</variable>
-	<variable name="TotNonImponib" class="java.lang.Float" resetType="Group" incrementType="Column" resetGroup="reg_link" calculation="Sum">
-		<variableExpression><![CDATA[$V{TotNonImponib} + RS.iif(RS.Reg_Link is None, 0, (RS.IVA_NonImponib or 0))]]></variableExpression>
+	<variable name="TotNonImponib" class="java.lang.Float" resetType="Group" incrementType="Column" resetGroup="globale" calculation="Sum">
+		<variableExpression><![CDATA[$V{TotNonImponib} + (RS.IVA_NonImponib or 0)]]></variableExpression>
 		<initialValueExpression><![CDATA[0]]></initialValueExpression>
 	</variable>
-	<variable name="TotEsente" class="java.lang.Float" resetType="Group" incrementType="Column" resetGroup="reg_link" calculation="Sum">
-		<variableExpression><![CDATA[$V{TotEsente} + RS.iif(RS.Reg_Link is None, 0, (RS.IVA_Esente or 0))]]></variableExpression>
+	<variable name="TotEsente" class="java.lang.Float" resetType="Group" incrementType="Column" resetGroup="globale" calculation="Sum">
+		<variableExpression><![CDATA[$V{TotEsente} + (RS.IVA_Esente or 0)]]></variableExpression>
 		<initialValueExpression><![CDATA[0]]></initialValueExpression>
 	</variable>
-	<variable name="TotFuoriCampo" class="java.lang.Float" resetType="Group" incrementType="Column" resetGroup="reg_link" calculation="Sum">
-		<variableExpression><![CDATA[$V{TotFuoriCampo} + RS.iif(RS.Reg_Link is None, 0, (RS.IVA_FuoriCampo or 0))]]></variableExpression>
+	<variable name="TotFuoriCampo" class="java.lang.Float" resetType="Group" incrementType="Column" resetGroup="globale" calculation="Sum">
+		<variableExpression><![CDATA[$V{TotFuoriCampo} + (RS.IVA_FuoriCampo or 0)]]></variableExpression>
 		<initialValueExpression><![CDATA[0]]></initialValueExpression>
 	</variable>
-	<variable name="TotTotale" class="java.lang.Float" resetType="Group" incrementType="Column" resetGroup="reg_link" calculation="Sum">
-		<variableExpression><![CDATA[$V{TotTotale} + RS.iif(RS.Reg_Link is None, 0, (RS.IVA_Totale or 0))]]></variableExpression>
+	<variable name="TotTotale" class="java.lang.Float" resetType="Group" incrementType="Column" resetGroup="globale" calculation="Sum">
+		<variableExpression><![CDATA[$V{TotTotale} + (RS.IVA_Totale or 0)]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="NumRiga" class="java.lang.Integer" resetType="Page" incrementType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$V{NumRiga} + 1]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="TotAllImpo" class="java.lang.Float" resetType="Group" resetGroup="globale" calculation="Sum">
+		<variableExpression><![CDATA[$V{TotAllImpo} + (RS.IVA_AllImpo or 0)]]></variableExpression>
 		<initialValueExpression><![CDATA[0]]></initialValueExpression>
 	</variable>
 
-		<group  name="reg_link" >
-			<groupExpression><![CDATA[RS.Reg_Link]]></groupExpression>
+		<group  name="globale" >
+			<groupExpression><![CDATA[1]]></groupExpression>
 			<groupHeader>
-			<band height="5"  isSplitAllowed="true" >
-				<line direction="TopDown">
-					<reportElement
-						mode="Opaque"
-						x="0"
-						y="3"
-						width="782"
-						height="1"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="line-2"/>
-					<graphicElement stretchType="NoStretch" fill="Solid" >
-					<pen lineWidth="0.25" lineStyle="Solid"/>
-</graphicElement>
-				</line>
+			<band height="0"  isSplitAllowed="true" >
 			</band>
 			</groupHeader>
 			<groupFooter>
 			<band height="14"  isSplitAllowed="true" >
-				<printWhenExpression><![CDATA[RS.Reg_Link is not None]]></printWhenExpression>
-				<staticText>
-					<reportElement
-						mode="Transparent"
-						x="44"
-						y="1"
-						width="160"
-						height="10"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="element-93"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
-						<font fontName="Times New Roman" pdfFontName="Times-Italic" size="8" isBold="false" isItalic="true" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
-					</textElement>
-				<text><![CDATA[*** Totali registrazioni aggregate ***]]></text>
-				</staticText>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="489"
-						y="2"
+						x="440"
+						y="5"
 						width="47"
 						height="9"
 						forecolor="#000000"
@@ -128,8 +101,8 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="538"
-						y="2"
+						x="685"
+						y="5"
 						width="47"
 						height="9"
 						forecolor="#000000"
@@ -148,8 +121,8 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="587"
-						y="2"
+						x="489"
+						y="5"
 						width="47"
 						height="9"
 						forecolor="#000000"
@@ -168,8 +141,8 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="636"
-						y="2"
+						x="538"
+						y="5"
 						width="47"
 						height="9"
 						forecolor="#000000"
@@ -188,8 +161,8 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="685"
-						y="2"
+						x="587"
+						y="5"
 						width="47"
 						height="9"
 						forecolor="#000000"
@@ -209,7 +182,7 @@
 					<reportElement
 						mode="Transparent"
 						x="734"
-						y="2"
+						y="5"
 						width="47"
 						height="9"
 						forecolor="#000000"
@@ -225,6 +198,57 @@
 					</textElement>
 				<textFieldExpression   class="java.lang.Integer"><![CDATA[RS.sepnvi($V{TotTotale})]]></textFieldExpression>
 				</textField>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="365"
+						y="4"
+						width="72"
+						height="10"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="element-93"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
+						<font fontName="Times New Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[Totali:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="636"
+						y="5"
+						width="47"
+						height="9"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField-32"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Oblique" size="8" isBold="false" isItalic="true" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+					</textElement>
+				<textFieldExpression   class="java.lang.Integer"><![CDATA[RS.sepnvi($V{TotAllImpo})]]></textFieldExpression>
+				</textField>
+				<line direction="TopDown">
+					<reportElement
+						x="1"
+						y="3"
+						width="781"
+						height="0"
+						key="line-3"/>
+					<graphicElement stretchType="NoStretch">
+					<pen lineWidth="0.25" lineStyle="Solid"/>
+</graphicElement>
+				</line>
 			</band>
 			</groupFooter>
 		</group>
@@ -394,7 +418,7 @@
 					<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="10" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[Transazioni Spesometro]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[Valori IVA dello Spesometro]]></textFieldExpression>
 				</textField>
 				<line direction="TopDown">
 					<reportElement
@@ -413,7 +437,7 @@
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="17"
+						x="2"
 						y="1"
 						width="25"
 						height="10"
@@ -433,9 +457,9 @@
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="44"
+						x="29"
 						y="1"
-						width="160"
+						width="220"
 						height="10"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -449,46 +473,6 @@
 						<font fontName="Times New Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Anagrafica]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						mode="Transparent"
-						x="373"
-						y="1"
-						width="30"
-						height="10"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="element-90"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
-						<font fontName="Times New Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
-					</textElement>
-				<text><![CDATA[N.Doc.]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						mode="Transparent"
-						x="406"
-						y="1"
-						width="45"
-						height="10"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="element-90"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement verticalAlignment="Top" rotation="None" lineSpacing="Single">
-						<font fontName="Times New Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
-					</textElement>
-				<text><![CDATA[Data]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
@@ -513,27 +497,7 @@
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="452"
-						y="1"
-						width="35"
-						height="10"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="element-90"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
-						<font fontName="Times New Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
-					</textElement>
-				<text><![CDATA[Prot.]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						mode="Transparent"
-						x="489"
+						x="440"
 						y="1"
 						width="47"
 						height="10"
@@ -553,7 +517,7 @@
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="538"
+						x="685"
 						y="1"
 						width="47"
 						height="10"
@@ -573,7 +537,7 @@
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="587"
+						x="489"
 						y="1"
 						width="47"
 						height="10"
@@ -593,7 +557,7 @@
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="636"
+						x="538"
 						y="1"
 						width="47"
 						height="10"
@@ -613,7 +577,7 @@
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="685"
+						x="587"
 						y="1"
 						width="47"
 						height="10"
@@ -633,7 +597,7 @@
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="1"
+						x="254"
 						y="1"
 						width="15"
 						height="10"
@@ -645,7 +609,7 @@
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
-					<textElement verticalAlignment="Top" rotation="None" lineSpacing="Single">
+					<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="Times New Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[AP]]></text>
@@ -653,7 +617,7 @@
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="206"
+						x="272"
 						y="1"
 						width="90"
 						height="10"
@@ -673,7 +637,7 @@
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="299"
+						x="365"
 						y="1"
 						width="72"
 						height="10"
@@ -690,14 +654,34 @@
 					</textElement>
 				<text><![CDATA[P.IVA]]></text>
 				</staticText>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="636"
+						y="1"
+						width="47"
+						height="10"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="element-94"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
+						<font fontName="Times New Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[Importo]]></text>
+				</staticText>
 			</band>
 		</columnHeader>
 		<detail>
-			<band height="12"  isSplitAllowed="true" >
+			<band height="14"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="17"
+						x="2"
 						y="2"
 						width="25"
 						height="9"
@@ -717,9 +701,9 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="44"
+						x="29"
 						y="2"
-						width="160"
+						width="220"
 						height="9"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -733,46 +717,6 @@
 						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.Integer"><![CDATA[RS.Anag_Descriz]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						mode="Transparent"
-						x="373"
-						y="2"
-						width="30"
-						height="9"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="textField"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
-					</textElement>
-				<textFieldExpression   class="java.lang.Integer"><![CDATA[RS.Reg_NumDoc]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						mode="Transparent"
-						x="406"
-						y="2"
-						width="45"
-						height="9"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="textField"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
-					</textElement>
-				<textFieldExpression   class="java.lang.Integer"><![CDATA[RS.dita(RS.Reg_DatDoc)]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -797,27 +741,7 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="452"
-						y="2"
-						width="35"
-						height="9"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="textField"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
-					</textElement>
-				<textFieldExpression   class="java.lang.Integer"><![CDATA['%d/%s' % (RS.Reg_NumIva, RS.RegIva_Cod)]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						mode="Transparent"
-						x="489"
+						x="440"
 						y="2"
 						width="47"
 						height="9"
@@ -837,7 +761,7 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="538"
+						x="685"
 						y="2"
 						width="47"
 						height="9"
@@ -857,7 +781,7 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="587"
+						x="489"
 						y="2"
 						width="47"
 						height="9"
@@ -877,7 +801,7 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="636"
+						x="538"
 						y="2"
 						width="47"
 						height="9"
@@ -897,7 +821,7 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="685"
+						x="587"
 						y="2"
 						width="47"
 						height="9"
@@ -917,7 +841,7 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="1"
+						x="254"
 						y="2"
 						width="15"
 						height="9"
@@ -929,7 +853,7 @@
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
-					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
+					<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.Integer"><![CDATA[RS.Anag_AziPer]]></textFieldExpression>
@@ -937,7 +861,7 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="206"
+						x="272"
 						y="2"
 						width="90"
 						height="9"
@@ -957,7 +881,7 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="299"
+						x="365"
 						y="2"
 						width="72"
 						height="9"
@@ -975,6 +899,39 @@
 						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.Integer"><![CDATA['%s %s' % (RS.Anag_Nazione or "IT", RS.Anag_PIVA)]]></textFieldExpression>
+				</textField>
+				<line direction="TopDown">
+					<reportElement
+						x="1"
+						y="13"
+						width="781"
+						height="0"
+						key="line-2">
+							<printWhenExpression><![CDATA[$V{NumRiga}%4==0]]></printWhenExpression>
+						</reportElement>
+					<graphicElement stretchType="NoStretch">
+					<pen lineWidth="0.25" lineStyle="Dashed"/>
+</graphicElement>
+				</line>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="636"
+						y="2"
+						width="47"
+						height="9"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField-31"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+					</textElement>
+				<textFieldExpression   class="java.lang.Integer"><![CDATA[RS.sepnvi(RS.IVA_AllImpo)]]></textFieldExpression>
 				</textField>
 			</band>
 		</detail>
