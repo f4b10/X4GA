@@ -57,16 +57,35 @@ class _CliFor_DatiFiscaliGrid(dbgrid.ADB_Grid):
         dbgrid.ADB_Grid.__init__(self, parent, db_table=dbana, can_edit=True, on_menu_select='row')
         
         AC = self.AddColumn
-        AC(pdc,   'descriz', label='Descrizione', col_width=300, is_fittable=True)
-        AC(stato, 'codice', label='Stato', col_width=60)
-        AC(anag,  'nazione', label='St.PI', col_width=60)
-        AC(anag,  'piva', label='P.IVA', col_width=100, is_editable=True)
-        AC(anag,  'codfisc', label='Cod.Fiscale', col_width=140, is_editable=True)
-        AC(anag,  'allegcf', label='All.', col_width=50, col_type=self.TypeCheck())
-        AC(anag,  'aziper', label='A/P', col_width=50, is_editable=True)
-        AC(anag,  'is_blacklisted', label='B/L', col_width=50, col_type=self.TypeCheck())
+        self.COL_DESCRIZ = AC(pdc,   'descriz', label='Descrizione', col_width=300, is_fittable=True)
+        self.COL_STATO =   AC(stato, 'codice', label='Stato', col_width=60)
+        self.COL_NAZIONE = AC(anag,  'nazione', label='St.PI', col_width=60)
+        self.COL_PIVA =    AC(anag,  'piva', label='P.IVA', col_width=100, is_editable=True)
+        self.COL_CODFISC = AC(anag,  'codfisc', label='Cod.Fiscale', col_width=140, is_editable=True)
+        self.COL_ALLEGCF = AC(anag,  'allegcf', label='All.', col_width=50, col_type=self.TypeCheck())
+        self.COL_AZIPER =  AC(anag,  'aziper', label='A/P', col_width=50, is_editable=True)
+        self.COL_ANAG_BL = AC(anag,  'is_blacklisted', label='B/L', col_width=50, col_type=self.TypeCheck())
+        
+        def gfi(tab, col):
+            return tab._GetFieldIndex(col, inline=True)
+        
+        self._col_aziper =  gfi(anag, 'aziper')
+        self._col_nazione = gfi(anag, 'nazione')
+        self._col_piva =    gfi(anag, 'piva')
+        self._col_codfisc = gfi(anag, 'codfisc')
         
         self.CreateGrid()
+    
+    def GetAttr(self, row, col, rscol, attr):
+        attr = dbgrid.ADB_Grid.GetAttr(self, row, col, rscol, attr)
+        rs = self.db_table.GetRecordset()
+        if 0 <= row < len(rs):
+            r = rs[row]
+            if (r[self._col_nazione] or "IT") == "IT":
+                if (r[self._col_aziper] == "A" and len(r[self._col_piva] or '') == 0) or \
+                   (r[self._col_aziper] == "P" and len(r[self._col_codfisc] or '') == 0):
+                    attr.SetBackgroundColour('red')
+        return attr
     
     def ApriScheda(self, row):
         anag = self.dbana
