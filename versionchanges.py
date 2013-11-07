@@ -28,6 +28,12 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
+    ('1.4.86', dt.Date(2013, 11, 7), (
+         ("BET1165",
+         """Adeguamento tabella stati per inclusione codice unico
+         se sprovvista.."""),
+        ),),
+    
     ('1.4.85', dt.Date(2013, 11, 7), (
          ("BET1164",
          """Colorazione in rosso su griglia controllo dati fiscali su

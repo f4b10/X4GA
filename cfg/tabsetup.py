@@ -891,7 +891,7 @@ UPDATE `cfgsetup`
         
             # -------------------------------------------------------------------------------------
             
-            if oldver<'1.4.12' and ok:
+            if oldver<'1.4.85' and ok:
                 
                 #adeguamento struttura tabella stati per aggiunta codice stato 
                 #nella codifica del modello unico di dichiarazione dei redditi
