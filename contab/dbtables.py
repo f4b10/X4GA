@@ -4393,6 +4393,7 @@ class Spesometro2013_AcquistiVendite(Spesometro2011_AcquistiVendite):
         colriv = self._GetFieldIndex('RegIva_Cod')
         colniv = self._GetFieldIndex('Reg_NumIva')
         colndc = self._GetFieldIndex('Reg_NumDoc')
+        colddc = self._GetFieldIndex('Reg_DatDoc')
         colimp = self._GetFieldIndex('IVA_Imponib')    #imponibile
         coliva = self._GetFieldIndex('IVA_Imposta')    #imposta
         colali = self._GetFieldIndex('IVA_AllImpo')    #sommatoria di imponibile, non imp, esente, fuori campo
@@ -4460,7 +4461,7 @@ class Spesometro2013_AcquistiVendite(Spesometro2011_AcquistiVendite):
                 continue
             
             #test massimali
-            if (r[colapr] == "A" and r[colimp] < maxazi) or (r[colapr] == "P" and r[colsat] < maxpri):
+            if (r[colapr] == "A" and abs(r[colimp]) < maxazi) or (r[colapr] == "P" and r[colsat] < maxpri):
                 continue
             
             key = get_key(r[coltri], r[coldes])
@@ -4468,7 +4469,10 @@ class Spesometro2013_AcquistiVendite(Spesometro2011_AcquistiVendite):
                 rs2.append([]+r)
                 rs2[-1][coltri] = r[coltri]
                 rs2[-1][colriv] = ''
+                rs2[-1][colndc] = ''
+                rs2[-1][colddc] = None
                 rs2[-1][colniv] = 0
+                lastkey = key
                 
                 for ct in _coltot:
                     rs2[-1][ct] = 0
@@ -4482,10 +4486,6 @@ class Spesometro2013_AcquistiVendite(Spesometro2011_AcquistiVendite):
                     rs2[-1][ct] += 1
                 elif r[ct] < 0:
                     rs2[-1][ct] -= 1
-            
-            rs2[-1][colndc] = '%d(A)/%d(P)' % (rs2[-1][colact], rs2[-1][colpct])
-            
-            lastkey = key
         
         return rs2
     
@@ -4559,7 +4559,7 @@ class Spesometro2013_AcquistiVendite(Spesometro2011_AcquistiVendite):
                 q_fa.oppas_notevar = fmt_importo(self.fa_pas_var)
                 q_fa.oppas_ivanvar = fmt_importo(self.fa_pas_viv)
             
-            if self.Anag_Nazione != "IT":
+            elif self.bl_att_cnt != 0 or self.bl_pas_cnt != 0:
                 
                 #operazione con fattura (acquisto/vendita) soggetti esteri
                 
