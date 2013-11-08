@@ -3556,7 +3556,8 @@ SELECT reg.id              'Reg_Id',
            *IF((tipana.tipo="C" AND statocli.id IS NULL or statocli.codice="IT")
              OR(tipana.tipo="F" AND statofor.id IS NULL or statofor.codice="IT"), 1, 0)
            *IF(bodycri.tipriga="I", 1, 0)
-           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, 0))  'fa_att_tot',
+           *IF(reg.tipreg="E",0,
+               IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, 0)))  'fa_att_tot',
        
        SUM((bodycri.imposta+IF(bodycri.indeduc IS NULL, 0, bodycri.indeduc))
            *causale.pralcf
@@ -3564,7 +3565,8 @@ SELECT reg.id              'Reg_Id',
            *IF((tipana.tipo="C" AND statocli.id IS NULL or statocli.codice="IT")
              OR(tipana.tipo="F" AND statofor.id IS NULL or statofor.codice="IT"), 1, 0)
            *IF(bodycri.tipriga IN ("I", "O"), 1, 0)
-           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, 0))  'fa_att_iva',
+           *IF(reg.tipreg="E",1,
+               IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, 0)))  'fa_att_iva',
        
        0                                                                        'fa_att_ine',
        
@@ -3699,15 +3701,15 @@ INNER JOIN contab_h  reg     ON reg.id=bodyanag.id_reg
 INNER JOIN           regiva  ON regiva.id=reg.id_regiva
 INNER JOIN cfgcontab causale ON causale.id=reg.id_caus
 
-INNER JOIN contab_b  bodycri ON bodycri.id_reg=bodyanag.id_reg AND bodycri.numriga>1
+INNER JOIN contab_b  bodycri ON bodycri.id_reg=bodyanag.id_reg AND (reg.tipreg="E" OR bodycri.numriga>1)
 INNER JOIN pdc       pdccer  ON pdccer.id=bodycri.id_pdcpa
 
  LEFT JOIN aliqiva   aliq    ON aliq.id=bodycri.id_aliqiva
 
 WHERE %(filters)s
 
-GROUP BY anag.descriz, reg.sm_regrif, reg.sm_link, reg.datdoc, reg.numdoc, regiva.tipo, regiva.codice
-ORDER BY anag.descriz, reg.sm_regrif, reg.sm_link, reg.datdoc, reg.numdoc, regiva.tipo, regiva.codice
+GROUP BY anag.descriz, reg.datdoc, reg.numdoc, regiva.tipo, regiva.codice
+ORDER BY anag.descriz, reg.datdoc, reg.numdoc, regiva.tipo, regiva.codice
         """ % locals()
 #         print cmd
         db = adb.db.__database__
@@ -4423,7 +4425,8 @@ class Spesometro2013_AcquistiVendite(Spesometro2011_AcquistiVendite):
         colsat = self._GetFieldIndex('sa_att_tot')     #quadro SA op.attive - totale imponibile, non imponibile, esente, imposta
         
         def get_key(regiva_tipo, anag_descriz):
-            return '%s-%s' % (regiva_tipo, anag_descriz)
+#            return '%s-%s' % (regiva_tipo, anag_descriz)
+            return anag_descriz
         
         rs1 = self.GetRecordset()
         rs2 = []
@@ -4502,7 +4505,10 @@ class Spesometro2013_AcquistiVendite(Spesometro2011_AcquistiVendite):
             return ('%.2f' % importo).replace('.', ',')
         
         def fmt_string(msg):
-            return (msg or '').encode('ascii', errors='replace')
+            try:
+                return (msg or '').encode('ascii', errors='replace')
+            except:
+                return msg or ''
         
         quadri = []
         q_00 = Quadro_00(); quadri.append(q_00)
