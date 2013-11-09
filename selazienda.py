@@ -985,6 +985,10 @@ VALUES
                         filtmod += ' IS NULL OR azi.modname="")'
                 except MySQLdb.Error, e:
                     pass
+            order = 'azi.azienda, azi.codice'
+            curs.execute("DESCRIBE x4.aziende")
+            if filter(lambda r: r[0] == 'ordine', curs.fetchall()):
+                order = 'azi.ordine, %s' % order
             cn = lambda x: self.FindWindowById(x)
             sql = r"""
               SELECT azi.id, azi.codice, azi.azienda, azi.nomedb
@@ -993,7 +997,7 @@ VALUES
                 JOIN utenti ute ON dir.id_utente=ute.id
                WHERE dir.id_utente=ute.id AND
                      dir.attivo=1 AND ute.descriz=%%s %s
-            ORDER BY azi.azienda, azi.codice""" % filtmod
+            ORDER BY %s""" % (filtmod, order)
             curs.execute(sql, (cn(ID_USER).GetValue(),))
             self.dbaz.SetRecordset(curs.fetchall())
             self.gridaz.ChangeData(self.dbaz.GetRecordset())
