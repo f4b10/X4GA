@@ -4506,7 +4506,7 @@ class Spesometro2013_AcquistiVendite(Spesometro2011_AcquistiVendite):
         
         def fmt_string(msg):
             try:
-                return (msg or '').encode('ascii', errors='replace')
+                return (msg or '').encode('ascii', 'replace')
             except:
                 return msg or ''
         
