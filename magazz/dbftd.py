@@ -544,10 +544,14 @@ class FtDif(adb.DbTable):
                     dg.tot.total_imponib += impriga
             
             self.BodyCopied(dg, dr)
+        self.AllBodyCopied(dg, dr)
     
     def HeadCreated(self, *args, **kwargs):
         pass
     
+    def AllBodyCopied(self, *args, **kwargs):
+        pass
+
     def BodyCopied(self, *args, **kwargs):
         pass
     
