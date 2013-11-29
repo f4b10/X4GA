@@ -28,6 +28,20 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
+    ('1.4.89', dt.Date(2013, 11, 8), (
+         ("BUG1142",
+         """Corretta estrazione dati spesometro per inclusione
+         autofatture su fornitori."""),
+         ("BUG1143",
+         """Corretta aggregazione dati spesometro in caso di
+         soggetto sia cliente che fornitore."""),
+        ),),
+    
+    ('1.4.87', dt.Date(2013, 11, 8), (
+         ("BET1166",
+         """Corretto encoding in generazione file spesometro."""),
+        ),),
+    
     ('1.4.86', dt.Date(2013, 11, 7), (
          ("BET1165",
          """Adeguamento tabella stati per inclusione codice unico
