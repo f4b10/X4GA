@@ -200,7 +200,10 @@ class Setup(ConfigParser.RawConfigParser):
         out = ConfigParser.RawConfigParser.write(self, fp)
         fp.close()
         for sec, opt, pswd in pswds:
-            enc = crypt.encrypt_data(pswd)
+            try:
+                enc = crypt.encrypt_data(pswd)
+            except:
+                enc = crypt.encrypt_data(pswd.encode())
             try:
                 f = open(self.getPswdFile(sec), 'wb')
                 f.write(enc)
