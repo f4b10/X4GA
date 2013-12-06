@@ -287,6 +287,12 @@ class Clienti(Pdc):
         cli.AddJoin(\
             bt.TABNAME_ALIQIVA, "aliqiva", idLeft="id_aliqiva",\
             join=adb.JOIN_LEFT)
+
+        cli.AddJoin(\
+            'x4.stati', "stato", idLeft="id_stato",\
+            join=adb.JOIN_LEFT)
+
+
         
         m = cli.AddMultiJoin(\
             bt.TABNAME_BANCF,   "banche",  idRight="id_pdc",\
