@@ -1242,7 +1242,10 @@ class DbGridTable(gridlib.PyGridTableBase):
                         value = (self.getExternal[1])(row, col, rscol)
                     else:
                         #prendo valore da recordset - standard
-                        value = self.data[row][rscol]
+                        if rscol>0:
+                            value = self.data[row][rscol]
+                        else:
+                            value=None
         except IndexError:
             pass
         return value
