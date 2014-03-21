@@ -28,6 +28,11 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
+    ('1.4.91', dt.Date(2014, 03, 21), (
+         ("BET1167",
+         """Spesometro 2013."""),
+        ),),
+    
     ('1.4.90', dt.Date(2014, 03, 21), (
          ("BUG1144",
          """Corretta esportazione da griglia in file excel."""),
