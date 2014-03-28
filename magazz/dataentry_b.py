@@ -1439,7 +1439,8 @@ class GridBody(object):
             resetview = True
             
         else:
-            setattr(self.dbdoc.mov, self.dbdoc.mov.GetFieldNames()[col], value)
+            if col in self.dbdoc.mov.GetFieldNames():
+                setattr(self.dbdoc.mov, self.dbdoc.mov.GetFieldNames()[col], value)
         
         self.MakeTotals(pesocolli=True)
         
