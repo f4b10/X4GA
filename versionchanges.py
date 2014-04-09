@@ -28,6 +28,12 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
+    ('1.4.94', dt.Date(2014, 04, 9), (
+         ("BUG1146",
+         """Corretta estrazione dati per spesometro, non considerava l'imposta
+         delle fatture di vendita di soli omaggi."""),
+        ),),
+    
     ('1.4.92', dt.Date(2014, 03, 24), (
          ("BUG1145",
          """Corretta bug su visualizzazione griglia prodotti."""),

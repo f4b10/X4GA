@@ -3701,8 +3701,8 @@ INNER JOIN contab_h  reg     ON reg.id=bodyanag.id_reg
 INNER JOIN           regiva  ON regiva.id=reg.id_regiva
 INNER JOIN cfgcontab causale ON causale.id=reg.id_caus
 
-INNER JOIN contab_b  bodycri ON bodycri.id_reg=bodyanag.id_reg AND (reg.tipreg="E" OR bodycri.numriga>1)
-INNER JOIN pdc       pdccer  ON pdccer.id=bodycri.id_pdcpa
+ LEFT JOIN contab_b  bodycri ON bodycri.id_reg=bodyanag.id_reg AND (reg.tipreg="E" OR bodycri.numriga>1)
+ LEFT JOIN pdc       pdccer  ON pdccer.id=bodycri.id_pdcpa
 
  LEFT JOIN aliqiva   aliq    ON aliq.id=bodycri.id_aliqiva
 
@@ -4458,13 +4458,20 @@ class Spesometro2013_AcquistiVendite(Spesometro2011_AcquistiVendite):
         lastkey = None
         for _n, r in enumerate(rs1):
             
-            if r[colact] == 0 and r[colpct] == 0\
-           and r[colean] == 0 and r[colepn] == 0\
+#             if r[colact] == 0 and r[colpct] == 0\
+#            and r[colean] == 0 and r[colepn] == 0\
+#            and r[colsat] == 0:
+            if r[colatt] == 0 and r[colaiv] == 0\
+           and r[colava] == 0 and r[colavi] == 0\
+           and r[colptt] == 0 and r[colpiv] == 0\
+           and r[colpva] == 0 and r[colpvi] == 0\
+           and r[coleat] == 0 and r[coleai] == 0\
+           and r[colept] == 0 and r[colepi] == 0\
            and r[colsat] == 0:
                 continue
             
             #test massimali
-            if (r[colapr] == "A" and abs(r[colimp]) < maxazi) or (r[colapr] == "P" and r[colsat] < maxpri):
+            if (r[colapr] == "A" and abs(r[colimp] or 0) < maxazi) or (r[colapr] == "P" and r[colsat] < maxpri):
                 continue
             
             key = get_key(r[coltri], r[coldes])
