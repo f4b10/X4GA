@@ -51,7 +51,7 @@ class ReddVendGrid(dbgrid.ADB_Grid):
     
     def __init__(self, parent, dbred):
         
-        self.dbred = red = dbred
+        self.dbtic = red = dbred
         
         dbgrid.ADB_Grid.__init__(self, parent, db_table=dbred, can_edit=True, on_menu_select='row')
         
@@ -78,8 +78,8 @@ class ReddVendPanel(wx.Panel):
         wx.Panel.__init__(self, *args, **kwargs)
         wdr.ReddVendFunc(self)
         cn = self.FindWindowByName
-        self.dbred = dbs.ReddVend()
-        self.gridred = ReddVendGrid(cn('pangridven'), self.dbred)
+        self.dbtic = dbs.ReddVend()
+        self.gridred = ReddVendGrid(cn('pangridven'), self.dbtic)
         for name, func in (('butupd', self.OnUpdateData),
                            ('butprt', self.OnPrintData),):
             self.Bind(wx.EVT_BUTTON, func, cn(name))
@@ -91,7 +91,7 @@ class ReddVendPanel(wx.Panel):
     def UpdateData(self):
         cn = self.FindWindowByName
         d1, d2 = map(lambda x: cn(x).GetValue(), 'data1 data2'.split())
-        red = self.dbred
+        red = self.dbtic
         red.ClearFilters()
         if d1:
             red.AddFilter("doc_data>=%s", d1)
@@ -129,7 +129,7 @@ class ReddVendPanel(wx.Panel):
         event.Skip()
     
     def PrintData(self):
-        rpt.Report(self, self.dbred, "Redditivita' vendite")
+        rpt.Report(self, self.dbtic, "Redditivita' vendite")
 
 
 # ------------------------------------------------------------------------------
