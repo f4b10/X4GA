@@ -28,6 +28,12 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
+    ('1.4.95', dt.Date(2014, 4, 16), (
+         ("BUG1147",
+         """Uso di clienti/fornitori filtrati per tipologia, per
+         includere anche sottoconti dal tipo affine ma con diverso codice."""),
+        ),),
+    
     ('1.4.94', dt.Date(2014, 04, 9), (
          ("BUG1146",
          """Corretta estrazione dati per spesometro, non considerava l'imposta
