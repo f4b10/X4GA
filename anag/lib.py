@@ -543,7 +543,7 @@ class _LinkTablePdcMixin(LinkTable):
         out = False
         dbtip = self.dbtip
         if tipanacods:
-            filt = "codice IN (%s)" \
+            filt = "tipo IN (%s)" \
                  % ','.join(map(lambda x: "'%s'" % x, list(tipanacods)))
         else:
             filt = '1'
