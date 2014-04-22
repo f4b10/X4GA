@@ -28,6 +28,12 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
+    ('1.4.95', dt.Date(2014, 4, 22), (
+         ("BUG1148",
+         """Corretta fatturazione differita, non considerava il filtro su
+         mod.pagamento."""),
+        ),),
+    
     ('1.4.95', dt.Date(2014, 4, 16), (
          ("BUG1147",
          """Uso di clienti/fornitori filtrati per tipologia, per
