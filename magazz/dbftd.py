@@ -272,6 +272,7 @@ class FtDif(adb.DbTable):
             ('id_pdc',    '=',  '_solopdc',   None),
             ('id_agente', '=',  '_soloage',   None),
             ('id_zona',   '=',  '_solozona',  None),
+            ('id_modpag', '=',  '_solomp',    None),
             ('f_printed', '=',  '_solosta',  self.docrag._solosta),
             ):                     
             value = self.docrag.__getattr__(name) or default
@@ -283,7 +284,6 @@ class FtDif(adb.DbTable):
         anag = dr.pdc.anag.GetTableAlias()
         for field, op, name, default in (
             ('id_categ',  '=', '_solocateg', None),
-            ('id_modpag', '=', '_solomp',    None),
             ):                     
             value = self.docrag.__getattr__(name) or default
             if value:
