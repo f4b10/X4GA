@@ -273,6 +273,8 @@ class print_Report:
     StoreRecordPosition=None
     completed = False
     nameOutputFile = None
+    filterScreen= None
+    fileFilterScreen=None
 
     def __init__(self, 
                  nameXmlFile=None, 
@@ -308,10 +310,10 @@ class print_Report:
                  filtersPanel=None,
                  changefilename=None,
                  multicopia_init=None,
-                 multicopia_reactor=None):
+                 multicopia_reactor=None,
+                 filterScreen=None):
         
         self.printed = False
-        
         output=upper(output)
         if not output in ["VIEW", "PRINT", "STORE"]:
             output="VIEW"
@@ -523,14 +525,17 @@ class print_Report:
             self.oTitle.mnemonicName = 'Title'
             
             statit = False
-            if filtersPanel:
+            if filtersPanel or filterScreen:
                 if messages:
                     statit = awu.MsgDialog(parentWindow, "Vuoi stampare le selezioni?", style=wx.ICON_QUESTION|wx.YES_NO|wx.YES_DEFAULT) == wx.ID_YES
                     if statit:
-                        self.AddFiltersPanelTitleElements(filtersPanel)
+                        if filtersPanel:
+                            self.AddFiltersPanelTitleElements(filtersPanel)
+                        else:
+                            self.AddFiltersScreenTitleImage(filterScreen)                            
                 else:
                     statit = False
-            
+
             if doprogress:
                 re_enable = awu.GetParentFrame(parentWindow).Disable()
                 wait = awu.WaitDialog(parentWindow, message=waitMessage,
@@ -604,9 +609,10 @@ class print_Report:
                         continue
                     
                     if statit:
-                        self.stampaTitoloBand()
-                        self.DelFiltersPanelTitleElements()
-                        statit = False
+                        if filtersPanel:
+                            self.stampaTitoloBand()
+                            self.DelFiltersPanelTitleElements()
+                            statit = False
                     self.stampaTestata()
                     
                     if not lBeginReport and self.rotturaGruppo():
@@ -710,6 +716,10 @@ class print_Report:
                         raise Exception, 'tipo di output non riconosciuto'
                 self.nameOutputFile = nameOutputFile
                 self.printed = True
+                try:
+                    os.remove(self.fileFilterScreen)
+                except:
+                    pass
                 break
             except IOError, e:
                 if e.args[0] == 13:
@@ -738,6 +748,27 @@ class print_Report:
     
     def GetFileName(self):
         return self.nameOutputFile
+
+
+    def AddFiltersScreenTitleImage(self, filterScreen):
+        pageWidth=self.oReport.get_PageSetup()['pageWidth']-self.oReport.get_PageSetup()['rightMargin']-self.oReport.get_PageSetup()['leftMargin']
+        img_w, img_h = filterScreen.GetSize()
+        coef=img_w/pageWidth
+        coef=max(2.5, coef)
+        img_w=img_w/coef
+        img_h=img_h/coef
+        
+        deltaWidth=(pageWidth-img_w)
+        x0=deltaWidth/2
+        
+        import uuid
+        unique_filename = uuid.uuid4()
+        self.fileFilterScreen=os.path.join(report.pathimg, '%s.png' % unique_filename).replace('\\', '/')
+        #print self.fileFilterScreen
+        filterScreen.SaveFile(self.fileFilterScreen, wx.BITMAP_TYPE_PNG)
+        wrkTitle={'title':{u'band': {u'001_image': {u'box': {}, u'graphicElement': {'pen': {'lineWidth': '1', 'lineStyle': 'Solid'}, 'stretchType': 'NoStretch'}, 'hyperlinkType': 'None', 'evaluationTime': 'Now', 'hyperlinkTarget': 'Self', u'reportElement': {'y': 0.0, 'x': x0, 'height': img_h, 'key': 'image-1', 'width': img_w}, u'imageExpression': {'DATA': self.fileFilterScreen, 'class': 'java.lang.String'}}, 'isSplitAllowed': 'true', 'height': img_h+4}}}
+        self.oTitle=title(wrkTitle, self.oCanvas)
+    
     
     def AddFiltersPanelTitleElements(self, filtersPanel):
         
