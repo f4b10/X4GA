@@ -28,6 +28,12 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
+    ('1.4.97', dt.Date(2014, 07, 07), (
+         ("BET1168",
+         """Aggiunta la possibilita' di stampare lo screenshot delle selezioni
+         effettuate al lancio di un report"""),
+        ),),
+
     ('1.4.95', dt.Date(2014, 4, 22), (
          ("BUG1148",
          """Corretta fatturazione differita, non considerava il filtro su
