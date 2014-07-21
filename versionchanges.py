@@ -28,7 +28,7 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
-    ('1.4.98', dt.Date(2014, 21, 07), (
+    ('1.4.98', dt.Date(2014, 07, 21), (
          ("BET1169",
          """Aggiunta prezzi_sizer su scheda prodotto"""),
         ),),
