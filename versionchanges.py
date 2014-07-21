@@ -28,6 +28,11 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
+    ('1.4.98', dt.Date(2014, 21, 07), (
+         ("BET1169",
+         """Aggiunta prezzi_sizer su scheda prodotto"""),
+        ),),
+
     ('1.4.97', dt.Date(2014, 07, 07), (
          ("BET1168",
          """Aggiunta la possibilita' di stampare lo screenshot delle selezioni
