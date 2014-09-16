@@ -1147,9 +1147,9 @@ class SaldiBilancio(adb.DbTable):
         pdc = self.AddJoin(\
             bt.TABNAME_PDC,       "pdc",    idLeft="id_pdcpa", idRight="id")
         
-        bilmas = pdc.AddJoin(self.GetMastroTabName(), "bilmas")
+        bilmas = pdc.AddJoin(self.GetMastroTabName(), "bilmas", idLeft=self.GetMastroColName())
         
-        bilcon = pdc.AddJoin(self.GetContoTabName(),  "bilcon")
+        bilcon = pdc.AddJoin(self.GetContoTabName(),  "bilcon", idLeft=self.GetContoColName())
         
         from cfg.dbtables import BilancioCeeTable
         bilcee = pdc.AddJoin(self.GetBilCeeName(), 'bilcee', join=adb.JOIN_LEFT,
@@ -1186,6 +1186,12 @@ class SaldiBilancio(adb.DbTable):
     
     def GetContoTabName(self):
         return bt.TABNAME_BILCON
+    
+    def GetMastroColName(self):
+        return 'id_bilmas'
+    
+    def GetContoColName(self):
+        return 'id_bilcon'
     
     def GetBilCeeName(self):
         return 'x4.bilcee'
@@ -1243,6 +1249,12 @@ class BilancioRicl(Bilancio):
     def GetContoTabName(self):
         return bt.TABNAME_BRICON
     
+    def GetMastroColName(self):
+        return 'id_brimas'
+    
+    def GetContoColName(self):
+        return 'id_bricon'
+
 
 # ------------------------------------------------------------------------------
 

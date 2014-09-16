@@ -28,7 +28,23 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
-    ('1.4.96', dt.Date(2014, 4, 22), (
+    ('1.4.99', dt.Date(2014, 5, 16), (
+         ("BUG1148",
+         """Corretti bilanci riclassificati."""),
+        ),),
+
+    ('1.4.98', dt.Date(2014, 07, 21), (
+         ("BET1169",
+         """Aggiunta prezzi_sizer su scheda prodotto"""),
+        ),),
+
+    ('1.4.97', dt.Date(2014, 07, 07), (
+         ("BET1168",
+         """Aggiunta la possibilita' di stampare lo screenshot delle selezioni
+         effettuate al lancio di un report"""),
+        ),),
+
+    ('1.4.95', dt.Date(2014, 4, 22), (
          ("BUG1148",
          """Corretta fatturazione differita, non considerava il filtro su
          mod.pagamento."""),

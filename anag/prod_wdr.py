@@ -1571,6 +1571,7 @@ def ListGriFunc( parent, call_fit = True, set_sizer = True ):
     
     item16 = wx.StaticBox( parent, -1, "Costo acquisto e prezzo vendita" )
     item15 = wx.StaticBoxSizer( item16, wx.VERTICAL )
+    parent.prezzi_sizer = item15
     
     item17 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
