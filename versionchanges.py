@@ -28,6 +28,14 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
+    ('1.5.00', dt.Date(2014, 10, 8), (
+         ("BUG1149",
+         """Corretto scorporo iva in immissione registrazioni
+         iva in contabilità, in caso di squadratura tra totale 
+         digitato e calcolo iva adeguava l'imponibile invece
+         dell'imposta."""),
+        ),),
+
     ('1.4.99', dt.Date(2014, 5, 16), (
          ("BUG1148",
          """Corretti bilanci riclassificati."""),

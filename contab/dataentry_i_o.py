@@ -1306,11 +1306,11 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
             if tx is not None and not samefloat(ri[RSIVA_TTIVATO], tx):
                 dif = ri[RSIVA_TTIVATO]-tx
                 if abs(dif) <= .01:
-                    if rsb[ttn][ctb.RSDET_IMPDARE] is not None:
-                        rsb[ttn][ctb.RSDET_IMPDARE] -= dif
-                    elif rsb[ttn][ctb.RSDET_IMPAVERE] is not None:
-                        rsb[ttn][ctb.RSDET_IMPAVERE] -= dif
-                    ri[RSIVA_IMPONIB] -= dif
+#                    if rsb[ttn][ctb.RSDET_IMPDARE] is not None:
+#                        rsb[ttn][ctb.RSDET_IMPDARE] -= dif
+#                    elif rsb[ttn][ctb.RSDET_IMPAVERE] is not None:
+#                        rsb[ttn][ctb.RSDET_IMPAVERE] -= dif
+                    ri[RSIVA_IMPOSTA] -= dif
                     ri[RSIVA_TTIVATO] -= dif
         if self._grid_iva:
             self._grid_iva.ResetView()
