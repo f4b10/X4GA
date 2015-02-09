@@ -636,7 +636,7 @@
 					<textElement textAlignment="Right" verticalAlignment="Bottom" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[IVA a deducibilita' differita:]]></text>
+				<text><![CDATA[IVA in Split Payment:]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement

@@ -295,6 +295,13 @@ class LiqIvaPanel(aw.Panel):
         wdr.LiqIvaFunc(self)
         cn = self.FindWindowByName
         
+        for c in aw.awu.GetAllChildrens(self):
+            if hasattr(c, 'SetLabel'):
+                l = c.GetLabel()
+                if l.startswith('IVA a deducib') and l.endswith('differita:'):
+                    c.SetLabel('IVA in split payment:')
+                    break
+        
         tipi = {'P': ("Stampa Provvisoria",\
                       """Vengono estratte solo le registrazioni IVA non """
                       """ancora stampate in modo definitivo.\nL'elaborazione"""
