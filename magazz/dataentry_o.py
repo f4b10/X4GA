@@ -80,6 +80,8 @@ class _MagazzPanel_O_Mixin(object):
         if not sra:
             doc.totritacc = 0
             doc.totdare = doc.totimporto
+            if doc.is_split_payment():
+                doc.totdare -= doc.totimposta
         self.UpdateRitAcc()
         event.Skip()
     
@@ -102,6 +104,8 @@ class _MagazzPanel_O_Mixin(object):
         doc.totritacc = round(doc.perritacc*doc.impritacc/100*doc.comritacc/100, 
                               bt.VALINT_DECIMALS)
         doc.totdare = doc.totimporto-doc.totritacc
+        if doc.is_split_payment():
+            doc.totdare -= doc.totimposta
     
     def OnRitAccChanged(self, event):
         if hasattr(self, 'stopritacc'):
@@ -179,6 +183,8 @@ class _MagazzPanel_O_Mixin(object):
         warnColor = wx.RED
         if doc.mov.Locate(lambda m: not self.GridBodyIsRowOK()):
             warnText = "Attenzione: sono presenti righe con dati incompleti"
+        elif not doc.test_split_payment():
+            warnText = "Attenzione: uso promiscuo di aliquote iva in split payment"
         else:
             warnText = "Il documento è composto da %d righe"\
                      % doc.mov.RowsCount()

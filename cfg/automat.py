@@ -136,6 +136,11 @@ class AutomatContabPanel(aw.Panel, _automatmixin):
         
         wdr.AutomatContabFunc(self, True)
         
+        for c in aw.awu.GetAllChildrens(self):
+            if hasattr(c, 'SetLabel'):
+                if c.GetLabel() == 'Iva in sospensione:':
+                    c.SetLabel('Iva in split playment:')
+        
         for aut, des in (("pdctip", "Tipo sottoconto"),
                          ("bilmas", "Mastro di bilancio"),
                          ("bilcon", "Conto di bilancio"),

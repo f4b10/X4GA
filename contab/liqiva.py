@@ -183,7 +183,7 @@ class GridRiepAliq(dbglib.DbGrid):
              lambda rs, row: not rs[row][dbc.LIQIVA_ALIQ_TIPO]),
             ("Acquisti CEE:",
              lambda rs, row: rs[row][dbc.LIQIVA_ALIQ_TIPO] == "C"),
-            ("Vendite in sospensione:",
+            ("Vendite in split payment:",
              lambda rs, row: rs[row][dbc.LIQIVA_ALIQ_TIPO] == "S")):
             self.AddTotalsRow(1, label, (dbc.LIQIVA_TOTIMPONIB,
                                          dbc.LIQIVA_TOTIMPOSTA,

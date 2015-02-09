@@ -1975,6 +1975,10 @@ class DocMag(adb.DbTable):
                 
             self.totdare = RoundImp(self.totimporto - (self.totritacc or 0))
         
+        if self.is_split_payment():
+            #adeguamento di totdare x split payment
+            self.totdare = RoundImp(self.totdare - (self.totimposta or 0))
+        
         #ridefinizione dei subtotali
         _t = {}
         for name in 'merce servi trasp spese'.split():
@@ -1994,6 +1998,22 @@ class DocMag(adb.DbTable):
         
         if scad and self.config.caucon.pcf == '1':
             self.CalcolaScadenze()
+    
+    def is_split_payment(self):
+        for ti in self._info.totiva:
+            if ti[magazz.RSIVA_tipoalq] == "S":
+                return True
+        return False
+    
+    def test_split_payment(self):
+        #test coerenza split payment
+        sp = False
+        for ti in self._info.totiva:
+            if ti[magazz.RSIVA_tipoalq] == "S":
+                sp = True
+            elif sp:
+                return False
+        return True
     
     def AddTotalPesoColli(self, mov):
         if mov.config.tqtaxpeso:
@@ -2036,6 +2056,8 @@ class DocMag(adb.DbTable):
         
         if reg.RowsCount() == 0:
             reg.CreateNewRow()
+        
+        is_split_payment = self.is_split_payment()
         
         #testata registrazione
         reg.esercizio = self.datdoc.year
@@ -2143,6 +2165,23 @@ class DocMag(adb.DbTable):
                     if pdccpid is None:
                         pdccpid = body.id_pdcpa
                     numriga += 1
+            
+            if gestiva and is_split_payment:
+                #aggiungo riga solo contabile con l'imposta in split payment
+                #che manca dall'importo della riga 1
+                body.CreateNewRow()
+                body.numriga = numriga
+                body.tipriga = "C"
+                body.importo = abs(self.totimposta)
+                if self.totimporto >= 0:
+                    body.segno = segnopa
+                else:
+                    body.segno = segnocp
+                body.id_pdcpa = pdcivaid
+                body.id_pdccp = self.id_pdc
+                body.solocont = 1
+                numriga += 1
+            
         else:
             
             #semplif.
@@ -2331,7 +2370,7 @@ class DocMag(adb.DbTable):
                     break
                 elif mov.iva.tipo == 'S':
                     if regivatip != "V":
-                        raise Exception, "Impossibile usare l'aliquota %s, riservata alle vendite in sospensione di imposta, se il registro non e' di tipo Vendite" % mov.iva.codice
+                        raise Exception, "Impossibile usare l'aliquota %s, riservata alle vendite in split payment, se il registro non e' di tipo Vendite" % mov.iva.codice
                     cod = "ivavensos"
                     break
         if cod is None:

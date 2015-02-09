@@ -341,7 +341,7 @@ class GridTotAliq(dbglib.DbGridColoriAlternati):
              lambda rs, row: not rs[row][coltipo]),
             ("Acquisti CEE:",
              lambda rs, row: rs[row][coltipo] == "C"),
-            ("Vendite in sospensione:",
+            ("Vendite in split payment:",
              lambda rs, row: rs[row][coltipo] == "S")):
             self.AddTotalsRow(1, label, (colaimp, colaiva, colaind), cbfilt)
         

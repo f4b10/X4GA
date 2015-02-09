@@ -28,6 +28,11 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
+    ('1.5.01', dt.Date(2015, 2, 9), (
+         ("BET1170",
+         """Gestione vendite in split payment."""),
+        ),),
+
     ('1.5.00', dt.Date(2014, 10, 8), (
          ("BUG1149",
          """Corretto scorporo iva in immissione registrazioni

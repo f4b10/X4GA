@@ -1728,6 +1728,10 @@ class MagazzPanel(aw.Panel,\
             return False
         if not self.rowsok:
             return False
+        if (doc.totritacc or 0) != 0 and doc.is_split_payment():
+            msg = """La ritenuta d'acconto non può essere applicata in split payment"""
+            aw.awu.MsgDialog(self, msg, style=wx.ICON_ERROR)
+            return False
         if len(doc._info.righep0)>0:
             if MsgDialog(self, "Sono presenti righe senza prezzo.\nConfermi l'operazione?", 
                          style=wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT) != wx.ID_YES:
