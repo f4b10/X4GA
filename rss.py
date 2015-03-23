@@ -24,7 +24,10 @@
 
 import os
 import urllib2
-import feedparser
+try:
+    import feedparser
+except:
+    pass
 
 import stormdb as adb
 
