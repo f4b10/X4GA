@@ -43,13 +43,16 @@ class AliqIvaSearchResultsGrid(ga.SearchResultsGrid):
         _STR = gl.GRID_VALUE_STRING
         _DAT = gl.GRID_VALUE_DATETIME
         _PRC = bt.GetPerGenMaskInfo()
+        _CHK = gl.GRID_VALUE_CHOICE+":1,0"
         cn = lambda x: self.db._GetFieldIndex(x)
         tab = self.tabalias
         return (( 35, (cn('aliqiva_codice'),  "Cod.",     _STR, True)),
                 (240, (cn('aliqiva_descriz'), "Aliquota", _STR, True)),
                 ( 50, (cn('aliqiva_perciva'), "%IVA",     _PRC, True)),
+                ( 50, (cn('aliqiva_percind'), "%Ind",     _PRC, True)),
                 ( 50, (cn('aliqiva_tipo'),    "Tipo",     _STR, True)),
                 ( 50, (cn('aliqiva_modo'),    "Modo",     _STR, True)),
+                ( 50, (cn('aliqiva_sm11_no'), "No Sp.",   _CHK, True)),
                 (  1, (cn('aliqiva_id'),      "#aliq",    _STR, True)),
             )
     

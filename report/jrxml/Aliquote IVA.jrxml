@@ -219,9 +219,9 @@
 				<rectangle radius="0" >
 					<reportElement
 						mode="Transparent"
-						x="414"
+						x="430"
 						y="11"
-						width="120"
+						width="104"
 						height="10"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -233,9 +233,9 @@
 				<rectangle radius="0" >
 					<reportElement
 						mode="Transparent"
-						x="294"
+						x="326"
 						y="11"
-						width="120"
+						width="104"
 						height="10"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -247,9 +247,9 @@
 				<rectangle radius="0" >
 					<reportElement
 						mode="Transparent"
-						x="504"
+						x="508"
 						y="21"
-						width="30"
+						width="26"
 						height="11"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -261,9 +261,9 @@
 				<rectangle radius="0" >
 					<reportElement
 						mode="Transparent"
-						x="474"
+						x="482"
 						y="21"
-						width="30"
+						width="26"
 						height="11"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -275,9 +275,9 @@
 				<rectangle radius="0" >
 					<reportElement
 						mode="Transparent"
-						x="444"
+						x="456"
 						y="21"
-						width="30"
+						width="26"
 						height="11"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -289,9 +289,9 @@
 				<rectangle radius="0" >
 					<reportElement
 						mode="Transparent"
-						x="414"
+						x="430"
 						y="21"
-						width="30"
+						width="26"
 						height="11"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -303,9 +303,9 @@
 				<rectangle radius="0" >
 					<reportElement
 						mode="Transparent"
-						x="384"
+						x="404"
 						y="21"
-						width="30"
+						width="26"
 						height="11"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -317,9 +317,9 @@
 				<rectangle radius="0" >
 					<reportElement
 						mode="Transparent"
-						x="354"
+						x="378"
 						y="21"
-						width="30"
+						width="26"
 						height="11"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -331,9 +331,9 @@
 				<rectangle radius="0" >
 					<reportElement
 						mode="Transparent"
-						x="324"
+						x="352"
 						y="21"
-						width="30"
+						width="26"
 						height="11"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -345,9 +345,9 @@
 				<rectangle radius="0" >
 					<reportElement
 						mode="Transparent"
-						x="294"
+						x="326"
 						y="21"
-						width="30"
+						width="26"
 						height="11"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -481,9 +481,9 @@
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="296"
+						x="328"
 						y="22"
-						width="28"
+						width="24"
 						height="9"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -501,9 +501,9 @@
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="325"
+						x="353"
 						y="22"
-						width="28"
+						width="24"
 						height="9"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -521,9 +521,9 @@
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="355"
+						x="379"
 						y="22"
-						width="28"
+						width="24"
 						height="9"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -541,9 +541,9 @@
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="385"
+						x="405"
 						y="22"
-						width="28"
+						width="24"
 						height="9"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -561,9 +561,9 @@
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="415"
+						x="431"
 						y="22"
-						width="28"
+						width="24"
 						height="9"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -581,9 +581,9 @@
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="445"
+						x="457"
 						y="22"
-						width="28"
+						width="24"
 						height="9"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -601,9 +601,9 @@
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="475"
+						x="483"
 						y="22"
-						width="28"
+						width="24"
 						height="9"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -621,9 +621,9 @@
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="505"
+						x="509"
 						y="22"
-						width="28"
+						width="24"
 						height="9"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -641,9 +641,9 @@
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="296"
+						x="328"
 						y="12"
-						width="117"
+						width="102"
 						height="9"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -661,9 +661,9 @@
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="418"
+						x="431"
 						y="12"
-						width="115"
+						width="102"
 						height="9"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -749,9 +749,9 @@
 				<rectangle radius="0" >
 					<reportElement
 						mode="Transparent"
-						x="294"
+						x="326"
 						y="1"
-						width="240"
+						width="208"
 						height="10"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -763,9 +763,9 @@
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="296"
+						x="328"
 						y="2"
-						width="238"
+						width="206"
 						height="9"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -780,6 +780,40 @@
 					</textElement>
 				<text><![CDATA[Allegati]]></text>
 				</staticText>
+				<rectangle radius="0" >
+					<reportElement
+						mode="Transparent"
+						x="294"
+						y="21"
+						width="32"
+						height="11"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="rectangle-33"/>
+					<graphicElement stretchType="NoStretch" fill="Solid" >
+					<pen lineWidth="0.25" lineStyle="Solid"/>
+</graphicElement>
+				</rectangle>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="296"
+						y="22"
+						width="28"
+						height="9"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="element-123"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Bottom" rotation="None" lineSpacing="Single">
+						<font fontName="Times New Roman" pdfFontName="Times-Roman" size="6" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[Spesom.]]></text>
+				</staticText>
 			</band>
 		</columnHeader>
 		<detail>
@@ -787,9 +821,9 @@
 				<rectangle radius="0" >
 					<reportElement
 						mode="Transparent"
-						x="504"
+						x="508"
 						y="0"
-						width="30"
+						width="26"
 						height="12"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -801,9 +835,9 @@
 				<rectangle radius="0" >
 					<reportElement
 						mode="Transparent"
-						x="474"
+						x="482"
 						y="0"
-						width="30"
+						width="26"
 						height="12"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -815,9 +849,9 @@
 				<rectangle radius="0" >
 					<reportElement
 						mode="Transparent"
-						x="444"
+						x="456"
 						y="0"
-						width="30"
+						width="26"
 						height="12"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -829,9 +863,9 @@
 				<rectangle radius="0" >
 					<reportElement
 						mode="Transparent"
-						x="414"
+						x="430"
 						y="0"
-						width="30"
+						width="26"
 						height="12"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -843,9 +877,9 @@
 				<rectangle radius="0" >
 					<reportElement
 						mode="Transparent"
-						x="384"
+						x="404"
 						y="0"
-						width="30"
+						width="26"
 						height="12"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -857,9 +891,9 @@
 				<rectangle radius="0" >
 					<reportElement
 						mode="Transparent"
-						x="354"
+						x="378"
 						y="0"
-						width="30"
+						width="26"
 						height="12"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -871,9 +905,9 @@
 				<rectangle radius="0" >
 					<reportElement
 						mode="Transparent"
-						x="324"
+						x="352"
 						y="0"
-						width="30"
+						width="26"
 						height="12"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -885,9 +919,9 @@
 				<rectangle radius="0" >
 					<reportElement
 						mode="Transparent"
-						x="294"
+						x="326"
 						y="0"
-						width="30"
+						width="26"
 						height="12"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -1035,9 +1069,9 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="296"
+						x="328"
 						y="1"
-						width="28"
+						width="24"
 						height="8"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -1057,9 +1091,9 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="325"
+						x="353"
 						y="1"
-						width="28"
+						width="24"
 						height="8"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -1079,9 +1113,9 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="355"
+						x="379"
 						y="1"
-						width="28"
+						width="24"
 						height="8"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -1101,9 +1135,9 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="385"
+						x="405"
 						y="1"
-						width="28"
+						width="24"
 						height="8"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -1123,9 +1157,9 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="415"
+						x="431"
 						y="1"
-						width="28"
+						width="24"
 						height="8"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -1145,9 +1179,9 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="445"
+						x="457"
 						y="1"
-						width="28"
+						width="24"
 						height="8"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -1167,9 +1201,9 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="475"
+						x="483"
 						y="1"
-						width="28"
+						width="24"
 						height="8"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -1189,9 +1223,9 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="505"
+						x="509"
 						y="1"
-						width="28"
+						width="24"
 						height="8"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -1275,6 +1309,42 @@
 						<font fontName="Courier New" pdfFontName="Courier" size="6" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.Integer"><![CDATA[RS.modo]]></textFieldExpression>
+				</textField>
+				<rectangle radius="0" >
+					<reportElement
+						mode="Transparent"
+						x="294"
+						y="0"
+						width="32"
+						height="12"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="rectangle-34"/>
+					<graphicElement stretchType="NoStretch" fill="Solid" >
+					<pen lineWidth="0.25" lineStyle="Solid"/>
+</graphicElement>
+				</rectangle>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="296"
+						y="1"
+						width="28"
+						height="8"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField-42">
+							<printWhenExpression><![CDATA[RS.sm11_no>0]]></printWhenExpression>
+						</reportElement>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Bottom" rotation="None" lineSpacing="Single">
+						<font fontName="Courier New" pdfFontName="Courier" size="6" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+					</textElement>
+				<textFieldExpression   class="java.lang.Integer"><![CDATA["NO"]]></textFieldExpression>
 				</textField>
 			</band>
 		</detail>

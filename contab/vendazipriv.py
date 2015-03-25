@@ -142,6 +142,7 @@ class VendAziPrivPanel(aw.Panel):
     """
     
     tipi = 'priv aziita azicee estero'.split()
+    rptname = 'Vendite aziende-privati'
     
     def __init__(self, *args, **kwargs):
         
@@ -247,6 +248,10 @@ class VendAziPrivPanel(aw.Panel):
         return True
     
     def OnPrintData(self, event):
+        self.PrintData()
+        event.Skip()
+    
+    def SetPrintData(self):
         cn = self.FindWindowByName
         ven = self.dbven
         for name in 'datmin datmax'.split():
@@ -255,8 +260,10 @@ class VendAziPrivPanel(aw.Panel):
         for tipo in self.tipi:
             s[tipo] = cn('get%s'%tipo).IsChecked()
         ven.SetSpecs(**s)
-        rpt.Report(self, ven, 'Vendite aziende-privati')
-        event.Skip()
+    
+    def PrintData(self):
+        self.SetPrintData()
+        rpt.Report(self, self.dbven, self.rptname)
 
 
 # ------------------------------------------------------------------------------
@@ -272,4 +279,143 @@ class VendAziPrivFrame(aw.Frame):
             kwargs['title'] = FRAME_TITLE
         aw.Frame.__init__(self, *args, **kwargs)
         self.panel = VendAziPrivPanel(self)
+        self.AddSizedPanel(self.panel)
+
+
+
+
+class VenditeXAliqIVAGrid(dbglib.ADB_Grid):
+    
+    def __init__(self, parent, dbriep):
+        
+        dbglib.ADB_Grid.__init__(self, parent, db_table=dbriep, 
+                                 can_edit=False, can_insert=False, 
+                                 on_menu_select='row')
+        riep = self.dbriep = dbriep
+        
+        NI, ND = 10, 2
+        
+        def gfi(col):
+            return self.dbriep._GetFieldIndex(col, inline=True)
+        
+        iva = dbc.adb.DbTable('aliqiva')
+        
+        self.COL_PDCCOD = self.AddColumn(riep, 'pdc_codice', 'Cod.', col_width=50)
+        self.COL_PDCDES = self.AddColumn(riep, 'pdc_descriz', 'Anagrafica', col_width=180, is_fittable=True)
+        self.COL_AZIPER = self.AddColumn(riep, 'anag_aziper', 'A/P', col_width=40)
+        self.COL_STATO =  self.AddColumn(riep, 'anag_stato', 'Stato', col_width=40)
+        self.COL_PIVA =   self.AddColumn(riep, 'anag_piva', 'P.IVA', col_width=110)
+        self.COL_CODFIS = self.AddColumn(riep, 'anag_codfisc', 'Cod.Fisc.', col_width=140)
+        
+        tc = []
+        for field in riep.GetAllColumnsNames():
+            if field.startswith('total_imponib_aliq_'):
+                _, _, _, s_id_aliqiva = field.split('_')
+                iva.Retrieve('aliqiva.id=%s' % s_id_aliqiva)
+                title = iva.descriz
+                setattr(self, 'COL_ALIQ_%s' % iva.id,
+                        self.AddColumn(riep, field, title, col_type=self.TypeFloat(NI, ND)))
+                tc.append(gfi(field))
+        setattr(self, 'COL_IMPOSTA', self.AddColumn(riep, 'total_imposta', 'Imposta', col_type=self.TypeFloat(NI, ND)))
+        
+        self.CreateGrid()
+        
+        self.AddTotalsRow(1, 'Totali:', tc)
+
+
+class VenditeXAliqIVAPanel(VendAziPrivPanel):
+    
+    rptname = "Riepilogo vendite per aliquota iva"
+    
+    def __init__(self, *args, **kwargs):
+        wx.Panel.__init__(self, *args, **kwargs)
+        wdr.VendAziPrivFunc(self)
+        self.TestRegIva()
+        cn = self.FindWindowByName
+        self.dbven = dbc.VenditeXAliqIVA()
+        self.gridven = VenditeXAliqIVAGrid(cn('pangridven'), self.dbven)
+        cn = self.FindWindowByName
+        for name in 'getpriv getaziita getazicee getestero'.split():
+            self.Bind(wx.EVT_CHECKBOX, self.OnUpdateData, cn(name))
+        for name, func in (('butupd', self.OnUpdateData),
+                           ('butprt', self.OnPrintData),):
+            self.Bind(wx.EVT_BUTTON, func, cn(name))
+    
+    def OnUpdateData(self, event):
+        if self.Validate():
+            self.UpdateData()
+            event.Skip()
+    
+    def Validate(self):
+        cn = self.FindWindowByName
+        d1, d2 = map(lambda x: cn(x).GetValue(), 'datmin datmax'.split())
+        if not d1 or not d2 or d2<d1:
+            aw.awu.MsgDialog(self, "Date non valide", style=wx.ICON_ERROR)
+            return False
+        return True
+    
+    def UpdateData(self):
+        cn = self.FindWindowByName
+        d1, d2 = map(lambda x: cn(x).GetValue(), 'datmin datmax'.split())
+        self.dbven = dbc.VenditeXAliqIVA(d1, d2,
+                                         privati=cn('getpriv').IsChecked(),
+                                         pivita=cn('getaziita').IsChecked(),
+                                         pivcee=cn('getazicee').IsChecked(),
+                                         pivest=cn('getestero').IsChecked())
+        ven = self.dbven
+        ri = []
+        regs = cn('registri')
+        for n in range(len(regs.valori)):
+            if regs.IsChecked(n):
+                ri.append(regs.valori[n])
+        if not ri:
+            aw.awu.MsgDialog(self, "Nessun registro selezionato")
+            return
+        ven.AddFilter('reg.id_regiva IN (%s)' % ', '.join(map(str, ri)))
+        ven.AddFilter('reg.datreg>=%s', d1)
+        ven.AddFilter('reg.datreg<=%s', d2)
+        if not ven.Retrieve():
+            aw.awu.MsgDialog(self, repr(ven.GetError()), style=wx.ICON_ERROR)
+            return False
+        if self.gridven:
+            self.gridven.Destroy()
+        self.gridven = VenditeXAliqIVAGrid(cn('pangridven'), self.dbven)
+        grid = self.gridven
+        grid.ChangeData(ven.GetRecordset())
+        timp = tiva = 0
+        for _ in ven:
+            timp += (ven.total_imponib or 0)
+            tiva += (ven.total_imposta or 0)
+        self.totvaloper = timp
+        self.totimposta = tiva
+        for name in 'totvaloper totimposta'.split():
+            self.FindWindowByName(name).SetValue(getattr(self, name))
+        return True
+    
+    def SetPrintData(self):
+        VendAziPrivPanel.SetPrintData(self)
+        iva = dbc.adb.DbTable('aliqiva')
+        cols_id = []
+        cols_title = []
+        for field in self.dbven.GetAllColumnsNames():
+            if field.startswith('total_imponib_aliq_'):
+                _, _, _, s_id_aliqiva = field.split('_')
+                iva.Retrieve('aliqiva.id=%s' % s_id_aliqiva)
+                cols_id.append(iva.id)
+                cols_title.append(iva.descriz)
+        self.dbven.SetPrintValue('cols_id', cols_id)
+        self.dbven.SetPrintValue('cols_title', cols_title)
+
+
+
+class VenditeXAliqIVAFrame(aw.Frame):
+    """
+    Frame sintesi vendite per aliquota iva
+    """
+    
+    def __init__(self, *args, **kwargs):
+        if not kwargs.has_key('title') and len(args) < 3:
+            kwargs['title'] = "Vendite per aliquota IVA"
+        aw.Frame.__init__(self, *args, **kwargs)
+        self.panel = VenditeXAliqIVAPanel(self)
         self.AddSizedPanel(self.panel)

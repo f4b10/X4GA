@@ -3163,7 +3163,18 @@ class CtrIvaSeqCheck(adb.DbTable):
 
 
 
-class VendAziPriv(adb.DbTable):
+class _Vendite_mixin_(object):
+    
+    _impexpr = 'mov.imponib*IF(mov.segno="A",1,-1)'
+    _ivaexpr = '(mov.imposta+mov.indeduc)*IF(mov.segno="A",1,-1)'
+    _privafilt = 'IF(tipana.tipo="C", cliente.piva IS NULL OR cliente.piva="", fornit.piva IS NULL OR fornit.piva="")'
+    _pivitfilt = 'IF(tipana.tipo="C", stato_cli.codice="IT", stato_for.codice="IT")'
+    _pivcefilt = 'IF(tipana.tipo="C", stato_cli.is_cee=1 AND stato_cli.codice<>"IT", stato_for.is_cee=1 AND stato_for.codice<>"IT")'
+    _pivestfilt = '(IF(tipana.tipo="C", stato_cli.codice != "IT", stato_for.codice != "IT") AND NOT %(_pivcefilt)s)' % locals()
+    _ivanull = '(aliq.perciva=0 OR aliq.perciva IS NULL)'
+
+
+class VendAziPriv(adb.DbTable, _Vendite_mixin_):
     
     def __init__(self, **kwargs):
         
@@ -3190,13 +3201,13 @@ class VendAziPriv(adb.DbTable):
         AG('IF(tipana.tipo="C", cliente.piva,     fornit.piva)',      'anag_piva')
         AG('IF(tipana.tipo="C", cliente.codfisc,  fornit.codfisc)',   'anag_codfisc')
         
-        impexpr = 'mov.imponib*IF(mov.segno="A",1,-1)'
-        ivaexpr = '(mov.imposta+mov.indeduc)*IF(mov.segno="A",1,-1)'
-        privafilt = 'IF(tipana.tipo="C", cliente.piva IS NULL OR cliente.piva="", fornit.piva IS NULL OR fornit.piva="")'
-        pivitfilt = 'IF(tipana.tipo="C", stato_cli.codice="IT", stato_for.codice="IT")'
-        pivcefilt = 'IF(tipana.tipo="C", stato_cli.is_cee=1 AND stato_cli.codice<>"IT", stato_for.is_cee=1 AND stato_for.codice<>"IT")'
-        ivanull = '(aliq.perciva=0 OR aliq.perciva IS NULL)'
-        pivestfilt = '(IF(tipana.tipo="C", stato_cli.codice != "IT", stato_for.codice != "IT") AND NOT %(pivcefilt)s)' % locals()
+        impexpr = self._impexpr
+        ivaexpr = self._ivaexpr
+        privafilt = self._privafilt
+        pivitfilt = self._pivitfilt
+        pivcefilt = self._pivcefilt
+        ivanull = self._ivanull
+        pivestfilt = self._pivestfilt
         
         #privati
         self.AddTotalOf('IF(NOT %(ivanull)s AND     %(privafilt)s, %(impexpr)s, 0)' % locals(),                       'imponib_priv')
@@ -3281,6 +3292,112 @@ class VendAziPriv(adb.DbTable):
         while len(v)<4:
             v.append(0)
         return v[n]
+
+
+
+class VenditeXAliqIVA(adb.DbTable, _Vendite_mixin_):
+    
+    _aliq_id = []
+    def get_aliq_id(self, num):
+        try:
+            return self._aliq_id[num]
+        except:
+            return None
+    
+    _aliq_desc = []
+    def get_aliq_desc(self, num):
+        try:
+            return self._aliq_desc[num]
+        except:
+            return None
+    
+    def get_aliq_imponib(self, num):
+        try:
+            field = 'total_imponib_aliq_%s' % self.get_aliq_id(num)
+            return getattr(self, field, 0)
+        except:
+            return 0
+    
+    def __init__(self, data1=None, data2=None, privati=True, pivita=True, pivcee=True, pivest=True):
+        
+        adb.DbTable.__init__(self, bt.TABNAME_CONTAB_B, 'mov', fields=None)
+        
+        mov = self
+        reg = self.AddJoin(bt.TABNAME_CONTAB_H, 'reg',       fields=None, idLeft='id_reg')
+        riv = reg.AddJoin(bt.TABNAME_REGIVA,    'regiva',    fields=None, idLeft='id_regiva')
+        iva = mov.AddJoin(bt.TABNAME_ALIQIVA,   'aliq',      fields=None, idLeft='id_aliqiva')
+        mdc = mov.AddJoin(bt.TABNAME_CONTAB_B,  'movpdc',    fields=None, relexpr='movpdc.id_reg=mov.id_reg AND movpdc.numriga=1')
+        pdc = mdc.AddJoin(bt.TABNAME_PDC,       'pdc',       fields=None, idLeft='id_pdcpa')
+        tpa = pdc.AddJoin(bt.TABNAME_PDCTIP,    'tipana',    fields=None, idLeft='id_tipo')
+        cli = pdc.AddJoin(bt.TABNAME_CLIENTI,   'cliente',   fields=None, idLeft='id', idRight='id', join=adb.JOIN_LEFT)
+        stc = cli.AddJoin('x4.stati',           'stato_cli', fields=None, idLeft='id_stato', idRight='id', join=adb.JOIN_LEFT)
+        frn = pdc.AddJoin(bt.TABNAME_FORNIT,    'fornit',    fields=None, idLeft='id', idRight='id', join=adb.JOIN_LEFT)
+        stf = frn.AddJoin('x4.stati',           'stato_for', fields=None, idLeft='id_stato', idRight='id', join=adb.JOIN_LEFT)
+        
+        self.AddBaseFilter('mov.tipriga IN ("I", "E", "O") AND regiva.tipo IN ("V", "C")')
+        self.AddBaseFilter('tipana.tipo="C"')
+        
+        def set_filter_dates(dbt):
+            if data1:
+                dbt.AddFilter('reg.datreg>=%s', data1)
+            if data2:
+                dbt.AddFilter('reg.datreg<=%s', data2)
+        set_filter_dates(self)
+        
+        self.AddOrder('pdc.descriz')
+        
+        movtest = adb.DbTable('contab_b', 'mov', fields=None)
+        _reg = movtest.AddJoin('contab_h', 'reg', idLeft='id_reg', idRight='id', fields=None)
+        _pdc = movtest.AddJoin('pdc', idLeft='id_pdcpa', idRight='id', fields=None)
+        _iva = movtest.AddJoin('aliqiva', 'iva', idLeft='id_aliqiva', idRight='id')
+        _riv = _reg.AddJoin('regiva', idLeft='id_regiva', idRight='id', fields=None)
+        _tpa = _pdc.AddJoin('pdctip', 'tipana', idLeft='id_tipo', idRight='id')
+        movtest.AddBaseFilter('mov.tipriga IN ("I", "E", "O") AND regiva.tipo IN ("V", "C")')
+        movtest.AddBaseFilter('tipana.tipo="C"')
+        set_filter_dates(movtest)
+        movtest.AddFilter('mov.id_aliqiva IS NOT NULL')
+        movtest.AddGroupOn('mov.id_aliqiva')
+        movtest.AddTotalOf('mov.importo')
+        movtest.AddOrder('iva.codice')
+        movtest.Retrieve()
+        
+        AG = self.AddGroupOn
+        AG('movpdc.id_pdcpa', 'pdc_id')
+        AG('pdc.codice',      'pdc_codice')
+        AG('pdc.descriz',     'pdc_descriz')
+        AG('IF(tipana.tipo="C", cliente.aziper,   fornit.aziper)',    'anag_aziper')
+        AG('IF(tipana.tipo="C", stato_cli.codice, stato_for.codice)', 'anag_stato')
+        AG('IF(tipana.tipo="C", cliente.piva,     fornit.piva)',      'anag_piva')
+        AG('IF(tipana.tipo="C", cliente.codfisc,  fornit.codfisc)',   'anag_codfisc')
+        
+        del self._aliq_id[:]
+        del self._aliq_desc[:]
+        for _ in movtest:
+            self.AddTotalOf('IF(mov.id_aliqiva=%d, mov.imponib*IF(mov.segno="A",1,-1), 0)' % movtest.id_aliqiva, 
+                            'imponib_aliq_%d' % movtest.id_aliqiva)
+            self._aliq_id.append(movtest.id_aliqiva)
+            self._aliq_desc.append(movtest.iva.descriz)
+        self.AddTotalOf('mov.imponib*IF(mov.segno="A",1,-1)', 'imponib')
+        self.AddTotalOf('mov.imposta*IF(mov.segno="A",1,-1)', 'imposta')
+        
+        f = []
+        if privati:
+            f.append(self._privafilt)
+        if pivita:
+            f.append(self._pivitfilt)
+        if pivcee:
+            f.append(self._pivcefilt)
+        if pivest:
+            f.append(self._pivestfilt)
+        self.AddBaseFilter(" OR ".join(f))
+        
+        self.Reset()
+    
+    def SetSpecs(self, *args, **kwargs):
+        pass
+    
+    def get_self(self):
+        return self
 
 
 # ------------------------------------------------------------------------------

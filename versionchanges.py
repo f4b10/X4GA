@@ -28,6 +28,12 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
+    ('1.5.03', dt.Date(2015, 3, 25), (
+         ("BET1172",
+         """Nuova estrazione dati per riepilogo vendite 
+         distinte per aliquota iva."""),
+        ),),
+
     ('1.5.02', dt.Date(2015, 3,19), (
          ("BET1171",
          """Implementazione Spesometro 2014."""),

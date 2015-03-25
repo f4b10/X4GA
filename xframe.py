@@ -584,6 +584,7 @@ class XFrame(aw.Frame):
             (self.OnGiornaleGenerale,          ID_CONTAB_GIORNALE),
             (self.OnFatturatoAcqVen,           ID_FATCONACQVEN),
             (self.OnVendAziPriv,               ID_VENDAZIPRIV),
+            (self.OnVenditeXAliqIVA,           ID_VENDXALIQIVA),
             (self.OnSpesometro,                ID_CONTAB_SPESOM),
             
             #interrogazioni iva
@@ -1485,6 +1486,10 @@ class XFrame(aw.Frame):
     def OnVendAziPriv(self, event):
         from contab.vendazipriv import VendAziPrivFrame
         self.LaunchFrame(VendAziPrivFrame)
+    
+    def OnVenditeXAliqIVA(self, event):
+        from contab.vendazipriv import VenditeXAliqIVAFrame
+        self.LaunchFrame(VenditeXAliqIVAFrame)
     
     def OnSpesometro(self, event):
         from contab.spesometro_2013 import SpesometroFrame
