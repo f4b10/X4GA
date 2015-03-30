@@ -28,7 +28,7 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
-    ('1.5.04', dt.Date(2015, 3, 25), (
+    ('1.5.04', dt.Date(2015, 3, 30), (
          ("BUG1150",
          """Corretto controllo congruenza aliquote per split payment
          in dataentry documento."""),
