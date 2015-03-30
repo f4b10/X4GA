@@ -28,6 +28,17 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
+    ('1.5.04', dt.Date(2015, 3, 25), (
+         ("BUG1150",
+         """Corretto controllo congruenza aliquote per split payment
+         in dataentry documento."""),
+         ("BET1173",
+         """Inserito controllo formale su codice fiscale e partita
+         iva in fatturato contabile clienti/fornitori e sintesi vendite 
+         aziende aziende privati, aggiunto richiamo della scheda 
+         anagrafica da relativa griglia."""),
+        ),),
+
     ('1.5.03', dt.Date(2015, 3, 25), (
          ("BET1172",
          """Nuova estrazione dati per riepilogo vendite 

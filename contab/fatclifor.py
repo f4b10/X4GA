@@ -28,6 +28,9 @@ import awc.controls.dbgrid as dbglib
 import awc.controls.windows as aw
 
 import Env
+from awc.lib import ControllaCodFisc, ControllaPIVA
+from anag.clienti import ClientiDialog
+from anag.fornit import FornitDialog
 bt = Env.Azienda.BaseTab
 
 import contab.dbtables as dbc
@@ -95,6 +98,10 @@ class FatturatoContabileClientiFornitGrid(dbglib.DbGridColoriAlternati):
             AC((120, (cn('aliq_descriz'), "Aliquota IVA",   _STR, True)))
         AC((  1, (cn('pdc_id'),           "#pdc",           _STR, True)))
         
+        self._col_codfisc = cn('anag_codfisc')
+        self._col_piva = cn('anag_piva')
+        self._col_stato = cn('anag_stato')
+        
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
         
@@ -118,6 +125,29 @@ class FatturatoContabileClientiFornitGrid(dbglib.DbGridColoriAlternati):
         sz.Add(self, 0, wx.GROW|wx.ALL, 0)
         parent.SetSizer(sz)
         sz.SetSizeHints(parent)
+    
+    def GetAttr(self, row, col, rscol, attr=dbglib.gridlib.GridCellAttr):
+        attr = dbglib.DbGridColoriAlternati.GetAttr(self, row, col, rscol, attr=attr)   
+        if 0 <= row < self.dbfat.RowsCount():
+            err = False
+            if rscol == self._col_codfisc:
+                cf = self.dbfat.GetRecordset()[row][self._col_codfisc]
+                if len(cf or '') > 0:
+                    c = ControllaCodFisc(cf)
+                    if not c.Controlla():
+                        err = True
+            elif rscol == self._col_piva:
+                rs = self.dbfat.GetRecordset()
+                pi = rs[row][self._col_piva]
+                if len(pi or '') > 0:
+                    c = ControllaPIVA()
+                    c.SetPIva(pi, rs[row][self._col_stato])
+                    if not c.Controlla():
+                        err = True
+            if err:
+                attr.SetBackgroundColour('red')
+                attr.SetTextColour('yellow')
+        return attr
 
 
 # ------------------------------------------------------------------------------
@@ -145,6 +175,32 @@ class FatturatoContabileClientiFornitPanel(aw.Panel):
         self.TestRegIva()
         
         wx.CallAfter(lambda: cn('datmin').SetFocus())
+    
+    def OnCellDblClick(self, event):
+        row = event.GetRow()
+        self.dbfat.MoveRow(row)
+        tipo = self.dbfat.pdc_tipo
+        if tipo == "C":
+            Dialog = ClientiDialog
+        elif tipo == "F":
+            Dialog = FornitDialog
+        else:
+            aw.awu.MsgDialog(self, "Tipo panagrafico non riconosciuto")
+            return
+        id_pdc = self.dbfat.pdc_id
+        wx.BeginBusyCursor()
+        try:
+            dlg = Dialog(self, onecodeonly=id_pdc)
+            dlg.OneCardOnly(id_pdc)
+            dlg.CenterOnScreen()
+        finally:
+            wx.EndBusyCursor()
+        dlg.ShowModal()
+        dlg.Destroy()
+        def update_data():
+            self.UpdateData()
+        wx.CallAfter(update_data)
+        event.Skip()
     
     def OnAcqVenChanged(self, event):
         self.TestRegIva()
@@ -246,6 +302,7 @@ class FatturatoContabileClientiFornitPanel(aw.Panel):
         self.gridfat.Destroy()
         self.gridfat = FatturatoContabileClientiFornitGrid(cn('pangridfat'), fat, detail=dr)
         self.gridfat.ChangeData(fat.GetRecordset())
+        self.Bind(dbglib.gridlib.EVT_GRID_CELL_LEFT_DCLICK, self.OnCellDblClick, self.gridfat)
     
     def OnPrintData(self, event):
         self.PrintData()

@@ -2007,13 +2007,14 @@ class DocMag(adb.DbTable):
     
     def test_split_payment(self):
         #test coerenza split payment
-        sp = False
+        sp = {'splitp': 0,
+              'normal': 0,}
         for ti in self._info.totiva:
             if ti[magazz.RSIVA_tipoalq] == "S":
-                sp = True
-            elif sp:
-                return False
-        return True
+                sp['splitp'] += 1
+            else:
+                sp['normal'] += 1
+        return sp['splitp'] == 0 or sp['normal'] == 0
     
     def AddTotalPesoColli(self, mov):
         if mov.config.tqtaxpeso:

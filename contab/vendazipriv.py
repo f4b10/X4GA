@@ -29,6 +29,9 @@ import awc.util as awu
 import awc.controls.windows as aw
 
 import Env
+from awc.lib import ControllaCodFisc, ControllaPIVA
+from anag.clienti import ClientiDialog
+from anag.fornit import FornitDialog
 bt = Env.Azienda.BaseTab
 
 import contab.dbtables as dbc
@@ -89,6 +92,10 @@ class VendAziPrivGrid(dbglib.DbGridColoriAlternati):
                 (  w, (ct('noimpes_estero'), "NoImp/Es.Estero",  _VAL, True)),
                 (  1, (cn('pdc_id'),         "#pdc",             _STR, True)),)
         
+        self._col_codfisc = cn('anag_codfisc')
+        self._col_piva = cn('anag_piva')
+        self._col_stato = cn('anag_stato')
+        
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
         
@@ -118,6 +125,29 @@ class VendAziPrivGrid(dbglib.DbGridColoriAlternati):
         sz.Add(self, 0, wx.GROW|wx.ALL, 0)
         parent.SetSizer(sz)
         sz.SetSizeHints(parent)
+    
+    def GetAttr(self, row, col, rscol, attr=dbglib.gridlib.GridCellAttr):
+        attr = dbglib.DbGridColoriAlternati.GetAttr(self, row, col, rscol, attr=attr)   
+        if 0 <= row < self.dbven.RowsCount():
+            err = False
+            if rscol == self._col_codfisc:
+                cf = self.dbven.GetRecordset()[row][self._col_codfisc]
+                if len(cf or '') > 0:
+                    c = ControllaCodFisc(cf)
+                    if not c.Controlla():
+                        err = True
+            elif rscol == self._col_piva:
+                rs = self.dbven.GetRecordset()
+                pi = rs[row][self._col_piva]
+                if len(pi or '') > 0:
+                    c = ControllaPIVA()
+                    c.SetPIva(pi, rs[row][self._col_stato])
+                    if not c.Controlla():
+                        err = True
+            if err:
+                attr.SetBackgroundColour('red')
+                attr.SetTextColour('yellow')
+        return attr
     
     def GetTotale(self, rscol):
         def cn(col):
@@ -163,12 +193,37 @@ class VendAziPrivPanel(aw.Panel):
         self.colestero = None
         for tipo in self.tipi:
             self.AdaptColumnsWidth(cn('get%s'%tipo))
+        self.Bind(dbglib.gridlib.EVT_GRID_CELL_LEFT_DCLICK, self.OnCellDblClick, self.gridven)
         for name, func in (('butupd', self.OnUpdateData),
                            ('butprt', self.OnPrintData),):
             self.Bind(wx.EVT_BUTTON, func, cn(name))
         self.Bind(wx.EVT_CHECKBOX, self.OnCheckBoxChanged)
         
         wx.CallAfter(lambda: cn('datmin').SetFocus())
+    
+    def OnCellDblClick(self, event):
+        row = event.GetRow()
+        self.dbven.MoveRow(row)
+        tipo = self.dbven.pdc_tipo
+        if tipo == "C":
+            Dialog = ClientiDialog
+        elif tipo == "F":
+            Dialog = FornitDialog
+        else:
+            aw.awu.MsgDialog(self, "Tipo panagrafico non riconosciuto")
+            return
+        id_pdc = self.dbven.pdc_id
+        wx.BeginBusyCursor()
+        try:
+            dlg = Dialog(self, onecodeonly=id_pdc)
+            dlg.OneCardOnly(id_pdc)
+            dlg.CenterOnScreen()
+            dlg.ShowModal()
+        finally:
+            wx.EndBusyCursor()
+        dlg.Destroy()
+        self.UpdateData()
+        event.Skip()
     
     def TestRegIva(self):
         cn = self.FindWindowByName
