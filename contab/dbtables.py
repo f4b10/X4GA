@@ -4633,6 +4633,9 @@ class Spesometro2013_AcquistiVendite(Spesometro2011_AcquistiVendite):
     def genera_file(self, filename):
         
         def fmt_data(data):
+            if type(data) is str:
+                #yyyy-mm-dd
+                return data[-2:]+data[5:7]+data[:4]            
             if data:
                 return data.strftime('%d%m%Y')
             return ''

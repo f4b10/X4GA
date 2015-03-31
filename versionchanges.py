@@ -28,6 +28,12 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
+    ('1.5.05', dt.Date(2015, 3, 31), (
+         ("BUG1151",
+         """Corretta formattazione data di nascita in generazione quadro BL 
+         per spesometro."""),
+        ),),
+
     ('1.5.04', dt.Date(2015, 3, 30), (
          ("BUG1150",
          """Corretto controllo congruenza aliquote per split payment
