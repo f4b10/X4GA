@@ -1712,6 +1712,13 @@ class MagazzPanel(aw.Panel,\
                 aw.awu.MsgDialog(self, e.args[0], style=wx.ICON_ERROR)
                 return False
         if doc.id_aliqiva is not None:
+            if not doc.test_split_payment():
+                msg =\
+                """Attenzione!\n"""\
+                """"Attenzione: uso promiscuo di aliquote iva in split payment\n"""\
+                """Confermi le informazioni inserite?"""
+                if aw.awu.MsgDialog(self, msg, style=wx.ICON_ERROR|wx.YES_NO|wx.NO_DEFAULT) != wx.ID_YES:
+                    return False
             for mov in doc.mov:
                 if mov.id_aliqiva is not None and mov.id_aliqiva != doc.id_aliqiva:
                     msg =\

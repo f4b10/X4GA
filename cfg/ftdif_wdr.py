@@ -44,6 +44,7 @@ ID_CHGMAG = 16013
 
 def FtDifCardFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    parent.cfgdifferita = item0
     
     item1 = AnagCardPanel(parent, -1)
     item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )

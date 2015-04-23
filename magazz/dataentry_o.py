@@ -185,6 +185,8 @@ class _MagazzPanel_O_Mixin(object):
             warnText = "Attenzione: sono presenti righe con dati incompleti"
         elif not doc.test_split_payment():
             warnText = "Attenzione: uso promiscuo di aliquote iva in split payment"
+            warnColor = wx.BLACK
+            out=True
         else:
             warnText = "Il documento è composto da %d righe"\
                      % doc.mov.RowsCount()

@@ -28,6 +28,16 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
+    ('1.5.06', dt.Date(2015, 4, 22), (
+         ("BET1175",
+         """In fase di inserimento/modifica  documento di magazzino, il controllo di congruenza
+         delle aliquote Iva a fini dello split payment é stato reso non vincolante, demandando all'utente
+         la possibilità di gestire situazioni miste"""),
+         ("BET1174",
+         """Aggiunta la possibilita' di accedere al grid principale della maschera di
+         setup dei raggruppamenti per le operazioni differite."""),
+        ),),
+
     ('1.5.05', dt.Date(2015, 3, 31), (
          ("BUG1151",
          """Corretta formattazione data di nascita in generazione quadro BL 
