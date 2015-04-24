@@ -36,6 +36,8 @@ history = (
          ("BET1174",
          """Aggiunta la possibilita' di accedere al grid principale della maschera di
          setup dei raggruppamenti per le operazioni differite."""),
+         ("BUG1151",
+         """Attivata la corretta memorizzazione in id_memoeva del riferimento alla riga acquisita in sede di fatturazione differita."""),
         ),),
 
     ('1.5.05', dt.Date(2015, 3, 31), (

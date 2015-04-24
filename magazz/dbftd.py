@@ -599,7 +599,11 @@ class FtDif(adb.DbTable):
                     for field in bodyfields:
                         setattr(new.mov, field, getattr(mov, field))
                     new.mov.id_doc = None
-                    new.mov.id_moveva = mov.id
+                    #============================================================
+                    # #rimossa per conservare il riferimento a id della riga evasa
+                    #------------------------------------------------------------
+                    # new.mov.id_moveva = mov.id
+                    #============================================================
                     if not mov.MoveNext():
                         break
                 
