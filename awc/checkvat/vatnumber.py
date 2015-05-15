@@ -3,17 +3,17 @@
 # ------------------------------------------------------------------------------
 # Copyright (c) 2008-2011 Cédric Krier.
 # Copyright (c) 2008-2011 B2CK.
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
@@ -707,20 +707,26 @@ def check_vat_it(vat):
     '''
     Check Italy VAT number.
     '''
+    vat=vat.rstrip()
     if len(vat) != 11:
         return False
     try:
         int(vat)
     except ValueError:
         return False
-    if int(vat[0:7]) <= 0:
-        return False
-    if int(vat[7:10]) <= 0:
-        return False
-    if int(vat[7:10]) > 100 and int(vat[7:10]) < 120:
-        return False
-    if int(vat[7:10]) > 121:
-        return False
+    #===========================================================================
+    # Controlli rimossi perchè non trovano correispondenza su indicazioni
+    # ministeriali per il controllo della partita Iva.
+    #===========================================================================
+    # if int(vat[0:7]) <= 0:
+    #     return False
+    # if int(vat[7:10]) <= 0:
+    #     return False
+    # if int(vat[7:10]) > 100 and int(vat[7:10]) < 120:
+    #     return False
+    # if int(vat[7:10]) > 121:
+    #     return False
+    #===========================================================================
 
     check_sum = int(vat[0]) + mult_add(2, int(vat[1])) + int(vat[2]) + \
             mult_add(2, int(vat[3])) + int(vat[4]) + \

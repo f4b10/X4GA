@@ -6,17 +6,17 @@
 # Copyright:    (C) 2011 Astra S.r.l. C.so Cavallotti, 122 18038 Sanremo (IM)
 # ------------------------------------------------------------------------------
 # This file is part of X4GA
-# 
+#
 # X4GA is free software: you can redistribute it and/or modify
 # it under the terms of the Affero GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # X4GA is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
@@ -31,7 +31,7 @@ from _version import apptype, appType, appinfo
 
 VERSION_MAJOR   = 1
 VERSION_MINOR   = 5
-VERSION_RELEASE = 6
+VERSION_RELEASE = 7
 VERSION_TAG     = ""
 VERSION_TYPE    = apptype
 VERSION_TYPEXT  = appType
@@ -65,13 +65,13 @@ MODVERSION_TAG     = ""
 
 __min_compat_mod__ = ''
 
-MODVERSION = (MODVERSION_MAJOR, 
-              MODVERSION_MINOR, 
-              MODVERSION_RELEASE, 
+MODVERSION = (MODVERSION_MAJOR,
+              MODVERSION_MINOR,
+              MODVERSION_RELEASE,
               MODVERSION_TAG)
 
-MODVERSION_STRING  = "%s.%s.%s" % (MODVERSION_MAJOR, 
-                                   MODVERSION_MINOR, 
+MODVERSION_STRING  = "%s.%s.%s" % (MODVERSION_MAJOR,
+                                   MODVERSION_MINOR,
                                    str(MODVERSION_RELEASE).zfill(2))
 
 __modversion_exe__ = MODVERSION_STRING
