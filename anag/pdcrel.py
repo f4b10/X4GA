@@ -6,17 +6,17 @@
 # Copyright:    (C) 2011 Astra S.r.l. C.so Cavallotti, 122 18038 Sanremo (IM)
 # ------------------------------------------------------------------------------
 # This file is part of X4GA
-# 
+#
 # X4GA is free software: you can redistribute it and/or modify
 # it under the terms of the Affero GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # X4GA is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
@@ -64,7 +64,7 @@ import awc.controls.dbgrid as dbglib
 
 CONTACT_TYPE_EMAIL = 0
 CONTACT_TYPE_CALL =  1
-    
+
 ID_BTN_CARDPDC = wx.NewId()
 
 
@@ -78,14 +78,14 @@ class _PdcRangeCode(object):
         dbpdcmax dbtable pdc sintetizzata x il codice max.
         dbpdctip dbtable tipi anagrafici con allegati i rispettivi range cod.
         """
-        self.dbpdcmax = adb.DbTable(bt.TABNAME_PDC, 'pdc', writable=False, 
+        self.dbpdcmax = adb.DbTable(bt.TABNAME_PDC, 'pdc', writable=False,
                                     fields='codice')
         self.dbpdcmax.AddLimit(1)
         self.dbpdcmax.AddOrder('pdc.codice', adb.ORDER_DESCENDING)
-        
+
         self.dbpdctip = adb.DbTable(bt.TABNAME_PDCTIP, 'tipana', writable=False)
         self.dbpdctip.AddJoin(bt.TABNAME_PDCRANGE, 'pdcrange')
-    
+
     def NewRangeCode(self, idtipo):
         """
         Determina il nuovo codice automatico in base al tipo anagrafico passato
@@ -95,7 +95,7 @@ class _PdcRangeCode(object):
         pdc, tpa = self.dbpdcmax, self.dbpdctip
         if tpa.Retrieve('tipana.id=%s', idtipo) and tpa.RowsCount():
             pdc.ClearFilters()
-            pdc.AddFilter('pdc.codice>=%s AND pdc.codice<=%s', 
+            pdc.AddFilter('pdc.codice>=%s AND pdc.codice<=%s',
                           tpa.pdcrange.rangemin,
                           tpa.pdcrange.rangemax)
             if pdc.Retrieve():
@@ -105,7 +105,7 @@ class _PdcRangeCode(object):
                     lastnum = tpa.pdcrange.rangemin
                 newcod = str(lastnum+1)
         return newcod
-    
+
     def OnTipanaChanged(self, event):
         if self.db_recid is None and not self.valuesearch:
             tipo = event.GetEventObject().GetValue()
@@ -122,28 +122,28 @@ class _PdcRelPanel(ga.AnagPanel,\
                    auto.CfgAutomat,\
                    _PdcRangeCode):
     """
-    Classe specializzata nel mantenere relazionate le tabelle anagrafiche 
-    di clienti, fornitori, banche con i relativi sottoconti nella tabella 
+    Classe specializzata nel mantenere relazionate le tabelle anagrafiche
+    di clienti, fornitori, banche con i relativi sottoconti nella tabella
     del piano dei conti di contabilità.
     """
-    
+
     _ctrcod = None
     _ctrdes = None
     tabanag = None
     pdctipo = None
-    
+
     def __init__(self, *args, **kwargs):
-        
+
         assert type(self.tabanag) in (str, unicode),\
                """Il nome della tabella anagrafica non è definito"""
-        
+
         assert type(self.pdctipo) in (str, unicode),\
                """Il tipo di anagrafica non è definito"""
-        
+
         ga.AnagPanel.__init__(self, *args, **kwargs)
-        
+
         self.firstfocus ='descriz'
-        
+
         self.SetDbSetup(bt.tabelle[bt.TABSETUP_TABLE_PDC])
         self._sqlrelcol = ", tipana.tipo, tipana.codice"
         self._sqlrelfrm =\
@@ -159,47 +159,47 @@ class _PdcRelPanel(ga.AnagPanel,\
             ("Descrizione", ('tipana.codice', 'pdc.descriz',)),
         ))
         self.SetOrderNumber(1)
-        
+
         self.anag_db_columns = None
-        
+
         auto.CfgAutomat.__init__(self, self.db_curs)
         self._auto_pdctip = None
         self._auto_bilmas = None
         self._auto_bilcon = None
         self._auto_bilcee = None
-        
+
         _PdcRangeCode.__init__(self)
-        
+
         self.HelpBuilder_SetDir('anag.pdcrel_%s' % str(self.tabanag).capitalize())
-    
+
     def InitControls(self, *args, **kwargs):
         ga.AnagPanel.InitControls(self, *args, **kwargs)
         if self._btnattach is not None:
             self._btnattach.SetScope(self.db_tabname)#self.tabanag)
         self.Bind(lt.EVT_LINKTABCHANGED, self.OnTipanaChanged, id=wdr.ID_CTRPDCTIP)
-    
+
     def SetControlsMaxLength(self, fields, controls):
         ga.AnagPanel.SetControlsMaxLength(self, fields, controls)
         ga.AnagPanel.SetControlsMaxLength(self, self.anag_db_columns, self.anag_db_datalink)
-    
+
     def InitDataControls( self ):
         """
         Inizializza i controlli relativi alle colonne standard C{codice} e
         C{descriz} (codice e descrizione della tabella gestita).
         """
         out = ga.AnagPanel.InitDataControls( self, update=False )
-        
+
         controls = GetNamedChildrens( self._panelcard,\
                                       [ col[0] \
                                         for col in self.anag_db_columns ])
         self.anag_db_datalink = [ ( ctr.GetName(), ctr )\
                                   for ctr in controls ]
         self.anag_db_datacols = [ col for col,ctr in self.anag_db_datalink ]
-        
+
         for col, ctr in self.anag_db_datalink:
             if isinstance(ctr, wx.Window):
                 self.BindChangedEvent(ctr)
-        
+
         for col,ctr in self.db_datalink:
             if col == "id_tipo":
                 ctr.SetFilter("tipo='%s'" % self.pdctipo)
@@ -214,7 +214,7 @@ class _PdcRelPanel(ga.AnagPanel,\
             MsgDialog(self,\
 """Non sarà possibile inserire nuovi elementi poiché manca la """\
 """definizione del controllo di tipo '%s'.""" % msg )
-        
+
         #se c'è un solo record, il controllo della descrizione è inspiegabilmente
         #scrollato a destra troncando a video la parte iniziale; settando il focus
         #tale comportamento errato non ha luogo
@@ -222,12 +222,12 @@ class _PdcRelPanel(ga.AnagPanel,\
         c = self.FindWindowByName('descriz')
         if c:
             c.SetFocus()
-        
+
         if ga.SEARCH_ON_SHOW or not self.complete:
             self.UpdateSearch()
-        
+
         return out
-    
+
     def UpdateDataControls( self, recno ):
         ga.AnagPanel.UpdateDataControls( self, recno, activatechanges=False )
         if self.db_recid is None and not self.valuesearch:
@@ -275,7 +275,7 @@ class _PdcRelPanel(ga.AnagPanel,\
         event = ga.AcceptDataChanged()
         event.acceptchanges = True
         wx.PostEvent(self, event)
-    
+
     def CopyFrom_GetLastInserted(self):
         lastid = self.db_last_inserted_id
         if lastid is None:
@@ -284,7 +284,7 @@ class _PdcRelPanel(ga.AnagPanel,\
                 if len(db.rs) == 1:
                     lastid = db.rs[0][0]
         return lastid
-    
+
     def CopyFrom_DoCopy(self, idcopy):
         for tabname, datalink in ((self.db_tabname, self.db_datalink),
                                   (self.tabanag,    self.anag_db_datalink),):
@@ -295,16 +295,16 @@ class _PdcRelPanel(ga.AnagPanel,\
                         try:
                             n = aw.awu.ListSearch(datalink, lambda x: x[0] == name)
                             v = getattr(db, name)
-                            if v is not None:  
+                            if v is not None:
                                 datalink[n][1].SetValue(v)
                         except IndexError:
                             pass
         self.SetFirstFocus()
-       
+
     def SetValueSearchFields(self):
         ga.AnagPanel.SetValueSearchFields(self)
         ga.AnagPanel.SetValueSearchFields(self, self.anag_db_datalink)
-    
+
     def GetValueSearchValues(self):
         vsf = ga.AnagPanel.GetValueSearchValues(self)
         for n, (col, ctr) in enumerate(self.anag_db_datalink):
@@ -317,7 +317,7 @@ class _PdcRelPanel(ga.AnagPanel,\
             if value:
                 vsf.append((self.tabanag, col, value))
         return vsf
-    
+
     def GetSqlValueSearch(self):
         flt, par = ga.AnagPanel.GetSqlValueSearch(self)
         if self.complete:
@@ -326,7 +326,7 @@ class _PdcRelPanel(ga.AnagPanel,\
                 if alias in flt:
                     flt = flt.replace(alias, 'anag.')
         return flt, par
-    
+
     def TransferDataFromWindow( self ):
         """
         Scrittura dati.  Vengono prima salvati i dati del pdc se con
@@ -344,7 +344,7 @@ class _PdcRelPanel(ga.AnagPanel,\
                 pass
         written = ga.AnagPanel.TransferDataFromWindow(self)
         if written:
-            
+
             if new:
                 cmd = "INSERT INTO %s (" % self.tabanag
                 cmd += ", ".join( [ col for col,ctr in self.anag_db_datalink ] )
@@ -355,33 +355,33 @@ class _PdcRelPanel(ga.AnagPanel,\
                 cmd += ", ".join(
                        [ "%s=%%s" % col for col,ctr in self.anag_db_datalink ] )
                 cmd += " WHERE ID=%s;" % self.db_recid
-            
+
             par = []
             for col, ctr in self.anag_db_datalink:
                 if col == 'id':
                     par.append(self.db_recid)
                 else:
                     par.append(ctr.GetValue())
-            
+
             try:
                 self.db_curs.execute(cmd, par)
             except MySQLdb.Error, e:
                 MsgDialog(self, message=repr(e.args))
                 written = False
-        
+
         return written
 
     #def TestForDeletion( self ):
         #"""
         #Metodo per la verifica della cancellabilità di un elemento.
-        
+
         #@todo: controlli per integrità referenziale sulle movimentazioni.
         #"""
         #out = False
         #if ga.AnagPanel.TestForDeletion(self):
             #out = True
         #return out
-    
+
     def DeleteDataRecord( self ):
         """
         Cancellazione record.  Viene prima cancellato il record dei dati
@@ -427,21 +427,21 @@ class GrigliaPrezziGrid(dbglib.DbGridColoriAlternati):
     """
     Griglia prezzi.
     """
-    
+
     idpdc = None
-    
+
     def __init__(self, parent, dbgri):
         """
         Parametri:
         parent griglia  (wx.Panel)
         dbtable grigila prezzi
         """
-        
-        dbglib.DbGridColoriAlternati.__init__(self, parent, -1, 
-                                              size=parent.GetClientSizeTuple(), 
+
+        dbglib.DbGridColoriAlternati.__init__(self, parent, -1,
+                                              size=parent.GetClientSizeTuple(),
                                               style=0)
         self.dbgri = dbgri
-        
+
         _NUM = gl.GRID_VALUE_NUMBER
         _STR = gl.GRID_VALUE_STRING
         _DAT = gl.GRID_VALUE_DATETIME
@@ -449,14 +449,14 @@ class GrigliaPrezziGrid(dbglib.DbGridColoriAlternati):
         _PRE = bt.GetMagPreMaskInfo()
         _PRC = bt.GetMagScoMaskInfo()
         _PZC = bt.GetMagPzcMaskInfo()
-        
+
         cn = lambda db, col: db._GetFieldIndex(col, inline=True)
         gri = dbgri
         pro = gri.prod
-        
+
         cols = []
         self.edcols = []
-        
+
         def a(x, e=False):
             cols.append(x)
             n = len(cols)-1
@@ -465,16 +465,16 @@ class GrigliaPrezziGrid(dbglib.DbGridColoriAlternati):
             return n
         def b(x):
             return a(x, True)
-        
+
         self.COL_codice =  b((100, (cn(pro, 'codice'),  "Codice",         _STR, True)))
         self.COL_descriz = a((230, (cn(pro, 'descriz'), "Prodotto",       _STR, True)))
         self.COL_DATA =    b(( 90, (cn(gri, 'data'),    "Data",           _DAT, True)))
-        
+
         if bt.MAGPZGRIP:
             self.COL_PZCONF = b((70,(cn(gri,'pzconf'),  "Pz.Conf.",       _PZC, True)))
-        
+
         self.COL_PREZZO =  b((110, (cn(gri, 'prezzo'),  "Prezzo griglia", _PRE, True)))
-        
+
         if bt.MAGNUMSCO >= 1:
             self.COL_SCONTO1 = b(( 50, (cn(gri, 'sconto1'), "Sc.%"+'1'*int(bt.MAGNUMSCO>1), _PRC, True)))
         if bt.MAGNUMSCO >= 2:
@@ -489,12 +489,12 @@ class GrigliaPrezziGrid(dbglib.DbGridColoriAlternati):
             self.COL_SCONTO6 = b(( 50, (cn(gri, 'sconto6'), "Sc.%6",      _PRC, True)))
         self.COL_ID_GRIP = a((  1, (cn(gri, 'id'),      "#gri",           _STR, True)))
         self.COL_ID_PROD = a((  1, (cn(pro, 'id'),      "#pro",           _STR, True)))
-        
+
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
-        
+
         canedit = canins = True
-        
+
         links = []
         import anag.lib as alib
         from anag.prod import ProdDialog
@@ -506,14 +506,14 @@ class GrigliaPrezziGrid(dbglib.DbGridColoriAlternati):
                                      ProdDialog,          #card class
                                      refresh=True)        #refresh flag
         links.append(ltpro)
-        
+
         afteredit = ((dbglib.CELLEDIT_AFTER_UPDATE, -1, self.EditedValues),)
-        
+
         self.SetData([], colmap, canedit, canins, links, afteredit, self.CreateNewRow)
-        
+
         map(lambda c:\
             self.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
-        
+
         self.SetFitColumn(1)
         self.AutoSizeColumns()
         sz = wx.FlexGridSizer(1,0,0,0)
@@ -522,23 +522,23 @@ class GrigliaPrezziGrid(dbglib.DbGridColoriAlternati):
         sz.Add(self, 0, wx.GROW|wx.ALL, 0)
         parent.SetSizer(sz)
         sz.SetSizeHints(parent)
-        
+
         self.Bind(gl.EVT_GRID_CELL_RIGHT_CLICK, self.OnRightClick)
         self.Bind(gl.EVT_GRID_CELL_LEFT_DCLICK, self.OnDblClick)
-    
+
     def EditedValues(self, row, gridcol, col, value):
         dbgrip = self.dbgri
         if 0 <= row < dbgrip.RowsCount():
             dbgrip.MoveRow(row)
             dbgrip.data = dbgrip.data #forza la scrittura della riga
         return True
-    
+
     def OnRightClick(self, event):
         row = event.GetRow()
         if 0 <= row < self.dbgri.RowsCount():
             self.MenuPopup(event)
             event.Skip()
-    
+
     def OnDblClick(self, event):
         gri = self.dbgri
         sr = self.GetSelectedRows()
@@ -547,7 +547,7 @@ class GrigliaPrezziGrid(dbglib.DbGridColoriAlternati):
             gri.MoveRow(row)
             self.ApriSchedaProd()
         event.Skip()
-    
+
     def MenuPopup(self, event):
         row, col = event.GetRow(), event.GetCol()
         if not 0 <= row < self.dbgri.RowsCount():
@@ -570,11 +570,11 @@ class GrigliaPrezziGrid(dbglib.DbGridColoriAlternati):
         self.PopupMenu(menu, (xo, yo))
         menu.Destroy()
         event.Skip()
-    
+
     def OnSchedaProd(self, event):
         self.ApriSchedaProd()
         event.Skip()
-    
+
     def ApriSchedaProd(self):
         proid = self.dbgri.id_prod
         f = None
@@ -589,7 +589,7 @@ class GrigliaPrezziGrid(dbglib.DbGridColoriAlternati):
         f.ShowModal()
         if f is not None:
             f.Destroy()
-    
+
     def OnDeleteRow(self, event):
         sr = self.GetSelectedRows()
         if sr:
@@ -613,10 +613,10 @@ class GrigliaPrezziGrid(dbglib.DbGridColoriAlternati):
                 gri._info.iterCount -= 1
                 self.Refresh()
         event.Skip()
-    
+
     def SetPdcId(self, idpdc):
         self.idpdc = idpdc
-    
+
     def GetAttr(self, row, col, rscol, attr=gl.GridCellAttr):
         attr = dbglib.DbGridColoriAlternati.GetAttr(self, row, col, rscol, attr)
         attr.SetReadOnly(not col in self.edcols)
@@ -625,7 +625,7 @@ class GrigliaPrezziGrid(dbglib.DbGridColoriAlternati):
     def GridListTestValues(self, row, gridcol, col, value):
         out = True
         return out
-    
+
     def CreateNewRow(self):
         g = self.dbgri
         g.CreateNewRow()
@@ -642,27 +642,27 @@ class GriglieCollegateGrid(dbglib.DbGridColoriAlternati):
     """
     Correlazione anagrafiche per la griglia prezzi.
     """
-    
+
     idpdc = None
-    
+
     def __init__(self, parent, dbpcp):
         """
         Parametri:
         parent griglia  (wx.Panel)
         """
-        
-        dbglib.DbGridColoriAlternati.__init__(self, parent, -1, 
-                                              size=parent.GetClientSizeTuple(), 
+
+        dbglib.DbGridColoriAlternati.__init__(self, parent, -1,
+                                              size=parent.GetClientSizeTuple(),
                                               style=0)
         _STR = gl.GRID_VALUE_STRING
         _CHK = gl.GRID_VALUE_BOOL+":1,0"
-        
+
         def cn(db, col):
             return db._GetFieldIndex(col, inline=True)
-        
+
         cols = []
         self.edcols = []
-        
+
         def e(x, e=False):
             cols.append(x)
             n = len(cols)-1
@@ -671,27 +671,27 @@ class GriglieCollegateGrid(dbglib.DbGridColoriAlternati):
             return n
         def E(x):
             return e(x, True)
-        
+
         self.dbpcp = pcp = dbpcp
         pdc = pcp
         ana = pdc.anag
-        
+
         self.COL_CODICE =  e(( 50, (cn(pdc, 'codice'),       "Codice",     _STR, True)))
         self.COL_DESCRIZ = e((200, (cn(pdc, 'descriz'),      "Anagrafica", _STR, True)))
         self.COL_vediall = e(( 50, (cn(ana, 'vediprod_all'), "Tutti",      _CHK, True)))
         self.COL_vedigri = e(( 50, (cn(ana, 'vediprod_gra'), "S.G.",       _CHK, True)))
         self.COL_vedigrf = e(( 50, (cn(ana, 'vediprod_grf'), "G.F.",       _CHK, True)))
-        
+
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
-        
+
         canedit = canins = False
-        
+
         self.SetData((), colmap, canedit, canins)
-        
+
         map(lambda c:\
             self.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
-        
+
         self.SetFitColumn(1)
         self.AutoSizeColumns()
         sz = wx.FlexGridSizer(1,0,0,0)
@@ -700,7 +700,7 @@ class GriglieCollegateGrid(dbglib.DbGridColoriAlternati):
         sz.Add(self, 0, wx.GROW|wx.ALL, 0)
         parent.SetSizer(sz)
         sz.SetSizeHints(parent)
-        
+
     def SetPdcId(self, idpdc):
         self.idpdc = idpdc
         self.dbpcp.SetPdcMaster(idpdc)
@@ -711,7 +711,7 @@ class GriglieCollegateGrid(dbglib.DbGridColoriAlternati):
 
 
 class GriglieCollegatePanel(aw.Panel):
-    
+
     def __init__(self, *args, **kwargs):
         GriglieTableClass = kwargs.pop('GriglieTableClass')
         pdc_master = kwargs.pop('pdc_master')
@@ -728,13 +728,13 @@ class GriglieCollegatePanel(aw.Panel):
 
 
 class GriglieCollegateDialog(aw.Dialog):
-    
+
     def __init__(self, *args, **kwargs):
         GriglieTableClass = kwargs.pop('GriglieTableClass')
         pdc_master = kwargs.pop('pdc_master')
         kwargs['title'] = 'Griglie Collegate'
         aw.Dialog.__init__(self, *args, **kwargs)
-        self.panel = GriglieCollegatePanel(self, GriglieTableClass=GriglieTableClass, 
+        self.panel = GriglieCollegatePanel(self, GriglieTableClass=GriglieTableClass,
                                            pdc_master=pdc_master)
 
         self.AddSizedPanel(self.panel)
@@ -784,9 +784,9 @@ desfields = 'id codice descriz indirizzo cap citta prov numtel numtel2 numcel nu
 
 
 class GrigliaPrezziAttualiPanel(wx.Panel):
-    
+
     def __init__(self, *args, **kwargs):
-        
+
         id_pdc = kwargs.pop('id_pdc')
         tipana = kwargs.pop('tipana')
         if tipana == "C":
@@ -794,26 +794,26 @@ class GrigliaPrezziAttualiPanel(wx.Panel):
         else:
             self._desana = "Fornitore"
         self.tipana = tipana
-        
+
         wx.Panel.__init__(self, *args, **kwargs)
-        
+
         import magazz.listini_wdr as liswdr
         liswdr.VediPrezziInVigoreFunc(self)
-        
+
         import magazz.stagrip as stagrip
         self.dbgrip = stagrip.dba.TabProdGrigliaPrezziAttualiPdcTable()
         self.dbgrip.SetParam(Env.Azienda.Login.dataElab, id_pdc)
         self.dbgrip.Retrieve()
-        
+
         def cn(x):
             return self.FindWindowByName(x)
-        
-        self.gridlis = stagrip.GrigliaPrezziAttualiGrid(cn('pangridlist'), 
+
+        self.gridlis = stagrip.GrigliaPrezziAttualiGrid(cn('pangridlist'),
                                                         self.dbgrip,
                                                         self.tipana)
-        
+
         self.Bind(wx.EVT_BUTTON, self.OnPrint, cn('butprint'))
-    
+
     def OnPrint(self, event):
         self.dbgrip._datlis = Env.Azienda.Login.dataElab
         self.dbgrip._desana = self._desana
@@ -843,43 +843,43 @@ class GrigliaPrezziAttualiDialog(aw.Dialog):
 
 
 class DatiBancariMixin(object):
-    
+
     def OnCalcolaBBAN(self, event):
         self.CalcolaXBAN('bban')
         event.Skip()
-    
+
     def OnCalcolaIBAN(self, event):
         self.CalcolaXBAN('iban')
         event.Skip()
-    
+
     def CalcolaXBAN(self, tipo):
-        
+
         if not tipo in 'bban iban'.split():
             raise Exception, 'Tipo di calcolo errato: %s' % tipo
-        
+
         cols = []
         keys = []
-        
+
         lcc = 12
         if tipo == 'iban':
             keys.append(['paese',   'Paese',    2])
             keys.append(['ciniban', 'CIN IBAN', 2])
             lcc = 12
-        
+
         keys.append(['cinbban', 'CIN BBAN', 1])
         keys.append(['abi',     'ABI',      5])
         keys.append(['cab',     'CAB',      5])
         keys.append(['numcc',   'C/C',    lcc])
-        
+
         cols = [key for key, des, lun in keys]
-        
+
         def cn(col):
             return self.FindWindowByName('ban_%s'%col)
-        
+
         if cn(tipo).GetValue():
             if aw.awu.MsgDialog(self, "Il codice %s è già compilato, vuoi ricalcolarlo ?" % str(tipo).upper(), style=wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT) != wx.ID_YES:
                 return
-        
+
         xban = ''
         for key, des, lun in keys:
             val = cn(key).GetValue() or ''
@@ -903,7 +903,7 @@ class DatiBancariMixin(object):
                     aw.awu.MsgDialog(self, "Valore errato per %s" % des)
                     return
             xban += val
-        
+
         cn(tipo).SetValue(xban)
 
 
@@ -911,36 +911,36 @@ class DatiBancariMixin(object):
 
 
 class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
-    
+
     _GridBan_OnCalcolaBBAN = DatiBancariMixin.OnCalcolaBBAN
     _GridBan_OnCalcolaIBAN = DatiBancariMixin.OnCalcolaIBAN
-    
+
     def __init__(self, *args, **kwargs):
-        
+
         _PdcRelPanel.__init__(self, *args, **kwargs)
         DatiBancariMixin.__init__(self)
-        
+
         self._sqlrelcol += ", anag.indirizzo, anag.cap, anag.citta, anag.prov"
         self._sqlrelcol += ", anag.piva, anag.codfisc"
         self._sqlrelcol += ", anag.numtel, anag.numfax, anag.email, tipana.tipo"
-        
+
         self.rsban = []
         self.rsbanmod = []
         self.rsbannew = []
         self.rsbandel = []
         self._grid_ban = None
-        
+
         self.rsdes = []
         self.rsdesmod = []
         self.rsdesnew = []
         self.rsdesdel = []
         self._grid_des = None
-        
+
         self.dbgrip = None
         self.gridgrip = None
-        
+
         self.loadrelated = None
-    
+
     def InitControls(self, *args, **kwargs):
         self.loadrelated = False
         _PdcRelPanel.InitControls(self, *args, **kwargs)
@@ -949,16 +949,16 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
         self.LoadBanche()
         self._GridDes_Init()
         self.LoadDestin()
-    
-    def InitAnagToolbar(self, parent):        
+
+    def InitAnagToolbar(self, parent):
         out = ga.AnagToolbar(parent, -1, hide_ssv=False)
         self.Bind(wx.EVT_TOGGLEBUTTON, self.OnSSV)
         return out
-    
+
     def OnSSV(self, event):
         self.UpdateSearch()
         event.Skip()
-    
+
     def InitGrigliaPrezzi(self):
         def cn(x):
             return self.FindWindowByName(x)
@@ -979,7 +979,7 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
                 if wz.GetPageText(n).lower() == 'griglia prezzi':
                     wz.RemovePage(n)
                     break
-    
+
     def OnVediGriglieCollegate(self, event):
         cn = self.FindWindowByName
         pdc_master = cn('id_pdcgrp').GetValue()
@@ -996,7 +996,7 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
             dlg.ShowModal()
             dlg.Destroy()
         event.Skip()
-    
+
     def OnVediGrigliaInVigore(self, event):
         cn = self.FindWindowByName
         pdc_master = cn('id_pdcgrp').GetValue()
@@ -1008,7 +1008,7 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
         d.ShowModal()
         d.Destroy()
         event.Skip()
-    
+
     def UpdateDataControls( self, recno ):
         _PdcRelPanel.UpdateDataControls( self, recno )
         if self.loadrelated:
@@ -1019,13 +1019,13 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
             if self.gridgrip is not None:
                 self.LoadGriglia()
                 self.gridgrip.SetGridCursor(0,0)
-    
+
     def UpdateDataRecord( self ):
-        
+
         cn = self.FindWindowByName
-        
+
         id, cf, pi = map(lambda x: cn(x).GetValue(), 'id codfisc piva'.split())
-        
+
         do = True
         for ctr in range(3):
             err = ''
@@ -1073,27 +1073,27 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
                 do = x == wx.ID_YES
                 if not do:
                     break
-        
+
         if do:
-            
+
             if cn('id_stato').GetValue() is None:
                 cn('id_stato').SetValueHome()
                 cn('nazione').SetValue("IT")
-                
+
             self.loadrelated = False
             written = _PdcRelPanel.UpdateDataRecord(self)
             self.loadrelated = True
-            
+
             if written:
                 self.WriteBanche(); self.LoadBanche()
                 self.WriteDestin(); self.LoadDestin()
                 self.WriteGriglia(); self.LoadGriglia()
-            
+
         else:
             written = False
-        
+
         return written
-    
+
     def WriteBanche(self):
         if len(self.rsban)>=2:
             try:
@@ -1106,7 +1106,7 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
     def WriteDestin(self):
         return self.WriteRelated(bt.TABNAME_DESTIN, desfields, self.rsdes,\
                                  self.rsdesnew, self.rsdesmod, self.rsdesdel)
-    
+
     def WriteGriglia(self):
         if (self.pdctipo == "C" and bt.MAGATTGRIP) or (self.pdctipo == "F" and bt.MAGATTGRIF):
             gri = self.dbgrip
@@ -1114,7 +1114,7 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
                 if not gri.Save():
                     MsgDialog(self, 'Problema in scrittura griglia:\n%s'\
                               % repr(gri.GetError()))
-    
+
     def WriteRelated(self, table, fields, rs, rsins, rsmod, rsdel):
         written = False
         setCol = ""
@@ -1159,7 +1159,7 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
         except Exception, e:
             pass
         return written
-    
+
 
     def DeleteDataRecord( self ):
         recid = self.db_recid
@@ -1177,7 +1177,7 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
             except Exception, e:
                 MsgDialogDbError(self, e)
         return deleted
-    
+
     def LoadBanche(self):
         if self.db_recid is None:
             rsban = ()
@@ -1253,27 +1253,27 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
             gri.Retrieve('gri.id_pdc=%s', id_pdcgrp)
             self.gridgrip.ChangeData(gri.GetRecordset())
             self.gridgrip.SetPdcId(id_pdcgrp)
-    
+
     def _GridBan_Init(self):
-        
+
         cn = self.FindWindowByName
-        
+
         #costruzione griglia banche del cliente/fornitore
         parent = cn('ban_panelgrid')
-        
+
         _STR = gl.GRID_VALUE_STRING
         _CHK = gl.GRID_VALUE_BOOL+":1,0"
-        
+
         cols = (( 50, (RSBAN_CODICE,  "Cod.",   _STR, True )),
                 (120, (RSBAN_DESCRIZ, "Banca",  _STR, True )),
                 ( -1, (RSBAN_PREF,    "Pref",   _CHK, True )),
                 (  1, (RSBAN_ID,      "#ban",   _STR, False)),
             )
-        
+
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
-        
-        grid = dbglib.DbGridColoriAlternati(parent, -1, 
+
+        grid = dbglib.DbGridColoriAlternati(parent, -1,
                                             size=parent.GetClientSizeTuple())
         grid.SetData(self.rsban, colmap, canEdit=True)
         grid.SetCellDynAttr(self._GridBan_GetAttr)
@@ -1283,10 +1283,10 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
                            ('ban_butdel', self._GridBan_OnDelete),
                            ('ban_butlst', self._GridBan_OnPrint),):
             self.Bind(wx.EVT_BUTTON, func, cn(name))
-        
+
         map(lambda c:\
             grid.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
-        
+
         grid.SetFitColumn(1)
         grid.AutoSizeColumns()
         sz = wx.FlexGridSizer(1,0,0,0)
@@ -1296,9 +1296,9 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
         parent.SetSizer(sz)
         sz.SetSizeHints(parent)
         self._grid_ban = grid
-        
+
         self._ban_updating = False
-        
+
         t = bt.tabelle[bt.TABSETUP_TABLE_BANCF][2] #struttura tabella banche cli/for
         for name in banfields:
             c = cn('ban_%s' % name)
@@ -1307,10 +1307,10 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
                 if hasattr(c, 'SetMaxLength'):
                     c.SetMaxLength(t[n][bt.TABSETUP_COLUMNLENGTH])
                 self.Bind(wx.EVT_TEXT, self._GridBan_OnBancaChanged, c)
-        
+
         self.Bind(wx.EVT_BUTTON, self._GridBan_OnCalcolaBBAN, cn('ban_butcalc_bban'))
         self.Bind(wx.EVT_BUTTON, self._GridBan_OnCalcolaIBAN, cn('ban_butcalc_iban'))
-    
+
     def _GridBan_OnBancaChanged(self, event):
         row = self._grid_ban.GetSelectedRows()[0]
         if self._ban_updating or not 0 <= row < len(self.rsban):
@@ -1325,20 +1325,20 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
                 self._grid_ban.Refresh()
                 self._GridBan_TestWarning(row)
                 self.SetDataChanged()
-    
+
     def _GridBan_GetAttr(self, row, col, rscol, attr=gl.GridCellAttr):
-        
+
         attr = dbglib.DbGridColoriAlternati.GetAttr(self._grid_ban, row, col, rscol, attr)
         attr.SetReadOnly(True)
-        
+
         if 0<=row<len(self.rsban):
             if not self._GridBan_IsOk(row):
                 #colorazione riga se dati errati
                 attr.SetTextColour(stdcolor.VALERR_FOREGROUND)
                 attr.SetBackgroundColour(stdcolor.VALERR_BACKGROUND)
-        
+
         return attr
-    
+
     def _GridBan_IsOk(self, row):
         valok = True
         if 0<=row<len(self.rsban):
@@ -1348,7 +1348,7 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
                 if not valok:
                     break
         return valok
-    
+
     def _GridBan_AddNewRow(self):
         try:
             c = self.db_curs
@@ -1376,7 +1376,7 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
             None])#RSBAN_PREF
         if len(self.rsban) == 1:
             self.rsban[0][RSBAN_PREF] = 1
-    
+
     def _GridBan_OnSelected(self, event):
         row = event.GetRow()
         enable = 0<=row<len(self.rsban)
@@ -1400,7 +1400,7 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
         self._ban_updating = False
         self._GridBan_TestWarning(row)
         event.Skip()
-    
+
     def _GridBan_UpdateFields(self, row):
         if not 0 <= row < len(self.rsban):
             return
@@ -1411,7 +1411,7 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
             c = cn(name)
             if c:
                 c.SetValue(r[col])
-    
+
     def _GridBan_EnableFields(self, enable=True):
         def cn(name):
             return self.FindWindowByName('ban_%s'%name)
@@ -1419,7 +1419,7 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
             c = cn(name)
             if c:
                 c.Enable(enable)
-    
+
     def _GridBan_ResetFields(self):
         def cn(name):
             return self.FindWindowByName('ban_%s'%name)
@@ -1427,7 +1427,7 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
             c = cn(name)
             if c:
                 c.SetValue(None)
-    
+
     def _GridBan_OnChanged(self, event):
         row = event.GetRow()
         if 0<=row<len(self.rsban):
@@ -1435,7 +1435,7 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
             if banid is not None and not banid in self.rsbanmod:
                 self.rsbanmod.append(banid)
         self.SetDataChanged()
-    
+
     def _GridBan_OnCreate(self, event):
         self._GridBan_AddNewRow()
         self._grid_ban.ResetView()
@@ -1470,11 +1470,11 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
                         self._grid_ban.SelectRow(row)
                         self._GridBan_UpdateFields(row)
         event.Skip()
-    
+
     def _GridBan_OnPrint(self, event):
         self.BanDesPrint(banfields, self.rsban, 'Lista banche anagrafica')
         event.Skip()
-    
+
     def _GridBan_TestWarning(self, row):
         label = ""
         ctr = self.FindWindowById(wdr.ID_BANCAWARNING)
@@ -1491,25 +1491,25 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
         ctr.SetLabel(label)
 
     def _GridDes_Init(self):
-        
+
         cn = self.FindWindowByName
-        
+
         #costruzione griglia destinatari del cliente/fornitore
         parent = cn('des_panelgrid')
-        
+
         _STR = gl.GRID_VALUE_STRING
         _CHK = gl.GRID_VALUE_BOOL+":1,0"
-        
+
         cols = (( 50, (RSDES_CODICE,   "Cod.",      _STR, True )),
                 (120, (RSDES_DESCRIZ,  "Destinaz.", _STR, True )),
                 ( -1, (RSDES_PREF,     "Pref",      _CHK, True )),
                 (  1, (RSDES_ID,       "#des",      _STR, False)),
             )
-        
+
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
-        
-        grid = dbglib.DbGridColoriAlternati(parent, -1, 
+
+        grid = dbglib.DbGridColoriAlternati(parent, -1,
                                             size=parent.GetClientSizeTuple())
         grid.SetData(self.rsdes, colmap, canEdit=True)
         grid.SetCellDynAttr(self._GridDes_GetAttr)
@@ -1519,10 +1519,10 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
                            ('des_butdel', self._GridDes_OnDelete),
                            ('des_butlst', self._GridDes_OnPrint),):
             self.Bind(wx.EVT_BUTTON, func, cn(name))
-        
+
         map(lambda c:\
             grid.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
-        
+
         grid.SetFitColumn(1)
         grid.AutoSizeColumns()
         sz = wx.FlexGridSizer(1,0,0,0)
@@ -1532,9 +1532,9 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
         parent.SetSizer(sz)
         sz.SetSizeHints(parent)
         self._grid_des = grid
-        
+
         self._des_updating = False
-        
+
         t = bt.tabelle[bt.TABSETUP_TABLE_DESTIN][2] #struttura tabella destinatari
         for name in desfields:
             c = cn('des_%s' % name)
@@ -1542,7 +1542,28 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
                 n = aw.awu.ListSearch(t, lambda x: x[bt.TABSETUP_COLUMNNAME] == name)
                 if hasattr(c, 'SetMaxLength'):
                     c.SetMaxLength(t[n][bt.TABSETUP_COLUMNLENGTH])
-                self.Bind(wx.EVT_TEXT, self._GridDes_OnDestinChanged, c)
+
+                for i in ['CodiceFiscaleEntryCtrl' ,
+                          'FileEntryCtrl' ,
+                          'FolderEntryCtrl' ,
+                          'FullPathFileEntryCtrl' ,
+                          'HttpEntryCtrl' ,
+                          'MailEntryCtrl' ,
+                          'PartitaIvaEntryCtrl' ,
+                          'PhoneEntryCtrl']:
+                    if isinstance(c, getattr(awc.controls.entries, i )):
+                        c.GetChildren()[0].Bind(wx.EVT_TEXT, self._GridDes_OnDestinChanged)
+                if isinstance(c, wx.TextCtrl):
+                    self.Bind(wx.EVT_TEXT, self._GridDes_OnDestinChanged, c)
+                elif isinstance(c, awc.controls.datectrl.DateCtrl):
+                    self.Bind(EVT_DATECHANGED, self._GridDes_OnDestinChanged, c)
+                elif isinstance(c, wx.CheckBox):
+                    self.Bind(wx.EVT_CHECKBOX, self._GridDes_OnDestinChanged, c)
+                elif isinstance(c, awc.controls.linktable.LinkTable):
+                    self.Bind(EVT_LINKTABCHANGED, self._GridDes_OnDestinChanged, c)
+                #===============================================================
+                # self.Bind(wx.EVT_TEXT, self._GridDes_OnDestinChanged, c)
+                #===============================================================
 
     def _GridDes_OnDestinChanged(self, event):
         row = self._grid_des.GetSelectedRows()[0]
@@ -1550,28 +1571,35 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
             return
         obj = event.GetEventObject()
         name = obj.GetName()
-        if name.startswith('des_'):
-            name = name[4:]
-            if name in desfields:
-                col = desfields.index(name)
+        lProceed=name.startswith('des_')
+        if lProceed:
+            fieldName=name[4:]
+        else:
+            if len(obj.GetParent().GetChildren())>0:
+                ancestor=obj.GetParent().GetName()
+                lProceed=ancestor.startswith('des_')
+                fieldName=ancestor[4:]
+        if lProceed:
+            if fieldName in desfields:
+                col = desfields.index(fieldName)
                 self.rsdes[row][col] = obj.GetValue()
                 self._grid_des.Refresh()
                 self._GridDes_TestWarning(row)
                 self.SetDataChanged()
-    
+
     def _GridDes_GetAttr(self, row, col, rscol, attr=gl.GridCellAttr):
-        
+
         attr = dbglib.DbGridColoriAlternati.GetAttr(self._grid_des, row, col, rscol, attr)
         attr.SetReadOnly(True)
-        
+
         if 0<=row<len(self.rsdes):
             if not self._GridDes_IsOk(row):
                 #colorazione riga se dati errati
                 attr.SetTextColour(stdcolor.VALERR_FOREGROUND)
                 attr.SetBackgroundColour(stdcolor.VALERR_BACKGROUND)
-        
+
         return attr
-    
+
     def _GridDes_IsOk(self, row):
         valok = True
         if 0<=row<len(self.rsdes):
@@ -1583,7 +1611,7 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
                 if not valok:
                     break
         return valok
-    
+
     def _GridDes_AddNewRow(self):
         try:
             c = self.db_curs
@@ -1612,7 +1640,7 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
             None])#RSDES_PREF
         if len(self.rsdes) == 1:
             self.rsdes[0][RSDES_PREF] = 1
-    
+
     def _GridDes_OnSelected(self, event):
         row = event.GetRow()
         enable = 0<=row<len(self.rsdes)
@@ -1636,7 +1664,7 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
         self._des_updating = False
         self._GridDes_TestWarning(row)
         event.Skip()
-    
+
     def _GridDes_UpdateFields(self, row):
         if not 0 <= row < len(self.rsdes):
             return
@@ -1647,7 +1675,7 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
             c = cn(name)
             if c:
                 c.SetValue(r[col])
-    
+
     def _GridDes_EnableFields(self, enable=True):
         def cn(name):
             return self.FindWindowByName('des_%s'%name)
@@ -1655,7 +1683,7 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
             c = cn(name)
             if c:
                 c.Enable(enable)
-    
+
     def _GridDes_ResetFields(self):
         def cn(name):
             return self.FindWindowByName('des_%s'%name)
@@ -1663,7 +1691,7 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
             c = cn(name)
             if c:
                 c.SetValue(None)
-    
+
     def _GridDes_OnChanged(self, event):
         row = event.GetRow()
         if 0<=row<len(self.rsdes):
@@ -1671,7 +1699,7 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
             if desid is not None and not desid in self.rsdesmod:
                 self.rsdesmod.append(desid)
         self.SetDataChanged()
-    
+
     def _GridDes_OnCreate(self, event):
         self._GridDes_AddNewRow()
         self._grid_des.ResetView()
@@ -1708,11 +1736,11 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
                         self._grid_des.SelectRow(row)
                         self._GridDes_UpdateFields(row)
         event.Skip()
-    
+
     def _GridDes_OnPrint(self, event):
         self.BanDesPrint(desfields, self.rsdes, 'Lista destinazioni anagrafica')
         event.Skip()
-    
+
     def _GridDes_TestWarning(self, row):
         label = ""
         ctr = self.FindWindowById(wdr.ID_DESTWARNING)
@@ -1729,7 +1757,7 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
                     missing.append(err)
             label = "Manca: " + ", ".join(missing)
         ctr.SetLabel(label)
-    
+
     def BanDesPrint(self, fields, rs, rptname):
         cols = []
         for col in 'codice descriz indirizzo cap citta prov codfisc nazione piva'.split():
@@ -1742,7 +1770,7 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
         db.SetRecordset(rs)
         db.anag = anag
         rpt.Report(self, db, rptname)
-    
+
     def GetSqlFilterSearch(self):
         cn = self.FindWindowByName
         cmd, par = _PdcRelPanel.GetSqlFilterSearch(self)
@@ -1760,9 +1788,9 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
             cmd = lt.OrApp(cmd, "anag.codfisc=%s")
             par.append(val)
         return cmd, par
-    
+
     def GetSearchResultsGrid(self, parent):
-        return CliForSearchResultsGrid(parent, ga.ID_SEARCHGRID, 
+        return CliForSearchResultsGrid(parent, ga.ID_SEARCHGRID,
                                        self.db_tabname, self.GetSqlColumns())
 
 
@@ -1770,7 +1798,7 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
 
 
 class CliForSearchResultsGrid(ga.SearchResultsGrid):
-    
+
     def GetDbColumns(self):
         _STR = gl.GRID_VALUE_STRING
         cn = lambda x: self.db._GetFieldIndex(x)
@@ -1790,6 +1818,6 @@ class CliForSearchResultsGrid(ga.SearchResultsGrid):
             (200, (cn('anag_email'),     "e-mail",          _STR, True )),
             (  1, (cn('pdc_id'),         "#pdc",            _STR, True )),
         )
-    
+
     def SetColumn2Fit(self):
         self.SetFitColumn(2)
