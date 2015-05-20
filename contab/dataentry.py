@@ -95,7 +95,9 @@ class ContabPanel(aw.Panel,\
     Data entry di contabilità.
     """
     
-    wrkDatReg=None
+    wrkDatReg       =None
+    consensoEspresso=None
+
     
     def __init__(self, *args, **kwargs):
         
@@ -647,6 +649,8 @@ class ContabPanel(aw.Panel,\
             headw = self.RegWriteHead()
             if headw:
                 if newreg:
+                    if not self.wrkDatReg==self.reg_datreg:
+                        self.consensoEspresso=False
                     self.wrkDatReg=self.reg_datreg
                 
                 bodyw = self.RegWriteBody()
@@ -1063,8 +1067,20 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
         if self.reg_datreg is None:
             if self.wrkDatReg is None:
                 self.reg_datreg = Esercizio.dataElab
+                self.consensoEspresso=False
             else:
-                self.reg_datreg = self.wrkDatReg
+                if not self.consensoEspresso and not self.wrkDatReg==Esercizio.dataElab:
+                    if aw.awu.MsgDialog(self, 
+                                          'Attenzione!\nSi desidera continuare a registrare in data %s.' % self.wrkDatReg.strftime('%d-%m-%Y'),
+                                          style = wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT) == wx.ID_NO:
+                        self.reg_datreg = Esercizio.dataElab
+                    else:
+                        self.reg_datreg = self.wrkDatReg
+                        self.consensoEspresso=True
+                else:
+                    self.reg_datreg = self.wrkDatReg
+                    
+
         self.ReadProgr()
         
         self.reg_esercizio = Esercizio.year #automatizzare
