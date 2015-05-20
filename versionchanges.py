@@ -28,6 +28,12 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
+    ('1.5.08', dt.Date(2015, 5, 20), (
+         ("BET1176",
+         """In fase di inserimento registrazioni contabili viene proposta come data di registrazione l'ultima data di registrazione utilizzata
+         nella sessione di registrazione."""),
+        ),),
+
     ('1.5.07', dt.Date(2015, 5, 15), (
          ("BUG1152",
          """Corretto controllo Partita Iva che in alcune situazioni particolari segnalava errate partite Iva valide."""),

@@ -646,7 +646,8 @@ class ContabPanel(aw.Panel,\
             newreg = (self.reg_id is None)
             headw = self.RegWriteHead()
             if headw:
-                self.wrkDatReg=self.reg_datreg
+                if newreg:
+                    self.wrkDatReg=self.reg_datreg
                 
                 bodyw = self.RegWriteBody()
                 if bodyw:
