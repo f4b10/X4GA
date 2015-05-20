@@ -95,6 +95,8 @@ class ContabPanel(aw.Panel,\
     Data entry di contabilità.
     """
     
+    wrkDatReg=None
+    
     def __init__(self, *args, **kwargs):
         
         aw.Panel.__init__(self, *args, **kwargs)
@@ -644,6 +646,8 @@ class ContabPanel(aw.Panel,\
             newreg = (self.reg_id is None)
             headw = self.RegWriteHead()
             if headw:
+                self.wrkDatReg=self.reg_datreg
+                
                 bodyw = self.RegWriteBody()
                 if bodyw:
                     if self._cfg_id_tipevent and self._cfg_event_msg:
@@ -1056,8 +1060,10 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
     def DefaultValues(self):
         
         if self.reg_datreg is None:
-            self.reg_datreg = Esercizio.dataElab
-        
+            if self.wrkDatReg is None:
+                self.reg_datreg = Esercizio.dataElab
+            else:
+                self.reg_datreg = self.wrkDatReg
         self.ReadProgr()
         
         self.reg_esercizio = Esercizio.year #automatizzare
