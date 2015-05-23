@@ -108,7 +108,8 @@ class RefIntegrityDialog(wx.Dialog):
 
     def OnRefSelection( self, event ):
         dett = self.FindWindowById(wdr.ID_LISTDET)
-        n = self.FindWindowById(wdr.ID_LISTREF).GetSelectedItemCount()
+        #n = self.FindWindowById(wdr.ID_LISTREF).GetSelectedItemCount()
+        n= self.FindWindowById(wdr.ID_LISTREF).GetNextItem(-1, wx.LIST_NEXT_ALL, wx.LIST_STATE_SELECTED) +1
         if n >= 1 and n <= len(self.ref):
             tab, _, idf, _ = self.ref[n-1]
             idr = self.recid
