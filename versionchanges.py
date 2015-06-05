@@ -28,6 +28,13 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
+    ('1.5.10', dt.Date(2015, 6, 05), (
+         ("BET1179",
+         """Ottimizzata la gestione delle pagine aggiuntive su schede Clienti/Fornitori."""),
+         ("BET1178",
+         """Introdotta nuova classe specializzata nella gestione delle pagine aggiuntive di Clienti e Fornitori."""),
+        ),),
+
     ('1.5.09', dt.Date(2015, 6, 04), (
          ("BET1177",
          """Evidenzia Giroconti apertura su Gestione Bilanci,

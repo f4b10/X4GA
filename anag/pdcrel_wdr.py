@@ -263,17 +263,9 @@ def ClientiCardFunc( parent, call_fit = True, set_sizer = True ):
     CliForGrigliaPrezziFunc(item7, False)
     item4.AddPage( item7, "Griglia Prezzi" )
 
-    item8 = aw.Panel( item4, -1 ); item8.HelpBuilder_SetDir('anag.pdcrel_CliFor'); item8.SetName('CliForBanDesPage')
-    CliForBanFunc(item8, False)
-    item4.AddPage( item8, "Banche" )
-
-    item9 = wx.Panel( item4, -1 )
-    CliForDesFunc(item9, False)
-    item4.AddPage( item9, "Destinazioni" )
-
-    item10 = aw.Panel( item4, -1 ); item10.HelpBuilder_SetDir('anag.pdcrel'); item10.SetName('BilClassPage')
-    DatiContabFunc(item10, False)
-    item4.AddPage( item10, "Dati contabili" )
+    item8 = aw.Panel( item4, -1 ); item8.HelpBuilder_SetDir('anag.pdcrel'); item8.SetName('BilClassPage')
+    DatiContabFunc(item8, False)
+    item4.AddPage( item8, "Dati contabili" )
 
     item2.Add( item3, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 0 )
 
@@ -1539,21 +1531,13 @@ def FornitCardFunc( parent, call_fit = True, set_sizer = True ):
     CliForGrigliaPrezziFunc(item7, False)
     item4.AddPage( item7, "Griglia prezzi" )
 
-    item8 = aw.Panel( item4, -1 ); item8.HelpBuilder_SetDir('anag.pdcrel_CliFor'); item8.SetName('CliForBanDesPage')
-    CliForBanFunc(item8, False)
-    item4.AddPage( item8, "Banche" )
+    item8 = aw.Panel( item4, -1 ); item8.HelpBuilder_SetDir('anag.pdcrel'); item8.SetName('BilClassPage')
+    DatiContabFunc(item8, False)
+    item4.AddPage( item8, "Dati contabili" )
 
-    item9 = wx.Panel( item4, -1 )
-    CliForDesFunc(item9, False)
-    item4.AddPage( item9, "Destinazioni" )
-
-    item10 = aw.Panel( item4, -1 ); item10.HelpBuilder_SetDir('anag.pdcrel'); item10.SetName('BilClassPage')
-    DatiContabFunc(item10, False)
-    item4.AddPage( item10, "Dati contabili" )
-
-    item11 = aw.Panel( item4, -1 ); item11.SetName('PdcPrefPage')
-    FornitPdcPrefFunc(item11, False)
-    item4.AddPage( item11, "Sottoconti preferiti" )
+    item9 = aw.Panel( item4, -1 ); item9.SetName('PdcPrefPage')
+    FornitPdcPrefFunc(item9, False)
+    item4.AddPage( item9, "Sottoconti preferiti" )
 
     item2.Add( item3, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 0 )
 

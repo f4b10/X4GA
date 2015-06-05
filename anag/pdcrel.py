@@ -21,6 +21,9 @@
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
 
+from awc.controls.linktable import EVT_LINKTABCHANGED
+from awc.controls.datectrl import EVT_DATECHANGED
+
 import wx
 from wx.lib import masked
 
@@ -761,27 +764,28 @@ RSBAN_PREF    = 12
 #campi della tabella banche del cliente
 banfields = 'id codice descriz paese ciniban cinbban abi cab numcc bban iban bic pref'.split()
 
-
-#costanti per recordset destinatari del cliente/fornitore
-RSDES_ID       =  0
-RSDES_CODICE   =  1
-RSDES_DESCRIZ  =  2
-RSDES_INDIR    =  3
-RSDES_CAP      =  4
-RSDES_CITTA    =  5
-RSDES_PROV     =  6
-RSDES_NUMTEL   =  7
-RSDES_NUMTEL2  =  8
-RSDES_NUMCEL   =  9
-RSDES_NUMFAX   = 10
-RSDES_EMAIL    = 11
-RSDES_CONTATTO = 12
-RSDES_PREF     = 13
-
-
-#campi della tabella destinatari del cliente
-desfields = 'id codice descriz indirizzo cap citta prov numtel numtel2 numcel numfax email contatto pref'.split()
-
+#===============================================================================
+#
+# #costanti per recordset destinatari del cliente/fornitore
+# RSDES_ID       =  0
+# RSDES_CODICE   =  1
+# RSDES_DESCRIZ  =  2
+# RSDES_INDIR    =  3
+# RSDES_CAP      =  4
+# RSDES_CITTA    =  5
+# RSDES_PROV     =  6
+# RSDES_NUMTEL   =  7
+# RSDES_NUMTEL2  =  8
+# RSDES_NUMCEL   =  9
+# RSDES_NUMFAX   = 10
+# RSDES_EMAIL    = 11
+# RSDES_CONTATTO = 12
+# RSDES_PREF     = 13
+#
+#
+# #campi della tabella destinatari del cliente
+# desfields = 'id codice descriz indirizzo cap citta prov numtel numtel2 numcel numfax email contatto pref'.split()
+#===============================================================================
 
 class GrigliaPrezziAttualiPanel(wx.Panel):
 
@@ -912,8 +916,8 @@ class DatiBancariMixin(object):
 
 class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
 
-    _GridBan_OnCalcolaBBAN = DatiBancariMixin.OnCalcolaBBAN
-    _GridBan_OnCalcolaIBAN = DatiBancariMixin.OnCalcolaIBAN
+    #_GridBan_OnCalcolaBBAN = DatiBancariMixin.OnCalcolaBBAN
+    #_GridBan_OnCalcolaIBAN = DatiBancariMixin.OnCalcolaIBAN
 
     def __init__(self, *args, **kwargs):
 
@@ -945,10 +949,27 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
         self.loadrelated = False
         _PdcRelPanel.InitControls(self, *args, **kwargs)
         self.loadrelated = True
-        self._GridBan_Init()
-        self.LoadBanche()
-        self._GridDes_Init()
-        self.LoadDestin()
+
+        cn = self.FindWindowByName
+        nb = cn('workzone')
+        for i in range(0,nb.GetPageCount()):
+            if nb.GetPageText(i)=='Impostazioni Commerciali':
+                break
+
+        i=i+1
+        import pageBanche
+        self.banchePanel=pageBanche.BanchePanel(nb,  mainPanel=self )
+        nb.InsertPage(i, self.banchePanel, 'Banche')
+
+        i=i+1
+        import pageDestinazioni
+        self.destinPanel=pageDestinazioni.DestinPanel(nb,  mainPanel=self )
+        nb.InsertPage(i, self.destinPanel, 'Destinazioni')
+
+        self.InitControls_PersonalPage()
+
+    def InitControls_PersonalPage(self):
+        pass
 
     def InitAnagToolbar(self, parent):
         out = ga.AnagToolbar(parent, -1, hide_ssv=False)
@@ -1012,13 +1033,23 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
     def UpdateDataControls( self, recno ):
         _PdcRelPanel.UpdateDataControls( self, recno )
         if self.loadrelated:
-            self.LoadBanche()
-            self._grid_ban.SetGridCursor(0,0)
-            self.LoadDestin()
-            self._grid_des.SetGridCursor(0,0)
+
+            for panel in [self.banchePanel, self.destinPanel]:
+                try:
+                    panel.UpdateDataControls()
+                except:
+                    pass
+
+            self.UpdateDataControls_PersonalPage()
+
             if self.gridgrip is not None:
                 self.LoadGriglia()
                 self.gridgrip.SetGridCursor(0,0)
+
+
+    def UpdateDataControls_PersonalPage(self):
+        pass
+
 
     def UpdateDataRecord( self ):
 
@@ -1085,27 +1116,23 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
             self.loadrelated = True
 
             if written:
-                self.WriteBanche(); self.LoadBanche()
-                self.WriteDestin(); self.LoadDestin()
                 self.WriteGriglia(); self.LoadGriglia()
 
+                for panel in [self.banchePanel, self.destinPanel]:
+                    try:
+                        panel.UpdateDataRecord()
+                    except:
+                        pass
+
+
+                self.UpdateDataRecord_PersonalPage()
         else:
             written = False
 
         return written
 
-    def WriteBanche(self):
-        if len(self.rsban)>=2:
-            try:
-                n = aw.awu.ListSearch(self.rsban, lambda x: x[RSBAN_PREF] == 1)
-            except IndexError:
-                self.rsban[-1][RSBAN_PREF] = 1
-        return self.WriteRelated(bt.TABNAME_BANCF, banfields, self.rsban,\
-                                 self.rsbannew, self.rsbanmod, self.rsbandel)
-
-    def WriteDestin(self):
-        return self.WriteRelated(bt.TABNAME_DESTIN, desfields, self.rsdes,\
-                                 self.rsdesnew, self.rsdesmod, self.rsdesdel)
+    def UpdateDataRecord_PersonalPage(self):
+        pass
 
     def WriteGriglia(self):
         if (self.pdctipo == "C" and bt.MAGATTGRIP) or (self.pdctipo == "F" and bt.MAGATTGRIF):
@@ -1165,86 +1192,96 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
         recid = self.db_recid
         deleted = _PdcRelPanel.DeleteDataRecord(self)
         if deleted:
-            try:
-                cmdDelDest =\
-"""DELETE FROM %s WHERE id_pdc=%%s""" % bt.TABNAME_DESTIN
-                cmdDelBanche =\
-"""DELETE FROM %s WHERE id_pdc=%%s""" % bt.TABNAME_BANCF
-                self.db_curs.execute(cmdDelDest, recid)
-                self.db_curs.execute(cmdDelBanche, recid)
-            except MySQLdb.Error, e:
-                MsgDialogDbError(self, e)
-            except Exception, e:
-                MsgDialogDbError(self, e)
+            for panel in [self.banchePanel, self.destinPanel]:
+                try:
+                    panel.DeleteDataRecord(recid)
+                except:
+                    pass
+        self.DeleteDataRecord_PersonalPage(recid)
+
         return deleted
 
-    def LoadBanche(self):
-        if self.db_recid is None:
-            rsban = ()
-        else:
-            cmd =\
-"""SELECT """
-            for field in banfields:
-                cmd += "b.%s, " % field
-            cmd = cmd[:-2]+" "+\
-"""FROM %s AS b WHERE b.id_pdc=%%s """\
-"""ORDER BY b.codice, b.descriz """ % bt.TABNAME_BANCF
-            try:
-                self.db_curs.execute(cmd, self.db_recid)
-                rsban = self.db_curs.fetchall()
-                void = False
-            except MySQLdb.Error, e:
-                MsgDialogDbError(self, e)
-            except Exception, e:
-                pass
-        del self.rsban[:]
-        for n in range(len(rsban)):
-            self.rsban.append(list(rsban[n]))
-        self._grid_ban.ResetView()
-        del self.rsbandel[:]
-        del self.rsbanmod[:]
-        del self.rsbannew[:]
-        if len(self.rsban)>0:
-            self._grid_ban.MakeCellVisible(0,0)
-            self._grid_ban.SetGridCursor(0,0)
-            self._grid_ban.SelectRow(0)
-            self._ban_updating = True
-            self._GridBan_UpdateFields(0)
-            self._ban_updating = False
+    def DeleteDataRecord_PersonalPage( self, recid ):
+        #=======================================================================
+        # Metodo richiamato alla cancellazione delaa anagrafica
+        #=======================================================================
+        pass
 
-    def LoadDestin(self):
-        if self.db_recid is None:
-            rsdes = ()
-        else:
-            cmd =\
-"""SELECT """
-            for field in desfields:
-                cmd += "d.%s, " % field
-            cmd = cmd[:-2]+" "+\
-"""FROM %s AS d WHERE d.id_pdc=%%s """\
-"""ORDER BY d.codice, d.codice""" % bt.TABNAME_DESTIN
-            try:
-                self.db_curs.execute(cmd, self.db_recid)
-                rsdes = self.db_curs.fetchall()
-                void = False
-            except MySQLdb.Error, e:
-                MsgDialogDbError(self, e)
-            except Exception, e:
-                pass
-        del self.rsdes[:]
-        for n in range(len(rsdes)):
-            self.rsdes.append(list(rsdes[n]))
-        self._grid_des.ResetView()
-        del self.rsdesdel[:]
-        del self.rsdesmod[:]
-        del self.rsdesnew[:]
-        if len(self.rsdes)>0:
-            self._grid_des.MakeCellVisible(0,0)
-            self._grid_des.SetGridCursor(0,0)
-            self._grid_des.SelectRow(0)
-            self._des_updating = True
-            self._GridDes_UpdateFields(0)
-            self._des_updating = False
+
+
+
+
+#===============================================================================
+#     def LoadBanche(self):
+#         if self.db_recid is None:
+#             rsban = ()
+#         else:
+#             cmd =\
+# """SELECT """
+#             for field in banfields:
+#                 cmd += "b.%s, " % field
+#             cmd = cmd[:-2]+" "+\
+# """FROM %s AS b WHERE b.id_pdc=%%s """\
+# """ORDER BY b.codice, b.descriz """ % bt.TABNAME_BANCF
+#             try:
+#                 self.db_curs.execute(cmd, self.db_recid)
+#                 rsban = self.db_curs.fetchall()
+#                 void = False
+#             except MySQLdb.Error, e:
+#                 MsgDialogDbError(self, e)
+#             except Exception, e:
+#                 pass
+#         del self.rsban[:]
+#         for n in range(len(rsban)):
+#             self.rsban.append(list(rsban[n]))
+#         self._grid_ban.ResetView()
+#         del self.rsbandel[:]
+#         del self.rsbanmod[:]
+#         del self.rsbannew[:]
+#         if len(self.rsban)>0:
+#             self._grid_ban.MakeCellVisible(0,0)
+#             self._grid_ban.SetGridCursor(0,0)
+#             self._grid_ban.SelectRow(0)
+#             self._ban_updating = True
+#             self._GridBan_UpdateFields(0)
+#             self._ban_updating = False
+#===============================================================================
+
+#===============================================================================
+#     def LoadDestin(self):
+#         if self.db_recid is None:
+#             rsdes = ()
+#         else:
+#             cmd =\
+# """SELECT """
+#             for field in desfields:
+#                 cmd += "d.%s, " % field
+#             cmd = cmd[:-2]+" "+\
+# """FROM %s AS d WHERE d.id_pdc=%%s """\
+# """ORDER BY d.codice, d.codice""" % bt.TABNAME_DESTIN
+#             try:
+#                 self.db_curs.execute(cmd, self.db_recid)
+#                 rsdes = self.db_curs.fetchall()
+#                 void = False
+#             except MySQLdb.Error, e:
+#                 MsgDialogDbError(self, e)
+#             except Exception, e:
+#                 pass
+#         del self.rsdes[:]
+#         for n in range(len(rsdes)):
+#             self.rsdes.append(list(rsdes[n]))
+#         self._grid_des.ResetView()
+#         del self.rsdesdel[:]
+#         del self.rsdesmod[:]
+#         del self.rsdesnew[:]
+#         if len(self.rsdes)>0:
+#             self._grid_des.MakeCellVisible(0,0)
+#             self._grid_des.SetGridCursor(0,0)
+#             self._grid_des.SelectRow(0)
+#             self._des_updating = True
+#             self._GridDes_UpdateFields(0)
+#             self._des_updating = False
+#===============================================================================
 
     def LoadGriglia(self):
         if self.gridgrip is not None:
@@ -1254,509 +1291,522 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
             self.gridgrip.ChangeData(gri.GetRecordset())
             self.gridgrip.SetPdcId(id_pdcgrp)
 
-    def _GridBan_Init(self):
+#===============================================================================
+#     def _GridBan_Init(self):
+#
+#         cn = self.FindWindowByName
+#
+#         #costruzione griglia banche del cliente/fornitore
+#         parent = cn('ban_panelgrid')
+#
+#         _STR = gl.GRID_VALUE_STRING
+#         _CHK = gl.GRID_VALUE_BOOL+":1,0"
+#
+#         cols = (( 50, (RSBAN_CODICE,  "Cod.",   _STR, True )),
+#                 (120, (RSBAN_DESCRIZ, "Banca",  _STR, True )),
+#                 ( -1, (RSBAN_PREF,    "Pref",   _CHK, True )),
+#                 (  1, (RSBAN_ID,      "#ban",   _STR, False)),
+#             )
+#
+#         colmap  = [c[1] for c in cols]
+#         colsize = [c[0] for c in cols]
+#
+#         grid = dbglib.DbGridColoriAlternati(parent, -1,
+#                                             size=parent.GetClientSizeTuple())
+#         grid.SetData(self.rsban, colmap, canEdit=True)
+#         grid.SetCellDynAttr(self._GridBan_GetAttr)
+#         grid.Bind(gl.EVT_GRID_SELECT_CELL, self._GridBan_OnSelected)
+#         grid.Bind(gl.EVT_GRID_CELL_CHANGE, self._GridBan_OnChanged)
+#         for name, func in (('ban_butnew', self._GridBan_OnCreate),
+#                            ('ban_butdel', self._GridBan_OnDelete),
+#                            ('ban_butlst', self._GridBan_OnPrint),):
+#             self.Bind(wx.EVT_BUTTON, func, cn(name))
+#
+#         map(lambda c:\
+#             grid.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
+#
+#         grid.SetFitColumn(1)
+#         grid.AutoSizeColumns()
+#         sz = wx.FlexGridSizer(1,0,0,0)
+#         sz.AddGrowableCol( 0 )
+#         sz.AddGrowableRow( 0 )
+#         sz.Add(grid, 0, wx.GROW|wx.ALL, 0)
+#         parent.SetSizer(sz)
+#         sz.SetSizeHints(parent)
+#         self._grid_ban = grid
+#
+#         self._ban_updating = False
+#
+#         t = bt.tabelle[bt.TABSETUP_TABLE_BANCF][2] #struttura tabella banche cli/for
+#         for name in banfields:
+#             c = cn('ban_%s' % name)
+#             if c:
+#                 n = aw.awu.ListSearch(t, lambda x: x[bt.TABSETUP_COLUMNNAME] == name)
+#                 if hasattr(c, 'SetMaxLength'):
+#                     c.SetMaxLength(t[n][bt.TABSETUP_COLUMNLENGTH])
+#                 self.Bind(wx.EVT_TEXT, self._GridBan_OnBancaChanged, c)
+#
+#         self.Bind(wx.EVT_BUTTON, self._GridBan_OnCalcolaBBAN, cn('ban_butcalc_bban'))
+#         self.Bind(wx.EVT_BUTTON, self._GridBan_OnCalcolaIBAN, cn('ban_butcalc_iban'))
+#
+#     def _GridBan_OnBancaChanged(self, event):
+#         row = self._grid_ban.GetSelectedRows()[0]
+#         if self._ban_updating or not 0 <= row < len(self.rsban):
+#             return
+#         obj = event.GetEventObject()
+#         name = obj.GetName()
+#         if name.startswith('ban_'):
+#             name = name[4:]
+#             if name in banfields:
+#                 col = banfields.index(name)
+#                 self.rsban[row][col] = obj.GetValue()
+#                 self._grid_ban.Refresh()
+#                 self._GridBan_TestWarning(row)
+#                 self.SetDataChanged()
+#
+#     def _GridBan_GetAttr(self, row, col, rscol, attr=gl.GridCellAttr):
+#
+#         attr = dbglib.DbGridColoriAlternati.GetAttr(self._grid_ban, row, col, rscol, attr)
+#         attr.SetReadOnly(True)
+#
+#         if 0<=row<len(self.rsban):
+#             if not self._GridBan_IsOk(row):
+#                 #colorazione riga se dati errati
+#                 attr.SetTextColour(stdcolor.VALERR_FOREGROUND)
+#                 attr.SetBackgroundColour(stdcolor.VALERR_BACKGROUND)
+#
+#         return attr
+#
+#     def _GridBan_IsOk(self, row):
+#         valok = True
+#         if 0<=row<len(self.rsban):
+#             ban = self.rsban[row]
+#             for c in (RSBAN_CODICE, RSBAN_DESCRIZ, RSBAN_ABI, RSBAN_CAB):
+#                 valok = valok and ban[c] is not None and len(ban[c].strip())>0
+#                 if not valok:
+#                     break
+#         return valok
+#
+#     def _GridBan_AddNewRow(self):
+#         try:
+#             c = self.db_curs
+#             c.execute("SELECT MAX(0+CODICE) FROM %s ban WHERE ban.id_pdc=%s"\
+#                       % (bt.TABNAME_BANCF, self.db_recid))
+#             rs = c.fetchone()
+#             lastab = rs[0] or 0
+#             lasmem = max([int(x[RSBAN_CODICE] or '') for x in self.rsban])
+#             newc = str(int(max(lastab, lasmem)+1))
+#         except:
+#             newc = '1'
+#         self.rsban.append([\
+#             None, #RSBAN_ID
+#             newc, #RSBAN_CODICE
+#             None, #RSBAN_DESCRIZ
+#             None, #RSBAN_PAESE
+#             None, #RSBAN_CINIBAN
+#             None, #RSBAN_CINBBAN
+#             None, #RSBAN_ABI
+#             None, #RSBAN_CAB
+#             None, #RSBAN_NUMCC
+#             None, #RSBAN_BBAN
+#             None, #RSBAN_IBAN
+#             None, #RSBAN_BIC
+#             None])#RSBAN_PREF
+#         if len(self.rsban) == 1:
+#             self.rsban[0][RSBAN_PREF] = 1
+#
+#     def _GridBan_OnSelected(self, event):
+#         row = event.GetRow()
+#         enable = 0<=row<len(self.rsban)
+#         if enable:
+#             if event.GetCol() == 2: #RSBAN_PREF
+#                 r = self.rsban[row]
+#                 v = r[RSBAN_PREF] = 1-(r[RSBAN_PREF] or 0)
+#                 if v:
+#                     for nr in range(len(self.rsban)):
+#                         if nr != row:
+#                             self.rsban[nr][RSBAN_PREF] = 0
+#                 self._grid_ban.ResetView()
+#                 self.SetDataChanged()
+#         else:
+#             self._GridBan_ResetFields()
+#         self._GridBan_EnableFields(enable)
+#         ctr = self.FindWindowById(wdr.ID_BTNBANCHEDEL)
+#         ctr.Enable(enable)
+#         self._ban_updating = True
+#         self._GridBan_UpdateFields(row)
+#         self._ban_updating = False
+#         self._GridBan_TestWarning(row)
+#         event.Skip()
+#
+#     def _GridBan_UpdateFields(self, row):
+#         if not 0 <= row < len(self.rsban):
+#             return
+#         r = self.rsban[row]
+#         def cn(name):
+#             return self.FindWindowByName('ban_%s'%name)
+#         for col, name in enumerate(banfields):
+#             c = cn(name)
+#             if c:
+#                 c.SetValue(r[col])
+#
+#     def _GridBan_EnableFields(self, enable=True):
+#         def cn(name):
+#             return self.FindWindowByName('ban_%s'%name)
+#         for col, name in enumerate(banfields+'butcalc_bban butcalc_iban'.split()):
+#             c = cn(name)
+#             if c:
+#                 c.Enable(enable)
+#
+#     def _GridBan_ResetFields(self):
+#         def cn(name):
+#             return self.FindWindowByName('ban_%s'%name)
+#         for col, name in enumerate(banfields):
+#             c = cn(name)
+#             if c:
+#                 c.SetValue(None)
+#
+#     def _GridBan_OnChanged(self, event):
+#         row = event.GetRow()
+#         if 0<=row<len(self.rsban):
+#             banid = self.rsban[row][RSBAN_ID]
+#             if banid is not None and not banid in self.rsbanmod:
+#                 self.rsbanmod.append(banid)
+#         self.SetDataChanged()
+#
+#     def _GridBan_OnCreate(self, event):
+#         self._GridBan_AddNewRow()
+#         self._grid_ban.ResetView()
+#         self._grid_ban.SetGridCursor(len(self.rsban)-1,1)
+#         self.FindWindowByName('ban_descriz').SetFocus()
+#
+#     def _GridBan_OnDelete(self, event):
+#         sr = self._grid_ban.GetSelectedRows()
+#         if sr:
+#             row = sr[-1]
+#             if 0 <= row < len(self.rsban):
+#                 banid = self.rsban[row][RSBAN_ID]
+#                 do = True
+#                 if banid is not None:
+#                     do = CheckRefIntegrity(self, self.db_curs, bt.TABSETUP_CONSTR_BANCF, banid)
+#                     if do:
+#                         if aw.awu.MsgDialog(self, "Confermi la cancellazione di questa banca?", style=wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT) != wx.ID_YES:
+#                             do = False
+#                     if do:
+#                         self.rsbandel.append(banid)
+#                 if do:
+#                     self._grid_ban.DeleteRows(row)
+#                     self._grid_ban.ResetView()
+#                     self.SetDataChanged()
+#                     if len(self.rsban) == 0:
+#                         self._GridBan_ResetFields()
+#                         self._GridBan_EnableFields(False)
+#                     else:
+#                         row = len(self.rsban)-1
+#                         self._grid_ban.MakeCellVisible(row,0)
+#                         self._grid_ban.SetGridCursor(row,0)
+#                         self._grid_ban.SelectRow(row)
+#                         self._GridBan_UpdateFields(row)
+#         event.Skip()
+#
+#     def _GridBan_OnPrint(self, event):
+#         self.BanDesPrint(banfields, self.rsban, 'Lista banche anagrafica')
+#         event.Skip()
+#
+#     def _GridBan_TestWarning(self, row):
+#         label = ""
+#         ctr = self.FindWindowById(wdr.ID_BANCAWARNING)
+#         if not self._GridBan_IsOk(row):
+#             missing = []
+#             for col, err in ((RSBAN_CODICE,  "codice"),\
+#                              (RSBAN_DESCRIZ, "descrizione"),\
+#                              (RSBAN_ABI,     "ABI"),\
+#                              (RSBAN_CAB,     "CAB")):
+#                 value = self.rsban[row][col]
+#                 if type(value) not in (str, unicode) or len(value.strip()) == 0:
+#                     missing.append(err)
+#             label = "Manca: " + ", ".join(missing)
+#         ctr.SetLabel(label)
+#===============================================================================
 
-        cn = self.FindWindowByName
-
-        #costruzione griglia banche del cliente/fornitore
-        parent = cn('ban_panelgrid')
-
-        _STR = gl.GRID_VALUE_STRING
-        _CHK = gl.GRID_VALUE_BOOL+":1,0"
-
-        cols = (( 50, (RSBAN_CODICE,  "Cod.",   _STR, True )),
-                (120, (RSBAN_DESCRIZ, "Banca",  _STR, True )),
-                ( -1, (RSBAN_PREF,    "Pref",   _CHK, True )),
-                (  1, (RSBAN_ID,      "#ban",   _STR, False)),
-            )
-
-        colmap  = [c[1] for c in cols]
-        colsize = [c[0] for c in cols]
-
-        grid = dbglib.DbGridColoriAlternati(parent, -1,
-                                            size=parent.GetClientSizeTuple())
-        grid.SetData(self.rsban, colmap, canEdit=True)
-        grid.SetCellDynAttr(self._GridBan_GetAttr)
-        grid.Bind(gl.EVT_GRID_SELECT_CELL, self._GridBan_OnSelected)
-        grid.Bind(gl.EVT_GRID_CELL_CHANGE, self._GridBan_OnChanged)
-        for name, func in (('ban_butnew', self._GridBan_OnCreate),
-                           ('ban_butdel', self._GridBan_OnDelete),
-                           ('ban_butlst', self._GridBan_OnPrint),):
-            self.Bind(wx.EVT_BUTTON, func, cn(name))
-
-        map(lambda c:\
-            grid.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
-
-        grid.SetFitColumn(1)
-        grid.AutoSizeColumns()
-        sz = wx.FlexGridSizer(1,0,0,0)
-        sz.AddGrowableCol( 0 )
-        sz.AddGrowableRow( 0 )
-        sz.Add(grid, 0, wx.GROW|wx.ALL, 0)
-        parent.SetSizer(sz)
-        sz.SetSizeHints(parent)
-        self._grid_ban = grid
-
-        self._ban_updating = False
-
-        t = bt.tabelle[bt.TABSETUP_TABLE_BANCF][2] #struttura tabella banche cli/for
-        for name in banfields:
-            c = cn('ban_%s' % name)
-            if c:
-                n = aw.awu.ListSearch(t, lambda x: x[bt.TABSETUP_COLUMNNAME] == name)
-                if hasattr(c, 'SetMaxLength'):
-                    c.SetMaxLength(t[n][bt.TABSETUP_COLUMNLENGTH])
-                self.Bind(wx.EVT_TEXT, self._GridBan_OnBancaChanged, c)
-
-        self.Bind(wx.EVT_BUTTON, self._GridBan_OnCalcolaBBAN, cn('ban_butcalc_bban'))
-        self.Bind(wx.EVT_BUTTON, self._GridBan_OnCalcolaIBAN, cn('ban_butcalc_iban'))
-
-    def _GridBan_OnBancaChanged(self, event):
-        row = self._grid_ban.GetSelectedRows()[0]
-        if self._ban_updating or not 0 <= row < len(self.rsban):
-            return
-        obj = event.GetEventObject()
-        name = obj.GetName()
-        if name.startswith('ban_'):
-            name = name[4:]
-            if name in banfields:
-                col = banfields.index(name)
-                self.rsban[row][col] = obj.GetValue()
-                self._grid_ban.Refresh()
-                self._GridBan_TestWarning(row)
-                self.SetDataChanged()
-
-    def _GridBan_GetAttr(self, row, col, rscol, attr=gl.GridCellAttr):
-
-        attr = dbglib.DbGridColoriAlternati.GetAttr(self._grid_ban, row, col, rscol, attr)
-        attr.SetReadOnly(True)
-
-        if 0<=row<len(self.rsban):
-            if not self._GridBan_IsOk(row):
-                #colorazione riga se dati errati
-                attr.SetTextColour(stdcolor.VALERR_FOREGROUND)
-                attr.SetBackgroundColour(stdcolor.VALERR_BACKGROUND)
-
-        return attr
-
-    def _GridBan_IsOk(self, row):
-        valok = True
-        if 0<=row<len(self.rsban):
-            ban = self.rsban[row]
-            for c in (RSBAN_CODICE, RSBAN_DESCRIZ, RSBAN_ABI, RSBAN_CAB):
-                valok = valok and ban[c] is not None and len(ban[c].strip())>0
-                if not valok:
-                    break
-        return valok
-
-    def _GridBan_AddNewRow(self):
-        try:
-            c = self.db_curs
-            c.execute("SELECT MAX(0+CODICE) FROM %s ban WHERE ban.id_pdc=%s"\
-                      % (bt.TABNAME_BANCF, self.db_recid))
-            rs = c.fetchone()
-            lastab = rs[0] or 0
-            lasmem = max([int(x[RSBAN_CODICE] or '') for x in self.rsban])
-            newc = str(int(max(lastab, lasmem)+1))
-        except:
-            newc = '1'
-        self.rsban.append([\
-            None, #RSBAN_ID
-            newc, #RSBAN_CODICE
-            None, #RSBAN_DESCRIZ
-            None, #RSBAN_PAESE
-            None, #RSBAN_CINIBAN
-            None, #RSBAN_CINBBAN
-            None, #RSBAN_ABI
-            None, #RSBAN_CAB
-            None, #RSBAN_NUMCC
-            None, #RSBAN_BBAN
-            None, #RSBAN_IBAN
-            None, #RSBAN_BIC
-            None])#RSBAN_PREF
-        if len(self.rsban) == 1:
-            self.rsban[0][RSBAN_PREF] = 1
-
-    def _GridBan_OnSelected(self, event):
-        row = event.GetRow()
-        enable = 0<=row<len(self.rsban)
-        if enable:
-            if event.GetCol() == 2: #RSBAN_PREF
-                r = self.rsban[row]
-                v = r[RSBAN_PREF] = 1-(r[RSBAN_PREF] or 0)
-                if v:
-                    for nr in range(len(self.rsban)):
-                        if nr != row:
-                            self.rsban[nr][RSBAN_PREF] = 0
-                self._grid_ban.ResetView()
-                self.SetDataChanged()
-        else:
-            self._GridBan_ResetFields()
-        self._GridBan_EnableFields(enable)
-        ctr = self.FindWindowById(wdr.ID_BTNBANCHEDEL)
-        ctr.Enable(enable)
-        self._ban_updating = True
-        self._GridBan_UpdateFields(row)
-        self._ban_updating = False
-        self._GridBan_TestWarning(row)
-        event.Skip()
-
-    def _GridBan_UpdateFields(self, row):
-        if not 0 <= row < len(self.rsban):
-            return
-        r = self.rsban[row]
-        def cn(name):
-            return self.FindWindowByName('ban_%s'%name)
-        for col, name in enumerate(banfields):
-            c = cn(name)
-            if c:
-                c.SetValue(r[col])
-
-    def _GridBan_EnableFields(self, enable=True):
-        def cn(name):
-            return self.FindWindowByName('ban_%s'%name)
-        for col, name in enumerate(banfields+'butcalc_bban butcalc_iban'.split()):
-            c = cn(name)
-            if c:
-                c.Enable(enable)
-
-    def _GridBan_ResetFields(self):
-        def cn(name):
-            return self.FindWindowByName('ban_%s'%name)
-        for col, name in enumerate(banfields):
-            c = cn(name)
-            if c:
-                c.SetValue(None)
-
-    def _GridBan_OnChanged(self, event):
-        row = event.GetRow()
-        if 0<=row<len(self.rsban):
-            banid = self.rsban[row][RSBAN_ID]
-            if banid is not None and not banid in self.rsbanmod:
-                self.rsbanmod.append(banid)
-        self.SetDataChanged()
-
-    def _GridBan_OnCreate(self, event):
-        self._GridBan_AddNewRow()
-        self._grid_ban.ResetView()
-        self._grid_ban.SetGridCursor(len(self.rsban)-1,1)
-        self.FindWindowByName('ban_descriz').SetFocus()
-
-    def _GridBan_OnDelete(self, event):
-        sr = self._grid_ban.GetSelectedRows()
-        if sr:
-            row = sr[-1]
-            if 0 <= row < len(self.rsban):
-                banid = self.rsban[row][RSBAN_ID]
-                do = True
-                if banid is not None:
-                    do = CheckRefIntegrity(self, self.db_curs, bt.TABSETUP_CONSTR_BANCF, banid)
-                    if do:
-                        if aw.awu.MsgDialog(self, "Confermi la cancellazione di questa banca?", style=wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT) != wx.ID_YES:
-                            do = False
-                    if do:
-                        self.rsbandel.append(banid)
-                if do:
-                    self._grid_ban.DeleteRows(row)
-                    self._grid_ban.ResetView()
-                    self.SetDataChanged()
-                    if len(self.rsban) == 0:
-                        self._GridBan_ResetFields()
-                        self._GridBan_EnableFields(False)
-                    else:
-                        row = len(self.rsban)-1
-                        self._grid_ban.MakeCellVisible(row,0)
-                        self._grid_ban.SetGridCursor(row,0)
-                        self._grid_ban.SelectRow(row)
-                        self._GridBan_UpdateFields(row)
-        event.Skip()
-
-    def _GridBan_OnPrint(self, event):
-        self.BanDesPrint(banfields, self.rsban, 'Lista banche anagrafica')
-        event.Skip()
-
-    def _GridBan_TestWarning(self, row):
-        label = ""
-        ctr = self.FindWindowById(wdr.ID_BANCAWARNING)
-        if not self._GridBan_IsOk(row):
-            missing = []
-            for col, err in ((RSBAN_CODICE,  "codice"),\
-                             (RSBAN_DESCRIZ, "descrizione"),\
-                             (RSBAN_ABI,     "ABI"),\
-                             (RSBAN_CAB,     "CAB")):
-                value = self.rsban[row][col]
-                if type(value) not in (str, unicode) or len(value.strip()) == 0:
-                    missing.append(err)
-            label = "Manca: " + ", ".join(missing)
-        ctr.SetLabel(label)
-
-    def _GridDes_Init(self):
-
-        cn = self.FindWindowByName
-
-        #costruzione griglia destinatari del cliente/fornitore
-        parent = cn('des_panelgrid')
-
-        _STR = gl.GRID_VALUE_STRING
-        _CHK = gl.GRID_VALUE_BOOL+":1,0"
-
-        cols = (( 50, (RSDES_CODICE,   "Cod.",      _STR, True )),
-                (120, (RSDES_DESCRIZ,  "Destinaz.", _STR, True )),
-                ( -1, (RSDES_PREF,     "Pref",      _CHK, True )),
-                (  1, (RSDES_ID,       "#des",      _STR, False)),
-            )
-
-        colmap  = [c[1] for c in cols]
-        colsize = [c[0] for c in cols]
-
-        grid = dbglib.DbGridColoriAlternati(parent, -1,
-                                            size=parent.GetClientSizeTuple())
-        grid.SetData(self.rsdes, colmap, canEdit=True)
-        grid.SetCellDynAttr(self._GridDes_GetAttr)
-        grid.Bind(gl.EVT_GRID_SELECT_CELL, self._GridDes_OnSelected)
-        grid.Bind(gl.EVT_GRID_CELL_CHANGE, self._GridDes_OnChanged)
-        for name, func in (('des_butnew', self._GridDes_OnCreate),
-                           ('des_butdel', self._GridDes_OnDelete),
-                           ('des_butlst', self._GridDes_OnPrint),):
-            self.Bind(wx.EVT_BUTTON, func, cn(name))
-
-        map(lambda c:\
-            grid.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
-
-        grid.SetFitColumn(1)
-        grid.AutoSizeColumns()
-        sz = wx.FlexGridSizer(1,0,0,0)
-        sz.AddGrowableCol( 0 )
-        sz.AddGrowableRow( 0 )
-        sz.Add(grid, 0, wx.GROW|wx.ALL, 0)
-        parent.SetSizer(sz)
-        sz.SetSizeHints(parent)
-        self._grid_des = grid
-
-        self._des_updating = False
-
-        t = bt.tabelle[bt.TABSETUP_TABLE_DESTIN][2] #struttura tabella destinatari
-        for name in desfields:
-            c = cn('des_%s' % name)
-            if c:
-                n = aw.awu.ListSearch(t, lambda x: x[bt.TABSETUP_COLUMNNAME] == name)
-                if hasattr(c, 'SetMaxLength'):
-                    c.SetMaxLength(t[n][bt.TABSETUP_COLUMNLENGTH])
-
-                for i in ['CodiceFiscaleEntryCtrl' ,
-                          'FileEntryCtrl' ,
-                          'FolderEntryCtrl' ,
-                          'FullPathFileEntryCtrl' ,
-                          'HttpEntryCtrl' ,
-                          'MailEntryCtrl' ,
-                          'PartitaIvaEntryCtrl' ,
-                          'PhoneEntryCtrl']:
-                    if isinstance(c, getattr(awc.controls.entries, i )):
-                        c.GetChildren()[0].Bind(wx.EVT_TEXT, self._GridDes_OnDestinChanged)
-                if isinstance(c, wx.TextCtrl):
-                    self.Bind(wx.EVT_TEXT, self._GridDes_OnDestinChanged, c)
-                elif isinstance(c, awc.controls.datectrl.DateCtrl):
-                    self.Bind(EVT_DATECHANGED, self._GridDes_OnDestinChanged, c)
-                elif isinstance(c, wx.CheckBox):
-                    self.Bind(wx.EVT_CHECKBOX, self._GridDes_OnDestinChanged, c)
-                elif isinstance(c, awc.controls.linktable.LinkTable):
-                    self.Bind(EVT_LINKTABCHANGED, self._GridDes_OnDestinChanged, c)
-                #===============================================================
-                # self.Bind(wx.EVT_TEXT, self._GridDes_OnDestinChanged, c)
-                #===============================================================
-
-    def _GridDes_OnDestinChanged(self, event):
-        row = self._grid_des.GetSelectedRows()[0]
-        if self._des_updating or not 0 <= row < len(self.rsdes):
-            return
-        obj = event.GetEventObject()
-        name = obj.GetName()
-        lProceed=name.startswith('des_')
-        if lProceed:
-            fieldName=name[4:]
-        else:
-            if len(obj.GetParent().GetChildren())>0:
-                ancestor=obj.GetParent().GetName()
-                lProceed=ancestor.startswith('des_')
-                fieldName=ancestor[4:]
-        if lProceed:
-            if fieldName in desfields:
-                col = desfields.index(fieldName)
-                self.rsdes[row][col] = obj.GetValue()
-                self._grid_des.Refresh()
-                self._GridDes_TestWarning(row)
-                self.SetDataChanged()
-
-    def _GridDes_GetAttr(self, row, col, rscol, attr=gl.GridCellAttr):
-
-        attr = dbglib.DbGridColoriAlternati.GetAttr(self._grid_des, row, col, rscol, attr)
-        attr.SetReadOnly(True)
-
-        if 0<=row<len(self.rsdes):
-            if not self._GridDes_IsOk(row):
-                #colorazione riga se dati errati
-                attr.SetTextColour(stdcolor.VALERR_FOREGROUND)
-                attr.SetBackgroundColour(stdcolor.VALERR_BACKGROUND)
-
-        return attr
-
-    def _GridDes_IsOk(self, row):
-        valok = True
-        if 0<=row<len(self.rsdes):
-            des = self.rsdes[row]
-            for c in (RSDES_CODICE, RSDES_DESCRIZ, RSDES_INDIR, RSDES_CITTA,\
-                      RSDES_CAP, RSDES_PROV):
-                valok = valok and des[c] is not None\
-                      and len(des[c].strip())>0
-                if not valok:
-                    break
-        return valok
-
-    def _GridDes_AddNewRow(self):
-        try:
-            c = self.db_curs
-            c.execute("SELECT MAX(0+CODICE) FROM %s des WHERE des.id_pdc=%s"\
-                      % (bt.TABNAME_DESTIN, self.db_recid))
-            rs = c.fetchone()
-            lastab = rs[0] or 0
-            lasmem = max([int(x[RSDES_CODICE] or '') for x in self.rsdes])
-            newc = str(int(max(lastab, lasmem)+1))
-        except:
-            newc = '1'
-        self.rsdes.append([\
-            None, #RSDES_ID
-            newc, #RSDES_CODICE
-            None, #RSDES_DESCRIZ
-            None, #RSDES_INDIR
-            None, #RSDES_CAP
-            None, #RSDES_CITTA
-            None, #RSDES_PROV
-            None, #RSDES_NUMTEL
-            None, #RSDES_NUMTEL2
-            None, #RSDES_NUMCEL
-            None, #RSDES_NUMFAX
-            None, #RSDES_EMAIL
-            None, #RSDES_CONTATTO
-            None])#RSDES_PREF
-        if len(self.rsdes) == 1:
-            self.rsdes[0][RSDES_PREF] = 1
-
-    def _GridDes_OnSelected(self, event):
-        row = event.GetRow()
-        enable = 0<=row<len(self.rsdes)
-        if enable:
-            if event.GetCol() == 2: #RSDES_PREF
-                r = self.rsdes[row]
-                v = r[RSDES_PREF] = 1-(r[RSDES_PREF] or 0)
-                if v:
-                    for nr in range(len(self.rsdes)):
-                        if nr != row:
-                            self.rsdes[nr][RSDES_PREF] = 0
-                self._grid_des.ResetView()
-                self.SetDataChanged()
-        else:
-            self._GridDes_ResetFields()
-        self._GridDes_EnableFields(enable)
-        ctr = self.FindWindowById(wdr.ID_BTNDESTDEL)
-        ctr.Enable(enable)
-        self._des_updating = True
-        self._GridDes_UpdateFields(row)
-        self._des_updating = False
-        self._GridDes_TestWarning(row)
-        event.Skip()
-
-    def _GridDes_UpdateFields(self, row):
-        if not 0 <= row < len(self.rsdes):
-            return
-        r = self.rsdes[row]
-        def cn(name):
-            return self.FindWindowByName('des_%s'%name)
-        for col, name in enumerate(desfields):
-            c = cn(name)
-            if c:
-                c.SetValue(r[col])
-
-    def _GridDes_EnableFields(self, enable=True):
-        def cn(name):
-            return self.FindWindowByName('des_%s'%name)
-        for col, name in enumerate(desfields):
-            c = cn(name)
-            if c:
-                c.Enable(enable)
-
-    def _GridDes_ResetFields(self):
-        def cn(name):
-            return self.FindWindowByName('des_%s'%name)
-        for col, name in enumerate(desfields):
-            c = cn(name)
-            if c:
-                c.SetValue(None)
-
-    def _GridDes_OnChanged(self, event):
-        row = event.GetRow()
-        if 0<=row<len(self.rsdes):
-            desid = self.rsdes[row][RSDES_ID]
-            if desid is not None and not desid in self.rsdesmod:
-                self.rsdesmod.append(desid)
-        self.SetDataChanged()
-
-    def _GridDes_OnCreate(self, event):
-        self._GridDes_AddNewRow()
-        self._grid_des.ResetView()
-        self._grid_des.SetGridCursor(len(self.rsdes)-1,1)
-        c = self.FindWindowByName('des_descriz')
-        c.SetValue(self.FindWindowByName('descriz').GetValue())
-        c.SetFocus()
-
-    def _GridDes_OnDelete(self, event):
-        sr = self._grid_des.GetSelectedRows()
-        if sr:
-            row = sr[-1]
-            if 0 <= row < len(self.rsdes):
-                desid = self.rsdes[row][RSDES_ID]
-                do = True
-                if desid is not None:
-                    do = CheckRefIntegrity(self, self.db_curs, bt.TABSETUP_CONSTR_DESTIN, desid)
-                    if do:
-                        if aw.awu.MsgDialog(self, "Confermi la cancellazione di questa destinazione?", style=wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT) != wx.ID_YES:
-                            do = False
-                    if do:
-                        self.rsdesdel.append(desid)
-                if do:
-                    self._grid_des.DeleteRows(row)
-                    self._grid_des.ResetView()
-                    self.SetDataChanged()
-                    if len(self.rsdes) == 0:
-                        self._GridDes_ResetFields()
-                        self._GridDes_EnableFields(False)
-                    else:
-                        row = len(self.rsdes)-1
-                        self._grid_des.MakeCellVisible(row,0)
-                        self._grid_des.SetGridCursor(row,0)
-                        self._grid_des.SelectRow(row)
-                        self._GridDes_UpdateFields(row)
-        event.Skip()
-
-    def _GridDes_OnPrint(self, event):
-        self.BanDesPrint(desfields, self.rsdes, 'Lista destinazioni anagrafica')
-        event.Skip()
-
-    def _GridDes_TestWarning(self, row):
-        label = ""
-        ctr = self.FindWindowById(wdr.ID_DESTWARNING)
-        if not self._GridDes_IsOk(row):
-            missing = []
-            for col, err in ((RSDES_CODICE,  "codice"),\
-                             (RSDES_DESCRIZ, "descrizione"),\
-                             (RSDES_INDIR,   "indirizzo"),\
-                             (RSDES_CAP,     "CAP"),\
-                             (RSDES_CITTA,   "città"),\
-                             (RSDES_PROV,    "prov.")):
-                value = self.rsdes[row][col]
-                if type(value) != str or len(value.strip()) == 0:
-                    missing.append(err)
-            label = "Manca: " + ", ".join(missing)
-        ctr.SetLabel(label)
+#===============================================================================
+#     def _GridDes_Init(self):
+#
+#         cn = self.FindWindowByName
+#
+#         #costruzione griglia destinatari del cliente/fornitore
+#         parent = cn('des_panelgrid')
+#
+#         _STR = gl.GRID_VALUE_STRING
+#         _CHK = gl.GRID_VALUE_BOOL+":1,0"
+#
+#         cols = (( 50, (RSDES_CODICE,   "Cod.",      _STR, True )),
+#                 (120, (RSDES_DESCRIZ,  "Destinaz.", _STR, True )),
+#                 ( -1, (RSDES_PREF,     "Pref",      _CHK, True )),
+#                 (  1, (RSDES_ID,       "#des",      _STR, False)),
+#             )
+#
+#         colmap  = [c[1] for c in cols]
+#         colsize = [c[0] for c in cols]
+#
+#         grid = dbglib.DbGridColoriAlternati(parent, -1,
+#                                             size=parent.GetClientSizeTuple())
+#         grid.SetData(self.rsdes, colmap, canEdit=True)
+#         grid.SetCellDynAttr(self._GridDes_GetAttr)
+#         grid.Bind(gl.EVT_GRID_SELECT_CELL, self._GridDes_OnSelected)
+#         grid.Bind(gl.EVT_GRID_CELL_CHANGE, self._GridDes_OnChanged)
+#         for name, func in (('des_butnew', self._GridDes_OnCreate),
+#                            ('des_butdel', self._GridDes_OnDelete),
+#                            ('des_butlst', self._GridDes_OnPrint),):
+#             self.Bind(wx.EVT_BUTTON, func, cn(name))
+#
+#         map(lambda c:\
+#             grid.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
+#
+#         grid.SetFitColumn(1)
+#         grid.AutoSizeColumns()
+#         sz = wx.FlexGridSizer(1,0,0,0)
+#         sz.AddGrowableCol( 0 )
+#         sz.AddGrowableRow( 0 )
+#         sz.Add(grid, 0, wx.GROW|wx.ALL, 0)
+#         parent.SetSizer(sz)
+#         sz.SetSizeHints(parent)
+#         self._grid_des = grid
+#
+#         self._des_updating = False
+#
+#         t = bt.tabelle[bt.TABSETUP_TABLE_DESTIN][2] #struttura tabella destinatari
+#         for name in desfields:
+#             c = cn('des_%s' % name)
+#             if c:
+#                 n = aw.awu.ListSearch(t, lambda x: x[bt.TABSETUP_COLUMNNAME] == name)
+#                 if hasattr(c, 'SetMaxLength'):
+#                     c.SetMaxLength(t[n][bt.TABSETUP_COLUMNLENGTH])
+#
+#                 for i in ['CodiceFiscaleEntryCtrl' ,
+#                           'FileEntryCtrl' ,
+#                           'FolderEntryCtrl' ,
+#                           'FullPathFileEntryCtrl' ,
+#                           'HttpEntryCtrl' ,
+#                           'MailEntryCtrl' ,
+#                           'PartitaIvaEntryCtrl' ,
+#                           'PhoneEntryCtrl']:
+#                     if isinstance(c, getattr(awc.controls.entries, i )):
+#                         c.GetChildren()[0].Bind(wx.EVT_TEXT, self._GridDes_OnDestinChanged)
+#                 if isinstance(c, wx.TextCtrl):
+#                     self.Bind(wx.EVT_TEXT, self._GridDes_OnDestinChanged, c)
+#                 elif isinstance(c, awc.controls.datectrl.DateCtrl):
+#                     self.Bind(EVT_DATECHANGED, self._GridDes_OnDestinChanged, c)
+#                 elif isinstance(c, wx.CheckBox):
+#                     self.Bind(wx.EVT_CHECKBOX, self._GridDes_OnDestinChanged, c)
+#                 elif isinstance(c, awc.controls.linktable.LinkTable):
+#                     self.Bind(EVT_LINKTABCHANGED, self._GridDes_OnDestinChanged, c)
+#                 #===============================================================
+#                 # self.Bind(wx.EVT_TEXT, self._GridDes_OnDestinChanged, c)
+#                 #===============================================================
+#
+#     def _GridDes_OnDestinChanged(self, event):
+#         row = self._grid_des.GetSelectedRows()[0]
+#         if self._des_updating or not 0 <= row < len(self.rsdes):
+#             return
+#         obj = event.GetEventObject()
+#         name = obj.GetName()
+#         lProceed=name.startswith('des_')
+#         if lProceed:
+#             fieldName=name[4:]
+#         else:
+#             if len(obj.GetParent().GetChildren())>0:
+#                 ancestor=obj.GetParent().GetName()
+#                 lProceed=ancestor.startswith('des_')
+#                 fieldName=ancestor[4:]
+#         if lProceed:
+#             if fieldName in desfields:
+#                 col = desfields.index(fieldName)
+#                 self.rsdes[row][col] = obj.GetValue()
+#                 self._grid_des.Refresh()
+#                 self._GridDes_TestWarning(row)
+#                 self.SetDataChanged()
+#
+#     def _GridDes_GetAttr(self, row, col, rscol, attr=gl.GridCellAttr):
+#
+#         attr = dbglib.DbGridColoriAlternati.GetAttr(self._grid_des, row, col, rscol, attr)
+#         attr.SetReadOnly(True)
+#
+#         if 0<=row<len(self.rsdes):
+#             if not self._GridDes_IsOk(row):
+#                 #colorazione riga se dati errati
+#                 attr.SetTextColour(stdcolor.VALERR_FOREGROUND)
+#                 attr.SetBackgroundColour(stdcolor.VALERR_BACKGROUND)
+#
+#         return attr
+#
+#     def _GridDes_IsOk(self, row):
+#         valok = True
+#         if 0<=row<len(self.rsdes):
+#             des = self.rsdes[row]
+#             for c in (RSDES_CODICE, RSDES_DESCRIZ, RSDES_INDIR, RSDES_CITTA,\
+#                       RSDES_CAP, RSDES_PROV):
+#                 valok = valok and des[c] is not None\
+#                       and len(des[c].strip())>0
+#                 if not valok:
+#                     break
+#         return valok
+#
+#     def _GridDes_AddNewRow(self):
+#         try:
+#             c = self.db_curs
+#             c.execute("SELECT MAX(0+CODICE) FROM %s des WHERE des.id_pdc=%s"\
+#                       % (bt.TABNAME_DESTIN, self.db_recid))
+#             rs = c.fetchone()
+#             lastab = rs[0] or 0
+#             lasmem = max([int(x[RSDES_CODICE] or '') for x in self.rsdes])
+#             newc = str(int(max(lastab, lasmem)+1))
+#         except:
+#             newc = '1'
+#         self.rsdes.append([\
+#             None, #RSDES_ID
+#             newc, #RSDES_CODICE
+#             None, #RSDES_DESCRIZ
+#             None, #RSDES_INDIR
+#             None, #RSDES_CAP
+#             None, #RSDES_CITTA
+#             None, #RSDES_PROV
+#             None, #RSDES_NUMTEL
+#             None, #RSDES_NUMTEL2
+#             None, #RSDES_NUMCEL
+#             None, #RSDES_NUMFAX
+#             None, #RSDES_EMAIL
+#             None, #RSDES_CONTATTO
+#             None])#RSDES_PREF
+#         if len(self.rsdes) == 1:
+#             self.rsdes[0][RSDES_PREF] = 1
+#
+#     def _GridDes_OnSelected(self, event):
+#         row = event.GetRow()
+#         enable = 0<=row<len(self.rsdes)
+#         if enable:
+#             if event.GetCol() == 2: #RSDES_PREF
+#                 r = self.rsdes[row]
+#                 v = r[RSDES_PREF] = 1-(r[RSDES_PREF] or 0)
+#                 if v:
+#                     for nr in range(len(self.rsdes)):
+#                         if nr != row:
+#                             self.rsdes[nr][RSDES_PREF] = 0
+#                 self._grid_des.ResetView()
+#                 self.SetDataChanged()
+#         else:
+#             self._GridDes_ResetFields()
+#         self._GridDes_EnableFields(enable)
+#         ctr = self.FindWindowById(wdr.ID_BTNDESTDEL)
+#         ctr.Enable(enable)
+#         self._des_updating = True
+#         self._GridDes_UpdateFields(row)
+#         self._des_updating = False
+#         self._GridDes_TestWarning(row)
+#         event.Skip()
+#
+#     def _GridDes_UpdateFields(self, row):
+#         if not 0 <= row < len(self.rsdes):
+#             return
+#         r = self.rsdes[row]
+#         def cn(name):
+#             return self.FindWindowByName('des_%s'%name)
+#         for col, name in enumerate(desfields):
+#             c = cn(name)
+#             if c:
+#                 if isinstance(c, awc.controls.linktable.LinkTable) or \
+#                     isinstance(c, awc.controls.datectrl.DateCtrl):
+#                     needNotifyChange=c.NotifyChanges(False)
+#                 try:
+#                     c.SetValue(r[col])
+#                 except:
+#                     c.SetValue('')
+#                 if isinstance(c, awc.controls.linktable.LinkTable) or \
+#                     isinstance(c, awc.controls.datectrl.DateCtrl):
+#                     c.NotifyChanges(needNotifyChange)
+#
+#     def _GridDes_EnableFields(self, enable=True):
+#         def cn(name):
+#             return self.FindWindowByName('des_%s'%name)
+#         for col, name in enumerate(desfields):
+#             c = cn(name)
+#             if c:
+#                 c.Enable(enable)
+#
+#     def _GridDes_ResetFields(self):
+#         def cn(name):
+#             return self.FindWindowByName('des_%s'%name)
+#         for col, name in enumerate(desfields):
+#             c = cn(name)
+#             if c:
+#                 c.SetValue(None)
+#
+#     def _GridDes_OnChanged(self, event):
+#         row = event.GetRow()
+#         if 0<=row<len(self.rsdes):
+#             desid = self.rsdes[row][RSDES_ID]
+#             if desid is not None and not desid in self.rsdesmod:
+#                 self.rsdesmod.append(desid)
+#         self.SetDataChanged()
+#
+#     def _GridDes_OnCreate(self, event):
+#         self._GridDes_AddNewRow()
+#         self._grid_des.ResetView()
+#         self._grid_des.SetGridCursor(len(self.rsdes)-1,1)
+#         c = self.FindWindowByName('des_descriz')
+#         c.SetValue(self.FindWindowByName('descriz').GetValue())
+#         c.SetFocus()
+#
+#     def _GridDes_OnDelete(self, event):
+#         sr = self._grid_des.GetSelectedRows()
+#         if sr:
+#             row = sr[-1]
+#             if 0 <= row < len(self.rsdes):
+#                 desid = self.rsdes[row][RSDES_ID]
+#                 do = True
+#                 if desid is not None:
+#                     do = CheckRefIntegrity(self, self.db_curs, bt.TABSETUP_CONSTR_DESTIN, desid)
+#                     if do:
+#                         if aw.awu.MsgDialog(self, "Confermi la cancellazione di questa destinazione?", style=wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT) != wx.ID_YES:
+#                             do = False
+#                     if do:
+#                         self.rsdesdel.append(desid)
+#                 if do:
+#                     self._grid_des.DeleteRows(row)
+#                     self._grid_des.ResetView()
+#                     self.SetDataChanged()
+#                     if len(self.rsdes) == 0:
+#                         self._GridDes_ResetFields()
+#                         self._GridDes_EnableFields(False)
+#                     else:
+#                         row = len(self.rsdes)-1
+#                         self._grid_des.MakeCellVisible(row,0)
+#                         self._grid_des.SetGridCursor(row,0)
+#                         self._grid_des.SelectRow(row)
+#                         self._GridDes_UpdateFields(row)
+#         event.Skip()
+#
+#     def _GridDes_OnPrint(self, event):
+#         self.BanDesPrint(desfields, self.rsdes, 'Lista destinazioni anagrafica')
+#         event.Skip()
+#
+#     def _GridDes_TestWarning(self, row):
+#         label = ""
+#         ctr = self.FindWindowById(wdr.ID_DESTWARNING)
+#         if not self._GridDes_IsOk(row):
+#             missing = []
+#             for col, err in ((RSDES_CODICE,  "codice"),\
+#                              (RSDES_DESCRIZ, "descrizione"),\
+#                              (RSDES_INDIR,   "indirizzo"),\
+#                              (RSDES_CAP,     "CAP"),\
+#                              (RSDES_CITTA,   "città"),\
+#                              (RSDES_PROV,    "prov.")):
+#                 value = self.rsdes[row][col]
+#                 if type(value) != str or len(value.strip()) == 0:
+#                     missing.append(err)
+#             label = "Manca: " + ", ".join(missing)
+#         ctr.SetLabel(label)
+#===============================================================================
 
     def BanDesPrint(self, fields, rs, rptname):
         cols = []
