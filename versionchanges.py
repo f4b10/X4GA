@@ -32,7 +32,7 @@ history = (
          ("BET1177",
          """Evidenzia Giroconti apertura su Gestione Bilanci,
          In stampa Bilancio Gestionale è presente un nuovo report:
-         Bilancio Gestionale Strutturato con aperture."""), 
+         Bilancio Gestionale Strutturato con aperture. """), 
         ),),
            
     ('1.5.08', dt.Date(2015, 5, 20), (
