@@ -1174,6 +1174,9 @@ class SaldiBilancio(adb.DbTable):
         self.AddTotalOf("IF(saldi.segno='D', saldi.importo, 0)", "dare")
         self.AddTotalOf("IF(saldi.segno='A', saldi.importo, 0)", "avere")
         
+        self.AddTotalOf("IF(saldi.segno='D' and cau.codice='GA', saldi.importo, 0)", "darega")
+        self.AddTotalOf("IF(saldi.segno='A' and cau.codice='GA', saldi.importo, 0)", "averega")
+
         _tipirighe = "SCA"
         if bt.TIPO_CONTAB == "S":
             _tipirighe += "I"

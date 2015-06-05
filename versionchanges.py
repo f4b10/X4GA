@@ -28,6 +28,13 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
+    ('1.5.09', dt.Date(2015, 6, 04), (
+         ("BET1177",
+         """Evidenzia Giroconti apertura su Gestione Bilanci,
+         In stampa Bilancio Gestionale è presente un nuovo report:
+         Bilancio Gestionale Strutturato con aperture."""), 
+        ),),
+           
     ('1.5.08', dt.Date(2015, 5, 20), (
          ("BET1176",
          """In fase di inserimento registrazioni contabili viene proposta come data di registrazione l'ultima data di registrazione utilizzata

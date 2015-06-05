@@ -74,6 +74,8 @@ GRIDCOL_CEECAP = 15 #classificazione cee: capitolo
 GRIDCOL_CEEDET = 16 #classificazione cee: dettaglio
 GRIDCOL_CEESUB = 17 #classificazione cee: sub-dettaglio
 GRIDCOL_CEEVAL = 18 #valore (Dare - Avere)
+GRIDCOL_SALGAD = 12 #saldo G.Apertura se dare
+GRIDCOL_SALGAA = 13 #saldo G.Apertura se avere
 
 
 class DbMemBil(dbc.adb.DbMem):
@@ -220,6 +222,8 @@ class _BilGrid(dbglib.DbGridColoriAlternati):
             color = bc.GetColour("linen")
         elif rscol in (GRIDCOL_PROGRD, GRIDCOL_PROGRA):
             color = bc.GetColour("gainsboro")
+        elif rscol in (GRIDCOL_SALGAD, GRIDCOL_SALGAA):
+            color = bc.GetColour("lightyellow")
         elif rsb[GRIDCOL_TIPBIL] == 0:
             color = bc.GetColour("lightblue")
         elif rsb[GRIDCOL_TIPBIL] == 1:
@@ -280,14 +284,21 @@ class _BilGrid(dbglib.DbGridColoriAlternati):
         ncdma = ci(b.pdc.bilmas, 'descriz')
         ncdco = ci(b.pdc.bilcon, 'descriz')
         ncdsc = ci(b.pdc, 'descriz')
+        nctgd = ci(b,            'total_darega')
+        nctga = ci(b,            'total_averega')
+
         
         b.SetVar('pbar', pbar)
         
-        def AddTot(totdict, key, dare, avere):
+#        def AddTot(totdict, key, dare, avere):
+        def AddTot(totdict, key, dare, avere, darega, averega):
             if not totdict.has_key(key):
-                totdict[key] = [0, 0]
+#                totdict[key] = [0, 0]
+                totdict[key] = [0, 0, 0, 0]
             totdict[key][0] += dare or 0
             totdict[key][1] += avere or 0
+            totdict[key][2] += darega or 0
+            totdict[key][3] += averega or 0
         
         totpatd = 0; totpata = 0
         totecod = 0; totecoa = 0
@@ -300,11 +311,15 @@ class _BilGrid(dbglib.DbGridColoriAlternati):
         for row in range(b.RowsCount()):
             rowd = rs[row][ncttd]
             rowa = rs[row][nctta]
+            rgad = rs[row][nctgd]
+            rgaa = rs[row][nctga]
+
             if self.Filter(rs[row][nctip], rs[row][ncttd]>=rs[row][nctta]):
                 for tipo, col in (('t', nctip),\
                                   ('m', ncmas),\
                                   ('c', nccon)):
-                    AddTot(tt, "%s%s" % (tipo, rs[row][col]), rowd, rowa)
+                    AddTot(tt, "%s%s" % (tipo, rs[row][col]), rowd, rowa, rgad, rgaa)
+#                    AddTot(tt, "%s%s" % (tipo, rs[row][col]), rowd, rowa)
        
         dototmas = parms['tipdet'] in "MCS"
         dototcon = parms['tipdet'] in "CS"
@@ -323,6 +338,9 @@ class _BilGrid(dbglib.DbGridColoriAlternati):
         
         self.totd = 0
         self.tota = 0
+        
+        self.tgad = 0
+        self.tgaa = 0
         
         self.pbar = pbar
         self.timer = wx.Timer(self)
@@ -360,6 +378,12 @@ class _BilGrid(dbglib.DbGridColoriAlternati):
                 
                 self.totd += rowd
                 self.tota += rowa
+
+                rgad = r[nctgd] or 0
+                rgaa = r[nctga] or 0
+
+                self.tgad += rgad
+                self.tgaa += rgaa
                 
                 def TestZero(d,a):
                     return (not parms['detnozero'] or not SameFloat(d,a))
@@ -372,30 +396,32 @@ class _BilGrid(dbglib.DbGridColoriAlternati):
                                 dsb = ('Stato Patrimoniale',\
                                        'Conto Economico',\
                                        'Conti d\'Ordine')[tip]
-                                prd, pra = tt['t%s' % tip]
+                                prd, pra, gad, gaa = tt['t%s' % tip]
+#                                prd, pra = tt['t%s' % tip]
                             except IndexError:
                                 dsb = 'Tipo di bilancio sconosciuto'
-                                prd, pra = 0, 0
+                                prd, pra, gad, gaa = 0, 0, 0, 0
+#                                prd, pra = 0, 0
                             if len(rs)>0:
                                 for x in range(2):
                                     self.AppendRow(tip=-1)
-                            self.AppendRow(tip, mas=dsb, prd=prd, pra=pra)
+                            self.AppendRow(tip, mas=dsb, prd=prd, pra=pra, gad=gad, gaa=gaa)
                         ltip = tip
                     
                     if dototmas and mas != lmas:
-                        prd, pra = tt['m%s' % mas]
+                        prd, pra, gad, gaa = tt['m%s' % mas]
                         if TestZero(prd, pra):
                             if (dototcon or dototpdc) and len(self.rsbil)>0:
                                 self.AppendRow(tip)
                             self.AppendRow(tip, mas=mas, des=r[ncdma],\
-                                           prd=prd, pra=pra)
+                                           prd=prd, pra=pra, gad=gad, gaa=gaa)
                         lmas = mas
                     
                     if dototcon and con != lcon:
-                        prd, pra = tt['c%s' % con]
+                        prd, pra, gad, gaa = tt['c%s' % con]
                         if TestZero(prd, pra):
                             self.AppendRow(tip, con=con, des=r[ncdco],\
-                                           prd=prd, pra=pra)
+                                           prd=prd, pra=pra, gad=gad, gaa=gaa)
                         lcon = con
                     
                     if dototpdc and\
@@ -403,24 +429,39 @@ class _BilGrid(dbglib.DbGridColoriAlternati):
                         TestZero(rowd, rowa)):
                         self.AppendRow(tip,\
                                        pid=pid, pdc=pdc, tpi=tpi, tpa=tpa, des=des,\
-                                       prd=rowd, pra=rowa)
+                                       prd=rowd, pra=rowa,\
+                                       gad=rgad, gaa=rgaa)
+#                        self.AppendRow(tip,\
+#                                       pid=pid, pdc=pdc, tpi=tpi, tpa=tpa, des=des,\
+#                                       prd=rowd, pra=rowa)
                     
                     if dototpdc and r[nctpt] in "CF" and not parms['detcf'] and\
                         TestZero(rowd, rowa):
                         self.AppendRow(tip,\
                                        pid=pid, pdc="***", tpi=tpi, tpa=tpa, des="SOTTOCONTI ACCORPATI",\
-                                       prd=rowd, pra=rowa, accorpa=r[nctpt])
+                                       prd=rowd, pra=rowa, accorpa=r[nctpt],\
+                                       gad=rgad, gaa=rgaa)
+#                        self.AppendRow(tip,\
+#                                       pid=pid, pdc="***", tpi=tpi, tpa=tpa, des="SOTTOCONTI ACCORPATI",\
+#                                       prd=rowd, pra=rowa, accorpa=r[nctpt])
                     
                 elif not r[nctpt] in "CF" or parms['detcf'] and\
                      TestZero(rowd, rowa):
                     self.AppendRow(tip, mas=mas, con=con,\
                                    pid=pid, pdc=pdc, tpi=tpi, tpa=tpa, des=des,\
-                                   prd=rowd, pra=rowa)
+                                   prd=rowd, pra=rowa, gad=rgad, gaa=rgaa)
+#                    self.AppendRow(tip, mas=mas, con=con,\
+#                                   pid=pid, pdc=pdc, tpi=tpi, tpa=tpa, des=des,\
+#                                   prd=rowd, pra=rowa)
             
             if parms['globaltot']:
                 self.AppendRow(-1, mas="-", con="-",\
                                pdc="-", tpa="-", des="TOTALI",\
-                               prd=self.totd, pra=self.tota)
+                               prd=self.totd, pra=self.tota,\
+                               gad=self.tgad, gaa=self.tgaa)
+#                self.AppendRow(-1, mas="-", con="-",\
+#                               pdc="-", tpa="-", des="TOTALI",\
+#                               prd=self.totd, pra=self.tota)
             
             self.Freeze()
             try:
@@ -438,9 +479,12 @@ class _BilGrid(dbglib.DbGridColoriAlternati):
     def Filter(self, *args):
         return True
     
+#    def AppendRow(self, tip,\
+#                  mas=None, con=None, pid=None, pdc=None, tpi=None, tpa=None, des=None,\
+#                  prd=None, pra=None, accorpa=None):
     def AppendRow(self, tip,\
                   mas=None, con=None, pid=None, pdc=None, tpi=None, tpa=None, des=None,\
-                  prd=None, pra=None, accorpa=None):
+                  prd=None, pra=None, accorpa=None, gad=None, gaa=None):
         
         if prd is None or pra is None:
             sld, sla = None, None
@@ -453,6 +497,9 @@ class _BilGrid(dbglib.DbGridColoriAlternati):
         if pra == 0: pra = None
         if sld == 0: sld = None
         if sla == 0: sla = None
+
+        if gad == 0: gad = None
+        if gaa == 0: gaa = None
         
         app = True
         if accorpa is not None:
@@ -466,6 +513,8 @@ class _BilGrid(dbglib.DbGridColoriAlternati):
                     else:
                         lr[10], lr[11] = None, lr[9]-lr[8]
                     app = False
+                    lr[12] = (self.rsbil[-1][12] or 0)+(gad or 0)
+                    lr[13] = (self.rsbil[-1][13] or 0)+(gaa or 0)
             except:
                 pass
         if app:
@@ -484,7 +533,9 @@ class _BilGrid(dbglib.DbGridColoriAlternati):
                                prd,  #GRIDCOL_PROGRD
                                pra,  #GRIDCOL_PROGRA
                                sld,  #GRIDCOL_SALDOD
-                               sla]) #GRIDCOL_SALDOA
+                               sla,  #GRIDCOL_SALDOA
+                               gad,  #GRIDCOL_SALGAD
+                               gaa]) #GRIDCOL_SALGAA
         return self.rsbil[-1]
     
 
@@ -567,6 +618,8 @@ class BilGestGrid(_BilGrid):
             ( iw, (GRIDCOL_SALDOA, "Saldo Avere", _IMP, True  )),
             ( iw, (GRIDCOL_PROGRD, "Progr.Dare",  _IMP, True  )),
             ( iw, (GRIDCOL_PROGRA, "Progr.Avere", _IMP, True  )),
+            ( iw, (GRIDCOL_SALGAD, "G.Ap.Dare",   _IMP, True  )),
+            ( iw, (GRIDCOL_SALGAA, "G.Ap.Avere",  _IMP, True  )),
         )
         anchorcol = 6
         resizecol = 4
@@ -994,6 +1047,7 @@ class BilGestPanel(_BilPanel):
     
     def UpdateTotals(self):
         grids = self.gridbil.grids
+#        gridpat, grideco = grids[:2]
         gridpat, grideco = grids[:2]
         ND = bt.VALINT_DECIMALS
         totd = round(gridpat.totd-gridpat.tota, ND)
@@ -1013,7 +1067,8 @@ class BilGestPanel(_BilPanel):
                                           ripep=(sezno == 0))
     
     def PrintBil(self):
-        bil = DbMemBil(self, 'tip,mas,con,tpi,tpa,pid,pdc,des,prd,pra,sld,sla')
+#        bil = DbMemBil(self, 'tip,mas,con,tpi,tpa,pid,pdc,des,prd,pra,sld,sla')
+        bil = DbMemBil(self, 'tip,mas,con,tpi,tpa,pid,pdc,des,prd,pra,sld,sla,gad,gaa')
         bil.SetRecordset(self.gridbil.grids[0].rsbil
                          +self.gridbil.grids[1].rsbil
                          +self.gridbil.grids[2].rsbil)
@@ -1021,7 +1076,8 @@ class BilGestPanel(_BilPanel):
         def adegua(rptname, report):
             dbt = bil
             if 'strutt' in rptname.lower():
-                bil2 = DbMemBil(self, 'tip,mas,con,tpi,tpa,pid,pdc,des,prd,pra,sld,sla,dmas,dcon')
+#                bil2 = DbMemBil(self, 'tip,mas,con,tpi,tpa,pid,pdc,des,prd,pra,sld,sla,dmas,dcon')
+                bil2 = DbMemBil(self, 'tip,mas,con,tpi,tpa,pid,pdc,des,prd,pra,sld,sla,dmas,dcon,gad,gaa')
                 l_tip = l_mas = l_con = None
                 ldmas = ldcon = None
                 for b in bil:
@@ -1050,6 +1106,8 @@ class BilGestPanel(_BilPanel):
                         bil2.sla = b.sla
                         bil2.dmas = ldmas
                         bil2.dcon = ldcon
+                        bil2.gad = b.gad
+                        bil2.gaa = b.gaa
                 dbt = bil2
             return dbt
         rpt.Report(self, bil, self.report, dbfunc=adegua)
@@ -1110,7 +1168,8 @@ class BilVerifPanel(_BilPanel):
         self.UpdateQuadratura(self.gridbil.totd, self.gridbil.tota, salep=True, quadonly=True)
 
     def PrintBil(self):
-        bil = DbMemBil(self, 'tip,mas,con,tpi,tpa,pid,pdc,des,prd,pra,sld,sla')
+#        bil = DbMemBil(self, 'tip,mas,con,tpi,tpa,pid,pdc,des,prd,pra,sld,sla')
+        bil = DbMemBil(self, 'tip,mas,con,tpi,tpa,pid,pdc,des,prd,pra,sld,sla,gad,gaa')
         bil.SetRecordset(self.gridbil.rsbil)
         rpt.Report(self, bil, self.report)
 
