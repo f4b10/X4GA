@@ -141,7 +141,11 @@ class GenericPersonalPage_InternalGrid(dbglib.DbGridColoriAlternati):
         print 'OnPrint'
         evt.Skip()
 
+    def BeforeWriteData(self):
+        pass
+
     def WriteData(self):
+        self.BeforeWriteData()
         return self.WriteRelated(self.gridTableName, self.fields, self.rsdata,\
                                  self.rsdatanew, self.rsdatamod, self.rsdatadel)
 
