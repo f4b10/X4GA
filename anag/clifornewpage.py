@@ -65,6 +65,18 @@ class GenericPersonalPage_InternalGrid(dbglib.DbGridColoriAlternati):
         self.Bind(gl.EVT_GRID_SELECT_CELL, self.OnSelected)
         self.LoadData()
 
+
+
+    #TODO: Introdurre la possibilità di specificare il/i campi che debbono
+    #necessariamente assumenre un valore univoco
+
+    #TODO: Introdurre la possibilità di specificare il/i campi da gestire in
+    #      sola lettura per i quali non è consentita la modifica in editazione
+
+    def SetDisabledField(self):
+        return []
+
+
     def SetColumn2Fit(self):
         self.SetFitColumn(0)
 
@@ -108,8 +120,11 @@ class GenericPersonalPage_InternalGrid(dbglib.DbGridColoriAlternati):
             return self.mainPanel.FindWindowByName('%s_%s'% (self.gridTableName, name))
         for col, name in enumerate(self.fields):
             c = cn(name)
-            if c:
-                c.Enable(enable)
+            if name in self.SetDisabledField():
+                c.Enable(False)
+            else:
+                if c:
+                    c.Enable(enable)
 
     def ResetFields(self):
         def cn(name):
@@ -458,6 +473,15 @@ class GenericPersonalPage_InternalGrid(dbglib.DbGridColoriAlternati):
         newc = str(int(max(lastab, lasmem)+1))
         return newc
 
+    def Data2Dict(self, index):
+        dict={}
+        for n in self.fields:
+            #print '%s:%s' % (n, self.GetIndexField(n))
+            dict[n]=self.rsdata[index][self.GetIndexField(n)]
+        return dict
+
+
+
 def GetNamedChildrens(container, names=None, Test=None):
     """
     Esamina tutta la discendenza di figli di C{container} e ritorna una
@@ -584,6 +608,10 @@ class GenericPersonalPage_Panel(ClientiInterrPanel):
                 obj.Bind(wx.EVT_BUTTON, func)
             except:
                 aw.awu.MsgDialog(self, "Attenzione!\nNon e' stato definito il controllo %s." % name, caption="ERRORE PROGRAMMAZIONE", style=wx.ICON_ERROR)
+        self.BindAddButton()
+
+    def BindAddButton(self):
+        pass
 
 
     def BindInputControl(self):
@@ -609,7 +637,7 @@ class GenericPersonalPage_Panel(ClientiInterrPanel):
 
 
 
-    
+
 
 
 
