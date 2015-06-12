@@ -97,31 +97,28 @@ class DatiBancariMixin(object):
 
 
 class BanchePanel(GenericPersonalPage_Panel, DatiBancariMixin):
-    
+
     _OnCalcolaBBAN = DatiBancariMixin.OnCalcolaBBAN
-    _OnCalcolaIBAN = DatiBancariMixin.OnCalcolaIBAN    
-  
-    
-    
+    _OnCalcolaIBAN = DatiBancariMixin.OnCalcolaIBAN
+
     def __init__(self, *args, **kwargs):
 
         self.gridTableName=bt.TABNAME_BANCF
         GenericPersonalPage_Panel.__init__(self, *args, **kwargs)
-        wdr.BancheFunc(self)
+        self.SetLayoutFromWdr()
         panelGrid=self.GetPanelGrid()
         self._grid=BancheGrid(panelGrid, -1, size=panelGrid.GetClientSizeTuple(), mainPanel=self.mainPanel, gridTableName=self.gridTableName)
         self.BindControl()
-        
-        cn=self.FindWindowByName
-        self.Bind(wx.EVT_BUTTON, self._OnCalcolaBBAN, cn('bancf_butcalc_bban'))
-        self.Bind(wx.EVT_BUTTON, self._OnCalcolaIBAN, cn('bancf_butcalc_iban'))        
-        
-        
 
-        
+    def BindAddButton(self):
+        cn=self.FindWindowByName
+        cn('ban_butcalc_bban').Bind(wx.EVT_BUTTON, self._OnCalcolaBBAN)
+        cn('ban_butcalc_iban').Bind(wx.EVT_BUTTON, self._OnCalcolaIBAN)
+
+    def SetLayoutFromWdr(self):
+        wdr.BancheFunc(self)
 
 class BancheGrid(GenericPersonalPage_InternalGrid):
-
 
     def __init__(self, *args, **kwargs):
         GenericPersonalPage_InternalGrid.__init__(self, *args, **kwargs)
@@ -135,6 +132,11 @@ class BancheGrid(GenericPersonalPage_InternalGrid):
 
     def SetExclusiveCheckField(self):
         return ['pref']
+
+    def SetUniqueField(self):
+        #TODO: Introdurre la possibilità di specificare il(i campi che debbono
+        #necessariamente assumenre un valore univoco
+        return []
 
 
     def SetColumnGrid(self):
@@ -196,7 +198,7 @@ class BancheGrid(GenericPersonalPage_InternalGrid):
         #         return value is not None and len(value.strip())>0
         #===============================================================================
 
-    
+
     def Check_codice(self, record):
         value=record[self.GetIndexField('codice')]
         return value is not None and len(value.strip())>0
