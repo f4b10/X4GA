@@ -541,13 +541,6 @@ class GenericPersonalPage_Panel(ClientiInterrPanel):
         self.rsdatadel   = []
         self._grid  = None
 
-
-
-
-
-
-
-
     def UpdateDataRecord( self):
         self._grid.UpdateDataRecord()
 
@@ -613,7 +606,6 @@ class GenericPersonalPage_Panel(ClientiInterrPanel):
     def BindAddButton(self):
         pass
 
-
     def BindInputControl(self):
         self.GetDataStructure()
         for col, ctr in self.db_datalink:
@@ -623,7 +615,6 @@ class GenericPersonalPage_Panel(ClientiInterrPanel):
     def BindControl(self):
         self.BindInputControl()
         self.BindStdButton()
-
 
     def DeleteDataRecord( self, recid ):
         try:
