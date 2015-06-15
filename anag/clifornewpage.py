@@ -520,11 +520,6 @@ class GenericPersonalPage_Panel(wx.Panel):
         self.mainPanel= kwargs.pop('mainPanel', None)
         self.wdrFunc= kwargs.pop('wdrFunc', None)
         wx.Panel.__init__(self, *args, **kwargs)
-        
-        if self.wdrFunc:
-            self.wdrFunc(self)
-            self.InitDataControls()
-
 
     def InitDataControls(self):
         from awc.util import GetNamedChildrens
