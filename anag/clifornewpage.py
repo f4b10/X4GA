@@ -21,7 +21,7 @@ stdcolor = Env.Azienda.Colours
 bt = Env.Azienda.BaseTab
 from awc.tables.util import CheckRefIntegrity
 
-class GenericPersonalPage_InternalGrid(dbglib.DbGridColoriAlternati):
+class GenericPersonalLinkedPage_InternalGrid(dbglib.DbGridColoriAlternati):
     _grid_contatori = None
     rsdata          = None
     rsdatamod       = None
@@ -513,8 +513,59 @@ def GetNamedChildrens(container, names=None, Test=None):
 from contab.pdcint import ClientiInterrPanel
 
 
+class GenericPersonalPage_Panel(wx.Panel):
+    wdrFunc=None
 
-class GenericPersonalPage_Panel(ClientiInterrPanel):
+    def __init__(self, *args, **kwargs):
+        self.mainPanel= kwargs.pop('mainPanel', None)
+        self.wdrFunc= kwargs.pop('wdrFunc', None)
+        wx.Panel.__init__(self, *args, **kwargs)
+        
+        if self.wdrFunc:
+            self.wdrFunc(self)
+            self.InitDataControls()
+
+
+    def InitDataControls(self):
+        from awc.util import GetNamedChildrens
+        controls = GetNamedChildrens( self,\
+                                      [ col[0] \
+                                        for col in self.mainPanel.anag_db_columns ])
+        new_db_datalink =[ ( ctr.GetName(), ctr ) for ctr in controls ]
+        new_db_datacols= [ col for col,ctr in new_db_datalink ]
+
+        for col, ctr in new_db_datalink:
+            for i in ['CodiceFiscaleEntryCtrl' ,
+                      'FileEntryCtrl' ,
+                      'FolderEntryCtrl' ,
+                      'FullPathFileEntryCtrl' ,
+                      'HttpEntryCtrl' ,
+                      'MailEntryCtrl' ,
+                      'PartitaIvaEntryCtrl' ,
+                      'PhoneEntryCtrl']:
+                if isinstance(ctr, getattr(awc.controls.entries, i )):
+                    self.mainPanel.BindChangedEvent(ctr.GetChildren()[0])
+            if isinstance(ctr, wx.TextCtrl):
+                self.mainPanel.BindChangedEvent(ctr)
+            elif isinstance(ctr, awc.controls.datectrl.DateCtrl):
+                self.mainPanel.BindChangedEvent(ctr)
+            elif isinstance(ctr, wx.CheckBox):
+                self.mainPanel.BindChangedEvent(ctr)
+            elif isinstance(ctr, awc.controls.linktable.LinkTable):
+                self.mainPanel.BindChangedEvent(ctr)
+
+
+
+        for o in new_db_datalink:
+            self.mainPanel.anag_db_datalink.append(o)
+
+        for o in new_db_datacols:
+            self.mainPanel.anag_db_datacols.append(o)
+
+
+
+
+class GenericPersonalLinkedPage_Panel(ClientiInterrPanel):
 
     rsdata         = None
     rsdatamod      = None
