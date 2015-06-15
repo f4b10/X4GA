@@ -11,8 +11,8 @@ import Env
 import anag.pdcrelAddPage_wdr as wdr
 bt = Env.Azienda.BaseTab
 
-from anag.clifornewpage import GenericPersonalPage_Panel
-from anag.clifornewpage import GenericPersonalPage_InternalGrid
+from anag.clifornewpage import GenericPersonalLinkedPage_Panel
+from anag.clifornewpage import GenericPersonalLinkedPage_InternalGrid
 import wx.grid as gl
 
 
@@ -24,22 +24,21 @@ import wx.grid as gl
 
 
 
-
-class DestinPanel(GenericPersonalPage_Panel):
+class DestinPanel(GenericPersonalLinkedPage_Panel):
     def __init__(self, *args, **kwargs):
 
         self.gridTableName=bt.TABNAME_DESTIN
-        GenericPersonalPage_Panel.__init__(self, *args, **kwargs)
+        GenericPersonalLinkedPage_Panel.__init__(self, *args, **kwargs)
         wdr.DestinFunc(self)
         panelGrid=self.GetPanelGrid()
         self._grid=DestinGrid(panelGrid, -1, size=panelGrid.GetClientSizeTuple(), mainPanel=self.mainPanel, gridTableName=self.gridTableName)
         self.BindControl()
 
-class DestinGrid(GenericPersonalPage_InternalGrid):
+class DestinGrid(GenericPersonalLinkedPage_InternalGrid):
 
 
     def __init__(self, *args, **kwargs):
-        GenericPersonalPage_InternalGrid.__init__(self, *args, **kwargs)
+        GenericPersonalLinkedPage_InternalGrid.__init__(self, *args, **kwargs)
 
 
     def SetColumn2Fit(self):
@@ -125,7 +124,7 @@ class DestinGrid(GenericPersonalPage_InternalGrid):
     #         newc = '1'
     #     return newc
     #===========================================================================
-    
+
     def Check_codice(self, record):
         value=record[self.GetIndexField('codice')]
         return value is not None and len(value.strip())>0

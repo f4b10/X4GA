@@ -14,10 +14,9 @@ bt = Env.Azienda.BaseTab
 import wx
 import awc.controls.windows as aw
 
-from anag.clifornewpage import GenericPersonalPage_Panel
-from anag.clifornewpage import GenericPersonalPage_InternalGrid
+from anag.clifornewpage import GenericPersonalLinkedPage_Panel
+from anag.clifornewpage import GenericPersonalLinkedPage_InternalGrid
 import wx.grid as gl
-
 
 
 
@@ -96,7 +95,7 @@ class DatiBancariMixin(object):
 
 
 
-class BanchePanel(GenericPersonalPage_Panel, DatiBancariMixin):
+class BanchePanel(GenericPersonalLinkedPage_Panel, DatiBancariMixin):
 
     _OnCalcolaBBAN = DatiBancariMixin.OnCalcolaBBAN
     _OnCalcolaIBAN = DatiBancariMixin.OnCalcolaIBAN
@@ -104,10 +103,10 @@ class BanchePanel(GenericPersonalPage_Panel, DatiBancariMixin):
     def __init__(self, *args, **kwargs):
 
         self.gridTableName=bt.TABNAME_BANCF
-        GenericPersonalPage_Panel.__init__(self, *args, **kwargs)
+        GenericPersonalLinkedPage_Panel.__init__(self, *args, **kwargs)
         self.SetLayoutFromWdr()
         panelGrid=self.GetPanelGrid()
-        self._grid=BancheGrid(panelGrid, -1, size=panelGrid.GetClientSizeTuple(), mainPanel=self.mainPanel, gridTableName=self.gridTableName)
+        self._grid=self.GetPanelGridClass()(panelGrid, -1, size=panelGrid.GetClientSizeTuple(), mainPanel=self.mainPanel, gridTableName=self.gridTableName)
         self.BindControl()
 
     def BindAddButton(self):
@@ -118,10 +117,14 @@ class BanchePanel(GenericPersonalPage_Panel, DatiBancariMixin):
     def SetLayoutFromWdr(self):
         wdr.BancheFunc(self)
 
-class BancheGrid(GenericPersonalPage_InternalGrid):
+    def GetPanelGridClass(self):
+        return BancheGrid
+
+
+class BancheGrid(GenericPersonalLinkedPage_InternalGrid):
 
     def __init__(self, *args, **kwargs):
-        GenericPersonalPage_InternalGrid.__init__(self, *args, **kwargs)
+        GenericPersonalLinkedPage_InternalGrid.__init__(self, *args, **kwargs)
 
 
     def SetColumn2Fit(self):
