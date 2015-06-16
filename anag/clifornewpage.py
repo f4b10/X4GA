@@ -312,7 +312,7 @@ class GenericPersonalLinkedPage_InternalGrid(dbglib.DbGridColoriAlternati):
             except:
                 pass
             type=self.colmap[col][2]
-            if 'bool' in type and self.colmap[col][1] in self.SetCanEditCheck():
+            if 'bool' in type and self.fields[self.colmap[col][0]] in self.SetCanEditCheck():
                 r=self.rsdata[row]
                 v = r[self.colmap[col][0]] = 1-(r[self.colmap[col][0]] or 0)
                 if v:
