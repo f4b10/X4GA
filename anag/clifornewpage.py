@@ -73,6 +73,11 @@ class GenericPersonalLinkedPage_InternalGrid(dbglib.DbGridColoriAlternati):
     #TODO: Introdurre la possibilità di specificare il/i campi da gestire in
     #      sola lettura per i quali non è consentita la modifica in editazione
 
+    def GetDbColumns(self):
+        return self.cols
+
+
+
     def SetDisabledField(self):
         return []
 
@@ -243,16 +248,20 @@ class GenericPersonalLinkedPage_InternalGrid(dbglib.DbGridColoriAlternati):
         del self.rsdatamod[:]
         del self.rsdatanew[:]
         if len(self.rsdata)>0:
-            self.MakeCellVisible(0,0)
-            self.SetGridCursor(0,0)
-            self.SelectRow(0)
-            self.updating = True
-            self.UpdateFields(0)
-            self.updating = False
+            self.UpdateCard()
+            #===================================================================
+            # self.MakeCellVisible(0,0)
+            # self.SetGridCursor(0,0)
+            # self.SelectRow(0)
+            # self.updating = True
+            # self.UpdateFields(0)
+            # self.updating = False
+            #===================================================================
         else:
             self.ResetFields()
             self.EnableFields(False)
         self.Refresh()
+        self.ResetColLabels()
 
     def UpdateFields(self, row):
         if not 0 <= row < len(self.rsdata):
@@ -277,6 +286,33 @@ class GenericPersonalLinkedPage_InternalGrid(dbglib.DbGridColoriAlternati):
         except:
             pass
         return status
+
+    def UpdateCard(self):
+        self.MakeCellVisible(0,0)
+        self.SetGridCursor(0,0)
+        self.SelectRow(0)
+        self.updating = True
+        self.UpdateFields(0)
+        self.updating = False
+        
+    
+    def ChangeData(self, newdata):
+        #TODO: Gestire la problematica della sincronizzazione tra grid e card
+        self.rsdata=newdata
+        self.UpdateCard()
+        
+        #=======================================================================
+        # 
+        # table = self.GetTable()
+        # if table:
+        #     table.ChangeData(newdata, autosize_columns=False)
+        #     self.AnchorColumn()
+        #     self.SetRowScrollRatio()
+        #     self.SetGridCursor(0,0)
+        # self._edrow = self._edcol = None
+        # self.AdjustRowsHeight()
+        #=======================================================================
+
 
     def OnGridChanged(self, event):
         row = self.GetSelectedRows()[0]
