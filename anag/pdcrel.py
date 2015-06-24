@@ -493,6 +493,8 @@ class GrigliaPrezziGrid(dbglib.DbGridColoriAlternati):
         self.COL_ID_GRIP = a((  1, (cn(gri, 'id'),      "#gri",           _STR, True)))
         self.COL_ID_PROD = a((  1, (cn(pro, 'id'),      "#pro",           _STR, True)))
 
+        self.cols = cols
+
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
 
@@ -685,6 +687,7 @@ class GriglieCollegateGrid(dbglib.DbGridColoriAlternati):
         self.COL_vedigri = e(( 50, (cn(ana, 'vediprod_gra'), "S.G.",       _CHK, True)))
         self.COL_vedigrf = e(( 50, (cn(ana, 'vediprod_grf'), "G.F.",       _CHK, True)))
 
+        self.cols = cols
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
 
