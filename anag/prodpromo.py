@@ -116,6 +116,7 @@ class ProdPromoGrid(dbglib.DbGridColoriAlternati):
         self.COL_ID_PROM = c((  1, (cc(prm, 'id'),      "#prm",     _STR, True)))
         self.COL_ID_PROD = c((  1, (cc(pro, 'id'),      "#pdc",     _STR, True)))
                                   
+        self.cols=cols
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
         
