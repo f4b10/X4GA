@@ -1649,6 +1649,7 @@ class AttachmentsGrid(dbg.DbGridColoriAlternati):
         
         coldins = cn("datins")
         
+        self.cols=cols
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
         

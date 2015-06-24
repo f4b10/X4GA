@@ -232,7 +232,6 @@ class LinkTable(wx.Control,\
         self.currentid = None
         self.iderror = False
         self.canedit = True
-        #TODO: FATTO - gestire correttamente canins che viene passato in lt_kwargs
         if lt_kwargs.has_key('canins'):
             self.canins = lt_kwargs['canins']
         else:
