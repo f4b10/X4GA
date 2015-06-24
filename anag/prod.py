@@ -91,6 +91,7 @@ class GiacMagGrid(dbglib.DbGridColoriAlternati):
         
         cn = lambda db, col: db._GetFieldIndex(col, inline=True)
         
+        self.cols=cols
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
         canedit = True
@@ -235,6 +236,7 @@ class GrigliaPrezziCliForGrid(dbglib.DbGridColoriAlternati):
         self.COL_ID_GRIP = a((  1, (cn(gri, 'id'),      "#gri",           _STR, True)))
         self.COL_ID_PDC =  a((  1, (cn(pdc, 'id'),      "#pdc",           _STR, True)))
         
+        self.cols=cols
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
         
@@ -447,6 +449,8 @@ class ListAttGrid(dbglib.DbGridColoriAlternati):
                 ( 50, (RSLISTATT_GUADAGNO,   "Gu.CA%",  _PRC, True)),
                 )
         cn = lambda db, col: db._GetFieldIndex(col, inline=True)
+
+        self.cols=cols
         
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
@@ -1500,6 +1504,7 @@ class ProdPanel(ga.AnagPanel):
         
         self.COL_ID = a((  1, (cn('id'),   "#lis", _STR, False)))
         
+        self.cols=cols
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
         canedit = True
