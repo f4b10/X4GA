@@ -137,8 +137,7 @@ class BancheGrid(GenericPersonalLinkedPage_InternalGrid):
         return ['pref']
 
     def SetUniqueField(self):
-        #TODO: Introdurre la possibilità di specificare il(i campi che debbono
-        #necessariamente assumenre un valore univoco
+        #TODO: Introdurre la possibilità di specificare il(i campi che debbono necessariamente assumenre un valore univoco
         return []
 
 
@@ -165,6 +164,7 @@ class BancheGrid(GenericPersonalLinkedPage_InternalGrid):
                 ( 30, (self.GetIndexField('pref'),    "Pref",         _CHK, True )),
                 (  1, (self.GetIndexField('id'),      "#id",          _STR, False)),
             )
+        self.cols = cols
         self.colmap  = [c[1] for c in cols]
         self.colsize = [c[0] for c in cols]
         #===============================================================================
