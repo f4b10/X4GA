@@ -74,6 +74,7 @@ class DestinGrid(GenericPersonalLinkedPage_InternalGrid):
                 ( 30, (self.GetIndexField('pref'),    "Pref",         _CHK, True )),
                 (  1, (self.GetIndexField('id'),      "#id",          _STR, False)),
             )
+        self.cols = cols
         self.colmap  = [c[1] for c in cols]
         self.colsize = [c[0] for c in cols]
         #===============================================================================
