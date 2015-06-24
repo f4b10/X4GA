@@ -65,11 +65,13 @@ class DestinazSearchGrid(dbglib.DbGridColoriAlternati):
         pdc = des.pdc
         
         coldef = (
-            ( 50, (cn(des, 'codice'),  "Cod.",         _STR, False)),
+            ( 50, (cn(des, 'codice'),  "Cod.D",         _STR, False)),
             (250, (cn(des, 'descriz'), "Destinatario", _STR, False)),
-            ( 50, (cn(pdc, 'codice'),  "Cod.",         _STR, False)),
+            ( 50, (cn(pdc, 'codice'),  "Cod.C",         _STR, False)),
             (250, (cn(pdc, 'descriz'), "Cliente",      _STR, False)),
         )
+        
+        self._cols=coldef
         
         sizes =  [c[0] for c in coldef]
         colmap = [c[1] for c in coldef]
@@ -136,7 +138,8 @@ class DestinazSearchPanel(aw.Panel):
         des.Retrieve()
         self.grides.ResetView()
 
-
+    def GetPanelDataSource(self):
+        return self.dbdes
 # ------------------------------------------------------------------------------
 
 
