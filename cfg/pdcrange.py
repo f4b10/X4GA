@@ -56,6 +56,8 @@ class PdcRangeGrid(dbglib.DbGrid):
             ( 60, (cn(dbr, "rangemax"),  "Max.",   _VAL, False)),\
             ( 50, (cn(dbr, "id"),        "range#", _STR, True )),\
         )
+        self.cols=cols
+        
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
         

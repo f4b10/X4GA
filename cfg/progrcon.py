@@ -63,7 +63,9 @@ class ProgrStampaMastriGrid(dbglib.DbGridColoriAlternati):
             ( 35, (cn("keydiff"),   "Es.",       _STR, True)),
             ( 80, (cn("progrdate"), "St.Mastri", _DAT, True)),
             (  1, (cn("id"),        "#stm",      _STR, True)),
-        )                            
+        ) 
+        self.cols=cols
+
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
         

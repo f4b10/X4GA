@@ -55,6 +55,8 @@ class PdcPrefGrid(dbglib.DbGridColoriAlternati):
         pdc = pcp.pdc
         
         cols = self.DefColumns()
+        self.cols=cols
+        
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
         
@@ -268,7 +270,10 @@ class PdcPrefCauPanel(PdcPrefPanel):
 
 
 class PdcPrefFornitGrid(PdcPrefGrid):
-    
+
+    def GetDbColumns(self):
+        return self.DefColumns()
+      
     def DefColumns(self):
         
         _STR = gl.GRID_VALUE_STRING

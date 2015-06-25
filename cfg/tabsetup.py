@@ -1007,7 +1007,7 @@ class TablesGrid(dbglib.DbGrid):
         cols = (\
             ( 90, (0, "Tabella", _STR, True )),\
             )
-        
+        self.cols=cols
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
         canedit = False
@@ -1058,7 +1058,7 @@ class DiffsGrid(dbglib.DbGrid):
             (100, (0, "Colonna",    _STR, True )),\
             (360, (1, "Differenze", _STR, True )),\
             )
-        
+        self.cols=cols
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
         canedit = False
