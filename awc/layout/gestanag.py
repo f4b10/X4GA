@@ -1540,6 +1540,8 @@ class AnagPanel(aw.Panel):
         if not self.IsGestioneClientiFornitori():
             self.UpdateDataControls_PersonalPage()
 
+    def UpdateDataControls_PersonalPage(self):
+        pass
 
     def ResetControl( self, ctr ):
         try:
