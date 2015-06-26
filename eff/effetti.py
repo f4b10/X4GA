@@ -128,6 +128,8 @@ class EffGrid(dbglib.DbGridColoriAlternati):
         
         global gbapcod; gbapcod = 8
         
+        self._cols = cols
+        
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
         canedit = True
@@ -340,6 +342,10 @@ class EmiEffettiPanel(wx.Panel):
         
         self.Bind(gl.EVT_GRID_CELL_LEFT_DCLICK, self.OnDblClick)
         self.Bind(contab.EVT_PCFCHANGED, self.OnUpdate)
+    
+    
+    def GetPanelDataSource(self):
+        return self.dbeff
     
     def OnTipEffChanged(self, event):
         self.AdeguaFiltriByTipEff()
