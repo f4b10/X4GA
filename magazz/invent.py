@@ -101,7 +101,7 @@ class GridInv(object):
         iw = 110 # val col width
         
         cols = [
-            (  1, (RSINV_CTCOD, "Cod.",      _STR, True )),
+            (  1, (RSINV_CTCOD, "cod.",      _STR, True )),
             (  1, (RSINV_CTDES, "Categoria", _STR, True )),
             ( 80, (RSINV_COD,   "Cod.",      _STR, True )),
             (180, (RSINV_DES,   "Prodotto",  _STR, True ))
@@ -128,6 +128,7 @@ class GridInv(object):
         cols.append((1, (RSINV_ID,      "#pro", _STR, True)))
         cols.append((1, (RSINV_FORN_ID, "#for", _STR, True)))
         
+        
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
         
@@ -137,6 +138,9 @@ class GridInv(object):
         
         grid = dbglib.DbGrid(self.parent, -1, size=size, style=0)
         grid.SetData(self.rsinv, colmap, canedit, canins)
+        grid._cols=cols
+        
+        
         
         def GridAttr(row, col, rscol, attr):
             if col%2 == 0:
@@ -311,6 +315,9 @@ class InventPanel(aw.Panel):
         self.Bind(wx.EVT_CHECKBOX, self.OnChangeTipoInv, id=wdr.ID_INVDATA)
         self.Bind(wx.EVT_RADIOBOX, self.OnChangeTipoVal, id=wdr.ID_TIPOVAL)
         self.Bind(wx.EVT_CHECKBOX, self.OnChangeView, id=wdr.ID_CHGVIEW)
+    
+    def GetPanelDataSource(self):
+        return self.dbinvdat
     
     def CreateGrid(self):
         self.gridinv = GridInv(self.FindWindowById(wdr.ID_PANGRIDINV))
