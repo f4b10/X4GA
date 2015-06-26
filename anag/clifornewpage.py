@@ -74,7 +74,7 @@ class GenericPersonalLinkedPage_InternalGrid(dbglib.DbGridColoriAlternati):
     #      sola lettura per i quali non è consentita la modifica in editazione
 
     def GetDbColumns(self):
-        return self.cols
+        return self._cols
 
 
 
@@ -241,6 +241,7 @@ class GenericPersonalLinkedPage_InternalGrid(dbglib.DbGridColoriAlternati):
             except Exception, e:
                 pass
         del self.rsdata[:]
+
         for n in range(len(rsdata)):
             self.rsdata.append(list(rsdata[n]))
         self.ResetView()
@@ -249,13 +250,6 @@ class GenericPersonalLinkedPage_InternalGrid(dbglib.DbGridColoriAlternati):
         del self.rsdatanew[:]
         if len(self.rsdata)>0:
             self.UpdateCard()
-            #===================================================================
-            # self.MakeCellVisible(0,0)
-            # self.SetGridCursor(0,0)
-            # self.SelectRow(0)
-            # self.updating = True
-            # self.UpdateFields(0)
-            # self.updating = False
             #===================================================================
         else:
             self.ResetFields()
@@ -294,15 +288,15 @@ class GenericPersonalLinkedPage_InternalGrid(dbglib.DbGridColoriAlternati):
         self.updating = True
         self.UpdateFields(0)
         self.updating = False
-        
-    
+
+
     def ChangeData(self, newdata):
         #TODO: Gestire la problematica della sincronizzazione tra grid e card
         self.rsdata=newdata
         self.UpdateCard()
-        
+
         #=======================================================================
-        # 
+        #
         # table = self.GetTable()
         # if table:
         #     table.ChangeData(newdata, autosize_columns=False)
@@ -515,7 +509,6 @@ class GenericPersonalLinkedPage_InternalGrid(dbglib.DbGridColoriAlternati):
     def Data2Dict(self, index):
         dict={}
         for n in self.fields:
-            #print '%s:%s' % (n, self.GetIndexField(n))
             dict[n]=self.rsdata[index][self.GetIndexField(n)]
         return dict
 
@@ -601,11 +594,13 @@ class GenericPersonalPage_Panel(wx.Panel):
 
 class GenericPersonalLinkedPage_Panel(ClientiInterrPanel):
 
-    rsdata         = None
-    rsdatamod      = None
-    rsdatanew      = None
-    rsdatadel      = None
-    mainPanel      = None
+    #===========================================================================
+    # rsdata         = None
+    # rsdatamod      = None
+    # rsdatanew      = None
+    # rsdatadel      = None
+    # mainPanel      = None
+    #===========================================================================
     gridTableName  = None
     _grid          = None
 
@@ -620,10 +615,12 @@ class GenericPersonalLinkedPage_Panel(ClientiInterrPanel):
 
         ClientiInterrPanel.__init__(self, *args, **kwargs)
 
-        self.rsdata      = []
-        self.rsdatamod   = []
-        self.rsdatanew   = []
-        self.rsdatadel   = []
+        #=======================================================================
+        # self.rsdata      = []
+        # self.rsdatamod   = []
+        # self.rsdatanew   = []
+        # self.rsdatadel   = []
+        #=======================================================================
         self._grid  = None
 
     def UpdateDataRecord( self):

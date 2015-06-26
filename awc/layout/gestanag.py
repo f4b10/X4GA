@@ -408,6 +408,19 @@ class AnagPanel(aw.Panel):
 
         self.Bind(EVT_ACCEPTDATACHANGED, self.OnAcceptDataChanged)
 
+    def IsGestioneClientiFornitori(self):
+        lReturn = False
+        try:
+            import contab.pdcint
+            if isinstance(self, contab.pdcint.ClientiInterrPanel):
+                lReturn = True
+        except:
+            pass
+        return lReturn
+
+
+
+
     def OnAcceptDataChanged(self, event):
         if "acceptchanges" in dir(event):
             flag = event.acceptchanges
@@ -587,6 +600,20 @@ class AnagPanel(aw.Panel):
 
         if self.complete:
             wx.CallAfter(lambda: self.FindWindowByName('_searchval').SetFocus())
+
+        """
+        il richiamo del metodo InitControls_PersonalPage() non deve essere richiamato da qui nel caso si stiano
+        gestendo clienti o fornitori. Altrimenti lo spostamenti sulla grid non aggiornerebbe conseguientemente
+        gli oggetti presenti nella card.
+        """
+        if not self.IsGestioneClientiFornitori():
+            self.InitControls_PersonalPage()
+
+    def InitControls_PersonalPage(self):
+        pass
+
+    def UpdateDataRecord_PersonalPage(self):
+        pass
 
     def OnAttachsModified(self, event):
         self.SetDataChanged()
@@ -1275,6 +1302,8 @@ class AnagPanel(aw.Panel):
                     valid = False
         if valid:
             if self.TransferDataFromWindow():
+                #TODO AGGIUNTA PER MEMORIZZARE DATI NELLE TABELLE LINKATE
+                self.UpdateDataRecord_PersonalPage()
                 self.UpdateDataControls( self.db_recno )
                 self._oricod, self._orides = newcod, newdes
                 written = True
@@ -1282,6 +1311,8 @@ class AnagPanel(aw.Panel):
             MsgDialog(self,\
 """Sono presenti valori non validi.  Correggere le parti evidenziate per """\
 """continuare.  I dati non sono stati salvati.""" )
+
+
         return written
 
     def TransferDataFromWindow( self ):
@@ -1505,6 +1536,10 @@ class AnagPanel(aw.Panel):
             #self._gridsrc.MakeCellVisible(recno, col)
         if self._btnattach is not None:
             self._btnattach.SetKey(self.db_recid)
+
+        if not self.IsGestioneClientiFornitori():
+            self.UpdateDataControls_PersonalPage()
+
 
     def ResetControl( self, ctr ):
         try:

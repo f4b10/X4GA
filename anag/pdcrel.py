@@ -971,9 +971,6 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
 
         self.InitControls_PersonalPage()
 
-    def InitControls_PersonalPage(self):
-        pass
-
     def InitAnagToolbar(self, parent):
         out = ga.AnagToolbar(parent, -1, hide_ssv=False)
         self.Bind(wx.EVT_TOGGLEBUTTON, self.OnSSV)
@@ -1036,19 +1033,15 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
     def UpdateDataControls( self, recno ):
         _PdcRelPanel.UpdateDataControls( self, recno )
         if self.loadrelated:
-
             for panel in [self.banchePanel, self.destinPanel]:
                 try:
                     panel.UpdateDataControls()
                 except:
                     pass
-
             self.UpdateDataControls_PersonalPage()
-
             if self.gridgrip is not None:
                 self.LoadGriglia()
                 self.gridgrip.SetGridCursor(0,0)
-
 
     def UpdateDataControls_PersonalPage(self):
         # Metodo da implementare nella classe derivata per gestire l'aggiornamento visuale dei controlli
