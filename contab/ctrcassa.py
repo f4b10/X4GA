@@ -64,7 +64,7 @@ class GridPdc(dbglib.DbGrid):
                 (140, (cn(pdc, 'descriz'), "Sottoconto", _STR, True)),)
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
-        
+        self._cols=cols
         canedit = False
         canins = False
         
@@ -308,8 +308,11 @@ class CtrCassaPanel(aw.Panel):
         pdc.Retrieve()
         wx.EndBusyCursor()
     
+
+    
     def UpdateGridPdc(self):
         db = self.dbctr
+        self.dbGridPdc = db 
         wx.BeginBusyCursor()
         do = db.Retrieve()
         wx.EndBusyCursor()
