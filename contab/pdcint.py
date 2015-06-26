@@ -131,7 +131,9 @@ class GridMastro(dbglib.DbGridColoriAlternati):
             (240, (cn(mov, "note"),      "Note",      _STR, True )),
             (  1, (cn(reg, "id"),        "#reg",      _STR, True )),
             (  1, (cn(mov, "id"),        "#mov",      _STR, True )),
-        )                                           
+        ) 
+        
+        self._cols=cols                                          
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
         
@@ -160,6 +162,12 @@ class GridMastro(dbglib.DbGridColoriAlternati):
         sz.SetSizeHints(parent)
         
         self.Bind(gl.EVT_GRID_CELL_LEFT_DCLICK, self.OnDblClick)
+    
+    
+
+    def GetDbColumns(self):
+        return self._cols
+    
     
     def GetAttr(self, row, col, rscol, attr=gl.GridCellAttr):
         attr = dbglib.DbGridColoriAlternati.GetAttr(self, row, col, rscol, attr)
@@ -548,6 +556,7 @@ class GridScadenzario(dbglib.DbGridColoriAlternati,
             (110, (cn(pcf, "imppar"),  "Pareggiamento", _FLV, False)),
             (  1, (cn(pcf, "id"),      "#pcf",          _STR, False)),
             )
+        self._cols=cols
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
         
