@@ -93,7 +93,7 @@ class SottoscortaGrid(inv.GridInv):
         
         grid = dbglib.DbGrid(self.parent, -1, size=size, style=0)
         grid.SetData(self.rsinv, colmap, canedit, canins)
-        
+        grid._cols=cols
         #def GridAttr(row, col, rscol, attr):
             #if col%2 == 0:
                 #attr.SetBackgroundColour(stdcolor.GetColour("gainsboro"))
