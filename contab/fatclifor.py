@@ -102,6 +102,8 @@ class FatturatoContabileClientiFornitGrid(dbglib.DbGridColoriAlternati):
         self._col_piva = cn('anag_piva')
         self._col_stato = cn('anag_stato')
         
+        self._cols=cols
+        
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
         
@@ -176,6 +178,9 @@ class FatturatoContabileClientiFornitPanel(aw.Panel):
         
         wx.CallAfter(lambda: cn('datmin').SetFocus())
     
+    def GetPanelDataSource(self):
+        return self.fat
+        
     def OnCellDblClick(self, event):
         row = event.GetRow()
         self.dbfat.MoveRow(row)
@@ -292,6 +297,8 @@ class FatturatoContabileClientiFornitPanel(aw.Panel):
                 sf += 'IF(tipana.tipo="C", stato_cli.codice<>"IT" AND stato_cli.is_cee=0, stato_for.codice<>"IT" AND stato_for.is_cee=0)'
         if sf:
             fat.AddFilter(sf)
+            
+        self.fat=fat
         wx.BeginBusyCursor()
         try:
             if not fat.Retrieve():
