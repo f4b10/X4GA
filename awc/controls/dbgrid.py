@@ -27,7 +27,7 @@ from wx.grid import GRID_VALUE_NUMBER, GRID_VALUE_FLOAT, GRID_VALUE_DATETIME,\
 Presentazione e/o editazione valori in formato griglia.
 """
 
-_DEBUG=True
+_DEBUG=False
 
 import csv
 CSVFORMAT_ASGRID = 0
@@ -74,12 +74,17 @@ import mx.DateTime as dt
 import awc.wxinit as wxinit
 
 
+ASC  = 'ASC'
+DESC = 'DESC'
+
+
 class DbGrid(gridlib.Grid, cmix.HelpedControl):
     """
     Presentazione e/o editazione valori in formato griglia.
     """
     _canReorder = None
     _cols = None
+    Titoli = None
     def __init__(self, *args, **kwargs):
 
         self.tableClass = DbGridTable
@@ -155,8 +160,9 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
         self._lastdim = [None, None, False]
         self.Bind(wx.EVT_SIZE, self.OnGridResized)
 
-
-
+        self._canReorder=self.CanOrderByLabelTitle()
+        if self._canReorder:
+            self.SetLabelTextColour(wx.BLUE)
 
     def GetDbColumns(self):
         #TODO: DA CONTROLLARE SE NECESSARIO
@@ -217,17 +223,29 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
         event.Skip()
 
     def OnFocusGain(self, event):
-        if not self._canReorder:
-            self._canReorder=self.CanOrderByLabelTitle()
-            if self._canReorder:
-                #TODO: Evidenziare titoli riordinabili
-                cursor = wx.StockCursor(wx.CURSOR_CROSS)
-                self.GetGridColLabelWindow().SetCursor(cursor)
-                win=self.GetGridColLabelWindow()
-                win.SetBackgroundColour(wx.WHITE)
-                win.SetForegroundColour(wx.WHITE)
-                self.Refresh()
-                pass
+        if self._canReorder:
+            if not self.Titoli:
+                try:
+                    self.Titoli=Titoli(self)
+                except:
+                    pass
+            if self.Titoli:
+                colonnaOrdinata=self.Titoli.GetOrderColumn()
+                if colonnaOrdinata:
+                    t=self.GetTable()
+                    data=t.data
+                    newdata=data
+                    newdata=self.Titoli.ChangeOrder(colonnaOrdinata.GetPosition(), data)
+                    #TODO:GESTIRE LA VISUALIZZAZIONE DEI DATI SECONDO L'ORDINAMENTO ATTIV
+                    print 'ripristrinare ordinamento indicato dalle label di colonna %s %s' % (colonnaOrdinata.GetLabel(), colonnaOrdinata.GetVersus())
+                    objRs, objDb = self.GetPanelDataSource()
+                    if objRs:
+                        objRs.db_rs=newdata
+                    elif objDb:
+                        db=objDb.GetPanelDataSource()
+                        db._info.rs=newdata
+                    t.ChangeData(newdata)
+                    self.ChangeData(newdata)                    
         self.FocusGained()
         event.Skip()
 
@@ -317,13 +335,18 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
         return (rs, db)
 
     def CanOrderByLabelTitle(self):
-        #TODO: recuperare l'ordinamento iniziale
         lCanOrder=False
         objRs, objDb = self.GetPanelDataSource()
         if objRs or objDb:
-            col=self.GetDbColumns()
-            if col and len(col)>0:
-                lCanOrder=True
+            try:
+                col=self.GetDbColumns()
+                if col and len(col)>0:
+                    lCanOrder=True
+            except Exception, exc:
+                #print Exception, exc
+                if "object has no attribute 'tabalias'" in exc.message:
+                    lCanOrder=True
+                pass
         return lCanOrder
         #return not (objRs==None and objDb==None)
 
@@ -361,44 +384,15 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
             pass
 
         if lCanReorder:
-            label=self.GetColLabelValue(col)
-            if DOWNCHAR == label[0]:
-                self.ResetColLabels()
-                try:
-                    label=self.GetColLabelValue(col)
-                    idx=self.GetLabelColIndexInDb(label)
-                    if idx >= 0:
-                        self.SetColLabelValue(col, '%s%s' % (UPCHAR, label))
-                        newdata=self.ChangeOrderData(data, idx, order='ASC')
-                except:
-                    pass
-            else:
-                self.ResetColLabels()
-                try:
-                    label=self.GetColLabelValue(col)
-                    idx=self.GetLabelColIndexInDb(label)
-                    if idx >= 0:
-                        self.SetColLabelValue(col, '%s%s' % (DOWNCHAR, label))
-                        newdata=self.ChangeOrderData(data, idx, order='DESC')
-                except:
-                    pass
-
-            if idx<0:
-                print ''
-                print ''
-                print ''
-                print 'NON  TROIVATa la definizione delle colonne per il grid %s' % self
-                print '='*80
-
-
-
-            if objRs:
-                objRs.db_rs=newdata
-            elif objDb:
-                db=objDb.GetPanelDataSource()
-                db._info.rs=newdata
-            t.ChangeData(newdata)
-            self.ChangeData(newdata)
+            if self.Titoli:
+                newdata=self.Titoli.ChangeOrder(col, data)
+                if objRs:
+                    objRs.db_rs=newdata
+                elif objDb:
+                    db=objDb.GetPanelDataSource()
+                    db._info.rs=newdata
+                t.ChangeData(newdata)
+                self.ChangeData(newdata)
 
     def _Grid_MenuPopup(self, x, y):
         hascte = hasctc = False
@@ -938,6 +932,20 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
         table = self.GetTable()
         if table:
             return table.DeleteRows(rowFrom, rowTo)
+
+    def GetColumnOrdered(self):
+        idxColumn=-1
+        order = 'ASC'
+        for i in range(0, self.GetNumberCols()):
+            label=self.GetColLabelValue(i)
+            if label[0]==UPCHAR or label[0]==DOWNCHAR:
+                idxColumn=i
+                if label[0]==UPCHAR:
+                    order='DESC'
+                else:
+                    order='ASC'
+                break
+        return (idxColumn, order)
 
     def ChangeData(self, newdata):
         table = self.GetTable()
@@ -2386,6 +2394,122 @@ class ADB_Grid(DbGridColoriAlternati):
         return True
 
 
+
+class Titoli(list):
+    parent      = None
+    orderColumn = None
+    
+    def __init__(self, parent):
+        self.parent =parent
+        columnDef   =parent.GetDbColumns()
+        for i, c in enumerate(columnDef):
+            obj=Titolo(i, c, self)
+            self.append(obj)
+
+    def __str__(self):
+        ret=''
+        #=======================================================================
+        # for c in self:
+        #     ret= '%s\n%s' % (ret, c.__str__())
+        # print '-'*60
+        # ret= '%s\n%s' % (ret, c.__str__())
+        #=======================================================================
+        ret= '%s\n%s' % (ret, ('ordinato per colonna %s' % self.GetOrderColumn()))
+        return ret
+
+
+    def ChangeOrder(self, col, data):
+        newColOrder=self[col]
+        oldColOrder=self.GetOrderColumn()
+        if not newColOrder==oldColOrder:
+            if oldColOrder:
+                self.ResetOrderColumn()                        
+        self.SetOrderColumn(newColOrder.GetPosition())
+        newdata=self.parent.ChangeOrderData(data, newColOrder.GetIndexDb(), order=newColOrder.GetVersus())
+        return newdata
+
+
+
+
+
+    def SetOrderColumn(self, i):
+        self.orderColumn = i
+        self[i].SetOrder()
+
+    def ResetOrderColumn(self):
+        i=self.orderColumn
+        self.orderColumn = None
+        if i:
+            self[i].ResetOrder()
+        
+        
+    def GetOrderColumn(self):
+        if self.orderColumn:
+            return self[self.orderColumn]
+        else:
+            return None
+
+class Titolo():
+    size        = None
+    pos         = None
+    idxDb       = None
+    type        = None
+    label       = None
+    backColour  = None
+    foreColour  = None
+    isOrdered   = None
+    orderVersus = None
+    isFiltered  = None
+
+    def __init__(self, i, columnDef, parent):
+        self.parent = parent
+        self.pos=i
+        self.size= columnDef[0]
+        self.idxDb, self.label, self.type, self.canEdit = columnDef[1]
+        self.isOrdered = False
+        self.orderVersus=DESC
+
+    def __str__(self):
+        return 'label:%s \tpos:%s \tinDb:%s \ttipo:%s \tverso=%s' % (self.label, self.pos, self.idxDb, self.type, self.orderVersus)
+
+    def SetOrder(self):
+        self.isOrdered  =True
+        if self.orderVersus==ASC:
+            self.orderVersus=DESC
+            sign=DOWNCHAR
+        else:
+            self.orderVersus=ASC
+            sign=UPCHAR
+        #print self.parent.parent
+        self.parent.parent.SetColLabelValue(self.pos, '%s%s' % (sign, self.label))
+        
+    def ResetOrder(self):
+        self.parent.parent.SetColLabelValue(self.pos, '%s' % self.label)
+        self.isOrdered=False
+        self.orderVersus=DESC
+
+    def IsOrdered(self):
+        return self.isOrdered
+
+    def GetOrderVersus(self):
+        return self.self.orderVersus
+
+    def GetOrder(self):
+        return (self.isOrdered, self.orderVersus)
+        
+    def GetLabel(self):
+        return self.label
+
+    def GetVersus(self):
+        return self.orderVersus
+
+    def GetPosition(self):
+        return self.pos
+
+    def GetIndexDb(self):
+        return self.idxDb
+
+
 if __name__ == '__main__':
 
     import sys
@@ -2396,7 +2520,7 @@ if __name__ == '__main__':
 
     db = adb.DB()
     if not db.Connect(host='localhost', user='user_name', passwd='password', db='db_name'):
-        print db.dbError.description
+        #print db.dbError.description
         sys.exit()
 
     class TestApp(wx.PySimpleApp):
