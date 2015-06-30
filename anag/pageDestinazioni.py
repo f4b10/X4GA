@@ -11,8 +11,8 @@ import Env
 import anag.pdcrelAddPage_wdr as wdr
 bt = Env.Azienda.BaseTab
 
-from anag.clifornewpage import GenericPersonalLinkedPage_Panel
-from anag.clifornewpage import GenericPersonalLinkedPage_InternalGrid
+from awc.layout.anagnewpage import GenericPersonalLinkedPage_Panel
+from awc.layout.anagnewpage import GenericPersonalLinkedPage_InternalGrid
 import wx.grid as gl
 
 

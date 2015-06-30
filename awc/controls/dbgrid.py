@@ -245,7 +245,7 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
                         db=objDb.GetPanelDataSource()
                         db._info.rs=newdata
                     t.ChangeData(newdata)
-                    self.ChangeData(newdata)                    
+                    self.ChangeData(newdata)
         self.FocusGained()
         event.Skip()
 
@@ -353,46 +353,50 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
     def OnLabelLeftClick(self, event):
         lCanReorder=False
         col=event.GetCol()
-
-        t=self.GetTable()
-        data=t.data
-        newdata=data
-        try:
-            try:
-                objRs, objDb = self.GetPanelDataSource()
-                if objRs==None and objDb==None:
-                    print ''
-                    print ''
-                    print ''
-                    print 'NON  TROIVATO un panel che del tipo di seguito specificato:'
-                    print '- Panel derivato da awc.controls.windows.Panel che contenga attrinuto db_rs'
-                    print '- Panel derivato da wx.panel esponga il metodo GetPanelDataSource'
-                    print 'La ricerca è stata eseguita neim seguenti oggetti:'
-                    self.GetPanelDataSource(debug=True)
-                    print '='*80
-                else:
-                    lCanReorder=True
+        if self._canReorder or _DEBUG:
+            filterOn=event.ControlDown()
+            if filterOn:
+                print 'filtra'
+            else:
+                t=self.GetTable()
+                data=t.data
+                newdata=data
+                try:
+                    try:
+                        objRs, objDb = self.GetPanelDataSource()
+                        if objRs==None and objDb==None:
+                            if _DEBUG:
+                                print ''
+                                print ''
+                                print ''
+                                print 'NON  TROIVATO un panel che del tipo di seguito specificato:'
+                                print '- Panel derivato da awc.controls.windows.Panel che contenga attrinuto db_rs'
+                                print '- Panel derivato da wx.panel esponga il metodo GetPanelDataSource'
+                                print 'La ricerca è stata eseguita neim seguenti oggetti:'
+                                self.GetPanelDataSource(debug=True)
+                                print '='*80
+                        else:
+                            lCanReorder=True
+                            if _DEBUG:
+                                print '%s %s' % (objRs, objDb)
+                    except:
+                        pass
+                except:
+                    objRs=None
+                    objDb=None
                     if _DEBUG:
-                        print '%s %s' % (objRs, objDb)
-            except:
-                pass
-        except:
-            objRs=None
-            objDb=None
-            if _DEBUG:
-                print 'RECORDET NON TROVATO %s' % self
-            pass
+                        print 'RECORDET NON TROVATO %s' % self
+                    pass
 
-        if lCanReorder:
-            if self.Titoli:
-                newdata=self.Titoli.ChangeOrder(col, data)
-                if objRs:
-                    objRs.db_rs=newdata
-                elif objDb:
-                    db=objDb.GetPanelDataSource()
-                    db._info.rs=newdata
-                t.ChangeData(newdata)
-                self.ChangeData(newdata)
+                if self.Titoli:
+                    newdata=self.Titoli.ChangeOrder(col, data)
+                    if objRs:
+                        objRs.db_rs=newdata
+                    elif objDb:
+                        db=objDb.GetPanelDataSource()
+                        db._info.rs=newdata
+                    t.ChangeData(newdata)
+                    self.ChangeData(newdata)
 
     def _Grid_MenuPopup(self, x, y):
         hascte = hasctc = False
@@ -2398,7 +2402,7 @@ class ADB_Grid(DbGridColoriAlternati):
 class Titoli(list):
     parent      = None
     orderColumn = None
-    
+
     def __init__(self, parent):
         self.parent =parent
         columnDef   =parent.GetDbColumns()
@@ -2423,7 +2427,7 @@ class Titoli(list):
         oldColOrder=self.GetOrderColumn()
         if not newColOrder==oldColOrder:
             if oldColOrder:
-                self.ResetOrderColumn()                        
+                self.ResetOrderColumn()
         self.SetOrderColumn(newColOrder.GetPosition())
         newdata=self.parent.ChangeOrderData(data, newColOrder.GetIndexDb(), order=newColOrder.GetVersus())
         return newdata
@@ -2441,8 +2445,8 @@ class Titoli(list):
         self.orderColumn = None
         if i:
             self[i].ResetOrder()
-        
-        
+
+
     def GetOrderColumn(self):
         if self.orderColumn:
             return self[self.orderColumn]
@@ -2482,7 +2486,7 @@ class Titolo():
             sign=UPCHAR
         #print self.parent.parent
         self.parent.parent.SetColLabelValue(self.pos, '%s%s' % (sign, self.label))
-        
+
     def ResetOrder(self):
         self.parent.parent.SetColLabelValue(self.pos, '%s' % self.label)
         self.isOrdered=False
@@ -2496,7 +2500,7 @@ class Titolo():
 
     def GetOrder(self):
         return (self.isOrdered, self.orderVersus)
-        
+
     def GetLabel(self):
         return self.label
 
