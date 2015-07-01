@@ -14,8 +14,8 @@ bt = Env.Azienda.BaseTab
 import wx
 import awc.controls.windows as aw
 
-from anag.clifornewpage import GenericPersonalLinkedPage_Panel
-from anag.clifornewpage import GenericPersonalLinkedPage_InternalGrid
+from awc.layout.anagnewpage import GenericPersonalLinkedPage_Panel
+from awc.layout.anagnewpage import GenericPersonalLinkedPage_InternalGrid
 import wx.grid as gl
 
 
