@@ -2518,19 +2518,16 @@ class MagazzPanel(aw.Panel,\
             func = lambda *x: True
         #DbgMsg('enable=%s on controls of %s' % (enable, parent.GetName()))
         ctrls = aw.awu.GetAllChildrens(parent)
-        print '='*60
         for c in ctrls:
             if isinstance(c, (wx.TextCtrl, wx.Button, dbglib.DbGrid)):
                 if func(c):
                     try:
                         if not c.IsEditable():
-                            print c.GetName()
                             c.Enable(False)
                         else:
                             c.Enable(enable)
                     except:
                         c.Enable(enable)
-
                 #===============================================================
                 # if func(c):
                 #     c.Enable(enable)
