@@ -725,7 +725,10 @@ class NumericCellEditor(gridlib.PyGridCellEditor, CellEditorsMixin):
                     rscol = table.rsColumns[col]
                     if rscol>=0:
                         #data[row][rscol] = val
-                        data[row][rscol] = self._tc.GetValue() #potrebbe essere stato variato dai callback
+                        try:
+                            data[row][rscol] = self._tc.GetValue() #potrebbe essere stato variato dai callback
+                        except:
+                            pass
                     table.ForceResetView()
                     changed = True
                     # callback successivo all'aggiornamento del recordset
