@@ -120,7 +120,7 @@ class DocIntGrid(dbglib.DbGridColoriAlternati, _DocIntGridMixin):
             ( 80, (cn(doc,"datdoc"),     "Data doc.",     _DAT, True)),
             ( 50, (cn(pdc,"codice"),     "Cod.",          _STR, True)),
             (290, (cn(pdc,"descriz"),    "Sottoconto",    _STR, True)),
-            ( 35, (cn(mpa,"codice"),     "Cod.",          _STR, True)),
+            ( 35, (cn(mpa,"codice"),     "Mp",            _STR, True)),
             (120, (cn(mpa,"descriz"),    "Mod.Pagamento", _STR, True)),
             ( 35, (cn(spe,"codice"),     "Spese",         _STR, True)),
             (110, (cn(doc,"totimporto"), "Tot.Documento", _IMP, True)),
@@ -138,6 +138,8 @@ class DocIntGrid(dbglib.DbGridColoriAlternati, _DocIntGridMixin):
             (  1, (cn(doc,"id_reg"),     "#reg",          _STR, True)),
         )
         
+
+        self._cols=cols
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
         
@@ -311,6 +313,9 @@ class DocIntPanel(aw.Panel):
         tpd.Get(cn('id_tipdoc').GetValue())
         cn('docfam').Enable(bool(tpd.docfam))
 
+
+    def GetPanelDataSource(self):
+        return self.dbdoc
 
 # ------------------------------------------------------------------------------
 

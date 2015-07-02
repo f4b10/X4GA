@@ -88,6 +88,7 @@ class PdcIntMagDocGrid(dbglib.DbGridColoriAlternati, docint._DocIntGridMixin):
             ( 30, (cn(doc, 'f_ann'),      "Ann",           _CHK, True )),
             (  1, (cn(doc, "id"),         "#doc",          _STR, True )),
         )
+        self._cols=cols
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
         
@@ -200,6 +201,7 @@ class PdcIntMagMovGrid(dbglib.DbGridColoriABlocchi):
         a((  1, (cn(doc, "id"),      "#doc",         _STR, True)))
         a((  1, (cn(pro, "id"),      "#pro",         _STR, True)))
         
+        self._cols=cols
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
         
@@ -282,6 +284,7 @@ class PdcIntMagFtProdGrid(dbglib.DbGridColoriAlternati):
             ( 40, (cn(dbfat, 'lastsco'),      "Sc.%",         _SCO, True)),
             ( 70, (cn(dbfat, 'lastscmq'),     "Sc.Mce",       _QTA, True)),
         )
+        self._cols=cols
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
         
@@ -330,6 +333,7 @@ class PdcIntMagFatCatArtGrid(dbglib.DbGridColoriAlternati):
             ( 60, (cn(mov, "total_statqtafat"), "Qta",       _QTA, True)),
             ( 90, (cn(mov, "total_statvalfat"), "Importo",   _IMP, True)),
         )
+        self._cols=cols
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
         
@@ -383,6 +387,7 @@ class PdcIntMagFatProGrid(dbglib.DbGridColoriAlternati):
             ( 90, (cn(mov, "total_statvalfat"), "Importo",   _IMP, True)),
             (  1, (cn(pro, "id"),               "#pro",      _STR, True)),
         )
+        self._cols=cols
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
         

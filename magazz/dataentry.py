@@ -6,17 +6,17 @@
 # Copyright:    (C) 2011 Astra S.r.l. C.so Cavallotti, 122 18038 Sanremo (IM)
 # ------------------------------------------------------------------------------
 # This file is part of X4GA
-# 
+#
 # X4GA is free software: you can redistribute it and/or modify
 # it under the terms of the Affero GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # X4GA is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
@@ -99,22 +99,22 @@ def DbgMsg(x):
 
 
 class PdcProdHistoryGrid(dbglib.DbGrid):
-    
+
     def __init__(self, parent):
-        
+
         dbglib.DbGrid.__init__(self, parent, -1, size=parent.GetSize(), style=0)
-        
+
         self.dbmas = dbm.ProdMastro()
         mov = self.dbmas.mov
         doc = mov.doc
         tpd = doc.tipdoc
         tpm = mov.tipmov
         mag = doc.mag
-        
+
         self._cache_history = {}
-        
+
         cn = lambda db, col: db._GetFieldIndex(col, inline=True)
-        
+
         _NUM = gl.GRID_VALUE_NUMBER
         _STR = gl.GRID_VALUE_STRING
         _DAT = gl.GRID_VALUE_DATETIME
@@ -123,7 +123,7 @@ class PdcProdHistoryGrid(dbglib.DbGrid):
         _PRE = bt.GetMagPreMaskInfo()
         _IMP = bt.GetValIntMaskInfo()
         _SCO = bt.GetMagScoMaskInfo()
-        
+
         cols = []
         a = cols.append
         a(( 35, (cn(mag, "codice"),  "Mag.",      _STR, True)))
@@ -153,22 +153,22 @@ class PdcProdHistoryGrid(dbglib.DbGrid):
         a(( 30, (cn(doc, "f_acq"),   "Acq",       _CHK, True)))
         a((  1, (cn(doc, "id"),      "#doc",      _STR, True)))
         a((  1, (cn(mov, "id"),      "#mov",      _STR, True)))
-        
+
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
-        
+
         canedit = True
         canins = False
-        
+
         self.SetData((), colmap, canedit, canins)
-        
+
         self._bgcol1, self._bgcol2 = [bc.GetColour(c) for c in ("lavender",
                                                                 "aliceblue")]
         self.SetCellDynAttr(self.GetAttr)
-        
+
         map(lambda c:\
             self.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
-        
+
         self.SetFitColumn(1)
         self.AutoSizeColumns()
         sz = wx.FlexGridSizer(1,0,0,0)
@@ -177,23 +177,23 @@ class PdcProdHistoryGrid(dbglib.DbGrid):
         sz.Add(self, 0, wx.GROW|wx.ALL, 0)
         parent.SetSizer(sz)
         sz.SetSizeHints(parent)
-        
+
         #self.Bind(gl.EVT_GRID_CELL_LEFT_DCLICK, self.OnCallProd)
-    
+
     def GetAttr(self, row, col, rscol, attr=gl.GridCellAttr):
         readonly = col < 3 or col > 8
         attr.SetReadOnly(readonly)
-        
+
         if row%2 == 0:
             bgcol = self._bgcol2
         else:
             bgcol = self._bgcol1
-        
+
         #attr.SetTextColour(fgcol)
         attr.SetBackgroundColour(bgcol)
-        
+
         return attr
-    
+
     def UpdateGrid(self, idpdc, idprod):
         if idprod is None:
             rs = ()
@@ -214,7 +214,7 @@ class PdcProdHistoryGrid(dbglib.DbGrid):
                 self._cache_history[key] = rs
             rs = self._cache_history[key]
         self.ChangeData(rs)
-    
+
     def ClearHistoryCache(self):
         self._cache_history.clear()
 
@@ -223,20 +223,20 @@ class PdcProdHistoryGrid(dbglib.DbGrid):
 
 
 class DisplayFidoPanel(aw.Panel):
-    
+
     check = None
-    
+
     def __init__(self, *args, **kwargs):
         aw.Panel.__init__(self, *args, **kwargs)
         wdr.DisplayFidoClienteFunc(self)
         for name, func in (('btnprintfido', self.OnPrintFido),
                            ('btnprintritp', self.OnPrintRitardi)):
             self.Bind(wx.EVT_BUTTON, func, self.FindWindowByName(name))
-    
+
     def OnPrintFido(self, event):
         rpt.Report(self, self.check, 'Situazione fido cliente')
         event.Skip()
-    
+
     def OnPrintRitardi(self, event):
         s = self.check.dbscad
         s.Get(self.check.id)
@@ -245,7 +245,7 @@ class DisplayFidoPanel(aw.Panel):
             return
         rpt.Report(self, s, 'Analisi ritardi pagamenti clienti')
         event.Skip()
-    
+
     def UpdateValues(self, check):
         assert isinstance(check, dbm.CtrFidoCliente)
         def cn(x):
@@ -267,13 +267,13 @@ class DisplayFidoPanel(aw.Panel):
 
 
 class DisplayFidoDialog(aw.Dialog):
-    
+
     def __init__(self, *args, **kwargs):
         kwargs['title'] = 'Situazione fido cliente'
         aw.Dialog.__init__(self, *args, **kwargs)
         self.panel = DisplayFidoPanel(self)
         self.AddSizedPanel(self.panel)
-    
+
     def UpdateValues(self, check):
         self.panel.UpdateValues(check)
 
@@ -293,14 +293,14 @@ class MagazzPanel(aw.Panel,\
     onedoconly_id = None
     _testload = True
     gridbodyclass = GridBody
-    
+
     def __init__(self, *args, **kwargs):
-        
+
         aw.Panel.__init__(self, *args, **kwargs)
-        
+
         global today
         today = Env.Azienda.Esercizio.dataElab
-        
+
         self.caudisp = [ ("codice",  "Cod."),\
                          ("descriz", "Causale") ]
         self.cauid = None
@@ -319,50 +319,50 @@ class MagazzPanel(aw.Panel,\
         self.interrpdc_lastid = None
         self.loadingdoc = False
         self.oldlist = None
-        
+
         self._delta_xy = 1
-        
+
         self.setenablecontrols = True
         self.rowsok = True
-        
+
         self.dbdoc = dbm.DocMag()
         self.ctrfido = dbm.CtrFidoCliente()
-        
+
         self.dbpdc = adb.DbTable(bt.TABNAME_PDC)
         self.dbpdc.AddJoin(bt.TABNAME_PDCTIP, "tipana", idLeft="id_tipo")
         self.dbpag = adb.DbTable(bt.TABNAME_MODPAG, "modpag")
         self.dbanag = None
-        
+
         self.dbattanag = AttachTableList(bt.TABNAME_ALLEGATI)
-        
+
         self.dbevas = dbm.ElencoMovimEva()
         self.dbevas.AddLimit(1)
-        
+
         db_curs = adb.db.__database__.GetConnection().cursor()
-        
+
         cfgcon.CfgCausale.__init__(self, db_curs)
         auto.CfgAutomat.__init__(self, db_curs)
         progr.CfgProgr.__init__(self, db_curs)
-        
+
         self.gridbodyclass.__init__(self)
-        
+
         scadedit.GridScad.__init__(self, self.dbdoc.regcon)
-        
+
         self._Auto_AddKeysMagazz()
         self._Progr_AddKeysMagazz()
-        
+
         self.status = None
         self.caufilt = None
-        
+
         wdr.DialogFunc(self, True)
         self.InitPanelTot()
-        
+
         cn = self.FindWindowByName
         ci = self.FindWindowById
-        
+
         cn('scadwarning').SetLabel('')
         cn('butfido').Disable()
-        
+
         self.boxanag = None
         self.boxdest = None
         ctrls = aw.awu.GetAllChildrens(self)
@@ -372,13 +372,13 @@ class MagazzPanel(aw.Panel,\
                     setattr(self, c.GetLabel(), c)
         self.boxanag.SetLabel('Anagrafica')
         self.boxdest.SetLabel('Destinazione diversa')
-        
+
         self.GridBody_Init(ci(wdr.ID_PANGRIDBODY))
         self.gridlist = prod.ListAttGrid(ci(wdr.ID_PANGRIDLIST))
         self.gridmovi = PdcProdHistoryGrid(ci(wdr.ID_PANGRIDMOVIM))
-        
+
         self.controls = awc.util.DictNamedChildrens(self)
-        
+
         def ResetPdc(*x):
             """
             Quando viene confermato il dialog modale della scheda anagrafica,
@@ -391,34 +391,34 @@ class MagazzPanel(aw.Panel,\
             if self.dbdoc.id is None:
                 self.dbdoc.id_pdc = None
         self.controls['id_pdc'].SetPreSetVal(ResetPdc)
-        
+
         btnat = self.controls["butattach"]
         btnat.SetScope("movmag_h")
         btnat.SetAutoText(self.controls["autonotes_doc"])
         btnat.SetSpyPanel(cn('attachspy'))
-        
+
         self._docsearch = dbm.DocMag()
         self._regsearch = dbm.dbc.DbRegCon()
         self._regsearch.AddGroupOn('reg.id_regiva')
         self._regsearch.AddMaximumOf('reg.numiva', 'numiva')
-        
+
         self.InitCausale()
         self.SetRegStatus(STATUS_SELCAUS)
-        
-        #per grandezza minima della griglia, che altrimenti è settata come altezza completa 
-        #ed abilitando la zona dati del prodotto la griglia rimane troppo alta, 
+
+        #per grandezza minima della griglia, che altrimenti è settata come altezza completa
+        #ed abilitando la zona dati del prodotto la griglia rimane troppo alta,
         #nascondendo i bottoni sottostanti x nuova riga, elimina riga ecc.
         self.SetProdZoneSize(force_visible=True)
-        
+
         self.SetFieldsMaxLength()
-        
+
         for n in range(9):
             if n+1>bt.MAGNUMSCO:
                 for prefix in 'labsco sconto'.split():
                     c = cn('%s%d' % (prefix, n+1))
                     if c:
                         c.Hide()
-        
+
         # bind eventi dei bottoni
         for name, func in (("butnew",     self.OnDocNew),
                            ("butsrc",     self.OnDocSearch),
@@ -434,7 +434,7 @@ class MagazzPanel(aw.Panel,\
                            ("butfido",    self.OnDisplayFidoCliente),
                            ("butvediacc", self.OnDisplayAccontiCliente),):
             self.Bind(wx.EVT_BUTTON, func, self.controls[name])
-        
+
         # bind eventi di cambiamento dati del documento
         for name, evt in (('numdoc', wx.EVT_TEXT),
                           ('numiva', wx.EVT_TEXT),
@@ -443,83 +443,83 @@ class MagazzPanel(aw.Panel,\
             self.Bind(evt, self.OnDocIdChanged, self.controls[name])
         self.Bind(linktab.EVT_LINKTABCHANGED, self.OnDocIdChanged,\
                   id=wdr.ID_MAGAZZ)
-        
+
         ci(wdr.ID_PDC).GetCtrlScheda().Bind(wx.EVT_RIGHT_DOWN, self.OnInterrPdc)
-        
+
         ci(wdr.ID_PDC).SetInitFocus(linktab.INITFOCUS_DESCRIZ)
-        
+
         ci(wdr.ID_FANN).SetDataLink('f_ann', {True: 1, False: 0})
         ci(wdr.ID_FACQ).SetDataLink('f_acq', {True: 1, False: 0})
-        
+
         # bind evento cambiamento sottoconto x agg.dati anagrafici
         self.Bind(linktab.EVT_LINKTABCHANGED, self.OnAnagChanged,\
                   id=wdr.ID_PDC)
         #self.Bind(linktab.EVT_LINKTABCHANGED, self.OnDestChanged,\
                   #id=wdr.ID_DEST)
-        
+
         # bind eventi di cambiamento dati di testata
         for name in 'f_ann f_acq'.split():
             self.Bind(wx.EVT_CHECKBOX, self.OnHeadChanged, cn(name))
-        
+
         for name in 'pdc modpag bancf speinc aliqiva agente zona tiplist valuta dest'.split():
             self.Bind(EVT_LINKTABCHANGED, self.OnHeadChanged, cn("id_%s" % name))
-        
+
         for name in 'desrif numrif noteint notedoc sconto1 sconto2 sconto3 sconto4 sconto5 sconto6'.split():
             self.Bind(wx.EVT_TEXT, self.OnHeadChanged, cn(name))
-        
+
         for name in 'datrif'.split():
             self.Bind(EVT_DATECHANGED, self.OnHeadChanged, cn(name))
-        
+
         # bind eventi di cambiamento dati accompagnatori
         for name in 'cau cur vet asp por con'.split():
             self.Bind(EVT_LINKTABCHANGED, self.OnFootChanged, cn("id_tra%s" % name))
-        
+
         for name in 'impcontr totpeso totcolli notevet'.split():
             self.Bind(wx.EVT_TEXT, self.OnFootChanged, cn(name))
-        
+
         self.Bind(EVT_DATECHANGED, self.OnFootChanged, cn("initrasp"))
         self.Bind(wx.EVT_BUTTON, self.OnFootChanged, cn("initraspnow"))
-        
+
         self.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnWorkZoneChanged, cn('workzone'))
-        
+
         for cid, func in ((wdr.ID_BTNBODYNEW,  self.GridBodyOnCreate),
                           (wdr.ID_BTNBODYDEL,  self.GridBodyOnDelete),
                           (wdr.ID_BTNBODYPDT,  self.GridBodyOnAcqPDT),
                           (wdr.ID_BTNBODYETIC, self.GridBodyOnLabels)):
             self.Bind(wx.EVT_BUTTON, func, id=cid)
-        
+
         for type in 'des vet'.split():
-            
+
             c = cn('enable_nocode%s' % type)
             self.Bind(wx.EVT_CHECKBOX, self.OnFootChanged, c)
-            
+
             c = cn('nocode%s_id_stato' % type)
             if c:
                 self.Bind(EVT_LINKTABCHANGED, self.OnFootChanged, c)
-            
+
             for name in 'descriz indirizzo cap citta prov codfisc piva'.split():
                 c = cn('nocode%s_%s' % (type, name))
                 if c:
                     self.Bind(wx.EVT_TEXT, self.OnFootChanged, c)
-        
+
         cn('nocodevet_piva').SetStateControl(cn('nocodevet_nazione'))
-        
+
         if bt.MAGEXTRAVET:
             for name in 'targa autista dichiar'.split():
                 c = cn('nocodevet_%s' % name)
                 self.Bind(wx.EVT_TEXT, self.OnFootChanged, c)
-        
+
         self.Bind(wx.EVT_CHECKBOX, self.OnVariaDestin, cn('enable_nocodedes'))
         self.Bind(wx.EVT_CHECKBOX, self.OnVariaVettore, cn('enable_nocodevet'))
         self.Bind(wx.EVT_TEXT, self.OnVariaColli, cn('numcolli'))
-        
+
         self.Bind(wx.EVT_SIZE, self.OnResize)
-        
+
 #        self.SetSize((1024,768))
-        
+
         self.Layout_()
         wx.CallAfter(self.Layout_)
-        
+
         self.SetAcceleratorKey('I', wdr.ID_BTN_NEW,    'Inserisci',       'Inserisce un nuovo documento')
         self.SetAcceleratorKey('C', wdr.ID_BTN_SEARCH, 'Cerca',           'Cerca un documento esistente')
         self.SetAcceleratorKey('M', wdr.ID_BTN_MODIF,  'Modifica',        'Modifica il documento visualizzato')
@@ -528,12 +528,12 @@ class MagazzPanel(aw.Panel,\
         self.SetAcceleratorKey('P', wdr.ID_BTN_PRINT,  'Stampa e Chiudi', 'Stampa il presente documento')
         self.SetAcceleratorKey('X', wdr.ID_BTN_DELETE, 'Elimina',         'Elimina il presente documento')
         self.SetAcceleratorKey('Q', wdr.ID_BTN_QUIT,   'Abbandona',       'Abbandona il documento senza salvare')
-    
+
     def Layout_(self):
         s = self.GetSize()
         self.SetSize((s[0]+self._delta_xy, s[1]))
         self._delta_xy = 0-self._delta_xy
-    
+
     def OnVariaDestin(self, event):
         def Enable(f):
             self.EnableHeadControls()
@@ -543,7 +543,7 @@ class MagazzPanel(aw.Panel,\
                 self.FindWindowByName('nocodedes_descriz').SetFocus()
         wx.CallAfter(Enable, event.GetEventObject().IsChecked())
         event.Skip()
-    
+
     def OnVariaVettore(self, event):
         wx.CallAfter(self.EnableDatiAcc)
         if event.GetEventObject().IsChecked():
@@ -552,19 +552,19 @@ class MagazzPanel(aw.Panel,\
             f = self.FindWindowByName('id_travet')
         wx.CallAfter(lambda: f.SetFocus())
         event.Skip()
-    
+
     def OnVariaColli(self, event):
         cn = self.FindWindowByName
         cn('butrptcolli').Enable((cn('totcolli').GetValue() or 0) > 0)
         event.Skip()
-    
+
     def SetFieldsMaxLength(self):
         for f in bt.tabelle[bt.TABSETUP_TABLE_MOVMAG_H][bt.TABSETUP_TABLESTRUCTURE]:
             if f[bt.TABSETUP_COLUMNTYPE] in 'CHAR,VARCHAR':
                 c = self.FindWindowByName(f[bt.TABSETUP_COLUMNNAME])
                 if c:
                     c.SetMaxLength(f[bt.TABSETUP_COLUMNLENGTH])
-    
+
     def TestQuit(self):
         out = True
         if self.status == STATUS_EDITING and self.dbdoc.HasModifies():
@@ -574,7 +574,7 @@ class MagazzPanel(aw.Panel,\
                                  style=wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT)
             out = (x == wx.ID_YES)
         return out
-    
+
     def OnInterrPdc(self, event):
         self.InterrPdc(show=True)
         event.Skip()
@@ -609,10 +609,10 @@ class MagazzPanel(aw.Panel,\
         finally:
             wx.EndBusyCursor()
         self.interrpdc_lastid = pdcid
-    
+
     #def InitPanelTot(self):
         #pass
-    
+
     def OnWorkZoneChanged(self, event):
         ci = self.FindWindowById
         wz = self.FindWindowByName('workzone')
@@ -627,7 +627,7 @@ class MagazzPanel(aw.Panel,\
             self.EnableFootControls()
         self.TestWorkZoneFirstFocus()
         event.Skip()
-    
+
     def TestWorkZoneFirstFocus(self):
         ci = self.FindWindowById
         wz = self.FindWindowByName('workzone')
@@ -651,7 +651,7 @@ class MagazzPanel(aw.Panel,\
                     if hasattr(c, 'SetFocus') and c.IsEnabled() and not isinstance(c, wx.StaticText):
                         c.SetFocus()
                         break
-    
+
     def UpdatePanelDAcc(self):
         doc = self.dbdoc
         ctr = lambda f: self.FindWindowByName(f)
@@ -670,7 +670,7 @@ class MagazzPanel(aw.Panel,\
                     ctr(name).SetValue(getattr(doc, name))
                 except:
                     pass
-    
+
     def IsDocValid(self, docload=True, frame=None):
         valid = False
         if frame is None:
@@ -734,7 +734,7 @@ class MagazzPanel(aw.Panel,\
             self.UpdateHeadAnag()
             self.UpdateHeadDest()
         return valid
-    
+
     def GetDocLoadFilter(self, frame=None):
         if frame is None:
             frame = self
@@ -747,7 +747,7 @@ class MagazzPanel(aw.Panel,\
         filter += " AND YEAR(doc.datreg)=%s"
         fparms.append(cnv('datreg').year)
         if cfg.docfam:
-            filter += " AND tipdoc.docfam=%s" 
+            filter += " AND tipdoc.docfam=%s"
             fparms.append(cfg.docfam)
         else:
             filter += " AND doc.id_tipdoc=%s"
@@ -758,7 +758,7 @@ class MagazzPanel(aw.Panel,\
             filter += " AND doc.id<>%s"
             fparms.append(doc.id)
         return filter, fparms
-    
+
     def DocLoad(self, docid):
         out = False
         doc = self.dbdoc
@@ -783,7 +783,7 @@ class MagazzPanel(aw.Panel,\
         if self.interrpdc:
             self.InterrPdc()
         return out
-    
+
     def DocRedraw(self):
         doc = self.dbdoc
         self.controls['butattach'].SetKey(doc.id)
@@ -800,7 +800,7 @@ class MagazzPanel(aw.Panel,\
         self.MakeTotals(False)
         if self.interrpdc:
             self.InterrPdc()
-    
+
     def TestPcf(self):
         out = True
         doc = self.dbdoc
@@ -876,7 +876,7 @@ class MagazzPanel(aw.Panel,\
         values = dbdoc.min_numdoc, dbdoc.min_datreg,\
                dbdoc.max_numdoc, dbdoc.max_datreg
         return values
-    
+
     def OnButDoc(self, event):
         if self.status == STATUS_GETKEY:
             if self.ValidateDates():
@@ -900,7 +900,7 @@ class MagazzPanel(aw.Panel,\
             self.isediting = True
             self.SetRegStatus(STATUS_GETKEY)
         event.Skip()
-    
+
     def ValidateDates(self):
         out = True
         cn = self.FindWindowByName
@@ -997,7 +997,7 @@ class MagazzPanel(aw.Panel,\
             self.dbdoc.datreg = dr
             self.dbdoc.datdoc = dd
         return out
-    
+
     def OnButPrint(self, event):
         if self.PrintDoc():
             if self.status == STATUS_EDITING:
@@ -1005,7 +1005,7 @@ class MagazzPanel(aw.Panel,\
                     event.Skip()
                 else:
                     self.SetRegStatus(STATUS_SELCAUS)
-    
+
     def OnButModify(self, event):
         if self.status == STATUS_DISPLAY and self.canedit:
             if self.TestCanModify():
@@ -1013,7 +1013,7 @@ class MagazzPanel(aw.Panel,\
                     self.SetRegStatus(STATUS_EDITING)
                     self.UpdateBodyButtons()
         event.Skip()
-    
+
     def TestCanModify(self):
         """
         Verifica la possibilità di mofidicare il documento.
@@ -1047,12 +1047,12 @@ class MagazzPanel(aw.Panel,\
                              style=wx.ICON_ERROR)
             out = False
         return out
-    
+
     def OnButAcquis(self, event):
         self.AcqDoc()
         self.gridbody.ResetView()
         event.Skip()
-    
+
     def OnAnagChanged(self, event):
         DbgMsg('OnAnagChanged, control=%s' %event.GetEventObject().GetName())
         self.UpdateHeadAnag(initAll=True)
@@ -1060,8 +1060,8 @@ class MagazzPanel(aw.Panel,\
         cn = self.FindWindowByName
         try:
             if getattr(self.dbanag.status, 'nomov_%s' % doc.cfgdoc.clasdoc) == 1:
-                aw.awu.MsgDialog(self, "%s - %s\nAnagrafica non utilizzabile in questo documento" % (doc.pdc.codice, doc.pdc.descriz), 
-                                 caption="Restrizioni sullo status (%s - %s)" % (self.dbanag.status.codice, self.dbanag.status.descriz), 
+                aw.awu.MsgDialog(self, "%s - %s\nAnagrafica non utilizzabile in questo documento" % (doc.pdc.codice, doc.pdc.descriz),
+                                 caption="Restrizioni sullo status (%s - %s)" % (self.dbanag.status.codice, self.dbanag.status.descriz),
                                  style=wx.ICON_WARNING)
                 cn('id_pdc').SetValue(None)
         except:
@@ -1104,40 +1104,40 @@ class MagazzPanel(aw.Panel,\
                 del ds
         wx.CallAfter(self.TestModPagStatusAnag)
         event.Skip()
-    
+
     def TestModPagStatusAnag(self):
         try:
             doc = self.dbdoc
             if (doc.modpag.tipo or ' ') in 'RI' and self.dbanag.status.noeffetti == 1:
-                aw.awu.MsgDialog(self, "%s - %s\nMod.Pagamento con effetti non utilizzabile su questa anagrafica" % (doc.pdc.codice, doc.pdc.descriz), 
-                                 "Restrizioni sullo status (%s - %s)" % (self.dbanag.status.codice, self.dbanag.status.descriz), 
+                aw.awu.MsgDialog(self, "%s - %s\nMod.Pagamento con effetti non utilizzabile su questa anagrafica" % (doc.pdc.codice, doc.pdc.descriz),
+                                 "Restrizioni sullo status (%s - %s)" % (self.dbanag.status.codice, self.dbanag.status.descriz),
                                  style=wx.ICON_WARNING)
                 self.controls['id_modpag'].SetValue(None)
                 return False
         except:
             pass
         return True
-    
+
     def SetEnableHeadControls(self, s):
         self.setenablecontrols = s
-    
+
     def PrintDoc(self, doc=None):
-        
+
         if not self.Validate():
             return False
-        
+
         if doc is None:
             doc = self.dbdoc
-            
+
         cfg = doc.cfgdoc
         tool = cfg.toolprint
         if not tool:
             aw.awu.MsgDialog(self, message="Manca definizione stampa documento")
             return False
-        
+
         sendem = False
         copies = cfg.copies
-        
+
         if self.status == STATUS_EDITING:
             sei = doc.SendMail_Prepare()
             if sei.sendto and sei.request:
@@ -1155,19 +1155,19 @@ class MagazzPanel(aw.Panel,\
                             copies -= 1
                 else:
                     sendem = False
-        
+
         if self.status == STATUS_EDITING:
             self.dbdoc.f_printed = 1
             if not self.DocSave(doc):
                 return False
             self.UpdateDocIdControls()
             self.UpdateButtons()
-            
+
         doc._info.anag = doc.GetAnag()
-        
+
         def MoveFirst(rpt, dbt):
             dbt.mov.MoveFirst()
-        
+
         def PrintOtherQuestionsFiller(p):
             wdr.PrintOtherQuestionsFunc(p)
             pcn = p.FindWindowByName
@@ -1181,32 +1181,32 @@ class MagazzPanel(aw.Panel,\
                 sp.Disable()
             if cfg.askstapre != 'X':
                 sp.Hide()
-        
+
         def PrintOtherQuestionsReactor(dlg):
             pcn = dlg.FindWindowByName
             doc._info.report_askstaint_reply = (pcn('staint').IsChecked())
             doc._info.report_askstapre_reply = (pcn('stapre').IsChecked())
-        
+
         def PrintMultiCopiaInit(multicopia):
             for mc in multicopia:
                 if 'vettore' in mc[0].lower():
                     if getattr(doc, 'enable_nocodevet', False) or doc.id_travet:
                         mc[1] = 1
-        
+
         pathname = doc.GetPrintPathName()
         filename = doc.GetPrintFileName()
         r = rpt.Report(self, doc, tool, noMove=True, startFunc=MoveFirst,
-                       printer=cfg.printer, copies=copies, 
+                       printer=cfg.printer, copies=copies,
                        changepathname=pathname, changefilename=filename,
                        otherquestions_filler=PrintOtherQuestionsFiller,
                        otherquestions_reactor=PrintOtherQuestionsReactor,
                        multicopia_init=PrintMultiCopiaInit)
-        
+
         out = False
         ur = r.GetUsedReport()
         if ur is not None and ur.completed:
             out = True
-        
+
         if out and sendem:
             progr = aw.awu.WaitDialog(self, message="Invio email a: %s" % sei.sendto)
             try:
@@ -1219,9 +1219,9 @@ class MagazzPanel(aw.Panel,\
                                      style=wx.ICON_ERROR)
             finally:
                 progr.Destroy()
-        
+
         return out
-    
+
     def UpdateHeadAnag(self, initAll=False):
         DbgMsg('UpdateHeadAnag')
         idpdc = self.controls["id_pdc"].GetValue()
@@ -1290,7 +1290,7 @@ class MagazzPanel(aw.Panel,\
                 except:
                     pass
                 self.controls["id_bancf"].SetValue(banid)
-        if hcol['nazione'] and hcol['nazione'] != 'IT': 
+        if hcol['nazione'] and hcol['nazione'] != 'IT':
             hcol['piva'] = hcol['nazione']+hcol['piva']
         ind = ''
         x = hcol["indirizzo"]
@@ -1314,17 +1314,17 @@ class MagazzPanel(aw.Panel,\
         self.Layout()
 
     def UpdateHeadDest(self, initAll=True, update_nocodedes=True):
-        
+
         cn = self.FindWindowByName
-        
+
         doc = self.dbdoc
         dest = self.dbdoc.dest
-        
+
         if dest.contatto:
             contact = "Contatto: %s" % dest.contatto
         else:
             contact = ""
-            
+
         if getattr(doc, 'enable_nocodedes', False):
             ddes = doc.nocodedes_descriz
             dind = doc.nocodedes_indirizzo
@@ -1343,7 +1343,7 @@ class MagazzPanel(aw.Panel,\
                 cn("nocodedes_cap").SetValue(dcap or '')
                 cn("nocodedes_citta").SetValue(dcit or '')
                 cn("nocodedes_prov").SetValue(dprv or '')
-        
+
         d = ''
         if dind:
             if d:
@@ -1363,7 +1363,7 @@ class MagazzPanel(aw.Panel,\
                             ("destaddr",    d),\
                             ("destcontact", contact)):
             cn(name).SetLabel(field)
-    
+
     def SetAnagFilters(self):
         doc = self.dbdoc
         #if doc.id_pdc is None:
@@ -1376,13 +1376,13 @@ class MagazzPanel(aw.Panel,\
                 ctr.SetFilter("id_pdc<0")
             else:
                 ctr.SetFilter("id_pdc=%d" % doc.id_pdc)
-    
+
     def OnDocIdChanged(self, event):
         name = event.GetEventObject().GetName()
         value = event.GetEventObject().GetValue()
         self.TestDocIdChanges(name, value)
         event.Skip()
-    
+
     def TestDocIdChanges(self, name, value):
         doc = self.dbdoc
         if name == "id_magazz":
@@ -1404,28 +1404,28 @@ class MagazzPanel(aw.Panel,\
                 if name == "numdoc" and doc.cfgdoc.numdoc == '3':
                     doc.numiva = value
                     self.controls["numiva"].SetValue(doc.numiva)
-    
+
     def OnHeadChanged(self, event):
-        
+
         if self.status == STATUS_SELCAUS:
             self.UpdateButtons()
             return
-        
+
         name = event.GetEventObject().GetName()
         value = event.GetEventObject().GetValue()
         doc = self.dbdoc
-        
+
         if name == 'id_pdc' and doc.id_pdc == value:
             return
-        
+
         if name == 'id_tiplist' and doc.id_tiplist == value:
             return
-        
+
         if name in doc.GetFieldNames():
             doc.__setattr__(name, value)
             if name == "id_dest":
                 self.UpdateHeadDest()
-        
+
         #if not self.loadingdoc:# and doc.modpag.tipo != 'R':
             #doc.totspese = None
         scad = (doc.totdare != doc._info.oldtot or\
@@ -1445,7 +1445,7 @@ class MagazzPanel(aw.Panel,\
                     doc.totspese = None
                     if s is not None:
                         s = self.controls['id_speinc'].GetValue()
-                        aw.awu.MsgDialog(self, 
+                        aw.awu.MsgDialog(self,
                                          """Il cambio di madalità di pagamento """
                                          """comporta l'azzeramento della """
                                          """banca d'appoggio e delle spese """
@@ -1458,47 +1458,47 @@ class MagazzPanel(aw.Panel,\
                 self.EnableFootControls()
         else:
             self.IsHeadValid()
-        
+
         if name == "id_bancf":
             if value is not None and (doc.config.askbanca != 'X' or not doc.modpag.askbanca):
                 value = None
                 doc.id_bancf = None
                 self.FindWindowByName('id_bancf').SetValue(None)
             doc.regcon._info.id_effbap = value
-        
+
         if name == "id_pdc":
             self.UpdateDatiScad()
             self.UpdateDatiAcconto()
             self.UpdateDatiEvas()
             self.UpdateAnagAutoNotes()
-        
+
         if name == 'id_tiplist':
             self.CheckVariaListino("""Applico il listino selezionato alle """
                                    """righe già presenti?""")
             if value is not None:
                 self.oldlist = value
-        
+
         if self.setenablecontrols:
             self.EnableHeadControls()
             self.EnableBodyControls()
             self.EnableFootControls()
-        
+
         self.UpdateButtons()
-        
+
         event.Skip()
-    
+
     def CheckVariaListino(self, msg):
         doc = self.dbdoc
         lis = self.FindWindowByName('id_tiplist').GetValue()
         if lis is not None and doc.mov.RowsCount()>0:
-            r = aw.awu.MsgDialog(self, msg, 
+            r = aw.awu.MsgDialog(self, msg,
                                  style=wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT)
             if r == wx.ID_YES:
                 try:
                     doc.ApplicaListino()
                 except dbm.ListinoMancanteException, e:
                     aw.awu.MsgDialog(self, e.args[0], caption="Problema in cambio prezzi")
-    
+
     def UpdateAnagAutoNotes(self):
         def cn(x):
             return self.FindWindowByName(x)
@@ -1510,7 +1510,7 @@ class MagazzPanel(aw.Panel,\
             db.Retrieve('attscope="pdc" and attkey=%s' % pdcid)
             txt = cn('butattach').GetAutoNotes(db)
         cn('autonotes_cli').SetText(txt)
-    
+
     def UpdateDatiScad(self):
         def cn(x):
             return self.FindWindowByName(x)
@@ -1538,7 +1538,7 @@ class MagazzPanel(aw.Panel,\
 #            if anag.note:
 #                tts.Parla("Nota: "+anag.note)
         self.EnableButFido()
-    
+
     def UpdateDatiAcconto(self):
         if bt.MAGGESACC != 1:
             return
@@ -1547,14 +1547,14 @@ class MagazzPanel(aw.Panel,\
         a.GetForPdc(doc.id_pdc)
         cn = self.FindWindowByName
         cn('accontodisp').SetValue((a.acconto_disponib or 0))
-    
+
     def EnableButFido(self, doc=None):
         if doc is None:
             doc = self.dbdoc
         def cn(x):
             return self.FindWindowByName(x)
         cn('butfido').Enable(bt.GESFIDICLI == '1' and doc.cfgdoc.checkfido == 1)
-    
+
     def UpdateDatiEvas(self):
         doc = self.dbdoc
         cfg = doc.cfgdoc
@@ -1572,7 +1572,7 @@ class MagazzPanel(aw.Panel,\
             c.SetLabel('')
         else:
             c.SetLabel('Ci sono documenti da evadere')
-    
+
     def OnFootChanged(self, event):
         cn = self.FindWindowByName
         name = event.GetEventObject().GetName()
@@ -1598,32 +1598,32 @@ class MagazzPanel(aw.Panel,\
                 cn('nocodevet_nazione').SetValue(cn('nocodevet_id_stato').GetVatPrefix())
             elif name == 'initrasp':
                 cn('butinitraspnow').Enable(not bool(value))
-                
+
         elif name == 'butinitraspnow':
             now = Env.DateTime.now()
             doc.initrasp = now
             c = cn('initrasp')
             c.SetValue(now)
             c.SetFocus()
-        
+
         elif name == 'butrptcolli':
             self.PrintSegnaColli()
-        
+
         event.Skip()
-    
+
     def PrintSegnaColli(self):
         cn = self.FindWindowByName
         totcolli = (cn('totcolli').GetValue() or 0)
         if totcolli > 0:
             dbsc = self.dbdoc.GetSegnaColli(totcolli)
             rpt.ReportLabels(self, dbsc, 'Etichette Segnacollo')
-    
+
     def OnDocNew( self, event ):
         if self.status == STATUS_SELCAUS:
             if self.TestConfig():
                 self.DocNew()
         event.Skip()
-    
+
     def OnDocSearch( self, event ):
         if self.status == STATUS_SELCAUS:
             if self.TestConfig():
@@ -1631,7 +1631,7 @@ class MagazzPanel(aw.Panel,\
         elif self.status == STATUS_DISPLAY:
             self.SetRegStatus(STATUS_SELCAUS)
         event.Skip()
-    
+
     def TestConfig(self):
         out = True
         cfg = self.dbdoc.cfgdoc
@@ -1642,7 +1642,7 @@ class MagazzPanel(aw.Panel,\
                              style=wx.ICON_ERROR)
             out = False
         return out
-    
+
     def OnDisplayFidoCliente(self, event):
         self.CheckFidoCliente(messages=False)
         dlg = DisplayFidoDialog(self)
@@ -1650,7 +1650,7 @@ class MagazzPanel(aw.Panel,\
         dlg.ShowModal()
         dlg.Destroy()
         event.Skip()
-    
+
     def OnDisplayAccontiCliente(self, event):
         pdcid = self.dbdoc.id_pdc
         if pdcid is not None:
@@ -1661,14 +1661,14 @@ class MagazzPanel(aw.Panel,\
             dlg.ShowModal()
             dlg.Destroy()
             event.Skip()
-        
+
     def OnDocEnd( self, event ):
         if self.DocSave():
             if self.onedoconly_id:
                 event.Skip()
             else:
                 self.SetRegStatus(STATUS_SELCAUS)
-    
+
     def CheckFidoCliente(self, messages=True):
         doc = self.dbdoc
         out = True
@@ -1692,16 +1692,16 @@ class MagazzPanel(aw.Panel,\
                 kwa['doc_id_ex'] = doc.id
             f = cf.CheckFido(doc.id_pdc, e, td, **kwa)
             if f != 'OK' and messages:
-                r = MsgDialog(self, 
+                r = MsgDialog(self,
                               """Sforamento del fido concesso al cliente\n"""
-                              """%s\n\nProseguo lo stesso?""" % f, 
+                              """%s\n\nProseguo lo stesso?""" % f,
                               style=wx.ICON_WARNING|wx.YES_NO|wx.NO_DEFAULT)
                 if r != wx.ID_YES:
                     out = False
             elif f != 'OK' and not messages:
                 out = False
         return out
-    
+
     def DocSave(self, doc=None):
         if doc is None:
             doc = self.dbdoc
@@ -1740,7 +1740,7 @@ class MagazzPanel(aw.Panel,\
             aw.awu.MsgDialog(self, msg, style=wx.ICON_ERROR)
             return False
         if len(doc._info.righep0)>0:
-            if MsgDialog(self, "Sono presenti righe senza prezzo.\nConfermi l'operazione?", 
+            if MsgDialog(self, "Sono presenti righe senza prezzo.\nConfermi l'operazione?",
                          style=wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT) != wx.ID_YES:
                 return False
         if (doc.totimporto == 0 or doc.mov.RowsCount() == 0)\
@@ -1757,16 +1757,16 @@ class MagazzPanel(aw.Panel,\
             if (bt.TIPO_CONTAB == "O" and len(doc._info.totiva) == 0) or (bt.TIPO_CONTAB == "S" and len(doc._info.totpdc) == 0):
                 MsgDialog(self, """Nessun totale IVA presente, impossibile confermare il documento.""")
                 return False
-        
+
         if (doc.totimporto == 0 or doc.mov.RowsCount() == 0) and doc.cfgdoc.totzero:
             err = "nullo"
         elif doc.totimporto < 0 and doc.cfgdoc.totneg:
             err = "negativo"
         if err:
-            if MsgDialog(self, "Il totale documento è %s.\nConfermi l'operazione?" % err, 
+            if MsgDialog(self, "Il totale documento è %s.\nConfermi l'operazione?" % err,
                          style=wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT) != wx.ID_YES:
                 return False
-        
+
         if bt.CONATTRITACC and doc.cfgdoc.sogritacc and doc.sogritacc:
             if not doc.samefloat(doc.impritacc, doc.totimponib):
                 msg =\
@@ -1775,20 +1775,20 @@ class MagazzPanel(aw.Panel,\
                 style = wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT
                 if MsgDialog(self, msg, style=style) != wx.ID_YES:
                     return False
-        
+
         #controllo fidi
         if not self.CheckFidoCliente():
             return False
-        
+
         #determinazione nuovo numero documento
         if doc.id is None:# and not doc.numdoc:
             if not doc.numdoc:
                 self.DefNumDoc()
             if not doc.numiva:
                 self.DefNumIva()
-        
+
         save = True
-        
+
         if doc.cfgdoc.pienum and doc.id is None:
             #dialog conferma numero
             dlg = NumDocDialog(self, doc.cfgdoc.datdoc, doc.cfgdoc.numdoc, doc.cfgdoc.askprotiva)
@@ -1812,16 +1812,16 @@ class MagazzPanel(aw.Panel,\
             else:
                 save = False
             dlg.Destroy()
-        
+
         chk_do, chk_des = doc.CheckNum()
         if not chk_do:
             aw.awu.MsgDialog(self, chk_des, style=wx.ICON_WARNING|wx.OK)
             save = False
-        
+
         if not save:
             aw.awu.MsgDialog(self, 'Il documento non è stato salvato', style=wx.ICON_WARNING|wx.OK)
             return False
-        
+
         dispnum = False
         if doc.cfgdoc.colcg and doc.cfgdoc.caucon:
             try:
@@ -1832,7 +1832,7 @@ class MagazzPanel(aw.Panel,\
                           % repr(e.args))
                 if doc.regcon.id:
                     doc.regcon.Erase()
-        
+
         saved = doc.Save()
         if saved:
             self.controls['butattach'].SetKey(doc.id, save=True)
@@ -1845,7 +1845,7 @@ class MagazzPanel(aw.Panel,\
                 """verificato un problema sul database:\n\n%s"""\
                 % repr(doc.GetError())
             MsgDialog(self, err)
-        
+
         return saved
 
     def OnDocQuit( self, event ):
@@ -1872,7 +1872,7 @@ class MagazzPanel(aw.Panel,\
         if self.IsShown():
             wx.CallAfter(self.SetProdZoneSize)
         event.Skip()
-    
+
     def SetOneDocOnly(self, iddoc):
         self.onedoconly_id = iddoc
         if self.DocLoad(iddoc):
@@ -1900,11 +1900,11 @@ class MagazzPanel(aw.Panel,\
 
     def DocSearchClass( self ):
         return DocSearch
-    
+
     def InitCausale( self ):
         """
         Inizializza il controllo della selezione causale.
-        
+
         @return: Vero o falso a seconda che sia riuscito a caricare
         le causali.
         @rtype: bool
@@ -1929,7 +1929,7 @@ class MagazzPanel(aw.Panel,\
         ctrcau.SetFilter(flt)
         self.Bind(EVT_LINKTABCHANGED, self.OnCauChanged, ctrcau)
         return out
-    
+
     def OnCauChanged(self, event):
         """
         Callback per causale selezionata
@@ -1942,7 +1942,7 @@ class MagazzPanel(aw.Panel,\
         self.SetCausale()
         wx.CallAfter(self.SetProdZoneSize)
         event.Skip()
-    
+
     def SetCausale(self):
         ci = self.FindWindowById
         cn = self.FindWindowByName
@@ -1964,7 +1964,7 @@ class MagazzPanel(aw.Panel,\
             mags = adb.DbTable(bt.TABNAME_MAGAZZ, 'mag', writable=False)
             mags.Retrieve()
             filt = "id IN (%s)" % ','.join([str(x.id_pdc)
-                                            for x in mags 
+                                            for x in mags
                                             if x.id_pdc is not None])
         mp = self.controls['id_modpag']
         if cfg.askmpnoeff:
@@ -2006,9 +2006,9 @@ class MagazzPanel(aw.Panel,\
             e.AddBaseFilter("mov.f_ann IS NULL OR mov.f_ann<>1")
             e.ClearHavings()
             e.AddHaving('(total_evas_qta IS NULL OR total_evas_qta<mov.qta)')
-    
+
     def SetProdZoneSize(self, force_visible=False):
-        def cid(x): 
+        def cid(x):
             return self.FindWindowById(x)
         cfg = self.dbdoc.cfgdoc
         prodzone = bool(cfg.viscosto or cfg.visgiac or cfg.vislistini or cfg.visultmov)
@@ -2020,7 +2020,7 @@ class MagazzPanel(aw.Panel,\
         bz.SetSashPosition(bz.GetSize()[1]-h)
         if cfg.ultmovbef:
             cid(wdr.ID_BODYSTATZONE).SetSelection(1)
-    
+
     def SetRegStatus( self, status = None):
         """
         Imposta lo status della registrazione::
@@ -2091,10 +2091,10 @@ class MagazzPanel(aw.Panel,\
 #            wx.CallAfter(SetFocus)
         wx.CallAfter(self.TestWorkZoneFirstFocus)
         return oldstatus
-    
+
     def SetDataChanged(self, changed=True):
         pass
-    
+
     def SetEditingType( self, etype=EDITING_HEAD):
         """
         Imposta il tipo di editing attivo::
@@ -2106,7 +2106,7 @@ class MagazzPanel(aw.Panel,\
         nb.SetPage(etype)
         self.UpdateAllControls()
         self.EnableAllControls()
-    
+
     def EnableAllControls(self, enable = True):
         self.UpdateButtons(enable)
         self.controls["causale"].Enable(enable and\
@@ -2124,44 +2124,44 @@ class MagazzPanel(aw.Panel,\
                                        self.canins and\
                                        self.cauid is not None and\
                                        status == STATUS_SELCAUS)
-        
+
         self.controls["butsrc"].Enable(enable and\
                                        status == STATUS_SELCAUS and\
                                        self.cauid is not None)
-        
+
         self.controls["butsave"].Enable(enable and\
                                         status == STATUS_EDITING and\
                                         self._headok and\
                                         self._scadok)
-        
+
         self.controls["butprint"].Enable(enable and\
                                          status in (STATUS_DISPLAY,
                                                     STATUS_EDITING) and\
                                          self._headok and\
                                          self._scadok and\
                                          doc.cfgdoc.IsPrintable())
-        
+
         self.controls["butmodif"].Enable(enable and\
                                          status == STATUS_DISPLAY)
-        
+
         self.controls["butacquis"].Enable(enable and\
                                           status == STATUS_EDITING and\
                                           doc.id_pdc is not None and\
                                           doc.cfgdoc.HasAcquisDocs())
-        
+
         self.controls["butquit"].Enable(enable and\
                                         status in (STATUS_GETKEY,\
                                                    STATUS_DISPLAY,\
                                                    STATUS_EDITING))
-        
+
         self.controls["butdel"].Enable(enable and\
                                        self.candelete and\
                                        status == STATUS_EDITING and\
                                        self.dbdoc.id is not None)
-        
+
         self.controls["butattach"].Enable(enable and status in (STATUS_DISPLAY,
                                                                 STATUS_EDITING))
-        
+
         if 'butdoc' in self.controls:
             self.controls["butdoc"].Enable(enable and\
                                            status in (STATUS_GETKEY,\
@@ -2172,14 +2172,14 @@ class MagazzPanel(aw.Panel,\
         Scrittura registrazione su db.
         """
         pass
-    
+
     def Validate(self):
         for c in aw.awu.GetAllChildrens(self, lambda x: hasattr(x, 'IsTooBig')):
             if c.IsTooBig():
 #                aw.awu.MsgDialog(self, "Valore numerico troppo elevato\n(%s)" % c.GetName(), style=wx.ICON_ERROR)
                 return False
         return True
-    
+
     def DocReset(self):
         self.dbdoc.Reset()
         self.dbdoc.cfgdoc.Get(self.cauid)
@@ -2222,7 +2222,7 @@ class MagazzPanel(aw.Panel,\
                 self.dbdoc.enable_nocodedes = 1
             if bt.MAGNOCODEVET and bt.MAGNOCDEFVET:
                 self.dbdoc.enable_nocodevet = 1
-    
+
     def DefaultValues(self):
         doc = self.dbdoc
         doc.id_tipdoc = self.cauid
@@ -2243,7 +2243,7 @@ class MagazzPanel(aw.Panel,\
         if magid is None:
             magid = magazz.GetDefaultMagazz()
         doc.id_magazz = magid
-    
+
     def DefNumDoc(self, doc=None):
         if doc is None:
             doc = self.dbdoc
@@ -2261,7 +2261,7 @@ class MagazzPanel(aw.Panel,\
                 doc.numdoc = numdocmax+1
             if cfg.numdoc == '3':
                 doc.numiva = doc.numdoc
-    
+
     def DefNumIva(self, doc=None):
         if doc is None:
             doc = self.dbdoc
@@ -2285,7 +2285,7 @@ class MagazzPanel(aw.Panel,\
             reg.AddFilter('YEAR(reg.datreg)=%s', doc.datreg.year)
             reg.Retrieve()
             doc.numiva = (reg.max_numiva or 0)+1
-    
+
     def TestNumDoc(self):
         out = True
         doc = self.dbdoc
@@ -2295,7 +2295,7 @@ class MagazzPanel(aw.Panel,\
             c.SetFocus()
             out = False
         return out
-    
+
     def UpdateDocIdControls(self):
         doc = self.dbdoc
         for f, v in (("doc_id",    doc.id),\
@@ -2307,7 +2307,7 @@ class MagazzPanel(aw.Panel,\
                      ("numiva",    doc.numiva)):
             if f in self.controls:
                 self.controls[f].SetValue(v)
-    
+
     def RegDelete(self):
         out = True
         doc = self.dbdoc
@@ -2330,7 +2330,7 @@ class MagazzPanel(aw.Panel,\
                     "Errore nella cancellazione del documento:"+\
                     "\n %s" % repr(doc.GetError()))
         return out
-    
+
     def UpdatePanelHead(self):
         names = """id_pdc id_dest id_modpag id_agente id_zona id_valuta id_tiplist id_aliqiva """\
                 """datrif numrif desrif noteint notedoc f_ann f_acq """\
@@ -2345,7 +2345,7 @@ class MagazzPanel(aw.Panel,\
         self.FindWindowById(wdr.ID_STATUSACQ).UpdateText(self.dbdoc)
         self.UpdateHeadAnag()
         self.UpdateHeadDest()
-    
+
     def UpdatePanelDocId(self):
         """
         Aggiorna i controlli della testata.
@@ -2357,7 +2357,7 @@ class MagazzPanel(aw.Panel,\
         datdoc = self.controls["datdoc"]
         numdoc = self.controls["numdoc"]
         numiva = self.controls["numiva"]
-        
+
         if self.status == STATUS_SELCAUS:
             doc_id.SetValueSilent(None)
             magazz.SetValueSilent(None)
@@ -2411,7 +2411,7 @@ class MagazzPanel(aw.Panel,\
             l = n+1
             s = h.FindWindowByName('sconto%d'%l)
             s.Enable(en and (not (cfg.numsconti) or l<=cfg.numsconti))
-    
+
     def EnableFootControls(self, enable=True):
         enable = enable and self.status == STATUS_EDITING
         enable = enable and self.IsHeadValid()
@@ -2422,7 +2422,7 @@ class MagazzPanel(aw.Panel,\
         self.FindWindowByName('notedoc').Enable(enable)
         self.EnableDatiAcc()
         self.EnableRitAccControls(enable)
-    
+
     def EnableRitAccControls(self, enable=True):
         def cn(x):
             return self.FindWindowByName(x)
@@ -2433,7 +2433,7 @@ class MagazzPanel(aw.Panel,\
         for name in 'per com imp'.split():
             cn('%sritacc'%name).Enable(enable)
         cn('butritacc').Enable(enable)
-    
+
     def EnableDatiAcc(self):
         doc = self.dbdoc
         cfgdoc = doc.config
@@ -2468,14 +2468,14 @@ class MagazzPanel(aw.Panel,\
         e = e and cn('enable_nocodevet').IsChecked()
         for ctrl in aw.awu.GetAllChildrens(self, lambda x: x.GetName().startswith('nocodevet')):
             ctrl.Enable(e)
-    
+
     def EnableDocIdControls(self, enable = True):
         """
         Abilita o meno i controlli della testata in base alla
         configurazione della causale.
         """
         enable = enable and self.status == STATUS_GETKEY
-        
+
         cfg = self.dbdoc.cfgdoc
         self.controls["id_magazz"].Enable(enable and cfg.askmagazz)
         enable = enable and self.controls["id_magazz"].GetValue() is not None
@@ -2488,7 +2488,7 @@ class MagazzPanel(aw.Panel,\
                                        and len(cfg.askprotiva)>0\
                                        and cfg.askprotiva in "012")
         self.controls["id_valuta"].Enable(enable and False)
-    
+
     def EnableBodyControls(self, enable = True):
         enable = enable and self.status == STATUS_EDITING and self.IsHeadValid()
         nb = self.FindWindowByName('workzone')
@@ -2512,28 +2512,41 @@ class MagazzPanel(aw.Panel,\
         #b.Enable(self.dbdoc.mov.RowsCount()>0)
         b.Show(showbcd)
         b.GetParent().Layout()
-    
+
     def EnableControls(self, enable, parent, func=None):
         if func is None:
             func = lambda *x: True
         #DbgMsg('enable=%s on controls of %s' % (enable, parent.GetName()))
         ctrls = aw.awu.GetAllChildrens(parent)
+        print '='*60
         for c in ctrls:
             if isinstance(c, (wx.TextCtrl, wx.Button, dbglib.DbGrid)):
                 if func(c):
-                    c.Enable(enable)
-    
+                    try:
+                        if not c.IsEditable():
+                            print c.GetName()
+                            c.Enable(False)
+                        else:
+                            c.Enable(enable)
+                    except:
+                        c.Enable(enable)
+
+                #===============================================================
+                # if func(c):
+                #     c.Enable(enable)
+                #===============================================================
+
     def IsHeadValid(self):
-        
+
         warn = self.FindWindowById(wdr.ID_WARNING)
         warn.SetLabel('')
-        
+
         #if self.status != STATUS_EDITING:
             #return True
-        
+
         def CtrMissing(self, ctrname):
             return self.controls[ctrname].GetValue() is None
-        
+
         valid = True
         err = []
         doc = self.dbdoc
@@ -2601,7 +2614,7 @@ class MagazzPanel(aw.Panel,\
         if self.cauid is not None:
             srccls = self.DocSearchClass()
             if srccls is not None:
-                dlg = srccls(self, self.cauid, self.caudes, 
+                dlg = srccls(self, self.cauid, self.caudes,
                              self.dbdoc.cfgdoc.numdoc)
                 dlg.db_curs = self.db_curs
                 #if self.dbdoc.cfgdoc.ctrnum:
@@ -2773,29 +2786,29 @@ class GridSearchDoc(dbglib.DbGridColoriAlternati):
         """
         Passare il parent della griglia (tipicamente wx.Panel)
         """
-        
+
         dbglib.DbGridColoriAlternati.__init__(self, parent, -1, size=parent.GetClientSizeTuple())
-        
+
         self.dbdocs = self.MakeDbDocs()
-        
+
         cols = self.MakeColumns()
-        
+
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
-        
+
         canedit = False
         canins = False
-        
+
         self.SetData([], colmap, canedit, canins)
-        
+
         map(lambda c:\
             self.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
-        
+
         self.clrer = 'gold indianred'.split()
         self.colnum = self.dbdocs._GetFieldIndex('numdoc')
         self.SetCellDynAttr(self.GetAttr)
         self.SetSearchColors()
-        
+
 #        self.SetFitColumn(-1)
         self.AutoSizeColumns()
         sz = wx.FlexGridSizer(1,0,0,0)
@@ -2804,7 +2817,7 @@ class GridSearchDoc(dbglib.DbGridColoriAlternati):
         sz.Add(self, 0, wx.GROW|wx.ALL, 0)
         parent.SetSizer(sz)
         sz.SetSizeHints(parent)
-    
+
     def MakeDbDocs(self):
 #        dbdocs = dbm.DocMag()
         dbdocs = dbm.ElencoDocum()
@@ -2822,26 +2835,26 @@ class GridSearchDoc(dbglib.DbGridColoriAlternati):
         dbdocs.AddOrder('datdoc')
         dbdocs.AddOrder('numdoc')
         return dbdocs
-    
+
     def MakeColumns(self):
-        
+
         doc = self.dbdocs
         mag = doc.magazz
         pdc = doc.pdc
         des = doc.dest
         self.colors = True
-        
+
         def cn(db, col):
             return db._GetFieldIndex(col, inline=True)
-        
+
         _NUM = gl.GRID_VALUE_NUMBER+":6"
         _STR = gl.GRID_VALUE_STRING
         _DAT = gl.GRID_VALUE_DATETIME
         _CHK = gl.GRID_VALUE_BOOL+":1,0"
         _IMP = bt.GetValIntMaskInfo()
-        
+
         descanag = doc.config.descanag or "Anagrafica"
-        
+
         cols = []
         a = cols.append
         a([ 30, (cn(mag, 'codice'),     "Mag.",          _STR, True)])
@@ -2860,14 +2873,14 @@ class GridSearchDoc(dbglib.DbGridColoriAlternati):
         a([300, (cn(doc, '_destdesc'),  "Destinazione",  _STR, True)])
         a([  1, (cn(doc, 'id'),         "doc#",          _STR, True)])
         a([  1, (cn(doc, 'id_reg'),     "reg#",          _STR, True)])
-        
+
         self.SetAnchorColumns(7, 6)
-        
+
         return cols
-    
+
     def EnableColors(self, ec):
         self.colors = ec
-    
+
     def GetAttr(self, row, col, rscol, attr=gl.GridCellAttr):
         attr = dbglib.DbGridColoriAlternati.GetAttr(self, row, col, rscol, attr)
         ok = True
@@ -2880,7 +2893,7 @@ class GridSearchDoc(dbglib.DbGridColoriAlternati):
                 attr.SetBackgroundColour(bgcol)
             attr.SetReadOnly(True)
         return attr
-    
+
     def UpdateGrid(self, td, dr1, dr2, dd1, dd2, mag, pdc, acq, ann):
         """
         Aggiorna i dati della griglia di ricerca.
@@ -2919,19 +2932,19 @@ class DocSearch(wx.Dialog):
     db_curs = None
     _idreg = None
     _ctrlist = None
-    
+
     def __init__(self, parent, tdocid, tdocdes, tipnum):
         wx.Dialog.__init__(self, parent,\
                            title="Ricerca documenti di tipo: %s" % tdocdes,\
                            style = wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER)
         self.tdocid = tdocid
         self.tdocdes = tdocdes
-        
+
         wdr.DocSearchFunc(self)
         pangrid = self.FindWindowById(wdr.ID_SRCDOCPANGRID)
         self.gridsrc = GridSearchDoc(pangrid)
         self.gridsrc.EnableColors((tipnum or '') in '23')
-        
+
         for name, val in (('srcdatreg1', datregsrc1),
                           ('srcdatreg2', datregsrc2),
                           ('srcdatdoc1', datdocsrc1),
@@ -2943,45 +2956,45 @@ class DocSearch(wx.Dialog):
                           ('ricordasel', ricsearch),):
             c = self.FindWindowByName(name)
             c.SetValue(val)
-            
+
         self.CenterOnScreen()
-        
+
         self.UpdateSearch()
-        
+
         self.gridsrc.Bind(gl.EVT_GRID_CELL_LEFT_DCLICK, self.OnDocSelected)
         self.gridsrc.Bind(wx.EVT_KEY_DOWN, self.OnGridKeyDown)
         self.Bind(wx.EVT_BUTTON, self.OnUpdateSearch, id=wdr.ID_SRCBUTSRC)
         self.Bind(wx.EVT_BUTTON, self.OnDocSelected, id=wdr.ID_SRCBUTSEL)
-        
+
         for c in aw.awu.GetAllChildrens(self):
             if isinstance(c, (wx.TextCtrl, DateCtrl, LinkTable)):
                 c.Bind(wx.EVT_SET_FOCUS, self.OnFocusGainedBySearchControls)
         self.gridsrc.Bind(wx.EVT_SET_FOCUS, self.OnFocusGainedByGrid)
-        
+
         self.Bind(wx.EVT_CLOSE, self.OnClose)
-    
+
     def OnFocusGainedBySearchControls(self, event):
         self.FindWindowById(wdr.ID_SRCBUTSRC).SetDefault()
         event.Skip()
-    
+
     def OnFocusGainedByGrid(self, event):
         self.FindWindowById(wdr.ID_SRCBUTSEL).SetDefault()
         event.Skip()
-    
+
     def OnGridKeyDown(self, event):
         if event.GetKeyCode() == wx.WXK_RETURN:
             self.DocSelected()
         event.Skip()
-    
+
     def OnUpdateSearch(self, event):
         self.UpdateSearch()
         event.Skip()
-    
+
     def UpdateSearch(self):
         dr1, dr2, dd1, dd2, magid, pdcid, acq, ann =\
             map(lambda x: self.FindWindowByName(x).GetValue(),
                 'srcdatreg1 srcdatreg2 srcdatdoc1 srcdatdoc2 id_magazz id_pdc acqsearch annsearch'.split())
-        
+
         self.gridsrc.UpdateGrid(self.tdocid, dr1, dr2, dd1, dd2, magid, pdcid, acq, ann)
         if self.gridsrc.dbdocs.IsEmpty():
             f = self.FindWindowById(wdr.ID_SRCDATREG1)
@@ -2993,7 +3006,7 @@ class DocSearch(wx.Dialog):
 
     def OnDocSelected(self, event):
         self.DocSelected()
-    
+
     def DocSelected(self):
         docid = -1
         try:
@@ -3002,7 +3015,7 @@ class DocSearch(wx.Dialog):
             docid = self.gridsrc.dbdocs.id
         except:
             pass
-        
+
         global ricsearch; ricsearch = self.FindWindowByName('ricordasel').IsChecked()
         if ricsearch:
             dr1, dr2, dd1, dd2, magid, pdcid, acq, ann =\
@@ -3016,13 +3029,13 @@ class DocSearch(wx.Dialog):
             global magsearch;  magsearch = magid
             global acqsearch;  acqsearch = acq
             global annsearch;  annsearch = ann
-        
+
         self.EndModal(docid)
-    
+
     def ShowModal(self):
         wx.CallAfter(lambda: self.FindWindowById(wdr.ID_SRCDATREG1).SetFocus())
         return wx.Dialog.ShowModal(self)
-    
+
     def OnClose(self, event):
         self.EndModal(-1)
 
@@ -3031,7 +3044,7 @@ class DocSearch(wx.Dialog):
 
 
 class NumDocDialog(aw.Dialog):
-    
+
     def __init__(self, parent, tipdat, tipnum, tipniv, **kwargs):
         kwargs['title'] = 'Attribuzione numero documento'
         kwargs['style'] = wx.DEFAULT_DIALOG_STYLE
@@ -3057,7 +3070,7 @@ class NumDocDialog(aw.Dialog):
         self.Bind(linktab.EVT_LINKTABCHANGED, self.OnDataChanged,\
                   id=wdr.ID_MAGAZZ)
         self.Bind(wx.EVT_BUTTON, self.OnSave, id=wdr.ID_BTNSAVE)
-    
+
     def OnDataChanged(self, event):
         def cn(x):
             return self.FindWindowByName(x)
@@ -3079,7 +3092,7 @@ class NumDocDialog(aw.Dialog):
             cn('numdoc').SetValue(doc.numdoc)
             cn('numiva').SetValue(doc.numiva)
         event.Skip()
-    
+
     def OnSave(self, event):
         fields = list('datdoc,numdoc,datreg'.split(','))
         if self.tipniv and self.tipniv in '012':
@@ -3103,10 +3116,10 @@ class NumDocDialog(aw.Dialog):
 
 
 class _FrameDialogMixin(object):
-    
+
     def SetOneDocOnly(self, *args, **kwargs):
         return self.panel.SetOneDocOnly(*args, **kwargs)
-    
+
     def FixTimerProblem(self):
         #fix Timer su wx.2.8.11: se non lo stoppo, l'applicaizone va in crash :-(
         #TODO: verificare quando è stato risolto il problema nella libreria wx
@@ -3114,7 +3127,7 @@ class _FrameDialogMixin(object):
             c = self.FindWindowByName(name)
             if c:
                 c.Stop()
-    
+
     def CanClose(self):
         #richiamata da XFrame in fase di chiusura applicazione
         if self.panel.TestQuit():
