@@ -158,6 +158,8 @@ class PdcProdHistoryGrid(dbglib.DbGrid):
         colsize = [c[0] for c in cols]
 
         canedit = True
+        #TODO: Imposto a non editabile il grid della storia del prodotto
+        canedit = False
         canins = False
 
         self.SetData((), colmap, canedit, canins)
