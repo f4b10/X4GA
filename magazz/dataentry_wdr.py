@@ -2343,7 +2343,8 @@ ID_BODYSTATZONE = 20180
 ID_BODYGIAC = 20181
 ID_BODYCOST = 20182
 ID_BODYCSTM = 20183
-ID_PANGRIDLIST = 20184
+ID_BODYPRIC = 20184
+ID_PANGRIDLIST = 20185
 
 def BodyStatFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 1, 0, 0, 0 )
@@ -2365,42 +2366,48 @@ def BodyStatFunc( parent, call_fit = True, set_sizer = True ):
     
     item6 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
-    item7 = wx.StaticText( parent, ID_TEXT, "Giac.:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item6.Add( item7, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP, 5 )
+    item7 = wx.StaticText( parent, ID_TEXT, "Giac.", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
+    item6.Add( item7, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.TOP, 5 )
 
-    item8 = bt.GetMagQtaNumCtrl(parent, ID_BODYGIAC, 'bodygiac', editable=False)
+    item8 = bt.GetMagQtaNumCtrl(parent, ID_BODYGIAC, 'bodygiac', numint=6, editable=False)
     item6.Add( item8, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP, 5 )
 
     item9 = wx.StaticText( parent, ID_TEXT, "CU:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item6.Add( item9, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP, 5 )
+    item6.Add( item9, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.TOP, 5 )
 
-    item10 = bt.GetMagPreNumCtrl(parent, ID_BODYCOST, 'bodycost', editable=False)
+    item10 = bt.GetMagPreNumCtrl(parent, ID_BODYCOST, 'bodycost', numint=6, editable=False)
     item6.Add( item10, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP, 5 )
 
     item11 = wx.StaticText( parent, ID_TEXT, "CM:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item6.Add( item11, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.TOP, 5 )
 
-    item12 = bt.GetValIntNumCtrl(parent, ID_BODYCSTM, 'bodycstm', editable=False)
-    item6.Add( item12, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.TOP, 5 )
+    item12 = bt.GetMagPreNumCtrl(parent, ID_BODYCSTM, 'bodycstm', numint=6, editable=False)
+    item6.Add( item12, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP, 5 )
+
+    item13 = wx.StaticText( parent, ID_TEXT, "%R.", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item6.Add( item13, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.TOP, 5 )
+
+    item14 = NumCtrl(parent, ID_BODYPRIC, name='bodypric', integerWidth=4, fractionWidth=1, allowNegative=True, groupDigits=False); item14.SetReadOnly()
+    item6.Add( item14, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.TOP, 5 )
 
     item6.AddGrowableCol( 1 )
 
     item5.Add( item6, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item13 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    item15 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
-    item14 = wx.StaticText( parent, ID_TEXT, "Listini attuali", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item14.SetForegroundColour( wx.BLUE )
-    item13.Add( item14, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item16 = wx.StaticText( parent, ID_TEXT, "Listini attuali", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item16.SetForegroundColour( wx.BLUE )
+    item15.Add( item16, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item15 = wx.Panel( parent, ID_PANGRIDLIST, wx.DefaultPosition, [400,120], wx.SUNKEN_BORDER )
-    item13.Add( item15, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item17 = wx.Panel( parent, ID_PANGRIDLIST, wx.DefaultPosition, [320,120], wx.SUNKEN_BORDER )
+    item15.Add( item17, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item13.AddGrowableCol( 0 )
+    item15.AddGrowableCol( 0 )
 
-    item13.AddGrowableRow( 1 )
+    item15.AddGrowableRow( 1 )
 
-    item5.Add( item13, 0, wx.GROW|wx.LEFT, 5 )
+    item5.Add( item15, 0, wx.GROW|wx.LEFT, 5 )
 
     item5.AddGrowableCol( 0 )
 
@@ -2419,7 +2426,7 @@ def BodyStatFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_PANGRIDMOVIM = 20185
+ID_PANGRIDMOVIM = 20186
 
 def BodyStatMovim( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -2438,17 +2445,17 @@ def BodyStatMovim( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_LABELUM = 20186
-ID_TEXTCTRL = 20187
-ID_PZCONF = 20188
-ID_PERPRO = 20189
-ID_DIMX = 20190
-ID_DIMY = 20191
-ID_DIMZ = 20192
-ID_VOLUME = 20193
-ID_PESO = 20194
-ID_BUTPRODMAS = 20195
-ID_BUTPRODSCH = 20196
+ID_LABELUM = 20187
+ID_TEXTCTRL = 20188
+ID_PZCONF = 20189
+ID_PERPRO = 20190
+ID_DIMX = 20191
+ID_DIMY = 20192
+ID_DIMZ = 20193
+ID_VOLUME = 20194
+ID_PESO = 20195
+ID_BUTPRODMAS = 20196
+ID_BUTPRODSCH = 20197
 
 def BodyStatDatiProd( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 1, 0, 0, 0 )
@@ -2617,7 +2624,7 @@ def BodyStatDatiProd( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_BODYZONE = 20197
+ID_BODYZONE = 20198
 
 def BodyFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -2641,10 +2648,10 @@ def BodyFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_ACQPDTRIEP = 20198
-ID_ACQPDTGRID = 20199
-ID_BTNACQPDT = 20200
-ID_BTNDELPDT = 20201
+ID_ACQPDTRIEP = 20199
+ID_ACQPDTGRID = 20200
+ID_BTNACQPDT = 20201
+ID_BTNDELPDT = 20202
 
 def AcqPDTFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -2707,9 +2714,9 @@ def AcqPDTFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_TIPDOC = 20202
-ID_REGIVA = 20203
-ID_BTNSAVE = 20204
+ID_TIPDOC = 20203
+ID_REGIVA = 20204
+ID_BTNSAVE = 20205
 
 def NumDocFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -2811,8 +2818,8 @@ def NumDocFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_PANGRIDSCAD = 20205
-ID_BTNSEL = 20206
+ID_PANGRIDSCAD = 20206
+ID_BTNSEL = 20207
 
 def ScadLinkFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -2843,19 +2850,19 @@ def ScadLinkFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_DOC = 20207
-ID_ESA = 20208
-ID_BTNPRINTFIDO = 20209
-ID_DDF = 20210
-ID_BTNPRINTRITP = 20211
-ID_ESP = 20212
-ID_FIDOESP = 20213
-ID_SCO = 20214
-ID_FIDOSCO = 20215
-ID_PAP = 20216
-ID_FIDOPCF = 20217
-ID_GGS = 20218
-ID_FIDOGGS = 20219
+ID_DOC = 20208
+ID_ESA = 20209
+ID_BTNPRINTFIDO = 20210
+ID_DDF = 20211
+ID_BTNPRINTRITP = 20212
+ID_ESP = 20213
+ID_FIDOESP = 20214
+ID_SCO = 20215
+ID_FIDOSCO = 20216
+ID_PAP = 20217
+ID_FIDOPCF = 20218
+ID_GGS = 20219
+ID_FIDOGGS = 20220
 
 def DisplayFidoClienteFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 4, 0, 0 )
@@ -2989,11 +2996,11 @@ def DisplayFidoClienteFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_SOGRITACC = 20220
-ID_PERRITACC = 20221
-ID_COMRITACC = 20222
-ID_IMPRITACC = 20223
-ID_BUTRITACC = 20224
+ID_SOGRITACC = 20221
+ID_PERRITACC = 20222
+ID_COMRITACC = 20223
+ID_IMPRITACC = 20224
+ID_BUTRITACC = 20225
 
 def RitAccDatiPanelFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -3047,8 +3054,8 @@ def RitAccDatiPanelFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_TOTRITACC = 20225
-ID_TOTDARE = 20226
+ID_TOTRITACC = 20226
+ID_TOTDARE = 20227
 
 def RitAccTotPanelFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -3077,7 +3084,7 @@ def RitAccTotPanelFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_BUTOKLONGDES = 20227
+ID_BUTOKLONGDES = 20228
 
 def LongDescrizBodyFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -3107,12 +3114,12 @@ def LongDescrizBodyFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID__DESCRIZ = 20228
-ID__INDIRIZZO = 20229
-ID__CAP = 20230
-ID__CITTA = 20231
-ID__PROV = 20232
-ID__PANDEST = 20233
+ID__DESCRIZ = 20229
+ID__INDIRIZZO = 20230
+ID__CAP = 20231
+ID__CITTA = 20232
+ID__PROV = 20233
+ID__PANDEST = 20234
 
 def AnagNewDestFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -3189,7 +3196,7 @@ def AnagNewDestFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID__PANBANCF = 20234
+ID__PANBANCF = 20235
 
 def AnagNewBanCFFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -3266,10 +3273,10 @@ def AnagNewBanCFFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_VENDITATOT = 20235
-ID_COSTOTOT = 20236
-ID_MARGINEVAL = 20237
-ID_MARGINEPERC = 20238
+ID_VENDITATOT = 20236
+ID_COSTOTOT = 20237
+ID_MARGINEVAL = 20238
+ID_MARGINEPERC = 20239
 
 def MargineDatiPanelFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -3316,7 +3323,7 @@ def MargineDatiPanelFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_TOTSPLIT = 20239
+ID_TOTSPLIT = 20240
 
 def PiedeTotGriglie_O_Func( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -3340,7 +3347,7 @@ def PiedeTotGriglie_O_Func( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_GRIGLIETOTPANEL = 20240
+ID_GRIGLIETOTPANEL = 20241
 
 def PiedeTotGriglie_S_Func( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -3360,8 +3367,8 @@ def PiedeTotGriglie_S_Func( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_BUTVEDIACC = 20241
-ID_ACCONTODISP = 20242
+ID_BUTVEDIACC = 20242
+ID_ACCONTODISP = 20243
 
 def AccontiTotFunc( parent, call_fit = True, set_sizer = True ):
     item1 = wx.StaticBox( parent, -1, "Acconti attivi" )
@@ -3395,10 +3402,10 @@ def AccontiTotFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_RSANAG = 20243
-ID_ANCHECHIUSI = 20244
-ID_PANGRIDACC = 20245
-ID_PANGRIDSTO = 20246
+ID_RSANAG = 20244
+ID_ANCHECHIUSI = 20245
+ID_PANGRIDACC = 20246
+ID_PANGRIDSTO = 20247
 
 def SelezionaMovimentoAccontoFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -3448,9 +3455,9 @@ def SelezionaMovimentoAccontoFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_CLIENTICHIUSI = 20247
-ID_PANGRIDCLI = 20248
-ID_FOREIGN = 20249
+ID_CLIENTICHIUSI = 20248
+ID_PANGRIDCLI = 20249
+ID_FOREIGN = 20250
 
 def SituazioneGlobaleAccontiFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 1, 0, 0, 0 )
@@ -3495,8 +3502,8 @@ def SituazioneGlobaleAccontiFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_STAINT = 20250
-ID_STAPRE = 20251
+ID_STAINT = 20251
+ID_STAPRE = 20252
 
 def PrintOtherQuestionsFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.BoxSizer( wx.HORIZONTAL )
@@ -3516,9 +3523,9 @@ def PrintOtherQuestionsFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_NOCODEVET_DICHIAR = 20252
-ID_NOCODEVET_TARGA = 20253
-ID_NOCODEVET_AUTISTA = 20254
+ID_NOCODEVET_DICHIAR = 20253
+ID_NOCODEVET_TARGA = 20254
+ID_NOCODEVET_AUTISTA = 20255
 
 def ExtraVetDataFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )

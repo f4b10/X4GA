@@ -1441,6 +1441,10 @@ class GridBody(object):
         else:
             if col < len(self.dbdoc.mov.GetFieldNames()):
                 setattr(self.dbdoc.mov, self.dbdoc.mov.GetFieldNames()[col], value)
+
+        #--------------------------------------------- Ricalcola ricarica
+        self.UpdateProdZonePRic()
+        #--------------------------------------------- Ricalcola ricarica
         
         self.MakeTotals(pesocolli=True)
         
@@ -1571,6 +1575,30 @@ class GridBody(object):
             if lt:
                 lt.SetFilter(editor.lt_filter)
     
+    def UpdateProdZonePRic(self):
+        def cn(x): return self.FindWindowByName(x)
+#        def ci(x): return self.FindWindowById(x)
+        cfg = self.dbdoc.cfgdoc
+        if cfg.visgiac or cfg.viscosto:
+            bprc = 0
+            cstu = self.dbprod.costo or 0
+            qt   = self.dbdoc.mov.qta or 0
+            pv   = self.dbdoc.mov.prezzo or 0
+            im   = self.dbdoc.mov.importo or 0
+            if im>0 and qt>0:
+                try:
+                    pv = round(im/qt, 2)
+                except ZeroDivisionError:
+                    pv = 0
+            if pv>0 and cstu>0:
+                try:
+                    bprc = round((pv/cstu)*100, 2) - 100
+                except ZeroDivisionError:
+                    bprc = 0
+            cn('bodypric').SetValue(bprc)
+#            ci('ID_BODYPRIC').SetValue(bprc)
+ 
+
     def UpdateProdZone(self, idpro):
         if idpro == self.lastprod:
             return
@@ -1579,7 +1607,8 @@ class GridBody(object):
         cfg = self.dbdoc.cfgdoc
         if cfg.visgiac or cfg.viscosto:
             magid = cn('id_magazz').GetValue()
-            giac = cstu = cstm = 0
+#            giac = cstu = cstm = 0
+            giac = cstu = cstm = bprc = 0
             #aggiorno giacenza
             if not idpro in self._cache_giacenze:
                 inv = self.dbinv
@@ -1611,6 +1640,9 @@ class GridBody(object):
                                     ('bodycstm', cstm, cfg.viscosto)):
                 if cond:
                     cn(name).SetValue(val)
+#            #--------------------------------------------- Ricalcola ricarica
+#            self.UpdateProdZonePRic()
+#            #--------------------------------------------- Ricalcola ricarica
         if cfg.vislistini:
             #aggiorno listini del prodotto
             self.gridlist.Update(idpro)
