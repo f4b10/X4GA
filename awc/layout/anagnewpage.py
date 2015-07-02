@@ -49,8 +49,10 @@ class GenericPersonalLinkedPage_InternalGrid(dbglib.DbGridColoriAlternati):
         self.SetGridField()
         self.SetConnection()
         self.SetColumnGrid()
-
-        self.SetData(self.rsdata, self.colmap, canEdit=True)
+        if hasattr(self, 'SetLinkColumnGrid') and callable(getattr(self, 'SetLinkColumnGrid')):
+            self.SetLinkColumnGrid()
+        else:
+            self.SetData(self.rsdata, self.colmap, canEdit=True)
         self.SetCellDynAttr(self.GetAttr)
         self.SetColumn2Fit()
         self.SetColumnSize()

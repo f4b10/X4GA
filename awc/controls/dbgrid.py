@@ -236,8 +236,6 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
                     data=t.data
                     newdata=data
                     newdata=self.Titoli.ChangeOrder(colonnaOrdinata.GetPosition(), data)
-                    #TODO:GESTIRE LA VISUALIZZAZIONE DEI DATI SECONDO L'ORDINAMENTO ATTIV
-                    print 'ripristrinare ordinamento indicato dalle label di colonna %s %s' % (colonnaOrdinata.GetLabel(), colonnaOrdinata.GetVersus())
                     objRs, objDb = self.GetPanelDataSource()
                     if objRs:
                         objRs.db_rs=newdata
