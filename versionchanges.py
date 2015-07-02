@@ -28,11 +28,22 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
-    ('1.5.10', dt.Date(2015, 6, 05), (
+    ('1.5.10', dt.Date(2015, 7, 01), (
+         ("BUG1154",
+         """Rimosso bug che nel caso non venisse definito l'automatismo per le spese di incasso precludeva la possibilità
+          di avviare la gesdtione degli incassi e pagamenti."""),
+         ("BET1181",
+         """Introdotta la possibilità di riordinare i dati delle grid in ordine crescente/decrescente in base alla colonna.
+         La funzionalità può essere richiamata con il click sul titolo della colonna interessata. I grid dotati della nuova
+         funzionalità sono riconoscibili per il colore blue dei titoli."""),
+         ("BET1180",
+         """Ottimizzata la gestione delle pagine aggiuntive su schede Clienti/Fornitori e Anagrafiche Generiche."""),
          ("BET1179",
-         """Ottimizzata la gestione delle pagine aggiuntive su schede Clienti/Fornitori."""),
+         """Introdotta la visualizzazione della percentuale di ricarica durante dataentry di magazzino."""),
          ("BET1178",
          """Introdotta nuova classe specializzata nella gestione delle pagine aggiuntive di Clienti e Fornitori."""),
+         ("BUG1153",
+         """Inibita la possibilità di andare in editazione sui dati della storia del prodotto visualizzati in sede di dataentry di magazzino."""),
         ),),
 
     ('1.5.09', dt.Date(2015, 6, 04), (

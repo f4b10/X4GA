@@ -785,6 +785,8 @@ class ContabPanelTipo_SC(ctb.ContabPanel):
         self._auto_abbpas_cod = None
         self._auto_abbpas_des = None
         
+        self._auto_speinc     = None
+        
         self.id_pdccp = None   #id pdc c/partita (tipicamente cassa/banca)
         
         self.regrsp = []       #recordset partite del cli/for
