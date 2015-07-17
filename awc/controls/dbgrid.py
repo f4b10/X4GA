@@ -314,7 +314,7 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
         panel=self
         rs=None
         db=None
-        for i in range(0,10):
+        for i in range(0,25):
             try:
                 panel=getattr(panel, 'Parent')
                 if debug:
@@ -385,7 +385,11 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
                     if _DEBUG:
                         print 'RECORDET NON TROVATO %s' % self
                     pass
-
+                if not self.Titoli:
+                    try:
+                        self.Titoli=Titoli(self)
+                    except:
+                        pass
                 if self.Titoli:
                     newdata=self.Titoli.ChangeOrder(col, data)
                     if objRs:
