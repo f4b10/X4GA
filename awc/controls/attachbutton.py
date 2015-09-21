@@ -52,6 +52,8 @@ import awc.controls.images as images
 import awc.thumbs as thumbs
 import base64
 
+import time
+
 _colorsok = False
 
 attach_dir = './attach_files'
@@ -683,9 +685,8 @@ class AttachmentButton(wx.Button):
                 for a in am:
                     a.attkey = self._attkey
                     self.StoreNewAttach(am)
-                    out = am.Save()
-                    if not out:
-                        break
+                    time.sleep(1)
+                out = am.Save()
                 if not out:
                     awu.MsgDialog(self,\
                                   """Problema durante il salvataggio """\
