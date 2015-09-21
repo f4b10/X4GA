@@ -668,6 +668,7 @@ class AttachmentButton(wx.Button):
         dlg.Destroy()
     
     def SaveAttachments(self):
+        wx.BeginBusyCursor()
         out = True
         am = self._attmemo
         if am.RowsCount() > 0:
@@ -682,10 +683,11 @@ class AttachmentButton(wx.Button):
                               style=wx.ICON_ERROR)
                 out = False
             else:
-                for a in am:
+                for i, a in enumerate(am):
+                    if i>0:
+                        time.sleep(1)
                     a.attkey = self._attkey
                     self.StoreNewAttach(am)
-                    time.sleep(1)
                 out = am.Save()
                 if not out:
                     awu.MsgDialog(self,\
@@ -694,6 +696,7 @@ class AttachmentButton(wx.Button):
                                   % repr(am.GetError()))
                 self.UpdateElements()
                 am.Retrieve()
+        wx.EndBusyCursor()
         self.UpdateButtonStatus()
         return out
     
