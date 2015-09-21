@@ -676,14 +676,16 @@ class AttachmentButton(wx.Button):
                     desc = "i %d allegati inseriti" % am.RowsCount()
                 awu.MsgDialog(self,\
                               """Non è possibile memorizzare %s in quanto """\
-                              """manca l'identificativo a cui riferirli""",\
+                              """manca l'identificativo a cui riferirli""" % desc,\
                               style=wx.ICON_ERROR)
                 out = False
             else:
                 for a in am:
                     a.attkey = self._attkey
                     self.StoreNewAttach(am)
-                out = am.Save()
+                    out = am.Save()
+                    if not out:
+                        break
                 if not out:
                     awu.MsgDialog(self,\
                                   """Problema durante il salvataggio """\
