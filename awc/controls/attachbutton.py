@@ -142,12 +142,13 @@ class _AttachTableMixin(adb.DbTable):
         now = DateTime.now()
         def f(x,n=2):
             return str(int(x)).zfill(n)
-        file_name = '%s-%s-%s %s-%s-%s' % (f(now.year,4),
+        file_name = '%s-%s-%s %s-%s-%s-%s' % (f(now.year,4),
                                            f(now.month),
                                            f(now.day),
                                            f(now.hour),
                                            f(now.minute),
-                                           f(now.second))
+                                           f(now.second),
+                                           f(now.microsecond/1000))
         return path_number, file_name
     
     def IsImage(self):
@@ -685,7 +686,7 @@ class AttachmentButton(wx.Button):
             else:
                 for i, a in enumerate(am):
                     if i>0:
-                        time.sleep(1)
+                        time.sleep(.01)
                     a.attkey = self._attkey
                     self.StoreNewAttach(am)
                 out = am.Save()
