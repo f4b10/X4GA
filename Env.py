@@ -6,17 +6,17 @@
 # Copyright:    (C) 2011 Astra S.r.l. C.so Cavallotti, 122 18038 Sanremo (IM)
 # ------------------------------------------------------------------------------
 # This file is part of X4GA
-# 
+#
 # X4GA is free software: you can redistribute it and/or modify
 # it under the terms of the Affero GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # X4GA is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
@@ -66,7 +66,7 @@ def log(x):
     f=open(logfile, 'a')
     f.write(x+'\n')
     f.close()
-    
+
 
 def opj(x,y):
     return os.path.join(x,y).replace('\\', '/')
@@ -137,7 +137,7 @@ class Setup(ConfigParser.RawConfigParser):
         if os.path.exists(fileName):
             self.read()
         self.InitDefs(defs)
-    
+
     def InitDefs(self, defs):
         for sec, opts in defs:
             for opt, val in opts:
@@ -149,7 +149,7 @@ class Setup(ConfigParser.RawConfigParser):
                 if self.has_option(sec, opt):
                     val = self.get(sec, opt)
                 self.set(sec, opt, val)
-    
+
     def set(self, sec, opt, val):
         if sec in self.types:
             t = self.types[sec]
@@ -164,7 +164,7 @@ class Setup(ConfigParser.RawConfigParser):
                         pass
         ConfigParser.RawConfigParser.set(self, sec, opt, val)
         setattr(self, '%s_%s' % (sec, opt), val)
-    
+
     def get(self, sec, opt, setvar=False):
         val = ConfigParser.RawConfigParser.get(self, sec, opt)
         if sec in self.types:
@@ -182,13 +182,13 @@ class Setup(ConfigParser.RawConfigParser):
             if setvar:
                 setattr(self, '%s_%s' % (sec, opt), val)
         return val
-    
+
     def read(self):
         fp = open(self.fileName, 'r')
         out = self.readfp(fp)
         fp.close()
         return out
-    
+
     def write(self):
         pswds = []
         for sec in self.sections():
@@ -212,7 +212,7 @@ class Setup(ConfigParser.RawConfigParser):
                 pass
             self.set(sec, opt, pswd)
         return out
-    
+
     def readfp(self, fp):
         out = ConfigParser.RawConfigParser.readfp(self, fp)
         for sec in self.sections():
@@ -229,7 +229,7 @@ class Setup(ConfigParser.RawConfigParser):
                         except IOError:
                             pass
         return out
-    
+
     def getPswdFile(self, sec):
         """
         Determina il nome del file contenente la password relativa alla sezione 'sec' e voce 'opt'
@@ -242,31 +242,31 @@ class Setup(ConfigParser.RawConfigParser):
 
 
 class GeneralSetup(Setup):
-    
+
     @classmethod
     def GetConfigFileName(cls):
         if sys.platform.startswith('linux'):
             return 'x4ga.conf' #linux
         return 'x4ga.ini' #windows
-        
+
     @classmethod
     def GetConfigPath(cls):
         return opj(config_base_path, cls.GetConfigFileName())
-    
+
     def __init__(self, fileName=None, config_stru=None):
-        
+
         defs = [('Database',                            #configurazione database
                  (('type', 'mysql'),                    #tipo motore
                   ('user', ''),                         #nome utente X4
                   ('sqlspy', '0'))),                    #flag visualizzazione comandi sql
-                 
+
                 ('MySQL',                               #configurazione mysql
                  (('desc', 'Server locale'),            #descrizione server
                   ('host', 'localhost'),                #url server
                   ('port', 3306),                       #porta tcp/ip
                   ('user', ''),                         #nome utente mysql
                   ('pswd', ''))),                       #password utente mysql
-                 
+
                 ('Report',                              #configurazione report
                  (('temp',    './report/temp'),         #cartella temporanea
                   ('defin',   './report/jrxml'),        #cartella jrxml
@@ -279,146 +279,146 @@ class GeneralSetup(Setup):
                   ('pdfcmd',  ''),                      #comando apertura pdf a fine stampa
                   ('prtdef',  ''),                      #nome stampante di default
                   ('labeler', ''),)),                   #nome stampante etichettatrice
-                 
+
                 ('Site',                                #configurazione installazione
                  (('name',   'sede'),                   #nome sito
                   ('folder', ''),                       #cartella comune
                   ('attdir', ''),                       #cartella files allegati
                   ('remote', '0'),                      #flag workstation remota
                   ('inetao', '0'),)),                   #flag internet always on
-                 
+
                 ('X4news',                              #visualizzazione modifiche all'avvio
                  (('lastversionshown', ''),             #ultima versione mostrata
                   ('lastmodversionshown', ''),          #ultima mod mostrata
                   ('shownews', 0),)),                   #flag visualizza modifiche
-                 
+
                 ('Updates',                             #configurazione aggiornamenti
                  (('url',       'http://www.x4ga.com'), #url aggiornamenti
                   ('user',      ''),                    #nome utente
                   ('pswd',      ''),                    #password
                   ('folder',    ''),                    #cartella download
                   ('autocheck', '2'),)),                #flag autocheck alla partenza: 0=No, 1=Si, 2=Configura
-                 
+
                 ('DataExport',                          #configurazione esportazione griglie
                  (('csvasgrid',    '1'),                #flag genera come mostrato
                   ('csvdelimiter', ','),                #separatore campi
                   ('csvquotechar', '"'),                #delimitatore campi
                   ('csvquoting',   '2'),                #tipo presenza delimitatori
                   ('csvexcelzero', '0'),)),             #numeri come formula, workaround x excel
-                 
+
                 ('Controls',                            #configurazione controlli
                  (('iconstype', 'Vista'),               #tipo di icone delle toolbar
                   ('gridtabtraversal', '1'),)),         #flag navigazione con tasto "Alt"
              ]
-        
+
         if config_stru:
             defs += config_stru
-        
+
         if fileName is None:
             fileName = self.GetConfigPath()
-        
+
         Setup.__init__(self, fileName, defs)
-        
+
         self.loadHosts()
-    
+
     def set(self, sec, opt, val):
-        
+
         if sec == 'Updates':
             if opt == 'url' and val == 'http://astrasrl.dyndns.org':
                 val = 'http://www.x4ga.com'
-        
+
         Setup.set(self, sec, opt, val)
-        
+
         if sec == 'Report':
-            
+
             import report
-            
+
             if opt == 'defin':
                 report.SetPathRpt(val)
                 if Azienda.codice:
                     report.SetPathSub('azienda_%s' % Azienda.codice)
                 else:
                     report.SetPathSub('')
-                
+
             elif opt == 'dpers':
                 if val:
                     report.SetPathSub(val)
-                
+
             elif opt == 'action':
                 if val in 'view print'.split():
                     report.SetActionDefault(val)
-                
+
             elif opt == 'pdfcmd':
                 if val:
                     report.SetPdfCommand(val or None)
-                
+
             elif opt == 'dde':
                 report.SetDDE(val == '1')
-                
+
             elif opt == 'cmdprint':
                 report.SetDirectPrint(val == '1')
-                
+
             elif opt == 'prtdef':
                 report.SetPrinterName((val or '').replace('/', '\\'))
-                
+
             elif opt == 'labeler':
                 report.SetLabelerName((val or '').replace('/', '\\'))
-                
+
             elif opt == 'output':
                 if val.startswith('./') and sys.platform.startswith('linux'):
                     val = os.path.expanduser('~/%s/%s' % (version.appcode, val[2:]))
                 report.SetPathPdf(val)
-                
+
             elif opt == 'images':
                 report.SetPathImg(val)
                 Azienda.imagePath = val
-            
+
         elif sec == 'DataExport':
-            
+
             if opt == 'csvdelimiter':
                 dbgrid.CSVFORMAT_DELIMITER = val
-                
+
             elif opt == 'csvquotechar':
                 dbgrid.CSVFORMAT_QUOTECHAR = val
-                
+
             elif opt == 'csvquoting':
                 dbgrid.CSVFORMAT_QUOTING = val
-                
+
             elif opt == 'csvexcelzero':
                 dbgrid.CSVFORMAT_EXCELZERO = bool(int(val or 0))
-            
+
         elif sec == 'Site':
-            
+
             if opt == 'remote':
                 import awc.layout.gestanag as ga
                 ga.SEARCH_ON_SHOW = self.get(sec, opt) != '1'
-                
+
             elif opt == 'inetao':
                 from awc.controls.entries import PartitaIvaEntryCtrl
                 PartitaIvaEntryCtrl.SetAskForLink(self.get(sec, opt) != '1')
-            
+
         elif sec == 'Database':
-            
+
             if opt == 'sqlspy':
                 adb.db.setlog(val == '1')
-            
+
         elif sec == 'Controls':
-            
+
             if opt == 'gridtabtraversal':
                 dbgrid.TABTRAVERSAL = (val == '1')
-    
+
     def read(self):
         out = Setup.read(self)
         self.setReportSub()
         self.setPaths()
         self.setIconsType()
         return out
-    
+
     def write(self):
         out = Setup.write(self)
         if out:
             self.setPaths()
-    
+
     def setPaths(self):
         sitepath = self.get('Site', 'folder')
         if len(sitepath) == 0:
@@ -438,7 +438,7 @@ class GeneralSetup(Setup):
             wx.MessageBox('Impossibile accedere alla cartella di configurazione:\n%s' % sitepath)
         self.set('Site', 'folder', sitepath)
         self.set('Updates', 'folder', updatespath)
-    
+
     def setReportSub(self):
         pathrpt = self.get('Report', 'defin')
         pathimg = self.get('Report', 'images')
@@ -456,22 +456,22 @@ class GeneralSetup(Setup):
         del report.pathalt[:]
         for n,p in enumerate(plugins):
             if pathsub:
-                report.AppendPathAlt(opj(opj(pathsub or pathrpt, sub), 
+                report.AppendPathAlt(opj(opj(pathsub or pathrpt, sub),
                                          'X4-plugin.%s' % p))
-            report.AppendPathAlt(opj(pathsub or pathrpt, 
+            report.AppendPathAlt(opj(pathsub or pathrpt,
                                      'X4-plugin.%s' % p))
         pathsub = opj(pathsub or pathrpt, sub)
         report.SetPathRpt(pathrpt)
         report.SetPathSub(pathsub)
         report.SetPathImg(pathimg)
-    
+
     def setIconsType(self):
         import imgfac
         try:
             imgfac.SetIconsType(self.get('Controls', 'iconstype'))
         except:
             pass
-    
+
     def loadHosts(self):
         #impostazione multiserver
         global dbservers
@@ -494,7 +494,7 @@ class GeneralSetup(Setup):
 
 
 class LicenseSetup(Setup):
-    
+
     def __init__(self, fileName):
         defs = (('License',
                  (('head', ''),
@@ -544,7 +544,7 @@ def InitSettings(ask_missing_config=True):
     if out:
         out = InitLicense(config)
     if out:
-        Azienda.firstTime=False        
+        Azienda.firstTime=False
         Azienda.reportPath = config.get('Report', 'defin')
         Azienda.tempPath = config.get('Report', 'temp')
         Azienda.pdfPath = config.get('Report', 'output')
@@ -555,7 +555,7 @@ def InitSettings(ask_missing_config=True):
         Azienda.DB.password =   adb.DEFAULT_PASSWORD = psw
     Azienda.Colours.SetDefaults()
     return out
-    
+
 
 # ------------------------------------------------------------------------------
 
@@ -576,7 +576,7 @@ def InitLicense(config):
     out = False
     while not out:
         try:
-            out = license.License(cfglic.License_head, 
+            out = license.License(cfglic.License_head,
                                   cfglic.License_piva).IsOk(cfglic.License_pswd)
         except Exception, e:
             out = version.OSS()
@@ -635,7 +635,7 @@ def StrDateTime(date):
 
 class Azienda(object):
     """
-    Insieme di classi per la configurazione dell'azienda e la sua 
+    Insieme di classi per la configurazione dell'azienda e la sua
     accessibilità sul database.
     """
     firstTime = False
@@ -656,7 +656,7 @@ class Azienda(object):
     titprivacy = ""
     infatti = ""
     codateco = ""
-    
+
     @classmethod
     def read_dati_azienda(cls, db=None):
         setup = adb.DbTable(cls.BaseTab.TABNAME_CFGSETUP, 'setup', db=db)
@@ -669,13 +669,13 @@ class Azienda(object):
                     setattr(cls, key, setup.importo)
                 elif setup.descriz:
                     setattr(cls, key, setup.descriz)
-    
+
     reportPath = ""
     tempPath = ""
     pdfPath = ""
     imagePath = ""
     defaults = {}
-    
+
     args = sys.argv[1:]
     params = {'password-length': 6,
               'onexit-execute': '',
@@ -690,7 +690,7 @@ class Azienda(object):
             params[key] = tipo(val)
     except getopt.GetoptError, e:
         pass#MsgDialog(None, message="Parametri errati %s" % repr(e.args))
-    
+
     class Login(object):
         """
         Dati relativi all'utente e l'ingresso in azienda
@@ -700,11 +700,11 @@ class Azienda(object):
         userid = None
         userdata = None
         dataElab = DateTime.today()
-        
+
         @classmethod
         def GetUserData(cls, col):
             return getattr(cls.userdata, col)
-    
+
     class Esercizio(object):
         """
         Dati relativi all'esercizio.
@@ -714,7 +714,7 @@ class Azienda(object):
         start = DateTime.Date(2006, 1, 1)
         end = DateTime.Date(2006, 12, 31)
         dataElab = DateTime.today()
-    
+
     # --------------------------------------------------------------------------
 
     class Colours(object):
@@ -722,9 +722,9 @@ class Azienda(object):
         Database colori standard dell'applicazione.
         Colori definiti::
             NORMAL_BACKGROUND - colore standard background controlli
-            NOCALC_BACKGROUND - colore di background per elementi il cui 
+            NOCALC_BACKGROUND - colore di background per elementi il cui
                                 calcolo automatico è disabilitato
-            
+
             Accesso:
                 Azienda.Colours.chiave_colore
         """
@@ -745,8 +745,8 @@ class Azienda(object):
         DELETED_BACKGROUND  = None
         EFFSEL_FOREGROUND   = None
         EFFSEL_BACKGROUND   = None
-        
-        
+
+
         @classmethod
         def SetDefaults(cls):
             wx.lib.colourdb.updateColourDB()
@@ -769,8 +769,8 @@ class Azienda(object):
             cls.DELETED_BACKGROUND = cdb.Find("YELLOW")
             cls.EFFSEL_FOREGROUND = cdb.Find("BLACK")
             cls.EFFSEL_BACKGROUND = cdb.Find("MOCCASIN")
-        
-        
+
+
         @classmethod
         def GetColour(cls, colorname):
             """
@@ -788,11 +788,11 @@ class Azienda(object):
     class DB:
         """
         Fornisce i parametri per la connessione al database server.
-        
+
             - Valori definiti dalla configurazione della workstation:
                 - servername
                 - serverport
-                
+
             - Valori definiti dall'utente in fase di selezione azienda:
                 - username
                 - password
@@ -803,9 +803,9 @@ class Azienda(object):
         password   = ""
         pswAdmin   = ""
         schema     = ""
-        
+
         connection = None
-        
+
         def testdb(*args):
             #Azienda.DB.connection = MySQLdb.connect( host = "localhost",\
             #user = "jfc",\
@@ -815,41 +815,41 @@ class Azienda(object):
             username =   "root"
             password =   "root"
             schema =     "astra"
-            
+
             Azienda.DB.servername = servername
             Azienda.DB.username =   username
             Azienda.DB.password =   password
             Azienda.DB.schema =     schema
-            
+
             Azienda.DB.connection = MySQLdb.connect(\
                 host =   Azienda.DB.servername,\
                 user =   Azienda.DB.username,\
                 passwd = Azienda.DB.password,\
                 db =     Azienda.DB.schema)
-            
+
             adb.DEFAULT_DATABASE = servername
             adb.DEFAULT_USERNAME = username
             adb.DEFAULT_PASSWORD = password
             adb.DEFAULT_DATABASE = schema
-            
+
             db = adb.DB()
             db.Connect()
-            
+
             Azienda.Login.username = username
-            
+
         testdb = staticmethod(testdb)
-    
+
     # --------------------------------------------------------------------------
-    
+
     def GetAutom(codauto, default=None):
         out = default
-        dba = adb.DbTable(Azienda.BaseTab.TABNAME_CFGAUTOM, 'auto', 
+        dba = adb.DbTable(Azienda.BaseTab.TABNAME_CFGAUTOM, 'auto',
                           writable=False)
         if dba.Retrieve('codice=%s', codauto) and dba.OneRow():
             out = dba.aut_id
         return out
     GetAutom = staticmethod(GetAutom)
-    
+
     # --------------------------------------------------------------------------
 
     class BaseTab(object):
@@ -861,41 +861,41 @@ class Azienda(object):
         C{BaseTab.tabelle} contiene i dati necessari alla gestione di tutte le
         tabelle del package; è una tupla di tuple, in cui ogni elemento si
         riferisce ad una singola tabella:
-            
+
             - Nome  I{String}
             - Descrizione tabella  I{String}
             - Struttura  I{tuple}
             - Indici I{tuple}
             - Constraints I{tuple}
             - Specifiche vocali I{dict}
-            
+
         Il terzo elemento è la tupla contenente la struttura della tabella,
         in cui ogni elemento è una tupla costituita da:
-            
+
             - Nome della colonna   I{String}
             - Larghezza  I{int}
             - Decimali  I{int}
             - Descrizione del contenuto  I{String}
             - Attributi aggiuntivi database column  I{String}
-        
-        
+
+
         Accesso alla struttura di una tabella
         -------------------------------------
         E' possibile accedere alla tupla delle tabelle indirizzando l'elemento
         tabella desiderato tramite la relativa costante di posizione nella tupla,
         per ogni tabella definita come C{TABSETUP_TABLE_TABXX}, dove C{TABXX} è il
         nome maiuscolo della tabella.
-        
+
         Esempio:
         C{strutturaclienti = Azienda.BaseTab.tabelle[ TABSETUP_TABLE_CLIENTI ]}
-        
+
         In tale struttura è possibile accedere agli elementi tramite le costanti:::
             TABSETUP_TABLENAME = 0
             TABSETUP_TABLEDESCRIPTION = 1
             TABSETUP_TABLESTRUCTURE = 2
             TABSETUP_TABLEINDEXES = 3
             TABSETUP_TABLECONSTRAINTS = 4
-            
+
         Nella struttura in C{TABSETUP_TABLESTRU} è possibile accedere agli elementi
         tramite le costanti:::
             TABSETUP_COLUMNNAME = 0
@@ -904,11 +904,11 @@ class Azienda(object):
             TABSETUP_COLUMNDECIMALS = 3
             TABSETUP_COLUMNDESCRIPTION = 4
             TABSETUP_COLUMNATTRIBUTES = 5
-        
-        
+
+
         Tabelle standard
         ----------------
-        
+
         Le tabelle standard sono:::
             Tabella           Nome std   Descrizione                           Costante di posizione
             -----------------------------------------------------------------------------------------
@@ -949,9 +949,10 @@ class Azienda(object):
             TABNAME_CFGMAGMOV cfgmagmov  Movimenti magazzino                   TABSETUP_TABLE_CFGMAGMOV
             TABNAME_MOVMAG_H  movmag_h   Documenti magazzino                   TABSETUP_TABLE_MOVMAG_H
             TABNAME_MOVMAG_B  movmag_b   Movimenti magazzino                   TABSETUP_TABLE_MOVMAG_B
-        
+            TABNAME_ALLEGATI  allegati   Allegati esterni a tabelle X4         TABSETUP_TABLE_ALLEGATI
+
         """
-        
+
         OPTDIGSEARCH = True  #flag ricerca immediata in digitazione codice/descrizione
         OPTTABSEARCH = True  #flag attivazione ricerche anche con il tasto Tab
         OPTRETSEARCH = True  #flag attivazione ricerche anche con il tasto Return
@@ -964,28 +965,28 @@ class Azienda(object):
         OPTLNKGRDCLI = None  #inizializzazione focus su codice/descrizione in LinkTableCliente da griglia
         OPTLNKCRDFOR = None  #inizializzazione focus su codice/descrizione in LinkTableFornit da scheda
         OPTLNKGRDFOR = None  #inizializzazione focus su codice/descrizione in LinkTableFornit da griglia
-        
+
         OPT_GC_PRINT = True  #flag abilitazione stampe su google cloud print
         OPT_GCP_USER = None  #nome utente google
         OPT_GCP_PSWD = None  #password utente google
-        
+
         TIPO_CONTAB = None   #tipo di contabilità
-        
+
         CONSOVGES = None     #chiusure con sovrapposizione o no
         CONBILRICL = False   #flag gestione bilanci riclassificati
         CONBILRCEE = False   #flag gestione bilencio riclassificato cee
         CONATTRITACC = False #flag gestione ritenute d'acconto
         CONPERRITACC = None  #percentuale di calcolo della ritenuta d'acconto
         CONCOMRITACC = None  #percentuale di competenza del totale imponibile per r.a.
-        
+
         VALINT_DECIMALS = 2  #numero decimali su valuta interna
         VALUTE_DECIMALS = 6  #numero decimali su valuta estera
-        
+
         VALINT_INTEGERS = 12 #numero cifre intere su valuta interna
         VALUTE_INTEGERS = 16 #numero cifre intere su valuta estera
         MAGPRE_INTEGERS = 12 #numero cifre intere prezzi
         MAGQTA_INTEGERS = 10 #numero cifre intere prezzi
-        
+
         MAGPRE_DECIMALS = 2  #numero decimali prezzi
         MAGQTA_DECIMALS = 0  #numero decimali quantità
         MAGEAN_PREFIX = '22' #prefisso per generazione codici ean
@@ -1027,7 +1028,7 @@ class Azienda(object):
         MAGNOCDEFDES = False #flag attivazione di default destinatari non codificati su ogni nuovo doc.
         MAGNOCDEFVET = False #flag attivazione di default vettori non codificati su ogni nuovo doc.
         MAGEXTRAVET = False  #flag attivazione campi extra sui vettori
-        
+
         #variabili per la gestione dei listini
         MAGNUMSCO = 3        #numero di sconti gestiti
         MAGNUMRIC = 3        #numero di ricariche gestite
@@ -1050,30 +1051,30 @@ class Azienda(object):
         MAGSEPLIS = False    #flag visualizzazione sconto effettivo del costo ultimo v/ prezzo pubblico
         MAGRELLIS = False    #flag visualizzazione ricarica effettiva di ogni singolo listino v/ costo ultimo
         MAGSELLIS = False    #flag visualizzazione sconto effettivo di ogni singolo listino v/ prezzo pubblico
-        
+
         TABSETUP_COLUMNNAME =        0
         TABSETUP_COLUMNTYPE =        1
         TABSETUP_COLUMNLENGTH =      2
         TABSETUP_COLUMNDECIMALS =    3
         TABSETUP_COLUMNDESCRIPTION = 4
         TABSETUP_COLUMNATTRIBUTES =  5
-        
+
         TABSETUP_TABLENAME =         0
         TABSETUP_TABLEDESCRIPTION =  1
         TABSETUP_TABLESTRUCTURE =    2
         TABSETUP_TABLEINDEXES =      3
         TABSETUP_TABLECONSTRAINTS =  4
-        
+
         TABCONSTRAINT_TABLE = 0
         TABCONSTRAINT_FIELD = 1
         TABCONSTRAINT_TYPE =  2
-        
+
         TABCONSTRAINT_TYPE_RESTRICT =   0
         TABCONSTRAINT_TYPE_NOACTION =   1
         TABCONSTRAINT_TYPE_CASCADE =    2
         TABCONSTRAINT_TYPE_SETNULL =    3
         TABCONSTRAINT_TYPE_SETDEFAULT = 4
-        
+
         class NumProgressivo(object):
             def __init__(self):
                 object.__init__(self)
@@ -1081,635 +1082,635 @@ class Azienda(object):
             def next(self):
                 self.progr += 1
                 return self.progr
-        
+
         numtab = NumProgressivo()
-        
+
         TABNAME_BILMAS = "bilmas"
         TABDESC_BILMAS = "Mastri di bilancio"
         TABSETUP_TABLE_BILMAS = numtab.next()
         TABSETUP_CONSTR_BILMAS = []
         TABVOICE_BILMAS = {1: ['mastro', ['il', 'un', 'del', 'dal']],
                            2: ['mastri', ['i', 'dei', 'dai']]}
-        
+
         TABNAME_BILCON = "bilcon"
         TABDESC_BILCON = "Conti di bilancio"
         TABSETUP_TABLE_BILCON = numtab.next()
         TABSETUP_CONSTR_BILCON = []
         TABVOICE_BILCON = {1: ['conto', ['il', 'un', 'del', 'dal']],
                            2: ['conti', ['i', 'dei', 'dai']]}
-        
+
         TABNAME_PDCTIP = "pdctip"
         TABDESC_PDCTIP = "Tipi sottoconto"
         TABSETUP_TABLE_PDCTIP = numtab.next()
         TABSETUP_CONSTR_PDCTIP = []
         TABVOICE_PDCTIP = {1: ['tipo', ['il', 'un', 'del', 'dal']],
                            2: ['tipi', ['i', 'dei', 'dai']]}
-        
+
         TABNAME_ALIQIVA = "aliqiva"
         TABDESC_ALIQIVA = "Aliquote IVA"
         TABSETUP_TABLE_ALIQIVA = numtab.next()
         TABSETUP_CONSTR_ALIQIVA = []
         TABVOICE_ALIQIVA = {1: ['aliquota IVA', ['l\'', 'un\'', 'dell\'', 'dall\'']],
                             2: ['aliquote IVA', ['le', 'delle', 'dalle']]}
-        
+
         TABNAME_AGENTI = "agenti"
         TABDESC_AGENTI = "Agenti"
         TABSETUP_TABLE_AGENTI = numtab.next()
         TABSETUP_CONSTR_AGENTI = []
         TABVOICE_AGENTI = {1: ['agente', ['l\'', 'un', 'dell\'', 'dall\'']],
                            2: ['agenti', ['gli', 'degli', 'dagli']]}
-        
+
         TABNAME_ZONE = "zone"
         TABDESC_ZONE = "Zone"
         TABSETUP_TABLE_ZONE = numtab.next()
         TABSETUP_CONSTR_ZONE = []
         TABVOICE_ZONE = {1: ['zona', ['la', 'una', 'della', 'dalla']],
                          2: ['zone', ['le', 'dele', 'dalle']]}
-        
+
         TABNAME_VALUTE = "valute"
         TABDESC_VALUTE = "Valute"
         TABSETUP_TABLE_VALUTE = numtab.next()
         TABSETUP_CONSTR_VALUTE = []
         TABVOICE_VALUTE = {1: ['valuta', ['la', 'una', 'della', 'dalla']],
                            2: ['valute', ['le', 'delle', 'dalle']]}
-        
+
         TABNAME_MODPAG = "modpag"
         TABDESC_MODPAG = "Modalità di pagamento"
         TABSETUP_TABLE_MODPAG = numtab.next()
         TABSETUP_CONSTR_MODPAG = []
         TABVOICE_MODPAG = {1: ['mod.pagamento', ['la', 'una', 'della', 'dalla']],
                            2: ['mod.pagamento', ['le', 'delle', 'dalle']]}
-        
+
         TABNAME_TRAVET = "travet"
         TABDESC_TRAVET = "Vettori"
         TABSETUP_TABLE_TRAVET = numtab.next()
         TABSETUP_CONSTR_TRAVET = []
         TABVOICE_TRAVET = {1: ['vettore', ['il', 'un', 'del', 'dal']],
                            2: ['vettori', ['i', 'dei', 'dai']]}
-        
+
         TABNAME_SPEINC = "speinc"
         TABDESC_SPEINC = "Spese di incasso"
         TABSETUP_TABLE_SPEINC = numtab.next()
         TABSETUP_CONSTR_SPEINC = []
         TABVOICE_SPEINC = {1: ['spesa di incasso', ['la', 'una', 'della', 'dalla']],
                            2: ['spese di incasso', ['le', 'delle', 'dalle']]}
-        
+
         TABNAME_REGIVA = "regiva"
         TABDESC_REGIVA = "Registri IVA"
         TABSETUP_TABLE_REGIVA = numtab.next()
         TABSETUP_CONSTR_REGIVA = []
         TABVOICE_REGIVA = {1: ['registro IVA', ['il', 'un', 'del', 'dal']],
                            2: ['registri IVA', ['i', 'dei', 'dai']]}
-        
+
         TABNAME_CFGCONTAB = "cfgcontab"
         TABDESC_CFGCONTAB = "Causali contabili"
         TABSETUP_TABLE_CFGCONTAB = numtab.next()
         TABSETUP_CONSTR_CFGCONTAB = []
         TABVOICE_CFGCONTAB = {1: ['causale', ['la', 'una', 'della', 'dalla']],
                               2: ['causali', ['le', 'delle', 'dalle']]}
-        
+
         TABNAME_CATCLI = "catcli"
         TABDESC_CATCLI = "Categorie clienti"
         TABSETUP_TABLE_CATCLI = numtab.next()
         TABSETUP_CONSTR_CATCLI = []
         TABVOICE_CATCLI = {1: ['categoria cliente', ['la', 'una', 'della', 'dalla']],
                            2: ['categorie cliente', ['le', 'delle', 'dalle']]}
-        
+
         TABNAME_CATFOR = "catfor"
         TABDESC_CATFOR = "Categorie fornitori"
         TABSETUP_TABLE_CATFOR = numtab.next()
         TABSETUP_CONSTR_CATFOR = []
         TABVOICE_CATFOR = {1: ['categoria fornitore', ['la', 'una', 'della', 'dalla']],
                            2: ['categorie fornitore', ['le', 'delle', 'dalle']]}
-        
+
         TABNAME_STATCLI = "statcli"
         TABDESC_STATCLI = "Status clienti"
         TABSETUP_TABLE_STATCLI = numtab.next()
         TABSETUP_CONSTR_STATCLI = []
         TABVOICE_STATCLI = {1: ['status cliente', ['lo', 'uno', 'dello', 'dallo']],
                             2: ['status cliente', ['gli', 'degli', 'dagli']]}
-        
+
         TABNAME_STATFOR = "statfor"
         TABDESC_STATFOR = "Status fornitori"
         TABSETUP_TABLE_STATFOR = numtab.next()
         TABSETUP_CONSTR_STATFOR = []
         TABVOICE_STATFOR = {1: ['status fornitore', ['lo', 'uno', 'dello', 'dallo']],
                             2: ['status fornitore', ['gli', 'degli', 'dagli']]}
-        
+
         TABNAME_PDC = "pdc"
         TABDESC_PDC = "Piano dei conti"
         TABSETUP_TABLE_PDC = numtab.next()
         TABSETUP_CONSTR_PDC = []
         TABVOICE_PDC = {1: ['sottoconto', ['il', 'un', 'del', 'dal']],
                         2: ['sottoconti', ['i', 'dei', 'dai']]}
-        
+
         TABNAME_CLIENTI = "clienti"
         TABDESC_CLIENTI = "Clienti"
         TABSETUP_TABLE_CLIENTI = numtab.next()
         TABSETUP_CONSTR_CLIENTI = []
         TABVOICE_CLIENTI = {1: ['cliente', ['il', 'un', 'del', 'dal']],
                             2: ['clienti', ['i', 'dei', 'dai']]}
-        
+
         TABNAME_DESTIN = "destin"
         TABDESC_DESTIN = "Destinatari"
         TABSETUP_TABLE_DESTIN = numtab.next()
         TABSETUP_CONSTR_DESTIN = []
         TABVOICE_DESTIN = {1: ['destinatario', ['il', 'un', 'del', 'dal']],
                            2: ['destinatari', ['i', 'dei', 'dai']]}
-        
+
         TABNAME_BANCF = "bancf"
         TABDESC_BANCF = "Banche di clienti/fornitori"
         TABSETUP_TABLE_BANCF = numtab.next()
         TABSETUP_CONSTR_BANCF = []
         TABVOICE_BANCF = {1: ['banca',  ['la', 'una', 'della', 'dalla']],
                           2: ['banche', ['le', 'delle', 'dalle']]}
-        
+
         TABNAME_FORNIT = "fornit"
         TABDESC_FORNIT = "Fornitori"
         TABSETUP_TABLE_FORNIT = numtab.next()
         TABSETUP_CONSTR_FORNIT = []
         TABVOICE_FORNIT = {1: ['fornitore', ['il', 'un', 'del', 'dal']],
                            2: ['fornitori', ['i', 'dei', 'dai']]}
-        
+
         TABNAME_CASSE = "casse"
         TABDESC_CASSE = "Casse"
         TABSETUP_TABLE_CASSE = numtab.next()
         TABSETUP_CONSTR_CASSE = []
         TABVOICE_CASSE = {1: ['cassa', ['la', 'una', 'della', 'dalla']],
                           2: ['casse', ['le', 'delle', 'dalle']]}
-        
+
         TABNAME_BANCHE = "banche"
         TABDESC_BANCHE = "Banche"
         TABSETUP_TABLE_BANCHE = numtab.next()
         TABSETUP_CONSTR_BANCHE = []
         TABVOICE_BANCHE = {1: ['banca',  ['la', 'una', 'della', 'dalla']],
                            2: ['banche', ['le', 'delle', 'dalle']]}
-        
+
         TABNAME_CONTAB_H = "contab_h"
         TABDESC_CONTAB_H = "Registrazioni contabili"
         TABSETUP_TABLE_CONTAB_H = numtab.next()
         TABSETUP_CONSTR_CONTAB_H = []
         TABVOICE_CONTAB_H = {1: ['registrazione contabile', ['la', 'una', 'della', 'dalla']],
                              2: ['registrazioni contabili', ['le', 'delle', 'dalle']]}
-        
+
         TABNAME_CONTAB_B = "contab_b"
         TABDESC_CONTAB_B = "Dettaglio registrazioni contabili"
         TABSETUP_TABLE_CONTAB_B = numtab.next()
         TABSETUP_CONSTR_CONTAB_B = []
         TABVOICE_CONTAB_B = {1: ['dettaglio della reg.contabile', ['il', 'un', 'del', 'dal']],
                              2: ['dettagli delle reg.contabili',  ['l', 'dei', 'dai']]}
-        
+
         TABNAME_PCF = "pcf"
         TABDESC_PCF = "Partite clienti/fornitori"
         TABSETUP_TABLE_PCF = numtab.next()
         TABSETUP_CONSTR_PCF = []
         TABVOICE_PCF = {1: ['partita cliente/fornitore', ['la', 'una', 'della', 'dalla']],
                         2: ['partite clienti/fornitori', ['le', 'delle', 'dalle']]}
-        
+
         TABNAME_CONTAB_S = "contab_s"
         TABDESC_CONTAB_S = "Scadenze registrazioni contabili"
         TABSETUP_TABLE_CONTAB_S = numtab.next()
         TABSETUP_CONSTR_CONTAB_S = []
         TABVOICE_CONTAB_S = {1: ['scadenza della reg.contabile', ['la', 'una', 'della', 'dalla']],
                              2: ['scadenze delle reg.contabili', ['le', 'delle', 'dalle']]}
-        
+
         TABNAME_CFGPROGR = "cfgprogr"
         TABDESC_CFGPROGR = "Progressivi"
         TABSETUP_TABLE_CFGPROGR = numtab.next()
         TABSETUP_CONSTR_PROGR = []
         TABVOICE_CFGPROGR = {1: ['progressivo', ['il', 'un', 'del', 'dal']],
                              2: ['progressivi', ['i', 'dei', 'dai']]}
-        
+
         TABNAME_CFGAUTOM = "cfgautom"
         TABDESC_CFGAUTOM = "Automatismi"
         TABSETUP_TABLE_CFGAUTOM = numtab.next()
         TABSETUP_CONSTR_AUTOM = []
         TABVOICE_CFGAUTOM = {1: ['automatismo', ['l\'', 'un', 'dell\'', 'dall\'']],
                              2: ['automatismi', ['gli', 'degli', 'dagli']]}
-        
+
         TABNAME_CFGPDCP = "cfgpdcpref"
         TABDESC_CFGPDCP = "Sottoconti preferiti"
         TABSETUP_TABLE_CFGPDCP = numtab.next()
         TABSETUP_CONSTR_CFGPDCP = []
         TABVOICE_CFGPDCP = {1: ['sottoconto preferito', ['il', 'uno', 'del', 'dal']],
                             2: ['sottoconti preferiti', ['i', 'dei', 'dai']]}
-        
+
         TABNAME_TIPART = "tipart"
         TABDESC_TIPART = "Tipi articolo"
         TABSETUP_TABLE_TIPART = numtab.next()
         TABSETUP_CONSTR_TIPART = []
         TABVOICE_TIPART = {1: ['tipo articolo', ['il', 'un', 'del', 'dal']],
                            2: ['tipi articolo', ['i', 'dei', 'dai']]}
-        
+
         TABNAME_CATART = "catart"
         TABDESC_CATART = "Categorie merce"
         TABSETUP_TABLE_CATART = numtab.next()
         TABSETUP_CONSTR_CATART = []
         TABVOICE_CATART = {1: ['categoria merce', ['la', 'una', 'della', 'dalla']],
                            2: ['categorie merce', ['le', 'delle', 'dalle']]}
-        
+
         TABNAME_GRUART = "gruart"
         TABDESC_GRUART = "Gruppi merce"
         TABSETUP_TABLE_GRUART = numtab.next()
         TABSETUP_CONSTR_GRUART = []
         TABVOICE_GRUART = {1: ['gruppo merce', ['il', 'un', 'del', 'dal']],
                            2: ['gruppi merce', ['i', 'dei', 'dai']]}
-        
+
         TABNAME_STATART = "statart"
         TABDESC_STATART = "Status prodotti"
         TABSETUP_TABLE_STATART = numtab.next()
         TABSETUP_CONSTR_STATART = []
         TABVOICE_STATART = {1: ['status articolo', ['lo', 'uno', 'dello', 'dallo']],
                             2: ['status articoli', ['gli', 'degli', 'dagli']]}
-        
+
         TABNAME_PROD = "prod"
         TABDESC_PROD = "Prodotti"
         TABSETUP_TABLE_PROD = numtab.next()
         TABSETUP_CONSTR_PROD = []
         TABVOICE_PROD = {1: ['prodotto', ['il', 'un', 'del', 'dal']],
                          2: ['prodotti', ['i', 'dei', 'dai']]}
-        
+
         TABNAME_CODARTCF = "artfor"
         TABDESC_CODARTCF = "Codici prodotto dei fornitori"
         TABSETUP_TABLE_CODARTCF = numtab.next()
         TABSETUP_CONSTR_CODARTCF = []
         TABVOICE_CODARTCF = {1: ['codice prodotto alternativo', ['il', 'un', 'del', 'dal']],
                              2: ['codici prodotto alternativi', ['i', 'dei', 'dai']]}
-        
+
         TABNAME_LISTINI = "listini"
         TABDESC_LISTINI = "Listini"
         TABSETUP_TABLE_LISTINI = numtab.next()
         TABSETUP_CONSTR_LISTINI = []
         TABVOICE_LISTINI = {1: ['condizione di listino', ['la', 'una', 'della', 'dalla']],
                             2: ['condizioni di listino', ['le', 'delle', 'dalle']]}
-        
+
         TABNAME_GRIGLIE = "griglie"
         TABDESC_GRIGLIE = "Griglie"
         TABSETUP_TABLE_GRIGLIE = numtab.next()
         TABSETUP_CONSTR_GRIGLIE = []
         TABVOICE_GRIGLIE = {1: ['condizione di griglia', ['la', 'una', 'della', 'dalla']],
                             2: ['condizioni di griglia', ['le', 'delle', 'dalle']]}
-        
+
         TABNAME_MAGAZZ = "magazz"
         TABDESC_MAGAZZ = "Magazzini"
         TABSETUP_TABLE_MAGAZZ = numtab.next()
         TABSETUP_CONSTR_MAGAZZ = []
         TABVOICE_MAGAZZ = {1: ['magazzino', ['il', 'un', 'del', 'dal']],
                            2: ['magazzini', ['i', 'dei', 'dai']]}
-        
+
         TABNAME_CFGMAGDOC = "cfgmagdoc"
         TABDESC_CFGMAGDOC = "Documenti di magazzino"
         TABSETUP_TABLE_CFGMAGDOC = numtab.next()
         TABSETUP_CONSTR_CFGMAGDOC = []
         TABVOICE_CFGMAGDOC = {1: ['tipo di documento', ['il', 'un', 'del', 'dal']],
                               2: ['tipi di documento', ['i', 'dei', 'dai']]}
-        
+
         TABNAME_CFGMAGMOV = "cfgmagmov"
         TABDESC_CFGMAGMOV = "Movimenti di magazzino"
         TABSETUP_TABLE_CFGMAGMOV = numtab.next()
         TABSETUP_CONSTR_CFGMAGMOV = []
         TABVOICE_CFGMAGMOV = {1: ['tipo di movimento', ['il', 'un', 'del', 'dal']],
                               2: ['tipi di movimento', ['i', 'dei', 'dai']]}
-        
+
         TABNAME_MOVMAG_H = "movmag_h"
         TABDESC_MOVMAG_H = "Documenti di magazzino"
         TABSETUP_TABLE_MOVMAG_H = numtab.next()
         TABSETUP_CONSTR_MOVMAG_H = []
         TABVOICE_MOVMAG_H = {1: ['testata del documento', ['la', 'una', 'della', 'dalla']],
                              2: ['testate dei documenti', ['le', 'delle', 'dalle']]}
-        
+
         TABNAME_MOVMAG_B = "movmag_b"
         TABDESC_MOVMAG_B = "Movimenti di magazzino"
         TABSETUP_TABLE_MOVMAG_B = numtab.next()
         TABSETUP_CONSTR_MOVMAG_B = []
         TABVOICE_MOVMAG_B = {1: ['riga di dettaglio del documento',  ['la', 'una', 'della', 'dalla']],
                              2: ['righe di dettaglio dei documenti', ['le', 'delle', 'dalle']]}
-        
+
         TABNAME_MACRO = "macro"
         TABDESC_MACRO = "Macro per personalizzazioni"
         TABSETUP_TABLE_MACRO = numtab.next()
         TABSETUP_CONSTR_MACRO = []
         TABVOICE_MACRO = {1: ['macro', ['la', 'una', 'della', 'dalla']],
                           2: ['macro', ['le', 'delle', 'dalle']]}
-        
+
         TABNAME_TIPLIST = "tiplist"
         TABDESC_TIPLIST = "Tipi listino"
         TABSETUP_TABLE_TIPLIST = numtab.next()
         TABSETUP_CONSTR_TIPLIST = []
         TABVOICE_TIPLIST = {1: ['tipo di listino', ['il', 'un', 'del', 'dal']],
                             2: ['tipi di listino', ['i', 'dei', 'dai']]}
-        
+
         TABNAME_TRACAU = "tracau"
         TABDESC_TRACAU = "Causali trasporto"
         TABSETUP_TABLE_TRACAU = numtab.next()
         TABSETUP_CONSTR_TRACAU = []
         TABVOICE_TRACAU = {1: ['causale di trasporto', ['la', 'una', 'della', 'dalla']],
                            2: ['causali di trasporto', ['le', 'delle', 'dalle']]}
-        
+
         TABNAME_TRACUR = "tracur"
         TABDESC_TRACUR = "Trasporto a cura"
         TABSETUP_TABLE_TRACUR = numtab.next()
         TABSETUP_CONSTR_TRACUR = []
         TABVOICE_TRACUR = {1: ['trasporto a cura', ['il', 'un', 'del', 'dal']],
                            2: ['trasporti a cura', ['i', 'dei', 'dai']]}
-        
+
         TABNAME_TRAASP = "traasp"
         TABDESC_TRAASP = "Aspetto beni trasporto"
         TABSETUP_TABLE_TRAASP = numtab.next()
         TABSETUP_CONSTR_TRAASP = []
         TABVOICE_TRAASP = {1: ['aspetto del trasporto', ['ll\'', 'un', 'dell\'', 'dall\'']],
                            2: ['aspetti del trasporto', ['gli', 'degli', 'dagli']]}
-        
+
         TABNAME_TRAPOR = "trapor"
         TABDESC_TRAPOR = "Porto"
         TABSETUP_TABLE_TRAPOR = numtab.next()
         TABSETUP_CONSTR_TRAPOR = []
         TABVOICE_TRAPOR = {1: ['tipo di porto', ['il', 'un', 'del', 'dal']],
                            2: ['tipi di porto', ['i', 'dei', 'dai']]}
-        
+
         TABNAME_TRACON = "tracon"
         TABDESC_TRACON = "Tipo di incasso contrassegno per vettore"
         TABSETUP_TABLE_TRACON = numtab.next()
         TABSETUP_CONSTR_TRACON = []
         TABVOICE_TRACON = {1: ['tipo di contrassegno', ['il', 'un', 'del', 'dal']],
                            2: ['tipi di contrassegno', ['i', 'dei', 'dai']]}
-        
+
         TABNAME_CFGEFF = "cfgeff"
         TABDESC_CFGEFF = "Configurazione tracciato effetti x emissione a banca"
         TABSETUP_TABLE_CFGEFF = numtab.next()
         TABSETUP_CONSTR_CFGEFF = []
         TABVOICE_CFGEFF = {1: ['riga di configurazione effetti',  ['la', 'una', 'della', 'dalla']],
                            2: ['righe di configurazione effetti', ['le', 'delle', 'dalle']]}
-        
+
         TABNAME_ALLEGATI = "allegati"
         TABDESC_ALLEGATI = "Allegati esterni a tabelle X4"
         TABSETUP_TABLE_ALLEGATI = numtab.next()
         TABSETUP_CONSTR_ALLEGATI = []
         TABVOICE_ALLEGATI = {1: ['allegato', ['l\'', 'un', 'dell\'', 'dall\'']],
                              2: ['allegati', ['gli', 'degli', 'dagli']]}
-        
+
         TABNAME_LIQIVA = "liqiva"
         TABDESC_LIQIVA = "Liquidazioni IVA"
         TABSETUP_TABLE_LIQIVA = numtab.next()
         TABSETUP_CONSTR_LIQIVA = []
         TABVOICE_LIQIVA = {1: ['liquidazione IVA', ['la', 'una', 'della', 'dalla']],
                            2: ['liquidazioni IVA', ['le', 'delle', 'dalle']]}
-        
+
         TABNAME_CFGSETUP = "cfgsetup"
         TABDESC_CFGSETUP = "Setup"
         TABSETUP_TABLE_SETUP = numtab.next()
         TABSETUP_CONSTR_CFGSETUP = []
         TABVOICE_CFGSETUP = {1: ['riga di configurazione del setup',  ['la', 'una', 'della', 'dalla']],
                              2: ['righe di configurazione del setup', ['le', 'delle', 'dalle']]}
-        
+
         TABNAME_CFGFTDIF = "cfgftdif"
         TABDESC_CFGFTDIF = "Setup fatturazione differita"
         TABSETUP_TABLE_CFGFTDIF = numtab.next()
         TABSETUP_CONSTR_CFGFTDIF = []
         TABVOICE_CFGFTDIF = {1: ['tipo di elaborazione differita', ['il', 'un', 'del', 'dal']],
                              2: ['tipo di elaborazione differita', ['i', 'dei', 'dai']]}
-        
+
         TABNAME_CFGFTDDR = "cfgftddr"
         TABDESC_CFGFTDDR = "Setup fatturazione differita - documenti da raggruppare"
         TABSETUP_TABLE_CFGFTDDR = numtab.next()
         TABSETUP_CONSTR_CFGFTDDR = []
         TABVOICE_CFGFTDDR = {1: ['documento da includere nell\'elaborazione differita', ['il', 'un', 'del', 'dal']],
                              2: ['documento da includere nell\'elaborazione differita', ['i', 'dei', 'dai']]}
-        
+
         TABNAME_CFGPERM = "cfgperm"
         TABDESC_CFGPERM = "Permessi utenti"
         TABSETUP_TABLE_CFGPERM = numtab.next()
         TABSETUP_CONSTR_CFGPERM = []
         TABVOICE_CFGPERM = {1: ['permesso utente', ['il', 'un', 'del', 'dal']],
                             2: ['permessi utente', ['i', 'dei', 'dai']]}
-        
+
         TABNAME_EFFETTI = "effetti"
         TABDESC_EFFETTI = "Effetti"
         TABSETUP_TABLE_EFFETTI = numtab.next()
         TABSETUP_CONSTR_EFFETTI = []
         TABVOICE_EFFETTI = {1: ['effetto', ['l\'', 'un', 'dell\'', 'dall\'']],
                             2: ['effetti', ['gli', 'degli', 'dagli']]}
-        
+
         TABNAME_SCADGRP = "scadgrp"
         TABDESC_SCADGRP = "Gruppi scadenzario"
         TABSETUP_TABLE_SCADGRP = numtab.next()
         TABSETUP_CONSTR_SCADGRP = []
         TABVOICE_SCADGRP = {1: ['gruppo scadenzario', ['il', 'un', 'del', 'dal']],
                             2: ['gruppi scadenzario', ['i', 'dei', 'dai']]}
-        
+
         TABNAME_PROMEM = "promem"
         TABDESC_PROMEM = "Promemoria"
         TABSETUP_TABLE_PROMEM = numtab.next()
         TABSETUP_CONSTR_PROMEM = []
         TABVOICE_PROMEM = {1: ['promemoria', ['il', 'un', 'del', 'dal']],
                            2: ['promemoria', ['i', 'dei', 'dai']]}
-        
+
         TABNAME_PROMEMU = "promemu"
         TABDESC_PROMEMU = "Utenti dei promemoria"
         TABSETUP_TABLE_PROMEMU = numtab.next()
         TABSETUP_CONSTR_PROMEMU = []
         TABVOICE_PROMEMU = {1: ['utente del promemoria', ['il', 'un', 'del', 'dal']],
                             2: ['utenti del promemoria', ['gli', 'degli', 'dagli']]}
-        
+
         TABNAME_CFGMAGRIV = "cfgmagriv"
         TABDESC_CFGMAGRIV = "Reg.IVA x magazzino/causale"
         TABSETUP_TABLE_CFGMAGRIV = numtab.next()
         TABSETUP_CONSTR_CFGMAGRIV = []
         TABVOICE_CFGMAGRIV = {1: ['associazione magazzino/registro IVA', ['l\'', 'un\'', 'dell\'', 'dall\'']],
                               2: ['associazioni magazzino/registro IVA', ['le', 'delle', 'dalle']]}
-        
+
         TABNAME_MARART = "marart"
         TABDESC_MARART = "Marche prodotti"
         TABSETUP_TABLE_MARART = numtab.next()
         TABSETUP_CONSTR_MARART = []
         TABVOICE_MARART = {1: ['marca del prodotto',  ['la', 'una', 'della', 'dalla']],
                            2: ['marche dei prodotti', ['le', 'delle', 'dalle']]}
-        
+
         TABNAME_PDCRANGE =  "pdcrange"
         TABDESC_PDCRANGE = "Ranges sottoconti"
         TABSETUP_TABLE_PDCRANGE = numtab.next()
         TABSETUP_CONSTR_PDCRANGE = []
         TABVOICE_PDCRANGE = {1: ['range dei sottoconti', ['il', 'un', 'del', 'dal']],
                              2: ['range dei sottoconti', ['i', 'dei', 'dai']]}
-        
+
         TABNAME_BRIMAS = "brimas"
         TABDESC_BRIMAS = "Mastri bilancio riclassificato"
         TABSETUP_TABLE_BRIMAS = numtab.next()
         TABSETUP_CONSTR_BRIMAS = []
         TABVOICE_BRIMAS = {1: ['mastro riclassificato', ['il', 'un', 'del', 'dal']],
                            2: ['mastri riclassificati', ['i', 'dei', 'dai']]}
-        
+
         TABNAME_BRICON = "bricon"
         TABDESC_BRICON = "Conti bilancio riclassificato"
         TABSETUP_TABLE_BRICON = numtab.next()
         TABSETUP_CONSTR_BRICON = []
         TABVOICE_BRICON = {1: ['conto riclassificato', ['il', 'un', 'del', 'dal']],
                            2: ['conti riclassificati', ['i', 'dei', 'dai']]}
-        
+
         TABNAME_PRODPRO = "prodpro"
         TABDESC_PRODPRO = "Progressivi prodotti"
         TABSETUP_TABLE_PRODPRO = numtab.next()
         TABSETUP_CONSTR_PRODPRO = []
         TABVOICE_PRODPRO = {1: ['riga di progressivi del prodotto',  ['la', 'una', 'della', 'dalla']],
                             2: ['righe di progressivi dei prodotti', ['le', 'delle', 'dalle']]}
-        
+
         TABNAME_GRUPREZ = "gruprez"
         TABDESC_GRUPREZ = "Gruppi prezzi"
         TABSETUP_TABLE_GRUPREZ = numtab.next()
         TABSETUP_CONSTR_GRUPREZ = []
         TABVOICE_GRUPREZ = {1: ['gruppo prezzi', ['il', 'un', 'del', 'dal']],
                             2: ['gruppi prezzo', ['i', 'dei', 'dai']]}
-        
+
         TABNAME_SCONTICC = "sconticc"
         TABDESC_SCONTICC = "Sconti categoria/cliente"
         TABSETUP_TABLE_SCONTICC = numtab.next()
         TABSETUP_CONSTR_SCONTICC = []
         TABVOICE_SCONTICC = {1: ['scontistica', ['la', 'una', 'della', 'dalla']],
                              2: ['scontistiche', ['le', 'delle', 'dalle']]}
-        
+
         TABNAME_PDT_H = "pdt_h"
         TABDESC_PDT_H = "Testate letture pdt"
         TABSETUP_TABLE_PDT_H = numtab.next()
         TABSETUP_CONSTR_PDT_H = []
         TABVOICE_PDT_H = {1: ['testata delle letture PDT', ['la', 'una', 'della', 'dalla']],
                           2: ['testate delle letture PDT', ['le', 'delle', 'dalle']]}
-        
+
         TABNAME_PDT_B = "pdt_b"
         TABDESC_PDT_B = "Dettaglio letture pdt"
         TABSETUP_TABLE_PDT_B = numtab.next()
         TABSETUP_CONSTR_PDT_B = []
         TABVOICE_PDT_B = {1: ['riga di dettaglio delle letture PDT',  ['la', 'una', 'della', 'dalla']],
                           2: ['righe di dettaglio delle letture PDT', ['le', 'delle', 'dalle']]}
-        
+
         TABNAME_PROCOS = "procos"
         TABDESC_PROCOS = "Costi consolidati sui prodotti"
         TABSETUP_TABLE_PROCOS = numtab.next()
         TABSETUP_CONSTR_PROCOS = []
         TABVOICE_PROCOS = {1: ['costo consolidato del prodotto', ['il', 'un', 'del', 'dal']],
                            2: ['costi consolidati dei prodotti', ['i', 'dei', 'dai']]}
-        
+
         TABNAME_PROGIA = "progia"
         TABDESC_PROGIA = "Giacenze prodotti rilevate"
         TABSETUP_TABLE_PROGIA = numtab.next()
         TABSETUP_CONSTR_PROGIA = []
         TABVOICE_PROGIA = {1: ['giacenza consolidata del prodotto', ['la', 'una', 'della', 'dalla']],
                            2: ['giacenze consolidate dei prodotti', ['le', 'delle', 'dalle']]}
-        
+
         TABNAME_PROMO = "promo"
         TABDESC_PROMO = "Condizioni promozionali prodotti"
         TABSETUP_TABLE_PROMO = numtab.next()
         TABSETUP_CONSTR_PROMO = []
         TABVOICE_PROMO = {1: ['condizione promo del prodotto', ['la', 'una', 'della', 'dalla']],
                           2: ['condizioni promo dei prodotti', ['le', 'delle', 'dalle']]}
-        
+
         TABNAME_STATPDC = "statpdc"
         TABDESC_STATPDC = "Status sottoconti P.d.C."
         TABSETUP_TABLE_STATPDC = numtab.next()
         TABSETUP_CONSTR_STATPDC = []
         TABVOICE_STATPDC = {1: ['status del P.d.C.', ['lo', 'uno', 'dello', 'dallo']],
                             2: ['status del P.d.C.', ['gli', 'degli', 'dagli']]}
-        
+
         TABNAME_TIPEVENT = "tipevent"
         TABDESC_TIPEVENT = "Tipi evento"
         TABSETUP_TABLE_TIPEVENT = numtab.next()
         TABSETUP_CONSTR_TIPEVENT = []
         TABVOICE_TIPEVENT = {1: ['tipo di evento', ['il', 'un', 'del', 'dal']],
                              2: ['tipi di evento', ['i', 'dei', 'dai']]}
-        
+
         TABNAME_EVENTI = "eventi"
         TABDESC_EVENTI = "Eventi"
         TABSETUP_TABLE_EVENTI = numtab.next()
         TABSETUP_CONSTR_EVENTI = []
         TABVOICE_EVENTI = {1: ['evento', ['l\'', 'un', 'dell\'', 'dall\'']],
                            2: ['eventi', ['gli', 'degli', 'dagli']]}
-        
+
         TABNAME_DOCSEMAIL = "docsemail"
         TABDESC_DOCSEMAIL = "Documenti per email"
         TABSETUP_TABLE_DOCSEMAIL = numtab.next()
         TABSETUP_CONSTR_DOCSEMAIL = []
         TABVOICE_DOCSEMAIL = {1: ['email', ['l\'', 'una', 'dell\'', 'dall\'']],
                               2: ['email', ['le', 'delle', 'dalle']]}
-        
+
         TABNAME_VARLIST = "varlist"
         TABDESC_VARLIST = "Listini variabili"
         TABSETUP_TABLE_VARLIST = numtab.next()
         TABSETUP_CONSTR_VARLIST = []
         TABVOICE_VARLIST = {1: ['listino variabile', ['il', 'un', 'del', 'dal']],
                             2: ['listini variabili', ['i', 'dai', 'dai']]}
-        
+
         tabelle = None
-        
+
         idw = 6    #larghezza colonne ID (integer)
         ntw = 1024 #larghezza colonne di tipo note
         dsw = 1024 #larghezza colonna descrizione in dettaglio doc.mag
-        
+
         std_indexes = ( ("PRIMARY KEY", "id"),
                         ("UNIQUE KEY",  "codice"),
                         ("UNIQUE KEY",  "descriz"), )
-        
-        
+
+
         @classmethod
         def getStdIdWidth(cls):
             return cls.idw
-        
-        
+
+
         @classmethod
         def getStdNoteWidth(cls):
             return cls.ntw
-        
-        
+
+
         @classmethod
         def getStdDesMovWidth(cls):
             return cls.dsw
-        
-        
+
+
         @classmethod
         def defstru(cls, initall=True):
-            
+
             DVI = cls.VALINT_DECIMALS #decimali valuta di conto
             DVE = cls.VALUTE_DECIMALS #decimali max valute estere
             DQM = cls.MAGQTA_DECIMALS #decimali qta mag.
             DPM = cls.MAGPRE_DECIMALS #decimali prezzo mag.
-            
+
             IVI = cls.VALINT_INTEGERS #cifre intere valuta di conto
             IVE = cls.VALUTE_INTEGERS #cifre intere valute estere
             IQM = cls.MAGQTA_INTEGERS #cifre intere qta mag.
             IPM = cls.MAGPRE_INTEGERS #cifre intere prezzo mag.
-            
+
             adb.dbtable.SetNumDecImp(DVI)
             adb.dbtable.SetNumDecPrz(DPM)
             adb.dbtable.SetNumDecQta(DQM)
-            
+
             idw = cls.idw
             ntw = cls.ntw
-            
+
             #azzeramento costrizioni tabelle
             for nome in dir(cls):
                 if nome.startswith('TABSETUP_CONSTR_'):
                     del getattr(cls, nome)[:]
-            
+
             cls.bilmas =\
               [ [ "id",         "INT",    idw,    0, "ID Mastro", "AUTO_INCREMENT" ],
                 [ "codice",     "CHAR",    10, None, "Codice", None ],
                 [ "descriz",    "VARCHAR", 60, None, "Descrizione", None ],
                 [ "tipo",       "CHAR",     1, None, "Tipologia P/E/O", None ] ]
             cls.bilmas_indexes = cls.std_indexes
-            
-            
+
+
             cls.bilcon =\
               [ [ "id",         "INT",    idw, None, "ID Conto", "AUTO_INCREMENT" ],
                 [ "codice",     "CHAR",    10, None, "Codice", None ],
                 [ "descriz",    "VARCHAR", 60, None, "Descrizione", None ],
                 [ "id_bilmas",  "INT",    idw, None, "ID Mastro", None ] ]
-            
+
             cls.set_constraints(cls.TABNAME_BILCON,
                                 ((cls.TABSETUP_CONSTR_BILMAS, 'id_bilmas', cls.TABCONSTRAINT_TYPE_NOACTION),))
-            
+
             cls.bilcon_indexes = [ ["PRIMARY KEY", "id"],
                                     ["UNIQUE KEY",  "id_bilmas,codice"],
                                     ["UNIQUE KEY",  "id_bilmas,descriz"], ]
-            
-            
+
+
             cls.pdctip =\
               [ [ "id",         "INT",    idw, None, "ID Tipo sottoconto", "AUTO_INCREMENT" ],
                 [ "codice",     "CHAR",    10, None, "Codice", None ],
@@ -1719,14 +1720,14 @@ class Azienda(object):
                 [ "id_bilcon",  "INT",    idw, None, "ID Conto default", None ],
                 [ "id_bilcee",  "INT",    idw, None, "ID bilancio CEE", None ],
                 [ "id_pdcrange","INT",    idw, None, "ID range sottoconti", None ] ]
-            
+
             cls.set_constraints(cls.TABNAME_PDCTIP,
                                 ((cls.TABSETUP_CONSTR_BILMAS, 'id_bilmas', cls.TABCONSTRAINT_TYPE_NOACTION),
                                  (cls.TABSETUP_CONSTR_BILCON, 'id_bilcon', cls.TABCONSTRAINT_TYPE_NOACTION),))
-            
+
             cls.pdctip_indexes = cls.std_indexes
-            
-            
+
+
             cls.aliqiva =\
               [ [ "id",         "INT",    idw, None, "ID Aliquota", "AUTO_INCREMENT" ],
                 [ "codice",     "CHAR",    10, None, "Codice", None ],
@@ -1744,10 +1745,10 @@ class Azienda(object):
                 [ "pralfc3",    "TINYINT",  1, None, "Flag allegati fornitori col.3", None ],
                 [ "pralfc4",    "TINYINT",  1, None, "Flag allegati fornitori col.4", None ],
                 [ "sm11_no",    "TINYINT",  1, None, "Flag esclusione da spesometro 2011", None ], ]
-            
+
             cls.aliqiva_indexes = cls.std_indexes
-            
-            
+
+
             cls.agenti =\
               [ [ "id",         "INT",    idw, None, "ID Agente", "AUTO_INCREMENT" ],
                 [ "codice",     "CHAR",    10, None, "Codice", None ],
@@ -1770,30 +1771,30 @@ class Azienda(object):
                 [ "iban",       "VARCHAR", 27, None, "Coord. IBAN", None ],
                 [ "id_zona",    "INT",    idw, None, "ID zona", None ],
                 [ "noprovvig",  "TINYINT",  1, None, "Flag esclusione da provvigioni", None ], ]
-            
+
             #cls.set_constraints(cls.TABNAME_AGENTI,
                                 #((cls.TABSETUP_CONSTR_ZONE, 'id_zona', cls.TABCONSTRAINT_TYPE_NOACTION),))
-            
+
             cls.agenti_indexes = cls.std_indexes
-            
-            
+
+
             cls.zone =\
               [ [ "id",         "INT",    idw, None, "ID Zona", "AUTO_INCREMENT" ],
                 [ "codice",     "CHAR",    10, None, "Codice", None ],
                 [ "descriz",    "VARCHAR", 60, None, "Descrizione", None ] ]
-            
+
             cls.zone_indexes = cls.std_indexes
-            
-            
+
+
             cls.valute =\
               [ [ "id",         "INT",    idw, None, "ID Valuta", "AUTO_INCREMENT" ],
                 [ "codice",     "CHAR",    10, None, "Codice", None ],
                 [ "descriz",    "VARCHAR", 60, None, "Descrizione", None ],
                 [ "cambio",     "DECIMAL",IVE,    6, "Cambio EURO", None ]  ]
-            
+
             cls.valute_indexes = cls.std_indexes
-            
-            
+
+
             cls.modpag =\
               [ [ "id",         "INT",    idw, None, "ID Mod.pagamento", "AUTO_INCREMENT" ],
                 [ "codice",     "CHAR",    10, None, "Codice", None ],
@@ -1822,17 +1823,17 @@ class Azienda(object):
             for n in range(1,13):
                 col = 'gem' + ("00%d" % n)[-2:]
                 cls.modpag.append([ col, "INT", 4, None, "Giorni extra per il mese #%d" % n, None ])
-            
+
             cls.set_constraints(cls.TABNAME_MODPAG,
                                 ((cls.TABSETUP_CONSTR_PDC, 'id_pdcpi', cls.TABCONSTRAINT_TYPE_NOACTION),))
-            
+
             cls.modpag_indexes = cls.std_indexes
-            
-            
+
+
             cls.travet =\
               [ [ "id",         "INT",     idw, None, "ID Vettore", "AUTO_INCREMENT" ],
                 [ "codice",     "CHAR",     10, None, "Codice", None ],
-                [ "descriz",    "VARCHAR", 255, None, "Descrizione", None ], 
+                [ "descriz",    "VARCHAR", 255, None, "Descrizione", None ],
                 [ "indirizzo",  "VARCHAR",  60, None, "Indirizzo", None ],
                 [ "cap",        "CHAR",      8, None, "CAP", None ],
                 [ "citta",      "VARCHAR",  60, None, "Città", None ],
@@ -1844,35 +1845,35 @@ class Azienda(object):
                 [ "numtel2",    "VARCHAR",  60, None, "Num. telefono aggiuntivo", None ],
                 [ "numfax",     "VARCHAR",  60, None, "Num. FAX", None ],
                 [ "numfax2",    "VARCHAR",  60, None, "Num. FAX aggiuntivo", None ],
-                [ "email",      "VARCHAR", 120, None, "Email", None ], 
-                [ "siteurl",    "VARCHAR", 120, None, "Url sito internet", None ], 
+                [ "email",      "VARCHAR", 120, None, "Email", None ],
+                [ "siteurl",    "VARCHAR", 120, None, "Url sito internet", None ],
                 [ "id_stato",   "INT",     idw, None, "ID Stato", None ], ]
-            
+
             if cls.MAGEXTRAVET:
                 a = cls.travet.append
                 a(["targa",   "VARCHAR",    16, None, "Targa", None ])
                 a(["autista", "VARCHAR",    64, None, "Autista", None ])
                 a(["dichiar", "VARCHAR",   ntw, None, "Dichiarazione", None ])
-            
+
             cls.set_constraints(cls.TABNAME_TRAVET,
                                 ((cls.TABSETUP_CONSTR_MOVMAG_H, 'id_travet', cls.TABCONSTRAINT_TYPE_NOACTION),))
-            
+
             cls.travet_indexes = cls.std_indexes
-            
-            
+
+
             cls.speinc =\
               [ [ "id",         "INT",    idw, None, "ID Spesa", "AUTO_INCREMENT" ],
                 [ "codice",     "CHAR",    10, None, "Codice", None ],
                 [ "descriz",    "VARCHAR", 60, None, "Descrizione", None ],
                 [ "importo",    "DECIMAL",  9,  DVI, "Importo spesa", None ],
                 [ "id_aliqiva", "INT",    idw, None, "ID aliquota IVA", None ] ]
-            
+
             cls.set_constraints(cls.TABNAME_SPEINC,
                                 ((cls.TABSETUP_CONSTR_ALIQIVA, 'id_aliqiva', cls.TABCONSTRAINT_TYPE_NOACTION),))
-            
+
             cls.speinc_indexes = cls.std_indexes
-            
-            
+
+
             cls.regiva = \
               [ [ "id",         "INT",    idw, None, "ID Registro IVA", "AUTO_INCREMENT" ],
                 [ "codice",     "CHAR",    10, None, "Codice", None ],
@@ -1880,19 +1881,19 @@ class Azienda(object):
                 [ "tipo",       "CHAR",     1, None, "Tipologia registro", None ],
                 [ "intestaz",   "VARCHAR",160, None, "Intestazione registro", None ],
                 [ "intanno",    "INT",      4, None, "Anno intestazione", None ],
-                [ "intpag",     "INT",      6, None, "Num. pagina in intestazione", None ], 
-                [ "lastprtnum", "INT",      6, None, "Num. protocollo ultima stampa definitiva", None ], 
-                [ "lastprtdat", "DATE",  None, None, "Data registrazione ultima stampa definitiva", None ], 
-                [ "noprot",     "TINYINT",  1, None, "Flag inibizione numero protocollo", None ], 
-                [ "rieponly",   "TINYINT",  1, None, "Flag registro riepilogativo", None ], 
-                [ "stacosric",  "TINYINT",  1, None, "Flag stampa costi/ricavi in semplificata", None ], 
-                [ "numdocsez",  "CHAR",     4, None, "Sezione per stampa sezione su numero documento", None ], 
-                [ "numdocann",  "TINYINT",  1, None, "Flag per stampa anno su numero documento", None ], 
+                [ "intpag",     "INT",      6, None, "Num. pagina in intestazione", None ],
+                [ "lastprtnum", "INT",      6, None, "Num. protocollo ultima stampa definitiva", None ],
+                [ "lastprtdat", "DATE",  None, None, "Data registrazione ultima stampa definitiva", None ],
+                [ "noprot",     "TINYINT",  1, None, "Flag inibizione numero protocollo", None ],
+                [ "rieponly",   "TINYINT",  1, None, "Flag registro riepilogativo", None ],
+                [ "stacosric",  "TINYINT",  1, None, "Flag stampa costi/ricavi in semplificata", None ],
+                [ "numdocsez",  "CHAR",     4, None, "Sezione per stampa sezione su numero documento", None ],
+                [ "numdocann",  "TINYINT",  1, None, "Flag per stampa anno su numero documento", None ],
             ]
-            
+
             cls.regiva_indexes = cls.std_indexes
-            
-            
+
+
             cls.cfgcontab =\
               [ [ "id",          "INT",     idw, None, "ID Causale", "AUTO_INCREMENT" ],
                 [ "codice",      "CHAR",     10, None, "Codice", None ],
@@ -1919,67 +1920,67 @@ class Azienda(object):
                 [ "id_pdctipcp", "INT",     idw, None, "C/Partita: ID tipo PDC", None ],
                 [ "pralcf",      "TINYINT",   1, None, "Flag allegati clienti/fornitori", None ],
                 [ "id_pdcrow1",  "INT",     idw, None, "Partita: ID PDC fisso", None ],
-                [ "camsegr1",    "TINYINT",   1, None, "Flag permesso cambio segno su riga 1", None ], 
-                [ "quaivanob",   "TINYINT",   1, None, "Flag quadratura iva/dare-avere non bloccante", None ], 
-                [ "davscorp",    "TINYINT",   1, None, "Flag colonna importo da scorporare su dare/avere", None ], 
-                [ "id_tipevent", "INT",     idw, None, "ID Tipo evento", None ], 
-                [ "event_msg",   "VARCHAR",1024, None, "Messaggio evento", None ], 
-                [ "rptname",     "VARCHAR",  64, None, "Nome report da proporre a fine registrazione", None ], 
+                [ "camsegr1",    "TINYINT",   1, None, "Flag permesso cambio segno su riga 1", None ],
+                [ "quaivanob",   "TINYINT",   1, None, "Flag quadratura iva/dare-avere non bloccante", None ],
+                [ "davscorp",    "TINYINT",   1, None, "Flag colonna importo da scorporare su dare/avere", None ],
+                [ "id_tipevent", "INT",     idw, None, "ID Tipo evento", None ],
+                [ "event_msg",   "VARCHAR",1024, None, "Messaggio evento", None ],
+                [ "rptname",     "VARCHAR",  64, None, "Nome report da proporre a fine registrazione", None ],
             ]
-            
+
             cls.set_constraints(cls.TABNAME_CFGCONTAB,
                                 ((cls.TABSETUP_CONSTR_REGIVA,   'id_regiva',   cls.TABCONSTRAINT_TYPE_NOACTION),
                                  (cls.TABSETUP_CONSTR_PDCTIP,   'id_pdctippa', cls.TABCONSTRAINT_TYPE_NOACTION),
                                  (cls.TABSETUP_CONSTR_PDCTIP,   'id_pdctipcp', cls.TABCONSTRAINT_TYPE_NOACTION),
                                  (cls.TABSETUP_CONSTR_PDC,      'id_pdcrow1',  cls.TABCONSTRAINT_TYPE_NOACTION),
                                  (cls.TABSETUP_CONSTR_TIPEVENT, 'id_tipevent', cls.TABCONSTRAINT_TYPE_NOACTION),))
-            
+
             cls.cfgcontab_indexes = cls.std_indexes
-            
-            
+
+
             cls.catcli =\
               [ [ "id",         "INT",    idw, None, "ID Categoria", "AUTO_INCREMENT" ],
                 [ "codice",     "CHAR",    10, None, "Codice", None ],
                 [ "descriz",    "VARCHAR", 60, None, "Descrizione", None ], ]
-            
+
             cls.catcli_indexes = cls.std_indexes
-            
-            
+
+
             cls.catfor =\
               [ [ "id",         "INT",    idw, None, "ID Categoria", "AUTO_INCREMENT" ],
                 [ "codice",     "CHAR",    10, None, "Codice", None ],
                 [ "descriz",    "VARCHAR", 60, None, "Descrizione", None ], ]
-            
+
             cls.catfor_indexes = cls.std_indexes
-            
-            
+
+
             cls.statcli =\
               [ [ "id",           "INT",    idw, None, "ID Sottoconto", "AUTO_INCREMENT" ],
                 [ "codice",       "CHAR",    10, None, "Codice", None ],
-                [ "descriz",      "VARCHAR", 60, None, "Descrizione", None ], 
+                [ "descriz",      "VARCHAR", 60, None, "Descrizione", None ],
                 [ "hidesearch",   "TINYINT",  1, None, "Flag per nascondere nelle ricerche", None ],
                 [ "nomov_ordcli", "TINYINT",  1, None, "Flag per impedire l'inserimento negli ordini da cliente", None ],
                 [ "nomov_vencli", "TINYINT",  1, None, "Flag per impedire l'inserimento nelle vendite a cliente", None ],
                 [ "nomov_rescli", "TINYINT",  1, None, "Flag per impedire l'inserimento nei resi da cliente", None ],
                 [ "noeffetti",    "TINYINT",  1, None, "Flag per impedire l'uso di mod.pagemento con effetti", None ],
             ]
-            
+
             cls.statcli_indexes = cls.std_indexes
-            
-            
+
+
             cls.statfor =\
               [ [ "id",           "INT",    idw, None, "ID Sottoconto", "AUTO_INCREMENT" ],
                 [ "codice",       "CHAR",    10, None, "Codice", None ],
-                [ "descriz",      "VARCHAR", 60, None, "Descrizione", None ], 
+                [ "descriz",      "VARCHAR", 60, None, "Descrizione", None ],
                 [ "hidesearch",   "TINYINT",  1, None, "Flag per nascondere nelle ricerche", None ],
                 [ "nomov_ordfor", "TINYINT",  1, None, "Flag per impedire l'inserimento negli ordini a fornitore", None ],
                 [ "nomov_carfor", "TINYINT",  1, None, "Flag per impedire l'inserimento nei carichi da fornitore", None ],
                 [ "nomov_resfor", "TINYINT",  1, None, "Flag per impedire l'inserimento nei resi a fornitore", None ],
             ]
-            
+
             cls.statfor_indexes = cls.std_indexes
-            
-            
+
+
             cls.pdc =\
               [ [ "id",         "INT",    idw, None, "ID Sottoconto", "AUTO_INCREMENT" ],
                 [ "codice",     "CHAR",    10, None, "Codice", None ],
@@ -1990,22 +1991,22 @@ class Azienda(object):
                 [ "id_bilcon",  "INT",    idw, None, "ID conto bilancio", "NOT NULL DEFAULT -1" ],
                 [ "id_brimas",  "INT",    idw, None, "ID mastro bilancio ricl.", None ],
                 [ "id_bricon",  "INT",    idw, None, "ID conto bilancio ricl.", None ],
-                [ "id_bilcee",  "INT",    idw, None, "ID bilancio CEE", None ], 
-                [ "id_statpdc", "INT",    idw, None, "ID status p.d.c.", None ], 
+                [ "id_bilcee",  "INT",    idw, None, "ID bilancio CEE", None ],
+                [ "id_statpdc", "INT",    idw, None, "ID status p.d.c.", None ],
             ]
-            
+
             cls.set_constraints(cls.TABNAME_PDC,
                                 ((cls.TABSETUP_CONSTR_BILMAS,  'id_bilmas',  cls.TABCONSTRAINT_TYPE_NOACTION),
                                  (cls.TABSETUP_CONSTR_BILCON,  'id_bilcon',  cls.TABCONSTRAINT_TYPE_NOACTION),
                                  (cls.TABSETUP_CONSTR_BRIMAS,  'id_brimas',  cls.TABCONSTRAINT_TYPE_NOACTION),
                                  (cls.TABSETUP_CONSTR_BRICON,  'id_bricon',  cls.TABCONSTRAINT_TYPE_NOACTION),
                                  (cls.TABSETUP_CONSTR_STATPDC, 'id_statpdc', cls.TABCONSTRAINT_TYPE_NOACTION),))
-            
+
             cls.pdc_indexes = [ ["PRIMARY KEY", "id"],
                                  ["UNIQUE KEY", "codice"],
                                  ["KEY",        "id_tipo,descriz"] ]
-            
-            
+
+
             cls.clienti =\
               [ [ "id",             "INT",    idw, None, "ID Cliente", None ],
                 [ "indirizzo",      "VARCHAR", 60, None, "Indirizzo", None ],
@@ -2089,7 +2090,7 @@ class Azienda(object):
                 [ "sm11_sedestt",   "INT",    idw, None, "Soggetto estero: id stato estero sede legale", None ],
                 [ "sm11_associa",   "TINYINT",  1, None, "Soggetto estero: flag associa sempre tutte le registrazioni", None ],
             ]
-            
+
             cls.set_constraints(cls.TABNAME_CLIENTI,
                                 ((cls.TABSETUP_CONSTR_PDC,     'id_pdc',      cls.TABCONSTRAINT_TYPE_NOACTION),
                                  (cls.TABSETUP_CONSTR_ZONE,    'id_zona',     cls.TABCONSTRAINT_TYPE_NOACTION),
@@ -2105,10 +2106,10 @@ class Azienda(object):
                                  (cls.TABSETUP_CONSTR_CLIENTI, 'id_clifat',   cls.TABCONSTRAINT_TYPE_NOACTION),
                                  (cls.TABSETUP_CONSTR_SCADGRP, 'id_scadgrp',  cls.TABCONSTRAINT_TYPE_NOACTION),
                                  (cls.TABSETUP_CONSTR_PDC,     'id_bancapag', cls.TABCONSTRAINT_TYPE_NOACTION),))
-            
+
             cls.clienti_indexes = [ ["PRIMARY KEY", "id"], ]
-            
-            
+
+
             cls.destin =\
               [ [ "id",         "INT",    idw, None, "ID Destinatario", "AUTO_INCREMENT" ],
                 [ "codice",     "CHAR",    10, None, "Codice", None ],
@@ -2125,15 +2126,15 @@ class Azienda(object):
                 [ "contatto",   "VARCHAR", 60, None, "Contatto", None ],
                 [ "pref",       "TINYINT",  1, None, "Flag destinazione preferita", None ],
                 [ "id_pdc",     "INT",    idw, None, "ID Anagrafica di app.", None ] ]
-            
+
             cls.set_constraints(cls.TABNAME_DESTIN,
                                 ((cls.TABSETUP_CONSTR_PDC, 'id_pdc', cls.TABCONSTRAINT_TYPE_CASCADE),))
-            
+
             cls.destin_indexes = [ ["PRIMARY KEY", "id"],
                                     ["UNIQUE KEY", "id_pdc,codice"],
                                     ["KEY",        "id_pdc,descriz"], ]
-            
-            
+
+
             cls.bancf =\
               [ [ "id",         "INT",    idw, None, "ID Banca del cliente", "AUTO_INCREMENT" ],
                 [ "codice",     "CHAR",    10, None, "Codice", None ],
@@ -2149,14 +2150,14 @@ class Azienda(object):
                 [ "bic",        "VARCHAR", 11, None, "Codice BIC", None ],
                 [ "pref",       "TINYINT",  1, None, "Flag banca preferita", None ],
                 [ "id_pdc",     "INT",    idw, None, "ID Anagrafica di app.", None ] ]
-            
+
             cls.set_constraints(cls.TABNAME_BANCF,
                                 ((cls.TABSETUP_CONSTR_PDC, 'id_pdc', cls.TABCONSTRAINT_TYPE_CASCADE),))
-            
+
             cls.bancf_indexes = [ ["PRIMARY KEY", "id"],
                                    ["UNIQUE KEY",  "id_pdc,descriz"], ]
-            
-            
+
+
             cls.fornit =\
               [ [ "id",             "INT",    idw, None, "ID Fornitore", None ],
                 [ "indirizzo",      "VARCHAR", 60, None, "Indirizzo", None ],
@@ -2210,7 +2211,7 @@ class Azienda(object):
                 [ "grpstop",        "CHAR",     1, None, "Flag stop inserimento prodotti non in griglia", None ],
                 [ "allegcf",        "TINYINT",  1, None, "Flag allegati", None ],
                 [ "is_blacklisted", "TINYINT",  1, None, "Flag anagrafica in blacklist paradisi fiscali", None ],
-                [ "aziper",         "CHAR",     1, None, "Tipo cliente", None ], 
+                [ "aziper",         "CHAR",     1, None, "Tipo cliente", None ],
                 [ "sm11_cognome",   "VARCHAR", 60, None, "Soggetto estero: cognome", None ],
                 [ "sm11_nome",      "VARCHAR", 60, None, "Soggetto estero: nome", None ],
                 [ "sm11_nascdat",   "DATE",  None, None, "Soggetto estero: data di nascita", None ],
@@ -2221,7 +2222,7 @@ class Azienda(object):
                 [ "sm11_sedestt",   "INT",    idw, None, "Soggetto estero: id stato estero sede legale", None ],
                 [ "sm11_associa",   "TINYINT",  1, None, "Soggetto estero: flag associa sempre tutte le registrazioni", None ],
             ]
-            
+
             cls.set_constraints(cls.TABNAME_FORNIT,
                                 ((cls.TABSETUP_CONSTR_PDC,     'id_pdc',      cls.TABCONSTRAINT_TYPE_NOACTION),
                                  (cls.TABSETUP_CONSTR_VALUTE,  'id_valuta',   cls.TABCONSTRAINT_TYPE_NOACTION),
@@ -2234,16 +2235,16 @@ class Azienda(object):
                                  (cls.TABSETUP_CONSTR_ZONE,    'id_zona',     cls.TABCONSTRAINT_TYPE_NOACTION),
                                  (cls.TABSETUP_CONSTR_SCADGRP, 'id_scadgrp',  cls.TABCONSTRAINT_TYPE_NOACTION),
                                  (cls.TABSETUP_CONSTR_PDC,     'id_bancapag', cls.TABCONSTRAINT_TYPE_NOACTION),))
-            
+
             cls.fornit_indexes = [ ["PRIMARY KEY", "id"], ]
-            
-            
+
+
             cls.casse =\
               [ [ "id",         "INT",    idw, None, "ID Cassa", None ], ]
-            
+
             cls.casse_indexes = [ ["PRIMARY KEY", "id"], ]
-            
-            
+
+
             cls.banche =\
               [ [ "id",         "INT",    idw, None, "ID Banca", None ],
                 [ "abi",        "CHAR",     5, None, "ABI", None ],
@@ -2261,10 +2262,10 @@ class Azienda(object):
                 [ "provfin",    "VARCHAR", 15, None, "Prov. Finanza", None],
                 [ "aubanum",    "VARCHAR", 10, None, "Num. autorizz. banca", None],
                 [ "aubadat",    "DATE",  None, None, "Data autorizz. banca", None] ]
-            
+
             cls.banche_indexes = [ ["PRIMARY KEY", "id"], ]
-            
-            
+
+
             cls.contab_h =\
               [ [ "id",         "INT",    idw, None, "ID Registrazione", "AUTO_INCREMENT" ],
                 [ "esercizio",  "INT",      4, None, "Flag esercizio", "UNSIGNED NOT NULL" ],
@@ -2284,18 +2285,18 @@ class Azienda(object):
                 [ "sm_link",    "INT",      6, None, "Chiave di raggruppamento registrazioni per spesometro", None ],
                 [ "sm_regrif",  "TINYINT",  1, None, "Flag spesometro registrazione di riferimento per aggregazioni", None ],
             ]
-            
+
             cls.set_constraints(cls.TABNAME_CONTAB_H,
                                 ((cls.TABSETUP_CONSTR_CFGCONTAB, 'id_caus',   cls.TABCONSTRAINT_TYPE_NOACTION),
                                  (cls.TABSETUP_CONSTR_VALUTE,    'id_valuta', cls.TABCONSTRAINT_TYPE_NOACTION),
                                  (cls.TABSETUP_CONSTR_REGIVA,    'id_regiva', cls.TABCONSTRAINT_TYPE_NOACTION),
                                  (cls.TABSETUP_CONSTR_MODPAG,    'id_modpag', cls.TABCONSTRAINT_TYPE_NOACTION),))
-            
+
             cls.contab_h_indexes = [ ["PRIMARY KEY", "id"],
                                       ["KEY",        "id_regiva,numiva,numdoc"],
                                       ["KEY",        "datreg,id_regiva,numiva"], ]
-            
-            
+
+
             cls.contab_b =\
               [ [ "id",         "INT",     idw, None, "ID Riga", "AUTO_INCREMENT" ],
                 [ "id_reg",     "INT",     idw, None, "ID registrazione", None ],
@@ -2319,9 +2320,9 @@ class Azienda(object):
                 #[ "imposta_ve", "DECIMAL", IVE,  DVE, "Imposta in valuta", None ],
                 #[ "indeduc_ve", "DECIMAL", IVE,  DVE, "Imposta indeducibile in valuta", None ],
                 [ "ivaman",     "TINYINT",   1, None, "Calcolo IVA inibito", None ],
-                [ "solocont",   "TINYINT",   1, None, "Flag riga solo contabile", None ], 
+                [ "solocont",   "TINYINT",   1, None, "Flag riga solo contabile", None ],
                 [ "f_sermer",   "CHAR",      1, None, "Flag servizi/merce per spesometro", None ], ]
-            
+
             cls.set_constraints(cls.TABNAME_CONTAB_B,
                                 ((cls.TABSETUP_CONSTR_CONTAB_H, 'id_reg',     cls.TABCONSTRAINT_TYPE_CASCADE),
                                  (cls.TABSETUP_CONSTR_ALIQIVA,  'id_aliqiva', cls.TABCONSTRAINT_TYPE_NOACTION),
@@ -2329,12 +2330,12 @@ class Azienda(object):
                                  (cls.TABSETUP_CONSTR_PDC,      'id_pdccp',   cls.TABCONSTRAINT_TYPE_NOACTION),
                                  (cls.TABSETUP_CONSTR_PDC,      'id_pdciva',  cls.TABCONSTRAINT_TYPE_NOACTION),
                                  (cls.TABSETUP_CONSTR_PDC,      'id_pdcind',  cls.TABCONSTRAINT_TYPE_NOACTION),))
-            
+
             cls.contab_b_indexes = [ ["PRIMARY KEY", "id"],
                                      ["KEY",         "id_reg,numriga"],
                                      ["KEY",         "id_pdcpa,id_reg"] ]
-            
-            
+
+
             cls.pcf =\
               [ [ "id",         "INT",     idw, None, "ID Partita", "AUTO_INCREMENT" ],
                 [ "id_pdc",     "INT",     idw, None, "ID sottoconto pdc", "NOT NULL" ],
@@ -2360,7 +2361,7 @@ class Azienda(object):
                 [ "id_effreg",  "INT",     idw, None, "ID reg.contabile effetto", None ],
                 [ "id_effpdc",  "INT",     idw, None, "ID sottoconto effetto", None ],
                 [ "effdate",    "DATE",   None, None, "Data emissione effetto", None ] ]
-            
+
             cls.set_constraints(cls.TABNAME_PCF,
                                 ((cls.TABSETUP_CONSTR_PDC,       'id_pdc',    cls.TABCONSTRAINT_TYPE_NOACTION),
                                  (cls.TABSETUP_CONSTR_CFGCONTAB, 'id_caus',   cls.TABCONSTRAINT_TYPE_NOACTION),
@@ -2368,12 +2369,12 @@ class Azienda(object):
                                  (cls.TABSETUP_CONSTR_PDC,       'id_effban', cls.TABCONSTRAINT_TYPE_NOACTION),
                                  (cls.TABSETUP_CONSTR_BANCF,     'id_effbap', cls.TABCONSTRAINT_TYPE_NOACTION),
                                  (cls.TABSETUP_CONSTR_PDC,       'id_effpdc', cls.TABCONSTRAINT_TYPE_NOACTION),))
-            
+
             cls.pcf_indexes = [ ["PRIMARY KEY", "id"],
                                 ["KEY",         "id_pdc,datscad"],
                                 ["KEY",         "datscad"], ]
-            
-            
+
+
             cls.contab_s =\
               [ [ "id",         "INT",     idw, None, "ID Scadenza", "AUTO_INCREMENT" ],
                 [ "id_reg",     "INT",     idw, None, "ID registrazione", "NOT NULL" ],
@@ -2386,14 +2387,14 @@ class Azienda(object):
                 [ "id_pcf",     "INT",     idw, None, "ID della partita collegata", None ],
                 [ "note",       "VARCHAR", ntw, None, "Note scadenza", None ],
                 [ "tipabb",     "CHAR",      1, None, "Tipo di abbuono", None ] ]
-            
+
             cls.set_constraints(cls.TABNAME_CONTAB_S,
                                 ((cls.TABSETUP_CONSTR_PCF, 'id_pcf', cls.TABCONSTRAINT_TYPE_NOACTION),))
-            
+
             cls.contab_s_indexes = [ ["PRIMARY KEY", "id"],
                                      ["KEY",         "id_reg,datscad"], ]
-            
-            
+
+
             cls.cfgprogr =\
               [ [ "id",         "INT",    idw, None, "ID Progressivo", "AUTO_INCREMENT" ],
                 [ "codice",     "VARCHAR", 20, None, "Codice", None ],
@@ -2405,21 +2406,21 @@ class Azienda(object):
                 [ "progrimp1",  "DECIMAL", 12,  DVI, "Progressivo: importo 1", None ],
                 [ "progrimp2",  "DECIMAL", 12,  DVI, "Progressivo: importo 2", None ],
                 [ "progrdesc",  "VARCHAR",255, None, "Progressivo: stringa", None ], ]
-            
+
             cls.cfgprogr_indexes = [ ["PRIMARY KEY", "id"],
                                       ["UNIQUE KEY",  "codice,keydiff,key_id"], ]
-            
-            
+
+
             cls.cfgautom =\
               [ [ "id",         "INT",    idw, None, "ID Automatismo", "AUTO_INCREMENT" ],
                 [ "codice",     "VARCHAR", 20, None, "Codice", None ],
                 [ "descriz",    "VARCHAR", 60, None, "Descrizione", None ],
                 [ "aut_id",     "INT",    idw, None, "Chiave: ID", None ] ]
-            
+
             cls.cfgautom_indexes = [ ["PRIMARY KEY", "id"],
                                       ["UNIQUE KEY",  "codice"], ]
-            
-            
+
+
             cls.cfgpdcp =\
               [ [ "id",         "INT",    idw, None, "ID Sottoconto preferenziale", "AUTO_INCREMENT" ],
                 [ "ambito",     "TINYINT",  1, None, "Ambito preferenza", None ],
@@ -2427,22 +2428,22 @@ class Azienda(object):
                 [ "pdcord",     "INT",      3, None, "Ordinamento pdc nell'ambito/chiave", None ],
                 [ "id_pdc",     "INT",    idw, None, "Id pdc preferito", None ],
                 [ "segno",      "CHAR",     1, None, "Segno D/A", None ], ]
-            
+
             cls.set_constraints(cls.TABNAME_CFGPDCP,
                                 ((cls.TABSETUP_CONSTR_PDC, 'id_pdc', cls.TABCONSTRAINT_TYPE_NOACTION),))
-            
+
             cls.cfgpdcp_indexes = [ ["PRIMARY KEY", "id"],
                                      ["KEY",         "ambito,key_id"], ]
-            
-            
+
+
             cls.tipart =\
               [ [ "id",         "INT",    idw, None, "ID Tipo articolo", "AUTO_INCREMENT" ],
                 [ "codice",     "CHAR",    10, None, "Codice", None ],
                 [ "descriz",    "VARCHAR", 60, None, "Descrizione", None ] ]
-            
+
             cls.tipart_indexes = cls.std_indexes
-            
-            
+
+
             cls.catart =\
               [ [ "id",         "INT",    idw, None, "ID Categoria merce", "AUTO_INCREMENT" ],
                 [ "codice",     "CHAR",    10, None, "Codice", None ],
@@ -2450,28 +2451,28 @@ class Azienda(object):
                 [ "id_pdcacq",  "INT",    idw, None, "ID Pdc collegamento contabile su acquisti", None ],
                 [ "id_pdcven",  "INT",    idw, None, "ID Pdc collegamento contabile su vendite", None ],
             ]
-            
+
             cls.set_constraints(cls.TABNAME_CATART,
                                 ((cls.TABSETUP_CONSTR_PDC, 'id_pdcacq', cls.TABCONSTRAINT_TYPE_NOACTION),
                                  (cls.TABSETUP_CONSTR_PDC, 'id_pdcven', cls.TABCONSTRAINT_TYPE_NOACTION),))
-            
+
             cls.catart_indexes = cls.std_indexes
-            
-            
+
+
             cls.gruart =\
               [ [ "id",         "INT",    idw, None, "ID Gruppo merce", "AUTO_INCREMENT" ],
                 [ "codice",     "CHAR",    10, None, "Codice", None ],
                 [ "descriz",    "VARCHAR", 60, None, "Descrizione", None ],
                 [ "id_catart",  "INT",    idw, None, "ID della categoria di appartenenza", None ] ]
-            
+
             cls.set_constraints(cls.TABNAME_GRUART,
                                 ((cls.TABSETUP_CONSTR_CATART, 'id_catart', cls.TABCONSTRAINT_TYPE_CASCADE),))
-            
+
             cls.gruart_indexes = [ ["PRIMARY KEY", "id"],
                                    ["UNIQUE KEY",  "id_catart,codice"],
                                    ["UNIQUE KEY",  "id_catart,descriz"], ]
-            
-            
+
+
             cls.statart =\
               [ [ "id",           "INT",    idw, None, "ID Status", "AUTO_INCREMENT" ],
                 [ "codice",       "CHAR",    10, None, "Codice", None ],
@@ -2482,10 +2483,10 @@ class Azienda(object):
                 [ "nomov_ordcli", "TINYINT",  1, None, "Flag per impedire l'inserimento negli ordini da cliente", None ],
                 [ "nomov_vencli", "TINYINT",  1, None, "Flag per impedire l'inserimento nelle vendite a cliente", None ],
             ]
-            
+
             cls.statart_indexes = cls.std_indexes
-            
-            
+
+
             cls.prod =\
               [ [ "id",         "INT",    idw, None, "ID Prodotto", "AUTO_INCREMENT" ],
                 [ "codice",     "CHAR",    16, None, "Codice", "NOT NULL" ],
@@ -2532,7 +2533,7 @@ class Azienda(object):
                 [ "id_pdcacq",  "INT",    idw, None, "ID Pdc collegamento contabile su acquisti", None ],
                 [ "id_pdcven",  "INT",    idw, None, "ID Pdc collegamento contabile su vendite", None ],
             ]
-            
+
             cls.set_constraints(cls.TABNAME_PROD,
                                 ((cls.TABSETUP_CONSTR_ALIQIVA, 'id_aliqiva', cls.TABCONSTRAINT_TYPE_NOACTION),
                                  (cls.TABSETUP_CONSTR_TIPART,  'id_tipart',  cls.TABCONSTRAINT_TYPE_NOACTION),
@@ -2544,12 +2545,12 @@ class Azienda(object):
                                  (cls.TABSETUP_CONSTR_GRUPREZ, 'id_gruprez', cls.TABCONSTRAINT_TYPE_SETNULL),
                                  (cls.TABSETUP_CONSTR_PDC,     'id_pdcacq',  cls.TABCONSTRAINT_TYPE_NOACTION),
                                  (cls.TABSETUP_CONSTR_PDC,     'id_pdcven',  cls.TABCONSTRAINT_TYPE_NOACTION),))
-            
+
             cls.prod_indexes = [ ["PRIMARY KEY", "id"],
                                  ["UNIQUE KEY",  "codice"],
                                  ["KEY",         "id_tipart,descriz"], ]
-            
-            
+
+
             cls.codartcf =\
               [ [ "id",         "INT",    idw, None, "ID Codice fornitore", "AUTO_INCREMENT" ],
                 [ "id_prod",    "INT",    idw, None, "ID Prodotto", "NOT NULL" ],
@@ -2558,16 +2559,16 @@ class Azienda(object):
                 [ "codice",     "CHAR",    20, None, "Codice articolo del fornitore", None ],
                 [ "barcode",    "CHAR",    20, None, "Barcode articolo del fornitore", None ],
                 [ "predef",     "TINYINT",  1, None, "Codice attuale del fornitore", None ] ]
-            
+
             cls.set_constraints(cls.TABNAME_CODARTCF,
                                 ((cls.TABSETUP_CONSTR_PROD, 'id_prod', cls.TABCONSTRAINT_TYPE_CASCADE),
                                  (cls.TABSETUP_CONSTR_PDC,  'id_pdc',  cls.TABCONSTRAINT_TYPE_CASCADE),))
-            
+
             cls.codartcf_indexes = [ ["PRIMARY KEY", "id"],
                                      ["KEY",  "id_prod,id_pdc"],
                                      ["KEY",  "id_pdc,id_prod"], ]
-            
-            
+
+
             cls.listini =\
               [ [ "id",         "INT",     idw, None, "ID Listino", "AUTO_INCREMENT" ],
                 [ "id_prod",    "INT",     idw, None, "ID Prodotto", "NOT NULL" ],
@@ -2601,15 +2602,15 @@ class Azienda(object):
                 [ "riclis8",    "DECIMAL",  5,    2, "Ricarica #8", None ],
                 [ "riclis9",    "DECIMAL",  5,    2, "Ricarica #9", None ],
                 [ "note",       "VARCHAR", ntw, None, "Note", None ], ]
-            
+
             cls.set_constraints(cls.TABNAME_LISTINI,
                                 ((cls.TABSETUP_CONSTR_PROD,   'id_prod',   cls.TABCONSTRAINT_TYPE_CASCADE),
                                  (cls.TABSETUP_CONSTR_VALUTE, 'id_valuta', cls.TABCONSTRAINT_TYPE_CASCADE),))
-            
+
             cls.listini_indexes = [ ["PRIMARY KEY", "id"],
                                      ["UNIQUE KEY",  "id_prod,data"], ]
-            
-            
+
+
             cls.griglie =\
               [ [ "id",          "INT",    idw, None, "ID Griglia", "AUTO_INCREMENT" ],
                 [ "id_prod",     "INT",    idw, None, "ID Prodotto", "NOT NULL" ],
@@ -2627,27 +2628,27 @@ class Azienda(object):
                 [ "ext_codice",  "VARCHAR", 20, None, "Codice prodotto del cliente/fornitore", None ],
                 [ "ext_descriz", "VARCHAR", 60, None, "Descrizione prodotto del cliente/fornitore", None ],
                  ]
-            
+
             cls.set_constraints(cls.TABNAME_GRIGLIE,
                                 ((cls.TABSETUP_CONSTR_PROD, 'id_prod', cls.TABCONSTRAINT_TYPE_CASCADE),
                                  (cls.TABSETUP_CONSTR_PDC,  'id_pdc',  cls.TABCONSTRAINT_TYPE_CASCADE),))
-            
+
             cls.griglie_indexes = [ ["PRIMARY KEY", "id"],
                                      ["UNIQUE KEY",  "id_prod,id_pdc,data"], ]
-            
-            
+
+
             cls.magazz =\
               [ [ "id",         "INT",    idw, None, "ID Magazzino", "AUTO_INCREMENT" ],
                 [ "codice",     "CHAR",    10, None, "Codice", None ],
                 [ "descriz",    "VARCHAR", 60, None, "Descrizione", None ],
                 [ "id_pdc",     "INT",    idw, None, "ID sottoconto associato", None ] ]
-            
+
             cls.set_constraints(cls.TABNAME_MAGAZZ,
                                 ((cls.TABSETUP_CONSTR_PDC, 'id_pdc', cls.TABCONSTRAINT_TYPE_NOACTION),))
-            
+
             cls.magazz_indexes = cls.std_indexes
-            
-            
+
+
             cls.cfgmagdoc =\
               [ [ "id",         "INT",    idw, None, "ID Documento", "AUTO_INCREMENT" ],
                 [ "codice",     "CHAR",    10, None, "Codice", "NOT NULL" ],
@@ -2748,7 +2749,7 @@ class Azienda(object):
                 [ "rptcolli",   "TINYINT",  1, None, "Flag stampa segnacolli", None ],
                 [ "aanotedoc",  "TINYINT",  1, None, "Flag inibizione note documento da anagrafica", None ],
             ]
-            
+
             cls.set_constraints(cls.TABNAME_CFGMAGDOC,
                                 ((cls.TABSETUP_CONSTR_PDCTIP,    'id_pdctip',  cls.TABCONSTRAINT_TYPE_NOACTION),
                                  (cls.TABSETUP_CONSTR_CFGMAGDOC, 'id_acqdoc1', cls.TABCONSTRAINT_TYPE_NOACTION),
@@ -2764,10 +2765,10 @@ class Azienda(object):
                                  (cls.TABSETUP_CONSTR_CFGCONTAB, 'id_caucg',   cls.TABCONSTRAINT_TYPE_NOACTION),
                                  (cls.TABSETUP_CONSTR_CFGMAGDOC, 'id_tdoctra', cls.TABCONSTRAINT_TYPE_NOACTION),
                                  (cls.TABSETUP_CONSTR_PDC,       'id_pdc_ra',  cls.TABCONSTRAINT_TYPE_NOACTION),))
-            
+
             cls.cfgmagdoc_indexes = cls.std_indexes
-            
-            
+
+
             cls.cfgmagmov =\
               [ [ "id",           "INT",    idw, None, "ID Documento", "AUTO_INCREMENT" ],
                 [ "codice",       "CHAR",    10, None, "Codice", "NOT NULL" ],
@@ -2819,15 +2820,15 @@ class Azienda(object):
                 [ "modimpricalc", "CHAR",     1, None, "Flag tipo ricalcolo se modifica importo", None ],
                 [ "nomastroprod", "TINYINT",  1, None, "Flag esclusione movimenti in mastro prodotto", None ],
             ]
-            
+
             cls.set_constraints(cls.TABNAME_CFGMAGMOV,
                                 ((cls.TABSETUP_CONSTR_CFGMAGDOC, 'id_tipdoc', cls.TABCONSTRAINT_TYPE_CASCADE),
                                  (cls.TABSETUP_CONSTR_PDC,       'id_pdc',    cls.TABCONSTRAINT_TYPE_NOACTION),))
-            
+
             cls.cfgmagmov_indexes = [ ["PRIMARY KEY", "id"],
                                       ["UNIQUE KEY",  "id_tipdoc,codice"], ]
-            
-            
+
+
             cls.movmag_h =\
               [ [ "id",                   "INT",       idw, None, "ID Documento", "AUTO_INCREMENT" ],
                 [ "datreg",               "DATE",     None, None, "Data registrazione", "NOT NULL" ],
@@ -2893,7 +2894,7 @@ class Azienda(object):
                 [ "f_printed",            "TINYINT",     1, None, "Flag documento stampato", None ],
                 [ "f_emailed",            "TINYINT",     1, None, "Flag documento spedito x email", None ],
                 [ "initrasp",             "DATETIME", None, None, "Data e ora inizio trasporto", None ], ]
-            
+
             if cls.MAGNOCODEDES:
                 cls.movmag_h += [\
                 [ "enable_nocodedes",     "TINYINT",  None, None, "Destinatario non codificato: flag attivazione", None ],
@@ -2903,7 +2904,7 @@ class Azienda(object):
                 [ "nocodedes_citta",      "VARCHAR",    60, None, "Destinatario non codificato: Città", None ],
                 [ "nocodedes_prov",       "CHAR",        2, None, "Destinatario non codificato: Provincia", None ],
                 [ "nocodedes_id_stato",   "INT",       idw, None, "Destinatario non codificato: ID stato", None ], ]
-            
+
             if cls.MAGNOCODEVET:
                 cls.movmag_h += [\
                 [ "enable_nocodevet",     "TINYINT",  None, None, "Vettore non codificato: flag attivazione", None ],
@@ -2912,7 +2913,7 @@ class Azienda(object):
                 [ "nocodevet_cap",        "CHAR",        5, None, "Vettore non codificato: CAP", None ],
                 [ "nocodevet_citta",      "VARCHAR",    60, None, "Vettore non codificato: Città", None ],
                 [ "nocodevet_prov",       "CHAR",        2, None, "Vettore non codificato: Provincia", None ],
-                [ "nocodevet_id_stato",   "INT",       idw, None, "Vettore non codificato: ID stato", None ], 
+                [ "nocodevet_id_stato",   "INT",       idw, None, "Vettore non codificato: ID stato", None ],
                 [ "nocodevet_codfisc",    "CHAR",       16, None, "Vettore non codificato: Cod. fiscale", None ],
                 [ "nocodevet_nazione",    "CHAR",        4, None, "Vettore non codificato: Nazione", None ],
                 [ "nocodevet_piva",       "CHAR",       20, None, "Vettore non codificato: Partita IVA", None ], ]
@@ -2921,7 +2922,7 @@ class Azienda(object):
                     ["nocodevet_targa",   "VARCHAR",    16, None, "Vettore non codificato: targa", None ],
                     ["nocodevet_autista", "VARCHAR",    64, None, "Vettore non codificato: autista", None ],
                     ["nocodevet_dichiar", "VARCHAR",   ntw, None, "Vettore non codificato: dichiarazione", None ], ]
-            
+
             cls.set_constraints(cls.TABNAME_MOVMAG_H,
                                 ((cls.TABSETUP_CONSTR_CFGMAGDOC, 'id_tipdoc',  cls.TABCONSTRAINT_TYPE_NOACTION),
                                  (cls.TABSETUP_CONSTR_VALUTE,    'id_valuta',  cls.TABCONSTRAINT_TYPE_NOACTION),
@@ -2941,12 +2942,12 @@ class Azienda(object):
                                  (cls.TABSETUP_CONSTR_TRAPOR,    'id_trapor',  cls.TABCONSTRAINT_TYPE_NOACTION),
                                  (cls.TABSETUP_CONSTR_TRACON,    'id_tracon',  cls.TABCONSTRAINT_TYPE_NOACTION),
                                  (cls.TABSETUP_CONSTR_ALIQIVA,   'id_aliqiva', cls.TABCONSTRAINT_TYPE_NOACTION),))
-            
+
             cls.movmag_h_indexes = [ ["PRIMARY KEY", "id"],
-                                      ["UNIQUE KEY",  "id_magazz,datdoc,id_pdc,id_tipdoc,numdoc"], 
+                                      ["UNIQUE KEY",  "id_magazz,datdoc,id_pdc,id_tipdoc,numdoc"],
                                       ["KEY",         "id_pdc,datdoc,id_tipdoc,numdoc"], ]
-            
-            
+
+
             cls.movmag_b =\
               [ [ "id",         "INT",     idw, None, "ID Movimento", "AUTO_INCREMENT" ],
                 [ "id_doc",     "INT",     idw, None, "ID Documento appartenenza", "NOT NULL" ],
@@ -2979,7 +2980,7 @@ class Azienda(object):
                 [ "agggrip",    "TINYINT",   1, None, "Flag aggiornamento griglia prezzi", None ],
                 [ "id_tiplist", "INT",     idw, None, "ID Tipo listino", None ],
             ]
-            
+
             cls.set_constraints(cls.TABNAME_MOVMAG_B,
                                 ((cls.TABSETUP_CONSTR_MOVMAG_H,  'id_doc',     cls.TABCONSTRAINT_TYPE_CASCADE),
                                  (cls.TABSETUP_CONSTR_CFGMAGMOV, 'id_tipmov',  cls.TABCONSTRAINT_TYPE_NOACTION),
@@ -2987,75 +2988,75 @@ class Azienda(object):
                                  (cls.TABSETUP_CONSTR_ALIQIVA,   'id_aliqiva', cls.TABCONSTRAINT_TYPE_NOACTION),
                                  (cls.TABSETUP_CONSTR_PROD,      'id_prod',    cls.TABCONSTRAINT_TYPE_NOACTION),
                                  (cls.TABSETUP_CONSTR_PDC,       'id_pdccg',   cls.TABCONSTRAINT_TYPE_NOACTION),))
-            
+
             cls.movmag_b_indexes = [ ["PRIMARY KEY", "id"],
                                       ["KEY",         "id_doc,numriga"],
                                       ["KEY",         "id_prod,id_doc,numriga"],
-                                      ["KEY",         "id_moveva"], 
+                                      ["KEY",         "id_moveva"],
                                       ["KEY",         "id_movacc"], ]
-            
-            
+
+
             cls.macro =\
               [ [ "id",         "INT",      idw, None, "ID Macro", "AUTO_INCREMENT" ],
                 [ "codice",     "CHAR",      10, None, "Codice", "NOT NULL" ],
                 [ "descriz",    "VARCHAR",   60, None, "Descrizione", "NOT NULL" ],
                 [ "macro",      "VARCHAR", 2048, None, "Espressione macro", None] ]
-            
+
             cls.tiplist_indexes = cls.std_indexes
-            
-            
+
+
             cls.tiplist =\
               [ [ "id",         "INT",      idw, None, "ID Macro", "AUTO_INCREMENT" ],
                 [ "codice",     "CHAR",      10, None, "Codice", "NOT NULL" ],
                 [ "descriz",    "VARCHAR",   60, None, "Descrizione", "NOT NULL" ],
                 [ "tipoprezzo", "CHAR",       1, None, "Tipo prezzo", None ],
                 [ "id_macro",   "VARCHAR", 2048, None, "ID Macro prezzo personalizzato", None] ]
-            
+
             cls.macro_indexes = cls.std_indexes
-            
-            
+
+
             cls.tracau =\
               [ [ "id",         "INT",    idw, None, "ID Causale", "AUTO_INCREMENT" ],
                 [ "codice",     "CHAR",    10, None, "Codice", "NOT NULL" ],
                 [ "descriz",    "VARCHAR", 60, None, "Descrizione", "NOT NULL" ],
                 [ "esclftd",    "TINYINT",  1, None, "Flag esclusione raggruppamento ddt", "UNSIGNED NOT NULL DEFAULT '0'" ] ]
-            
+
             cls.tracau_indexes = cls.std_indexes
-            
-            
+
+
             cls.tracur =\
               [ [ "id",         "INT",    idw, None, "ID Trasporto a cura", "AUTO_INCREMENT" ],
                 [ "codice",     "CHAR",    10, None, "Codice", "NOT NULL" ],
                 [ "descriz",    "VARCHAR", 60, None, "Descrizione", "NOT NULL" ],\
                 [ "askvet",     "TINYINT",  1, None, "Flag gestione vettore", "NOT NULL DEFAULT 0" ] ]
-            
+
             cls.tracur_indexes = cls.std_indexes
-            
-            
+
+
             cls.traasp =\
               [ [ "id",         "INT",    idw, None, "ID Macro", "AUTO_INCREMENT" ],
                 [ "codice",     "CHAR",    10, None, "Codice", "NOT NULL" ],
                 [ "descriz",    "VARCHAR", 60, None, "Descrizione", "NOT NULL" ] ]
-            
+
             cls.traasp_indexes = cls.std_indexes
-            
-            
+
+
             cls.trapor =\
               [ [ "id",         "INT",    idw, None, "ID Macro", "AUTO_INCREMENT" ],
                 [ "codice",     "CHAR",    10, None, "Codice", "NOT NULL" ],
                 [ "descriz",    "VARCHAR", 60, None, "Descrizione", "NOT NULL" ] ]
-            
+
             cls.trapor_indexes = cls.std_indexes
-            
-            
+
+
             cls.tracon =\
               [ [ "id",         "INT",    idw, None, "ID Macro", "AUTO_INCREMENT" ],
                 [ "codice",     "CHAR",    10, None, "Codice", "NOT NULL" ],
                 [ "descriz",    "VARCHAR", 60, None, "Descrizione", "NOT NULL" ] ]
-            
+
             cls.tracon_indexes = cls.std_indexes
-            
-            
+
+
             cls.cfgeff =\
               [ [ "id",         "INT",    idw, None, "ID", "AUTO_INCREMENT" ],
                 [ "id_banca",   "INT",    idw, None, "ID Banca", None ],
@@ -3063,14 +3064,14 @@ class Azienda(object):
                 [ "zona",       "CHAR",     1, None, "Zona H/B/F", None ],
                 [ "riga",       "INT",      2, None, "Num. riga", None ],
                 [ "macro",      "TEXT",  None, None, "Macro riga", None ] ]
-            
+
             cls.set_constraints(cls.TABNAME_CFGEFF,
                                 ((cls.TABSETUP_CONSTR_PDC, 'id_banca', cls.TABCONSTRAINT_TYPE_NOACTION),))
-            
+
             cls.cfgeff_indexes = [ ["PRIMARY KEY", "id"],
-                                    ["UNIQUE KEY",  "id_banca,tipo,zona,riga"], ] 
-            
-            
+                                    ["UNIQUE KEY",  "id_banca,tipo,zona,riga"], ]
+
+
             cls.allegati =\
               [ [ "id",         "INT",      idw, None, "ID", "AUTO_INCREMENT" ],
                 [ "attscope",   "VARBINARY", 45, None, "Scope validità di attkey", None ],
@@ -3086,12 +3087,12 @@ class Azienda(object):
                 [ "autotext",   "TINYINT",    1, None, "Flag popup automatico note", None ],
                 [ "voiceatt_id","INT",      idw, None, "ID allegato vocale", None ],
             ]
-            
+
             cls.allegati_indexes = [ ["PRIMARY KEY", "id"],
                                       ["KEY",         "attscope,attkey,attach_type,datins"],
                                       ["KEY",         "attscope,attkey,datins"], ]
-            
-            
+
+
             cls.liqiva =\
               [ [ "id",         "INT",     idw, None, "ID", "AUTO_INCREMENT" ],
                 [ "anno",       "INT",       4, None, "Anno liquidazione", None ],
@@ -3141,11 +3142,11 @@ class Azienda(object):
                 [ 'ciculiq',    "DECIMAL",  IVI, DVI, "Cred.Compens. utilizzato in liq.", None ],
                 [ 'cicuf24',    "DECIMAL",  IVI, DVI, "Cred.Compens. utilizzato su F24", None ],
                 [ 'cicfine',    "DECIMAL",  IVI, DVI, "Cred.Compens. disponib. a fine liq.", None ]]
-            
+
             cls.liqiva_indexes = [ ["PRIMARY KEY", "id"],
                                     ["UNIQUE KEY", "anno,periodo"], ]
-            
-            
+
+
             cls.cfgsetup =\
               [ [ "id",         "INT",     idw, None, "ID", "AUTO_INCREMENT" ],
                 [ "chiave",     "CHAR",     60, None, "Chiave", None ],
@@ -3154,11 +3155,11 @@ class Azienda(object):
                 [ "descriz",    "VARCHAR", ntw, None, "Descrizione", None ],
                 [ 'data',       "DATE",   None, None, "Data", None ],
                 [ 'importo',    "DECIMAL", IVI, DVI, "Importo", None ] ]
-            
+
             cls.cfgsetup_indexes = [ ["PRIMARY KEY", "id"],
                                       ["UNIQUE KEY",  "chiave"], ]
-            
-            
+
+
             cls.cfgperm =\
               [ [ "id",         "INT",     idw, None, "ID", "AUTO_INCREMENT" ],
                 [ "id_utente",  "INT",     idw, None, "ID utente", None ],
@@ -3168,11 +3169,11 @@ class Azienda(object):
                 [ "leggi",      "TINYINT",   1, None, "Flag lettura", None ],
                 [ "scrivi",     "TINYINT",   1, None, "Flag scrittura", None ],
                 [ "permesso",   "CHAR",      1, None, "Tipo di permesso", None ], ]
-            
+
             cls.cfgperm_indexes = [ ["PRIMARY KEY", "id"],
                                     ["UNIQUE KEY",  "ambito,id_rel,id_utente"], ]
-            
-            
+
+
             cls.cfgftdif =\
               [ [ "id",         "INT",     idw, None, "ID", "AUTO_INCREMENT" ],
                 [ 'codice',     "CHAR",     10, None, "Descrizione", None ],
@@ -3188,50 +3189,50 @@ class Azienda(object):
                 [ "f_nodesrif", "TINYINT",   1, None, "Non genera riga di riferimento al documento raggruppato", "UNSIGNED NOT NULL DEFAULT '0'" ],
                 [ "f_chgmag",   "TINYINT",   1, None, "Flag cambio magazzino su documenti generati", "UNSIGNED NOT NULL DEFAULT '0'" ],
                 [ "id_chgmag",  "TINYINT", idw, None, "Id magazzino da sostituire su documenti generati", None ], ]
-            
+
             cls.set_constraints(cls.TABNAME_CFGFTDIF,
                                 ((cls.TABSETUP_CONSTR_CFGMAGDOC, 'id_docgen', cls.TABCONSTRAINT_TYPE_NOACTION),
                                  (cls.TABSETUP_CONSTR_MAGAZZ,    'id_chgmag', cls.TABCONSTRAINT_TYPE_NOACTION),))
-            
+
             cls.cfgftdif_indexes = cls.std_indexes
-            
-            
+
+
             cls.cfgftddr =\
               [ [ "id",         "INT",     idw, None, "ID", "AUTO_INCREMENT" ],
                 [ 'id_ftd',     "INT",     idw, None, "ID Fatturazione differita", None ],
                 [ "id_docrag",  "INT",     idw, None, "ID Tipo documento da raggruppare", None ],
                 [ "f_attivo",   "TINYINT",   1, None, "Flag attivo", None ] ]
-            
+
             cls.set_constraints(cls.TABNAME_CFGFTDDR,
                                 ((cls.TABSETUP_CONSTR_CFGFTDIF,  'id_ftd',    cls.TABCONSTRAINT_TYPE_CASCADE),
                                  (cls.TABSETUP_CONSTR_CFGMAGDOC, 'id_docrag', cls.TABCONSTRAINT_TYPE_CASCADE),))
-            
+
             cls.cfgftddr_indexes = [ ["PRIMARY KEY", "id"],
                                       ["UNIQUE KEY",  "id_ftd,id_docrag"], ]
-            
-            
+
+
             cls.effetti =\
               [ [ "id",         "INT",     idw, None, "ID Tipo effetto", "AUTO_INCREMENT" ],
                 [ "tipo",       "CHAR",      1, None, "Tipo effetto", None ],
                 [ "id_banca",   "INT",     idw, None, "ID banca associata", None ],
                 [ "id_caus",    "INT",     idw, None, "ID causale contabilizzazione", None ],
                 [ "filepath",   "VARCHAR", 250, None, "Percorso generazione file banca", None ], ]
-            
+
             cls.set_constraints(cls.TABNAME_EFFETTI,
                                 ((cls.TABSETUP_CONSTR_PDC,       'id_banca', cls.TABCONSTRAINT_TYPE_NOACTION),
                                  (cls.TABSETUP_CONSTR_CFGCONTAB, 'id_caus',  cls.TABCONSTRAINT_TYPE_NOACTION),))
-            
+
             cls.effetti_indexes = [ ["PRIMARY KEY", "id"], ]
-            
-            
+
+
             cls.scadgrp =\
               [ [ "id",         "INT",    idw, None, "ID Gruppo", "AUTO_INCREMENT" ],
                 [ "codice",     "CHAR",    10, None, "Codice gruppo", None ],
                 [ "descriz",    "VARCHAR", 60, None, "Descrizione gruppo", None ] ]
-            
+
             cls.scadgrp_indexes = cls.std_indexes
-            
-            
+
+
             cls.promem =\
               [ [ "id",         "INT",       idw, None, "ID promemoria", "AUTO_INCREMENT" ],
                 [ "datains",    "DATETIME", None, None, "Data inserimento", None ],
@@ -3244,81 +3245,81 @@ class Azienda(object):
                 [ "status",     "TINYINT",     1, None, "Status lavoro", None ],
                 [ "avvisa",     "TINYINT",     1, None, "Flag avviso scadenza", None ],
             ]
-            
+
             cls.promem_indexes = [ ["PRIMARY KEY", "id"],
                                     ["KEY",         "datasca"], ]
-            
-            
+
+
             cls.promemu =\
               [ [ "id",         "INT",       idw, None, "ID utente promemoria", "AUTO_INCREMENT" ],
                 [ "id_promem",  "INT",       idw, None, "ID promemoria", None ],
                 [ "utente",     "CHAR",        2, None, "Codice utente", None ],
                 [ "refresh",    "TINYINT",     1, None, "Flag refresh ui", None ],
             ]
-            
+
             cls.set_constraints(cls.TABNAME_PROMEMU,
                                 ((cls.TABSETUP_CONSTR_PROMEM, 'id_promem', cls.TABCONSTRAINT_TYPE_CASCADE),))
-            
+
             cls.promemu_indexes = [ ["PRIMARY KEY", "id"],
                                      ["UNIQUE KEY",  "id_promem,utente"], ]
-            
-            
+
+
             cls.cfgmagriv =\
               [ [ "id",         "INT",       idw, None, "ID", "AUTO_INCREMENT" ],
                 [ "id_caus",    "INT",       idw, None, "ID causale iva", "NOT NULL" ],
                 [ "id_magazz",  "INT",       idw, None, "ID magazzino", "NOT NULL" ],
                 [ "id_regiva",  "INT",       idw, None, "ID registro iva", "NOT NULL" ],
             ]
-            
+
             cls.set_constraints(cls.TABNAME_CFGMAGRIV,
                                 ((cls.TABSETUP_CONSTR_CFGCONTAB, 'id_caus',   cls.TABCONSTRAINT_TYPE_NOACTION),
                                  (cls.TABSETUP_CONSTR_MAGAZZ,    'id_magazz', cls.TABCONSTRAINT_TYPE_NOACTION),
                                  (cls.TABSETUP_CONSTR_REGIVA,    'id_regiva', cls.TABCONSTRAINT_TYPE_NOACTION),))
-            
+
             cls.cfgmagriv_indexes = [ ["PRIMARY KEY", "id"],
                                        ["UNIQUE KEY",  "id_caus,id_magazz,id_regiva"], ]
-            
-            
+
+
             cls.marart =\
               [ [ "id",         "INT",    idw, None, "ID Marca prodotto", "AUTO_INCREMENT" ],
                 [ "codice",     "CHAR",    10, None, "Codice", None ],
                 [ "descriz",    "VARCHAR", 60, None, "Descrizione", None ] ]
-            
+
             cls.marart_indexes = cls.std_indexes
-            
-            
+
+
             cls.pdcrange =\
               [ [ "id",         "INT",    idw, None, "ID Range", "AUTO_INCREMENT" ],
                 [ "codice",     "CHAR",    10, None, "Codice", None ],
                 [ "descriz",    "VARCHAR", 60, None, "Descrizione", None ],
                 [ "rangemin",   "INT",      6, None, "Range minimo", None ],
                 [ "rangemax",   "INT",      6, None, "Range massimo", None ] ]
-            
+
             cls.pdcrange_indexes = cls.std_indexes
-            
-            
+
+
             cls.brimas =\
               [ [ "id",         "INT",    idw,    0, "ID Mastro", "AUTO_INCREMENT" ],
                 [ "codice",     "CHAR",    10, None, "Codice", None ],
                 [ "descriz",    "VARCHAR", 60, None, "Descrizione", None ],
                 [ "tipo",       "CHAR",     1, None, "Tipologia P/E/O", None ] ]
             cls.brimas_indexes = cls.std_indexes
-            
-            
+
+
             cls.bricon =\
               [ [ "id",         "INT",    idw, None, "ID Conto", "AUTO_INCREMENT" ],
                 [ "codice",     "CHAR",    10, None, "Codice", None ],
                 [ "descriz",    "VARCHAR", 60, None, "Descrizione", None ],
                 [ "id_bilmas",  "INT",    idw, None, "ID Mastro", None ] ]
-            
+
             cls.set_constraints(cls.TABNAME_BRICON,
                                 ((cls.TABSETUP_CONSTR_BRIMAS, 'id_bilmas', cls.TABCONSTRAINT_TYPE_NOACTION),))
-            
+
             cls.bricon_indexes = [ ["PRIMARY KEY", "id"],
                                     ["UNIQUE KEY",  "id_bilmas,codice"],
                                     ["UNIQUE KEY",  "id_bilmas,descriz"], ]
-            
-            
+
+
             cls.prodpro =\
               [ [ "id",         "INT",     idw, None, "ID", "AUTO_INCREMENT" ],
                 [ "id_prod",    "INT",     idw, None, "ID Prodotto", "NOT NULL" ],
@@ -3334,15 +3335,15 @@ class Azienda(object):
                 [ "cvfcar",     "DECIMAL", IQM, DQM,  "Carichi C/V fornitori", "default '0'"],\
                 [ "cvfsca",     "DECIMAL", IQM, DQM,  "Scarichi C/V fornitori", "default '0'"],\
             ]
-            
+
             cls.set_constraints(cls.TABNAME_PRODPRO,
                                 ((cls.TABSETUP_CONSTR_PROD,   'id_prod',   cls.TABCONSTRAINT_TYPE_CASCADE),
                                  (cls.TABSETUP_CONSTR_MAGAZZ, 'id_magazz', cls.TABCONSTRAINT_TYPE_CASCADE),))
-            
+
             cls.prodpro_indexes = [["PRIMARY KEY", "id"],
                                    ["UNIQUE KEY",  "id_prod,id_magazz"],]
-            
-            
+
+
             cls.gruprez =\
               [ [ "id",         "INT",    idw, None, "ID", "AUTO_INCREMENT" ],
                 [ "codice",     "CHAR",    10, None, "Codice", None ],
@@ -3398,33 +3399,33 @@ class Azienda(object):
                 [ "prclisbas8", "CHAR",     1, None, "Prezzo da calcolo variabile: base calcolo 8", None],\
                 [ "prclisbas9", "CHAR",     1, None, "Prezzo da calcolo variabile: base calcolo 9", None],\
                 [ "nosconti",   "TINYINT",  1, None, "Flag inibizione scontistiche, tranne promo", None],\
-                [ "id_lisdagp", "INT",    idw, None, "ID Gruppo prezzi da usare per il calcolo dei listini", None], ]                                                                                    
-            
+                [ "id_lisdagp", "INT",    idw, None, "ID Gruppo prezzi da usare per il calcolo dei listini", None], ]
+
             cls.set_constraints(cls.TABNAME_GRUPREZ,
                                 ((cls.TABSETUP_CONSTR_GRUPREZ, 'id_lisdagp', cls.TABCONSTRAINT_TYPE_NOACTION),))
-            
+
             cls.gruprez_indexes = cls.std_indexes
-            
-            
+
+
             cls.sconticc =\
                [ [ "id",         "INT",    idw, None, "ID", "AUTO_INCREMENT" ],
                  [ "id_pdc",     "INT",    idw, None, "ID cliente", None ],
                  [ "id_catart",  "INT",    idw, None, "ID categoria", None ],
                  [ "sconto1",    "DECIMAL",  4,    2, "Sconto perc.1", None ],
                  [ "sconto2",    "DECIMAL",  4,    2, "Sconto perc.2", None ],
-                 [ "sconto3",    "DECIMAL",  4,    2, "Sconto perc.3", None ], 
-                 [ "sconto4",    "DECIMAL",  4,    2, "Sconto perc.4", None ], 
-                 [ "sconto5",    "DECIMAL",  4,    2, "Sconto perc.5", None ], 
+                 [ "sconto3",    "DECIMAL",  4,    2, "Sconto perc.3", None ],
+                 [ "sconto4",    "DECIMAL",  4,    2, "Sconto perc.4", None ],
+                 [ "sconto5",    "DECIMAL",  4,    2, "Sconto perc.5", None ],
                  [ "sconto6",    "DECIMAL",  4,    2, "Sconto perc.6", None ], ]
-            
+
             cls.set_constraints(cls.TABNAME_SCONTICC,
                                 ((cls.TABSETUP_CONSTR_PDC,    'id_pdc',    cls.TABCONSTRAINT_TYPE_CASCADE),
                                  (cls.TABSETUP_CONSTR_CATART, 'id_catart', cls.TABCONSTRAINT_TYPE_CASCADE),))
-            
+
             cls.sconticc_indexes = [ ["PRIMARY KEY", "id"],
                                      ["UNIQUE KEY",  "id_pdc,id_catart"] ]
-            
-            
+
+
             cls.pdt_h =\
                [ [ "id",            "INT",       idw, None, "ID", "AUTO_INCREMENT" ],
                  [ "uid",           "CHAR",       32, None, "Identificativo sessione di lavoro", None ],
@@ -3463,7 +3464,7 @@ class Azienda(object):
                  [ "numdoc",        "INT",        10, None, "Numero documento da generare", None ],
                  [ "datdoc",        "DATE",     None, None, "Data documento da generare", None ],
              ]
-            
+
             if cls.MAGNOCODEDES:
                 cls.pdt_h += [\
                 [ "nocodedes_descriz",    "VARCHAR",    60, None, "Destinatario non codificato: Descrizione", None ],
@@ -3472,14 +3473,14 @@ class Azienda(object):
                 [ "nocodedes_citta",      "VARCHAR",    60, None, "Destinatario non codificato: Città", None ],
                 [ "nocodedes_prov",       "CHAR",        2, None, "Destinatario non codificato: Provincia", None ],
                 [ "nocodedes_id_stato",   "INT",       idw, None, "Destinatario non codificato: ID stato", None ], ]
-            
+
             cls.set_constraints(cls.TABNAME_PDT_H,
                                 ((cls.TABSETUP_CONSTR_PDC, 'id_pdc', cls.TABCONSTRAINT_TYPE_CASCADE),))
-            
+
             cls.pdt_h_indexes = [ ["PRIMARY KEY", "id"],
                                   ["KEY",  "uid"] ]
-            
-            
+
+
             cls.pdt_b =\
                [ [ "id",         "INT",     idw, None, "ID", "AUTO_INCREMENT" ],
                  [ "id_h",       "INT",     idw, None, "ID sessione", None ],
@@ -3498,14 +3499,14 @@ class Azienda(object):
                  [ "importo",    "DECIMAL",  10,  DVI, "Importo riga", None ],
                  [ "note",       "VARCHAR", ntw, None, "Note della riga", None ],
              ]
-            
+
             cls.set_constraints(cls.TABNAME_PDT_B,
                                 ((cls.TABSETUP_CONSTR_PDT_H, 'id_h',    cls.TABCONSTRAINT_TYPE_CASCADE),
                                  (cls.TABSETUP_CONSTR_PROD,  'id_prod', cls.TABCONSTRAINT_TYPE_CASCADE),))
-            
+
             cls.pdt_b_indexes = [ ["PRIMARY KEY", "id"], ]
-            
-            
+
+
             cls.procos =\
                [ [ "id",      "INT",     idw, None, "ID", "AUTO_INCREMENT" ],
                  [ "id_prod", "INT",     idw, None, "ID Prodotto", None ],
@@ -3522,14 +3523,14 @@ class Azienda(object):
                  [ "prezzo7", "DECIMAL", IPM,  DPM, "Prezzo listino 7", None ],
                  [ "prezzo8", "DECIMAL", IPM,  DPM, "Prezzo listino 8", None ],
                  [ "prezzo9", "DECIMAL", IPM,  DPM, "Prezzo listino 9", None ], ]
-            
+
             cls.set_constraints(cls.TABNAME_PROCOS,
                                 ((cls.TABSETUP_CONSTR_PROD, 'id_prod', cls.TABCONSTRAINT_TYPE_CASCADE),))
-            
-            cls.procos_index = [ ["PRIMARY KEY", "id"], 
+
+            cls.procos_index = [ ["PRIMARY KEY", "id"],
                                  ["KEY", "id_prod,anno"], ]
-            
-            
+
+
             cls.progia =\
                [ [ "id",        "INT",     idw, None, "ID", "AUTO_INCREMENT" ],
                  [ "id_prod",   "INT",     idw, None, "ID Prodotto", None ],
@@ -3537,18 +3538,18 @@ class Azienda(object):
                  [ "anno",      "INT",       4, None, "Anno di riferimento", None ],
                  [ "datgia",    "DATE",   None, None, "Data determinazione giacenze contabili", None ],
                  [ "giacon",    "DECIMAL", IQM,  DQM, "Giacenza contabile", None ],
-                 [ "giafis",    "DECIMAL", IQM,  DQM, "Giacenza rilevata", None ], 
-                 [ "movgen",    "TINYINT",   1, None, "Flag movimento generato", None ], 
+                 [ "giafis",    "DECIMAL", IQM,  DQM, "Giacenza rilevata", None ],
+                 [ "movgen",    "TINYINT",   1, None, "Flag movimento generato", None ],
              ]
-            
+
             cls.set_constraints(cls.TABNAME_PROGIA,
                                 ((cls.TABSETUP_CONSTR_PROD,   'id_prod',   cls.TABCONSTRAINT_TYPE_CASCADE),
                                  (cls.TABSETUP_CONSTR_MAGAZZ, 'id_magazz', cls.TABCONSTRAINT_TYPE_CASCADE),))
-            
+
             cls.progia_index = [ ["PRIMARY KEY", "id"],
                                  ["UNIQUE KEY",  "id_prod,id_magazz,anno"], ]
-            
-            
+
+
             cls.promo =\
                [ [ "id",        "INT",     idw, None, "ID", "AUTO_INCREMENT" ],
                  [ "id_prod",   "INT",     idw, None, "ID Prodotto", None ],
@@ -3562,24 +3563,24 @@ class Azienda(object):
                  [ "sconto5",   "DECIMAL",   5,    2, "Sconto #5", None ],
                  [ "sconto6",   "DECIMAL",   5,    2, "Sconto #6", None ],
                  [ "note",      "VARCHAR", ntw, None, "Annotazioni", None ], ]
-            
+
             cls.set_constraints(cls.TABNAME_PROMO,
                                 ((cls.TABSETUP_CONSTR_PROD, 'id_prod', cls.TABCONSTRAINT_TYPE_CASCADE),))
-            
+
             cls.promo_index = [ ["PRIMARY KEY", "id"],
                                 ["KEY",         "id_prod,datmin"], ]
-            
-            
+
+
             cls.statpdc =\
               [ [ "id",           "INT",    idw, None, "ID Status", "AUTO_INCREMENT" ],
                 [ "codice",       "CHAR",    10, None, "Codice", None ],
                 [ "descriz",      "VARCHAR", 60, None, "Descrizione", None ],
                 [ "hidesearch",   "TINYINT",  1, None, "Flag per nascondere nelle ricerche", None ],
             ]
-            
+
             cls.statpdc_indexes = cls.std_indexes
-            
-            
+
+
             cls.tipevent =\
                [ [ "id",             "INT",     idw, None, "ID Tipo evento", "AUTO_INCREMENT" ],
                  [ "codice",         "CHAR",     10, None, "Codice", None ],
@@ -3587,10 +3588,10 @@ class Azienda(object):
                  [ "notify_emailto", "VARCHAR", 255, None, "Destinatario notifica email", None ],
                  [ "notify_xmppto",  "VARCHAR", 255, None, "Destinatario notifica xmpp", None ],
              ]
-            
+
             cls.tipevent_indexes = cls.std_indexes
-            
-            
+
+
             cls.eventi =\
                [ [ "id",             "INT",       idw, None, "ID Evento", "AUTO_INCREMENT" ],
                  [ "data_evento",    "DATETIME", None, None, "Data e ora evento", None ],
@@ -3607,14 +3608,14 @@ class Azienda(object):
                  [ "notified_xmpp",  "TINYINT",     1, None, "Flag evento notificato per messaggistica immediata", None ],
                  [ "notifieddxmpp",  "DATETIME", None, None, "Data invio notifica per messaggistica immediata", None ],
              ]
-            
+
             cls.set_constraints(cls.TABNAME_EVENTI,
                                 ((cls.TABSETUP_CONSTR_TIPEVENT, 'id_tipevent', cls.TABCONSTRAINT_TYPE_SETNULL),))
-            
+
             cls.eventi_indexes = [ ["PRIMARY KEY", "id"],
                                    ["KEY",         "data_evento"], ]
-            
-            
+
+
             cls.docsemail =\
                [ [ "id",             "INT",       idw, None, "ID Email", "AUTO_INCREMENT" ],
                  [ "datcoda",        "DATETIME", None, None, "Data-ora inserimento nella coda", None ],
@@ -3628,14 +3629,14 @@ class Azienda(object):
                  [ "testo",          "VARCHAR",   ntw, None, "Testo della mail", None ],
                  [ "documento",      "LONGBLOB", None, None, "Stream del documento allegato", None ],
              ]
-            
+
             cls.set_constraints(cls.TABNAME_DOCSEMAIL,
                                 ((cls.TABSETUP_CONSTR_PDC, 'id_pdc', cls.TABCONSTRAINT_TYPE_CASCADE),))
-            
+
             cls.docsemail_indexes = [ ["PRIMARY KEY", "id"],
                                       ["KEY",         "datcoda"], ]
-            
-            
+
+
             cls.varlist =\
                [ [ "id",             "INT",       idw, None, "ID Email", "AUTO_INCREMENT" ],
                  [ "id_cliente",     "INT",       idw, None, "ID cliente", None ],
@@ -3645,15 +3646,15 @@ class Azienda(object):
                  [ "id_gruart",      "INT",       idw, None, "ID gruppo merce", None ],
                  [ "id_tiplist",     "INT",       idw, None, "ID tipo listino", None ],
              ]
-            
+
 #            cls.set_constraints(cls.TABNAME_VARLIST,
 #                                ((cls.TABSETUP_CONSTR_PDC, 'id_pdc', cls.TABCONSTRAINT_TYPE_CASCADE),))
-            
+
             cls.varlist_indexes = [ ["PRIMARY KEY", "id"],
                                     ["KEY",         "id_cliente"], ]
-            
-            
-            cls.tabelle = [ 
+
+
+            cls.tabelle = [
                 (cls.TABNAME_BILMAS,    cls.TABDESC_BILMAS,    cls.bilmas,    cls.bilmas_indexes,    cls.TABSETUP_CONSTR_BILMAS,    cls.TABVOICE_BILMAS    ),
                 (cls.TABNAME_BILCON,    cls.TABDESC_BILCON,    cls.bilcon,    cls.bilcon_indexes,    cls.TABSETUP_CONSTR_BILCON,    cls.TABVOICE_BILCON    ),
                 (cls.TABNAME_PDCTIP,    cls.TABDESC_PDCTIP,    cls.pdctip,    cls.pdctip_indexes,    cls.TABSETUP_CONSTR_PDCTIP,    cls.TABVOICE_PDCTIP    ),
@@ -3734,17 +3735,17 @@ class Azienda(object):
                 (cls.TABNAME_DOCSEMAIL, cls.TABDESC_DOCSEMAIL, cls.docsemail, cls.docsemail_indexes, cls.TABSETUP_CONSTR_DOCSEMAIL, cls.TABVOICE_DOCSEMAIL ),
                 (cls.TABNAME_VARLIST,   cls.TABDESC_VARLIST,   cls.varlist,   cls.varlist_indexes,   cls.TABSETUP_CONSTR_VARLIST,   cls.TABVOICE_VARLIST   ),
             ]
-            
+
             #alterazioni strutture tabelle da applicazione personalizzata
             cls.modstru(initall)
-        
-        
+
+
         @classmethod
         def set_constraints(cls, tablename, relations):
             for r_constr, r_field, r_type in relations:
                 r_constr.append([tablename, r_field, r_type])
-        
-        
+
+
         @classmethod
         def modstru(cls, initall):
             import report
@@ -3764,8 +3765,8 @@ class Azienda(object):
                     custapp.TabStru(cls)
             except ImportError, e:
                 pass
-        
-        
+
+
         @classmethod
         def getcolwidth(cls, table, column):
             out = None
@@ -3777,21 +3778,21 @@ class Azienda(object):
                 if coldef:
                     out = coldef[0][2]
             return out
-        
-        
+
+
         __min_compat_ver__ = version.__min_compat_ver__
         __min_compat_mod__ = version.__min_compat_mod__
-        
-        
+
+
         @classmethod
         def GetBaseTab(cls):
             return cls.BaseTab
-            
+
         @classmethod
         def ReadAziendaSetup(cls):
-            
+
             cfg = adb.DbTable(cls.TABNAME_CFGSETUP, 'cfg', writable=False)
-            
+
             keys = cls.GetSetupKeys()
             for p in plugins:
                 m = plugins[p]
@@ -3803,9 +3804,9 @@ class Azienda(object):
                     keys += custapp.GetSetupKeys(cls)
             except ImportError, e:
                 pass
-            
+
             import awc.controls.entries as entries
-            
+
             for name, key, col, conv, err in keys:
                 if cfg.Retrieve("cfg.chiave=%s", key):
                     if cfg.OneRow():
@@ -3847,7 +3848,7 @@ class Azienda(object):
                                 pass
                             setattr(cls, name, p)
                         if cls != Azienda.BaseTab_base:
-                            #se è stata sovrascritta la classe BaseTab, scrivo 
+                            #se è stata sovrascritta la classe BaseTab, scrivo
                             #gli stessi settaggi anche nella sua forma base,
                             #che è già stata importata in svariati moduli
                             setattr(Azienda.BaseTab_base, name, v)
@@ -3862,24 +3863,24 @@ class Azienda(object):
             cls.SetXmppParams()
             cls.SetNotifyClass()
             return True
-        
-        
+
+
         @classmethod
         def GetSetupKeys(cls):
-            
+
             tc = 'del tipo di contabilità'
             d = 'del numero di decimali su'
             f = 'flag'
             i = 'importo'
             s = 'descriz'
-            
+
             def _str(x):
                 return str(x)
             def _int(x):
                 return int(x or '0')
             def _flt(x):
                 return float(x or 0)
-            
+
             return [\
                 ('TIPO_CONTAB',     'tipo_contab',        f, _str, tc),
                 ('CONSOVGES',       'consovges',          f, _int, None),
@@ -3967,8 +3968,8 @@ class Azienda(object):
                 ('MAGRELLIS',       'magrellis',          f, _flt, None),
                 ('MAGSELLIS',       'magsellis',          f, _flt, None),
             ]
-        
-        
+
+
         @classmethod
         def SetMailParams(cls):
             from cfg.dbtables import EmailConfigTable
@@ -3983,8 +3984,8 @@ class Azienda(object):
                 smtp.SetSender(e.sender)
             except:
                 pass
-        
-        
+
+
         @classmethod
         def SetXmppParams(cls):
             from cfg.dbtables import XmppConfigTable
@@ -3998,8 +3999,8 @@ class Azienda(object):
                 xmpp.SetOnlineOnly(s.onlineonly)
             except:
                 pass
-        
-        
+
+
         @classmethod
         def SetNotifyClass(cls):
             class MessageBoxNotify:
@@ -4016,8 +4017,8 @@ class Azienda(object):
                     self.notifyWin = None
             import cfg.dbtables
             cfg.dbtables.EventiStdCallbacks = MessageBoxNotify
-        
-        
+
+
         @classmethod
         def TableName4TipAna(cls, tipo):
             if   tipo == "A": out = cls.TABNAME_CASSE
@@ -4026,12 +4027,12 @@ class Azienda(object):
             elif tipo == "F": out = cls.TABNAME_FORNIT
             else:             out = None
             return out
-        
-        
+
+
         @classmethod
         def GetValIntIntegersDisplay(cls):
             return 9
-        
+
         @classmethod
         def GetValIntMaskInfo(cls, numint=None, numdec=None):
             if numint is None:
@@ -4039,23 +4040,23 @@ class Azienda(object):
             if numdec is None:
                 numdec = cls.VALINT_DECIMALS
             return gl.GRID_VALUE_FLOAT+":%d,%d" % (numint, numdec)
-        
+
         @classmethod
         def GetValIntNumCtrl(cls, parent, id, name, editable=True, numint=None, numdec=None, **kwa):
             if numint is None:
                 numint = cls.GetValIntIntegersDisplay()
             if numdec is None:
                 numdec = cls.VALINT_DECIMALS
-            ctrl = numctrl.NumCtrl(parent, id or -1, 
+            ctrl = numctrl.NumCtrl(parent, id or -1,
                                    integerWidth=numint, fractionWidth=numdec, groupDigits=True, **kwa)
             ctrl.SetName(name)
             ctrl.SetEditable(editable)
             return ctrl
-        
+
         @classmethod
         def GetMagQtaIntegersDisplay(cls):
             return 9
-        
+
         @classmethod
         def GetMagQtaMaskInfo(cls, numint=None, numdec=None):
             if numint is None:
@@ -4063,28 +4064,28 @@ class Azienda(object):
             if numdec is None:
                 numdec = cls.MAGQTA_DECIMALS
             return gl.GRID_VALUE_FLOAT+":%d,%d" % (numint, numdec)
-        
+
         @classmethod
         def GetMagQtaNumCtrl(cls, parent, id, name, editable=True, numint=None, numdec=None, **kwa):
             if numint is None:
                 numint = cls.GetMagQtaIntegersDisplay()
             if numdec is None:
                 numdec = cls.MAGQTA_DECIMALS
-            ctrl = numctrl.NumCtrl(parent, id or -1, 
+            ctrl = numctrl.NumCtrl(parent, id or -1,
                                    integerWidth=numint, fractionWidth=numdec, groupDigits=True, **kwa)
             ctrl.SetName(name)
             ctrl.SetEditable(editable)
             return ctrl
-        
-         
+
+
         @classmethod
         def GetMagPzcIntegersDisplay(cls):
             return 6
-        
+
         @classmethod
         def GetMagPzcDecimalsDisplay(cls):
             return cls.MAGQTA_DECIMALS
-        
+
         @classmethod
         def GetMagPzcMaskInfo(cls, numint=None, numdec=None):
             if numint is None:
@@ -4092,24 +4093,24 @@ class Azienda(object):
             if numdec is None:
                 numdec = cls.GetMagPzcDecimalsDisplay()
             return gl.GRID_VALUE_FLOAT+":%d,%d" % (numint, numdec)
-        
+
         @classmethod
         def GetMagPzcNumCtrl(cls, parent, id, name, editable=True, numint=None, numdec=None, **kwa):
             if numint is None:
                 numint = cls.GetMagPzcIntegersDisplay()
             if numdec is None:
                 numdec = cls.GetMagPzcDecimalsDisplay()
-            ctrl = numctrl.NumCtrl(parent, id or -1, 
+            ctrl = numctrl.NumCtrl(parent, id or -1,
                                    integerWidth=numint, fractionWidth=numdec, groupDigits=True, **kwa)
             ctrl.SetName(name)
             ctrl.SetEditable(editable)
             return ctrl
-        
-         
+
+
         @classmethod
         def GetMagPreIntegersDisplay(cls):
             return 6
-        
+
         @classmethod
         def GetMagPreMaskInfo(cls, numint=None, numdec=None):
             if numint is None:
@@ -4117,27 +4118,27 @@ class Azienda(object):
             if numdec is None:
                 numdec = cls.MAGPRE_DECIMALS
             return gl.GRID_VALUE_FLOAT+":%d,%d" % (numint, numdec)
-        
+
         @classmethod
         def GetMagPreNumCtrl(cls, parent, id, name, editable=True, numint=None, numdec=None, **kwa):
             if numint is None:
                 numint = cls.GetMagPreIntegersDisplay()
             if numdec is None:
                 numdec = cls.MAGPRE_DECIMALS
-            ctrl = numctrl.NumCtrl(parent, id or -1, 
+            ctrl = numctrl.NumCtrl(parent, id or -1,
                                    integerWidth=numint, fractionWidth=numdec, groupDigits=True, **kwa)
             ctrl.SetName(name)
             ctrl.SetEditable(editable)
             return ctrl
-         
+
         @classmethod
         def GetMagScoIntegersDisplay(cls):
             return 2
-        
+
         @classmethod
         def GetMagScoDecimalsDisplay(cls):
             return 2
-        
+
         @classmethod
         def GetMagScoMaskInfo(cls, numint=None, numdec=None):
             if numint is None:
@@ -4145,28 +4146,28 @@ class Azienda(object):
             if numdec is None:
                 numdec = cls.GetMagScoDecimalsDisplay()
             return gl.GRID_VALUE_FLOAT+":%d,%d" % (numint, numdec)
-        
+
         @classmethod
         def GetMagScoNumCtrl(cls, parent, id, name, editable=True, numint=None, numdec=None, **kwa):
             if numint is None:
                 numint = cls.GetMagScoIntegersDisplay()
             if numdec is None:
                 numdec = cls.GetMagScoDecimalsDisplay()
-            ctrl = numctrl.NumCtrl(parent, id or -1, 
-                                   integerWidth=numint, fractionWidth=numdec, 
+            ctrl = numctrl.NumCtrl(parent, id or -1,
+                                   integerWidth=numint, fractionWidth=numdec,
                                    groupDigits=True, allowNegative=True, **kwa)
             ctrl.SetName(name)
             ctrl.SetEditable(editable)
             return ctrl
-         
+
         @classmethod
         def GetMagRicIntegersDisplay(cls):
             return 3
-        
+
         @classmethod
         def GetMagRicDecimalsDisplay(cls):
             return 2
-        
+
         @classmethod
         def GetMagRicMaskInfo(cls, numint=None, numdec=None):
             if numint is None:
@@ -4174,28 +4175,28 @@ class Azienda(object):
             if numdec is None:
                 numdec = cls.GetMagRicDecimalsDisplay()
             return gl.GRID_VALUE_FLOAT+":%d,%d" % (numint, numdec)
-        
+
         @classmethod
         def GetMagRicNumCtrl(cls, parent, id, name, editable=True, numint=None, numdec=None, **kwa):
             if numint is None:
                 numint = cls.GetMagRicIntegersDisplay()
             if numdec is None:
                 numdec = cls.GetMagRicDecimalsDisplay()
-            ctrl = numctrl.NumCtrl(parent, id or -1, 
-                                   integerWidth=numint, fractionWidth=numdec, 
+            ctrl = numctrl.NumCtrl(parent, id or -1,
+                                   integerWidth=numint, fractionWidth=numdec,
                                    groupDigits=True, allowNegative=False, **kwa)
             ctrl.SetName(name)
             ctrl.SetEditable(editable)
             return ctrl
-         
+
         @classmethod
         def GetPerGenIntegersDisplay(cls):
             return 2
-        
+
         @classmethod
         def GetPerGenDecimalsDisplay(cls):
             return 2
-        
+
         @classmethod
         def GetPerGenMaskInfo(cls, numint=None, numdec=None):
             if numint is None:
@@ -4203,24 +4204,24 @@ class Azienda(object):
             if numdec is None:
                 numdec = cls.GetPerGenDecimalsDisplay()
             return gl.GRID_VALUE_FLOAT+":%d,%d" % (numint, numdec)
-        
+
         @classmethod
         def GetPerGenNumCtrl(cls, parent, id, name, editable=True, numint=None, numdec=None, **kwa):
             if numint is None:
                 numint = cls.GetPerGenIntegersDisplay()
             if numdec is None:
                 numdec = cls.GetPerGenDecimalsDisplay()
-            ctrl = numctrl.NumCtrl(parent, id or -1, 
-                                   integerWidth=numint, fractionWidth=numdec, 
+            ctrl = numctrl.NumCtrl(parent, id or -1,
+                                   integerWidth=numint, fractionWidth=numdec,
                                    groupDigits=True, allowNegative=True, **kwa)
             ctrl.SetName(name)
             ctrl.SetEditable(editable)
             return ctrl
-        
-        
+
+
         class AziendaSetupException(Exception):
             pass
-    
+
     BaseTab_base = BaseTab
 
 
@@ -4232,11 +4233,11 @@ stati_cee = [["AUSTRIA",         "AT"],
              ["BULGARIA",        "BG"],
              ["CIPRO",           "CY"],
              ["DANIMARCA",       "DK"],
-             ["ESTONIA",         "EE"], 
-             ["FINLANDIA",       "FI"], 
-             ["FRANCIA",         "FR"], 
+             ["ESTONIA",         "EE"],
+             ["FINLANDIA",       "FI"],
+             ["FRANCIA",         "FR"],
              ["GERMANIA",        "DE"],
-             ["GRAN BRETAGNA",   "GB"], 
+             ["GRAN BRETAGNA",   "GB"],
              ["GRECIA",          "EL"],
              ["IRLANDA",         "IE"],
              ["ITALIA",          "IT"],
@@ -4246,7 +4247,7 @@ stati_cee = [["AUSTRIA",         "AT"],
              ["MALTA",           "MT"],
              ["OLANDA",          "NL"],
              ["POLONIA",         "PL"],
-             ["PORTOGALLO",      "PT"], 
+             ["PORTOGALLO",      "PT"],
              ["REPUBBLICA CECA", "CZ"],
              ["ROMANIA",         "RO"],
              ["SLOVACCHIA",      "SK"],
@@ -4260,7 +4261,7 @@ Azienda.BaseTab.defstru(initall=False)
 
 
 if __name__ == '__main__':
-    
+
     def ExportCSV(tab, tmpname, headings=None):
         import csv
         tmpfile = open(tmpname, 'wb')
@@ -4278,18 +4279,18 @@ if __name__ == '__main__':
         writer.writerows(csvrs)
         tmpfile.close()
         getattr(os, 'startfile')(tmpname)
-    
+
     app = wx.PySimpleApp()
-    
+
     bt = Azienda.BaseTab
-    
+
     doc = adb.DbMem('c1,c2,c3,c4,c5')
     cnr = doc.CreateNewRow
-    
+
     import awc.util as awu
     w = awu.WaitDialog(None, message="Documentazione strutture in corso...",
                        maximum=len(bt.tabelle))
-    
+
     n = 0
     for nome, desc, stru, indi, cost, voic in bt.tabelle:
         print str(nome).ljust(12), desc
@@ -4320,7 +4321,7 @@ if __name__ == '__main__':
         cnr()
         n += 1
         w.SetValue(n)
-    
+
     w.Destroy()
-    
+
     ExportCSV(doc, 'stru.csv')#, 'c1 c2 c3 c4'.split())
