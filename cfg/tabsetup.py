@@ -6,17 +6,17 @@
 # Copyright:    (C) 2011 Astra S.r.l. C.so Cavallotti, 122 18038 Sanremo (IM)
 # ------------------------------------------------------------------------------
 # This file is part of X4GA
-# 
+#
 # X4GA is free software: you can redistribute it and/or modify
 # it under the terms of the Affero GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # X4GA is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
@@ -48,27 +48,27 @@ class TabSetupPanel(aw.Panel):
     """
     Setup tabelle
     """
-    
+
     def __init__(self, *args, **kwargs):
-        
+
         aw.Panel.__init__(self, *args, **kwargs)
         wdr.TabSetupPanelFunc(self)
-        
+
         ci = lambda x: self.FindWindowById(x)
-        
+
         pos = [0,0]
-        
+
         #p = aw.Panel(ci(wdr.ID_SCROLLED), pos=pos)
         #wdr.RowTitleFunc(p)
         #pos[1] += p.GetSize()[1]
-        
+
         ci(wdr.ID_VERSION).SetLabel(Env.__version__)
-        
+
         self.tabs = {}
         self.adeg = {}
-        
+
         bt = Env.Azienda.BaseTab
-        
+
         for name, desc, stru, index, constr, voice in bt.tabelle:
             p = aw.Panel(ci(wdr.ID_SCROLLED), pos=pos)
             wdr.RowTableFunc(p)
@@ -81,24 +81,24 @@ class TabSetupPanel(aw.Panel):
             ci(id3).SetLabel('')
             pos[1] += p.GetSize()[1]
             self.tabs[name] = id3
-        
+
         h = p.GetSize()[1]
         ci(wdr.ID_SCROLLED).SetScrollbars(\
             1, h, 20, len(bt.tabelle), 0, 0 )
         ci(wdr.ID_SHOWDIFF).Show(False)
-        
+
         self.Fit()
         self.Layout()
 
     def Analizza(self):
-        
+
         ci = lambda x: self.FindWindowById(x)
-        
+
         blobs = ("BLOB", "LONGBLOB", "VARBINARY", "VARCHAR", "TEXT")
         ctradeg = ci(wdr.ID_NUMADEG)
         nta = 0
         adeg = []
-        
+
         #MySQL SHOW INDEXES - struttura analisi:
         I_TABLE =      0
         I_NOTUNIQUE =  1
@@ -112,39 +112,39 @@ class TabSetupPanel(aw.Panel):
         I_NULL =       9
         I_INDEXTYPE = 10
         I_COMMENT =   11
-        
+
         bt = Env.Azienda.BaseTab
-        
+
         for name, desc, stru, index, constr, voice in bt.tabelle:
-            
+
             adeg = []
             tabchange = tabcreate = False
-            
+
             try:
-                
+
                 status = ci(self.tabs[name])
                 status.SetLabel('Analisi...')
                 self.Update()
                 wx.Yield()
-                
+
                 tab = adb.DbTable(name, writable=False)
                 tab.Get(-1)
                 tabchange = False
                 tabcreate = False
                 struphys = tab._GetStructure()
-                
+
                 #controllo struttura campi
                 for fname, ftype, flen, fdec, fnote, fspec in stru:
-                    
+
                     change = False
-                    
+
                     #test esistenza campo
                     try:
                         n = aw.awu.ListSearch(struphys, lambda x: x[0] == fname)
                     except IndexError:
                         adeg.append((fname, ADEG_MISSINGFIELD))
                         change = True
-                    
+
                     #test congruenza tipologia
                     if not change:
                         if not struphys[n][1] == "CHAR" and ftype == "STRING":
@@ -152,22 +152,22 @@ class TabSetupPanel(aw.Panel):
                                    (struphys[n][1] in blobs and ftype in blobs)
                             if change:
                                 adeg.append((fname, ADEG_WRONGTYPE))
-                    
+
                     #test lunghezza
                     if not change and flen:
                         change = struphys[n][2] < (flen + (fdec or 0))
                         if change:
                             adeg.append((fname, ADEG_WRONGLENGHT))
-                    
+
                     #test decimali
                     if not change and type(fdec) is int:
                         change = struphys[n][3] < fdec
                         if change:
                             adeg.append((fname, ADEG_WRONGDECIMALS))
-                    
+
                     if change:
                         tabchange = True
-                
+
                 #controllo indici
                 c = tab._info.db._dbCon.cursor()
                 c.execute("SHOW INDEXES FROM %s" % name)
@@ -197,7 +197,7 @@ class TabSetupPanel(aw.Panel):
                         adeg.append(("Chiave "+keydesc, adegtype, i))
                         tabchange = True
                 c.close()
-                
+
             except Exception, e:
                 #if '1146' in e.args[0]:
                 err = e.args[0]
@@ -205,6 +205,14 @@ class TabSetupPanel(aw.Panel):
                     err = err[0]
                 if '1146' in err:
                     adeg.append(('-', ADEG_MISSINGTABLE))
+                    for i, (indtype, indexpr) in enumerate(index):
+                        if "PRIMARY" in indtype:
+                            indname = "PRIMARY"
+                            keydesc = "primaria"
+                        else:
+                            indname = "index%d" % i
+                            keydesc = "#%d" % i
+                        adeg.append(("Chiave "+keydesc, ADEG_INDEX, i))
                     tabcreate = True
                 else:
                     aw.awu.MsgDialog(self,\
@@ -216,20 +224,20 @@ class TabSetupPanel(aw.Panel):
                         p.EndModal(2)
                     else:
                         p.Close()
-            
+
             if tabchange:
                 self.adeg[name] = adeg
                 label = "DA ADEGUARE"
                 nta += 1
-                
+
             elif tabcreate:
                 self.adeg[name] = adeg
                 label = "DA CREARE"
                 nta += 1
-                
+
             else:
                 label = "OK"
-            
+
             if nta > 0:
                 ctradeg.SetLabel("%d tabelle da adeguare - Analisi in corso..."\
                                  % nta)
@@ -237,7 +245,7 @@ class TabSetupPanel(aw.Panel):
             status.SetLabel(label)
             self.Update()
             wx.Yield()
-        
+
         but = ci(wdr.ID_SHOWDIFF)
         if nta > 0:
             ctradeg.SetLabel("""%d tabelle da adeguare""" % nta)
@@ -250,10 +258,10 @@ class TabSetupPanel(aw.Panel):
             but.SetLabel("Chiudi")
             self.Bind(wx.EVT_BUTTON, self.OnClose, but)
         but.Show()
-    
+
     def OnShowDiff(self, event):
         self.GetParent().EndModal(2)
-    
+
     def OnClose(self, event):
         self.GetParent().EndModal(1)
 
@@ -273,7 +281,7 @@ class TabSetupDialog(aw.Dialog):
         self.panel = TabSetupPanel(self, -1)
         self.AddSizedPanel(self.panel)
         self.CenterOnScreen()
-    
+
     def ShowModal(self):
         self.Show()
         self.panel.Analizza()
@@ -295,60 +303,60 @@ class TabSetupDialog(aw.Dialog):
         strutture sono state adattate alla versione attuale.
         """
         ok = True
-        
+
         bt = Env.Azienda.BaseTab
-        
+
         keyver = wx.GetApp().keyver
         setup = adb.DbTable(bt.TABNAME_CFGSETUP, 'setup', writable='True')
-        
+
         if setup.Retrieve("setup.chiave=%s", keyver) and setup.OneRow():
             db = setup._info.db
-            
+
             oldver, oldmod = setup.codice, setup.descriz
-            
+
             # -------------------------------------------------------------------------------------
-            
+
             if oldver<'0.9.45' and ok:
                 ok = db.Execute("""
                 UPDATE %s SET viscosto=0, visgiac=0, vislistini=0, visultmov=0
                 """ % bt.TABNAME_CFGMAGDOC)
-            
+
             # -------------------------------------------------------------------------------------
-            
+
             if oldver<'0.9.66' and ok:
                 do = db.Execute("""
-                INSERT INTO %s (id,codice,descriz,calcpc,calclis) 
+                INSERT INTO %s (id,codice,descriz,calcpc,calclis)
                      VALUES (1,'1','STANDARD','P','P')
                 """ % bt.TABNAME_GRUPREZ)
                 if do:
                     ok = db.Execute("""
                     UPDATE %s SET id_gruprez=1
                     """ % bt.TABNAME_PROD)
-            
+
             # -------------------------------------------------------------------------------------
-            
+
             if oldver<'0.9.74' and ok:
                 do = db.Execute("""
                 INSERT INTO %s (chiave,descriz) VALUES ('mageanprefix','22')
                 """ % bt.TABNAME_CFGSETUP)
-            
+
             # -------------------------------------------------------------------------------------
-            
+
             if oldver<'1.0.11' and ok:
                 do = db.Execute("""
-                ALTER TABLE `x4`.`aziende` 
+                ALTER TABLE `x4`.`aziende`
                  ADD COLUMN `modname` VARCHAR(20) AFTER `codice`
                 """)
                 if do:
                     do = db.Execute("""
                     UPDATE `x4`.`aziende` SET modname=%s
                     """, ver.MODVERSION_NAME or None)
-            
+
             # -------------------------------------------------------------------------------------
-            
+
             if oldver<'1.0.19' and ok:
                 if db.Retrieve("""
-                SELECT id FROM `x4`.`utenti` 
+                SELECT id FROM `x4`.`utenti`
                  ORDER BY codice
                 """):
                     uid = [r[0] for r in db.rs]
@@ -366,9 +374,9 @@ class TabSetupDialog(aw.Dialog):
                                 p.leggi = 1
                                 p.scrivi = 1
                             p.Save()
-            
+
             # -------------------------------------------------------------------------------------
-            
+
             if oldver<'1.0.98' and ok:
                 for tabkey, envkey, val in (('opttabsearch', 'OPTTABSEARCH', 1),
                                             ('optdigsearch', 'OPTDIGSEARCH', 0),):
@@ -376,9 +384,9 @@ class TabSetupDialog(aw.Dialog):
                     INSERT INTO %s (chiave, flag) VALUES (%%s,%%s)""" % bt.TABNAME_CFGSETUP,
                                                                        (tabkey, val,))
                     setattr(bt, envkey, val)
-            
+
             # -------------------------------------------------------------------------------------
-            
+
             if oldver<'1.1.00' and ok:
                 e = adb.DbTable(bt.TABNAME_EFFETTI, 'eff')
                 e.Retrieve()
@@ -387,17 +395,17 @@ class TabSetupDialog(aw.Dialog):
                     if b:
                         if e.id_caus:
                             db.Execute("UPDATE pcf SET id_effpdc=%d WHERE id_effban=%d AND (SELECT id_caus FROM contab_h WHERE contab_h.id=pcf.id_effreg)=%%s" % (e.id, b), (e.id_caus,))
-            
+
             # -------------------------------------------------------------------------------------
-            
+
             if oldver<'1.1.14' and ok:
                 db.Execute("UPDATE cfgcontab SET camsegr1=0 WHERE camsegr1 IS NULL")
                 db.Execute("UPDATE cfgcontab SET quaivanob=0 WHERE quaivanob IS NULL")
-            
+
             # -------------------------------------------------------------------------------------
-            
+
             if oldver<'1.1.32':
-                
+
                 #creo tab.cfg.email su db x4
                 db.Execute("""
 CREATE TABLE IF NOT EXISTS `x4`.`cfgmail` (
@@ -413,7 +421,7 @@ CREATE TABLE IF NOT EXISTS `x4`.`cfgmail` (
   UNIQUE KEY `index1` (`azienda`)
 ) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='Setup SMTP'
 """)
-                
+
                 #creo tab.cfg.xmpp su db x4
                 db.Execute("""
 CREATE TABLE IF NOT EXISTS `x4`.`cfgxmpp` (
@@ -428,26 +436,26 @@ CREATE TABLE IF NOT EXISTS `x4`.`cfgxmpp` (
   UNIQUE KEY `index1` (`azienda`)
 ) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='Setup XMPP'
 """)
-        
+
                 #inserisco opzione notifiche in setup azienda, per default=0
                 for tabkey, envkey, val in (('optnotifiche', 'OPTNOTIFICHE', 0),):
                     db.Execute("""
                     INSERT INTO %s (chiave, flag) VALUES (%%s,%%s)""" % bt.TABNAME_CFGSETUP,
                                                                        (tabkey, val,))
                     setattr(bt, envkey, val)
-                
+
                 db.Execute("""
                 UPDATE %s SET lendescriz=60
                 """ % bt.TABNAME_CFGMAGMOV)
-            
+
             # -------------------------------------------------------------------------------------
-            
+
             if oldver<'1.1.34':
-                
+
                 #creo tab. bilancio cee su db x4
                 db.Execute("""
 CREATE TABLE IF NOT EXISTS `x4`.`bilcee` (
-  `id`         int(6) NOT NULL 
+  `id`         int(6) NOT NULL
                       auto_increment    COMMENT 'ID PDC CEE',
   `codice`     char(9)     default NULL COMMENT 'Codice',
   `descriz`    char(128)   default NULL COMMENT 'Descrizione',
@@ -461,15 +469,15 @@ CREATE TABLE IF NOT EXISTS `x4`.`bilcee` (
   UNIQUE KEY `index1` (`codice`)
 ) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='Bilancio CEE'
 """)
-            
+
             test = adb.DbTable('x4.bilcee')
             test.AddLimit(1)
             test.Retrieve()
             if test.IsEmpty():
                 db.Execute("""
-INSERT INTO `x4`.`bilcee` 
-(`id`,`codice`,`descriz`,`sezione`,`voce`,`capitolo`,`dettaglio`,`subdett`,`selectable`) 
-VALUES 
+INSERT INTO `x4`.`bilcee`
+(`id`,`codice`,`descriz`,`sezione`,`voce`,`capitolo`,`dettaglio`,`subdett`,`selectable`)
+VALUES
  (307,"1","ATTIVO","1","","","","",0),
  (308,"1A","CREDITI VERSO SOCI PER VERSAMENTI ANCORA DOVUTI","1","A","","","",0),
  (309,"1A      a","PARTE RICHIAMATA","1","A","","","a",1),
@@ -621,12 +629,12 @@ VALUES
  (456,"4E    24","RETTIF. DI VAL. OPERATE ESCLUSIV. IN APPLIC. DI NORME TRIB.","4","E","","24","",1),
  (457,"4E    25","ACCANT. OPERATI ESCLUSIV. IN APPLIC. DI NORME TRIBUTARIE","4","E","","25","",1)
                 """)
-        
+
             # -------------------------------------------------------------------------------------
-            
+
             if oldver<'1.2.10':
-                
-                #cambio tipo riga righe contabili da "I" a "O" ed adeguo il tot.riga iva escludendo 
+
+                #cambio tipo riga righe contabili da "I" a "O" ed adeguo il tot.riga iva escludendo
                 #l'imponibile per le righe iva degli omaggi
                 #che nella contabilizzazione dal magazzino venivano contrassegnate con
                 #note = "OMAGGI"
@@ -635,7 +643,7 @@ UPDATE contab_b
 SET tipriga="O", importo=imposta+indeduc
 WHERE tipriga="I" AND note="OMAGGI"
                 """)
-        
+
             if oldver<'1.2.56' and ok:
                 for tabkey, envkey, val in (('optlnkcrdpdc', 'OPTLNKCRDPDC', 1),
                                             ('optlnkgrdpdc', 'OPTLNKGRDPDC', 0),
@@ -647,20 +655,20 @@ WHERE tipriga="I" AND note="OMAGGI"
                     INSERT INTO %s (chiave, flag) VALUES (%%s,%%s)""" % bt.TABNAME_CFGSETUP,
                                                                        (tabkey, val,))
                     setattr(bt, envkey, val)
-            
+
                 #inserisco opzione notifiche in setup azienda, per default=0
                 for tabkey, envkey, val in (('optnotifiche', 'OPTNOTIFICHE', 0),):
                     db.Execute("""
                     INSERT INTO %s (chiave, flag) VALUES (%%s,%%s)""" % bt.TABNAME_CFGSETUP,
                                                                        (tabkey, val,))
                     setattr(bt, envkey, val)
-                
+
                 db.Execute("""
                 UPDATE %s SET lendescriz=60
                 """ % bt.TABNAME_CFGMAGMOV)
-            
+
             # -------------------------------------------------------------------------------------
-            
+
             if oldver<'1.2.58' and ok:
                 #creo tab.stati su db x4
                 if not db.Retrieve("""DESCRIBE x4.stati""") and db.dbError.code == 1146:
@@ -678,11 +686,11 @@ CREATE TABLE IF NOT EXISTS `x4`.`stati` (
   UNIQUE KEY `index1` (`codice`),
   UNIQUE KEY `index2` (`descriz`)
 ) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='Stati'""")
-        
+
                     db.Execute("""
-INSERT INTO `x4`.`stati`  
-    (`id`,`codice`,`vatprefix`,`descriz`,`desceng`,`is_cee`,`is_blacklisted`) 
-VALUES 
+INSERT INTO `x4`.`stati`
+    (`id`,`codice`,`vatprefix`,`descriz`,`desceng`,`is_cee`,`is_blacklisted`)
+VALUES
     (  1, "AT", "AT", "AUSTRIA",         "AUSTRIA",        1, 0),
     (  2, "BE", "BE", "BELGIO",          "BELGIUM",        1, 0),
     (  3, "BG", "BG", "BULGARIA",        "BULGARIA",       1, 0),
@@ -714,13 +722,13 @@ VALUES
     ( 29, "MC", "FR", "MONACO",          "MONACO",         0, 1),
     ( 30, "CH", "CH", "SVIZZERA",        "SWISS",          0, 1),
     (999, "ZZ", "ZZ", "ZZ-INDEFINITO-",  "ZZ-UNDEFINED-",  0, 0)""")
-                
+
                 #adeguamento id_stato su clienti,fornitori in base a campo nazione
                 mancanti = []
                 for name in 'clienti fornit'.split():
-                    
+
                     db.Execute("""
-UPDATE %(name)s 
+UPDATE %(name)s
 SET id_stato=(
 
     SELECT stato.id
@@ -728,22 +736,22 @@ SET id_stato=(
      WHERE stato.codice=%(name)s.nazione OR stato.codice="IT" AND %(name)s.nazione=""
 )
                     """ % locals())
-                    
+
                     db.Retrieve("""
 SELECT COUNT(*)
 FROM %(name)s anag
 LEFT JOIN x4.stati stato ON stato.id=anag.id_stato OR (anag.nazione="" AND stato.codice="IT")
 WHERE anag.nazione<>"" AND anag.id_stato IS NULL""" % locals())
-                    
+
                     if db.rs:
                         if db.rs[0][0]>0:
                             mancanti.append('%s (%d)' % (name, db.rs[0][0]))
-                    
+
                     db.Execute("""
-UPDATE %(name)s 
+UPDATE %(name)s
 SET id_stato=999
 WHERE id_stato IS NULL""" % locals())
-                
+
                 if mancanti:
                     msg =\
                     """Durante l\'adeguamento dello stato dei clienti/fornitori,\n"""\
@@ -752,12 +760,12 @@ WHERE id_stato IS NULL""" % locals())
                     msg +=\
                     """Tali anagrafiche sono state impostate con stato INDEFINITO."""
                     aw.awu.MsgDialog(self, msg, style=wx.ICON_WARNING)
-                
+
                 #adeguamento nuovo campo 'modo' su tab.aliquote in base a perc.calcolo e descrizione
                 db.Execute(r"""
-UPDATE aliqiva 
+UPDATE aliqiva
 SET modo=IF(perciva>0, "I",
-         IF(descriz LIKE "%ES.%" OR descriz LIKE "%ESEN%", "E", 
+         IF(descriz LIKE "%ES.%" OR descriz LIKE "%ESEN%", "E",
          IF(descriz LIKE "%F.C%" OR descriz LIKE "%F%CAMP%", "F", "N")))""")
                 msg =\
                 """La tabella delle aliquote IVA contiene ora un nuovo campo,\n"""\
@@ -766,11 +774,11 @@ SET modo=IF(perciva>0, "I",
                 """campo di applicazione.\n"""\
                 """Tale informazione è stata inizializzata in questa fase di adeguamento\n"""\
                 """delle strutture dati, ma si consiglia di verificare, per ogni aliquota\n"""\
-                """presente, la correttezza del menzionato 'modo'."""  
+                """presente, la correttezza del menzionato 'modo'."""
                 aw.awu.MsgDialog(self, msg, style=wx.ICON_INFORMATION)
-        
+
             # -------------------------------------------------------------------------------------
-            
+
             if oldver<'1.2.62' and ok:
                 tpd = adb.DbTable(bt.TABNAME_CFGMAGDOC, 'tipdoc')
                 tpd.Retrieve('tipdoc.colcg="X" AND tipdoc.id_caucg IS NOT NULL')
@@ -790,16 +798,16 @@ SET modo=IF(perciva>0, "I",
                         rr.Retrieve('body.id_reg=%s', r.id_reg)
                         r.id_pdccp = rr.id_pdcpa
                     rw.Save()
-        
+
             # -------------------------------------------------------------------------------------
-            
+
             if oldver<'1.2.66' and ok:
-                
-                #adeguamento struttura tabella progressivi prodotti per inserimento valore di default 
+
+                #adeguamento struttura tabella progressivi prodotti per inserimento valore di default
                 DQ = Env.Azienda.BaseTab.MAGQTA_DECIMALS
                 DI = Env.Azienda.BaseTab.VALINT_DECIMALS
                 db.Execute(r"""
-  ALTER TABLE `prodpro` 
+  ALTER TABLE `prodpro`
 MODIFY COLUMN `ini`    DECIMAL(10,%(DQ)s) DEFAULT 0,
 MODIFY COLUMN `car`    DECIMAL(10,%(DQ)s) DEFAULT 0,
 MODIFY COLUMN `sca`    DECIMAL(10,%(DQ)s) DEFAULT 0,
@@ -810,21 +818,21 @@ MODIFY COLUMN `cvccar` DECIMAL(10,%(DQ)s) DEFAULT 0,
 MODIFY COLUMN `cvcsca` DECIMAL(10,%(DQ)s) DEFAULT 0,
 MODIFY COLUMN `cvfcar` DECIMAL(10,%(DQ)s) DEFAULT 0,
 MODIFY COLUMN `cvfsca` DECIMAL(10,%(DQ)s) DEFAULT 0""" % locals())
-        
-        
+
+
             # -------------------------------------------------------------------------------------
-            
+
             if oldver<'1.2.82' and ok:
-                
-                #spostamento variabile di setup: il numero di listini prima era sul campo flag, ora sposto su importo 
+
+                #spostamento variabile di setup: il numero di listini prima era sul campo flag, ora sposto su importo
                 db.Execute(r"""
 UPDATE `cfgsetup`
    SET importo=flag, flag=NULL
  WHERE chiave="magnumlis" """)
-        
-            
+
+
             # -------------------------------------------------------------------------------------
-            
+
             if oldver<'1.3.06' and ok:
                 #adeguo il charset di ugni tabella in utf8
                 err = None
@@ -855,11 +863,11 @@ UPDATE `cfgsetup`
                         aw.awu.MsgDialog(self, "Errore in conversione tabella:\n%s" % err)
                 if err:
                     ok = False
-            
+
             # -------------------------------------------------------------------------------------
-            
+
             if oldver<'1.3.14' and ok:
-                
+
                 #imposto i massimali conosciuti per azienda/privato per gli anni 2010 e 2011
                 for anno, maxazi, maxpri in ((2010, 25000, 25000),
                                              (2011,  3000,  3600),):
@@ -867,7 +875,7 @@ UPDATE `cfgsetup`
                     INSERT INTO cfgprogr (codice,       keydiff,   progrimp1,  progrimp2)
                                   VALUES ('spesometro', %(anno)s, %(maxazi)s, %(maxpri)s)""" % locals()
                     db.Execute(cmd)
-                
+
                 #adeguo il nuovo flag azienda/privato su tabelle clienti e fornitori
                 err = None
                 try:
@@ -878,24 +886,24 @@ UPDATE `cfgsetup`
                 if err:
                     aw.awu.MsgDialog(self, "Errore in adeguamento tabella %(tab_name)s:\n%(err)s" % locals())
                     ok = False
-                
+
             # -------------------------------------------------------------------------------------
-            
+
             if oldver<'1.3.28' and ok:
-                
+
                 try:
                     for key in 'magnumric magnumsco'.split():
                         db.Execute('INSERT INTO cfgsetup (chiave, importo) VALUES ("%(key)s", 3)' % locals())
                 except Exception, e:
                     pass
-        
+
             # -------------------------------------------------------------------------------------
-            
+
             if oldver<'1.4.85' and ok:
-                
-                #adeguamento struttura tabella stati per aggiunta codice stato 
+
+                #adeguamento struttura tabella stati per aggiunta codice stato
                 #nella codifica del modello unico di dichiarazione dei redditi
-                if db.Execute(r"""ALTER TABLE `x4`.`stati` 
+                if db.Execute(r"""ALTER TABLE `x4`.`stati`
                                     ADD COLUMN `codunico` CHAR(3) AFTER `is_blacklisted`"""):
                     for stato_desc, cod_unico in \
                         (("AUSTRIA",         "008"),
@@ -927,19 +935,19 @@ UPDATE `cfgsetup`
                          ("SAN MARINO",      "037"),
                          ("MONACO",          "091"),
                          ("SVIZZERA",        "071"),):
-                        db.Execute(r"""UPDATE `x4`.`stati` 
+                        db.Execute(r"""UPDATE `x4`.`stati`
                         SET codunico=%s WHERE descriz=%s""", (cod_unico, stato_desc))
-        
+
             if oldver<'1.4.43' and ok:
-                
-                #adeguamento struttura tabella stati per aggiunta codice stato 
+
+                #adeguamento struttura tabella stati per aggiunta codice stato
                 #nella codifica del modello unico di dichiarazione dei redditi
-                db.Execute(r"""ALTER TABLE `x4`.`cfgmail` 
+                db.Execute(r"""ALTER TABLE `x4`.`cfgmail`
                                     ADD COLUMN `authtls` TINYINT(1) AFTER `authpswd`""")
-        
+
 #            if oldver<'1.4.52' and ok:
             if ok:
-                
+
                 #crea vista per analisi utile, ricarica e marginalità su vendite
                 db.Execute(r"""
 CREATE VIEW stat_reddvend AS
@@ -967,15 +975,15 @@ WHERE tpd.clasdoc IN ("vencli", "rescli") AND (doc.f_ann IS NULL OR doc.f_ann<>1
 GROUP BY doc.id""")
         if ok:
             self.PerformExternalAdaptations()
-        
+
         if ok:
             WriteCurrentVersion()
         else:
             aw.awu.MsgDialog(self, repr(db.dbError.description),
                              "Adattamento tabelle")
-        
+
         return ok
-    
+
     def PerformExternalAdaptations(self):
         pass
 
@@ -993,17 +1001,17 @@ class TablesGrid(dbglib.DbGrid):
         parent griglia  (wx.Panel)
         dbtable registro iva (derivati da contab.dbtables.RegIva)
         """
-        
+
         self.rstab = [(key,) for key in tabdict]
-        
+
         size = parent.GetClientSizeTuple()
-        
+
         cn = lambda db, col: db._GetFieldIndex(col, inline=True)
-        
+
         _NUM = gl.GRID_VALUE_NUMBER
         _STR = gl.GRID_VALUE_STRING
         _DAT = gl.GRID_VALUE_DATETIME
-        
+
         cols = (\
             ( 90, (0, "Tabella", _STR, True )),\
             )
@@ -1012,18 +1020,18 @@ class TablesGrid(dbglib.DbGrid):
         colsize = [c[0] for c in cols]
         canedit = False
         canins = False
-        
+
         dbglib.DbGrid.__init__(self, parent, -1, size=size, style=0)
-        
+
         links = None
-        
+
         afteredit = None
         self.SetData( self.rstab, colmap, canedit, canins,\
                       links, afteredit)
-        
+
         map(lambda c:\
             self.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
-        
+
         self.SetFitColumn(0)
         self.AutoSizeColumns()
         sz = wx.FlexGridSizer(1,0,0,0)
@@ -1047,13 +1055,13 @@ class DiffsGrid(dbglib.DbGrid):
         parent griglia  (wx.Panel)
         dbtable registro iva (derivati da contab.dbtables.RegIva)
         """
-        
+
         size = parent.GetClientSizeTuple()
-        
+
         _NUM = gl.GRID_VALUE_NUMBER
         _STR = gl.GRID_VALUE_STRING
         _DAT = gl.GRID_VALUE_DATETIME
-        
+
         cols = (\
             (100, (0, "Colonna",    _STR, True )),\
             (360, (1, "Differenze", _STR, True )),\
@@ -1063,17 +1071,17 @@ class DiffsGrid(dbglib.DbGrid):
         colsize = [c[0] for c in cols]
         canedit = False
         canins = False
-        
+
         dbglib.DbGrid.__init__(self, parent, -1, size=size, style=0)
-        
+
         links = None
-        
+
         afteredit = None
         self.SetData( (), colmap, canedit, canins, links, afteredit)
-        
+
         map(lambda c:\
             self.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
-        
+
         self.SetFitColumn(1)
         self.AutoSizeColumns()
         sz = wx.FlexGridSizer(1,0,0,0)
@@ -1088,7 +1096,7 @@ class DiffsGrid(dbglib.DbGrid):
 
 
 class WarningDialog(aw.Dialog):
-    
+
     def __init__(self, parent):
         aw.Dialog.__init__(self, parent, -1, 'Warning Adeguamento Database')
         p = aw.Panel(self)
@@ -1096,7 +1104,7 @@ class WarningDialog(aw.Dialog):
         self.AddSizedPanel(p)
         self.Bind(wx.EVT_CHECKBOX, self.OnCheck)
         self.Bind(wx.EVT_BUTTON, self.OnStart)
-    
+
     def OnCheck(self, event):
         def cn(x):
             return self.FindWindowByName(x)
@@ -1105,7 +1113,7 @@ class WarningDialog(aw.Dialog):
             e = e and cn(name).IsChecked()
         cn('butstart').Enable(e)
         event.Skip()
-    
+
     def OnStart(self, event):
         self.EndModal(wx.ID_OK)
 
@@ -1117,33 +1125,33 @@ class AdeguaPanel(aw.Panel):
     """
     Adeguamento strutture tabelle
     """
-    
+
     def __init__(self, *args, **kwargs):
-        
+
         aw.Panel.__init__(self, *args, **kwargs)
         wdr.DiffDetailsFunc(self)
         ci = lambda x: self.FindWindowById(x)
         ci(wdr.ID_VERSION).SetLabel(Env.__version__)
-        
+
         self.Bind(wx.EVT_BUTTON, self.OnAdegua, ci(wdr.ID_ADEGUA))
-        
+
         self.adeg = {}
-    
+
     def SetAdeg(self, adeg):
-        
+
         self.adeg = adeg
-        
+
         ci = lambda x: self.FindWindowById(x)
         self.gritab = TablesGrid(ci(wdr.ID_PGTAB), self.adeg)
         self.gridif = DiffsGrid(ci(wdr.ID_PGDIF))
-        
+
         self.gritab.Bind(gl.EVT_GRID_CMD_SELECT_CELL, self.OnTabSelected)
         self.UpdateDiffs(0)
-    
+
     def OnTabSelected(self, event):
         self.UpdateDiffs(event.GetRow())
         event.Skip()
-    
+
     def UpdateDiffs(self, row):
         tab = self.gritab.rstab[row][0]
         dif = self.adeg[tab]
@@ -1166,7 +1174,7 @@ class AdeguaPanel(aw.Panel):
                 diff = "Indice incongruente"
             rsdif.append((field, diff))
         self.gridif.ChangeData(rsdif)
-    
+
     def OnAdegua(self, event):
         dlg = WarningDialog(self)
         do = (dlg.ShowModal() == wx.ID_OK)
@@ -1174,24 +1182,24 @@ class AdeguaPanel(aw.Panel):
         if do:
             self.Adegua()
         event.Skip()
-    
+
     def Adegua(self):
-        
+
         db = adb.db.__database__
         wait = aw.awu.WaitDialog(self, maximum=len(self.adeg))
         errors = False
-        
+
         bt = Env.Azienda.BaseTab
-        
+
         for n, tab in enumerate(self.adeg):
-            
+
             wait.SetMessage("E' in corso l'adeguamento della struttura di: %s"\
                             % tab)
-            
+
             t = aw.awu.ListSearch(bt.tabelle, lambda x: x[0] == tab)
             stru = bt.tabelle[t][bt.TABSETUP_TABLESTRUCTURE]
             indx = bt.tabelle[t][bt.TABSETUP_TABLEINDEXES]
-            
+
             create = False
             if self.adeg[tab][0][1] == ADEG_MISSINGTABLE:
                 cmd = "CREATE TABLE %s (" % tab
@@ -1203,29 +1211,29 @@ class AdeguaPanel(aw.Panel):
                 diffs = [(x[1], x) for x in self.adeg[tab] if x[1] < ADEG_INDEX]
                 diffs.sort()
                 diffs = [x[1] for x in diffs]
-            
+
             diffs += [x for x in self.adeg[tab] if x[1] >= ADEG_INDEX]
-            
+
             #diffs = lista differenze:
             #0 = nome colonna
             #1 = tipo differenza, ADEG_*
             #2 = (eventuale) numero indice da (ri)creare
-            
+
             #creazione/adeguamento struttura campi
             for d in diffs:
-                
+
                 field = d[0]
                 diff = d[1]
-                
+
                 if field == '-' or diff >= ADEG_INDEX:
                     continue
-                
+
                 if not create:
                     if diff == ADEG_MISSINGFIELD:
                         cmd += "ADD COLUMN "
                     else:
                         cmd += "MODIFY COLUMN "
-                    
+
                 c = aw.awu.ListSearch(stru, lambda c: c[0] == field)
                 col = stru[c]
                 fname, ftype, flen, fdec, fadd, fdes =\
@@ -1235,9 +1243,9 @@ class AdeguaPanel(aw.Panel):
                       col[bt.TABSETUP_COLUMNDECIMALS],
                       col[bt.TABSETUP_COLUMNATTRIBUTES],
                       col[bt.TABSETUP_COLUMNDESCRIPTION])
-                
+
                 cmd += "%s %s" % (fname, ftype)
-                
+
                 if flen:
                     cmd += "(%d" % (flen + (fdec or 0))
                     if fdec:
@@ -1250,11 +1258,11 @@ class AdeguaPanel(aw.Panel):
                     fdes = fdes.replace("%", "perc.")
                     cmd += " COMMENT '%s'" % fdes
                 cmd += ", "
-            
+
             #creazione primary key
             if create:
                 cmd += "PRIMARY KEY (%s), " % stru[0][bt.TABSETUP_COLUMNNAME]
-            
+
             #creazione/adeguamento indici
             for d in diffs:
                 if d[1] >= ADEG_INDEX:
@@ -1271,28 +1279,28 @@ class AdeguaPanel(aw.Panel):
                     else:
                         cmd += "INDEX "
                     cmd += "index%d (%s), " % (i, indexpr)
-            
+
             cmd = cmd[:-2]
             if create:
                 cmd += ") ENGINE = MYISAM"
-            
+
             if not db.Execute(cmd):
                 wait.Destroy()
                 if create:
                     action = "la creazione"
                 else:
                     action = "l'adeguamento di struttura"
-                aw.awu.MsgDialog(self, 
+                aw.awu.MsgDialog(self,
                                  """Si è verificato un problema durante """
                                  """%s della tabella %s:\n%s"""\
                                  % (action, tab, db.dbError.description))
                 #self.GetParent().EndModal(2)
                 errors = True
-            
+
             wait.SetValue(n)
-            
+
         wait.Destroy()
-        
+
         if errors:
             aw.awu.MsgDialog(self,\
                              """Si sono verificati problemi nel processo di """
@@ -1367,7 +1375,7 @@ class AdeguaDialog(aw.Dialog):
 
 
 if __name__ == '__main__':
-    
+
     class _testApp(wx.App):
         def OnInit(self):
             wx.InitAllImageHandlers()
@@ -1378,7 +1386,7 @@ if __name__ == '__main__':
                 print "Problema in connessione:\n%s"\
                       % repr(db.dbError.description)
             return out
-    
+
     app = _testApp(True)
     app.MainLoop()
     Env.InitSettings()
