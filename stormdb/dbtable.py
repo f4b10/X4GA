@@ -6,17 +6,17 @@
 # Copyright:    (C) 2011 Astra S.r.l. C.so Cavallotti, 122 18038 Sanremo (IM)
 # ------------------------------------------------------------------------------
 # This file is part of X4GA
-# 
+#
 # X4GA is free software: you can redistribute it and/or modify
 # it under the terms of the Affero GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # X4GA is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
@@ -30,13 +30,37 @@ from stormdb import DateTime,\
      JOIN_ALL, JOIN_LEFT, JOIN_RIGHT, ORDER_ASCENDING, ORDER_DESCENDING
 logmsg = adb.db.logmsg
 
+import awc.controls.windows as aw
+import mx
+
+ADEG_MISSINGTABLE =  0
+ADEG_MISSINGFIELD =  1
+ADEG_WRONGTYPE =     2
+ADEG_WRONGLENGHT =   3
+ADEG_WRONGDECIMALS = 4
+ADEG_INDEX =         5
+ADEG_REINDEX =       6
+
+I_TABLE =      0
+I_NOTUNIQUE =  1
+I_KEYNAME =    2
+I_SEQUENCE =   3
+I_COLUMN =     4
+I_COLLATION =  5
+I_CARDINAL =   6
+I_SUBPART =    7
+I_PACKED =     8
+I_NULL =       9
+I_INDEXTYPE = 10
+I_COMMENT =   11
+
 import locale
 
 FORCE_TO_LATIN1 = False
 
 
 __env__ = None
-    
+
 
 _JOIN_TABLE =       0
 _JOIN_FIELDLEFT =   1
@@ -179,44 +203,44 @@ class DbInfo(object):
         self.page_rows =          None
         self.waitDialog =         None
         self.debug =              False
-    
+
     def GetEnv(self):
         return __env__
-    
+
     def SetEnv(self, e):
         global __env__
         __env__ = e
-    
+
     def Debug(self):
         print 'debug'
         return True
-    
+
     def ResetPrintFilterValues(self):
         self.printfilters.clear()
-    
+
     def SetPrintFilterValue(self, key, val):
         self.printfilters[key] = val
-    
+
     def GetPrintFilterValue(self, key, default=''):
         if not key in self.printfilters:
             return default
         return self.printfilters[key]
-    
+
     def HasPrintFilterValues(self):
         return len(self.printfilters)>0
-    
+
     def SetPrintValue(self, name, value):
         self.printvalues[name] = value
-    
+
     def GetPrintValue(self, name, default=None):
         if name in self.printvalues:
             return self.printvalues[name]
         return default
-    
+
     def DeletePrintValue(self, name):
         if name in self.printvalues:
             self.printvalues.pop(name)
-    
+
     def ResetPrintValues(self):
         self.printvalues.clear()
 
@@ -252,14 +276,14 @@ class DbGroup(object):
 
     def AddGroup(self, field, alias=None):
         self.groups.append([field, alias])
-    
+
     def Aggregate(self, field, alias, aType, prefix):
         if aType in (_AGGR_TOT, _AGGR_CNT, _AGGR_MAX, _AGGR_MIN, _AGGR_AVG):
             self.fields.append([field, prefix+alias, aType])
         else:
             raise Exception,\
                   """Invalid type for aggregation"""
-    
+
     def ClearFilters(self):
         """
         Resets the filters list.
@@ -267,14 +291,14 @@ class DbGroup(object):
         oldFilters = copy.copy(self.filters)
         del self.filters[:]
         return oldFilters
-    
+
     def AddFilter(self, expr, params=None):
         self.filters.append((expr, params))
         return self
 
     def StoreFilters(self):
         self.filtersSaved.append(copy.deepcopy(self.filters))
-    
+
     def ResumeFilters(self):
         assert len(self.filtersSaved) > 0,\
                """No filters to resume on group"""
@@ -291,7 +315,7 @@ class DbError(object):
         self.description = ""
         self.duplicatedKey = False
         self.duplicatedKeyNumber = -1
-    
+
     def Reset(self):
         self.code =          0
         self.description =   ""
@@ -313,7 +337,7 @@ def ClearCache():
 def EnableChache(ec=True):
     global USE_CACHE
     USE_CACHE = ec
-    
+
 
 # ------------------------------------------------------------------------------
 
@@ -324,15 +348,19 @@ class DbTable(object):
     Provides all the necessary to:
         retrieve data from a table or a group of tables
         insert/update that data
-        treat that data as a group of class variables, one for each 
+        treat that data as a group of class variables, one for each
         retrieved column (field)
     Joins can be of type:
         1:1 relationship: related tables are not updatable or insertable
-        1:N relationship: related tables are updatable and insertable, 
-        with the automatic detection and store of the id that makes the 
+        1:N relationship: related tables are updatable and insertable,
+        with the automatic detection and store of the id that makes the
         relationship.
     In either cases, joins can be INNER JOIN or LEFT JOIN.
     """
+    pb       = None
+    adbStore = None
+
+
     def __init__(self, tabName, tabAlias=None, primaryKey="id",\
                  fields="*", writable=None, mandatoryFields="",\
                  defaults=None, db=None, getFilters=None, forceInsert=False):
@@ -342,18 +370,18 @@ class DbTable(object):
         Optional parameters are:
             tabAlias  (string) table alias
             primayKey (string) column name (default="id")
-            fields    (string) fields to retrieve, separated by commas 
+            fields    (string) fields to retrieve, separated by commas
                       (default="*")
             writable  (bool)   flag to allow insert/update/delete operations
                       (default=__defOpenMode__==OPENMODE_STANDARD)
-            mandatoryFields (string) list of all the mandatory columns on 
+            mandatoryFields (string) list of all the mandatory columns on
                       the table, separated by commas (default="")
-            defaults  (dictionary) default values for fields that require 
+            defaults  (dictionary) default values for fields that require
                       initial values (default={})
-            database  (DB) database object used to execute all the database 
+            database  (DB) database object used to execute all the database
                       commands (default=__connection__)
         """
-        if db is None: 
+        if db is None:
             db = adb.db.__database__
         if db is None:
             raise Exception, "Database connection is missing"
@@ -430,17 +458,17 @@ class DbTable(object):
                           """Error retrieving '%s' structure: %s, %s"""\
                           % (tabName, db.dbError.code,\
                              db.dbError.description)
-    
+
     def AddLimit(self, max=1):
         self._info.limit = max
-    
+
     def SetLimits(self, max=0, rows=None):
         self._info.limit = max
         self._info.limit_rows = rows
-    
+
     def GetLimits(self):
         return self._info.limit, self._info.limit_rows
-    
+
     def ShowDialog(self, show=None):
         """
         Imposta il parent dei dialog di attesa automatici.
@@ -448,7 +476,7 @@ class DbTable(object):
         """
         pass
 #        self._info.waitDialog = show
-    
+
     def _SetFields(self, fields):
         """
         Internal, stores field names in a list.
@@ -477,11 +505,11 @@ class DbTable(object):
         oldFilters = copy.deepcopy(self._info.filters)
         del self._info.filters[:]
         return oldFilters
-    
+
     def AddFilter(self, expr, *params):
         self._info.filters.append((expr, params))
         return self
-    
+
     def ClearBaseFilters(self):
         """
         Resets the base filters list.
@@ -501,7 +529,7 @@ class DbTable(object):
         oldHavings = copy.deepcopy(self._info.group.filters)
         del self._info.group.filters[:]
         return oldHavings
-    
+
     def AddHaving(self, expr, params=None):
         self._info.group.filters.append((expr, params))
         return self
@@ -513,7 +541,7 @@ class DbTable(object):
         oldFilters = copy.copy(self._info.orders)
         del self._info.orders[:]
         return oldFilters
-    
+
     def AddOrder(self, order, orderType=ORDER_ASCENDING):
         """
         Adds one order expression.
@@ -532,7 +560,7 @@ class DbTable(object):
         Adds a reversed order expression.
         """
         return self.AddOrder(order, ORDER_DESCENDING)
-    
+
     def AddJoin(self, table, alias=None, idLeft=None, join=JOIN_ALL,\
                 fields = "*", where=None, order=None, idRight=None,\
                 dbTabClass=None, pkRight="id", relexpr=None):
@@ -542,7 +570,7 @@ class DbTable(object):
         alias   (string) desired table alias
                 (default: table name)
         idLeft  (string) left table's column name
-                (default: template for foreign keys based on right table, see 
+                (default: template for foreign keys based on right table, see
                 SetForeignKeyTemplate function)
         fields  (string) list of fields to retrieve, separated by commas
                 (default: "*")
@@ -624,7 +652,7 @@ class DbTable(object):
         alias   (string) desired table alias
                 (default: table name)
         idRight (string) right table's column name
-                (default: template for foreign keys based on left table, see 
+                (default: template for foreign keys based on left table, see
                 SetForeignKeyTemplate function)
         fields  (string) list of fields to retrieve, separated by commas
                 (default: "*")
@@ -649,11 +677,11 @@ class DbTable(object):
             for order in cust.ord:
                 print "%d, %s" % (order.number, order.date)
         The 1:N join causes a unique SELECT performed at left table Retrieve
-        time to obtain informations relative on that table, plus eventual 
-        joined tables; informations relative to the table joined with 
-        method AddMultiJoin are retrieved separately everytime cursor 
-        changes position; in the example, a sigle SELECT is done over the 
-        database to retrieve customers, and a SELECT on the orders is made 
+        time to obtain informations relative on that table, plus eventual
+        joined tables; informations relative to the table joined with
+        method AddMultiJoin are retrieved separately everytime cursor
+        changes position; in the example, a sigle SELECT is done over the
+        database to retrieve customers, and a SELECT on the orders is made
         for every customer examined.
         """
         if writable is None:
@@ -662,7 +690,7 @@ class DbTable(object):
             alias = table
         if dbTabClass is None:
             dbTabClass = DbTable
-        dbrel = dbTabClass(table, alias, primaryKey=pkRight, fields=fields, 
+        dbrel = dbTabClass(table, alias, primaryKey=pkRight, fields=fields,
                            writable=writable, db=self._info.db)
         if idLeft is None:
             idLeft = dbrel._info.primaryKey
@@ -713,7 +741,7 @@ class DbTable(object):
                 return dbs
             return None
         addchildrens(dbs, self)
-        
+
         for db in dbs:
             del db._info.fieldNames[:]
             db._info.fieldNames = []
@@ -722,7 +750,7 @@ class DbTable(object):
 
     def AggregateOnItself(self):
         return self.Synthetize()
-    
+
     def Aggregate(self, table=None, alias=None, idRight=None,\
                      join=JOIN_ALL, idLeft=None, pkRight="id"):
         """
@@ -731,7 +759,7 @@ class DbTable(object):
         alias   (string) desired table alias
                 (default: table name)
         idRight (string) right table's column name
-                (default: template for foreign keys based on left table, see 
+                (default: template for foreign keys based on left table, see
                 SetForeignKeyTemplate function)
         idLeft  (string) left table column name
                 (default: table's primary key column name)
@@ -789,7 +817,7 @@ class DbTable(object):
                 alias = group
         addedGroup = self._info.group.AddGroup(group, alias)
         setattr(self, alias, None)
-    
+
     def ChangeGroupExpression(self, alias, expr):
         g = self._info.group.groups
         for n, (g_expr, g_alias) in enumerate(g):
@@ -797,10 +825,10 @@ class DbTable(object):
                 g[n][0] = expr
                 return True
         raise Exception, "Group not found"
-    
+
     def GetGroup(self):
         return self._info.group
-    
+
     def _Aggregate(self, field, alias, atype, prefix):
         if alias is None:
             if '.' in field:
@@ -810,31 +838,31 @@ class DbTable(object):
         self._info.group.Aggregate(field, alias, atype, prefix)
         setattr(self, prefix+(alias or ''), None)
         return self
-    
+
     def AddTotalOf(self, field, alias=None):
         return self._Aggregate(field, alias, _AGGR_TOT, "total_")
-    
+
     def AddCountOf(self, field, alias=None):
         return self._Aggregate(field, alias, _AGGR_CNT, "count_")
 
     def AddMinimumOf(self, field, alias=None):
         return self._Aggregate(field, alias, _AGGR_MIN, "min_")
-    
+
     def AddMaximumOf(self, field, alias=None):
         return self._Aggregate(field, alias, _AGGR_MAX, "max_")
-    
+
     def AddAverageOf(self, field, alias=None):
         self._info.group.Aggregate(field, alias, _AGGR_AVG, "avg_")
         return self
 
     def _MakeSQL_Fields(self, dbs):
-        
+
         fields = ""
         offset = 0
         for db in dbs:
-            
+
             nf = 0
-            
+
             if not db._info.synthetized:
                 for field in db._info.fields:
                     if '.' in field or field == "NULL":
@@ -845,7 +873,7 @@ class DbTable(object):
                             fields += " AS %s_%s" % (db._info.tableAlias, field)
                         fields += ", "
                 nf = len(db._info.fieldNames)
-            
+
             af = db._info.addedFields
             for group, alias in db._info.group.groups:
                 do = True
@@ -865,7 +893,7 @@ class DbTable(object):
                     fields += 'NULL'
                 fields += ", "
                 nf += 1
-            
+
             for field, alias, aType in db._info.group.fields:
                 if not '.' in field:
                     field = "%s.%s" % (db._info.tableAlias, field)
@@ -887,22 +915,22 @@ class DbTable(object):
                 elif aType == _AGGR_CNT:
                     fields += "COUNT(%s)%s, " % (field, alias)
                 nf += 1
-            
+
             for field, alias in db._info.addedFields:
                 fields += field
                 if alias:
                     fields += " AS %s" % alias
                 fields += ", "
                 nf += 1
-            
+
             if self._info.iRoot is None and db != self:
                 db._info.fieldsOffset = offset
             offset += nf
-            
+
         fields = fields[:-2]
-        
+
         return fields
-    
+
     def _MakeSQL_Joins(self, dbs):
         tables = ""
         if len(dbs)>1:
@@ -924,51 +952,51 @@ class DbTable(object):
                 else:
                     tables += " ON %s" % rel.expression
         return tables, []
-    
+
     def SetRelation(self, expr):
         self._info.relation.expression = expr
-    
+
     def _MakeSQL_Tables(self, dbs):
-        
+
         tabFrom = self._info.tableName
         if self._info.tableName != self._info.tableAlias:
             tabFrom += " AS %s" % self._info.tableAlias
         tables = tabFrom #"%s%s" % ("("*(len(dbs)-1), tabFrom)
-        
+
         tab, par = self._MakeSQL_Joins(dbs)
         tables += tab
-        
+
         return tables, par
-    
+
     def _GetITables(self, doJoins=True):
         dbs = [self]
         if doJoins:
             dbs = FindDbiChildrens(self)
         return dbs
-        
+
     def _MakeSQL(self, filterExpr="", *filterParams, **kwargs):
-        
+
         if not kwargs.has_key("doJoins"):   kwargs["doJoins"] =   True
         if not kwargs.has_key("unique"):    kwargs["unique"] =    False
-        
+
         doJoins = kwargs["doJoins"]
-        
+
         if kwargs.has_key("limit"):
             limit = kwargs["limit"]
         else:
             limit = self._info.limit
-        
+
         params = []
         filters = []
-        
+
         if filterExpr:
             #if len(filterParams) == 1:
                 #filterParams = filterParams[0]
             filters.append((filterExpr, filterParams))
-        
+
         #iRoot = self
         dbs = self._GetITables(doJoins)
-        
+
         count_only = 'getcount' in kwargs
         if count_only:
             fields = "COUNT(*)"
@@ -983,36 +1011,36 @@ class DbTable(object):
                 limit_rows = kwargs["limit_rows"]
             else:
                 limit_rows = self._info.limit_rows
-        
+
         tables, par = self._MakeSQL_Tables(dbs)
         params += par
-        
+
         orders = []#self._info.orders
-        
+
         for db in dbs:
-            
+
             if db._info.basefilters:
                 filters += db._info.basefilters
-            
+
             if db._info.filters:# and\
                #(not filterExpr or\
                 #(self._info.getFilters)):# and\
                  ##db._info.relation.joinType == JOIN_ALL)):
                 filters += db._info.filters
-            
+
             if db._info.orders:
                 orders += db._info.orders
-            
+
             del db._info.modifiedRecords[:]
             del db._info.deletedRecords[:]
-        
+
         where = ""
         if filters:
             for expr, par in filters:
                 if where: where += " and "
                 where += "(%s)" % expr
                 if "%" in expr.replace("%%",""): params += par#params.append(par)
-        
+
         group = ""
         if self._info.group is not None:
             af = self._info.addedFields
@@ -1027,14 +1055,14 @@ class DbTable(object):
                 group += grp
                 group += ", "
             group = group[:-2]
-        
+
         havings = ""
         for db in dbs:
             for expr, par in db._info.group.filters:
                 if havings: havings += " and "
                 havings += "(%s)" % expr
                 if r"%" in expr: params.append(par)
-        
+
         order = ""
         for oExpr, oType in orders:
             if order:
@@ -1042,7 +1070,7 @@ class DbTable(object):
             order += oExpr
             if oType == ORDER_DESCENDING:
                 order += " DESC"
-        
+
         if doJoins:
             mParent = self._info.mParent
             if mParent:
@@ -1063,14 +1091,14 @@ class DbTable(object):
                     where += "%s%%s" % rel.operator#, keyValue)
                     params.append(keyValue)
                     self._info.defaults[rel.rightId] = keyValue
-        
+
         cmd = "SELECT %s" % fields
-        
+
         if kwargs["unique"]:
             cmd += "DISTINCT "
-        
+
         cmd += " FROM %s" % tables
-        
+
         if where:
             cmd += " WHERE %s" % where
         if group:
@@ -1084,76 +1112,76 @@ class DbTable(object):
                 cmd += " LIMIT %d" % limit
             else:
                 cmd += " LIMIT %d,%d" % (limit, limit_rows)
-            
+
         if self._info.debug:
             print "="*60
             print "SQL Construct:\n%s" % cmd
             if params:
                 print "   Parameters:\n%s" % params
             print "="*60
-        
+
         return cmd, params
-    
+
     def GetSqlCount(self, filterExpr="", *filterParams, **kwargs):
         kwargs['getcount'] = True
         return self.Retrieve(filterExpr="", *filterParams, **kwargs)
-    
+
     def Retrieve(self, filterExpr="", *filterParams, **kwargs):
         """
         Retrieve data.
         """
-        
+
         if not kwargs.has_key("doJoins"):   kwargs["doJoins"] =   True
         if not kwargs.has_key("refresh"):   kwargs["refresh"] =   False
         if not kwargs.has_key("nullread"):  kwargs["nullread"] =  False
         doJoins =  kwargs["doJoins"]
         refresh =  kwargs["refresh"]
         nullread = kwargs["nullread"]
-        
+
         if nullread:
-            
+
             self._MakeSQL_Fields(self._GetITables(doJoins))
             self._info.db.Reset()
             for db in self._GetITables(doJoins):
                 db._info.db.Reset()
             logmsg('reset <%s> optimized' % self._info.tableName)
             success = True
-        
+
         else:
-            
+
             cmd, par = self._MakeSQL(filterExpr, *filterParams, **kwargs)
-            
+
             if self._info.debug:
                 print "***RETRIEVE***"
-            
+
             if self._info.waitDialog is not None:
                 wait = GetWaitDialogClass()(self._info.waitDialog, dataread=True)
-            
+
             success = self._info.db.Retrieve(cmd, par,\
                                              asList=self._info.writable)
-            
+
             if self._info.waitDialog is not None:
                 wait.Destroy()
-            
+
             if self._info.debug:
                 if success:
                     print "Success=OK, %d rows extracted" % len(self._info.db.rs)
                 else:
                     print "Extraction failed, reason: %s" % repr(self.GetError())
-        
+
         if 'getcount' in kwargs:
             n = 0
             if len(self._info.rs)>0:
                 if len(self._info.rs[0])>0:
                     n = self._info.db.rs[0][0]
             return n
-        
+
         dbs = [self]
         if doJoins:
             dbs = FindDbiChildrens(self)
-        
+
         if success:
-            
+
             #suboffset = 0
             #def AddChildsOffsets(iRoot, stopDBT):
                 #os = len(iRoot._info.fieldNames)
@@ -1163,10 +1191,10 @@ class DbTable(object):
                             #break
                         #os += AddChildsOffsets(child, stopDBT)
                 #return os
-                
+
             #if self._info.iRoot:
                 #suboffset = AddChildsOffsets(self._info.iRoot, self)
-        
+
             self._info.dbError.Reset()
             if refresh:
                 if self._info.db.rs:
@@ -1219,7 +1247,7 @@ class DbTable(object):
                 db.GetError()
                 db._info.recordCount = -1
                 db._info.recordNumber = -1
-        
+
         return success
 
     def RowNumber(self):
@@ -1227,19 +1255,19 @@ class DbTable(object):
         Returns current cursor position in the internal recordset.
         """
         return self._info.recordNumber
-    
+
     def RowsCount(self):
         """
         Returns number of records retrieved.
         """
         return max(self._info.recordCount, 0)
-    
+
     def GetRecordset(self):
         """
         Returns internal recordset
         """
         return self._info.rs
-    
+
     def SetRecordset(self, rs):
         """
         Sets internal recordset
@@ -1247,19 +1275,19 @@ class DbTable(object):
         self._info.rs = rs
         self._info.recordCount = len(rs)
         self._info.recordNumber = 0
-    
+
     def GetFieldCount(self):
         """
         Returns retrieved fields number.
         """
         return len(self._info.fieldNames)
-    
+
     def GetFieldNames(self):
         """
         Returns a list with all the retrieved fields.
         """
         return self._info.fieldNames
-    
+
     def GetAllColumnsNames(self):
         """
         Returns a list with all the retrieved fields, plus field groups, aggregated fields and added fields
@@ -1273,14 +1301,14 @@ class DbTable(object):
         for g_expr, g_field in self._info.addedFields:
             allcols.append(g_field)
         return allcols
-    
+
     def SetFieldNames(self, fn):
         """
         Set fields to retrieve.
         """
         self._info.fieldNames = fn
         self._info.fieldCount = len(fn)
-    
+
     def GetFieldName(self, fieldNum):
         """
         Returns the name of the field at C{fielNum} position, empty string
@@ -1291,11 +1319,11 @@ class DbTable(object):
         except IndexError:
             name = ""
         return name
-    
+
     def Locate(self, srcfunc, startPos=0):
         """
-        Locate a record in the internal recordset matching condition 
-        expressed in function srcfunc, starting at startPos position 
+        Locate a record in the internal recordset matching condition
+        expressed in function srcfunc, starting at startPos position
         (0=first record by default).
         Search is done by variable names and the entire dbtable is passed to
         the searching function for the filter evaluation.
@@ -1307,18 +1335,18 @@ class DbTable(object):
                 found = True
                 break
         return found
-    
+
     def LocateRow(self, srcfunc, startPos=0, position=True):
         """
-        Locate a record in the internal recordset matching condition 
-        expressed in function srcfunc, starting at startPos position 
+        Locate a record in the internal recordset matching condition
+        expressed in function srcfunc, starting at startPos position
         (0=first record by default).
         Search is done by direct recordset reference, no variable names are
-        updated and only a row of the recordset is passed to the searching 
+        updated and only a row of the recordset is passed to the searching
         function for the filter evaluation.
         LocateRow is faster than Locate, especially on large recordsets;
         however, the searching function cannot test field variables (because
-        they are not updated in the searching cycle): it must refer to the 
+        they are not updated in the searching cycle): it must refer to the
         recordset columns by their indexes.
         """
         found = False
@@ -1330,18 +1358,18 @@ class DbTable(object):
                 found = True
                 break
         return found
-    
+
     def LocateRS(self, srcfunc, startPos=0, position=True):
         """
-        Locate a record in the internal recordset matching condition 
-        expressed in function srcfunc, starting at startPos position 
+        Locate a record in the internal recordset matching condition
+        expressed in function srcfunc, starting at startPos position
         (0=first record by default).
         Search is done by direct recordset reference, no variable names are
-        updated and only a row of the recordset is passed to the searching 
+        updated and only a row of the recordset is passed to the searching
         function for the filter evaluation.
         LocateRow is faster than Locate, especially on large recordsets;
         however, the searching function cannot test field variables (because
-        they are not updated in the searching cycle): it must refer to the 
+        they are not updated in the searching cycle): it must refer to the
         recordset columns by their indexes.
         If found, returns the row number, otherwise None.
         """
@@ -1352,10 +1380,10 @@ class DbTable(object):
                 if position:
                     return recno
         return None
-    
+
     def _GetFieldNames(self):
         """
-        Internal, read field names from the table, and check primary key 
+        Internal, read field names from the table, and check primary key
         field position in fields list.
         """
         self._info.fieldCount = 0
@@ -1369,16 +1397,16 @@ class DbTable(object):
             if field[0] == self._info.primaryKey:
                 self._info.primaryCol = ncol
             self._info.fieldCount += 1
-        
+
         if self._info.primaryCol < 0:
             raise Exception,\
                   """Unable to detect primary key column on table '%s'"""\
                   % self._info.tableName
-        
+
         if len(self._info.fields) > 0:
             if self._info.fields[0] == "*":
                 self._info.fields = []+self._info.fieldNames
-        
+
         return self._info.fieldNames
 
     def _GetField(self, field, iRoot=True):
@@ -1444,7 +1472,7 @@ class DbTable(object):
     def _IsDetailed(self):
         return len(self._info.group.fields) == 0 or\
                len(self._info.group.groups) > 0
-    
+
     def GetFieldType(self, fieldName):
         """
         Returns fieldName type; it can be:
@@ -1481,7 +1509,7 @@ class DbTable(object):
         self._info.recordNumber = 0
         self._UpdateTableVars()
         return True
-    
+
     def MoveLast(self):
         """
         Moves internal record pointer to the last one, and updates all the
@@ -1491,7 +1519,7 @@ class DbTable(object):
         self._info.recordNumber = self._info.recordCount-1
         self._UpdateTableVars()
         return True
-    
+
     def CheckNextSkipping(self):
         """
         Check if a call to MoveNext will skip current row pointer.
@@ -1504,7 +1532,7 @@ class DbTable(object):
                     willskip = False
                     break
         return willskip
-    
+
     def MoveNext(self):
         """
         Moves internal record pointer to the next one, and updates all the
@@ -1525,7 +1553,7 @@ class DbTable(object):
                 self._UpdateTableVars()
                 skipped = True
         return skipped
-    
+
     def MovePrevious(self):
         """
         Moves internal record pointer to the previous one, and updates all
@@ -1617,17 +1645,17 @@ class DbTable(object):
             self._info.recordNumber = recno
             appended = True
         return appended
-    
+
     def Delete(self):
         return self.DeleteRow()
-    
+
     def Erase(self):
         out = False
         if self.Delete():
             out = self._SaveRecords([], self._info.deletedRecords)
         return out
 
-    
+
     def DeleteRow(self):
         """
         Phisically deletes the record on the table based on the internal
@@ -1669,7 +1697,7 @@ class DbTable(object):
 
     def Save(self):
         return self.SaveAll()
-    
+
     def SaveAll(self):
         """
         Causes a call to SaveRecord for all modified (or inserted) records.
@@ -1697,7 +1725,7 @@ class DbTable(object):
                     out = False
                 child.SetDebug(False)
         return out
-    
+
     def _DeleteMultiChildrens(self, masterId):
         """
         Updates multi joined tables (on delete)
@@ -1712,13 +1740,13 @@ class DbTable(object):
                     % (info.tableName, info.tableName, info.relation.rightId)
                 out = info.db.Execute(cmd, masterId)
         return out
-    
+
     def WriteAll(self, wa=True):
         self._info.writeall = wa
-    
+
     def AddDeletion(self, did):
         self._info.deletedRecords.append(did)
-    
+
     def _SaveRecords(self, records, deletions):
         """
         Update all modified records on the table.
@@ -1732,15 +1760,15 @@ class DbTable(object):
             raise Exception,\
                   """Table '%s' is retrieved in readonly mode, """\
                   """cannot write""" % self._info.tableName
-        
+
         setCol = ""
         for field in self._info.fieldNames:
             if (field != info.primaryKey or info.forceInsert):
                 setCol += "%s=%%s, " % field
         setCol = setCol[:-2]
-        
+
         curid = self.__getattr__(self._info.primaryKey)
-        
+
         #search in the recordset to detect rows to update and insert
         recInsert = []
         parInsert = []
@@ -1748,7 +1776,7 @@ class DbTable(object):
         for recno in range(self.RowsCount()):
             recId = info.rs[recno][info.primaryCol]
             if recId is None or recId in records or info.writeall or info.forceInsert:
-                # move to actual inserting record to update variables 
+                # move to actual inserting record to update variables
                 # if needed in (overriden) RecordInserting callback
                 if recId is None or info.forceInsert:
                     self.RecordInserting(recno)
@@ -1764,10 +1792,10 @@ class DbTable(object):
                 else:
                     par.append(recId)
                     parUpdate.append(par)
-        
+
         do = True
         self._info.dbError.Reset()
-        
+
         #delete recordset deleted rows from table
         parDelete = deletions
         if parDelete and do and not info.forceInsert:
@@ -1783,7 +1811,7 @@ class DbTable(object):
                         print "="*60
                     written = info.db.Execute(cmdDelete, pardel)
             #del deletions[:]
-        
+
         #insert new rows into table
         if parInsert:
             cmdInsert = "INSERT INTO %s SET %s"\
@@ -1798,17 +1826,17 @@ class DbTable(object):
                 written = info.db.Execute(cmdInsert, parins)
                 if written:
                     curid = info.db.GetInsertedId()
-                    
+
                     # update inserted id in the recordset
                     info.rs[recInsert[recins]][info.primaryCol] = curid
-                    
+
                     # update inserted id class variable
                     self.__setattr__(info.primaryKey, curid)
-                    
-                    ## now refresh all columns in the current record 
-                    ## to update joined tables and eventually default 
+
+                    ## now refresh all columns in the current record
+                    ## to update joined tables and eventually default
                     ## values defined at database level
-                    ## recordset will not be modified, except for all 
+                    ## recordset will not be modified, except for all
                     ## columns in the (just inserted) actual row
                     #filterExpr = "%s.%s=%%s"\
                                #% (self._info.tableAlias,\
@@ -1817,7 +1845,7 @@ class DbTable(object):
                     self.RecordInserted()
                 else:
                     do = False
-        
+
         #update modified rows into table
         if parUpdate and do and not info.forceInsert:
             cmdUpdate = "UPDATE %s SET %s WHERE %s.%s=%%s"\
@@ -1838,12 +1866,12 @@ class DbTable(object):
                 else:
                     break
             del records[:]
-        
+
         if do and curid:
             do = self._UpdateMultiChildrens(curid)
-        
+
         return do
-    
+
     def RecordInserting(self, row):
         """
         Callback before new record insertion into the database.
@@ -1877,25 +1905,25 @@ class DbTable(object):
         Returns the record id.
         """
         return self.__getattr__(self._info.primaryKey)
-    
+
     def GetTableName(self):
         """
         Returns managed table name.
         """
         return self._info.tableName
-    
+
     def GetTableAlias(self):
         """
         Returns managed table alias.
         """
         return self._info.tableAlias
-    
+
     def GetTable(self):
         """
         Returns self ref
         """
         return self
-    
+
     def GetFieldFromRow(self, field, row):
         out = None
         if self._info.iRoot:
@@ -1910,7 +1938,7 @@ class DbTable(object):
                       % (field, self._info.tableAlias)
             out = root._info.rs[row][col]
         return out
-    
+
     def Get(self, id, doJoins=True):
         """
         Retrieve record with corresponding id.
@@ -1929,7 +1957,7 @@ class DbTable(object):
         nullread = (id == -1)
         success = self.Retrieve(filter, id, doJoins=doJoins, nullread=nullread)
         return success
-    
+
     def New(self, **kwargs):
         """
         Automatically appends to the table the new record created on the fly
@@ -1972,7 +2000,7 @@ class DbTable(object):
 
     def IsEmpty(self):
         return self.RowsCount() == 0
-    
+
     def OneRow(self):
         return self.RowsCount() == 1
 
@@ -1987,19 +2015,19 @@ class DbTable(object):
         Returns True if record position is on the last one.
         """
         return self.RowNumber() < 0 or self.RowNumber() == self.LastRow()
-    
+
     def IsNewRow(self):
         """
         Returns True if primary key is None.
         """
         return getattr(self, self._info.primaryKey) is not None
-    
+
     def IsWritable(self):
         """
         Returns True if recordset is updatable.
         """
         return self._info.writable
-    
+
     def HasError(self):
         return (self._info.dbError.code > 0) or\
                (self._info.dbError.description != "")
@@ -2050,18 +2078,18 @@ class DbTable(object):
     def StoreFilters(self):
         i = self._info
         i.filtersSaved.append(copy.deepcopy(i.filters))
-    
+
     def DeletedRows(self):
         return self._info.deletedRecords
-    
+
     def IsDeleted(self):
         curid = self.__getattr__(self._info.primaryKey)
         return curid in self._info.deletedRecords
-    
+
     def HasModifies(self):
         """
         Checks wheter dbtable is modified or not: check is done over the
-        recordset, it is true if a row is modified or deleted.  
+        recordset, it is true if a row is modified or deleted.
         It is recursively done on all multichildren also.
         """
         mod = len(self._info.modifiedRecords)>0
@@ -2073,7 +2101,7 @@ class DbTable(object):
                 if mod:
                     break
         return mod
-    
+
     def ResumeFilters(self):
         i = self._info
         assert len(i.filtersSaved) > 0,\
@@ -2090,7 +2118,7 @@ class DbTable(object):
 
     def SetSilent(self, sil=True):
         self._info.updateMChildrens = not sil
-    
+
     def SetRowModified(self):
         out = False
         if self.IsWritable():
@@ -2101,7 +2129,7 @@ class DbTable(object):
                     self._info.modifiedRecords.append(recid)
                     out = True
         return out
-    
+
     def _UpdateTableVars(self, iRoot=True):
         """
         Updates all the class field-variables in respect at the (class)
@@ -2149,17 +2177,17 @@ class DbTable(object):
             for expr, field in self._info.addedFields:
                 #added expressions
                 self.__setattr__(field, None, setChanged=False)
-        
+
         #recursive variables update for all inline childrens
         if self._info.updateIChildrens:
             for child in self._info.iChildrens:
                 child._UpdateTableVars()
-        
+
         if self._info.updateMChildrens:
             success = success and self.UpdateChildrens()
-        
+
         return success
-    
+
     def UpdateChildrens(self):
         success = True
         #updates all multi-joined tables recordsets
@@ -2206,7 +2234,7 @@ class DbTable(object):
         elif valType == float:   newVal = float(0)
         else:                    newVal = None
         self.__setattr__(field, newVal)
-    
+
     def _SetDefaults(self, updateRS=False):
         """
         Internal, initializes field class vars with defaults values
@@ -2238,14 +2266,14 @@ class DbTable(object):
         self._info.iterIndex = 0
         self._info.iterCount = self._info.recordCount
         return self
-    
+
     def next(self):
         if self._info.iterIndex >= self._info.iterCount:
             raise StopIteration
         self.MoveRow(self._info.iterIndex)
         self._info.iterIndex += 1
         return self
-    
+
     def __len__(self):
         return max(0, (self._info.recordCount or 0))
 
@@ -2260,18 +2288,18 @@ class DbTable(object):
 
     def SetVar(self, name, value):
         self._info.externalData.dict[name] = value
-    
+
     def GetVar(self, name):
         try:
             out = self._info.externalData.dict[name]
         except IndexError:
             out = None
         return out
-    
+
     def DelVar(self, name):
         if self._info.externalData.dict.has_key(name):
             self._info.externalData.dict.pop(name)
-    
+
     def GetCountOf(self, filtdef=None, func=None):
         """
         Counts records and return total(s).
@@ -2291,7 +2319,7 @@ class DbTable(object):
                 flt = lambda *args: True
             totals.append(0)
             filters.append(flt)
-        
+
         rs = self.GetRecordset()
         for row in range(self.RowsCount()):
             for n in range(numtot):
@@ -2299,20 +2327,20 @@ class DbTable(object):
                     totals[n] += 1
             if func is not None:
                 func(self, row)
-        
+
         if numtot > 1:
             out = totals
         else:
             out = totals[0]
-        
+
         return out
-    
+
     def GetTotalOf(self, sumdef, cbf=None):
         """
         Sum column(s) and return total(s).
         sumdef can be a string (1 column sum) or a tuple of:
         - strings for more columns on the same table;
-        - 2/3-tuples for columns on joined tables and/or for filtering 
+        - 2/3-tuples for columns on joined tables and/or for filtering
         rows:
         - dbtable if the column is on a joined table
         - column name
@@ -2346,7 +2374,7 @@ class DbTable(object):
             colpos.append(tab._GetFieldIndex(col, inline=True))
             totals.append(0)
             filters.append(flt)
-        
+
         if self._info.iRoot is None:
             rs = self.GetRecordset()
             n = self.RowsCount()
@@ -2359,17 +2387,17 @@ class DbTable(object):
                     totals[n] += rs[row][colpos[n]] or 0
             if cbf is not None:
                 cbf(self, row)
-        
+
         if numtot > 1:
             out = totals
         else:
             out = totals[0]
-        
+
         return out
-    
+
     def SetDebug(self, debug=True):
         self._info.debug=debug
-    
+
     def SetFlatView(self, f=True):
         """
         Set flat view mode.
@@ -2386,22 +2414,22 @@ class DbTable(object):
         a.MoveNext() otherwise
         """
         self._info.flatView = f
-    
+
     def IsFlatView(self):
         return self._info.flatView
-    
+
     def ClearFlatViewGroups(self):
         """
         Clear all flat groups
         """
         del self._info.flatViewGroups[:]
-    
+
     def AddFlatViewGroup(self, db):
         """
         Adds a flat group: it bust be a multijoined table
         """
         self._info.flatViewGroups.append(db)
-    
+
     def _RaiseFlatViewMoveError(self):
         """
         Only MoveFirst and MoveNext can be done in flat view mode, here it is
@@ -2409,7 +2437,7 @@ class DbTable(object):
         """
         raise Exception,\
               """Sorry, only MoveNext in flat view mode"""
-    
+
     def __setattr__(self, field, content, setChanged=True):
         try:
             if field in self._info.fieldBooleans and type(content) != int:
@@ -2472,12 +2500,12 @@ class DbTable(object):
                 n = info.relTab.index(table)
                 return info.relDb[n]
         raise TypeError, """Scriptable index bust be a table name"""
-    
+
     def _GetDbMem(self):
         raise Exception, "Not implemented"
         if self._info.iRoot:
             raise Exception, "Not implemented on joined table"
-    
+
     def SeekOrCreate(self, key):
         """
         Searches for primary column value = key, creates a new row if not found
@@ -2496,11 +2524,11 @@ class DbTable(object):
             self.CreateNewRow()
             self.__setattr__(i.primaryKey, key)
         return add
-    
+
     def _GetStructure(self):
         if self._info.db._dbType == 'mysql':
             des = self._info.description
-            return tuple([(name, self._info.db.STRMAP_TYPES[mType], mLen, dec) 
+            return tuple([(name, self._info.db.STRMAP_TYPES[mType], mLen, dec)
                           for name, mType, unk1, mLen, mLen2, dec, unk2 in des])
 
     def SavePosition(self):
@@ -2509,14 +2537,14 @@ class DbTable(object):
         for child in childs:
             l+=child.SavePosition()
         return l
-    
+
     def RestorePosition(self, lRecno):
         for t in lRecno:
             if self._info.debug:
                 print "table:%s recno:%s" % (t[0], t[1])
             t[0]._ForceMoveRow(t[1])
         pass
-        
+
 
     def _ForceMoveRow(self, recno):
         skipped = False
@@ -2525,7 +2553,7 @@ class DbTable(object):
             self._UpdateTableVars()
             skipped = True
         return skipped
-    
+
     def GetNewEAN13code(self, field, prefix=''):
         table = self._info.tableName
         cmd = "SELECT MAX(%s) FROM %s" % (field, table)
@@ -2551,16 +2579,16 @@ class DbTable(object):
         import reportlab.graphics.barcode.eanbc as eanbc
         new += eanbc.Ean13BarcodeWidget._checkdigit(new)
         return new
-    
+
     def ExportCSV(self, filename, progrfunc=None, expidcol=False, headings=True,
                   delimiter=None, quotechar=None,
                   doublequote=None, quoting=None):
-        
+
         if delimiter is None: delimiter = CSVFORMAT_DELIMITER
         if quotechar is None: quotechar = CSVFORMAT_QUOTECHAR
         if doublequote is None: doublequote = True
         if quoting is None: quoting = int(CSVFORMAT_QUOTING)
-        
+
         def strdate(x):
             if x is None: return ''
             return x.Format().split(' ')[0]
@@ -2575,7 +2603,7 @@ class DbTable(object):
             return str(x)
         def strnone(x):
             return ''
-        
+
         def strconv(val):
             if type(val) in (int, long):
                 return locale.format('%.0f', val)
@@ -2591,19 +2619,19 @@ class DbTable(object):
                 return ''
             else:
                 pass
-        
+
         if hasattr(filename, 'write'):
             fh = filename
         else:
             fh = open(filename, 'wb')
-        
+
 #        writer = csv.writer(fh)
-#        
+#
 #        d = writer.dialect
 #        d.delimiter = CSVFORMAT_DELIMITER
 #        d.quotechar = CSVFORMAT_QUOTECHAR
 #        d.quoting = int(CSVFORMAT_QUOTING)
-        
+
         writer = csv.writer(fh,
                             delimiter=delimiter,
                             quotechar=quotechar,
@@ -2611,18 +2639,18 @@ class DbTable(object):
                             skipinitialspace=False,
                             lineterminator='\r\n',
                             quoting=quoting)
-        
+
         csvrs = []
-        
+
         rs = self.GetRecordset()
         pkc = self._info.primaryCol
-        
+
         if headings:
             #intestazioni di colonna
-            csvrs.append([self.GetFieldName(col) 
+            csvrs.append([self.GetFieldName(col)
                           for col in range(self.GetFieldCount())
                           if col != pkc or expidcol])
-        
+
         for row, rec in enumerate(rs):
             crs = []
             for col in range(self.GetFieldCount()):
@@ -2632,26 +2660,26 @@ class DbTable(object):
             csvrs.append(crs)
             if callable(progrfunc):
                 progrfunc(row, rec)
-        
+
         writer.writerows(csvrs)
-        
+
         if fh != filename:
             fh.close()
-    
+
     def MakeFiltersDict(self, filters):
         assert isinstance(filters, (list, tuple))
         keys = {}
         for name, value in filters:
             keys[name] = value
         return keys
-    
-    
+
+
     def GetEnv(self):
         return self._info.GetEnv()
-    
-    
+
+
     # metodi di classe
-    
+
     @classmethod
     def dita(self, date):
         out = None
@@ -2669,7 +2697,7 @@ class DbTable(object):
         except:
             pass
         return out
-    
+
     @classmethod
     def dtos(cls, date):
         out = ' '*8
@@ -2690,25 +2718,25 @@ class DbTable(object):
         else:
             out = locale.format("%%.%df" % dec, num, sepm, monetary=True)
         return out
-    
+
     @classmethod
     def sepnvi(cls, num, dec=None, sepm=True, zeroblank=False):
         if dec is None:
             dec = NUMDEC_IMP
         return cls.sepn(num, dec, sepm, zeroblank)
-    
+
     @classmethod
     def sepnpr(cls, num, dec=None, sepm=True, zeroblank=False):
         if dec is None:
             dec = NUMDEC_PRZ
         return cls.sepn(num, dec, sepm, zeroblank)
-    
+
     @classmethod
     def sepnqt(cls, num, dec=None, sepm=True, zeroblank=False):
         if dec is None:
             dec = NUMDEC_QTA
         return cls.sepn(num, dec, sepm, zeroblank)
-    
+
     @staticmethod
     def samefloat(f1, f2, dec=2):
 #        return abs((f1 or 0)-(f2 or 0))<0.0000001
@@ -2720,11 +2748,11 @@ class DbTable(object):
             f2 = 0
         mask = '%%.%df' % dec
         return (mask % (max(f1,f2)-min(f1,f2))) == (mask % 0)
-    
+
     @staticmethod
     def round(value, decimals=0):
         return round(value, decimals)
-    
+
     @classmethod
     def tabinfo(cls, tabname, tabid, field, pk='id'):
         out = None
@@ -2733,7 +2761,7 @@ class DbTable(object):
             if len(db.rs)>0:
                 out = db.rs[0][0]
         return out
-    
+
     @classmethod
     def sqlinfo(cls, sqlcmd, sqlpar=None):
         out = None
@@ -2743,19 +2771,19 @@ class DbTable(object):
             if len(db.rs) == 1:
                 out = db.rs[0][0]
         return out
-    
+
     @classmethod
     def iif(cls, test, v1, v2):
         if test:
             return v1
         return v2
-    
+
     @classmethod
     def GetUnspecifiedVal(cls, val):
         if not val:
             val = '-n/s-'
         return val
-    
+
     @classmethod
     def GetExternalInfo(cls, table, pkval, outcols, pkcol='id'):
         dbe = DbTable(table, primaryKey=pkcol)
@@ -2768,36 +2796,36 @@ class DbTable(object):
                 out.append(getattr(dbe, outcol))
             out = tuple(out)
         return out
-    
+
     # metodi proxy per DbInfo
-    
+
     def ResetPrintFilterValues(self, *args, **kwargs):
         return self._info.ResetPrintFilterValues(*args, **kwargs)
-    
+
     def SetPrintFilterValue(self, *args, **kwargs):
         return self._info.SetPrintFilterValue(*args, **kwargs)
-    
+
     def GetPrintFilterValue(self, *args, **kwargs):
         return self._info.GetPrintFilterValue(*args, **kwargs)
-    
+
     def HasPrintFilterValues(self, *args, **kwargs):
         return self._info.HasPrintFilterValues(*args, **kwargs)
-    
+
     def SetPrintValue(self, *args, **kwargs):
         return self._info.SetPrintValue(*args, **kwargs)
-    
+
     def GetPrintValue(self, *args, **kwargs):
         return self._info.GetPrintValue(*args, **kwargs)
-    
+
     def DeletePrintValue(self, *args, **kwargs):
         return self._info.DeletePrintValue(*args, **kwargs)
-    
+
     def ResetPrintValues(self, *args, **kwargs):
         return self._info.ResetPrintFilterValues(*args, **kwargs)
-    
+
     # -----------------------------------------------------------------------
     #integrazioni per web
-    
+
     def WebRetrieve(self, filterExpr="", *filterParams, **kwargs):
         if 'page_start' in kwargs:
             ps = kwargs.pop('page_start')
@@ -2808,22 +2836,22 @@ class DbTable(object):
             self.SetPageRows(pr)
             self.SetLimits(pr*(ps-1)+0, pr)
         return self.Retrieve(filterExpr, *filterParams, **kwargs)
-    
+
     def SetPageRows(self, pr):
         self._info.page_rows = pr
-    
+
     def GetPageRows(self):
         return self._info.page_rows
-    
+
     def GetSqlPage(self):
         return int(self._info.limit/self.GetPageRows()+.999)+1
-    
+
     def GetSqlPagePrevious(self):
         return self.GetSqlPage()-1
-    
+
     def GetSqlPageNext(self):
         return self.GetSqlPage()+1
-    
+
     def GetSqlPages(self, **kwargs):
         pt = int(float(self.GetSqlCount(**kwargs))/self.GetPageRows()+.999)+1
         pa = self.GetSqlPage()
@@ -2837,10 +2865,10 @@ class DbTable(object):
             else:
                 pe = min(ps+NAVIGATION_PAGES, pt)
         return range(ps, pe, 1)
-    
+
     def GetSqlLastPage(self):
         return int(float(self.GetSqlCount())/self.GetPageRows()+.999)
-    
+
     def GetSqlPagesLast(self):
         return self.GetSqlPages()[-1]
 
@@ -2857,7 +2885,7 @@ class DbTable(object):
         in python, l'accesso al campo 'codice' su pdc si ha con 'pdc.codice',
         mentre l'accesso al campo 'citta' dei clienti si ha con 'pdc.cli.citta'
         Volendo serializzare codice, descrizione, citta si avra':
-        pdc.JSONdump([[pdc, 'codice'], [pdc, 'descriz'], [pdc.cli, 'citta']) 
+        pdc.JSONdump([[pdc, 'codice'], [pdc, 'descriz'], [pdc.cli, 'citta'])
         """
         #rscols = [['%s_%s' % (tab.GetTableAlias().replace('.', '_'), col), tab._GetFieldIndex(col, inline=True)] for tab, col in fields]
         rscols = [['%s_%s' % ({True: item, False: tab.GetTableAlias()}[len(item)>0].replace('.', '_'), col), tab._GetFieldIndex(col, inline=True)] for tab, col in fields]
@@ -2877,10 +2905,318 @@ class DbTable(object):
         base = ', '.join(map(lambda x: repr(GetValues(x)), self.GetRecordset()))
         return '{"totalResultsCount":%d,"%s":[%s]}' % (self.RowsCount(), prefix, base)
 
+#======================================================================================
 
 
+    def SetConnectionStore(self, adbStore=None):
+        if adbStore==None:
+            if self.adbStore == None:
+                import stormdb.dbsto as adbSto
+                adbStore=adbSto.StoreConnection(globalConnection=False)
+            else:
+                adbStore=self.adbStore
+        self.adbStore=adbStore
+
+    def Store(self, adbStore=None):
+        self.SetConnectionStore(adbStore)
+        if self.CheckStore():
+            self.Copy2Store()
+
+    def CheckStore(self, adbStore=None):
+        self.SetConnectionStore(adbStore)
+        self.adeg={}
+        self.CheckStoreTable()
+        return self.Adegua()
+
+    def Move2Store(self, adbStore=None):
+        self.SetConnectionStore(adbStore)
+        if self.pb:
+            self.pb.SetRange(self.RowsCount())
+        for i, r in enumerate(self):
+            if self.pb:
+                self.pb.SetValue(i)
+            cmd='INSERT INTO %s ' % self.GetTableName()
+            setCol = self.MakeSetExpression()
+            cmd = '%s SET %s' % (cmd, setCol)
+            cmd = cmd[:-2]
+            if self.adbStore.Execute(cmd):
+                cmd='DELETE FROM %s where ID=%s' % (self.GetTableName(), r.id)
+                if not self._info.db.Execute(cmd):
+                    logmsg('Move2Store - errore in execute command: %s' % cmd)
+        if self.pb:
+            self.pb.SetValue(0)
+
+    def Copy2Store(self, adbStore=None):
+        self.SetConnectionStore(adbStore)
+        tabName=self._info.tableName
+        fields=self.GetFieldNames()
+        storeTable=DbTable(tabName, db=self.adbStore)
+        self.Retrieve()
+        if self.pb:
+            self.pb.SetRange(self.RowsCount())
+        for i, r in enumerate(self):
+            if self.pb:
+                self.pb.SetValue(i)
+
+            storeTable.Retrieve('id=%s' % r.id)
+            if not storeTable.OneRow():
+                cmd='INSERT INTO %s ' % tabName
+                setCol=self.MakeSetExpression(fields=fields)
+                cmd = '%s SET %s' % (cmd, setCol)
+                cmd = cmd[:-2]
+
+                esito=self.adbStore.Execute(cmd)
+                if not esito:
+                    logmsg('Copy2Store - errore in execute command: %s' % cmd)
+                storeTable.Retrieve('id=%s' % r.id)
+
+            for fn in fields:
+                setattr(storeTable, fn, getattr(self,fn ))
+            storeTable.Save()
+
+        if self.pb:
+            self.pb.SetValue(0)
 
 
+    def MakeSetExpression(self, fields=None):
+        if fields==None:
+            fields=self.GetFieldNames()
+        setCol=''
+        for fn in fields:
+            v=getattr(self,fn )
+            if not v==None:
+                if isinstance(v, mx.DateTime._date) or isinstance(v, mx.DateTime._datetime):
+                    setCol += '%s="%s", ' % (fn, v)
+                elif isinstance(v, unicode) or isinstance(v, str):
+                    v=v.replace('"', '\\"')
+                    setCol += '%s="%s", ' % (fn, v)
+                else:
+                    setCol += '%s=%s, ' % (fn, v)
+        return setCol
+
+
+    def CheckStoreTable(self):
+        import Env
+        blobs = ("BLOB", "LONGBLOB", "VARBINARY", "VARCHAR", "TEXT")
+
+        adeg = []
+        bt = Env.Azienda.BaseTab
+        t = aw.awu.ListSearch(bt.tabelle, lambda x: x[0] == self._info.tableName)
+        name, desc, stru, index, constr, voice =bt.tabelle[t]
+
+        try:
+            tab = DbTable(self._info.tableName, writable=False, db=self.adbStore)
+            tab.Get(-1)
+            tabchange = False
+            tabcreate = False
+            struphys  = tab._GetStructure()
+            #controllo struttura campi
+            for fname, ftype, flen, fdec, fnote, fspec in stru:
+                change = False
+                #test esistenza campo
+                try:
+                    n = aw.awu.ListSearch(struphys, lambda x: x[0] == fname)
+                except IndexError:
+                    adeg.append((fname, ADEG_MISSINGFIELD))
+                    change = True
+                #test congruenza tipologia
+                if not change:
+                    if not struphys[n][1] == "CHAR" and ftype == "STRING":
+                        change = struphys[n][1] != ftype and not\
+                               (struphys[n][1] in blobs and ftype in blobs)
+                        if change:
+                            adeg.append((fname, ADEG_WRONGTYPE))
+
+                #test lunghezza
+                if not change and flen:
+                    change = struphys[n][2] < (flen + (fdec or 0))
+                    if change:
+                        adeg.append((fname, ADEG_WRONGLENGHT))
+
+                #test decimali
+                if not change and type(fdec) is int:
+                    change = struphys[n][3] < fdec
+                    if change:
+                        adeg.append((fname, ADEG_WRONGDECIMALS))
+
+                if change:
+                    tabchange = True
+
+            #controllo indici
+            c = tab._info.db._dbCon.cursor()
+            c.execute("SHOW INDEXES FROM %s" % name)
+            rsi = c.fetchall()
+            for i, (indtype, indexpr) in enumerate(index):
+                if "PRIMARY" in indtype:
+                    indname = "PRIMARY"
+                    keydesc = "primaria"
+                else:
+                    indname = "index%d" % i
+                    keydesc = "#%d" % i
+                expr = ''
+                for r in rsi:
+                    if r[I_KEYNAME] == indname:
+                        expr += ','+r[I_COLUMN]
+                        isun = not r[I_NOTUNIQUE]
+                if expr: expr = expr[1:]
+                do = not expr == indexpr
+                if not do:
+                    stun = ("UNIQUE" in indtype or "PRIMARY" in indtype)
+                    do = (stun and not isun) or (not stun and isun)
+                if do:
+                    if expr:
+                        adegtype = ADEG_REINDEX
+                    else:
+                        adegtype = ADEG_INDEX
+                    adeg.append(("Chiave "+keydesc, adegtype, i))
+                    tabchange = True
+            c.close()
+
+        except Exception, e:
+            #if '1146' in e.args[0]:
+            err = e.args[0]
+            if type(err) in (list, tuple):
+                err = err[0]
+            if '1146' in str(err):
+                adeg.append(('-', ADEG_MISSINGTABLE))
+                for i, (indtype, indexpr) in enumerate(index):
+                    if "PRIMARY" in indtype:
+                        indname = "PRIMARY"
+                        keydesc = "primaria"
+                    else:
+                        indname = "index%d" % i
+                        keydesc = "#%d" % i
+                    adeg.append(("Chiave "+keydesc, ADEG_INDEX, i))
+                tabcreate = True
+            else:
+                aw.awu.MsgDialog(self,\
+                                 """Errore durante la lettura della """
+                                 """tabella %s\n%s"""
+                                 % (name, repr(e.args)))
+                p = self.GetParent()
+                if p.IsModal():
+                    p.EndModal(2)
+                else:
+                    p.Close()
+
+        if tabchange:
+            self.adeg[name] = adeg
+
+        elif tabcreate:
+            self.adeg[name] = adeg
+        else:
+            pass
+
+    def Adegua(self):
+        import Env
+        import wx
+        errors = False
+
+        bt = Env.Azienda.BaseTab
+        db = self.adbStore
+
+        for n, tab in enumerate(self.adeg):
+
+            t = aw.awu.ListSearch(bt.tabelle, lambda x: x[0] == tab)
+            stru = bt.tabelle[t][bt.TABSETUP_TABLESTRUCTURE]
+            indx = bt.tabelle[t][bt.TABSETUP_TABLEINDEXES]
+
+            create = False
+            if self.adeg[tab][0][1] == ADEG_MISSINGTABLE:
+                cmd = "CREATE TABLE %s (" % tab
+                diffs = [(c[bt.TABSETUP_COLUMNNAME], ADEG_MISSINGFIELD)
+                         for c in stru]
+                create = True
+            else:
+                cmd = "ALTER TABLE %s " % tab
+                diffs = [(x[1], x) for x in self.adeg[tab] if x[1] < ADEG_INDEX]
+                diffs.sort()
+                diffs = [x[1] for x in diffs]
+
+            diffs += [x for x in self.adeg[tab] if x[1] >= ADEG_INDEX]
+
+            #diffs = lista differenze:
+            #0 = nome colonna
+            #1 = tipo differenza, ADEG_*
+            #2 = (eventuale) numero indice da (ri)creare
+
+            #creazione/adeguamento struttura campi
+            for d in diffs:
+
+                field = d[0]
+                diff = d[1]
+
+                if field == '-' or diff >= ADEG_INDEX:
+                    continue
+
+                if not create:
+                    if diff == ADEG_MISSINGFIELD:
+                        cmd += "ADD COLUMN "
+                    else:
+                        cmd += "MODIFY COLUMN "
+
+                c = aw.awu.ListSearch(stru, lambda c: c[0] == field)
+                col = stru[c]
+                fname, ftype, flen, fdec, fadd, fdes =\
+                     (col[bt.TABSETUP_COLUMNNAME],
+                      col[bt.TABSETUP_COLUMNTYPE],
+                      col[bt.TABSETUP_COLUMNLENGTH],
+                      col[bt.TABSETUP_COLUMNDECIMALS],
+                      col[bt.TABSETUP_COLUMNATTRIBUTES],
+                      col[bt.TABSETUP_COLUMNDESCRIPTION])
+
+                cmd += "%s %s" % (fname, ftype)
+
+                if flen:
+                    cmd += "(%d" % (flen + (fdec or 0))
+                    if fdec:
+                        cmd += ",%d" % fdec
+                    cmd += ")"
+                if fadd:
+                    cmd += " %s" % fadd
+                if fdes:
+                    fdes = fdes.replace("'", "\\'")
+                    fdes = fdes.replace("%", "perc.")
+                    cmd += " COMMENT '%s'" % fdes
+                cmd += ", "
+
+            #creazione primary key
+            if create:
+                cmd += "PRIMARY KEY (%s), " % stru[0][bt.TABSETUP_COLUMNNAME]
+
+            #creazione/adeguamento indici
+            for d in diffs:
+                if d[1] >= ADEG_INDEX:
+                    i = d[2]
+                    #cancellazione indice se incongruente
+                    if d[1] == ADEG_REINDEX:
+                        cmd += "DROP INDEX index%d, " % i
+                    indtype, indexpr = indx[i]
+                    #creazione nuovo indice
+                    if not create:
+                        cmd += "ADD "
+                    if "UNIQUE" in indtype:
+                        cmd += "UNIQUE "
+                    else:
+                        cmd += "INDEX "
+                    cmd += "index%d (%s), " % (i, indexpr)
+
+            cmd = cmd[:-2]
+            if create:
+                cmd += ") ENGINE = MYISAM"
+
+            if not db.Execute(cmd):
+                if create:
+                    action = "la creazione"
+                else:
+                    action = "l'adeguamento di struttura"
+                aw.awu.MsgDialog(self,
+                                 """Si è verificato un problema durante """
+                                 """%s della tabella %s:\n%s"""\
+                                 % (action, tab, db.dbError.description))
+                #self.GetParent().EndModal(2)
+                errors = True
+        return (not errors)
 
 # ---------------------------------------------------------------------------
 
@@ -2893,14 +3229,14 @@ def SetForeignKeyTemplate(func):
         'id_aliasname' otherwise
     func is the function that returns the foreign key field name, following
     the preferred template.
-    
+
     Example:
         SetForeignKeyTemplate(lambda x: "%sID") =>
         if related table is 'foo' aliased 'bar', then foreign key is
         assumed to be 'fooID' if there is a field called 'fooID', 'barID'
         otherwise.
     """
-    
+
     global __fktemplate__
     __fktemplate__ = func
 
@@ -2944,19 +3280,19 @@ def GetHierarchy(root, level=0, tipo=0):
 
 def FindDbmChildrens(mRoot, offset=""):
     childs = mRoot._info.relDb
-    
-    #print mRoot.GetTableName()    
-    
+
+    #print mRoot.GetTableName()
+
     print "%s %s" % (offset, mRoot)
     offset=offset+"  | "
     for child in childs:
         childs += FindDbmChildrens(child, offset+"   ")
     return childs
 
-    
+
 # ------------------------------------------------------------------------------
-    
-    
+
+
 class SubDbTable(DbTable):
     """
     Sublassed fromto DbTable, its table is another DbTable, to make
@@ -2964,7 +3300,7 @@ class SubDbTable(DbTable):
         SELECT ... FROM (SELECT ... FROM ...) AS ...
     The SELECT construct inside parenthesis is obtained by passed
     DbTable SQL construct.
-    Every column in the subquery recordset is prefixed with subquery 
+    Every column in the subquery recordset is prefixed with subquery
     table name followed by an undercore: table_column
     """
     def __init__(self, subTable, subAlias, primaryKey=None,\
@@ -2975,12 +3311,12 @@ class SubDbTable(DbTable):
             DbTable object
             SubQuery alias name
             tabAlias  (string) table alias
-            database  (DB) database object used to execute all the database 
+            database  (DB) database object used to execute all the database
                       commands (default=__connection__)
         """
         if db is None: db = adb.db.__database__
         if db is None: raise Exception, "Database connection is missing"
-        
+
         self._info = DbInfo()
         self._info.db = db
         self._info.tableName = subAlias
@@ -2992,10 +3328,10 @@ class SubDbTable(DbTable):
         self._info.iterCount = 0
         self._info.relId = None
         self._info.debug = debug
-        
+
         if getFilters is not None:
             self._info.getFilters = getFilters
-            
+
         innerTable = None
         db = self._info.subTable
         while True:
@@ -3011,12 +3347,12 @@ class SubDbTable(DbTable):
                         t._info.fieldsAlias = True
                 break
             db = db._info.subTable
-        
+
         self._info.primaryKey = primaryKey
-        
+
         self._info.group = DbGroup()
         subTable.Get(-1)
-        
+
         if fields is not None:
             if self._info.debug:
                 print "Reading structure of '%s'" % self._info.subAlias
@@ -3048,7 +3384,7 @@ class SubDbTable(DbTable):
                       """Error retrieving '%s' structure: %d, %s"""\
                       % (subAlias, self._info.db.dbError.code,\
                          self._info.db.dbError.description)
-    
+
     def _MakeSQL_Fields(self, *args, **kwargs):
         fields = DbTable._MakeSQL_Fields(self, *args, **kwargs)
         childs = []
@@ -3059,9 +3395,9 @@ class SubDbTable(DbTable):
             if not isinstance(db, SubDbTable): break
         #self._info.fieldsOffset = childs[-1]._info.fieldsOffset + len(childs[-1]._info.fieldNames)
         return fields
-        
+
     def _MakeSQL_Tables(self, dbs):
-        
+
         tab, par = self._info.subTable._MakeSQL()
         jtb, jpr = self._MakeSQL_Joins(dbs)
         par += jpr
@@ -3100,7 +3436,7 @@ class SubDbTable(DbTable):
         if success:
             self._UpdateSubVars()
         return success
-    
+
 #    def Retrieve(self, *args, **kwargs):
 #        success = DbTable.Retrieve(self, *args, **kwargs)
 #        #recursive variables update for all inline childrens of any subtable
@@ -3115,7 +3451,7 @@ class SubDbTable(DbTable):
             childs += FindDbiChildrens(db._info.subTable)
             db = db._info.subTable
             if not isinstance(db, SubDbTable): break
-            
+
         for child in childs:
             if child._info.fields:
                 child._info.iRoot = self
@@ -3123,7 +3459,7 @@ class SubDbTable(DbTable):
 
     def _GetFieldNames(self):
         """
-        Internal, read field names from the table, and check primary key 
+        Internal, read field names from the table, and check primary key
         field position in fields list.
         """
         self._info.fieldCount = 0
@@ -3137,12 +3473,12 @@ class SubDbTable(DbTable):
             if fieldName == self._info.primaryKey:
                 self._info.primaryCol = ncol
             self._info.fieldCount += 1
-        
+
         #if self._info.primaryCol < 0:
             #raise Exception,\
                   #"""Unable to detect primary key column on table '%s'"""\
                   #% self._info.tableName
-        
+
         return self._info.fieldNames
 
     def _GetField(self, field, iRoot=True):
@@ -3189,7 +3525,7 @@ class DbMem(DbTable):
             self._SetFields(fields)
             self._GetFieldNames()
         self.Reset()
-    
+
     def SetRecordset(self, rs):
         assert type(rs) in (list, tuple)
         if len(rs)>0:
@@ -3200,14 +3536,14 @@ class DbMem(DbTable):
         self._info.iterCount = 0
         self._info.iterIndex = -1
         self.MoveFirst()
-    
+
     def Reset(self, *args, **kwargs):
         del self._info.rs[:]
         self._info.recordCount = 0
         self._info.recordNumber = -1
         self._info.iterCount = 0
         self._info.iterIndex = -1
-    
+
     def _SetFields(self, fields):
         """
         Internal, stores field names in a list.
@@ -3216,7 +3552,7 @@ class DbMem(DbTable):
             fields = fields.split(",")
         self._info.fields = fields
         return self._info.fields
-    
+
     def _GetFieldNames(self):
         self._info.fieldCount = 0
         self._info.fieldNames = []
@@ -3229,9 +3565,9 @@ class DbMem(DbTable):
             if field == self._info.primaryKey:
                 self._info.primaryCol = ncol
             self._info.fieldCount += 1
-        
+
         return self._info.fieldNames
-    
+
     def Retrieve(self, *args, **kwargs): pass
     def Get(self, *args, **kwargs): pass
     def _WriteRecords(self, *args, **kwargs): pass
@@ -3250,7 +3586,7 @@ class DbMem(DbTable):
             return r
         except:
             return object.__repr__(self)
-    
+
     def GetEnv(self):
         return self._info.GetEnv()
 
@@ -3259,7 +3595,7 @@ class DbMem(DbTable):
 
 
 class SplittedTable(DbMem):
-    
+
     def __init__(self, dbt, qtacol, colonne=1, func=None, qtadefault=None):
         assert isinstance(dbt, DbTable)
         fields = dbt.GetFieldNames()
@@ -3303,7 +3639,7 @@ class SplittedTable(DbMem):
 
 
 class SplittedMultiEticTable(DbMem):
-    
+
     def __init__(self, dbt, qtacol, colonne=1, func=None, qtadefault=None):
         assert isinstance(dbt, DbTable)
         dbs = dbt._GetITables()
@@ -3348,14 +3684,14 @@ class SplittedMultiEticTable(DbMem):
 
 
 class MultiEticList(DbMem):
-    
+
     def __init__(self, dbEtic, colonne=1):
         dbs = dbEtic._GetITables()
         fields = dbEtic._MakeSQL_Fields(dbs).replace(' ', '').replace('.','_').split(',')
         DbMem.__init__(self, ','.join(fields), 'id')
         self._info.dbetic = dbEtic
         self._info.colonne = colonne
-    
+
 #    def __setattr__(self, name, val, **kw):
 #        adb.DbMem.__setattr__(self, name, val, **kw)
 #        if name == 'id' and hasattr(self._info, 'dbetic'):
@@ -3365,7 +3701,7 @@ class MultiEticList(DbMem):
 #                for col in p.GetAllColumnsNames():
 #                    if not col in ('id', 'qtaetic'):
 #                        setattr(self, col, getattr(p, col))
-#    
+#
     def GetPrintTable(self, rptdef, rows, cols, row0, col0,
                       startFunc=None, progrFunc=None, endFunc=None):
         rs0 = self._info.dbetic.GetRecordset()
@@ -3379,7 +3715,7 @@ class MultiEticList(DbMem):
                 rs = [None]*len(rsp[0])
                 rs = [rs]*(cols*(row0-1)+col0-1)
                 self._info.dbetic.SetRecordset(rs+rsp)
-            pt = SplittedMultiEticTable(self._info.dbetic, 'qtaetic', self._info.colonne, 
+            pt = SplittedMultiEticTable(self._info.dbetic, 'qtaetic', self._info.colonne,
                                         progrFunc, qtadefault=1)
         finally:
             if callable(endFunc):
