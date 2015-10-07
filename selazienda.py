@@ -6,17 +6,17 @@
 # Copyright:    (C) 2011 Astra S.r.l. C.so Cavallotti, 122 18038 Sanremo (IM)
 # ------------------------------------------------------------------------------
 # This file is part of X4GA
-# 
+#
 # X4GA is free software: you can redistribute it and/or modify
 # it under the terms of the Affero GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # X4GA is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
@@ -83,41 +83,41 @@ class ListAziende(adb.DbMem):
 
 
 class SelAziendaGrid(dbglib.DbGridColoriAlternati):
-    
+
     def __init__(self, parent, dbaz, *args, **kwargs):
-        
-        dbglib.DbGridColoriAlternati.__init__(self, parent, 
+
+        dbglib.DbGridColoriAlternati.__init__(self, parent,
                                               size=parent.GetClientSizeTuple())
-        
+
         self.dbaz = dbaz
-        
+
         cn = lambda db, col: db._GetFieldIndex(col, inline=True)
-        
+
         _STR = gl.GRID_VALUE_STRING
-        
+
         cols = (\
             ( 60, (cn(dbaz, "codice"),  "Cod.",    _STR, True)),
             (100, (cn(dbaz, "azienda"), "Azienda", _STR, True)),
             (  1, (cn(dbaz, "id"),      "#azi",    _STR, True)),
-        )                                           
+        )
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
-        
+
         canedit = False
         canins = False
-        
+
         self.SetData(dbaz.GetRecordset(), colmap, canedit, canins)
-        
+
         ca = self.colAttr
         face = 'Bitstream Vera Sans'
         ca[0].SetFont(wx.Font(8, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False, face))
         ca[1].SetFont(wx.Font(9, wx.DEFAULT, wx.NORMAL, wx.BOLD, False, face))
 #        self.SetRowHeight(20)
         #self.SetCellDynAttr(self.GetAttr)
-        
+
         map(lambda c:\
             self.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
-        
+
         self.SetFitColumn(1)
         self.AutoSizeColumns()
         sz = wx.FlexGridSizer(1,0,0,0)
@@ -134,21 +134,21 @@ class SelAziendaGrid(dbglib.DbGridColoriAlternati):
 class SelAziendaPanel(aw.Panel):
     """
     Selezione azienda di lavoro.
-    
+
     Vengono settati:
     database dell'azienda
     descrizione dell'azienda
     nome utente
     data di elaborazione
-    
+
     Il Dialog di selezione è modale, e ritorna:
     ID_SELECTED se è avvenuta correttamente la selezione azienda e l'autenticazione
     ID_QUIT     altrimenti
     """
-    
+
     ID_SELECTED = 1
     ID_QUIT = 0
-    
+
     dbaz = None
     x4conn = None
     pswAdmin = None
@@ -158,37 +158,37 @@ class SelAziendaPanel(aw.Panel):
         """
         Costruttore panel selezione azienda.
         """
-        
+
         aw.Panel.__init__(self, *args, **kwargs)
         self.dbaz = ListAziende()
         self.login = True
-        
+
         def ci(x):
             return self.FindWindowById(x)
-        
+
         def cn(x):
             return self.FindWindowByName(x)
-        
+
         SelAziendaFunc(self)
         cn('plugins').Hide()
 
         self.Fit()
         self.Layout()
-        
+
         self.gridaz = SelAziendaGrid(ci(ID_LISTAZIENDE), self.dbaz)
-        
+
         ci(ID_USER).SetValue(Env.Azienda.config.get('Database', 'user'))
-        
+
         def fmt(x):
             return str(x or '').replace('&', '&&')
         l = Env.Azienda.license
-        
+
         self.LoadServerName()
-        
+
         ci(ID_DATAELAB).SetValue(DateTime.today())
-        
+
         self.UpdateUserControls()
-        
+
         for evt, func, cid in ((wx.EVT_BUTTON, self.OnLogin,    ID_LOGIN),
                                (wx.EVT_BUTTON, self.OnSelect,   ID_BTNAZISEL),
                                (wx.EVT_BUTTON, self.OnCreate,   ID_NEWAZI),
@@ -199,33 +199,33 @@ class SelAziendaPanel(aw.Panel):
                                ):
             self.Bind(evt, func, id=cid)
         self.Bind(wx.EVT_CLOSE, self.OnQuit)
-        
+
         self.SetAcceleratorKey('N', ID_NEWAZI,  'Nuova Azienda',     'Crea una nuova azienda')
         self.SetAcceleratorKey('U', ID_UTENTI,  'Setup Utenti',      'Richiama la gestione degli utenti')
         self.SetAcceleratorKey('W', ID_WKSETUP, 'Setup Workstation', 'Richiama l\'impostazione della workstation')
-        
+
         self.Bind(gl.EVT_GRID_SELECT_CELL,      self.OnAziMove, self.gridaz)
         self.Bind(gl.EVT_GRID_CELL_LEFT_DCLICK, self.OnSelect,  self.gridaz)
         self.gridaz.Bind(wx.EVT_KEY_DOWN, self.OnTestGridChar)
-        
+
         self.Bind(EVT_NEWAZI_CREATED, self.UpdateAziende)
-        
+
         self.test_mod_name = True
         ci(ID_PSWD).Bind(wx.EVT_KEY_DOWN, self.OnTestKey)
         ci(ID_PSWD).Bind(wx.EVT_KEY_UP, self.OnTestKey)
-        
+
         self.UpdateServerUrl(0)
-    
+
     def OnTestKey(self, event):
         self.test_mod_name = not event.ControlDown()
         event.Skip()
-    
+
     def OnTestGridChar(self, event):
         key = event.GetKeyCode()
         if key == wx.WXK_RETURN or key == 370: #370=enter del tastierino num.
             self.AziSelect()
         event.Skip()
-    
+
     def OnAziMove(self, event):
         wx.CallAfter(self.UpdateAziendaDetails)
         event.Skip()
@@ -243,7 +243,7 @@ class SelAziendaPanel(aw.Panel):
         d.Destroy()
         config.loadHosts()
         self.LoadServerName()
-    
+
     def LoadServerName(self):
         """
         Vengono caricati nel controllo di scelta Server, l'elenco dei server presenti nel file di
@@ -259,10 +259,10 @@ class SelAziendaPanel(aw.Panel):
             else:
                 sl.Append(s[1], s[0])
         sl.SetSelection(0)
-    
+
     def OnChgPsw(self, event):
         cn = lambda x: self.FindWindowById(x)
-        host, user, pwd = [cn(x).GetValue() 
+        host, user, pwd = [cn(x).GetValue()
                            for x in(ID_SERVER, ID_USER, ID_PSWD)]
         chgPswType=0
         if len(pwd)==0:
@@ -273,11 +273,11 @@ class SelAziendaPanel(aw.Panel):
         self.OnLogin(event)
         cn(ID_PSWD).SetValue("")
         event.Skip()
-    
+
     def OnServer(self, event):
         self.UpdateServerUrl(event.GetEventObject().GetSelection())
         event.Skip()
-    
+
     def OnLogin(self, event):
         cn = lambda x: self.FindWindowById(x)
         if self.login:
@@ -289,14 +289,14 @@ class SelAziendaPanel(aw.Panel):
             host, user, pswd = map(lambda x: cfg.get(sec, x),
                                    ('host', 'user', 'pswd'))
             x4user, x4pswd = [cn(x).GetValue() for x in(ID_USER, ID_PSWD)]
-            
+
             if self.OpenX4db(host, user, pswd):
-                
+
                 if self.AutorizzoUser(x4user, x4pswd):
-                    
+
                     cfg.set('Database', 'user', x4user)
                     cfg.write()
-                    
+
                     now = DateTime.now()
                     if    4 < now.hour <= 14:
                         welcome = "Buongiorno"
@@ -307,11 +307,11 @@ class SelAziendaPanel(aw.Panel):
                     else:
                         welcome = "Ciao"
                     welcome += " "+user
-                    
+
                     self.login = False
-                    
+
                     self.ReadAziende()
-                    
+
                     c = self.x4conn.cursor()
                     c.execute("SELECT id, codice, amministratore FROM utenti WHERE descriz=%s", x4user)
                     rs = c.fetchone()
@@ -320,7 +320,7 @@ class SelAziendaPanel(aw.Panel):
                     Env.Azienda.Login.usercode = rs[1]
                     self.supervisor = (rs[2] == "X")
                     c.close()
-                    
+
                     x4db = adb.DB(globalConnection=False)
                     x4db.Connect(host=Env.Azienda.DB.servername,
                                  user=Env.Azienda.DB.username,
@@ -330,7 +330,7 @@ class SelAziendaPanel(aw.Panel):
                     u.Get(Env.Azienda.Login.userid)
                     Env.Azienda.Login.userdata = u
                     x4db.Close()
-                    
+
                     if len(x4pswd)==0:
                         self.OnChgPsw(event)
                         self.login = False
@@ -340,13 +340,13 @@ class SelAziendaPanel(aw.Panel):
         else:
             self.login = True
             self.gridaz.Reset()
-        
+
         self.UpdateUserControls()
         self.UpdateAziendaDetails()
         event.Skip()
 
     def AutorizzoUser(self, user, psw):
-        
+
         c = self.x4conn.cursor()
         if (c.execute("SELECT psw FROM utenti WHERE descriz=%s", user)>0):
             psw_memo = c.fetchone()[0]
@@ -355,7 +355,7 @@ class SelAziendaPanel(aw.Panel):
         else:
             psw_memo='1'
             psw_digi='2'
-        
+
         if (psw_memo <> psw_digi):
             dlg = wx.MessageDialog(
                 parent=None,
@@ -364,7 +364,7 @@ class SelAziendaPanel(aw.Panel):
                 style = wx.OK|wx.ICON_WARNING)
             dlg.ShowModal()
             dlg.Destroy()
-        
+
         ok = (psw_memo==psw_digi)
         if ok:
             try:
@@ -375,54 +375,62 @@ class SelAziendaPanel(aw.Panel):
                 lt.SetMaxSqlCount(maxrows)
             except:
                 pass
-            
+
         return ok
 
     def OnSelect(self, event):
         self.AziSelect()
         event.Skip()
-    
+
     def AziSelect(self):
-        
+
         retVal = 0
         errMessage = None
-        
+
         def ErrMsg(msg):
             aw.awu.MsgDialog(self, message=msg, style=wx.ICON_EXCLAMATION)
-        
+
         dbaz = self.dbaz
-        
+
         row = self.gridaz.GetSelectedRows()[0]
         if row >= self.dbaz.RowsCount():
             ErrMsg("Nessuna azienda selezionata")
             return 0
-        
+
         dbaz.MoveRow(row)
-        
+
         codice, nomeazi, nomedb = dbaz.codice, dbaz.azienda, dbaz.nomedb
-        
+
         ctrUser = self.FindWindowById(ID_USER)
         ctrPswd = self.FindWindowById(ID_PSWD)
         if len(ctrPswd.GetValue())==0:
             ErrMsg("La password è obbligatoria")
             return 0
-        
+
         username = ctrUser.GetValue()
         password = ctrPswd.GetValue()
-        
+
         if len(username) == 0:
             ErrMsg("Indicare il nome dell'utente")
             return 0
-        
+
         data = self.FindWindowById(ID_DATAELAB).GetValue()
         if data is None:
             ErrMsg("Indicare la data di elaborazione")
             return 0
-        
+
         Env.Azienda.DB.schema = adb.DEFAULT_DATABASE = nomedb
-        
+
         bt = Env.Azienda.BaseTab
-        
+
+        #TODO: Viene modificata dinamicamnete la path per gli allegati nel caso si sia in presenza dell'azienda
+        #TODO: destinata all'archiviazione, riconoscibile per avere il nomedb che termina con _a
+        import awc.controls.attachbutton as ab
+        if nomedb[-2:]=='_a':
+            ab.attach_dir='%s_a' % ab.attach_dir
+
+
+
         if self.AutorizzoUser(username, password):
             if self.CheckLogin(nomeazi, nomedb, codice, data):
                 #bt.defstru()
@@ -453,7 +461,7 @@ class SelAziendaPanel(aw.Panel):
             Env.Azienda.codice = codice
             Env.Azienda.descrizione = nomeazi
             report.SetPathSub('azienda_%s' % codice)
-            
+
             db = adb.DB()
             db._dbCon = conn
             db.connected = True
@@ -471,14 +479,14 @@ class SelAziendaPanel(aw.Panel):
             Env.Azienda.BaseTab.ReadAziendaSetup()
             wx.GetApp().dbcon = conn
             #conn.close()
-            
+
         except MySQLdb.Error, e:
             errMessage = "Non è possibile accedere al database\n\n%s: %s" \
             % (e.args[0], e.args[1])
-            aw.awu.MsgDialog(self, message=errMessage, style=wx.ICON_EXCLAMATION)            
+            aw.awu.MsgDialog(self, message=errMessage, style=wx.ICON_EXCLAMATION)
             lEsito=False
         return lEsito
-    
+
     def OnCreate(self, event):
         """
         Crea una nuova azienda.
@@ -489,10 +497,10 @@ class SelAziendaPanel(aw.Panel):
         hostname = ctrHost.GetValue()
         username = ctrUser.GetValue()
         password = ctrPswd.GetValue()
-        
+
         if len(username) == 0:
             aw.awu.MsgDialog(self, "Manca il nome dell'utente", style=wx.ICON_EXCLAMATION)
-            
+
         else:
             dlg = AziendaSetup(None, -1, "Creazione nuova azienda")
             dlg.x4conn = self.x4conn
@@ -505,18 +513,18 @@ class SelAziendaPanel(aw.Panel):
                 tabname = '%s.cfgprogr' % db_name
                 anno = Env.Azienda.Login.dataElab.year
                 c = self.x4conn.cursor()
-                c.execute("""INSERT INTO %(tabname)s (codice, keydiff, progrnum, progrimp1, progrimp2) 
+                c.execute("""INSERT INTO %(tabname)s (codice, keydiff, progrnum, progrimp1, progrimp2)
                 VALUES ("ccg_esercizio", 0, %(anno)s, 0, 0)""" % locals())
-                c.execute("""INSERT INTO %(tabname)s (codice, keydiff, progrnum, progrimp1, progrimp2) 
+                c.execute("""INSERT INTO %(tabname)s (codice, keydiff, progrnum, progrimp1, progrimp2)
                 VALUES ("ccg_giobol",    0,        0, 0, 0)""" % locals())
-                c.execute("""INSERT INTO %(tabname)s (codice, keydiff,           progrimp1, progrimp2) 
+                c.execute("""INSERT INTO %(tabname)s (codice, keydiff,           progrimp1, progrimp2)
                 VALUES ("ccg_giobol_ec",           0, 0, 0)""" % locals())
-                c.execute("""INSERT INTO %(tabname)s (codice, keydiff,           progrimp1, progrimp2) 
+                c.execute("""INSERT INTO %(tabname)s (codice, keydiff,           progrimp1, progrimp2)
                 VALUES ("ccg_giobol_ep",           0, 0, 0)""" % locals())
                 c.close()
                 aw.awu.MsgDialog(self, "L'azienda è stata creata.\nProvvedere al completamento del setup dei dati aziendali.", style=wx.ICON_INFORMATION)
                 self.ReadAziende()
-    
+
     def OnQuit(self, event):
         """
         Evento associato all'abbandono del Dialog
@@ -524,7 +532,7 @@ class SelAziendaPanel(aw.Panel):
         self.GetParent().EndModal( self.ID_QUIT )
 
     def OnUtenti(self, event):
-        
+
         Env.Azienda.DB.connection = self.x4conn
         adb.DEFAULT_DATABASE = "x4"
         db = adb.DB()
@@ -540,12 +548,12 @@ class SelAziendaPanel(aw.Panel):
         else:
             aw.awu.MsgDialog(self, repr(db.dbError.description))
         event.Skip()
-    
+
     def UpdateUserControls(self):
-        
+
         cn = lambda x: self.FindWindowById(x)
         psw = cn(ID_PSWD).GetValue()
-        
+
         for id, enab in ((ID_SERVER,      self.login),
                          (ID_USER,        self.login),
                          (ID_PSWD,        self.login),
@@ -571,12 +579,12 @@ class SelAziendaPanel(aw.Panel):
         #defbut.SetDefault()
         self.SetDefaultItem(defbut)
         self.Layout()
-    
+
     def UpdateServerUrl(self, n):
         cn = lambda x: self.FindWindowById(x)
         if n < cn(ID_SERVER).GetCount():
             cn(ID_SERVERURL).SetLabel(cn(ID_SERVER).GetClientData(n))
-    
+
     def UpdateAziendaDetails(self):
         def cn(x):
             return self.FindWindowByName(x)
@@ -588,7 +596,7 @@ class SelAziendaPanel(aw.Panel):
             cod, des, tab = dbaz.codice, dbaz.azienda, dbaz.nomedb
         cn('azi_codice').SetLabel(cod)
         cn('azi_schema').SetLabel(tab)
-    
+
     def UserExist(self, user):
         curs = self.x4conn.cursor()
         if curs.execute("SELECT codice, nome, psw, datePsw FROM utenti where nome=%s", user)==0:
@@ -603,11 +611,11 @@ class SelAziendaPanel(aw.Panel):
         curs.execute("SELECT old_PASSWORD(" + chr(34) + psw + chr(34) + ");")
         digiPsw = curs.fetchone()[0]
         if memoPsw == digiPsw:
-            return True                 
+            return True
         else:
             return False
-        
-    
+
+
     def CheckUser( self, user, psw):
         lOk=False
         msg=None
@@ -616,14 +624,14 @@ class SelAziendaPanel(aw.Panel):
         elif self.CheckUserPassword(user, psw)==False:
             msg="Password Errata"
         return msg
-        
+
     def OpenX4db(self, hostname, username, password):
         """
         Apre il database delle aziende
         """
         retVal = False
         tryToOpenDB = True
-        
+
         while (tryToOpenDB):
             tryToOpenDB = False
             try:
@@ -636,7 +644,7 @@ class SelAziendaPanel(aw.Panel):
                 Env.Azienda.DB.password =   adb.DEFAULT_PASSWORD = password
                 Env.Azienda.DB.schema =     adb.DEFAULT_DATABASE = 'x4'
                 retVal = True
-                
+
             except MySQLdb.Error, e:
                 if e.args[0] == 1049:
                     style = wx.ICON_QUESTION|wx.YES_NO|wx.YES_DEFAULT
@@ -659,16 +667,16 @@ class SelAziendaPanel(aw.Panel):
                                         caption = "X4 :: Errore di accesso",
                                         style = wx.YES_NO|wx.ICON_EXCLAMATION) == wx.ID_YES:
                         tryToOpenDB = True
-            
+
         return retVal
-    
+
     def CreaX4db(self, hostname, username, password):
-        
+
         con = MySQLdb.connect(host=hostname, user=username, passwd=password)
         cur = con.cursor()
-        
+
         cur.execute("""CREATE DATABASE x4""")
-        
+
         cur.execute("""
         CREATE TABLE `x4`.`aziende` (
         `id`      INT(10)     UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -676,11 +684,11 @@ class SelAziendaPanel(aw.Panel):
         `nomedb`  VARCHAR(45)          NOT NULL DEFAULT '',
         `codice`  VARCHAR(10)          NOT NULL DEFAULT '',
         `modname` VARCHAR(20),
-        PRIMARY KEY  (`id`), 
+        PRIMARY KEY  (`id`),
         UNIQUE KEY `Index_2` (`codice`)
         ) ENGINE=MyISAM DEFAULT CHARSET=utf8
         """)
-        
+
         cur.execute("""
         CREATE TABLE `x4`.`utenti` (
         `id`             INT(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -697,7 +705,7 @@ class SelAziendaPanel(aw.Panel):
         INSERT INTO `x4`.`utenti` (id, codice, descriz, amministratore)
         VALUES (1, '01', %s, 'X')
         """, utente)
-        
+
         cur.execute("""
         CREATE TABLE `x4`.`diritti` (
         `id` INT(10) UNSIGNED            NOT NULL AUTO_INCREMENT,
@@ -707,7 +715,7 @@ class SelAziendaPanel(aw.Panel):
         PRIMARY KEY  (`id`)
         ) ENGINE=MyISAM DEFAULT CHARSET=utf8
         """)
-        
+
         cur.execute("""
         CREATE TABLE `x4`.`bilcee` (
           `id` int(6) NOT NULL auto_increment COMMENT 'ID PDC CEE',
@@ -723,9 +731,9 @@ class SelAziendaPanel(aw.Panel):
           UNIQUE KEY `index1` (`codice`)
         ) ENGINE=MyISAM AUTO_INCREMENT=459 DEFAULT CHARSET=utf8 COMMENT='Bilancio CEE'
         """)
-        
+
         cur.execute("""
-        INSERT INTO `x4`.`bilcee` (`id`,`codice`,`descriz`,`sezione`,`voce`,`capitolo`,`dettaglio`,`subdett`,`selectable`) VALUES 
+        INSERT INTO `x4`.`bilcee` (`id`,`codice`,`descriz`,`sezione`,`voce`,`capitolo`,`dettaglio`,`subdett`,`selectable`) VALUES
          (307,'1','ATTIVO','1','','','','',0),
          (308,'1A','CREDITI VERSO SOCI PER VERSAMENTI ANCORA DOVUTI','1','A','','','',0),
          (309,'1A      a','PARTE RICHIAMATA','1','A','','','a',1),
@@ -877,7 +885,7 @@ class SelAziendaPanel(aw.Panel):
          (456,'4E    24','RETTIF. DI VAL. OPERATE ESCLUSIV. IN APPLIC. DI NORME TRIB.','4','E','','24','',1),
          (457,'4E    25','ACCANT. OPERATI ESCLUSIV. IN APPLIC. DI NORME TRIBUTARIE','4','E','','25','',1);
         """)
-        
+
         cur.execute("""
         CREATE TABLE IF NOT EXISTS `x4`.`cfgmail` (
           `id` int(6) NOT NULL auto_increment COMMENT 'ID',
@@ -893,7 +901,7 @@ class SelAziendaPanel(aw.Panel):
           UNIQUE KEY `index1` (`azienda`)
         ) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='Setup SMTP'
         """)
-        
+
         cur.execute("""
         CREATE TABLE IF NOT EXISTS `x4`.`cfgxmpp` (
           `id`         int(6) NOT NULL auto_increment COMMENT 'ID',
@@ -907,7 +915,7 @@ class SelAziendaPanel(aw.Panel):
           UNIQUE KEY `index1` (`azienda`)
         ) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='Setup XMPP'
         """)
-        
+
         cur.execute("""
 CREATE TABLE IF NOT EXISTS `x4`.`stati` (
   `id`             INT(6)      NOT NULL AUTO_INCREMENT COMMENT 'ID',
@@ -922,11 +930,11 @@ CREATE TABLE IF NOT EXISTS `x4`.`stati` (
   UNIQUE KEY `index1` (`codice`),
   UNIQUE KEY `index2` (`descriz`)
 ) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='Stati'""")
-        
+
         cur.execute("""
-INSERT INTO `x4`.`stati`  
-    (`id`,`codice`,`vatprefix`,`descriz`,`desceng`,`is_cee`,`is_blacklisted`) 
-VALUES 
+INSERT INTO `x4`.`stati`
+    (`id`,`codice`,`vatprefix`,`descriz`,`desceng`,`is_cee`,`is_blacklisted`)
+VALUES
     (  1, "AT", "AT", "AUSTRIA",         "AUSTRIA",        1, 0),
     (  2, "BE", "BE", "BELGIO",          "BELGIUM",        1, 0),
     (  3, "BG", "BG", "BULGARIA",        "BULGARIA",       1, 0),
@@ -958,16 +966,16 @@ VALUES
     ( 29, "MC", "FR", "MONACO",          "MONACO",         0, 1),
     ( 30, "CH", "CH", "SVIZZERA",        "SWISS",          0, 1),
     (999, "ZZ", "ZZ", "ZZ-INDEFINITO-",  "ZZ-UNDEFINED-",  0, 0)""")
-        
+
         aw.awu.MsgDialog(self, """Il database delle aziende è stato creato.\n"""
                          """E' stato creato l'utente '%s', privo di password."""
                          % utente)
-        
+
         cur.close()
         con.close()
-        
+
         return True
-    
+
     def ReadAziende( self ):
         """
         Identifica le aziende installate leggendo dal database aziende
@@ -1001,7 +1009,7 @@ VALUES
             curs.execute(sql, (cn(ID_USER).GetValue(),))
             self.dbaz.SetRecordset(curs.fetchall())
             self.gridaz.ChangeData(self.dbaz.GetRecordset())
-            
+
         except MySQLdb.Error, e:
             dlg = wx.MessageDialog(
             parent=None,
@@ -1042,28 +1050,28 @@ class AziendaSetup(aw.Dialog):
     """
     Creazione nuova azienda
     =======================
-    
+
     Imposta i dati di intestazione dell'azienda e provvede a creare il database
     relativo.  E' possibile acquisire una azienda Mirage esistente tramite l'apposito
     bottone.
-    
+
     Il Dialog è modale; i possibili valori di ritorno sono:::
-    
+
         True   in caso di creazione database terminato correttamente (azienda creata)
         False  altrimenti
-        
+
     """
-    
+
     ID_QUIT = 0
     ID_DONE = 1
-    
+
     x4conn = None
     dbconn = None
-    
+
     _mirfrom = False
     _mirpath = False
     _mircode = False
-    
+
     def __init__(self, parent, id, title,
         pos = wx.DefaultPosition, size = wx.DefaultSize,
         style = wx.DEFAULT_FRAME_STYLE ):
@@ -1071,15 +1079,15 @@ class AziendaSetup(aw.Dialog):
         Costruttore Dialog standard
         """
         aw.Dialog.__init__(self, parent, id, title, pos, size, style)
-        
+
         panel = aw.Panel( self, -1 )
         AziendaSetupFunc( panel, True )
         self.UpdateCreationLabel()
-        
+
         self.Fit()
-        
+
         ctrIntestaz = self.FindWindowById(ID_INTESTAZ)
-        
+
         self.Bind(wx.EVT_BUTTON, self.OnQuit, id=ID_BTNQUIT)
         self.Bind(wx.EVT_BUTTON, self.OnConfirm, id=ID_BTNOK)
         if miracq:
@@ -1096,7 +1104,7 @@ class AziendaSetup(aw.Dialog):
         """
         Env.Azienda.BaseTab.defstru()
         self.CreateAzienda()
-        
+
     def OnQuit( self, event ):
         """
         Handler evento chiusura dialog per abbandonno operazione
@@ -1108,14 +1116,14 @@ class AziendaSetup(aw.Dialog):
         Handler evento bottone di acquisizione dati da Mirage.
         """
         mirAzi = self.FindAziendaMirage()
-        
+
         if mirAzi:
-            
+
             bt = Env.Azienda.BaseTab
-            
+
             self._mirfrom = True
             self._mirpath, self._mircode = ( mirAzi[0][0], mirAzi[0][1] )
-            
+
             dbfTab = Dbf('%sMGTABE%s.DBF' % (self._mirpath, self._mircode))
             rectot = len(dbfTab)
             for n in range(rectot):
@@ -1127,7 +1135,7 @@ class AziendaSetup(aw.Dialog):
                     bt.MAGPRE_DECIMALS= int(DA[52])
                     break
             dbfTab.close()
-            
+
             for cid, val in ((ID_NOMEDB,    'x4_%s' % self._mircode.lower()),
                              (ID_CODICE,    self._mircode),
                              (ID_INTESTAZ,  mirAzi[1]),
@@ -1139,17 +1147,17 @@ class AziendaSetup(aw.Dialog):
                              (ID_STATO,     mirAzi[7]),
                              (ID_PIVA,      mirAzi[8])):
                 self.FindWindowById(cid).SetValue(val)
-            
+
             for cid in (ID_ESERCIZIOGG, ID_ESERCIZIOMM):
                 self.FindWindowById(cid).SetValue(1)
-            
+
         else:
             self._mirfrom = False
-        
+
         self.UpdateCreationLabel()
-        
+
         return mirAzi is not None
-    
+
     def UpdateCreationLabel(self):
         label1 = 'Confermando, verrà '
         label2 = ''
@@ -1161,25 +1169,25 @@ class AziendaSetup(aw.Dialog):
         for cid, val in ((ID_CONFACTION1, label1),
                          (ID_CONFACTION2, label2)):
             self.FindWindowById(cid).SetLabel(val)
-    
+
     def CreateAzienda(self):
         """
         Provvede a creare il database dell'azienda e ad inserirne l'intestazione
         nel database delle aziende.
-        
+
         In caso di richiesta, provvede inoltre ad effettuare l'acquisizione dagli
         archivi di Mirage.
-        
+
         @param Mirage: flag per avviare l'acquisizione da Mirage
         @type: C{logical}  (I{Default=B{False}})
-        
+
         """
         retVal = False
-        
+
         intest = self.FindWindowById(ID_INTESTAZ).GetValue()
         nomedb = self.FindWindowById(ID_NOMEDB).GetValue()
         codice = self.FindWindowById(ID_CODICE).GetValue()
-        
+
         errMessage = None
         if len(nomedb) == 0:
             errMessage = "Specificare il nome del database"
@@ -1187,7 +1195,7 @@ class AziendaSetup(aw.Dialog):
             errMessage = "Specificare il codice azienda"
         elif len(intest) == 0:
             errMessage = "Specificare l'intestazione dell'azienda"
-        
+
         if errMessage != None:
             dlg = wx.MessageDialog(
             parent=None,
@@ -1195,17 +1203,17 @@ class AziendaSetup(aw.Dialog):
             caption = "X4 :: Errore di accesso",
             style = wx.OK|wx.ICON_EXCLAMATION )
             dlg.ShowModal()
-        
+
         else:
             dlg = wx.MessageDialog( parent=None,
-                                    message = "Confermi la creazione del database %s ?" % (nomedb,), 
+                                    message = "Confermi la creazione del database %s ?" % (nomedb,),
                                     caption = "X4 :: Creazione database",
                                     style = wx.YES_NO|wx.ICON_QUESTION )
             resp = dlg.ShowModal()
             dlg.Destroy()
             if resp != wx.ID_YES:
                 return False
-            
+
             errMessage = None
             curs = self.x4conn.cursor()
             for nome, desc in (('nomedb',  'questo nome di database'),
@@ -1218,10 +1226,10 @@ class AziendaSetup(aw.Dialog):
                     if rs:
                         errMessage = "Esiste già un'azienda con %s: \n%s" % (desc, rs[0])
                         break
-                
+
                 except MySQLdb.Error, e:
                     errMessage = "Non è possibile creare il database\n\n%s: %s" % (e.args[0], e.args[1])
-            
+
             if errMessage is None:
                 droponerr = False
                 try:
@@ -1234,9 +1242,9 @@ class AziendaSetup(aw.Dialog):
                     self.dbconn = conn
                     mv = version.MODVERSION_NAME or None
                     curs.execute("""
-                    INSERT INTO aziende (azienda, nomedb, codice, modname) 
+                    INSERT INTO aziende (azienda, nomedb, codice, modname)
                     VALUES (%s, %s, %s, %s)""", (intest, nomedb, codice, mv))
-                    
+
                     if self.CreateTables(droptables=False):
                         #push dati aziendali su cfgsetup
                         cmd = r"""
@@ -1262,7 +1270,7 @@ class AziendaSetup(aw.Dialog):
                             c.execute(cmd, ('esercizio_'+key, val))
                         c.close()
                         retVal = True
-                
+
                 except MySQLdb.Error, e:
                     dlg = wx.MessageDialog(parent=None, message = "Non è possibile accedere al database\n\n%s: %s" % (e.args[0], e.args[1]),
                     caption = "X4 :: Errore di accesso",
@@ -1276,18 +1284,18 @@ class AziendaSetup(aw.Dialog):
                         except Exception, e:
                             pass
             else:
-                dlg = wx.MessageDialog(parent=None, message = errMessage, 
+                dlg = wx.MessageDialog(parent=None, message = errMessage,
                 caption = "X4 :: Errore di accesso",
                 style = wx.CANCEL|wx.ICON_EXCLAMATION )
                 dlg.ShowModal()
                 dlg.Destroy()
-        
+
         if retVal:
-            
+
             self.attivaUtenti(nomedb)
-            
+
             bt = Env.Azienda.BaseTab
-            
+
             c = self.dbconn.cursor()
             cmd = "INSERT INTO %s (chiave,importo) VALUES (%%s, %%s)"\
                 % bt.TABNAME_CFGSETUP
@@ -1296,16 +1304,16 @@ class AziendaSetup(aw.Dialog):
                               ('magdec_prez',   bt.MAGPRE_DECIMALS)):
                 c.execute(cmd, (name, val))
             c.close()
-            
+
             if self._mirfrom:
                 appmir = miracq.AppendFromMirage(self, self.dbconn, self._mirpath, self._mircode, nomedb)
             else:
                 dlg = AziendaCopyDialog(self, nomedb)
                 dlg.ShowModal()
                 dlg.Destroy()
-            
+
             self.EndModal(retVal)
-    
+
     def existSupervisor(self):
         lEsito=False
         db = adb.DB()
@@ -1338,36 +1346,36 @@ class AziendaSetup(aw.Dialog):
                              "Impossibile accedere alla tabella utenti:\n"\
                              % repr(ute.GetError()))
             return False
-        
+
         dlg = wx.Dialog(self, -1, "Diritti utenti")
         UtentiNewAzienda(dlg)
-        
+
         cu = dlg.FindWindowById(ID_UTENTI)
         map(lambda u: cu.Append(u.descriz), ute)
-        
+
         def OnConferma(event):
             dlg.EndModal(1)
-        
+
         dlg.Bind(wx.EVT_BUTTON, OnConferma, dlg.FindWindowById(ID_CONFERMA))
-        
+
         if dlg.ShowModal() == 1:
-            
+
             def creaDiritto(n):
                 ute.MoveRow(n)
                 dir.CreateNewRow()
                 dir.id_azienda = azi.id
                 dir.id_utente = ute.id
                 dir.attivo = int(cu.IsChecked(n))
-            
+
             map(lambda n: creaDiritto(n), range(cu.GetCount()))
-            
+
             if not dir.Save():
                 aw.awu.MsgDialog(None,\
                                  "Impossibile aggiornare i diritti utenti:\n"\
                                  % repr(dir.GetError()))
-        
+
         dlg.Destroy()
-    
+
     def CreateTables( self, droptables=True ):
         """
         Creazione struttura tabelle nel database dell'azienda.
@@ -1408,18 +1416,18 @@ class AziendaSetup(aw.Dialog):
                 pd.SetValue(n)
             curs.close()
             retVal = True
-            
+
         except MySQLdb.Error, e:
             dlg = wx.MessageDialog(parent=None,
                                    message = "Si sono verificati problemi durante la creazione delle tabelle.\n\n%s: %s"
-                                   % (e.args[0], e.args[1]), 
+                                   % (e.args[0], e.args[1]),
                                    caption = "X4 :: Errore di setup",
                                    style = wx.CANCEL|wx.ICON_EXCLAMATION )
             dlg.ShowModal()
             dlg.Destroy()
-        
+
         pd.Destroy()
-        
+
         return retVal
 
     def FindAziendaMirage(self):
@@ -1444,7 +1452,7 @@ class AziendaCopyPanel(aw.Panel):
         self.dbaz = ListAziende()
         cur = self.db._dbCon.cursor()
         sql = r"""
-        SELECT azi.id, azi.codice, azi.azienda, azi.nomedb 
+        SELECT azi.id, azi.codice, azi.azienda, azi.nomedb
           FROM x4.aziende as azi
          ORDER BY azi.azienda, azi.codice"""
         cur.execute(sql)
@@ -1453,7 +1461,7 @@ class AziendaCopyPanel(aw.Panel):
         self.gridaz = SelAziendaGrid(self.FindWindowById(ID_PANGRIDAZI),
                                      self.dbaz)
         self.Bind(wx.EVT_BUTTON, self.OnConfirm, self.FindWindowByName('btnok'))
-    
+
     def OnConfirm(self, event):
         if aw.awu.MsgDialog(self, "Confermi l'acquisizione di queste informazioni?",
                             style=wx.ICON_QUESTION|wx.YES_NO|wx.YES_DEFAULT) == wx.ID_YES:
@@ -1462,7 +1470,7 @@ class AziendaCopyPanel(aw.Panel):
             self.copyfrom = self.dbaz.nomedb
             self.CopyData()
             event.Skip()
-    
+
     def CopyData(self):
         bt = Env.Azienda.BaseTab
         copytables = (
@@ -1548,11 +1556,11 @@ class AziendaCopyPanel(aw.Panel):
                     wait.SetValue(numtab)
         finally:
             wait.Destroy()
-    
+
     def _CopyTable(self, tabname, filt=''):
-        dbtfrom = adb.DbTable('%s.%s' % (self.copyfrom, tabname), 'tabfrom', 
+        dbtfrom = adb.DbTable('%s.%s' % (self.copyfrom, tabname), 'tabfrom',
                               db=self.db)
-        dbtdest = adb.DbTable('%s.%s' % (self.copydest, tabname), 'tabdest', 
+        dbtdest = adb.DbTable('%s.%s' % (self.copydest, tabname), 'tabdest',
                               db=self.db, forceInsert=True)
         if dbtfrom.Retrieve(filt):
             if ','.join(dbtdest.GetFieldNames()) == ','.join(dbtfrom.GetFieldNames()):
@@ -1570,11 +1578,11 @@ class AziendaCopyPanel(aw.Panel):
             if not dbtdest.Save():
                 raise Exception, repr(dbtdest.GetError())
         return True
-    
+
     def _CopyPdc(self, tabname, copycli, copyfor, copycas, copyban):
         if copycli and copyfor and copycas and copyban:
             return self._CopyTable(tabname)
-        tipana = adb.DbTable('%s.pdctip' % self.copyfrom, 'tipana', 
+        tipana = adb.DbTable('%s.pdctip' % self.copyfrom, 'tipana',
                              writable=False)
         tipiexcl = []
         for do, tipo in ((copycli, 'C'),
@@ -1598,13 +1606,13 @@ class AziendaCopyPanel(aw.Panel):
 
 
 class AziendaCopyDialog(aw.Dialog):
-    
+
     def __init__(self, parent, namedbdst):
-        aw.Dialog.__init__(self, parent, -1, 
+        aw.Dialog.__init__(self, parent, -1,
                            'Inizializzazione database azienda')
         self.AddSizedPanel(AziendaCopyPanel(self, namedbdst))
         self.CenterOnScreen()
         self.Bind(wx.EVT_BUTTON, self.OnConfirm, self.FindWindowByName('btnok'))
-    
+
     def OnConfirm(self, event):
         self.EndModal(wx.ID_OK)
