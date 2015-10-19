@@ -2423,7 +2423,6 @@ class Titoli(list):
         ret= '%s\n%s' % (ret, ('ordinato per colonna %s' % self.GetOrderColumn()))
         return ret
 
-
     def ChangeOrder(self, col, data):
         newColOrder=self[col]
         oldColOrder=self.GetOrderColumn()
@@ -2434,9 +2433,11 @@ class Titoli(list):
         newdata=self.parent.ChangeOrderData(data, newColOrder.GetIndexDb(), order=newColOrder.GetVersus())
         return newdata
 
-
-
-
+    def ChangeOrderFlag(self):
+        if self[self.orderColumn].orderVersus=='ASC':
+            self[self.orderColumn].orderVersus='DESC'
+        else:
+            self[self.orderColumn].orderVersus='ASC'
 
     def SetOrderColumn(self, i):
         self.orderColumn = i
@@ -2447,7 +2448,6 @@ class Titoli(list):
         self.orderColumn = None
         if i:
             self[i].ResetOrder()
-
 
     def GetOrderColumn(self):
         if self.orderColumn:
