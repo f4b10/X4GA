@@ -2434,10 +2434,13 @@ class Titoli(list):
         return newdata
 
     def ChangeOrderFlag(self):
-        if self[self.orderColumn].orderVersus=='ASC':
-            self[self.orderColumn].orderVersus='DESC'
-        else:
-            self[self.orderColumn].orderVersus='ASC'
+        try:
+            if self[self.orderColumn].orderVersus=='ASC':
+                self[self.orderColumn].orderVersus='DESC'
+            elif self[self.orderColumn].orderVersus=='DESC':
+                self[self.orderColumn].orderVersus='ASC'
+        except:
+            pass
 
     def SetOrderColumn(self, i):
         self.orderColumn = i
