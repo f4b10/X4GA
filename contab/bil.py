@@ -1488,9 +1488,9 @@ class BilContrPanel(_BilPanel):
         grids = self.gridbil.grids
         def GetRighe(n, rs1, rs2):
             try: r1 = rs1[n]
-            except IndexError: r1 = [None]*12
+            except IndexError: r1 = [None]*14
             try: r2 = rs2[n]
-            except IndexError: r2 = [None]*12
+            except IndexError: r2 = [None]*14
             return tuple(r1)+tuple(r2)
         def GetSezione(sez, rs1, rs2):
             sezrs = []
@@ -1504,8 +1504,8 @@ class BilContrPanel(_BilPanel):
         rs += GetSezione('E', grids[2].rsbil, grids[3].rsbil)
         rs += GetSezione('O', grids[4].rsbil, grids[5].rsbil)
         bil = DbMemBil(self,
-            'sez,tip1,mas1,con1,tpi1,tpa1,pid1,pdc1,des1,prd1,pra1,sld1,sla1,'+
-            ''+ 'tip2,mas2,con2,tpi2,tpa2,pid2,pdc2,des2,prd2,pra2,sld2,sla2')
+            'sez,tip1,mas1,con1,tpi1,tpa1,pid1,pdc1,des1,prd1,pra1,sld1,sla1,tgio11,tgio12,'+
+            ''+ 'tip2,mas2,con2,tpi2,tpa2,pid2,pdc2,des2,prd2,pra2,sld2,sla2,tgio21,tgio22 ')
         bil.SetRecordset(rs)
         bil.salep = self.salep
         for name in 'totpatatt totpatpas totecocos totecoric totorddar totordave'.split():
@@ -1514,6 +1514,26 @@ class BilContrPanel(_BilPanel):
                     'E': (self.totecocos, self.totecoric),
                     'O': (self.totorddar, self.totordave)}
         rpt.Report(self, bil, self.report)
+
+
+        #=======================================================================
+        # nctip = ci(b, 'tipobil')
+        # ncmas = ci(b, 'mastro')
+        # nccon = ci(b, 'conto')
+        # ncpid = ci(b.pdc, 'id')
+        # ncpdc = ci(b.pdc, 'codice')
+        # nctpi = ci(b.pdc.tipana, 'id')
+        # nctpa = ci(b.pdc.tipana, 'codice')
+        # nctpt = ci(b.pdc.tipana, 'tipo')
+        # ncttd = ci(b, 'total_dare')
+        # nctta = ci(b, 'total_avere')
+        # ncdma = ci(b.pdc.bilmas, 'descriz')
+        # ncdco = ci(b.pdc.bilcon, 'descriz')
+        # ncdsc = ci(b.pdc, 'descriz')
+        # nctgd = ci(b,            'total_darega')
+        # nctga = ci(b,            'total_averega')
+        #=======================================================================
+
 
 
 # ------------------------------------------------------------------------------

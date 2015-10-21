@@ -28,11 +28,16 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
+    ('1.5.12', dt.Date(2015, 9, 21), (
+         ("BUG1156",
+         """Rimosso bug che si verificava alla stampa del bilancio contrapposto"""),
+        ),),
+
     ('1.5.11', dt.Date(2015, 9, 06), (
          ("BUG1155",
          """Rimosso bug che all'atto della creazione di una tabella non  provvedeva a crearne anche i relativi indici"""),
          ("BET1184",
-         """Introdotti metodi per larchiviazione delle tabelle."""),
+         """Introdotti metodi per l'archiviazione delle tabelle."""),
          ("BET1183",
          """Introdotta classe per la gestione di una azioenda di archiviazione."""),
         ),),
