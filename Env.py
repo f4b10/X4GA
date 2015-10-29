@@ -1135,7 +1135,7 @@ class Azienda(object):
                            2: ['valute', ['le', 'delle', 'dalle']]}
 
         TABNAME_MODPAG = "modpag"
-        TABDESC_MODPAG = "Modalità di pagamento"
+        TABDESC_MODPAG = "Modalita' di pagamento"
         TABSETUP_TABLE_MODPAG = numtab.next()
         TABSETUP_CONSTR_MODPAG = []
         TABVOICE_MODPAG = {1: ['mod.pagamento', ['la', 'una', 'della', 'dalla']],
