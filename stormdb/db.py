@@ -731,7 +731,7 @@ class DB(object):
                     mem.fields += index.column_name
         
         for table in tables:
-            
+            print table
             tab_class = stormdb.DbTable
             if tab_classes and table in tab_classes:
                 tab_class = tab_classes[table]

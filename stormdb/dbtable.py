@@ -2928,7 +2928,7 @@ class DbTable(object):
         self.CheckStoreTable()
         return self.Adegua()
 
-    def Move2Store(self, adbStore=None):
+    def Move2Store(self, adbStore=None, field2Store=None):
         self.SetConnectionStore(adbStore)
         if self.pb:
             self.pb.SetRange(self.RowsCount())
@@ -2936,7 +2936,7 @@ class DbTable(object):
             if self.pb:
                 self.pb.SetValue(i)
             cmd='INSERT INTO %s ' % self.GetTableName()
-            setCol = self.MakeSetExpression()
+            setCol = self.MakeSetExpression(fields=field2Store)
             cmd = '%s SET %s' % (cmd, setCol)
             cmd = cmd[:-2]
             if self.adbStore.Execute(cmd):
