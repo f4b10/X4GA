@@ -6,17 +6,17 @@
 # Copyright:    (C) 2011 Astra S.r.l. C.so Cavallotti, 122 18038 Sanremo (IM)
 # ------------------------------------------------------------------------------
 # This file is part of X4GA
-# 
+#
 # X4GA is free software: you can redistribute it and/or modify
 # it under the terms of the Affero GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # X4GA is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
@@ -25,6 +25,8 @@ import string
 
 import wx
 import wx.grid as gridlib
+
+import awc.controls.windows as aw
 
 import awc.controls.datectrl
 import awc.controls.linktable
@@ -40,23 +42,23 @@ _evtEDITORSHOWN = wx.NewEventType()
 EVT_EDITORSHOWN = wx.PyEventBinder(_evtEDITORSHOWN, 0)
 
 class EditorShownEvent(wx.PyCommandEvent):
-    
+
     def __init__(self, row, col):
         wx.PyCommandEvent.__init__(self, _evtEDITORSHOWN)
         self._row = row
         self._col = col
-    
+
     def GetRow(self):
         return self._row
-    
+
     def GetCol(self):
         return self._col
 
 
 class CellEditorsMixin(object):
-    
+
     editing = False
-    
+
     def EndEdit(self, grid, row, col, changed=False, moveCursor=True):
         self.editing = False
         if moveCursor:#changed:
@@ -64,7 +66,7 @@ class CellEditorsMixin(object):
                 grid.TestNewColumn(row, col)
                 grid.SetFocus()
             wx.CallAfter(SetPos)
-    
+
     def TestNewRow(self, grid, row, value):
         out = True
         insreq = False
@@ -83,7 +85,7 @@ class CellEditorsMixin(object):
             else:
                 out = False
         return out
-    
+
     def GetDefaultValue(self, grid, row, col, editor):
         startValue = None
         dvfunc = grid.GetDefaultValueCB()
@@ -104,7 +106,7 @@ class CellEditorsMixin(object):
             out = (key>=48 and key<=57) or\
                 (key>=wx.WXK_NUMPAD0 and key<=wx.WXK_NUMPAD9)
         return out
-    
+
     def TrigEditorShownEvent(self, row, col):
         evt = EditorShownEvent(row, col)
         evt.SetEventObject(self._tc)
@@ -122,7 +124,7 @@ class DateCellEditor(gridlib.PyGridCellEditor, CellEditorsMixin):
     def __init__(self):
         gridlib.PyGridCellEditor.__init__(self)
         CellEditorsMixin.__init__(self)
-    
+
     def Create(self, parent, id, evtHandler):
         """
         Called to create the control, which must derive from wx.Control.
@@ -131,7 +133,7 @@ class DateCellEditor(gridlib.PyGridCellEditor, CellEditorsMixin):
         self._tc = awc.controls.datectrl.DateCtrl(parent, id, "",\
                                                   pos = (-100, -100))
         self.SetControl(self._tc)
-        
+
         win = parent
         while win:
             win = win.GetParent()
@@ -139,15 +141,15 @@ class DateCellEditor(gridlib.PyGridCellEditor, CellEditorsMixin):
                 if isinstance( win, ( wx.Frame, wx.Dialog ) ):
                     break
         if win:
-            self._tc.Bind(awc.controls.datectrl.EVT_DATEFOCUSLOST, 
+            self._tc.Bind(awc.controls.datectrl.EVT_DATEFOCUSLOST,
                      self.OnFocusLost)
             for ctr in (self._tc.maskedCtrl, self._tc.buttonCalendar):
                 ctr.Bind(wx.EVT_CHAR, self.OnTestEscape)
             self.grid = parent.GetParent()
-        
+
 #        if evtHandler:
 #            self._tc.PushEventHandler(evtHandler)
-    
+
     def OnFocusLost(self, event):
         if self.grid._edrow is None:
             return
@@ -157,13 +159,13 @@ class DateCellEditor(gridlib.PyGridCellEditor, CellEditorsMixin):
             self.Show(0)
             wx.CallAfter(self.grid.SetFocusTo)
         event.Skip()
-    
+
     def OnTestEscape(self, event):
         if event.GetKeyCode() == wx.WXK_ESCAPE:
             CellEditorsMixin.EndEdit(self, self.grid, self.grid._edrow, self.grid._edcol, False)
             self.startValue = None
         event.Skip()
-    
+
     def SetInitialCursor(self):
         self._tc.maskedCtrl._SetInsertionPoint(0)
 
@@ -257,13 +259,13 @@ class DateCellEditor(gridlib.PyGridCellEditor, CellEditorsMixin):
         key = evt.GetKeyCode()
         ch = None
         if key in\
-           [ wx.WXK_NUMPAD0, wx.WXK_NUMPAD1, wx.WXK_NUMPAD2, wx.WXK_NUMPAD3, 
-             wx.WXK_NUMPAD4, wx.WXK_NUMPAD5, wx.WXK_NUMPAD6, wx.WXK_NUMPAD7, 
+           [ wx.WXK_NUMPAD0, wx.WXK_NUMPAD1, wx.WXK_NUMPAD2, wx.WXK_NUMPAD3,
+             wx.WXK_NUMPAD4, wx.WXK_NUMPAD5, wx.WXK_NUMPAD6, wx.WXK_NUMPAD7,
              wx.WXK_NUMPAD8, wx.WXK_NUMPAD9 ]:
             ch = ch = chr(ord('0') + key - wx.WXK_NUMPAD0)
         ch = chr(key)
         return ch.isdigit()
-    
+
     def StartingKey(self, evt):
         """
         If the editor is enabled by pressing keys on the grid, this will be
@@ -272,15 +274,15 @@ class DateCellEditor(gridlib.PyGridCellEditor, CellEditorsMixin):
         key = evt.GetKeyCode()
         ch = None
         if key in\
-           [ wx.WXK_NUMPAD0, wx.WXK_NUMPAD1, wx.WXK_NUMPAD2, wx.WXK_NUMPAD3, 
-             wx.WXK_NUMPAD4, wx.WXK_NUMPAD5, wx.WXK_NUMPAD6, wx.WXK_NUMPAD7, 
+           [ wx.WXK_NUMPAD0, wx.WXK_NUMPAD1, wx.WXK_NUMPAD2, wx.WXK_NUMPAD3,
+             wx.WXK_NUMPAD4, wx.WXK_NUMPAD5, wx.WXK_NUMPAD6, wx.WXK_NUMPAD7,
              wx.WXK_NUMPAD8, wx.WXK_NUMPAD9 ]:
             ch = ch = chr(ord('0') + key - wx.WXK_NUMPAD0)
         ch = chr(key)
         if ch.isdigit():
             self._tc.maskedCtrl.SetValue(ch)
             wx.CallAfter(lambda: self._tc.maskedCtrl._SetInsertionPoint(1))
-    
+
     def StartingClick(self):
         """
         If the editor is enabled by clicking on the cell, this method will be
@@ -288,7 +290,7 @@ class DateCellEditor(gridlib.PyGridCellEditor, CellEditorsMixin):
         needed.
         """
         pass
-    
+
     def Destroy(self):
         """final cleanup"""
         #self.base_Destroy()
@@ -306,7 +308,7 @@ class DateCellEditor(gridlib.PyGridCellEditor, CellEditorsMixin):
 
 
 class DateTimeCellEditor(DateCellEditor):
-    
+
     def Create(self, parent, id, evtHandler):
         """
         Called to create the control, which must derive from wx.Control.
@@ -315,7 +317,7 @@ class DateTimeCellEditor(DateCellEditor):
         self._tc = awc.controls.datectrl.DateTimeCtrl(parent, id, "",\
                                                       pos = (-100, -100))
         self.SetControl(self._tc)
-        
+
         win = parent
         while win:
             win = win.GetParent()
@@ -323,7 +325,7 @@ class DateTimeCellEditor(DateCellEditor):
                 if isinstance( win, ( wx.Frame, wx.Dialog ) ):
                     break
         if win:
-            self._tc.Bind(awc.controls.datectrl.EVT_DATEFOCUSLOST, 
+            self._tc.Bind(awc.controls.datectrl.EVT_DATEFOCUSLOST,
                      self.OnFocusLost)
             for ctr in (self._tc.maskedCtrl, self._tc.buttonCalendar):
                 ctr.Bind(wx.EVT_CHAR, self.OnTestEscape)
@@ -342,16 +344,16 @@ class DataLinkCellEditor(gridlib.PyGridCellEditor, CellEditorsMixin):
     def __init__(self, tabname, rscolid, rscolcod, rscoldes=None,\
                  cardclass = None, filter = None, filterlinks = None,\
                  eventBindings=None, oncreate=None):
-        
+
         if eventBindings is None:
             eventBindings = []
-        
+
         if rscoldes is None and rscolcod is not None:
             rscoldes = rscolcod+1
-        
+
         if self.baseclass is None:
             self.baseclass = awc.controls.linktable.LinkTable
-        
+
         self.lt_tabname = tabname
         self.lt_rscolid = rscolid
         self.lt_rscolcod = rscolcod
@@ -362,7 +364,7 @@ class DataLinkCellEditor(gridlib.PyGridCellEditor, CellEditorsMixin):
         self.lt_eventBindings = eventBindings
         self.lt_oncreate = oncreate
         self._tc = None
-        
+
         gridlib.PyGridCellEditor.__init__(self)
         CellEditorsMixin.__init__(self)
 
@@ -373,7 +375,7 @@ class DataLinkCellEditor(gridlib.PyGridCellEditor, CellEditorsMixin):
         """
         self._tc = self.baseclass(parent, id=id, pos = (-100,-100),
                                   fromgrid=True)
-        
+
         if self.lt_tabname:
             self._tc.SetDataLink(self.lt_tabname,\
                                  cardclass = self.lt_cardclass,\
@@ -384,7 +386,7 @@ class DataLinkCellEditor(gridlib.PyGridCellEditor, CellEditorsMixin):
                            callable, self._tc)
         #self._tc.KillSizers()
         self.SetControl(self._tc)
-        
+
         win = parent
         while win:
             win = win.GetParent()
@@ -399,15 +401,15 @@ class DataLinkCellEditor(gridlib.PyGridCellEditor, CellEditorsMixin):
             for ctr in (self._tc._ctrcod, self._tc._ctrdes):
                 ctr.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
             self.grid = parent.GetParent()
-        
+
         if evtHandler:
             self._tc.SetExactCode(True)
             #self._tc._ctrcod.PushEventHandler(evtHandler)
             #self._tc._ctrdes.PushEventHandler(evtHandler)
-        
+
         if self.lt_oncreate:
             self.lt_oncreate(self._tc, self, parent)
-    
+
     def OnKeyDown(self, event):
         if event.GetKeyCode() == 27:
             self._tc._PostEventFocusLost()
@@ -416,12 +418,12 @@ class DataLinkCellEditor(gridlib.PyGridCellEditor, CellEditorsMixin):
                 self.grid.SetGridCursor(self.grid._edrow, self.grid._edcol)
             wx.CallAfter(RestorePos)
         event.Skip()
-    
+
     def OnFocusLost(self, event):
         if not event.GetEventObject().HasFocus():
             self.Show(0)
             event.Skip()
-    
+
     def OnValueChanged(self, event):
         if self.grid._edrow is None:
             return
@@ -573,13 +575,13 @@ class DataLinkCellEditor(gridlib.PyGridCellEditor, CellEditorsMixin):
         key = evt.GetKeyCode()
         ch = None
         if key in\
-           [ wx.WXK_NUMPAD0, wx.WXK_NUMPAD1, wx.WXK_NUMPAD2, wx.WXK_NUMPAD3, 
-             wx.WXK_NUMPAD4, wx.WXK_NUMPAD5, wx.WXK_NUMPAD6, wx.WXK_NUMPAD7, 
+           [ wx.WXK_NUMPAD0, wx.WXK_NUMPAD1, wx.WXK_NUMPAD2, wx.WXK_NUMPAD3,
+             wx.WXK_NUMPAD4, wx.WXK_NUMPAD5, wx.WXK_NUMPAD6, wx.WXK_NUMPAD7,
              wx.WXK_NUMPAD8, wx.WXK_NUMPAD9 ]:
             ch = chr(ord('0') + key - wx.WXK_NUMPAD0)
         else:
             ch = unichr(key)
-        
+
         if ch:
             if self._tc.initfocus == awc.controls.linktable.INITFOCUS_CODICE:
                 c = self._tc._ctrcod
@@ -600,7 +602,7 @@ class DataLinkCellEditor(gridlib.PyGridCellEditor, CellEditorsMixin):
         needed.
         """
         pass
-    
+
     def Destroy(self):
         """final cleanup"""
         #self.base_Destroy()
@@ -643,7 +645,7 @@ class NumericCellEditor(gridlib.PyGridCellEditor, CellEditorsMixin):
                                                 pos = (-100, -100),\
                                                 integerWidth = self._nint,\
                                                 fractionWidth = self._ndec)
-        
+
         self.SetControl(self._tc)
         self.grid = parent.GetParent()
         if evtHandler:
@@ -768,7 +770,7 @@ class NumericCellEditor(gridlib.PyGridCellEditor, CellEditorsMixin):
         needed.
         """
         pass
-    
+
     def Destroy(self):
         """final cleanup"""
         #self.base_Destroy()
@@ -795,7 +797,7 @@ class TextCellEditor(gridlib.PyGridCellEditor, CellEditorsMixin):
     CellEditor di tipo stringa.
     """
     _lowercase = False
-    
+
     def __init__(self):
         gridlib.PyGridCellEditor.__init__(self)
         CellEditorsMixin.__init__(self)
@@ -815,7 +817,7 @@ class TextCellEditor(gridlib.PyGridCellEditor, CellEditorsMixin):
         self.grid = parent.GetParent()
         if evtHandler:
             self._tc.PushEventHandler(evtHandler)
-    
+
     def SetInitialCursor(self):
         mask = wx.TextCtrl.GetValue(self._tc)
         if "," in mask: pos = mask.index(",")
@@ -845,10 +847,10 @@ class TextCellEditor(gridlib.PyGridCellEditor, CellEditorsMixin):
             self.editing = True
         else:
             self.grid.GetGridWindow().SetFocus()
-    
+
     def SetMaxLength(self, max):
         self._maxlen = max
-    
+
     def PaintBackground(self, rect, attr):
         """
         Draws the part of the cell not occupied by the edit control.  The
@@ -896,7 +898,12 @@ class TextCellEditor(gridlib.PyGridCellEditor, CellEditorsMixin):
                     # aggiornamento recordset
                     rscol = table.rsColumns[col]
                     if rscol>=0:
-                        data[row][rscol] = val
+                        try:
+                            data[row][rscol] = val
+                        except:
+                            msg='Intercettato errore\nControllare quanto digitato.'
+                            aw.awu.MsgDialog(None, msg, style=wx.ICON_ERROR)
+                            pass
                     table.ForceResetView()
                     changed = True
                     # callback successivo all'aggiornamento del recordset
@@ -933,8 +940,8 @@ class TextCellEditor(gridlib.PyGridCellEditor, CellEditorsMixin):
             ##tasti numerici tastiera
             #ch = chr(key)
         #elif key in\
-           #[ wx.WXK_NUMPAD0, wx.WXK_NUMPAD1, wx.WXK_NUMPAD2, wx.WXK_NUMPAD3, 
-             #wx.WXK_NUMPAD4, wx.WXK_NUMPAD5, wx.WXK_NUMPAD6, wx.WXK_NUMPAD7, 
+           #[ wx.WXK_NUMPAD0, wx.WXK_NUMPAD1, wx.WXK_NUMPAD2, wx.WXK_NUMPAD3,
+             #wx.WXK_NUMPAD4, wx.WXK_NUMPAD5, wx.WXK_NUMPAD6, wx.WXK_NUMPAD7,
              #wx.WXK_NUMPAD8, wx.WXK_NUMPAD9 ]:
             ##tasti numerici tastierino
             #ch = chr(ord('0') + key - wx.WXK_NUMPAD0)
@@ -952,7 +959,7 @@ class TextCellEditor(gridlib.PyGridCellEditor, CellEditorsMixin):
         needed.
         """
         pass
-    
+
     def Destroy(self):
         """final cleanup"""
         #self.base_Destroy()
@@ -1115,7 +1122,7 @@ class CheckBoxCellEditor(gridlib.PyGridCellEditor, CellEditorsMixin):
             #self._tc.SetValue(not self._tc.GetValue())
         #else:
             #evt.Skip()
-    
+
     def StartingClick(self):
         """
         If the editor is enabled by clicking on the cell, this method will be
@@ -1123,7 +1130,7 @@ class CheckBoxCellEditor(gridlib.PyGridCellEditor, CellEditorsMixin):
         needed.
         """
         pass
-    
+
     def Destroy(self):
         """final cleanup"""
         #self.base_Destroy()
@@ -1141,7 +1148,7 @@ class CheckBoxCellEditor(gridlib.PyGridCellEditor, CellEditorsMixin):
 
 
 class FlatCheckBoxCellEditor(CheckBoxCellEditor):
-    
+
     #def IsAcceptedKey(self, evt):
         #"""
         #Return True to allow the given key to start editing: the base class
@@ -1160,28 +1167,28 @@ class FlatCheckBoxCellEditor(CheckBoxCellEditor):
             #wx.CallAfter(self.SetInitialCursor)
         #else:
             #evt.Skip()
-    
+
     def Create(self, *args, **kwargs):
         pass
-    
+
     def SetSize(self, *args, **kwargs):
         pass
-    
+
     def Show(self, *args, **kwargs):
         pass
-    
+
     def BeginEdit(self, *args, **kwargs):
         pass
-    
+
     def EndEdit(self, *args, **kwargs):
         pass
-    
+
     def OnKeyPressed(self, event):
         # space deve invertire lo stato del checkbox, però
         # da qui non si può intercettare il tasto premuto
         # avviene quindi il binding EVT_KEY a livello di chiamante (Grid.SetData)
         # qui devo capire se il tasto è stato premuto in corrispondenza di una
-        # colonna che ha questa classe come editor, se si allora inverto lo 
+        # colonna che ha questa classe come editor, se si allora inverto lo
         # stato del checkbox di questa classe
         if event.GetKeyCode() == wx.WXK_SPACE:
             w = event.GetEventObject()
@@ -1217,7 +1224,7 @@ class FlatCheckBoxCellEditor(CheckBoxCellEditor):
 import images
 
 class CheckBoxCellRenderer(gridlib.PyGridCellRenderer):
-    
+
     def __init__(self):
         gridlib.PyGridCellRenderer.__init__(self)
         self.bmp_yes = images.getCheckYesBitmap()
@@ -1232,16 +1239,16 @@ class CheckBoxCellRenderer(gridlib.PyGridCellRenderer):
         #dc.SetBrush(wx.Brush(bgcol, wx.SOLID))
         #dc.SetPen(wx.TRANSPARENT_PEN)
         #dc.DrawRectangleRect(rect)
-        
+
         ##dc.SetFont(attr.GetFont())
-        
+
         dim = 16
         h = rect[3]
         x = rect[0]+6
         y = rect[1]+(h-dim)/2
         checkRect = (x, y, dim, dim)
         dc.SetBackgroundMode(wx.SOLID)
-        
+
         bgcol = wx.WHITE
         celattr = attr#grid.GetTable().GetAttr(row, col)
         if celattr is not None:
@@ -1249,7 +1256,7 @@ class CheckBoxCellRenderer(gridlib.PyGridCellRenderer):
         dc.SetBrush(wx.Brush(bgcol, wx.SOLID))
         dc.SetPen(wx.TRANSPARENT_PEN)
         dc.DrawRectangleRect(rect)
-        
+
         value = grid.GetTable().GetValue(row, col)
         if value:
             bmp = self.bmp_yes
@@ -1263,7 +1270,7 @@ class CheckBoxCellRenderer(gridlib.PyGridCellRenderer):
         #w, h = dc.GetTextExtent(text)
         #return wx.Size(w, h)
         return wx.Size(20, 20)
-    
+
     def Clone(self):
         return CheckBoxCellRenderer()
 
@@ -1272,12 +1279,12 @@ class CheckBoxCellRenderer(gridlib.PyGridCellRenderer):
 
 
 class ImageCellRenderer(gridlib.PyGridCellRenderer):
-    
+
     def __init__(self, width, height):
         gridlib.PyGridCellRenderer.__init__(self)
         self.width = width
         self.height = height
-    
+
     def SetBitmap(self, bmp):
         self.bitmap = bmp
 
@@ -1302,6 +1309,6 @@ class ImageCellRenderer(gridlib.PyGridCellRenderer):
         #w, h = dc.GetTextExtent(text)
         #return wx.Size(w, h)
         return wx.Size(self.width, self.height)
-    
+
     def Clone(self):
         return ImageCellRenderer(self.width, self.height)
