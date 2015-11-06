@@ -28,6 +28,11 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
+    ('1.5.13', dt.Date(2015, 11, 6), (
+         ("BUG1157",
+         """Intercettazion errore che si verificava in assegnazione valore a cella griglia"""),
+        ),),
+
     ('1.5.12', dt.Date(2015, 9, 21), (
          ("BUG1156",
          """Rimosso bug che si verificava alla stampa del bilancio contrapposto"""),
