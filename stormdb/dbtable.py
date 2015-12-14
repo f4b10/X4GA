@@ -2926,7 +2926,14 @@ class DbTable(object):
         self.SetConnectionStore(adbStore)
         self.adeg={}
         self.CheckStoreTable()
-        return self.Adegua()
+        # parametrizzare engine
+        import Env
+        if Env.Azienda.BaseTab.OPTLINKINDEX:
+            engine='INNODB'
+        else:
+            engine='MYISAM'
+        return self.Adegua(engine=engine)
+        #return self.Adegua()
 
     def Move2Store(self, adbStore=None, field2Store=None):
         self.SetConnectionStore(adbStore)
@@ -2948,7 +2955,9 @@ class DbTable(object):
 
     def Copy2Store(self, adbStore=None):
         self.SetConnectionStore(adbStore)
+        self.adbStore._dbCon.autocommit(True)
         tabName=self._info.tableName
+
         fields=self.GetFieldNames()
         storeTable=DbTable(tabName, db=self.adbStore)
         self.Retrieve()
@@ -3107,7 +3116,8 @@ class DbTable(object):
         else:
             pass
 
-    def Adegua(self):
+    def Adegua(self, engine='MYISAM'):
+        #TODO: parametrizzare engine
         import Env
         import wx
         errors = False
@@ -3202,8 +3212,9 @@ class DbTable(object):
                     cmd += "index%d (%s), " % (i, indexpr)
 
             cmd = cmd[:-2]
+            #TODO: parametrizzare engine
             if create:
-                cmd += ") ENGINE = MYISAM"
+                cmd += ") ENGINE = %s" % engine
 
             if not db.Execute(cmd):
                 if create:

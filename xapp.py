@@ -132,7 +132,7 @@ class XApp(wx.App):
                 wx.Sleep(.1)
             self.SetTopWindow(frame)
     
-    def TestDBVers(self, force=False):
+    def TestDBVers(self, force=False, reindex=False):
         
         vers_ok = True
         version_problems = []
@@ -220,7 +220,7 @@ class XApp(wx.App):
             
             if r == wx.ID_YES:
                 import cfg.tabsetup as tabsetup
-                dlg = tabsetup.TabSetupDialog()
+                dlg = tabsetup.TabSetupDialog(reindex=reindex)
                 vers_ok = dlg.ShowModal() != 0
                 dlg.Destroy()
                 

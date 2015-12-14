@@ -28,6 +28,11 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
+    ('1.5.14', dt.Date(2015, 11, 26), (
+         ("BET1185",
+         """Inserita possibilità di utilizzare database INNODB per compatibilità com SqlAlchemy"""),
+        ),),
+
     ('1.5.13', dt.Date(2015, 11, 6), (
          ("BUG1157",
          """Intercettazion errore che si verificava in assegnazione valore a cella griglia"""),
@@ -39,7 +44,7 @@ history = (
         ),),
 
     ('1.5.11', dt.Date(2015, 9, 06), (
-         ("BUG1155",
+         ("BUG11855",
          """Rimosso bug che all'atto della creazione di una tabella non  provvedeva a crearne anche i relativi indici"""),
          ("BET1184",
          """Introdotti metodi per l'archiviazione delle tabelle."""),

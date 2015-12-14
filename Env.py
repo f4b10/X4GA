@@ -953,6 +953,7 @@ class Azienda(object):
 
         """
 
+        OPTLINKINDEX = False #flag attiva engine INNODB per le tabella
         OPTDIGSEARCH = True  #flag ricerca immediata in digitazione codice/descrizione
         OPTTABSEARCH = True  #flag attivazione ricerche anche con il tasto Tab
         OPTRETSEARCH = True  #flag attivazione ricerche anche con il tasto Return
@@ -1855,8 +1856,12 @@ class Azienda(object):
                 a(["autista", "VARCHAR",    64, None, "Autista", None ])
                 a(["dichiar", "VARCHAR",   ntw, None, "Dichiarazione", None ])
 
-            cls.set_constraints(cls.TABNAME_TRAVET,
-                                ((cls.TABSETUP_CONSTR_MOVMAG_H, 'id_travet', cls.TABCONSTRAINT_TYPE_NOACTION),))
+
+            #TODO: RIMOSSO CONSTRAINTS
+            #===================================================================
+            # cls.set_constraints(cls.TABNAME_TRAVET,
+            #                     ((cls.TABSETUP_CONSTR_MOVMAG_H, 'id_travet', cls.TABCONSTRAINT_TYPE_NOACTION),))
+            #===================================================================
 
             cls.travet_indexes = cls.std_indexes
 
@@ -3188,7 +3193,7 @@ class Azienda(object):
                 [ "f_setgen",   "TINYINT",   1, None, "Setta flag documento generato da raggruppamento su doc.generato", "UNSIGNED NOT NULL DEFAULT '1'" ],
                 [ "f_nodesrif", "TINYINT",   1, None, "Non genera riga di riferimento al documento raggruppato", "UNSIGNED NOT NULL DEFAULT '0'" ],
                 [ "f_chgmag",   "TINYINT",   1, None, "Flag cambio magazzino su documenti generati", "UNSIGNED NOT NULL DEFAULT '0'" ],
-                [ "id_chgmag",  "TINYINT", idw, None, "Id magazzino da sostituire su documenti generati", None ], ]
+                [ "id_chgmag",  "INT    ", idw, None, "Id magazzino da sostituire su documenti generati", None ], ]
 
             cls.set_constraints(cls.TABNAME_CFGFTDIF,
                                 ((cls.TABSETUP_CONSTR_CFGMAGDOC, 'id_docgen', cls.TABCONSTRAINT_TYPE_NOACTION),
@@ -3901,6 +3906,7 @@ class Azienda(object):
                 ('MAGDIGSEARCH',    'magdigsearch',       f, _int, 'del flag di ricerca immediata prodotti in digitazione codice'),
                 ('MAGRETSEARCH',    'magretsearch',       f, _int, None),
                 ('MAGEXCSEARCH',    'magexcsearch',       f, _int, None),
+                ('OPTLINKINDEX',    'optlinkindex',       f, _int, None),
                 ('OPTDIGSEARCH',    'optdigsearch',       f, _int, None),
                 ('OPTTABSEARCH',    'opttabsearch',       f, _int, None),
                 ('OPTRETSEARCH',    'optretsearch',       f, _int, None),
@@ -3969,6 +3975,26 @@ class Azienda(object):
                 ('MAGSELLIS',       'magsellis',          f, _flt, None),
             ]
 
+        @classmethod
+        def GetLinkedIndex(cls):
+            def getKey(item):
+                return item[0]
+            linkedIndex=[]
+            for n, tabstru in enumerate(cls.tabelle):
+                for i in range(0,6):
+                    if i==4 and not tabstru[i]==[]:
+                        for nome, field, tipo in tabstru[i]:
+                            newIndex=[nome, tabstru[0], field, tipo]
+                            if not newIndex in linkedIndex:
+                                linkedIndex.append(newIndex)
+            linkedIndex=sorted(linkedIndex, key=getKey)
+            cls.linkedIndex=linkedIndex
+
+        @classmethod
+        def GetTableLinkedIndex(cls, table=None):
+            if not hasattr(cls, 'linkedIndex'):
+                cls.GetLinkedIndex()
+            return [x for x in cls.linkedIndex if x[0] == table]
 
         @classmethod
         def SetMailParams(cls):

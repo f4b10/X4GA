@@ -126,6 +126,7 @@ class StoreConnection(adb.DB):
                                           user=Env.Azienda.DB.username,
                                           passwd=Env.Azienda.DB.password,
                                           db=self.newDb)
+            self.dbconn.autocommit(True)
             lSuccess = True
         except MySQLdb.Error, e:
             #print 'errore in apertura database %s' % self.newDb

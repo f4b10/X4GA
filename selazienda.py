@@ -457,6 +457,7 @@ class SelAziendaPanel(aw.Panel):
                                    passwd=Env.Azienda.DB.password,
                                    db=nomedb,
                                    use_unicode=True)
+            conn.autocommit(True)
             Env.Azienda.DB.connection = conn
             Env.Azienda.codice = codice
             Env.Azienda.descrizione = nomeazi

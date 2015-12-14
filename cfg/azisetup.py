@@ -6,17 +6,17 @@
 # Copyright:    (C) 2011 Astra S.r.l. C.so Cavallotti, 122 18038 Sanremo (IM)
 # ------------------------------------------------------------------------------
 # This file is part of X4GA
-# 
+#
 # X4GA is free software: you can redistribute it and/or modify
 # it under the terms of the Affero GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # X4GA is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
@@ -47,18 +47,18 @@ FRAME_TITLE = "Setup azienda"
 
 
 class _SetupPanel(aw.Panel):
-    
+
     def __init__(self, *args, **kwargs):
         aw.Panel.__init__(self, *args, **kwargs)
         self.dbsetup = adb.DbTable(bt.TABNAME_CFGSETUP, 'setup')
-    
+
     def EncodeValue(self, value, name, is_pswd=False):
         if is_pswd:
             c = crypt.encrypt_data(str(value))
             enc = base64.b64encode(c)
             return enc
         return value
-    
+
     def DecodeValue(self, value, name, is_pswd=False):
         if is_pswd:
             try:
@@ -68,7 +68,7 @@ class _SetupPanel(aw.Panel):
             except:
                 pass
         return value
-    
+
     def SetupRead(self):
         db = self.dbsetup
         cn = self.FindWindowByName
@@ -85,13 +85,13 @@ class _SetupPanel(aw.Panel):
                     else:
                         val = self.DecodeValue(db.descriz, name, ctr.GetWindowStyle() & wx.TE_PASSWORD == wx.TE_PASSWORD)
                     ctr.SetValue(val)
-    
+
     def SetupWrite(self):
-        
+
         out = True
         db = self.dbsetup
         cn = self.FindWindowByName
-        
+
         for ctr in aw.awu.GetAllChildrens(self):
             name = ctr.GetName()
             if name[:6] == 'setup_':
@@ -117,18 +117,18 @@ class _SetupPanel(aw.Panel):
                     aw.awu.MsgDialog(self, message="Problema in lettura setup:\n%s" % db.GetError())
                     out = False
                     break
-        
+
         import lib
         evt = wx.PyCommandEvent(lib._evtCHANGEMENU)
         wx.GetApp().GetTopWindow().AddPendingEvent(evt)
-        
+
         return out
-    
+
     def OnConfirm(self, event):
         if self.Validate():
             if self.SetupWrite():
                 event.Skip()
-    
+
     def Validate(self):
         raise Exception, 'Classe non istanziabile'
 
@@ -140,9 +140,9 @@ class AziendaSetupPanel(_SetupPanel):
     """
     Impostazione setup azienda.
     """
-    
+
     def __init__(self, *args, **kwargs):
-        
+
         _SetupPanel.__init__(self, *args, **kwargs)
         wdr.AziendaSetup(self)
         cn = lambda x: self.FindWindowByName(x)
@@ -152,7 +152,7 @@ class AziendaSetupPanel(_SetupPanel):
             cn(name).SetDataLink(name, list(vals))
         self.SetupRead()
         self.Bind(wx.EVT_BUTTON, self.OnConfirm, id=wdr.ID_BTNOK)
-    
+
     def SetupRead(self):
         out = _SetupPanel.SetupRead(self)
         cn = self.FindWindowByName
@@ -161,12 +161,12 @@ class AziendaSetupPanel(_SetupPanel):
         if os.path.isfile(logo):
             cn('azienda_logo').display_image(logo)
         return out
-    
+
     def SetupWrite(self):
-        
+
         cn = self.FindWindowByName
         out = _SetupPanel.SetupWrite(self)
-        
+
         if out:
             #aggiornamento ragione sociale su db aziende
             out = False
@@ -192,9 +192,9 @@ class AziendaSetupPanel(_SetupPanel):
             else:
                 aw.awu.MsgDialog(self, message="Problema di connessione al database delle aziende:\n%s" % dba._Error_MySQLdb)
             dba.Close()
-            
+
             if out:
-                
+
                 img = cn('azienda_logo')
                 if img.is_changed():
                     fns = img.get_image_filename()
@@ -224,23 +224,24 @@ class AziendaSetupPanel(_SetupPanel):
                                         ht.close()
                             except Exception, e:
                                 aw.awu.MsgDialog(self, repr(e.args))
-            
+
                 bt.ReadAziendaSetup()
                 Env.Azienda.read_dati_azienda()
-            
+
         return out
-    
+
     def GetLogoPath(self, azienda_codice=None):
         import report
         d = report.pathsub
         if d:
             d = os.path.join(d, 'immagini')
         return d
-    
+
     def GetLogoFileName(self):
         return 'logo_aziendale.jpg'
-    
+
     def Validate(self):
+        reindex=False
         out = True
         cn = self.FindWindowByName
         ci = self.FindWindowById
@@ -280,6 +281,7 @@ class AziendaSetupPanel(_SetupPanel):
                    bt.MAGDIGSEARCH,
                    bt.MAGRETSEARCH,
                    bt.MAGEXCSEARCH,
+                   bt.OPTLINKINDEX,
                    bt.OPTDIGSEARCH,
                    bt.OPTTABSEARCH,
                    bt.OPTRETSEARCH,
@@ -342,6 +344,10 @@ class AziendaSetupPanel(_SetupPanel):
                    bt.MAGSEPLIS,
                    bt.MAGRELLIS,
                    bt.MAGSELLIS,)
+
+
+            if not bt.OPTLINKINDEX == bool(cn('setup_optlinkindex').GetValue()):
+                reindex=True
             bt.TIPO_CONTAB = cn('setup_tipo_contab').GetValue()
             bt.CONSOVGES = cn('setup_consovges').GetValue()
             bt.CONBILRICL = cn('setup_conbilricl').GetValue()
@@ -361,6 +367,7 @@ class AziendaSetupPanel(_SetupPanel):
             bt.MAGDIGSEARCH = bool(cn('setup_magdigsearch').GetValue())
             bt.MAGRETSEARCH = bool(cn('setup_magretsearch').GetValue())
             bt.MAGEXCSEARCH = bool(cn('setup_magexcsearch').GetValue())
+            bt.OPTLINKINDEX = bool(cn('setup_optlinkindex').GetValue())
             bt.OPTDIGSEARCH = bool(cn('setup_optdigsearch').GetValue())
             bt.OPTTABSEARCH = bool(cn('setup_opttabsearch').GetValue())
             bt.OPTRETSEARCH = bool(cn('setup_optretsearch').GetValue())
@@ -424,7 +431,7 @@ class AziendaSetupPanel(_SetupPanel):
             bt.MAGRELLIS = cn('setup_magrellis').GetValue()
             bt.MAGSELLIS = cn('setup_magsellis').GetValue()
             bt.defstru()
-            out = wx.GetApp().TestDBVers(force=True)
+            out = wx.GetApp().TestDBVers(force=True, reindex=reindex)
             if not out:
                 bt.TIPO_CONTAB,
                 bt.CONSOVGES,
@@ -445,6 +452,7 @@ class AziendaSetupPanel(_SetupPanel):
                 bt.MAGDIGSEARCH,
                 bt.MAGRETSEARCH,
                 bt.MAGEXCSEARCH,
+                bt.OPTLINKINDEX,
                 bt.OPTDIGSEARCH,
                 bt.OPTTABSEARCH,
                 bt.OPTRETSEARCH,
@@ -510,9 +518,9 @@ class AziendaSetupPanel(_SetupPanel):
         if out:
             cfg = CfgContab()
             cfg.SetEsercizio(Env.Azienda.Login.dataElab)
-        
+
         return out
-    
+
     def TestEsercizio(self):
         out = True
         cnv = lambda x: self.FindWindowByName('setup_'+x).GetValue()
@@ -541,7 +549,7 @@ class AziendaSetupDialog(aw.Dialog):
         self.CenterOnScreen()
         for cid, func in ((wdr.ID_BTNOK, self.OnSave),):
             self.Bind(wx.EVT_BUTTON, func, id=cid)
-    
+
     def OnSave(self, event):
         evt = wx.PyCommandEvent(lib._evtCHANGEMENU)
         wx.GetApp().GetTopWindow().AddPendingEvent(evt)
