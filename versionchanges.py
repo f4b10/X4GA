@@ -28,6 +28,13 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
+    ('1.5.15', dt.Date(2015, 11, 26), (
+         ("BET1187",
+         """Introdotta gestione SDD per adegugamento a tracciati CBI"""),
+         ("BET1187",
+         """Introdotta fix per Server MySql che non dispongono della funzione old_password()"""),
+        ),),
+
     ('1.5.14', dt.Date(2015, 11, 26), (
          ("BET1185",
          """Inserita possibilità di utilizzare database INNODB per compatibilità com SqlAlchemy"""),

@@ -2141,20 +2141,22 @@ class Azienda(object):
 
 
             cls.bancf =\
-              [ [ "id",         "INT",    idw, None, "ID Banca del cliente", "AUTO_INCREMENT" ],
-                [ "codice",     "CHAR",    10, None, "Codice", None ],
-                [ "descriz",    "VARCHAR", 60, None, "Descrizione", None ],
-                [ "paese",      "CHAR",     2, None, "Paese", None ],
-                [ "ciniban",    "CHAR",     2, None, "CIN IBAN", None ],
-                [ "cinbban",    "CHAR",     1, None, "CIN BBAN", None ],
-                [ "abi",        "CHAR",     5, None, "ABI", None ],
-                [ "cab",        "CHAR",     5, None, "CAB", None ],
-                [ "numcc",      "VARCHAR", 19, None, "Num. C/C", None ],
-                [ "bban",       "VARCHAR", 23, None, "Coord. BBAN", None ],
-                [ "iban",       "VARCHAR", 34, None, "Coord. IBAN", None ],
-                [ "bic",        "VARCHAR", 11, None, "Codice BIC", None ],
-                [ "pref",       "TINYINT",  1, None, "Flag banca preferita", None ],
-                [ "id_pdc",     "INT",    idw, None, "ID Anagrafica di app.", None ] ]
+              [ [ "id",         "INT",     idw, None, "ID Banca del cliente", "AUTO_INCREMENT" ],
+                [ "codice",     "CHAR",     10, None, "Codice", None ],
+                [ "descriz",    "VARCHAR",  60, None, "Descrizione", None ],
+                [ "paese",      "CHAR",      2, None, "Paese", None ],
+                [ "ciniban",    "CHAR",      2, None, "CIN IBAN", None ],
+                [ "cinbban",    "CHAR",      1, None, "CIN BBAN", None ],
+                [ "abi",        "CHAR",      5, None, "ABI", None ],
+                [ "cab",        "CHAR",      5, None, "CAB", None ],
+                [ "numcc",      "VARCHAR",  19, None, "Num. C/C", None ],
+                [ "bban",       "VARCHAR",  23, None, "Coord. BBAN", None ],
+                [ "iban",       "VARCHAR",  34, None, "Coord. IBAN", None ],
+                [ "bic",        "VARCHAR",  11, None, "Codice BIC", None ],
+                [ "pref",       "TINYINT",   1, None, "Flag banca preferita", None ],
+                [ "dtini_rid",  "DATE",   None, None, "Data Attivazione RID", None ],
+                [ "rcur",       "TINYINT",   1, None, "Flag RCUR per incasso auomatico", None ],
+                [ "id_pdc",     "INT",     idw, None, "ID Anagrafica di app.", None ] ]
 
             cls.set_constraints(cls.TABNAME_BANCF,
                                 ((cls.TABSETUP_CONSTR_PDC, 'id_pdc', cls.TABCONSTRAINT_TYPE_CASCADE),))
@@ -2266,7 +2268,9 @@ class Azienda(object):
                 [ "firmariba",  "VARCHAR", 20, None, "Firma x disco riba", None ],
                 [ "provfin",    "VARCHAR", 15, None, "Prov. Finanza", None],
                 [ "aubanum",    "VARCHAR", 10, None, "Num. autorizz. banca", None],
-                [ "aubadat",    "DATE",  None, None, "Data autorizz. banca", None] ]
+                [ "aubadat",    "DATE",  None, None, "Data autorizz. banca", None],
+                [ "creid",      "VARCHAR", 23, None, "Creditor Identifier", None ],
+                [ "cuc",        "VARCHAR",  8, None, "Codice CUC", None ],]
 
             cls.banche_indexes = [ ["PRIMARY KEY", "id"], ]
 
@@ -3066,7 +3070,7 @@ class Azienda(object):
               [ [ "id",         "INT",    idw, None, "ID", "AUTO_INCREMENT" ],
                 [ "id_banca",   "INT",    idw, None, "ID Banca", None ],
                 [ "tipo",       "CHAR",     1, None, "Tipo configurazione", None ],
-                [ "zona",       "CHAR",     1, None, "Zona H/B/F", None ],
+                [ "zona",       "CHAR",     4, None, "Zona H/B/F", None ],
                 [ "riga",       "INT",      2, None, "Num. riga", None ],
                 [ "macro",      "TEXT",  None, None, "Macro riga", None ] ]
 

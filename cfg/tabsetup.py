@@ -106,44 +106,44 @@ class TabSetupPanel(aw.Panel):
 #             self.AddForeignKey()
 #             print '='*80
 #         self.waitEngine.Destroy()
-#             
-# 
-# 
+#
+#
+#
 #     def SetEngine(self, engine=None):
 #         bt = Env.Azienda.BaseTab
 #         self.waitEngine.SetRange(len(bt.tabelle))
 #         self.waitEngine.SetRange2(0)
 #         self.waitEngine.SetValue(0)
 #         self.waitEngine.SetValue2(0)
-#         
+#
 #         for i, (name, desc, stru, index, constr, voice) in enumerate(bt.tabelle):
 #             self.waitEngine.SetMessage('Applico engine a %s' % name)
 #             self.waitEngine.SetMessage2('')
 #             self.waitEngine.SetValue(i+1)
-#             
+#
 #             print 'ALTER ENGINE %s %s' % (i, name)
 #             cmd='ALTER TABLE %s ENGINE=%s' % (name, engine)
 #             try:
-#                 tab = adb.DbTable(name, writable=False)                    
+#                 tab = adb.DbTable(name, writable=False)
 #                 c = tab._info.db._dbCon.cursor()
 #                 c.execute(cmd)
 #             except MySQLdb.Error, e:
 #                 print '%s errore in cambio engine %s %s' % (cmd, e[0], e[1])
 #                 pass
-# 
-# 
+#
+#
 #     def SetMyIsamEngine(self):
 #         self.SetEngine(engine='MYISAM')
-#             
-# 
+#
+#
 #     def SetInnoDbEngine(self):
 #         self.SetEngine(engine='INNODB')
-# 
-# 
+#
+#
 #     def RemoveAllForeignKey(self):
 #         bt = Env.Azienda.BaseTab
 #         nomedb=Env.Azienda.DB.schema
-# 
+#
 #         self.waitEngine.SetMessage('')
 #         self.waitEngine.SetMessage2('')
 #         self.waitEngine.SetValue(0)
@@ -158,16 +158,16 @@ class TabSetupPanel(aw.Panel):
 #             cmd="%s AND information_schema.TABLE_CONSTRAINTS.TABLE_SCHEMA = '%s'" % (cmd, nomedb)
 #             cmd="%s AND information_schema.TABLE_CONSTRAINTS.TABLE_NAME = '%s'" % (cmd, name)
 #             try:
-#                 tab = adb.DbTable(name, writable=False)                    
+#                 tab = adb.DbTable(name, writable=False)
 #                 c = tab._info.db._dbCon.cursor()
 #                 c.execute(cmd)
 #                 rsi = c.fetchall()
 #                 self.waitEngine.SetRange2(len(rsi))
 #                 for j, mysqlForeignKey in enumerate(rsi):
 #                     fk=mysqlForeignKey[2]
-#                     self.waitEngine.SetMessage2('rimozione %s' % fk)                    
+#                     self.waitEngine.SetMessage2('rimozione %s' % fk)
 #                     self.waitEngine.SetValue2(j+1)
-#                     
+#
 #                     cmd="ALTER TABLE %s DROP FOREIGN KEY %s" % (name, fk)
 #                     try:
 #                         c = tab._info.db._dbCon.cursor()
@@ -178,49 +178,49 @@ class TabSetupPanel(aw.Panel):
 #             except MySQLdb.Error, e:
 #                 print '%s errore in lettura foreign key %s %s' % (cmd, e[0], e[1])
 #                 pass
-#             
-# 
-# 
+#
+#
+#
 #     def AddForeignKey(self):
 #         bt = Env.Azienda.BaseTab
-#         
+#
 #         self.waitEngine.SetRange(len(bt.tabelle))
 #         self.waitEngine.SetValue(0)
 #         self.waitEngine.SetValue2(0)
-#         
-#         
+#
+#
 #         for i, (name, desc, stru, index, constr, voice) in enumerate(bt.tabelle):
 #             print 'ADD FOREIGN KEY %s %s' % (i, name)
 #             self.waitEngine.SetMessage('aggiunta foreign key a a %s' % name)
 #             self.waitEngine.SetValue(i+1)
 #             externalIndex=Env.Azienda.BaseTab.GetTableLinkedIndex(name)
 #             self.waitEngine.SetRange2(len(externalIndex))
-#             
+#
 #             for j, k in enumerate(externalIndex):
 #                 self.waitEngine.SetMessage2('aggiungo fk %s' % k[2])
 #                 self.waitEngine.SetValue2(j+1)
-#                 
+#
 #                 cmd="ALTER TABLE %s ADD FOREIGN KEY (%s) REFERENCES %s(Id)" % (k[0], k[2], k[1])
 #                 try:
-#                     tab = adb.DbTable(name, writable=False)                    
+#                     tab = adb.DbTable(name, writable=False)
 #                     c = tab._info.db._dbCon.cursor()
 #                     c.execute(cmd)
 #                 except MySQLdb.Error, e:
 #                     print '%s errore in foreign key %s %s' % (cmd, e[0], e[1])
 #                     pass
-# 
-# 
-# 
+#
+#
+#
 #     def RemoveAllIndex(self):
 #         bt = Env.Azienda.BaseTab
 #         self.waitEngine.SetRange(len(bt.tabelle))
 #         self.waitEngine.SetValue(0)
 #         self.waitEngine.SetValue2(0)
-#         
+#
 #         for i, (name, desc, stru, index, constr, voice) in enumerate(bt.tabelle):
 #             self.waitEngine.SetMessage('rimozione indici da %s' % name)
 #             self.waitEngine.SetValue(i+1)
-#             
+#
 #             print 'DROP INDEX %s %s' % (i, name)
 #             #print name
 #             try:
@@ -271,8 +271,6 @@ class TabSetupPanel(aw.Panel):
         I_COMMENT =   11
 
         bt = Env.Azienda.BaseTab
-
-
         #=======================================================================
         # if reindex:
         #     if Env.Azienda.BaseTab.OPTLINKINDEX:
@@ -281,9 +279,6 @@ class TabSetupPanel(aw.Panel):
         #         engine='MYISAM'
         #     self.ChangeEngine(engine)
         #=======================================================================
-
-
-
         for name, desc, stru, index, constr, voice in bt.tabelle:
             newIndex=[]
             for k in index:
@@ -301,8 +296,33 @@ class TabSetupPanel(aw.Panel):
                 status.SetLabel('Analisi...')
                 self.Update()
                 wx.Yield()
+                #===============================================================
+                # if name=='cfgeff':
+                #     pass
+                #===============================================================
 
                 tab = adb.DbTable(name, writable=False)
+
+
+                #===============================================================
+                # if name=='cfgeff':
+                #     try:
+                #         print tab._info.description
+                #         _sql = 'SELECT * FROM cfgeff LIMIT 1'
+                #         _conn= Env.Azienda.DB.connection
+                #         _dbCursor = _conn.cursor()
+                #         _dbCursor.execute(_sql)
+                #         print _dbCursor.description
+                #         for r in _dbCursor.description:
+                #             print r
+                #     except:
+                #         pass
+                #===============================================================
+
+
+
+
+
                 tab.Get(-1)
                 tabchange = False
                 tabcreate = False
@@ -490,7 +510,7 @@ class TabSetupDialog(aw.Dialog):
         dlg = WarningDialog(self)
         do = (dlg.ShowModal() == wx.ID_OK)
         dlg.Destroy()
-        if do:        
+        if do:
             self.waitEngine = aw.awu.WaitDialog(self, maximum=1, progress2=True)
             if newEngine=='MYISAM':
                 self.RemoveAllForeignKey(passo='1/3')
@@ -511,16 +531,16 @@ class TabSetupDialog(aw.Dialog):
         self.waitEngine.SetRange2(0)
         self.waitEngine.SetValue(0)
         self.waitEngine.SetValue2(0)
-        
+
         for i, (name, desc, stru, index, constr, voice) in enumerate(bt.tabelle):
             self.waitEngine.SetMessage('Applico engine a %s' % name)
             self.waitEngine.SetMessage2('')
             self.waitEngine.SetValue(i+1)
-            
+
             print 'ALTER ENGINE %s %s' % (i, name)
             cmd='ALTER TABLE %s ENGINE=%s' % (name, engine)
             try:
-                tab = adb.DbTable(name, writable=False)                    
+                tab = adb.DbTable(name, writable=False)
                 c = tab._info.db._dbCon.cursor()
                 c.execute(cmd)
             except MySQLdb.Error, e:
@@ -531,7 +551,7 @@ class TabSetupDialog(aw.Dialog):
     def SetMyIsamEngine(self, passo=None):
         self.waitEngine.SetTitle('Attendere prego ...... ( %s)' % passo)
         self.SetEngine(engine='MYISAM')
-            
+
 
     def SetInnoDbEngine(self, passo=None):
         self.waitEngine.SetTitle('Attendere prego ...... ( %s)' % passo)
@@ -556,16 +576,16 @@ class TabSetupDialog(aw.Dialog):
             cmd="%s AND information_schema.TABLE_CONSTRAINTS.TABLE_SCHEMA = '%s'" % (cmd, nomedb)
             cmd="%s AND information_schema.TABLE_CONSTRAINTS.TABLE_NAME = '%s'" % (cmd, name)
             try:
-                tab = adb.DbTable(name, writable=False)                    
+                tab = adb.DbTable(name, writable=False)
                 c = tab._info.db._dbCon.cursor()
                 c.execute(cmd)
                 rsi = c.fetchall()
                 self.waitEngine.SetRange2(len(rsi))
                 for j, mysqlForeignKey in enumerate(rsi):
                     fk=mysqlForeignKey[2]
-                    self.waitEngine.SetMessage2('rimozione %s' % fk)                    
+                    self.waitEngine.SetMessage2('rimozione %s' % fk)
                     self.waitEngine.SetValue2(j+1)
-                    
+
                     cmd="ALTER TABLE %s DROP FOREIGN KEY %s" % (name, fk)
                     try:
                         c = tab._info.db._dbCon.cursor()
@@ -576,7 +596,7 @@ class TabSetupDialog(aw.Dialog):
             except MySQLdb.Error, e:
                 print '%s errore in lettura foreign key %s %s' % (cmd, e[0], e[1])
                 pass
-            
+
 
 
     def AddForeignKey(self, passo=None):
@@ -585,22 +605,22 @@ class TabSetupDialog(aw.Dialog):
         self.waitEngine.SetRange(len(bt.tabelle))
         self.waitEngine.SetValue(0)
         self.waitEngine.SetValue2(0)
-        
-        
+
+
         for i, (name, desc, stru, index, constr, voice) in enumerate(bt.tabelle):
             print 'ADD FOREIGN KEY %s %s' % (i, name)
             self.waitEngine.SetMessage('aggiunta foreign key a a %s' % name)
             self.waitEngine.SetValue(i+1)
             externalIndex=Env.Azienda.BaseTab.GetTableLinkedIndex(name)
             self.waitEngine.SetRange2(len(externalIndex))
-            
+
             for j, k in enumerate(externalIndex):
                 self.waitEngine.SetMessage2('aggiungo fk %s' % k[2])
                 self.waitEngine.SetValue2(j+1)
-                
+
                 cmd="ALTER TABLE %s ADD FOREIGN KEY (%s) REFERENCES %s(Id)" % (k[0], k[2], k[1])
                 try:
-                    tab = adb.DbTable(name, writable=False)                    
+                    tab = adb.DbTable(name, writable=False)
                     c = tab._info.db._dbCon.cursor()
                     c.execute(cmd)
                 except MySQLdb.Error, e:
@@ -615,11 +635,11 @@ class TabSetupDialog(aw.Dialog):
         self.waitEngine.SetRange(len(bt.tabelle))
         self.waitEngine.SetValue(0)
         self.waitEngine.SetValue2(0)
-        
+
         for i, (name, desc, stru, index, constr, voice) in enumerate(bt.tabelle):
             self.waitEngine.SetMessage('rimozione indici da %s' % name)
             self.waitEngine.SetValue(i+1)
-            
+
             print 'DROP INDEX %s %s' % (i, name)
             #print name
             try:

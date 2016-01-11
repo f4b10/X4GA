@@ -96,6 +96,11 @@ class SquaredButtonAsBBAN(SquaredButtonAs):
 class SquaredButtonAsIBAN(SquaredButtonAs):
     basecontrolname = 'ban_iban'
 
+class RcurCheckBox(CheckBox):
+
+    def __init__(self, *args, **kwargs):
+        CheckBox.__init__(self, *args, **kwargs)
+        self.SetDataLink(values={True: 1, False: 0})
 
 # Window functions
 
@@ -399,6 +404,8 @@ ID_BAN_PAESE = 14031
 ID_BAN_CINIBAN = 14032
 ID_BAN_IBAN = 14033
 ID_BAN_BUTCALC_IBAN = 14034
+ID_TEXTCTRL = 14035
+ID_CHECKBOX = 14036
 
 def BancfCardFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -554,6 +561,34 @@ def BancfCardFunc( parent, call_fit = True, set_sizer = True ):
     item24.Add( item26, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item0.Add( item24, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item44 = wx.StaticBox( parent, -1, "Rid / Sepa Direct Debit" )
+    item43 = wx.StaticBoxSizer( item44, wx.VERTICAL )
+    
+    item45 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    
+    item46 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    
+    item47 = wx.StaticText( parent, ID_TEXT, "Data Attivazione RID", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item46.Add( item47, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item48 = DateCtrl( parent, ID_TEXTCTRL, "", wx.DefaultPosition, [80,-1], 0 )
+    item48.SetName( "bancf_dtini_rid" )
+    item46.Add( item48, 0, wx.ALIGN_CENTER|wx.LEFT, 5 )
+
+    item45.Add( item46, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item49 = wx.FlexGridSizer( 0, 4, 0, 0 )
+    
+    item50 = RcurCheckBox( parent, ID_CHECKBOX, "Disposizione di incasso automatico già emesso (RCUR x RID/SDD)", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item50.SetName( "bancf_rcur" )
+    item49.Add( item50, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+    item45.Add( item49, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item43.Add( item45, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item0.Add( item43, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item0.AddGrowableCol( 0 )
 

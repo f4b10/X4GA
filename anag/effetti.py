@@ -6,17 +6,17 @@
 # Copyright:    (C) 2011 Astra S.r.l. C.so Cavallotti, 122 18038 Sanremo (IM)
 # ------------------------------------------------------------------------------
 # This file is part of X4GA
-# 
+#
 # X4GA is free software: you can redistribute it and/or modify
 # it under the terms of the Affero GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # X4GA is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
@@ -52,6 +52,8 @@ class EffettiResultsGridTable(pdcrel.dbglib.DbGridTable):
                     out = 'RIBA'
                 elif val == 'I':
                     out = 'RID'
+                elif val == 'S':
+                    out = 'SDD'
                 else:
                     out = 'err'
             if out is None:
@@ -63,9 +65,9 @@ class EffettiResultsGridTable(pdcrel.dbglib.DbGridTable):
 
 
 class EffettiResultsGrid(pdcrel.ga.SearchResultsGrid):
-    
+
     tableClass = EffettiResultsGridTable
-    
+
     def GetDbColumns(self):
         _NUM = pdcrel.gl.GRID_VALUE_NUMBER
         _STR = pdcrel.gl.GRID_VALUE_STRING
@@ -84,7 +86,7 @@ class EffettiResultsGrid(pdcrel.ga.SearchResultsGrid):
                 (  1, (cn('banca_id'),      "#ban",            _STR, True)),
                 (  1, (cn('caus_id'),       "#cau",            _STR, True)),
             )
-    
+
     def SetColumn2Fit(self):
         self.SetFitColumn(1)
 
@@ -97,23 +99,23 @@ class EffettiPanel(pdcrel._PdcRelPanel):
     Gestione della tabella Effetti.
     """
     def __init__(self, *args, **kwargs):
-        
+
         self.pdctipo = "D"
         self.tabanag = bt.TABNAME_EFFETTI
         pdcrel._PdcRelPanel.__init__(self, *args, **kwargs)
-        
+
         self.anag_db_columns = [ c for c in Azienda.BaseTab.tabelle\
                                  [bt.TABSETUP_TABLE_EFFETTI]\
                                  [bt.TABSETUP_TABLESTRUCTURE] ]
-        
+
         self._sqlrelcol += ", banca.id, banca.codice, banca.descriz"
         self._sqlrelcol += ", caus.id, caus.codice, caus.descriz"
-        
+
         self._sqlrelfrm +=\
             " LEFT JOIN %s AS banca ON anag.id_banca=banca.id"\
             " LEFT JOIN %s AS caus ON anag.id_caus=caus.id"\
             % (bt.TABNAME_PDC, bt.TABNAME_CFGCONTAB)
-        
+
         self._Auto_AddKeys( { "pdctip_effetti": True,
                               "bilmas_effetti": True,
                               "bilcon_effetti": True,
@@ -123,21 +125,21 @@ class EffettiPanel(pdcrel._PdcRelPanel):
         self._auto_bilmas = getattr(self, "_auto_bilmas_effetti", None)
         self._auto_bilcon = getattr(self, "_auto_bilcon_effetti", None)
         self._auto_bilcee = getattr(self, "_auto_bilcee_effetti", None)
-        
+
         self.db_report = "Sottoconti Effetto"
-    
+
     def GetSqlColumns(self):
         fields = pdcrel._PdcRelPanel.GetSqlColumns(self)+', '
         for s in self.anag_db_columns:
             fields += 'anag.%s, ' % s[0]
         fields = fields[:-2]
         return fields
-    
+
     def InitAnagCard(self, parent):
         p = wx.Panel( parent, -1)
         EffettiCardFunc( p, True )
         cn = lambda x: self.FindWindowById(x)
-        cn(ID_TIPO).SetDataLink('tipo', 'RI')
+        cn(ID_TIPO).SetDataLink('tipo', 'RIS')
         #filtro su banca associata
         tipana = adb.DbTable(bt.TABNAME_PDCTIP, 'tipana', writable=False)
         if tipana.Retrieve('tipo="B"'):
@@ -158,13 +160,13 @@ class EffettiPanel(pdcrel._PdcRelPanel):
         lt.SetFilter("pcf=1 AND pcfscon=1 AND id_pdctippa IN (%s)"\
                      % ",".join(map(str, tipi["C"][1])))
         return p
-    
+
     def GetLinkTableClass(self):
         import anag.lib as alib
         return alib.LinkTableEffetto
 
     def GetSearchResultsGrid(self, parent):
-        grid = EffettiResultsGrid(parent, pdcrel.ga.ID_SEARCHGRID, 
+        grid = EffettiResultsGrid(parent, pdcrel.ga.ID_SEARCHGRID,
                                   self.db_tabname, self.GetSqlColumns())
         return grid
 

@@ -103,7 +103,7 @@ def ModPagCardFunc( parent, call_fit = True, set_sizer = True ):
     item3 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
     item4 = RadioBox( parent, ID_TIPOMP, "Tipologia", wx.DefaultPosition, wx.DefaultSize, 
-        ["Contanti/Assegni","Bonifico","Ricevuta Bancaria","RID","Cambiale","Altro"] , 1, wx.RA_SPECIFY_COLS )
+        ["Contanti/Assegni","Bonifico","Ricevuta Bancaria","RID","SSD","Cambiale","Altro"] , 1, wx.RA_SPECIFY_COLS )
     item3.Add( item4, 0, wx.GROW|wx.LEFT|wx.TOP, 5 )
 
     item5 = RadioBox( parent, ID_CONGAR, "Con garanzia:", wx.DefaultPosition, wx.DefaultSize, 

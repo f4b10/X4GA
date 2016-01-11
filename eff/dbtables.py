@@ -6,17 +6,17 @@
 # Copyright:    (C) 2011 Astra S.r.l. C.so Cavallotti, 122 18038 Sanremo (IM)
 # ------------------------------------------------------------------------------
 # This file is part of X4GA
-# 
+#
 # X4GA is free software: you can redistribute it and/or modify
 # it under the terms of the Affero GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # X4GA is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
@@ -44,25 +44,25 @@ class Eff(dbc.Pcf):
                     +-> cau (cfgcontab)
     """
     def __init__(self, *args, **kwargs):
-        
+
         dbc.Pcf.__init__(self, *args, **kwargs)
-        
+
         self.pdc.AddJoin(\
             dbc.bt.TABNAME_CLIENTI, "anag", idLeft="id", idRight="id",\
             join=adb.JOIN_LEFT)
-        
+
         pdcban = self.AddJoin(\
             dbc.bt.TABNAME_PDC,     "pdcban", idLeft="id_effban", idRight="id",\
             join=adb.JOIN_LEFT)
-        
+
         pdcban.AddJoin(\
             dbc.bt.TABNAME_BANCHE,  "ban", idLeft="id", idRight="id",\
             join=adb.JOIN_LEFT)
-        
+
         self.AddJoin(\
             dbc.bt.TABNAME_BANCF,   "bap", idLeft="id_effbap", idRight="id",\
             join=adb.JOIN_LEFT)
-        
+
         #la seguente dbtable è slegata dai dati di questa classe
         #viene usata in fase di stampa effetti per accedere ai dati della
         #banca emittente (pdcban e seguenti hanno senso solo *dopo* l'emissione)
@@ -70,18 +70,18 @@ class Eff(dbc.Pcf):
         pdcbanem.AddJoin(bt.TABNAME_BANCHE, 'banem', idLeft='id', idRight='id')
         pdcbanem.Get(-1)
         self._info.pdcbanem = pdcbanem
-        
+
         self.ClearOrders()
         self.AddOrder("pcf.datdoc")
         self.AddOrder("pcf.numdoc")
         self.AddOrder("pcf.datscad")
-        
+
         self.ClearFilters()
-        
+
         self.AddField('0.0', 'saldato')
-        
+
         self.Get(-1)
-    
+
     def Retrieve(self, *args, **kwargs):
         """
         Modifico il saldo di ogni partita per gestire l'emissione di:
@@ -103,11 +103,11 @@ class Eff(dbc.Pcf):
                 saldo = rse[row][colimp]
             rse[row][coleff] = saldo
         return out
-    
+
     def ClearFilters(self):
         dbc.Pcf.ClearFilters(self)
         self.AddFilter("tipana.tipo='C'")
-    
+
     def rifdoc(self):
         if False:#eff.desriba1:
             out = self.desriba1+self.desriba2
@@ -151,7 +151,7 @@ class Eff(dbc.Pcf):
 
 
 class RIBA(Eff):
-    
+
     def ClearFilters(self):
         dbc.Pcf.ClearFilters(self)
         self.AddFilter("tipana.tipo='C'")
@@ -162,7 +162,7 @@ class RIBA(Eff):
 
 
 class RID(Eff):
-    
+
     def ClearFilters(self):
         dbc.Pcf.ClearFilters(self)
         self.AddFilter("tipana.tipo='C'")
@@ -178,7 +178,7 @@ def GetEffConfig(tipo="R", banca=None):
     Parametri:
     tipo def. R tipo configurazione
     banca def. None banca del tracciato
-    Restituisce un dizionario di tre chiavi (H=head,B=body,F=foot)
+    Restituisce un dizionario di tre chiavi o più chiavi (H=head,B=body,F=foot)
     i valori sono le liste di mascro da generare, una per ogni riga del file
     """
     ec = dbc.Env.Azienda.BaseTab.TABNAME_CFGEFF
@@ -186,24 +186,153 @@ def GetEffConfig(tipo="R", banca=None):
     cfg.AddFilter("cfg.tipo=%s", tipo)
     cfg.StoreFilters()
     cfg.AddFilter("cfg.id_banca=%s", banca)
+    cfg.AddOrder('riga')
     cfg.Retrieve()
     if cfg.RowsCount() == 0:
         cfg.ResumeFilters()
         cfg.Retrieve()
     if cfg.RowsCount() == 0:
+        InitConfig(tipo)
+        cfg.Retrieve()
+    if cfg.RowsCount() == 0:
         raise Exception, "Manca la configurazione del file effetti"
     tr = {"H": [],\
           "B": [],\
+          "H1": [],\
+          "B1": [],\
+          "F1": [],\
           "F": []}
     cfgb = []
     cfgf = []
     for c in cfg:
-        if c.zona in "HBF":
+        if c.zona in "H|B|F|H1|B1|F1":
             tr[c.zona].append(c.macro)
     del cfg
     return tr
-    
-    
+
+
+def InitConfig(tipo='R'):
+    print 'inizializza configurazione effetti di tipo %s' % tipo
+    cfg=[]
+    if tipo=='S':
+        cfg.append(['H ',  0, "'<?xml version=" + '"1.0" encoding="UTF-8"?>' +"'"])
+        cfg.append(['H ',  1, "'<CBIBdySDDReq xmlns=" +'"urn:CBI:xsd:CBIBdySDDReq.00.01.00" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"'+"'"])
+        cfg.append(['H ',  2, "'              xsi:schemaLocation=" +'"urn:CBI:xsd:CBIBdySDDReq.00.00.06 CBIBdySDDReq.00.00.06.xsd">' + "'"])
+        cfg.append(['H ',  3, "'  <PhyMsgInf>'"])
+        cfg.append(['H ',  4, "'    <PhyMsgTpCd>' + info.PhyMsgTpCd +'</PhyMsgTpCd>'"])
+        cfg.append(['H ',  5, "'    <NumLogMsg>1</NumLogMsg>'"])
+        cfg.append(['H ',  6, "'  </PhyMsgInf>'"])
+        cfg.append(['H ',  7, "'  <CBIEnvelSDDReqLogMsg>'"])
+        cfg.append(['H ',  8, "'    <CBISDDReqLogMsg>'"])
+        cfg.append(['H ',  9, "'      <GrpHdr xmlns=" + '"urn:CBI:xsd:CBISDDReqLogMsg.00.00.06">' +"'"])
+        cfg.append(['H ', 10, "'        <MsgId>'+ info.MsgId + '</MsgId>'"])
+        cfg.append(['H ', 11, "'        <CreDtTm>'+ info.CreDtTm + '</CreDtTm>'"])
+        cfg.append(['H ', 12, "'        <NbOfTxs>' + str(info.NbOfTxs) +'</NbOfTxs>'"])
+        cfg.append(['H ', 13, "'        <CtrlSum>' + ('% 8.2f' % info.CtrlSum).strip() +'</CtrlSum>'"])
+        cfg.append(['H ', 14, "'        <InitgPty>'"])
+        cfg.append(['H ', 15, "'          <Nm>'+ info.InitgPty_Nm + '</Nm>'"])
+        cfg.append(['H ', 16, "'          <Id>'"])
+        cfg.append(['H ', 17, "'            <OrgId>'"])
+        cfg.append(['H ', 18, "'              <Othr>'"])
+        cfg.append(['H ', 19, "'                <Id>' + info.InitgPty_Id + '</Id>'"])
+        cfg.append(['H ', 20, "'                <Issr>CBI</Issr>'"])
+        cfg.append(['H ', 21, "'              </Othr>'"])
+        cfg.append(['H ', 22, "'            </OrgId>'"])
+        cfg.append(['H ', 23, "'          </Id>'"])
+        cfg.append(['H ', 24, "'        </InitgPty>'"])
+        cfg.append(['H ', 25, "'      </GrpHdr>'"])
+        cfg.append(['H1',  0, "'      <PmtInf xmlns=" +'"urn:CBI:xsd:CBISDDReqLogMsg.00.00.06">' "'"])
+        cfg.append(['H1',  1, "'        <PmtInfId>' + info.PmtInfId + '</PmtInfId>'"])
+        cfg.append(['H1',  2, "'        <PmtMtd>DD</PmtMtd>'"])
+        cfg.append(['H1',  3, "'        <PmtTpInf>'"])
+        cfg.append(['H1',  4, "'          <SvcLvl>'"])
+        cfg.append(['H1',  5, "'            <Cd>SEPA</Cd>'"])
+        cfg.append(['H1',  6, "'          </SvcLvl>'"])
+        cfg.append(['H1',  7, "'          <LclInstrm>'"])
+        cfg.append(['H1',  8, "'            <Cd>CORE</Cd>'"])
+        cfg.append(['H1',  9, "'          </LclInstrm>'"])
+        cfg.append(['H1', 10, "'          <SeqTp>' + info.SeqTp + '</SeqTp>'"])
+        cfg.append(['H1', 11, "'        </PmtTpInf>'"])
+        cfg.append(['H1', 12, "'        <ReqdColltnDt>' + info.ReqdColltnDt +'</ReqdColltnDt>'"])
+        cfg.append(['H1', 13, "'        <Cdtr>'"])
+        cfg.append(['H1', 14, "'          <Nm>' + info.Cdtr_Nm + '</Nm>'"])
+        cfg.append(['H1', 15, "'        </Cdtr>'"])
+        cfg.append(['H1', 16, "'        <CdtrAcct>'"])
+        cfg.append(['H1', 17, "'          <Id>'"])
+        cfg.append(['H1', 18, "'            <IBAN>' + info.CdtrAcct_IBAN + '</IBAN>'"])
+        cfg.append(['H1', 19, "'          </Id>'"])
+        cfg.append(['H1', 20, "'        </CdtrAcct>'"])
+        cfg.append(['H1', 21, "'        <CdtrAgt>'"])
+        cfg.append(['H1', 22, "'          <FinInstnId>'"])
+        cfg.append(['H1', 23, "'            <ClrSysMmbId>'"])
+        cfg.append(['H1', 24, "'              <MmbId>' + info.CdtrAgt_MmbId + '</MmbId>'"])
+        cfg.append(['H1', 25, "'            </ClrSysMmbId>'"])
+        cfg.append(['H1', 26, "'          </FinInstnId>'"])
+        cfg.append(['H1', 27, "'        </CdtrAgt>'"])
+        cfg.append(['H1', 28, "'        <CdtrSchmeId>'"])
+        cfg.append(['H1', 29, "'          <Nm>' + info.CdtrSchmedId_Nm + '</Nm>'"])
+        cfg.append(['H1', 30, "'          <Id>'"])
+        cfg.append(['H1', 31, "'            <PrvtId>'"])
+        cfg.append(['H1', 32, "'              <Othr>'"])
+        cfg.append(['H1', 33, "'                <Id>' + info.CdtrSchmedId_Id + '</Id>'"])
+        cfg.append(['H1', 34, "'              </Othr>'"])
+        cfg.append(['H1', 35, "'            </PrvtId>'"])
+        cfg.append(['H1', 36, "'          </Id>'"])
+        cfg.append(['H1', 37, "'        </CdtrSchmeId>'"])
+        cfg.append(['B1',  0, "'        <DrctDbtTxInf>'"])
+        cfg.append(['B1',  1, "'          <PmtId>'"])
+        cfg.append(['B1',  2, "'            <InstrId>' + info.InstrId + '</InstrId>'"])
+        cfg.append(['B1',  3, "'            <EndToEndId>' + info.EndToEndId +'</EndToEndId>'"])
+        cfg.append(['B1',  4, "'          </PmtId>'"])
+        cfg.append(['B1',  5, "'          <InstdAmt Ccy=" +'"EUR">' + "' + info.InstdAmt + '</InstdAmt>'"])
+        cfg.append(['B1',  6, "'          <DrctDbtTx>'"])
+        cfg.append(['B1',  7, "'            <MndtRltdInf>'"])
+        cfg.append(['B1',  8, "'              <MndtId>' + info.MndtId + '</MndtId>'"])
+        cfg.append(['B1',  9, "'              <DtOfSgntr>' + info.DtOfSgntr +'</DtOfSgntr>'"])
+        cfg.append(['B1', 10, "'              <AmdmntInd>false</AmdmntInd>'"])
+        cfg.append(['B1', 11, "'            </MndtRltdInf>'"])
+        cfg.append(['B1', 12, "'          </DrctDbtTx>'"])
+        cfg.append(['B1', 18, "'          <Dbtr>'"])
+        cfg.append(['B1', 19, "'            <Nm>' + info.Dbtr_Nm + '</Nm>'"])
+        cfg.append(['B1', 20, "'          </Dbtr>'"])
+        cfg.append(['B1', 21, "'          <DbtrAcct>'"])
+        cfg.append(['B1', 22, "'            <Id>'"])
+        cfg.append(['B1', 23, "'              <IBAN>' + info.DbtrAcct_IBAN + '</IBAN>'"])
+        cfg.append(['B1', 24, "'            </Id>'"])
+        cfg.append(['B1', 25, "'          </DbtrAcct>'"])
+        cfg.append(['B1', 26, "'          <Purp>'"])
+        cfg.append(['B1', 27, "'            <Cd>GDSV</Cd>'"])
+        cfg.append(['B1', 28, "'          </Purp>'"])
+        cfg.append(['B1', 29, "'          <RgltryRptg>'"])
+        cfg.append(['B1', 30, "'            <DbtCdtRptgInd>CRED</DbtCdtRptgInd>'"])
+        cfg.append(['B1', 31, "'          </RgltryRptg>'"])
+        cfg.append(['B1', 32, "'          <RmtInf>'"])
+        cfg.append(['B1', 33, "'            <Ustrd>' + info.RmtInf_Ustrd +'</Ustrd>'"])
+        cfg.append(['B1', 34, "'          </RmtInf>'"])
+        cfg.append(['B1', 35, "'        </DrctDbtTxInf>'"])
+        cfg.append(['B2', 13, "'          <DbtrAgt>'"])
+        cfg.append(['B2', 14, "'            <FinInstnId>'"])
+        cfg.append(['B2', 15, "'              <BIC>NDEASESS</BIC>'"])
+        cfg.append(['B2', 16, "'            </FinInstnId>'"])
+        cfg.append(['B2', 17, "'          </DbtrAgt>'"])
+        cfg.append(['F1', 1 , "'      </PmtInf>'"])
+        cfg.append(['F ', 0 , "'    </CBISDDReqLogMsg>'"])
+        cfg.append(['F ', 1 , "'  </CBIEnvelSDDReqLogMsg>'"])
+        cfg.append(['F ', 2 , "'</CBIBdySDDReq>'"])
+        
+    if len(cfg)>0:
+        ec = dbc.Env.Azienda.BaseTab.TABNAME_CFGEFF
+        cfgTable = adb.DbTable(ec, "cfg")
+        for r in cfg:
+            cfgTable.CreateNewRow()
+            cfgTable.tipo=tipo
+            cfgTable.zona=r[0]
+            cfgTable.riga=r[1]
+            cfgTable.macro=r[2]
+            cfgTable.Save()
+
+
+
 if __name__ == "__main__":
     db = adb.DB()
     db.Connect()

@@ -92,7 +92,7 @@ def EffettiFunc( parent, call_fit = True, set_sizer = True ):
     item2 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
     item3 = RadioBox( parent, ID_TIPEFF, "Tipo effetti da emettere:", wx.DefaultPosition, wx.DefaultSize, 
-        ["RIBA - Ricevute Bancarie","RID - Addebito sul conto"] , 1, wx.RA_SPECIFY_ROWS )
+        ["RIBA - Ricevute Bancarie","RID - Addebito sul conto","SDD - Sepa Direct Debit"] , 1, wx.RA_SPECIFY_ROWS )
     item2.Add( item3, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
 
     item5 = wx.StaticBox( parent, -1, "Selezioni" )

@@ -55,6 +55,9 @@ if D:
 _connect_original = MySQLdb.connect
 def connect_fixutf(*args, **kwargs):
     connection = _connect_original(*args, **kwargs)
+    #TODO FIX UNICODE da modificare per MySql 7.1
+    #print 'fix unicode: la funzione character_set_name della connessione ritorna sempre latin-1, anche se è utf-8'
+    #print connection.character_set_name()
     connection.set_character_set('utf8')
     return connection
 MySQLdb.connect = MySQLdb.Connect = MySQLdb.Connection = connect_fixutf

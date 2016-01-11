@@ -1039,7 +1039,7 @@ def BancheCardFunc( parent, call_fit = True, set_sizer = True ):
 
     item6 = aw.Panel( item4, -1 ); item6.SetName('EffettiPage')
     BancheAnag2Func(item6, False)
-    item4.AddPage( item6, "Dati per emissione riba" )
+    item4.AddPage( item6, "Dati per emissione effetti" )
 
     item7 = aw.Panel( item4, -1 ); item7.HelpBuilder_SetDir('anag.pdcrel'); item7.SetName('BilClassPage')
     DatiContabFunc(item7, False)
@@ -1572,7 +1572,7 @@ ID_AUBADAT = 14084
 def BancheAnag2Func( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
-    item2 = wx.StaticBox( parent, -1, "Dati per trasmissione Ri.Ba." )
+    item2 = wx.StaticBox( parent, -1, "Dati per trasmissione Effetti" )
     item1 = wx.StaticBoxSizer( item2, wx.VERTICAL )
     
     item3 = wx.FlexGridSizer( 0, 2, 0, 0 )
@@ -1591,61 +1591,75 @@ def BancheAnag2Func( parent, call_fit = True, set_sizer = True ):
     item7.SetName( "setif" )
     item3.Add( item7, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
 
-    item8 = wx.StaticText( parent, ID_TEXT, "Dati azienda:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item3.Add( item8, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+    item8 = wx.StaticText( parent, ID_TEXT, "SEPA Identificativo Creditore:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item3.Add( item8, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item9 = TextCtrl( parent, ID_DESRIBA1, "", wx.DefaultPosition, [80,-1], 0 )
-    item9.SetName( "desriba1" )
-    item3.Add( item9, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+    item9 = wx.TextCtrl( parent, ID_TEXTCTRL, "", wx.DefaultPosition, [200,-1], 0 )
+    item9.SetName( "creid" )
+    item3.Add( item9, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item10 = wx.StaticText( parent, ID_TEXT, "", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item3.Add( item10, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+    item10 = wx.StaticText( parent, ID_TEXT, "Codice CUC:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item3.Add( item10, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item11 = TextCtrl( parent, ID_DESRIBA2, "", wx.DefaultPosition, [80,-1], 0 )
-    item11.SetName( "desriba2" )
-    item3.Add( item11, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+    item11 = wx.TextCtrl( parent, ID_TEXTCTRL, "", wx.DefaultPosition, [80,-1], 0 )
+    item11.SetName( "cuc" )
+    item3.Add( item11, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item12 = wx.StaticText( parent, ID_TEXT, "", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item3.Add( item12, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+    item12 = wx.StaticText( parent, ID_TEXT, "Dati azienda:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item3.Add( item12, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
 
-    item13 = TextCtrl( parent, ID_DESRIBA3, "", wx.DefaultPosition, [80,-1], 0 )
-    item13.SetName( "desriba3" )
-    item3.Add( item13, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+    item13 = TextCtrl( parent, ID_DESRIBA1, "", wx.DefaultPosition, [80,-1], 0 )
+    item13.SetName( "desriba1" )
+    item3.Add( item13, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
 
     item14 = wx.StaticText( parent, ID_TEXT, "", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item3.Add( item14, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item3.Add( item14, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
-    item15 = TextCtrl( parent, ID_DESRIBA4, "", wx.DefaultPosition, [80,-1], 0 )
-    item15.SetName( "desriba4" )
-    item3.Add( item15, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item15 = TextCtrl( parent, ID_DESRIBA2, "", wx.DefaultPosition, [80,-1], 0 )
+    item15.SetName( "desriba2" )
+    item3.Add( item15, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
-    item16 = wx.StaticText( parent, ID_TEXT, "Firma:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item3.Add( item16, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+    item16 = wx.StaticText( parent, ID_TEXT, "", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item3.Add( item16, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
-    item17 = TextCtrl( parent, ID_FIRMARIBA, "", wx.DefaultPosition, [80,-1], 0 )
-    item17.SetName( "firmariba" )
-    item3.Add( item17, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+    item17 = TextCtrl( parent, ID_DESRIBA3, "", wx.DefaultPosition, [80,-1], 0 )
+    item17.SetName( "desriba3" )
+    item3.Add( item17, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
-    item18 = wx.StaticText( parent, ID_TEXT, "Prov. Finanza:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item3.Add( item18, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+    item18 = wx.StaticText( parent, ID_TEXT, "", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item3.Add( item18, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item19 = TextCtrl( parent, ID_PROVFIN, "", wx.DefaultPosition, [120,-1], 0 )
-    item19.SetName( "provfin" )
-    item3.Add( item19, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+    item19 = TextCtrl( parent, ID_DESRIBA4, "", wx.DefaultPosition, [80,-1], 0 )
+    item19.SetName( "desriba4" )
+    item3.Add( item19, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item20 = wx.StaticText( parent, ID_TEXT, "Num. Autorizzazione banca:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item20 = wx.StaticText( parent, ID_TEXT, "Firma:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item3.Add( item20, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item21 = TextCtrl( parent, ID_AUBANUM, "", wx.DefaultPosition, [80,-1], 0 )
-    item21.SetName( "aubanum" )
-    item3.Add( item21, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+    item21 = TextCtrl( parent, ID_FIRMARIBA, "", wx.DefaultPosition, [80,-1], 0 )
+    item21.SetName( "firmariba" )
+    item3.Add( item21, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item22 = wx.StaticText( parent, ID_TEXT, "Data autorizzazione:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item22 = wx.StaticText( parent, ID_TEXT, "Prov. Finanza:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item3.Add( item22, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item23 = DateCtrl( parent, ID_AUBADAT, "", wx.DefaultPosition, [80,-1], 0 )
-    item23.SetName( "aubadat" )
-    item3.Add( item23, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item23 = TextCtrl( parent, ID_PROVFIN, "", wx.DefaultPosition, [120,-1], 0 )
+    item23.SetName( "provfin" )
+    item3.Add( item23, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+
+    item24 = wx.StaticText( parent, ID_TEXT, "Num. Autorizzazione banca:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item3.Add( item24, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item25 = TextCtrl( parent, ID_AUBANUM, "", wx.DefaultPosition, [80,-1], 0 )
+    item25.SetName( "aubanum" )
+    item3.Add( item25, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item26 = wx.StaticText( parent, ID_TEXT, "Data autorizzazione:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item3.Add( item26, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item27 = DateCtrl( parent, ID_AUBADAT, "", wx.DefaultPosition, [80,-1], 0 )
+    item27.SetName( "aubadat" )
+    item3.Add( item27, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item3.AddGrowableCol( 1 )
 
@@ -1718,7 +1732,7 @@ def EffettiAnagFunc( parent, call_fit = True, set_sizer = True ):
     item1 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
     item2 = RadioBox( parent, ID_TIPO, "Tipologia di effetto", wx.DefaultPosition, wx.DefaultSize, 
-        ["Ri.Ba.","RID"] , 1, wx.RA_SPECIFY_COLS )
+        ["Ri.Ba.","RID","SDD"] , 1, wx.RA_SPECIFY_COLS )
     item2.SetName( "tipo" )
     item1.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 

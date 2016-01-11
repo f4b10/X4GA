@@ -313,6 +313,12 @@ class DB(object):
                 else:
                     dbCursor.execute(sql, par)
                 logmsg('done')
+                #TODO: per compatibilità con MySql 5.7
+                #===============================================================
+                # if 'cfgeff' in sql:
+                #     for r in dbCursor.description:
+                #         print r
+                #===============================================================
                 rs = dbCursor.fetchall()
                 if asList:
                     logmsg('convert to list')
@@ -1106,6 +1112,21 @@ class DB(object):
 
                     value_wildcards = ','.join([r'%s']*len(columns))
                     columns = ','.join(columns)
+
+                    #TODO: MODIFICARE PER MYSQL 5.7
+                    #===========================================================
+                    # if tab_name=='clienti':
+                    #     for x, y in enumerate(values):
+                    #         #TODO: MODIFICARE PER MYSQL 5.7
+                    #         if x==38:
+                    #             print '%s %s %s' % (values[0], x, y)
+                    #             #print values[x]
+                    #             values[x]=y.encode('utf-8')
+                    #             print values[x]
+                    #             values[x]=unicode(values[x], "utf-8")
+                    #             if values[0]==1172:
+                    #                 pass
+                    #===========================================================
 
                     if not self.Execute("INSERT INTO %(database_name)s.%(tab_name)s (%(columns)s) VALUES (%(value_wildcards)s)" % locals(), values):
                         raise Exception, '%s (riga %d)' % (self.dbError.description, row)

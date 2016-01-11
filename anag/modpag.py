@@ -6,17 +6,17 @@
 # Copyright:    (C) 2011 Astra S.r.l. C.so Cavallotti, 122 18038 Sanremo (IM)
 # ------------------------------------------------------------------------------
 # This file is part of X4GA
-# 
+#
 # X4GA is free software: you can redistribute it and/or modify
 # it under the terms of the Affero GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # X4GA is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
@@ -42,7 +42,7 @@ FRAME_TITLE = "Modalità di pagamento"
 
 
 class ModPagSearchResultsGrid(ga.SearchResultsGrid):
-    
+
     def GetDbColumns(self):
         _NUM = gl.GRID_VALUE_NUMBER
         _STR = gl.GRID_VALUE_STRING
@@ -55,7 +55,7 @@ class ModPagSearchResultsGrid(ga.SearchResultsGrid):
                 (200, (cn('pdcpi_descriz'),  "Cassa pag.imm.", _STR, True)),
                 (  1, (cn('modpag_id'),      "#mpa",           _STR, True)),
             )
-    
+
     def SetColumn2Fit(self):
         self.SetFitColumn(1)
 
@@ -79,16 +79,16 @@ class ModPagPanel(ga.AnagPanel):
     def InitAnagCard(self, parent):
         p = wx.Panel( parent, -1)
         wdr.ModPagCardFunc( p, True )
-        
+
         for cid, name, opt, evt in (\
-            (wdr.ID_TIPOMP,   'tipo',     'CBRIXY', self.OnChanged),
+            (wdr.ID_TIPOMP,   'tipo',     'CBRISXY', self.OnChanged),
             (wdr.ID_MODOCALC, 'modocalc', 'SDN',    self.OnCalcChanged),
             (wdr.ID_PERIODI,  'tipoper',  'MG',     self.OnCalcChanged)):
             self.FindWindowById(cid).SetDataLink(name, opt)
             self.Bind(wx.EVT_RADIOBOX, evt, id=cid)
-        
+
         self.FindWindowByName('congar').SetDataLink(values=[1, 0])
-        
+
         for cid, name in ((wdr.ID_FINEMESE, 'finemese0'),
                           (wdr.ID_FINEMESE, 'finemese'),
                           (wdr.ID_SC1NOEFF, 'sc1noeff'),
@@ -98,7 +98,7 @@ class ModPagPanel(ga.AnagPanel):
                           (wdr.ID_ASKSPESE, 'askspese')):
             ctr = self.FindWindowById(cid)
             ctr.SetDataLink(name, { True: 1, False: 0 })
-        
+
         return p
 
     def UpdateCalcs(self):
@@ -128,9 +128,9 @@ class ModPagPanel(ga.AnagPanel):
 
     def OnChanged(self, event):
         self.SetDataChanged()
-    
+
     def GetSearchResultsGrid(self, parent):
-        grid = ModPagSearchResultsGrid(parent, ga.ID_SEARCHGRID, 
+        grid = ModPagSearchResultsGrid(parent, ga.ID_SEARCHGRID,
                                        self.db_tabname, self.GetSqlColumns())
         return grid
 

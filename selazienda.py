@@ -345,13 +345,32 @@ class SelAziendaPanel(aw.Panel):
         self.UpdateAziendaDetails()
         event.Skip()
 
+
+    def mysql_hash_password(self, password):
+        nr = 1345345333
+        add = 7
+        nr2 = 0x12345671
+
+        for c in (ord(x) for x in password if x not in (' ', '\t')):
+            nr^= (((nr & 63)+add)*c)+ (nr << 8) & 0xFFFFFFFF
+            nr2= (nr2 + ((nr2 << 8) ^ nr)) & 0xFFFFFFFF
+            add= (add + c) & 0xFFFFFFFF
+
+        return "%08x%08x" % (nr & 0x7FFFFFFF,nr2 & 0x7FFFFFFF)
+
+
+
     def AutorizzoUser(self, user, psw):
 
         c = self.x4conn.cursor()
         if (c.execute("SELECT psw FROM utenti WHERE descriz=%s", user)>0):
             psw_memo = c.fetchone()[0]
-            c.execute("select old_password(%s)", psw)
-            psw_digi=c.fetchone()[0]
+            try:
+                c.execute("select old_password(%s)", psw)
+                psw_digi=c.fetchone()[0]
+            except:
+                print 'calcola password'
+                psw_digi=self.mysql_hash_password(psw)
         else:
             psw_memo='1'
             psw_digi='2'
@@ -609,8 +628,16 @@ class SelAziendaPanel(aw.Panel):
         curs = self.x4conn.cursor()
         curs.execute("SELECT psw FROM utenti where nome=" + chr(34) + user + chr(34) + ";")
         memoPsw = curs.fetchone()[0]
-        curs.execute("SELECT old_PASSWORD(" + chr(34) + psw + chr(34) + ");")
-        digiPsw = curs.fetchone()[0]
+        #=======================================================================
+        # curs.execute("SELECT old_PASSWORD(" + chr(34) + psw + chr(34) + ");")
+        # digiPsw = curs.fetchone()[0]
+        #=======================================================================
+        try:
+            curs.execute("select old_password(%s)", psw)
+            digiPsw=curs.fetchone()[0]
+        except:
+            print 'calcola password1'
+            digiPsw=self.mysql_hash_password(psw)
         if memoPsw == digiPsw:
             return True
         else:
