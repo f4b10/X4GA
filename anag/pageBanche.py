@@ -136,6 +136,9 @@ class BancheGrid(GenericPersonalLinkedPage_InternalGrid):
     def SetExclusiveCheckField(self):
         return ['pref']
 
+    def SetCanEditCheck(self):
+        return ['pref']
+
     def SetUniqueField(self):
         #TODO: Introdurre la possibilità di specificare il(i campi che debbono necessariamente assumenre un valore univoco
         return []
