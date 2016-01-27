@@ -559,6 +559,9 @@ class EmiEffettiPanel(wx.Panel):
         if te == 'I':
             #rid, filtro su tipologia della mod.pag.
             eff.AddFilter("modpag.tipo='I'")
+        elif te== 'S':
+            #rid filtro su flag della partita
+            eff.AddFilter("pcf.riba=2")
         else:
             #riba, filtro su flag della partita
             eff.AddFilter("pcf.riba=1")
@@ -865,8 +868,8 @@ class EmiEffettiPanel(wx.Panel):
             filename = dlg.GetPath()
         dlg.Destroy()
         return filename
-    
-    
+
+
     def GeneraFileRibaRid(self, datdist, idbanem, idpdcef, filepath):
         """
         Generazione file x RI.BA. o RID Arricchito
@@ -877,7 +880,7 @@ class EmiEffettiPanel(wx.Panel):
             _prefix = "RID"
             _msg="selezione file rid da generare"
             _wd ="File esportazione effetti (*.TXT)|*.TXT"
-            
+
         elif te == 'R':
             tipo = 'R'
             _prefix = "RIBA"
@@ -1026,8 +1029,8 @@ class EmiEffettiPanel(wx.Panel):
                         self.faseMsg="Composizione Piede Distinta"
                         fok=self.WriteMainFooter()
                 else:
-                    fok=False                
-                
+                    fok=False
+
                 if not fok:
                     if not self.errorMsg==None:
                         msg="Errore in valutazione della direttiva\n%s\nDurante la fase %s" % (self.errorMsg, self.faseMsg)

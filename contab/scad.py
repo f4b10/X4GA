@@ -6,17 +6,17 @@
 # Copyright:    (C) 2011 Astra S.r.l. C.so Cavallotti, 122 18038 Sanremo (IM)
 # ------------------------------------------------------------------------------
 # This file is part of X4GA
-# 
+#
 # X4GA is free software: you can redistribute it and/or modify
 # it under the terms of the Affero GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # X4GA is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
@@ -64,13 +64,13 @@ class Scadenze(object):
     def SetupModPag(self, id_modpag):
         """
         Calcola le scadenze di pagamento.
-        
+
         @param datestart: data di partenza (data documento)
         @type datestart: date
         @param id_modpag: id modalità di pagamento
         @type id_modpag: int
         @param impot: importo totale (tot. documento)
-        
+
         @return: elenco scadenze con data e importo
         @rtype: nscad-tuple di 2-tuple (data scadenza, importo)
         """
@@ -92,7 +92,7 @@ class Scadenze(object):
         self.mp_ggextra = None
         self.mp_gg = None
         self.mp_gem = None
-        
+
         if id_modpag is None:
             return
         cmd =\
@@ -161,7 +161,7 @@ class Scadenze(object):
     def CalcolaScadenze(self, datestart, id_modpag, imptot = 0, impiva = 0):
         """
         Calcola le scadenze di pagamento.
-        
+
         @param datestart: data di partenza (data documento)
         @type datestart: date
         @param id_modpag: id modalità di pagamento
@@ -170,28 +170,28 @@ class Scadenze(object):
         @type imptot: float
         @param impiva: importo iva
         @type imptot: float
-        
+
         @return: elenco scadenze con data e importo
         @rtype: nscad-tuple di 4-tuple (data scadenza, importo, isriba, iscontrass)
         """
         scad = []
-        
+
         if id_modpag != self.mp_id:
             self.SetupModPag(id_modpag)
-        
+
         NDEC = bt.VALINT_DECIMALS
-        
+
         if id_modpag and datestart and self.mp_id_pdcpi is None:
-            
+
             dscad = datestart
             if self.mp_finemese0:
                 dscad += dscad.GetDaysInMonth() - dscad.day
-            
+
             for numsca in range(self.mp_numscad):
-                
+
                 riba = 0
                 cass = 0
-                
+
                 #determino il periodo da aggiungere alla data precedente
                 if self.mp_modocalc == "S":
                     if numsca == 0:
@@ -200,7 +200,7 @@ class Scadenze(object):
                         periodi = self.mp_mesitra
                 elif self.mp_modocalc == "D":
                     periodi = self.mp_gg[numsca]
-                
+
                 #aggiungo il periodo alla data precedente
                 if self.mp_tipoper == "M":
                     dscad = lib.AddMonths(dscad, periodi)
@@ -208,15 +208,15 @@ class Scadenze(object):
                     dscad += dt.DateTimeDelta(days = periodi)
                 if self.mp_finemese == 1:
                     dscad += dscad.GetDaysInMonth() - dscad.day
-                
+
                 #determino se la mp è una riba
                 if self.mp_tipo == "R":
                     riba = 1
-                
+
                 #determino se la mp è un contrassegno
                 if self.mp_contrass:
                     cass = 1
-                
+
                 #determino importo ed esclusione effetto su prima scadenza
                 imp = 0
                 if numsca == 0:
@@ -228,7 +228,7 @@ class Scadenze(object):
                         riba = 0
                 ggextra = self.mp_gem[dscad.month-1] or self.mp_ggextra or 0
                 scad.append([dscad+ggextra, imp, riba, cass])
-            
+
             if scad:
                 ripn = 0
                 ripv = imptot
@@ -245,7 +245,7 @@ class Scadenze(object):
                 if total != imptot:
                     scad[len(scad)-1][1] =\
                         round(scad[len(scad)-1][1]+(imptot-total), NDEC)
-            
+
         elif id_modpag is None:
             #se la mod.pag. è vuota, genera cmq una scadenza in data documento
             #o data elaborazione se data doc. vuota (che non dovrebbe accadere)
@@ -253,7 +253,7 @@ class Scadenze(object):
             if dscad is None:
                 dscad = Env.Azienda.Login.dataElab
             scad.append([dscad, imptot, 0, 0])
-        
+
         return scad
 
 
@@ -290,13 +290,13 @@ class Scadenze_Table(adb.DbTable):
     def SetupModPag(self, id_modpag):
         """
         Calcola le scadenze di pagamento.
-        
+
         @param datestart: data di partenza (data documento)
         @type datestart: date
         @param id_modpag: id modalità di pagamento
         @type id_modpag: int
         @param impot: importo totale (tot. documento)
-        
+
         @return: elenco scadenze con data e importo
         @rtype: nscad-tuple di 2-tuple (data scadenza, importo)
         """
@@ -318,7 +318,7 @@ class Scadenze_Table(adb.DbTable):
         self.mp_ggextra = None
         self.mp_gg = None
         self.mp_gem = None
-        
+
         if id_modpag is None:
             return
         cmd =\
@@ -386,7 +386,7 @@ class Scadenze_Table(adb.DbTable):
     def CalcolaScadenze(self, datestart, id_modpag, imptot = 0, impiva = 0):
         """
         Calcola le scadenze di pagamento.
-        
+
         @param datestart: data di partenza (data documento)
         @type datestart: date
         @param id_modpag: id modalità di pagamento
@@ -395,28 +395,28 @@ class Scadenze_Table(adb.DbTable):
         @type imptot: float
         @param impiva: importo iva
         @type imptot: float
-        
+
         @return: elenco scadenze con data e importo
         @rtype: nscad-tuple di 4-tuple (data scadenza, importo, isriba, iscontrass)
         """
         scad = []
-        
+
         if id_modpag != self.mp_id:
             self.SetupModPag(id_modpag)
-        
+
         NDEC = bt.VALINT_DECIMALS
-        
+
         if id_modpag and datestart and self.mp_id_pdcpi is None:
-            
+
             dscad = datestart
             if self.mp_finemese0:
                 dscad += dscad.GetDaysInMonth() - dscad.day
-            
+
             for numsca in range(self.mp_numscad):
-                
+
                 riba = 0
                 cass = 0
-                
+
                 #determino il periodo da aggiungere alla data precedente
                 if self.mp_modocalc == "S":
                     if numsca == 0:
@@ -425,7 +425,7 @@ class Scadenze_Table(adb.DbTable):
                         periodi = self.mp_mesitra
                 elif self.mp_modocalc == "D":
                     periodi = self.mp_gg[numsca]
-                
+
                 #aggiungo il periodo alla data precedente
                 if self.mp_tipoper == "M":
                     dscad = lib.AddMonths(dscad, periodi)
@@ -433,15 +433,17 @@ class Scadenze_Table(adb.DbTable):
                     dscad += dt.DateTimeDelta(days = periodi)
                 if self.mp_finemese == 1:
                     dscad += dscad.GetDaysInMonth() - dscad.day
-                
+
                 #determino se la mp è una riba
                 if self.mp_tipo == "R":
                     riba = 1
-                
+                #determino se la mp è un SDD
+                elif self.mp_tipo == 'S':
+                    riba = 2
                 #determino se la mp è un contrassegno
                 if self.mp_contrass:
                     cass = 1
-                
+
                 #determino importo ed esclusione effetto su prima scadenza
                 imp = 0
                 if numsca == 0:
@@ -453,7 +455,7 @@ class Scadenze_Table(adb.DbTable):
                         riba = 0
                 ggextra = self.mp_gem[dscad.month-1] or self.mp_ggextra or 0
                 scad.append([dscad+ggextra, imp, riba, cass])
-            
+
             if scad:
                 ripn = 0
                 ripv = imptot
@@ -470,7 +472,7 @@ class Scadenze_Table(adb.DbTable):
                 if total != imptot:
                     scad[len(scad)-1][1] =\
                         round(scad[len(scad)-1][1]+(imptot-total), NDEC)
-            
+
         elif id_modpag is None:
             #se la mod.pag. è vuota, genera cmq una scadenza in data documento
             #o data elaborazione se data doc. vuota (che non dovrebbe accadere)
@@ -478,7 +480,7 @@ class Scadenze_Table(adb.DbTable):
             if dscad is None:
                 dscad = Env.Azienda.Login.dataElab
             scad.append([dscad, imptot, 0, 0])
-        
+
         return scad
 
 
