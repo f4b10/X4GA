@@ -434,12 +434,10 @@ class Scadenze_Table(adb.DbTable):
                 if self.mp_finemese == 1:
                     dscad += dscad.GetDaysInMonth() - dscad.day
 
-                #determino se la mp è una riba
-                if self.mp_tipo == "R":
+                #determino se la mp è una riba o SDD
+                if self.mp_tipo in 'R':
                     riba = 1
-                #determino se la mp è un SDD
-                elif self.mp_tipo == 'S':
-                    riba = 2
+
                 #determino se la mp è un contrassegno
                 if self.mp_contrass:
                     cass = 1
