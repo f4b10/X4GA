@@ -143,7 +143,7 @@ def PcfPanelFunc( parent, call_fit = True, set_sizer = True ):
     item21.SetName( "datscad" )
     item19.Add( item21, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item22 = CheckBox( parent, ID_CHKRIBA, "Effetto", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item22 = CheckBox( parent, ID_CHKRIBA, "RIBA", wx.DefaultPosition, wx.DefaultSize, 0 )
     item22.SetToolTip( wx.ToolTip("Barrare se la scadenza è una Ricevuta Bancaria") )
     item22.SetName( "riba" )
     item19.Add( item22, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
