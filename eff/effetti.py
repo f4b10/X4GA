@@ -559,12 +559,14 @@ class EmiEffettiPanel(wx.Panel):
         if te == 'I':
             #rid, filtro su tipologia della mod.pag.
             eff.AddFilter("modpag.tipo='I'")
-        elif te== 'S':
-            #rid filtro su flag della partita
-            eff.AddFilter("pcf.riba=2")
-        else:
-            #riba, filtro su flag della partita
+        elif te == 'S':
+            #sdd, filtro su tipologia della mod.pag.
+            eff.AddFilter("modpag.tipo='S'")
+        elif te == 'R':
+            #riba filtro su flag della partita
             eff.AddFilter("pcf.riba=1")
+
+
         for ctrid, filt in ((wdr.ID_CAUS,    r"pcf.id_caus=%s"),\
                             (wdr.ID_MODPAG,  r"pcf.id_modpag=%s"),\
                             (wdr.ID_PDC,     r"pcf.id_pdc=%s"),\
