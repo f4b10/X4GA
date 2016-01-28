@@ -123,7 +123,11 @@ class InfoSsd():
         self.MsgId='%s-%s' % ('DistintaXml', dt.now().strftime('%d%m%y-%H.%m'))
         self.CreDtTm = '%s' % dt.now().isoformat()
         self.InitgPty_Nm = Env.Azienda.descrizione
-        self.InitgPty_Id = self.banem.anag.cuc
+
+        if len(self.banem.anag.cuc.strip())==8:
+            self.InitgPty_Id = self.banem.anag.cuc
+        else:
+            self.InitgPty_Id = None
 
 
     def GetDistinte(self):
@@ -160,14 +164,27 @@ class InfoSsd():
         self.PmtInfId='%s GR%s' % (self.MsgId, nDistinta)
         self.SeqTp   = key[:4]
         self.ReqdColltnDt = '%s-%s-%s' % (key[10:14], key[7:9], key[4:6])
-        self.CdtrAcct_IBAN = self.banem.anag.iban
+
+        if len(self.banem.anag.iban.strip())==27:
+            self.CdtrAcct_IBAN = self.banem.anag.iban
+        else:
+            self.CdtrAcct_IBAN = None
+
 
         self.Cdtr_Nm = Env.Azienda.descrizione
 
-        self.CdtrAgt_MmbId = self.banem.anag.abi
+        if len(self.banem.anag.abi.strip())==5:
+            self.CdtrAgt_MmbId = self.banem.anag.abi
+        else:
+            self.CdtrAgt_MmbId = None
 
         self.CdtrSchmedId_Nm = Env.Azienda.descrizione
-        self.CdtrSchmedId_Id = self.banem.anag.creid
+
+
+        if len(self.banem.anag.creid.strip())==23:
+            self.CdtrSchmedId_Id = self.banem.anag.creid
+        else:
+            self.CdtrSchmedId_Id = None
 
 
     def SetNewEffetto(self, key, nEffetto):
@@ -178,11 +195,16 @@ class InfoSsd():
 
         self.InstrId = str(nEffetto+1)
         self.EndToEndId = '%s.%s' % (self.PmtInfId, nEffetto+1)
-        self.InstdAmt =('% 8.2f' % d['importo']).strip()
+        if  d['importo']>0:
+            self.InstdAmt =('% 8.2f' % d['importo']).strip()
+        else:
+            self.InstdAmt =None
 
         self.Dbtr_Nm=self.dbeff.pdc.descriz[:35]
         self.Dbtr_Nm=self.Dbtr_Nm.replace('<', '.')
         self.Dbtr_Nm=self.Dbtr_Nm.replace('>', '.')
+        if len(self.Dbtr_Nm)==0:
+            self.Dbtr_Nm = None
 
         try:
             self.MndtId= '%s-%s' % (self.dbeff.pdc.codice, self.dbeff.bap.dtini_rid.strftime('%Y-%m-%d'))
@@ -192,7 +214,11 @@ class InfoSsd():
             self.DtOfSgntr= self.dbeff.bap.dtini_rid.strftime('%Y-%m-%d')
         except:
             self.DtOfSgntr= None
-        self.DbtrAcct_IBAN = self.dbeff.bap.iban
+        if len(self.dbeff.bap.iban)==27:
+            self.DbtrAcct_IBAN = self.dbeff.bap.iban
+        else:
+            self.DbtrAcct_IBAN = None
+
         self.RmtInf_Ustrd='SALDO NS. %s N.%s DEL %s' % (self.dbeff.caus.descriz, self.dbeff.numdoc, self.dbeff.datdoc.strftime('%d-%m-%y'))
 
 
