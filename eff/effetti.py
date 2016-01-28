@@ -181,6 +181,9 @@ class InfoSsd():
         self.InstdAmt =('% 8.2f' % d['importo']).strip()
 
         self.Dbtr_Nm=self.dbeff.pdc.descriz[:35]
+        self.Dbtr_Nm=self.Dbtr_Nm.replace('<', '.')
+        self.Dbtr_Nm=self.Dbtr_Nm.replace('>', '.')
+
         try:
             self.MndtId= '%s-%s' % (self.dbeff.pdc.codice, self.dbeff.bap.dtini_rid.strftime('%Y-%m-%d'))
         except:
