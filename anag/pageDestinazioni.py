@@ -50,6 +50,8 @@ class DestinGrid(GenericPersonalLinkedPage_InternalGrid):
     def SetExclusiveCheckField(self):
         return ['pref']
 
+    def SetCanEditCheck(self):
+        return ['pref']
 
     def SetColumnGrid(self):
         _STR = gl.GRID_VALUE_STRING
