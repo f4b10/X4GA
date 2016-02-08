@@ -1242,13 +1242,35 @@ class AnagPanel(aw.Panel):
                                   self.db_tabconstr,
                                   self.db_recid )
 
+
+    def BeforeDeleteRecord(self):
+        pass
+
+    def AfterDeleteRecord(self):
+        pass
+
+    def BeforeInsertRecord(self):
+        pass
+
+    def AfterInsertRecord(self, recid):
+        pass
+
+    def BeforeUpdateRecord(self):
+        pass
+
+    def AfterUpdateRecord(self, dbvalues):
+        pass
+
+
     def DeleteDataRecord( self ):
         out = False
         try:
+            self.BeforeDeleteRecord()
             self.db_curs.execute( "DELETE FROM %s%s WHERE id=%d;"
                                   % ( self.db_schema,
                                       self.db_tabname,
                                       self.db_recid ) )
+            self.AfterDeleteRecord()
             self.db_rs = self.db_rs[:self.db_recno] +\
                          self.db_rs[self.db_recno+1:]
             if self.db_recno > len(self.db_rs)-1:
@@ -1334,7 +1356,7 @@ class AnagPanel(aw.Panel):
         try:
             #aggiornamento database
             if self.db_recno == NEW_RECORD:
-
+                self.BeforeInsertRecord()
                 cmd = "INSERT INTO %s%s (" % (self.db_schema, self.db_tabname)
                 cmd += ", ".join( [ col for col,ctr in self.db_datalink ] )
                 cmd += ") VALUES ("
@@ -1343,6 +1365,7 @@ class AnagPanel(aw.Panel):
                 self.db_curs.execute( cmd, dbvalues )
                 self.db_curs.execute( "SELECT LAST_INSERT_ID();" )
                 recid = int(self.db_curs.fetchone()[0])
+                self.AfterInsertRecord(recid)
 
                 #aggiunta record in coda al recordset
                 rec = list()
@@ -1363,12 +1386,13 @@ class AnagPanel(aw.Panel):
                 self.db_last_inserted_id = recid
 
             else:
-
+                self.BeforeUpdateRecord()
                 cmd = "UPDATE %s%s SET " % (self.db_schema, self.db_tabname)
                 cmd += ", ".join(
                        [ "%s=%%s" % col for col,ctr in self.db_datalink ] )
                 cmd += " WHERE ID = %s;" % self.db_recid
                 self.db_curs.execute( cmd, dbvalues )
+                self.AfterUpdateRecord(dbvalues)
 
             #aggiornamento recordset
             ncol = 0

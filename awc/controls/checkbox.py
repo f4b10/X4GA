@@ -132,7 +132,7 @@ class CheckListBox(wx.CheckListBox):
         lChecked=self.GetSelections()
         for e in lChecked:
             check='%s%s|' % (check, self.GetPyData(e))
-        return check
+        return check[:-1]
 
     def SetValue(self, v=''):
         lChecked=v.split('|')

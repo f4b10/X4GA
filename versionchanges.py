@@ -28,6 +28,14 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
+           
+    ('1.5.16', dt.Date(2016, 2, 8), (
+         ("BET1188",
+         """Aggiunti metodi before e after per aggiornamenti recor alla classa AnagPanel"""),
+         ("BUG1158",
+         """Ripristinata possibilità di checK preferiti su banche e destinazioni"""),
+        ),),
+
     ('1.5.15', dt.Date(2015, 11, 26), (
          ("BET1187",
          """Introdotta gestione SDD per adegugamento a tracciati CBI"""),
