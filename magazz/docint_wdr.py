@@ -919,8 +919,10 @@ ID_LABAGE = 15088
 ID_AGE = 15089
 ID_LABZNA = 15090
 ID_MASID_AGENTE = 15091
-ID_MASBUTUPD = 15092
-ID_MASBUTPRT = 15093
+ID_TXTRIF = 15092
+ID_MASDESRIF = 15093
+ID_MASBUTUPD = 15094
+ID_MASBUTPRT = 15095
 
 def DocMagSelFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -1062,32 +1064,45 @@ def DocMagSelFunc( parent, call_fit = True, set_sizer = True ):
 
     item18.Add( item20, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item41 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    item41 = wx.FlexGridSizer( 0, 2, 0, 0 )
     
-    item42 = wx.CheckBox( parent, ID_NODOCANN, "Escludi documenti annullati", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item42.SetValue( True )
-    item42.SetName( "nodocann" )
-    item41.Add( item42, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+    item42 = wx.StaticText( parent, ID_TXTRIF, "Riferimento", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
+    item41.Add( item42, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item43 = wx.CheckBox( parent, ID_NODOCACQ, "Escludi documenti acquisiti", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item43.SetValue( True )
-    item43.SetName( "nodocacq" )
-    item41.Add( item43, 0, wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
+    item43 = TextCtrl( parent, ID_MASDESRIF, "", wx.DefaultPosition, [200,-1], 0 )
+    item43.SetName( "masdesrif" )
+    item41.Add( item43, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item41.AddGrowableCol( 1 )
 
     item18.Add( item41, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
+    item44 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    
+    item45 = wx.CheckBox( parent, ID_NODOCANN, "Escludi documenti annullati", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item45.SetValue( True )
+    item45.SetName( "nodocann" )
+    item44.Add( item45, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item46 = wx.CheckBox( parent, ID_NODOCACQ, "Escludi documenti acquisiti", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item46.SetValue( True )
+    item46.SetName( "nodocacq" )
+    item44.Add( item46, 0, wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
+
+    item18.Add( item44, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
     item17.Add( item18, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
 
-    item44 = wx.BoxSizer( wx.HORIZONTAL )
+    item47 = wx.BoxSizer( wx.HORIZONTAL )
     
-    item45 = wx.Button( parent, ID_MASBUTUPD, "Applica", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item45.SetDefault()
-    item44.Add( item45, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+    item48 = wx.Button( parent, ID_MASBUTUPD, "Applica", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item48.SetDefault()
+    item47.Add( item48, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
 
-    item46 = wx.Button( parent, ID_MASBUTPRT, "&Lista", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item44.Add( item46, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+    item49 = wx.Button( parent, ID_MASBUTPRT, "&Lista", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item47.Add( item49, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
-    item17.Add( item44, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item17.Add( item47, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item17.AddGrowableRow( 1 )
 

@@ -194,7 +194,10 @@ class GridMov(object):
                     if val:
                         field = "doc.%s%s" % (name, tipo)
                         mov.AddFilter("%s%s%%s" % (field, oper), val)
-        
+
+        if cn('masdesrif').GetValue():
+            mov.AddFilter("doc.desrif LIKE '%%%s%%'" % cn('masdesrif').GetValue())
+                    
         c = cn('soloprmanca')
         if c:
             if c.IsChecked():

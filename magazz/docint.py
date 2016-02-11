@@ -246,12 +246,14 @@ class DocIntGrid(dbglib.DbGridColoriAlternati, _DocIntGridMixin):
                     if val:
                         field = "doc.%s%s" % (name, tipo)
                         doc.AddFilter("%s%s%%s" % (field, oper), val)
-        
         for name in 'ann acq'.split():
             val = cn('nodoc%s' % name).IsChecked()
             if val:
                 doc.AddFilter("(doc.f_%s IS NULL OR doc.f_%s<>1)" % (name, name))
         
+        if cn('masdesrif').GetValue():
+            doc.AddFilter("doc.desrif LIKE '%%%s%%'" % cn('masdesrif').GetValue())
+            
         self.UpdateGrid()
 
     def GridDocOnResetFilters(self):

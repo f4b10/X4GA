@@ -883,6 +883,8 @@ def VediEvasioniFunc( parent, call_fit = True, set_sizer = True ):
     return item0
 
 ID_MASID_ZONA = 14082
+ID_TXTRIF = 14083
+ID_MASDESRIF = 14084
 
 def MovMagFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -1072,29 +1074,42 @@ def MovMagFunc( parent, call_fit = True, set_sizer = True ):
 
     item31.Add( item33, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item30.Add( item31, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
-
-    item54 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    item54 = wx.FlexGridSizer( 0, 2, 0, 0 )
     
-    item55 = TipOrdinamRadioBox( parent, ID_TIPORD, "Ordina per:", wx.DefaultPosition, wx.DefaultSize, 
+    item55 = wx.StaticText( parent, ID_TXTRIF, "Riferimento", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
+    item54.Add( item55, 0, wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item56 = TextCtrl( parent, ID_MASDESRIF, "", wx.DefaultPosition, [200,-1], 0 )
+    item56.SetName( "masdesrif" )
+    item54.Add( item56, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+
+    item54.AddGrowableCol( 1 )
+
+    item31.Add( item54, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+
+    item30.Add( item31, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP, 5 )
+
+    item57 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    
+    item58 = TipOrdinamRadioBox( parent, ID_TIPORD, "Ordina per:", wx.DefaultPosition, wx.DefaultSize, 
         ["Data, Tipo documento, Numero","Anagrafica, Data, Tipo documento, Numero","Tipo documento, Anno, Numero","Tipo documento, Anagrafica, Anno, Numero"] , 1, wx.RA_SPECIFY_COLS )
-    item55.SetName( "tipord" )
-    item54.Add( item55, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL|wx.RIGHT, 5 )
+    item58.SetName( "tipord" )
+    item57.Add( item58, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL|wx.RIGHT, 5 )
 
-    item56 = wx.BoxSizer( wx.VERTICAL )
+    item59 = wx.BoxSizer( wx.VERTICAL )
     
-    item57 = wx.Button( parent, ID_MASBUTUPD, "Applica", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item57.SetDefault()
-    item56.Add( item57, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+    item60 = wx.Button( parent, ID_MASBUTUPD, "Applica", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item60.SetDefault()
+    item59.Add( item60, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 
-    item58 = wx.Button( parent, ID_MASBUTPRT, "&Lista", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item56.Add( item58, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+    item61 = wx.Button( parent, ID_MASBUTPRT, "&Lista", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item59.Add( item61, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 
-    item54.Add( item56, 0, wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM, 5 )
+    item57.Add( item59, 0, wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM|wx.BOTTOM, 5 )
 
-    item54.AddGrowableRow( 0 )
+    item57.AddGrowableRow( 0 )
 
-    item30.Add( item54, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+    item30.Add( item57, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item30.AddGrowableRow( 1 )
 
@@ -1104,106 +1119,106 @@ def MovMagFunc( parent, call_fit = True, set_sizer = True ):
 
     item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item59 = wx.StaticText( parent, ID_TEXT, "Movimenti presenti", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item59.SetForegroundColour( wx.BLUE )
-    item0.Add( item59, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+    item62 = wx.StaticText( parent, ID_TEXT, "Movimenti presenti", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item62.SetForegroundColour( wx.BLUE )
+    item0.Add( item62, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
-    item60 = wx.Panel( parent, ID_PANGRIDMOV, wx.DefaultPosition, [-1,180], wx.SUNKEN_BORDER )
-    item0.Add( item60, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item63 = wx.Panel( parent, ID_PANGRIDMOV, wx.DefaultPosition, [-1,180], wx.SUNKEN_BORDER )
+    item0.Add( item63, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item61 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    item64 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
-    item63 = wx.StaticBox( parent, -1, "Totali generali dei movimenti" )
-    item62 = wx.StaticBoxSizer( item63, wx.VERTICAL )
+    item66 = wx.StaticBox( parent, -1, "Totali generali dei movimenti" )
+    item65 = wx.StaticBoxSizer( item66, wx.VERTICAL )
     
-    item64 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    item67 = wx.FlexGridSizer( 0, 2, 0, 0 )
     
-    item65 = wx.StaticText( parent, ID_TEXT, "Movimenti estratti:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item64.Add( item65, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+    item68 = wx.StaticText( parent, ID_TEXT, "Movimenti estratti:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item67.Add( item68, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
 
-    item66 = NumCtrl(parent, integerWidth=8); item66.SetName("totnummov"); item66.SetEditable(False)
-    item64.Add( item66, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item69 = NumCtrl(parent, integerWidth=8); item69.SetName("totnummov"); item69.SetEditable(False)
+    item67.Add( item69, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item67 = wx.StaticText( parent, ID_LABTOTIMPORTO, "Tot.Importo:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item64.Add( item67, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item70 = wx.StaticText( parent, ID_LABTOTIMPORTO, "Tot.Importo:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item67.Add( item70, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item68 = bt.GetValIntNumCtrl(parent, ID_TOTIMPORTO, 'totimporto', editable=False)
-    item64.Add( item68, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+    item71 = bt.GetValIntNumCtrl(parent, ID_TOTIMPORTO, 'totimporto', editable=False)
+    item67.Add( item71, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
-    item62.Add( item64, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item65.Add( item67, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item61.Add( item62, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.LEFT|wx.BOTTOM, 5 )
+    item64.Add( item65, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item70 = wx.StaticBox( parent, -1, "Merce e servizi" )
-    item69 = wx.StaticBoxSizer( item70, wx.VERTICAL )
+    item73 = wx.StaticBox( parent, -1, "Merce e servizi" )
+    item72 = wx.StaticBoxSizer( item73, wx.VERTICAL )
     
-    item71 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    item74 = wx.FlexGridSizer( 0, 2, 0, 0 )
     
-    item72 = wx.StaticText( parent, ID_TEXT, "Tot.Merce:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item71.Add( item72, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+    item75 = wx.StaticText( parent, ID_TEXT, "Tot.Merce:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item74.Add( item75, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
 
-    item73 = bt.GetValIntNumCtrl(parent, ID_TOTMERCE, 'totimpmerce', editable=False)
-    item71.Add( item73, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item76 = bt.GetValIntNumCtrl(parent, ID_TOTMERCE, 'totimpmerce', editable=False)
+    item74.Add( item76, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item74 = wx.StaticText( parent, ID_TEXT, "Tot.Servizi:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item71.Add( item74, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item77 = wx.StaticText( parent, ID_TEXT, "Tot.Servizi:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item74.Add( item77, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item75 = bt.GetValIntNumCtrl(parent, ID_TOTSERVI, 'totimpservi', editable=False)
-    item71.Add( item75, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+    item78 = bt.GetValIntNumCtrl(parent, ID_TOTSERVI, 'totimpservi', editable=False)
+    item74.Add( item78, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
 
-    item69.Add( item71, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item72.Add( item74, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item61.Add( item69, 0, wx.LEFT|wx.BOTTOM, 5 )
+    item64.Add( item72, 0, wx.LEFT|wx.BOTTOM, 5 )
 
-    item77 = wx.StaticBox( parent, -1, "Addebiti" )
-    item76 = wx.StaticBoxSizer( item77, wx.VERTICAL )
+    item80 = wx.StaticBox( parent, -1, "Addebiti" )
+    item79 = wx.StaticBoxSizer( item80, wx.VERTICAL )
     
-    item78 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    item81 = wx.FlexGridSizer( 0, 2, 0, 0 )
     
-    item79 = wx.StaticText( parent, ID_LABTOTSPESE, "Spese:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item78.Add( item79, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+    item82 = wx.StaticText( parent, ID_LABTOTSPESE, "Spese:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item81.Add( item82, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
 
-    item80 = bt.GetValIntNumCtrl(parent, ID_TOTSPESE, 'totimpspese', editable=False)
-    item78.Add( item80, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item83 = bt.GetValIntNumCtrl(parent, ID_TOTSPESE, 'totimpspese', editable=False)
+    item81.Add( item83, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item81 = wx.StaticText( parent, ID_LABTOTSPESE, "Trasporti:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item78.Add( item81, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item84 = wx.StaticText( parent, ID_LABTOTSPESE, "Trasporti:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item81.Add( item84, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item82 = bt.GetValIntNumCtrl(parent, ID_TOTTRASP, 'totimptrasp', editable=False)
-    item78.Add( item82, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+    item85 = bt.GetValIntNumCtrl(parent, ID_TOTTRASP, 'totimptrasp', editable=False)
+    item81.Add( item85, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
 
-    item76.Add( item78, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item79.Add( item81, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item61.Add( item76, 0, wx.LEFT|wx.BOTTOM, 5 )
+    item64.Add( item79, 0, wx.LEFT|wx.BOTTOM, 5 )
 
-    item84 = wx.StaticBox( parent, -1, "Sconti praticati" )
-    item83 = wx.StaticBoxSizer( item84, wx.VERTICAL )
+    item87 = wx.StaticBox( parent, -1, "Sconti praticati" )
+    item86 = wx.StaticBoxSizer( item87, wx.VERTICAL )
     
-    item85 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    item88 = wx.FlexGridSizer( 0, 2, 0, 0 )
     
-    item86 = wx.StaticText( parent, ID_LABTOTSCRIP, "Sconti ripartiti:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item85.Add( item86, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+    item89 = wx.StaticText( parent, ID_LABTOTSCRIP, "Sconti ripartiti:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item88.Add( item89, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
 
-    item87 = bt.GetValIntNumCtrl(parent, ID_TOTSCRIP, 'totimpscrip', editable=False)
-    item85.Add( item87, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item90 = bt.GetValIntNumCtrl(parent, ID_TOTSCRIP, 'totimpscrip', editable=False)
+    item88.Add( item90, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item88 = wx.StaticText( parent, ID_LABTOTSCM, "Sconti in merce:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item85.Add( item88, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+    item91 = wx.StaticText( parent, ID_LABTOTSCM, "Sconti in merce:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item88.Add( item91, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
 
-    item89 = bt.GetValIntNumCtrl(parent, ID_TOTSCMCE, 'totimpscmce', editable=False)
-    item85.Add( item89, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item92 = bt.GetValIntNumCtrl(parent, ID_TOTSCMCE, 'totimpscmce', editable=False)
+    item88.Add( item92, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item90 = wx.StaticText( parent, ID_LABTOTOMG, "Omaggi:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item85.Add( item90, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item93 = wx.StaticText( parent, ID_LABTOTOMG, "Omaggi:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item88.Add( item93, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item91 = bt.GetValIntNumCtrl(parent, ID_TOTOMAGG, 'totimpomagg', editable=False)
-    item85.Add( item91, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+    item94 = bt.GetValIntNumCtrl(parent, ID_TOTOMAGG, 'totimpomagg', editable=False)
+    item88.Add( item94, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
 
-    item83.Add( item85, 0, wx.ALIGN_CENTER, 5 )
+    item86.Add( item88, 0, wx.ALIGN_CENTER, 5 )
 
-    item61.Add( item83, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item64.Add( item86, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item0.Add( item61, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item0.Add( item64, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item0.AddGrowableCol( 0 )
 
