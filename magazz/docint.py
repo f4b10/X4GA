@@ -126,6 +126,7 @@ class DocIntGrid(dbglib.DbGridColoriAlternati, _DocIntGridMixin):
             (110, (cn(doc,"totimporto"), "Tot.Documento", _IMP, True)),
             (110, (cn(doc,"totimponib"), "Imponibile",    _IMP, True)),
             (110, (cn(doc,"totimposta"), "Imposta",       _IMP, True)),
+            (120, (cn(doc,"desrif"),     "Riferimento",   _STR, True)),
             ( 80, (cn(doc,"datrif"),     "Data rif.",     _DAT, True)),
             ( 50, (cn(doc,"numrif"),     "N.Rif.",        _STR, True)),
             ( 35, (cn(age,"codice"),     "Cod.",          _STR, True)),
