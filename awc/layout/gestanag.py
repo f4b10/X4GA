@@ -66,6 +66,7 @@ import awc.controls.windows as aw
 import wx.grid as gl
 import awc.controls.dbgrid as dbglib
 
+import sync.manager as manager
 
 #variabile globale che imposta la presentazione automatica o meno
 #dei risultati della ricerca anagrafica una volta presentata la finestra
@@ -319,6 +320,7 @@ class AnagPanel(aw.Panel):
     Panel per la gestione di tabelle di tipo anagrafico.
     Da subclassare.
     """
+    needSync = None
 
     def __init__(self, parent, id=None, pos = wx.DefaultPosition,\
                  size = wx.DefaultSize):
@@ -407,6 +409,56 @@ class AnagPanel(aw.Panel):
                       style=wx.YES_CANCEL|wx.ICON_EXCLAMATION)
 
         self.Bind(EVT_ACCEPTDATACHANGED, self.OnAcceptDataChanged)
+
+        self.SyncManager=manager.SyncManager()
+        if self.SyncManager.IsMaster():
+            self.SyncManager.RemoveOldUpdate()
+
+
+
+    def BeforeDeleteRecord(self):
+        pass
+
+    def AfterDeleteRecord(self):
+        if self.SyncManager.NeedStore2Sync(self.db_tabname):
+            self.SyncManager.StoreUpdate(op='DELETE', \
+                                      dbTable=self.db_tabname, \
+                                      recId=self.db_recid)            
+
+    def BeforeInsertRecord(self):
+        if self.SyncManager.NeedStore2Sync(self.db_tabname):
+            self.recNew=[]
+            for col,ctr in self.db_datalink:
+                self.recNew.append(ctr.GetValue())
+
+    def AfterInsertRecord(self, recid):
+        if self.SyncManager.NeedStore2Sync(self.db_tabname):
+            for i, (col,ctr) in enumerate(self.db_datalink):
+                if col=='id':
+                    self.recNew[i]=recid
+                    break
+            self.SyncManager.StoreUpdate(op='INSERT', \
+                                      dbTable=self.db_tabname, \
+                                      recNew=self.recNew, \
+                                      dataLink=self.db_datalink)
+
+    def BeforeUpdateRecord(self):
+        if self.SyncManager.NeedStore2Sync(self.db_tabname):
+            self.recOld=self.db_rs[self.db_recno]
+            print 'tabella %s UPDATE (before)' % self.db_tabname
+
+    def AfterUpdateRecord(self, dbvalues):
+        if self.SyncManager.NeedStore2Sync(self.db_tabname):
+            print 'tabella %s UPDATE (after)' % self.db_tabname
+            self.recNew=dbvalues
+            for i, (col,ctr) in enumerate(self.db_datalink):
+                if not ctr.GetValue()==self.recOld[i]:
+                    self.SyncManager.StoreUpdate(op='UPDATE', \
+                                              dbTable=self.db_tabname, \
+                                              recNew=self.recNew, \
+                                              dataLink=self.db_datalink)
+                    break
+
 
     def IsGestioneClientiFornitori(self):
         lReturn = False
@@ -593,6 +645,9 @@ class AnagPanel(aw.Panel):
             if c:
                 self._btnattach.SetAutoText(c)
 
+        if self.SyncManager.NeedSync():
+            self.SyncManager.UpdateTables()
+
         self.SetSizer(sizer)
 
         self.InitDataControls()
@@ -608,6 +663,9 @@ class AnagPanel(aw.Panel):
         """
         if not self.IsGestioneClientiFornitori():
             self.InitControls_PersonalPage()
+
+
+
 
     def InitControls_PersonalPage(self):
         pass
@@ -1243,23 +1301,6 @@ class AnagPanel(aw.Panel):
                                   self.db_recid )
 
 
-    def BeforeDeleteRecord(self):
-        pass
-
-    def AfterDeleteRecord(self):
-        pass
-
-    def BeforeInsertRecord(self):
-        pass
-
-    def AfterInsertRecord(self, recid):
-        pass
-
-    def BeforeUpdateRecord(self):
-        pass
-
-    def AfterUpdateRecord(self, dbvalues):
-        pass
 
 
     def DeleteDataRecord( self ):
