@@ -171,6 +171,16 @@ class GridMov(object):
                 if bt.OPTSPASEARCH:
                     val = val.replace(' ', r'%')
                 mov.AddFilter("mov.descriz LIKE %s", val)
+
+       #filtro descrizione riferimento
+        d = cn('masdesrif')
+        if d:
+            val = d.GetValue()
+            if val:
+                val = '%%%s%%' % val.replace('..', r'%')
+                if bt.OPTSPASEARCH:
+                    val = val.replace(' ', r'%')
+                mov.AddFilter('doc.desrif LIKE %s', val)
         
         if cn('escdocacq').GetValue():
             mov.AddFilter('doc.f_acq IS NULL OR doc.f_acq<>1')
@@ -195,9 +205,6 @@ class GridMov(object):
                         field = "doc.%s%s" % (name, tipo)
                         mov.AddFilter("%s%s%%s" % (field, oper), val)
 
-        if cn('masdesrif').GetValue():
-            mov.AddFilter("doc.desrif LIKE '%%%s%%'" % cn('masdesrif').GetValue())
-                    
         c = cn('soloprmanca')
         if c:
             if c.IsChecked():
