@@ -28,12 +28,18 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
-           
+
+    ('1.5.18', dt.Date(2016, 2, 15), (
+         ("BET1190",
+         """Aggiunto possibilità di sincronizzare le modifiche apportate alle tabelle di base con postazioni offline"""),
+        ),),
+
+
     ('1.5.17', dt.Date(2016, 2, 8), (
          ("BET1189",
          """Aggiunta selezione per descrizione riferimento in interrogazioni magazzino"""),
         ),),
-           
+
     ('1.5.16', dt.Date(2016, 2, 8), (
          ("BET1188",
          """Aggiunti metodi before e after per aggiornamenti recor alla classa AnagPanel"""),

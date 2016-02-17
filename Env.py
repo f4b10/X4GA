@@ -1053,6 +1053,12 @@ class Azienda(object):
         MAGRELLIS = False    #flag visualizzazione ricarica effettiva di ogni singolo listino v/ costo ultimo
         MAGSELLIS = False    #flag visualizzazione sconto effettivo di ogni singolo listino v/ prezzo pubblico
 
+        SYNCFLAG        = 0     #flag attivazione sincronizzazione
+        SYNCTIPOSERVER  = 'S'   #tipo server di sincronizzazione (Maser/Slave)
+        SYNCWRKDIR      = ''    #cartella di sincronizzazione
+        SYNCDESTINATARI = ''    #lista destinatari
+        SYNCTABELLE     = ''    #lista tabelle
+
         TABSETUP_COLUMNNAME =        0
         TABSETUP_COLUMNTYPE =        1
         TABSETUP_COLUMNLENGTH =      2
@@ -3977,6 +3983,11 @@ class Azienda(object):
                 ('MAGSEPLIS',       'magseplis',          f, _flt, None),
                 ('MAGRELLIS',       'magrellis',          f, _flt, None),
                 ('MAGSELLIS',       'magsellis',          f, _flt, None),
+                ('SYNCFLAG',        'syncflag',           f, _int, None),
+                ('SYNCTIPOSERVER',  'syncTipoServer',     f, _str, None),
+                ('SYNCWRKDIR',      'syncWrkDir',         s, _str, None),
+                ('SYNCDESTINATARI', 'syncDestinatari',    s, _str, None),
+                ('SYNCTABELLE',     'syncTabelle',        s, _str, None),
             ]
 
         @classmethod

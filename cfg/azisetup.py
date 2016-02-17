@@ -39,8 +39,21 @@ from cfg.cfgcontab import CfgContab
 
 import os
 import lib
+import os
+import shutil
+import stat
+
+
 
 import crypt, base64
+
+
+def _mkdir_recursive(path):
+    sub_path = os.path.dirname(path)
+    if not os.path.exists(sub_path):
+        _mkdir_recursive(sub_path)
+    if not os.path.exists(path):
+        os.mkdir(path)
 
 
 FRAME_TITLE = "Setup azienda"
@@ -127,7 +140,39 @@ class _SetupPanel(aw.Panel):
     def OnConfirm(self, event):
         if self.Validate():
             if self.SetupWrite():
+                if bt.SYNCFLAG==1 and bt.SYNCTIPOSERVER=='M':
+                    self.UpdateDirStru()
                 event.Skip()
+
+
+    def UpdateDirStru(self):
+        import shutil
+        def del_rw(action, name, exc):
+            os.chmod(name, stat.S_IWRITE)
+            os.remove(name)
+        newDestinatari=self.FindWindowByName('setup_syncDestinatari').GetValue().split('|')
+        oldDestinatari=self.oldDestinatari.split('|')
+        userPath=os.path.join(self.FindWindowByName('setup_syncWrkDir').GetValue(), 'USERSYNC')
+        if not os.path.exists(userPath):
+            self._mkdir_recursive(userPath)
+        if os.path.exists(userPath):
+            L=[os.path.join(userPath,o) for o in os.listdir(userPath) if os.path.isdir(os.path.join(userPath,o))]
+            for d in L:
+                u='%s' % int(os.path.split(d)[1].strip())
+                if not u in newDestinatari:
+                    shutil.rmtree(d, onerror=del_rw)
+            for r in newDestinatari:
+                if len(r)>0:
+                    wrkPath=os.path.join(userPath, '%03d' % int(r))
+                    if not os.path.exists(wrkPath):
+                        self._mkdir_recursive(wrkPath)
+
+    def _mkdir_recursive(self, path):
+        sub_path = os.path.dirname(path)
+        if not os.path.exists(sub_path):
+            self._mkdir_recursive(sub_path)
+        if not os.path.exists(path):
+            os.mkdir(path)
 
     def Validate(self):
         raise Exception, 'Classe non istanziabile'
@@ -147,11 +192,43 @@ class AziendaSetupPanel(_SetupPanel):
         wdr.AziendaSetup(self)
         cn = lambda x: self.FindWindowByName(x)
         for name, vals in (('tipo_contab',     'OS'),
-                           ('liqiva_periodic', 'MT')):
+                           ('liqiva_periodic', 'MT'),
+                           ('syncTipoServer', 'MS'),):
             name = 'setup_'+name
             cn(name).SetDataLink(name, list(vals))
         self.SetupRead()
+
+
+        self.oldDestinatari=cn('setup_syncDestinatari').GetValue()
+
+        self.AttivaSyncCtrl(cn('setup_syncflag').GetValue())
+        self.AttivaServerCtrl(cn('setup_syncTipoServer').GetValue()=='M')
+
         self.Bind(wx.EVT_BUTTON, self.OnConfirm, id=wdr.ID_BTNOK)
+        cn('setup_syncflag').Bind(wx.EVT_CHECKBOX, self.OnAttivaSync)
+        cn('setup_syncTipoServer').Bind(wx.EVT_RADIOBOX , self.OnAttivaServer)
+
+
+    def OnAttivaServer(self, evt):
+        self.AttivaServerCtrl(self.FindWindowByName('setup_syncTipoServer').GetValue()=='M')
+        evt.Skip()
+
+    def AttivaServerCtrl(self, value=None):
+        for n in [ 'setup_syncDestinatari', 'setup_syncTabelle']:
+            self.FindWindowByName(n).Enable(value)
+
+    def OnAttivaSync(self, evt):
+        self.AttivaSyncCtrl(evt.IsChecked())
+        evt.Skip()
+
+    def AttivaSyncCtrl(self, value=None):
+        for ctr in aw.awu.GetAllChildrens(self):
+            name=ctr.GetName()
+            if name[:6] == 'setup_':
+                if ctr.GetName()[6:10] and not name=='setup_syncflag':
+                    ctr.Enable(value)
+
+
 
     def SetupRead(self):
         out = _SetupPanel.SetupRead(self)
@@ -261,6 +338,45 @@ class AziendaSetupPanel(_SetupPanel):
         if out and ci(wdr.ID_MAGDEFAULT).GetValue() is None:
             aw.awu.MsgDialog(self, message="Definire il magazzino di default", style=wx.ICON_ERROR)
             out = False
+
+        if out and cn('setup_syncflag').GetValue()==1:
+            if len(cn('setup_syncWrkDir').GetValue().strip())==0:
+                aw.awu.MsgDialog(self, message="Specificare Cartella di Sincronizzazione", style=wx.ICON_ERROR)
+                out = False
+            if out and not os.path.exists(cn('setup_syncWrkDir').GetValue().strip()):
+                aw.awu.MsgDialog(self, message="La Cartella di Sincronizzazione non esiste", style=wx.ICON_ERROR)
+                out = False
+            if out:
+                newDestinatari=cn('setup_syncDestinatari').GetValue().split('|')
+                oldDestinatari=self.oldDestinatari.split('|')
+                for d in oldDestinatari:
+                    if not d in newDestinatari:
+                        msg="""
+            ATTENZIONE! Si stanno rimuovendo alcuni destinatari.\n
+            Proseguendo con la memorizzazione per tali utenti
+            cesserà la sincronizzazione delle tabelle indicate\n
+            Si conferma la memorizzazione?"""
+                        if aw.awu.MsgDialog(self, message=msg, style=wx.ICON_QUESTION|wx.YES_NO)==wx.ID_NO:
+                            out = False
+                        break
+
+        #=======================================================================
+        # if len(self.wrkDir.GetValue().strip())==0:
+        #     msg="La cartella di lavoro deve essere specificata"
+        #     lEsito=False
+        # elif not os.path.exists(self.wrkDir.GetValue().strip()):
+        #     msg="La cartella di lavoro specificata non esiste"
+        #     lEsito=False
+        # return msg
+        #=======================================================================
+
+
+
+
+
+
+
+
         self.Refresh()
         if out:
             old = (bt.TIPO_CONTAB,
@@ -343,7 +459,13 @@ class AziendaSetupPanel(_SetupPanel):
                    bt.MAGREPLIS,
                    bt.MAGSEPLIS,
                    bt.MAGRELLIS,
-                   bt.MAGSELLIS,)
+                   bt.MAGSELLIS,
+                   bt.SYNCFLAG,
+                   bt.SYNCTIPOSERVER,
+                   bt.SYNCWRKDIR,
+                   bt.SYNCDESTINATARI,
+                   bt.SYNCTABELLE,
+                   )
 
 
             if not bt.OPTLINKINDEX == bool(cn('setup_optlinkindex').GetValue()):
@@ -383,6 +505,13 @@ class AziendaSetupPanel(_SetupPanel):
             bt.OPT_GC_PRINT = cn('setup_opt_gc_print').GetValue()
             bt.OPT_GCP_USER = cn('setup_opt_gcp_user').GetValue()
             bt.OPT_GCP_PSWD = cn('setup_opt_gcp_pswd').GetValue()
+
+            bt.SYNCFLAG       = cn('setup_syncflag').GetValue()
+            bt.SYNCTIPOSERVER = cn('setup_syncTipoServer').GetValue()
+            bt.SYNCWRKDIR     = cn('setup_syncWrkDir').GetValue()
+            bt.SYNCDESTINATARI= cn('setup_syncDestinatari').GetValue()
+            bt.SYNCTABELLE    = cn('setup_syncTabelle').GetValue()
+
             bt.MAGATTGRIP = bool(cn('setup_magattgrip').GetValue())
             bt.MAGATTGRIF = bool(cn('setup_magattgrif').GetValue())
             bt.MAGCDEGRIP = bool(cn('setup_magcdegrip').GetValue())
@@ -514,7 +643,12 @@ class AziendaSetupPanel(_SetupPanel):
                 bt.MAGREPLIS,
                 bt.MAGSEPLIS,
                 bt.MAGRELLIS,
-                bt.MAGSELLIS = old
+                bt.MAGSELLIS,
+                bt.SYNCFLAG,
+                bt.SYNCTIPOSERVER,
+                bt.SYNCWRKDIR,
+                bt.SYNCDESTINATARI,
+                bt.SYNCTABELLE, = old
         if out:
             cfg = CfgContab()
             cfg.SetEsercizio(Env.Azienda.Login.dataElab)

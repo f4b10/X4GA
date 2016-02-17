@@ -15,7 +15,7 @@ from awc.controls.textctrl import TextCtrl, TextCtrl_LC
 from awc.controls.datectrl import DateCtrl
 from awc.controls.numctrl import NumCtrl
 from awc.controls.radiobox import RadioBox
-from awc.controls.checkbox import CheckBox
+from awc.controls.checkbox import CheckBox, CheckListBox
 from awc.controls.linktable import LinkTable
 
 from awc.controls.entries import FolderEntryCtrl
@@ -74,7 +74,37 @@ class OrdPartiteRadioBox(RadioBox):
         RadioBox.__init__(self, *args, **kwargs)
         self.SetDataLink(values=["S",  "D"])
 
+class TipoSync(RadioBox):
+    def __init__(self, *args, **kwargs):
+        RadioBox.__init__(self, *args, **kwargs)
+        self.SetDataLink(values=' 1')
 
+class DestinatariSync(CheckListBox):
+    def __init__(self, *args, **kwargs):
+        CheckListBox.__init__(self, *args, **kwargs)
+        utenti=self.GetUtenti()
+        for i, (id, cod, des) in enumerate(utenti):
+            self.Append(des)
+            self.SetPyData(self.GetCount()-1, '%s' % id)
+
+    def GetUtenti(self):
+        cur=Env.Azienda.DB.connection.cursor()
+        sql = r"""
+        SELECT id_utente, utenti.codice, utenti.descriz FROM X4.diritti d
+  join X4.aziende on d.id_azienda=aziende.id
+  join X4.utenti on d.id_utente=utenti.id
+  where attivo=1 and aziende.codice="%s";""" % (Env.Azienda.codice)
+        cur.execute(sql)
+        Utenti= cur.fetchall()
+        cur.close()
+        return Utenti
+
+class TabelleSync(CheckListBox):
+    def __init__(self, *args, **kwargs):
+        CheckListBox.__init__(self, *args, **kwargs)
+        for t in Env.Azienda.BaseTab.tabelle:
+            self.Append(t[1])
+            self.SetPyData(self.GetCount()-1, t[0])
 
 
 # Window functions
@@ -104,16 +134,20 @@ def AziendaSetup( parent, call_fit = True, set_sizer = True ):
     OpzioniFunc(item6, False)
     item2.AddPage( item6, "Opzioni" )
 
+    item7 = wx.Panel( item2, -1 )
+    SyncFunc(item7, False)
+    item2.AddPage( item7, "Sincronizzazione" )
+
     item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item7 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    item8 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
-    item8 = wx.Button( parent, ID_BTNOK, "OK", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item8.SetDefault()
-    item8.SetName( "btnok" )
-    item7.Add( item8, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item9 = wx.Button( parent, ID_BTNOK, "OK", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item9.SetDefault()
+    item9.SetName( "btnok" )
+    item8.Add( item9, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item0.Add( item7, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item0.Add( item8, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item0.AddGrowableCol( 0 )
 
@@ -1249,6 +1283,84 @@ def DatiAziendaFunc( parent, call_fit = True, set_sizer = True ):
     item0.AddGrowableCol( 0 )
 
     item0.AddGrowableRow( 1 )
+
+    if set_sizer == True:
+        parent.SetSizer( item0 )
+        if call_fit == True:
+            item0.SetSizeHints( parent )
+    
+    return item0
+
+ID_IMPORTFOLDER = 15095
+ID_LDEST = 15096
+ID_LTAB = 15097
+
+def SyncFunc( parent, call_fit = True, set_sizer = True ):
+    item0 = wx.FlexGridSizer( 0, 3, 0, 0 )
+    
+    item1 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    
+    item2 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    
+    item3 = UnoZeroCheckBox( parent, ID_CHECKBOX, "Sincronizzazione Attiva", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item3.SetName( "setup_syncflag" )
+    item2.Add( item3, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+    item4 = TipoSync( parent, ID_RADIOBOX, "", wx.DefaultPosition, wx.DefaultSize, 
+        ["Master Sql Sever","Slave  Sql Sever"] , 1, wx.NO_BORDER|wx.RA_SPECIFY_ROWS )
+    item4.SetName( "setup_syncTipoServer" )
+    item2.Add( item4, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item2.AddGrowableCol( 1 )
+
+    item1.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item5 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    
+    item6 = wx.StaticText( parent, ID_TEXT, "Cartella Sincronizzazioni", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item5.Add( item6, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+    item7 = FolderEntryCtrl( parent, ID_IMPORTFOLDER, "", wx.DefaultPosition, [300,-1], 0 )
+    item7.SetName( "setup_syncWrkDir" )
+    item5.Add( item7, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item5.AddGrowableCol( 1 )
+
+    item1.Add( item5, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item8 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    
+    item9 = wx.StaticText( parent, ID_TEXT, "Destinatari Trasferimenti", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item8.Add( item9, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item10 = wx.StaticText( parent, ID_TEXT, "Tabelle da Sincronizzare", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item8.Add( item10, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item11 = DestinatariSync( parent, ID_LDEST, wx.DefaultPosition, [150,300], [], 0 )
+    item11.SetName( "setup_syncDestinatari" )
+    item8.Add( item11, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item12 = TabelleSync( parent, ID_LTAB, wx.DefaultPosition, [220,300], [], 0 )
+    item12.SetName( "setup_syncTabelle" )
+    item8.Add( item12, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item8.AddGrowableCol( 0 )
+
+    item8.AddGrowableCol( 1 )
+
+    item8.AddGrowableRow( 1 )
+
+    item1.Add( item8, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item1.AddGrowableCol( 0 )
+
+    item1.AddGrowableRow( 2 )
+
+    item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item0.AddGrowableCol( 0 )
+
+    item0.AddGrowableRow( 0 )
 
     if set_sizer == True:
         parent.SetSizer( item0 )
