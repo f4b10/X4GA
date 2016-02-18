@@ -411,8 +411,9 @@ class AnagPanel(aw.Panel):
         self.Bind(EVT_ACCEPTDATACHANGED, self.OnAcceptDataChanged)
 
         self.SyncManager=manager.SyncManager()
-        if self.SyncManager.IsMaster():
-            self.SyncManager.RemoveOldUpdate()
+        if bt.SYNCFLAG==1:
+            if self.SyncManager.IsMaster():
+                self.SyncManager.RemoveOldUpdate()
 
 
 
