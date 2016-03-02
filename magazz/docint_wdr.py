@@ -1094,12 +1094,15 @@ def DocMagSelFunc( parent, call_fit = True, set_sizer = True ):
     item17.Add( item18, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
 
     item47 = wx.BoxSizer( wx.HORIZONTAL )
+    parent.sizer_button = item47
     
     item48 = wx.Button( parent, ID_MASBUTUPD, "Applica", wx.DefaultPosition, wx.DefaultSize, 0 )
     item48.SetDefault()
+    item48.SetName( "btnUpdate" )
     item47.Add( item48, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
 
     item49 = wx.Button( parent, ID_MASBUTPRT, "&Lista", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item49.SetName( "btnLista" )
     item47.Add( item49, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
     item17.Add( item47, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
