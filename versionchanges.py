@@ -29,6 +29,14 @@ import mx.DateTime as dt
 
 history = (
 
+    ('1.5.19', dt.Date(2016, 3, 02), (
+         ("BET1191",
+         """Aggiunta possibilità di personalizzazione a interrogazione documenti di magazzino"""),
+         ("BET1192",
+         """Introdotta possibilità di esportazione in csv per ListCtrl"""),
+        ),),
+
+
     ('1.5.18', dt.Date(2016, 2, 15), (
          ("BET1190",
          """Aggiunto possibilità di sincronizzare le modifiche apportate alle tabelle di base con postazioni offline"""),
