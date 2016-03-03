@@ -442,8 +442,8 @@ class SelAziendaPanel(aw.Panel):
 
         bt = Env.Azienda.BaseTab
 
-        #TODO: Viene modificata dinamicamnete la path per gli allegati nel caso si sia in presenza dell'azienda
-        #TODO: destinata all'archiviazione, riconoscibile per avere il nomedb che termina con _a
+        # Viene modificata dinamicamnete la path per gli allegati nel caso si sia in presenza dell'azienda
+        # destinata all'archiviazione, riconoscibile per avere il nomedb che termina con _a
         import awc.controls.attachbutton as ab
         if nomedb[-2:]=='_a':
             ab.attach_dir='%s_a' % ab.attach_dir
