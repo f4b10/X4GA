@@ -374,6 +374,9 @@ class _PdcRelPanel(ga.AnagPanel,\
                     else:
                         op='UPDATE'
                     self.SyncManager.StoreUpdate(op=op, \
+                                              dbTable=self.tabanag, \
+                                              recNew=par, \
+                                              dataLink=self.anag_db_datalink)
             except MySQLdb.Error, e:
                 MsgDialog(self, message=repr(e.args))
                 written = False
@@ -413,7 +416,7 @@ class _PdcRelPanel(ga.AnagPanel,\
             if self.SyncManager.NeedStore2Sync(self.tabanag):
                 self.SyncManager.StoreUpdate(op='DELETE', \
                                           dbTable=self.tabanag, \
-                                          recId=self.db_recid)            
+                                          recId=self.db_recid)
             out = ga.AnagPanel.DeleteDataRecord(self)
         return out
 
