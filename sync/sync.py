@@ -77,7 +77,6 @@ class SyncDialog(aw.Dialog):
         self.btnExport.Hide()
 
     def OnExport(self, evt):
-        
         for i in range(self.log.GetCount()):
             print i, self.log.GetString(i)
         self.Close()
@@ -88,7 +87,6 @@ class SyncDialog(aw.Dialog):
         lUpdated=False
         lastUpdate=self.SyncManager.GetLastSyncDirName()
         dirUpdate=self.SyncManager.GetUpdatePath()
-        #TODO: ORDINARE CRONLOGICAMENTE LE DIRECTORY
         dirList=sorted(os.listdir(dirUpdate))
         for d in dirList:
             if not hasattr(self.SyncManager, 'logger'):
