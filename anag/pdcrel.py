@@ -368,6 +368,12 @@ class _PdcRelPanel(ga.AnagPanel,\
 
             try:
                 self.db_curs.execute(cmd, par)
+                if self.SyncManager.NeedStore2Sync(self.tabanag):
+                    if new:
+                        op='INSERT'
+                    else:
+                        op='UPDATE'
+                    self.SyncManager.StoreUpdate(op=op, \
             except MySQLdb.Error, e:
                 MsgDialog(self, message=repr(e.args))
                 written = False
@@ -404,6 +410,10 @@ class _PdcRelPanel(ga.AnagPanel,\
             except:
                 pass
         if delete:
+            if self.SyncManager.NeedStore2Sync(self.tabanag):
+                self.SyncManager.StoreUpdate(op='DELETE', \
+                                          dbTable=self.tabanag, \
+                                          recId=self.db_recid)            
             out = ga.AnagPanel.DeleteDataRecord(self)
         return out
 
