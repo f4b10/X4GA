@@ -108,6 +108,9 @@ class SyncManager(object):
         if not os.path.exists(path):
             os.mkdir(path)
 
+    def IsSyncronized(self):
+        return (bt.SYNCFLAG==1)
+
 
     def IsMaster(self):
         return (self.ruolo=='M')
@@ -504,7 +507,7 @@ class SyncManager(object):
         sqlSet='SET'
         sqlWhere = ''
         for f in spec['record']:
-            v=self.FieldXmlValue(f['type'], f['value'])
+            v=self.FieldXmlValue(f['type'], f['value'], f['name'], spec['table'])
             sqlSet = '%s %s=%s, ' % (sqlSet, f['name'], v)
         sqlSet = sqlSet[:-2]
         sql= '%s %s' % (sql, sqlSet)
@@ -515,7 +518,7 @@ class SyncManager(object):
         sql='DELETE FROM %s' % spec['table']
         sqlWhere = ''
         for f in spec['record']:
-            v=self.FieldXmlValue(f['type'], f['value'])
+            v=self.FieldXmlValue(f['type'], f['value'], f['name'], spec['table'])
             if f['primary_key']=='True':
                 sqlWhere = 'WHERE %s=%s' % (f['name'], v)
                 break
