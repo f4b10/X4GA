@@ -20,7 +20,7 @@
 # You should have received a copy of the GNU General Public License
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
-
+import wx
 import awc.controls.windows as aw
 import stormdb as adb
 import datetime
@@ -33,10 +33,9 @@ bt = Env.Azienda.BaseTab
 import os
 import shutil
 import stat
+from time import sleep
 
 import MySQLdb
-
-
 
 def opj(x, y):
     return os.path.join(x, y).replace('\\', '/')
@@ -184,15 +183,20 @@ class SyncManager(object):
             pass
         self.version['X4'] = (ver, min_ver)
 
-    def StoreUpdate(self, op=None, dbTable=None, recId=None, recNew=None, dataLink=None):
+    def StoreUpdate(self, op=None, dbTable=None, recId=None, recNew=None, dataLink=None, fields=None):
         dValue={}
         dValue['operation']=op
         dValue['table']= dbTable
         if op=='DELETE':
             dValue['id']=recId
         else:
-            for i, (col,ctr) in enumerate(dataLink):
-                dValue[col]=recNew[i]
+            if dataLink:
+                for i, (col,ctr) in enumerate(dataLink):
+                    dValue[col]=recNew[i]
+            elif fields:
+                for i, col in enumerate(fields):
+                    dValue[col]=recNew[i]
+
         self.StoreXml(dValue)
 
 
@@ -200,8 +204,8 @@ class SyncManager(object):
         try:
             cBasePath=self.GetUpdatePath()
             now    = datetime.datetime.utcnow()
-            nowFile=now.strftime('%Y%m%d-%H%M%S')
-            nowXml =now.strftime('%Y%m%d-%H:%M:%S')
+            nowFile='%s-%s' % (now.strftime('%Y%m%d-%H%M%S'), '%04d' % (now.microsecond /1000))
+            nowXml ='%s:%s' % (now.strftime('%Y%m%d-%H:%M:%S'), '%04d' % (now.microsecond /1000))
             doc=Document()
             root = doc.createElement("dbUpdate")
             for k in ['table', 'operation']:
@@ -215,7 +219,6 @@ class SyncManager(object):
             pathName=os.path.join(cBasePath, '%s' % nowFile)
             self._mkdir_recursive(pathName)
             fileName=os.path.join(pathName, '%s.xml' % nowFile )
-            print 'CREO FILE: %s' %fileName
             doc.writexml( open(fileName, 'w'),
                           indent="  ",
                           addindent="  ",
@@ -268,9 +271,6 @@ class SyncManager(object):
                         v=dValue[k]
                         v=v.encode('utf-8')
                         dValue[k]=v
-                        #dValue[k]=dValue[k].replace(u"\u00AE", '&#174;')
-                        #dValue[k]=dValue[k].replace(u"\u00AE", '&reg;')
-                        #print dValue[k]
                         field.setAttribute( 'value', '%s' % dValue[k] )
                     except:
                         field.setAttribute( 'value', '%s' % dValue[k] )
@@ -313,6 +313,20 @@ class SyncManager(object):
         lEsito=True
         fullPath=os.path.join(self.GetUpdatePath(), dir)
         fullName=os.path.join(fullPath, '%s.xml' % dir)
+        if not os.path.exists(fullName):
+            wait = aw.awu.WaitDialog(None, message="Attesa Dati x sincronizzazione...",
+                                           maximum   = 60,
+                                           style=wx.ICON_INFORMATION)            
+            for i in range(1,60):
+                wait.SetMessage("%s" % i)
+                if os.path.exists(fullName):
+                    break
+                sleep(1)
+                wait.SetValue(i+1)
+            try:
+                wait.Destroy()
+            except:
+                pass                
         if os.path.exists(fullName):
             #TODO: INSERIRE CONTROLLO SU CONGRUENZA VERSIONE
             spec=self.ReadXmlUpdate(fullName)
@@ -320,7 +334,7 @@ class SyncManager(object):
                 lEsito, msg=self.MakeUpdate(spec, dir)
             else:
                 lEsito=False
-                msg   = '%s %s'% (dir, 'IMPOSSIBILE INTERPRETARE DIRETTIVE')
+                msg   = '%s %s'% (dir, 'IMPOSSIBILE ACQUISIRE I DATI DI SINCRONIZZAZIONE')
                 self.logger.error(msg)
         else:
             msg='%s %s'% (dir, 'FILE XML INESISTENTE')
@@ -422,11 +436,43 @@ class SyncManager(object):
             if f['primary_key']=='True':
                 idPrimary=f['value']
                 break
-        sql='SELECT COUNT(*) FROM %s where ID=%s' % (spec['table'], idPrimary)
-        cur=Env.Azienda.DB.connection.cursor()
-        cur.execute(sql)
-        nRecord=cur._rows[0][0]
+        if not idPrimary==None:
+            sql='SELECT COUNT(*) FROM %s where ID=%s' % (spec['table'], idPrimary)
+            cur=Env.Azienda.DB.connection.cursor()
+            cur.execute(sql)
+            nRecord=cur._rows[0][0]
+        else:
+            nRecord=self.Check4LinkTable(spec)
         return nRecord
+
+    def Check4LinkTable(self, spec):
+        nRecord = 0
+        lFilter = self.GetUniqueKeyFilter4LinkTable(spec)
+        for filter in lFilter:
+            sql='SELECT COUNT(*) FROM %s where %s' % (spec['table'], filter)
+            cur=Env.Azienda.DB.connection.cursor()
+            cur.execute(sql)
+            nRecord=cur._rows[0][0]
+            if nRecord >0:
+                break
+        return nRecord
+
+    def GetUniqueKeyFilter4LinkTable(self, spec):
+        lFilter=[]
+        defTable=filter(lambda x: x[0] == spec['table'], Env.Azienda.BaseTab.tabelle)
+        defIndex=defTable[0][Env.Azienda.BaseTab.TABSETUP_TABLEINDEXES]
+        for k in defIndex:
+            if k[0]=='UNIQUE KEY':
+                cFilter=''
+                for f in k[1].split(','):
+                    vl=filter(lambda x: x['name'] == f, spec['record'])[0]
+                    v=vl['value']
+                    exp='%s = %s' % (f, v)
+                    cFilter='%s %s and ' % (cFilter, exp )
+                if len(cFilter)>0:
+                    cFilter=cFilter[:-5]
+                lFilter.append(cFilter)
+        return lFilter
 
     def CheckUpdate(self, spec):
         lOk=True
@@ -449,6 +495,8 @@ class SyncManager(object):
             actual_ver, _ = self.version[k]
             _, required_ver = version[k]
             if actual_ver <required_ver:
+                msg=u"Attenzione! Fino a quando non verrà effettuato l'aggiornamento del programma non sarà possibile effettuare la sincronizzazione dei dati."
+                aw.awu.MsgDialog(None, msg, style=wx.ICON_ERROR|wx.OK)
                 print 'NON AGGIORNO: modulo:%s  versione:%s vers.richiesta:%s ' % (k, actual_ver, required_ver)
                 lOk=False
                 break
@@ -498,6 +546,11 @@ class SyncManager(object):
                 sqlWhere = 'WHERE %s=%s' % (f['name'], v)
             sqlSet = '%s %s=%s, ' % (sqlSet, f['name'], v)
         sqlSet = sqlSet[:-2]
+        if len(sqlWhere)==0:
+            lFilter=self.GetUniqueKeyFilter4LinkTable(spec)
+            for filter in lFilter:
+                sqlWhere='WHERE %s' % filter
+                break
         sql= '%s %s %s' % (sql, sqlSet, sqlWhere)
         return sql
 
@@ -565,14 +618,10 @@ class SyncManager(object):
                 dirHistory=os.path.join(self.GetHistoryPath(), d)
                 if not os.path.exists(self.GetHistoryPath()):
                     self._mkdir_recursive(self.GetHistoryPath())
-                print 'Sposto cartella  %s' % dirDel
                 try:
                     shutil.move(dirDel, dirHistory)
                 except:
                     pass
-
-                #shutil.breakrmtree(dirDel, onerror=del_rw)
-
 
     def GetAlreadyUpdate(self):
         # Restituisce la data del più vecchio aggiornamento eseguito dai destinatari della
