@@ -24,6 +24,7 @@ from awc.tables.util import CheckRefIntegrity
 class GenericPersonalLinkedPage_InternalGrid(dbglib.DbGridColoriAlternati):
     _grid_contatori = None
     rsdata          = None
+    rsdataOld       = None
     rsdatamod       = None
     rsdatanew       = None
     rsdatadel       = None
@@ -38,6 +39,7 @@ class GenericPersonalLinkedPage_InternalGrid(dbglib.DbGridColoriAlternati):
     def __init__(self, *args, **kwargs):
 
         self.rsdata     = []
+        self.rsdataOld  = []
         self.rsdatamod  = []
         self.rsdatanew  = []
         self.rsdatadel  = []
@@ -167,14 +169,22 @@ class GenericPersonalLinkedPage_InternalGrid(dbglib.DbGridColoriAlternati):
         evt.Skip()
 
     def BeforeWriteData(self):
+        # da utilizzare nella classe derivata per personalizzare le memorizzazione
         pass
 
     def WriteData(self):
+        #TODO: Aggiungere gestione sincronizzazione
         self.BeforeWriteData()
         return self.WriteRelated(self.gridTableName, self.fields, self.rsdata,\
                                  self.rsdatanew, self.rsdatamod, self.rsdatadel)
 
     def WriteRelated(self, table, fields, rs, rsins, rsmod, rsdel):
+        needSync=False
+        if self.mainPanel.SyncManager.IsSyncronized():
+            if self.mainPanel.SyncManager.IsMaster():
+                if self.mainPanel.SyncManager.NeedStore2Sync(table):
+                    if not  self.rsdata==self.rsdataOld:
+                        needSync=True
         written = False
         setCol = ""
         for field in fields[1:]:
@@ -207,10 +217,39 @@ class GenericPersonalLinkedPage_InternalGrid(dbglib.DbGridColoriAlternati):
         try:
             if parDel:
                 self.db_curs.executemany(cmdDel, parDel)
+                if needSync:
+                    for i, recId in enumerate(rsdel):
+                        self.mainPanel.SyncManager.StoreUpdate(op='DELETE',   \
+                                                               dbTable=table, \
+                                                               recId=recId)            
             if parIns:
                 self.db_curs.executemany(cmdIns, parIns)
+                if needSync:
+                    for i, r in enumerate(self.rsdata):
+                        if r[0]==None:
+                            wrkRecord=list(r)
+                            wrkRecord.append(self.mainPanel.db_recid)
+                            wrkFields=list(fields)
+                            wrkFields.append('id_pdc')
+                            self.mainPanel.SyncManager.StoreUpdate(op='INSERT',   \
+                                                      dbTable=table,              \
+                                                      recNew=wrkRecord,           \
+                                                      fields=wrkFields)                                
             if parUpd:
                 self.db_curs.executemany(cmdUpd, parUpd)
+                if needSync:
+                    for i, r in enumerate(self.rsdata):
+                        if not r[0]==None:
+                            recold=[x for x in self.rsdataOld if x[0]==r[0]][0]
+                            if not r==recold:
+                                wrkRecord=list(r)
+                                wrkRecord.append(self.mainPanel.db_recid)
+                                wrkFields=list(fields)
+                                wrkFields.append('id_pdc')
+                                self.mainPanel.SyncManager.StoreUpdate(op='UPDATE',   \
+                                                          dbTable=table,              \
+                                                          recNew=wrkRecord,           \
+                                                          fields=wrkFields)                                
             written = True
         except MySQLdb.Error, e:
             aw.awu.MsgDialog(self, repr(e.args))
@@ -243,9 +282,11 @@ class GenericPersonalLinkedPage_InternalGrid(dbglib.DbGridColoriAlternati):
             except Exception, e:
                 pass
         del self.rsdata[:]
+        del self.rsdataOld[:]
 
         for n in range(len(rsdata)):
             self.rsdata.append(list(rsdata[n]))
+            self.rsdataOld.append(list(rsdata[n]))
         self.ResetView()
         del self.rsdatadel[:]
         del self.rsdatamod[:]
@@ -688,9 +729,21 @@ class GenericPersonalLinkedPage_Panel(ClientiInterrPanel):
         self.BindStdButton()
 
     def DeleteDataRecord( self, recid ):
+        #TODO: Aggiungere gestione sincronizzazione
+        needSync=False
+        if self.mainPanel.SyncManager.IsSyncronized():
+            if self.mainPanel.SyncManager.IsMaster():
+                if self.mainPanel.SyncManager.NeedStore2Sync(self.gridTableName):
+                    needSync=True
         try:
             cmdDel = """DELETE FROM %s WHERE id_pdc=%%s""" % self.gridTableName
             self.db_curs.execute(cmdDel, recid)
+            if needSync:
+                for r in self._grid.rsdataOld:
+                    id=r[0]
+                    self.mainPanel.SyncManager.StoreUpdate(op='DELETE',                \
+                                                           dbTable=self.gridTableName, \
+                                                           recId=id)            
         except MySQLdb.Error, e:
             MsgDialogDbError(self, e)
         except Exception, e:
