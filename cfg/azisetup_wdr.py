@@ -102,10 +102,11 @@ class DestinatariSync(CheckListBox):
 class TabelleSync(CheckListBox):
     def __init__(self, *args, **kwargs):
         CheckListBox.__init__(self, *args, **kwargs)
-        for t in Env.Azienda.BaseTab.tabelle:
-            self.Append(t[1])
+        x=list(Env.Azienda.BaseTab.tabelle)
+        x.sort()
+        for t in x:
+            self.Append('%s  - %s' % (t[0], t[1]))
             self.SetPyData(self.GetCount()-1, t[0])
-
 
 # Window functions
 
