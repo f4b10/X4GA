@@ -76,9 +76,13 @@ class SyncDialog(aw.Dialog):
         wx.CallAfter(lambda: self.UpdateTables())
         self.btnExport.Hide()
 
+        self.log.InsertColumn(0, 'Acquisizione', wx.LIST_FORMAT_RIGHT, 500)
+
+
+
+
     def OnExport(self, evt):
-        for i in range(self.log.GetCount()):
-            print i, self.log.GetString(i)
+        self.log.ExportCsv()
         self.Close()
         evt.Skip()
 
@@ -107,8 +111,10 @@ class SyncDialog(aw.Dialog):
             self.btnExport.Show()
 
     def AddMessage(self, msg):
-        self.log.Append(msg)
-        self.log.Refresh()
+        idx=self.log.GetItemCount()
+        self.log.InsertStringItem(idx, '')
+        self.log.SetStringItem(idx, 0, msg)
+        self.log.Refresh()        
         try:
             wx.Yield()
         except:

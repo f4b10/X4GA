@@ -10,9 +10,12 @@ import wx
 import wx.grid
 import wx.animate
 
+# Custom source
+from awc.controls.listctrl import ListCtrl
+
 # Window functions
 
-ID_LISTBOX = 15000
+ID_LISTCTRL = 15000
 ID_BUTTON = 15001
 
 def SyncFunc( parent, call_fit = True, set_sizer = True ):
@@ -20,9 +23,9 @@ def SyncFunc( parent, call_fit = True, set_sizer = True ):
     
     item1 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
-    item2 = wx.ListBox( parent, ID_LISTBOX, wx.DefaultPosition, [500,250], [], wx.LB_SINGLE )
+    item2 = ListCtrl( parent, ID_LISTCTRL, wx.DefaultPosition, [500,200], wx.LC_REPORT|wx.SUNKEN_BORDER )
     item2.SetName( "loglist" )
-    item1.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item1.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
     item3 = wx.FlexGridSizer( 0, 2, 0, 0 )
     
