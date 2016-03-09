@@ -29,11 +29,15 @@ import mx.DateTime as dt
 
 history = (
 
-    ('1.5.19', dt.Date(2016, 3, 02), (
+    ('1.5.19', dt.Date(2016, 3, 8), (
          ("BET1191",
          """Aggiunta possibilità di personalizzazione a interrogazione documenti di magazzino"""),
          ("BET1192",
          """Introdotta possibilità di esportazione in csv per ListCtrl"""),
+         ("BET1193",
+         """Gestione effetti - Propone in automatico per il conto effetti l'ultimo conto utilizzato"""),
+         ("BET1194",
+         """Migliorato riordinamenbto interattivo su griglie"""),
         ),),
 
 
