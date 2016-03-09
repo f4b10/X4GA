@@ -500,6 +500,28 @@ class EmiEffettiPanel(wx.Panel):
         self.Bind(contab.EVT_PCFCHANGED, self.OnUpdate)
 
 
+        oContoEff=self.FindWindowById(wdr.ID_CONTOEFF)
+        defaultValue=self.GetLastContoChoice()
+        oContoEff.SetValue(defaultValue)
+
+
+    def GetLastContoChoice(self):
+        choice=None
+        s = adb.DbTable(Env.Azienda.BaseTab.TABNAME_CFGSETUP, 'setup')
+        if s.Retrieve("setup.chiave='effetti_idconto'" ) and s.OneRow():
+            choice = s.importo        
+        return choice        
+
+
+    def SetLastContoChoice(self, value):
+        s = adb.DbTable(Env.Azienda.BaseTab.TABNAME_CFGSETUP, 'setup')
+        if not (s.Retrieve("setup.chiave='effetti_idconto'" ) and s.OneRow()):
+            s.CreateNewRow()
+            s.chiave='effetti_idconto'
+        s.importo=value
+        s.Save()
+
+
     def GetPanelDataSource(self):
         return self.dbeff
 
@@ -550,6 +572,7 @@ class EmiEffettiPanel(wx.Panel):
                                                       wdr.ID_FILEPATH))
         effid = pdcef.GetValue()
         if effid is not None:
+            self.SetLastContoChoice(effid)
             e = adb.DbTable(bt.TABNAME_EFFETTI, 'effetti', writable=False)
             if e.Get(effid):
                 caus.SetValue(e.id_caus)
@@ -655,20 +678,24 @@ class EmiEffettiPanel(wx.Panel):
 
     def SelectEff(self, rows, dosel):
         eff = self.dbeff
-        for row in rows:
-            sel = dosel and self.grideff.DatiOK(row)
-            eff.MoveRow(row)
-            if sel: eff.f_effsele = 1
-            else:   eff.f_effsele = 0
-            if sel:
-                if not row in self.effsel:
-                    self.effsel.append(row)
-            else:
-                if row in self.effsel:
-                    n = self.effsel.index(row)
-                    self.effsel.pop(n)
-        self.UpdateTot()
-        self.grideff.Refresh()
+        wx.BeginBusyCursor()
+        try:
+            for row in rows:
+                sel = dosel and self.grideff.DatiOK(row)
+                eff.MoveRow(row)
+                if sel: eff.f_effsele = 1
+                else:   eff.f_effsele = 0
+                if sel:
+                    if not row in self.effsel:
+                        self.effsel.append(row)
+                else:
+                    if row in self.effsel:
+                        n = self.effsel.index(row)
+                        self.effsel.pop(n)
+            self.UpdateTot()
+            self.grideff.Refresh()
+        finally:
+            wx.EndBusyCursor()        
 
     def UpdateTot(self):
         eff = self.dbeff
