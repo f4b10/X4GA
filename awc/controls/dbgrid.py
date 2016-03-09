@@ -351,70 +351,72 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
     def OnLabelLeftClick(self, event):
         lCanReorder=False
         col=event.GetCol()
-        if self._canReorder or _DEBUG:
-            t=self.GetTable()
-            data=t.data
-            newdata=data
+        ######################
+        t=self.GetTable()
+        data=t.data
+        newdata=data
+        try:
             try:
-                try:
-                    objRs, objDb = self.GetPanelDataSource()
-                    if objRs==None and objDb==None:
-                        if _DEBUG:
-                            print ''
-                            print ''
-                            print ''
-                            print 'NON  TROIVATO un panel che del tipo di seguito specificato:'
-                            print '- Panel derivato da awc.controls.windows.Panel che contenga attrinuto db_rs'
-                            print '- Panel derivato da wx.panel esponga il metodo GetPanelDataSource'
-                            print 'La ricerca è stata eseguita neim seguenti oggetti:'
-                            self.GetPanelDataSource(debug=True)
-                            print '='*80
-                    else:
-                        lCanReorder=True
-                        if _DEBUG:
-                            print '%s %s' % (objRs, objDb)
-                except:
-                    pass
-            except:
-                objRs=None
-                objDb=None
-                if _DEBUG:
-                    print 'RECORDET NON TROVATO %s' % self
-                pass
-            if not self.Titoli:
-                try:
-                    self.Titoli=Titoli(self)
-                except:
-                    pass
-
-            if lCanReorder:
-                filterOn=event.ControlDown()
-                if filterOn:
-                    newpos=self.GetTitlePosition(event.GetPosition())
-                    print 'size         :%s' % self.Titoli[col].size
-                    print 'pos          :%s' % self.Titoli[col].pos
-                    print 'idxDb        :%s' % self.Titoli[col].idxDb
-                    print 'type         :%s' % self.Titoli[col].type
-                    print 'label        :%s' % self.Titoli[col].label
-                    print 'backColour   :%s' % self.Titoli[col].backColour
-                    print 'foreColour   :%s' % self.Titoli[col].foreColour
-                    print 'isOrdered    :%s' % self.Titoli[col].isOrdered
-                    print 'orderVersus  :%s' % self.Titoli[col].orderVersus
-                    print 'isFiltered   :%s' % self.Titoli[col].isFiltered
-                    print '-'*60
-                    import treecheck
-                    dlg=treecheck.TreeDialog(self, style=wx.FRAME_NO_TASKBAR, pos=newpos, label=self.Titoli[col].label)
-                    dlg.ShowModal()
+                objRs, objDb = self.GetPanelDataSource()
+                if objRs==None and objDb==None:
+                    if _DEBUG:
+                        print ''
+                        print ''
+                        print ''
+                        print 'NON  TROIVATO un panel che del tipo di seguito specificato:'
+                        print '- Panel derivato da awc.controls.windows.Panel che contenga attrinuto db_rs'
+                        print '- Panel derivato da wx.panel esponga il metodo GetPanelDataSource'
+                        print 'La ricerca è stata eseguita neim seguenti oggetti:'
+                        self.GetPanelDataSource(debug=True)
+                        print '='*80
                 else:
-                    if self.Titoli:
-                        newdata=self.Titoli.ChangeOrder(col, data)
-                        if objRs:
-                            objRs.db_rs=newdata
-                        elif objDb:
-                            db=objDb.GetPanelDataSource()
-                            db._info.rs=newdata
-                        t.ChangeData(newdata)
-                        self.ChangeData(newdata)
+                    lCanReorder=True
+                    self._canReorder=lCanReorder
+                    self.SetLabelTextColour(wx.BLUE)                    
+                    if _DEBUG:
+                        print '%s %s' % (objRs, objDb)
+            except:
+                pass
+        except:
+            objRs=None
+            objDb=None
+            if _DEBUG:
+                print 'RECORDET NON TROVATO %s' % self
+            pass
+        if not self.Titoli:
+            try:
+                self.Titoli=Titoli(self)
+            except:
+                pass
+
+        if lCanReorder:
+            filterOn=event.ControlDown()
+            if filterOn:
+                newpos=self.GetTitlePosition(event.GetPosition())
+                print 'size         :%s' % self.Titoli[col].size
+                print 'pos          :%s' % self.Titoli[col].pos
+                print 'idxDb        :%s' % self.Titoli[col].idxDb
+                print 'type         :%s' % self.Titoli[col].type
+                print 'label        :%s' % self.Titoli[col].label
+                print 'backColour   :%s' % self.Titoli[col].backColour
+                print 'foreColour   :%s' % self.Titoli[col].foreColour
+                print 'isOrdered    :%s' % self.Titoli[col].isOrdered
+                print 'orderVersus  :%s' % self.Titoli[col].orderVersus
+                print 'isFiltered   :%s' % self.Titoli[col].isFiltered
+                print '-'*60
+                import treecheck
+                dlg=treecheck.TreeDialog(self, style=wx.FRAME_NO_TASKBAR, pos=newpos, label=self.Titoli[col].label)
+                dlg.ShowModal()
+            else:
+                if self.Titoli:
+                    newdata=self.Titoli.ChangeOrder(col, data)
+                    if objRs:
+                        objRs.db_rs=newdata
+                    elif objDb:
+                        db=objDb.GetPanelDataSource()
+                        db._info.rs=newdata
+                    t.ChangeData(newdata)
+                    self.ChangeData(newdata)
 
     def GetTitlePosition(self, evtPosition):
         p=self
