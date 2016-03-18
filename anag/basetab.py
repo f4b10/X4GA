@@ -131,7 +131,13 @@ class WebCatUpdateTypeRadioBox(RadioBox):
 _evtIMAGECHANGED = wx.NewEventType()
 EVT_IMAGECHANGED = wx.PyEventBinder(_evtIMAGECHANGED, 1)
 class ImageChangedEvent(wx.PyCommandEvent):
-    pass
+    def __init__(self, *args, **kwargs):
+        wx.PyCommandEvent.__init__(self, *args, **kwargs)
+        self._filename = None
+    def SetFileName(self, filename):
+        self._filename = filename
+    def GetFileName(self):    
+        return self._filename
 
 
 # ------------------------------------------------------------------------------
@@ -148,7 +154,10 @@ class FileDropTarget(wx.FileDropTarget):
     def OnDropFiles(self, x, y, filenames):
         fn = filenames[0]
         self.parent.display_image(fn)
-        self.set_image_filename(fn)
+        if len(filenames)==1:
+            self.set_image_filename(fn)
+        else:
+            self.set_image_filename(filenames)
         self.parent.set_changed()
     
     def set_image_filename(self, fn):
@@ -156,6 +165,8 @@ class FileDropTarget(wx.FileDropTarget):
         evt = ImageChangedEvent(_evtIMAGECHANGED)
         evt.SetEventObject(self.parent)
         evt.SetId(self.parent.GetId())
+        evt.SetFileName(fn)
+        
         self.parent.GetEventHandler().AddPendingEvent(evt)
     
     def get_image_filename(self):
