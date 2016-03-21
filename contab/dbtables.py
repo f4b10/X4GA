@@ -3583,8 +3583,279 @@ class Spesometro2011_AcquistiVendite(adb.DbMem):
             righecon = '"C", "S"'
         else:
             righecon = '"C", "S", "I"'
+#===============================================================================
+#       cmd = """
+# SELECT reg.id              'Reg_Id', 
+#       reg.sm_regrif       'Reg_Rif',
+#       reg.sm_link         'Reg_Link',
+#       regiva.id           'RegIva_Id',
+#       regiva.codice       'RegIva_Cod',
+#       regiva.descriz      'RegIva_Descriz',
+#       regiva.tipo         'RegIva_Tipo',
+#       anag.id             'Anag_Id',
+#       anag.codice         'Anag_Cod',
+#       anag.descriz        'Anag_Descriz',
+#       IF(tipana.tipo="C", anagcli.aziper,       anagfor.aziper)       'Anag_AziPer',
+#       IF(tipana.tipo="C", anagcli.codfisc,      anagfor.codfisc)      'Anag_CodFisc',
+#       IF(tipana.tipo="C", 
+#          IF(anagcli.nazione IS NULL OR anagcli.nazione="",
+#             "IT", anagcli.nazione),
+#          IF(anagfor.nazione IS NULL OR anagfor.nazione="",
+#             "IT", anagfor.nazione))                                   'Anag_Nazione',
+#       IF(tipana.tipo="C", anagcli.citta,        anagfor.citta)        'Anag_Citta',
+#       IF(tipana.tipo="C", anagcli.indirizzo,    anagfor.indirizzo)    'Anag_Indirizzo',
+#       IF(tipana.tipo="C", statocli.codunico,    statofor.codunico)    'Anag_StatUnico',
+#       IF(tipana.tipo="C", anagcli.piva,         anagfor.piva)         'Anag_PIVA',
+#       IF(tipana.tipo="C", anagcli.allegcf,      anagfor.allegcf)      'Anag_AllegCF',
+#       IF(tipana.tipo="C", anagcli.sm11_cognome, anagfor.sm11_cognome) 'Anag_Cognome',
+#       IF(tipana.tipo="C", anagcli.sm11_nome,    anagfor.sm11_nome)    'Anag_Nome',
+#       IF(tipana.tipo="C", anagcli.sm11_nascdat, anagfor.sm11_nascdat) 'Anag_NascDat',
+#       IF(tipana.tipo="C", anagcli.sm11_nascprv, anagfor.sm11_nascprv) 'Anag_NascPrv',
+#       IF(tipana.tipo="C", anagcli.sm11_nasccom, anagfor.sm11_nasccom) 'Anag_NascCom',
+#       IF(tipana.tipo="C", anagcli.sm11_sedeind, anagfor.sm11_sedeind) 'Anag_SedeInd',
+#       IF(tipana.tipo="C", anagcli.sm11_sedecit, anagfor.sm11_sedecit) 'Anag_SedeCit',
+#       IF(tipana.tipo="C", anagcli.sm11_sedestt, anagfor.sm11_sedestt) 'Anag_SedeStt',
+#       IF(tipana.tipo="C", anagcli.sm11_associa, anagfor.sm11_associa) 'Anag_Associa',
+#       reg.datreg          'Reg_Data',
+#       causale.id          'Cau_Id',
+#       causale.codice      'Cau_Cod',
+#       causale.descriz     'Cau_Descriz',
+#       reg.numdoc          'Reg_NumDoc',
+#       reg.datdoc          'Reg_DatDoc',
+#       reg.numiva          'Reg_NumIva',
+#       
+#       SUM(bodycri.importo
+#           *IF(bodycri.tipriga IN (%(righecon)s), 1, 0)
+#           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, -1)) 'Totale_DAV',
+#           
+#       SUM(bodycri.importo
+#           *IF(bodycri.tipriga IN (%(righecon)s), 1, 0)
+#           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, -1)
+#           *IF(pdccer.f_sermer="M" OR bodycri.f_sermer="M", 1, 0))              'DAV_Merce',
+#           
+#       SUM(bodycri.importo
+#           *IF(bodycri.tipriga IN (%(righecon)s), 1, 0)
+#           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, -1)
+#           *IF(pdccer.f_sermer="S" OR bodycri.f_sermer="S", 1, 0))              'DAV_Servizi',
+#           
+#       SUM(bodycri.importo
+#           *IF(bodycri.tipriga IN (%(righecon)s), 1, 0)
+#           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, -1)
+#           *IF(    pdccer.f_sermer IN ("M", "S") 
+#               OR bodycri.f_sermer IN ("M", "S"), 0, 1))                        'DAV_Altro',
+#       
+#       SUM(bodycri.imponib
+#           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, -1)) 'IVA_AllImpo',
+#           
+#       SUM(bodycri.imponib
+#           *IF(bodycri.tipriga="I", 1, 0)
+#           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, -1)
+#           *IF(aliq.modo="I",1,0))                                              'IVA_Imponib',
+#       
+#       SUM(bodycri.imposta
+#           *IF(bodycri.tipriga IN ("I", "O"), 1, 0)
+#           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, -1)
+#           *IF(aliq.modo="I",1,0))                                              'IVA_Imposta',
+#           
+#       SUM((bodycri.imponib+bodycri.imposta+bodycri.indeduc)
+#           *IF(bodycri.tipriga="I", 1, 0)
+#           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, -1)) 'IVA_Totale',
+#           
+#       SUM(bodycri.imponib
+#           *IF(bodycri.tipriga="I", 1, 0)
+#           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, -1)
+#           *IF(aliq.modo="N",1,0))                                              'IVA_NonImponib',
+#           
+#       SUM(bodycri.imponib
+#           *IF(bodycri.tipriga="I", 1, 0)
+#           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, -1)
+#           *IF(aliq.modo="E",1,0))                                              'IVA_Esente',
+#           
+#       SUM(bodycri.imponib
+#           *IF(bodycri.tipriga="I", 1, 0)
+#           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, -1)
+#           *IF(aliq.modo="F",1,0))                                              'IVA_FuoriCampo',
+#       
+#       0                                                                        'selected',
+#       
+#       SUM(1
+#           *IF((regiva.tipo="V" AND causale.pralcf= 1)
+#             OR(regiva.tipo="A" AND causale.pralcf=-1), 1, 0)
+#           *IF((tipana.tipo="C" AND statocli.id IS NULL or statocli.codice="IT")
+#             OR(tipana.tipo="F" AND statofor.id IS NULL or statofor.codice="IT"), 1, 0)
+#           *IF(bodycri.tipriga="I", 1, 0))                                      'fa_att_cnt',
+#       
+#       SUM(bodycri.imponib
+#           *causale.pralcf
+#           *IF(regiva.tipo="V", 1, 0)
+#           *IF((tipana.tipo="C" AND statocli.id IS NULL or statocli.codice="IT")
+#             OR(tipana.tipo="F" AND statofor.id IS NULL or statofor.codice="IT"), 1, 0)
+#           *IF(bodycri.tipriga="I", 1, 0)
+#           *IF(reg.tipreg="E",0,
+#               IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, 0)))  'fa_att_tot',
+#       
+#       SUM((bodycri.imposta+IF(bodycri.indeduc IS NULL, 0, bodycri.indeduc))
+#           *causale.pralcf
+#           *IF(regiva.tipo="V", 1, 0)
+#           *IF((tipana.tipo="C" AND statocli.id IS NULL or statocli.codice="IT")
+#             OR(tipana.tipo="F" AND statofor.id IS NULL or statofor.codice="IT"), 1, 0)
+#           *IF(bodycri.tipriga IN ("I", "O"), 1, 0)
+#           *IF(reg.tipreg="E",1,
+#               IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, 0)))  'fa_att_iva',
+#       
+#       0                                                                        'fa_att_ine',
+#       
+#       SUM(bodycri.imponib
+#           *IF(causale.pralcf=-1, 1, 0)
+#           *IF(regiva.tipo="A", 1, 0)
+#           *IF((tipana.tipo="C" AND statocli.id IS NULL or statocli.codice="IT")
+#             OR(tipana.tipo="F" AND statofor.id IS NULL or statofor.codice="IT"), 1, 0)
+#           *IF(bodycri.tipriga="I", 1, 0)
+#           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 0, 1))  'fa_att_vim',
+#       
+#       SUM((bodycri.imposta+IF(bodycri.indeduc IS NULL, 0, bodycri.indeduc))
+#           *IF(causale.pralcf=-1, 1, 0)
+#           *IF(regiva.tipo="A", 1, 0)
+#           *IF((tipana.tipo="C" AND statocli.id IS NULL or statocli.codice="IT")
+#             OR(tipana.tipo="F" AND statofor.id IS NULL or statofor.codice="IT"), 1, 0)
+#           *IF(bodycri.tipriga="I", 1, 0)
+#           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 0, 1))  'fa_att_viv',
+#       
+#       SUM(1
+#           *IF((regiva.tipo="A" AND causale.pralcf= 1)
+#             OR(regiva.tipo="V" AND causale.pralcf=-1), 1, 0)
+#           *IF((tipana.tipo="C" AND statocli.id IS NULL or statocli.codice="IT")
+#             OR(tipana.tipo="F" AND statofor.id IS NULL or statofor.codice="IT"), 1, 0)
+#           *IF(bodycri.tipriga="I", 1, 0))                                      'fa_pas_cnt',
+#       
+#       SUM(bodycri.imponib
+#           *causale.pralcf
+#           *IF(regiva.tipo="A", 1, 0)
+#           *IF((tipana.tipo="C" AND statocli.id IS NULL or statocli.codice="IT")
+#             OR(tipana.tipo="F" AND statofor.id IS NULL or statofor.codice="IT"), 1, 0)
+#           *IF(bodycri.tipriga="I", 1, 0)
+#           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, 0))  'fa_pas_tot',
+#       
+#       SUM((bodycri.imposta+IF(bodycri.indeduc IS NULL, 0, bodycri.indeduc))
+#           *causale.pralcf
+#           *IF(regiva.tipo="A", 1, 0)
+#           *IF((tipana.tipo="C" AND statocli.id IS NULL or statocli.codice="IT")
+#             OR(tipana.tipo="F" AND statofor.id IS NULL or statofor.codice="IT"), 1, 0)
+#           *IF(bodycri.tipriga IN ("I", "O"), 1, 0)
+#           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, 0))  'fa_pas_iva',
+#       
+#       0                                                                        'fa_pas_ine',
+#       
+#       SUM(bodycri.imponib
+#           *IF(causale.pralcf=-1, 1, 0)
+#           *IF(regiva.tipo="V", 1, 0)
+#           *IF((tipana.tipo="C" AND statocli.id IS NULL or statocli.codice="IT")
+#             OR(tipana.tipo="F" AND statofor.id IS NULL or statofor.codice="IT"), 1, 0)
+#           *IF(bodycri.tipriga="I", 1, 0)
+#           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 0, 1))  'fa_pas_vim',
+#       
+#       SUM((bodycri.imposta+IF(bodycri.indeduc IS NULL, 0, bodycri.indeduc))
+#           *IF(causale.pralcf=-1, 1, 0)
+#           *IF(regiva.tipo="V", 1, 0)
+#           *IF((tipana.tipo="C" AND statocli.id IS NULL or statocli.codice="IT")
+#             OR(tipana.tipo="F" AND statofor.id IS NULL or statofor.codice="IT"), 1, 0)
+#           *IF(bodycri.tipriga="I", 1, 0)
+#           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 0, 1))  'fa_pas_viv',
+#           
+#       SUM(1
+#           *IF((regiva.tipo="V" AND causale.pralcf= 1)
+#             OR(regiva.tipo="A" AND causale.pralcf=-1), 1, 0)
+#           *IF((tipana.tipo="C" AND statocli.codice != "IT")
+#             OR(tipana.tipo="F" AND statofor.codice != "IT"), 1, 0)
+#           *IF(bodycri.tipriga="I", 1, 0))                                      'bl_att_cnt',
+#       
+#       SUM(bodycri.imponib
+#           *causale.pralcf
+#           *IF(regiva.tipo="V", 1, 0)
+#           *IF((tipana.tipo="C" AND statocli.codice != "IT")
+#             OR(tipana.tipo="F" AND statofor.codice != "IT"), 1, 0)
+#           *IF(bodycri.tipriga="I", 1, 0)
+#           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, 0))  'bl_att_tot',
+#       
+#       SUM((bodycri.imposta+IF(bodycri.indeduc IS NULL, 0, bodycri.indeduc))
+#           *causale.pralcf
+#           *IF(regiva.tipo="V", 1, 0)
+#           *IF((tipana.tipo="C" AND statocli.codice != "IT")
+#             OR(tipana.tipo="F" AND statofor.codice != "IT"), 1, 0)
+#           *IF(bodycri.tipriga IN ("I", "O"), 1, 0)
+#           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, 0))  'bl_att_iva',
+#            
+#       SUM(1
+#           *IF((regiva.tipo="A" AND causale.pralcf= 1)
+#             OR(regiva.tipo="V" AND causale.pralcf=-1), 1, 0)
+#           *IF((tipana.tipo="C" AND statocli.codice != "IT")
+#             OR(tipana.tipo="F" AND statofor.codice != "IT"), 1, 0)
+#           *IF(bodycri.tipriga="I", 1, 0))                                      'bl_pas_cnt',
+#       
+#       SUM(bodycri.imponib
+#           *causale.pralcf
+#           *IF(regiva.tipo="A", 1, 0)
+#           *IF((tipana.tipo="C" AND statocli.codice != "IT")
+#             OR(tipana.tipo="F" AND statofor.codice != "IT"), 1, 0)
+#           *IF(bodycri.tipriga="I", 1, 0)
+#           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, 0))  'bl_pas_tot',
+#       
+#       SUM((bodycri.imposta+IF(bodycri.indeduc IS NULL, 0, bodycri.indeduc))
+#           *causale.pralcf
+#           *IF(regiva.tipo="A", 1, 0)
+#           *IF((tipana.tipo="C" AND statocli.codice != "IT")
+#             OR(tipana.tipo="F" AND statofor.codice != "IT"), 1, 0)
+#           *IF(bodycri.tipriga IN ("I", "O"), 1, 0)
+#           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, 0))  'bl_pas_iva',
+#           
+#       SUM(1
+#           *IF((regiva.tipo="C" AND causale.pralcf= 1), 1, 0)
+#           *IF((tipana.tipo="C" AND statocli.id IS NULL or statocli.codice="IT")
+#             OR(tipana.tipo="F" AND statofor.id IS NULL or statofor.codice="IT"), 1, 0)
+#           *IF(bodycri.tipriga="I", 1, 0))                                      'sa_att_cnt',
+#       
+#       SUM(bodycri.importo
+#           *causale.pralcf
+#           *IF((regiva.tipo="C" AND causale.pralcf= 1), 1, 0)
+#           *IF((tipana.tipo="C" AND statocli.id IS NULL or statocli.codice="IT")
+#             OR(tipana.tipo="F" AND statofor.id IS NULL or statofor.codice="IT"), 1, 0)
+#           *IF(bodycri.tipriga="I", 1, 0)
+#           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, 0))  'sa_att_tot'
+# 
+# FROM contab_b bodyanag
+# 
+# INNER JOIN pdc       anag    ON anag.id=bodyanag.id_pdcpa
+# INNER JOIN pdctip    tipana  ON tipana.id=anag.id_tipo
+# LEFT JOIN clienti   anagcli ON anagcli.id=anag.id
+# LEFT JOIN fornit    anagfor ON anagfor.id=anag.id
+# 
+# LEFT JOIN x4.stati  statocli ON statocli.id=anagcli.id_stato
+# LEFT JOIN x4.stati  statofor ON statofor.id=anagcli.id_stato
+# 
+# INNER JOIN contab_h  reg     ON reg.id=bodyanag.id_reg
+# INNER JOIN           regiva  ON regiva.id=reg.id_regiva
+# INNER JOIN cfgcontab causale ON causale.id=reg.id_caus
+# 
+# LEFT JOIN contab_b  bodycri ON bodycri.id_reg=bodyanag.id_reg AND (reg.tipreg="E" OR bodycri.numriga>1)
+# LEFT JOIN pdc       pdccer  ON pdccer.id=bodycri.id_pdcpa
+# 
+# LEFT JOIN aliqiva   aliq    ON aliq.id=bodycri.id_aliqiva
+# 
+# WHERE %(filters)s
+# 
+# GROUP BY anag.descriz, reg.datdoc, reg.numdoc, regiva.tipo, regiva.codice
+# ORDER BY anag.descriz, reg.datdoc, reg.numdoc, regiva.tipo, regiva.codice
+#===============================================================================
+
         cmd = """
-SELECT reg.id              'Reg_Id', 
+SELECT reg.id              'Reg_Id',
+#       causale.pasegno             'D/A C.',
+#       bodyanag.numriga            'Rig.',
+#       bodyanag.segno              'D/A',
+#       bodycri.segno               'D/A R1',
+#       bodycri.numriga             'Rg1',
+#       bodyrgh.segno               'D/A RgH',
+#       bodyrgh.numriga             'RgH',
        reg.sm_regrif       'Reg_Rif',
        reg.sm_link         'Reg_Link',
        regiva.id           'RegIva_Id',
@@ -3596,7 +3867,7 @@ SELECT reg.id              'Reg_Id',
        anag.descriz        'Anag_Descriz',
        IF(tipana.tipo="C", anagcli.aziper,       anagfor.aziper)       'Anag_AziPer',
        IF(tipana.tipo="C", anagcli.codfisc,      anagfor.codfisc)      'Anag_CodFisc',
-       IF(tipana.tipo="C", 
+       IF(tipana.tipo="C",
           IF(anagcli.nazione IS NULL OR anagcli.nazione="",
              "IT", anagcli.nazione),
           IF(anagfor.nazione IS NULL OR anagfor.nazione="",
@@ -3622,204 +3893,292 @@ SELECT reg.id              'Reg_Id',
        reg.numdoc          'Reg_NumDoc',
        reg.datdoc          'Reg_DatDoc',
        reg.numiva          'Reg_NumIva',
-       
+
        SUM(bodycri.importo
            *IF(bodycri.tipriga IN (%(righecon)s), 1, 0)
            *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, -1)) 'Totale_DAV',
-           
+
        SUM(bodycri.importo
            *IF(bodycri.tipriga IN (%(righecon)s), 1, 0)
            *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, -1)
            *IF(pdccer.f_sermer="M" OR bodycri.f_sermer="M", 1, 0))              'DAV_Merce',
-           
+
        SUM(bodycri.importo
            *IF(bodycri.tipriga IN (%(righecon)s), 1, 0)
            *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, -1)
            *IF(pdccer.f_sermer="S" OR bodycri.f_sermer="S", 1, 0))              'DAV_Servizi',
-           
+
        SUM(bodycri.importo
            *IF(bodycri.tipriga IN (%(righecon)s), 1, 0)
            *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, -1)
-           *IF(    pdccer.f_sermer IN ("M", "S") 
+           *IF(    pdccer.f_sermer IN ("M", "S")
                OR bodycri.f_sermer IN ("M", "S"), 0, 1))                        'DAV_Altro',
-       
+
+
+
        SUM(bodycri.imponib
            *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, -1)) 'IVA_AllImpo',
-           
+
        SUM(bodycri.imponib
-           *IF(bodycri.tipriga="I", 1, 0)
+#           *IF(bodycri.tipriga="I", 1, 0)
+           *IF(bodycri.tipriga IN ("I", "O"), 1, 0)
            *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, -1)
            *IF(aliq.modo="I",1,0))                                              'IVA_Imponib',
-       
-       SUM(bodycri.imposta
+
+#       SUM(bodycri.imposta
+       SUM((bodycri.imposta+bodycri.indeduc)
            *IF(bodycri.tipriga IN ("I", "O"), 1, 0)
            *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, -1)
            *IF(aliq.modo="I",1,0))                                              'IVA_Imposta',
-           
+
        SUM((bodycri.imponib+bodycri.imposta+bodycri.indeduc)
-           *IF(bodycri.tipriga="I", 1, 0)
+#           *IF(bodycri.tipriga="I", 1, 0)
+           *IF(bodycri.tipriga IN ("I", "O"), 1, 0)
            *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, -1)) 'IVA_Totale',
-           
+
        SUM(bodycri.imponib
            *IF(bodycri.tipriga="I", 1, 0)
            *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, -1)
            *IF(aliq.modo="N",1,0))                                              'IVA_NonImponib',
-           
+
        SUM(bodycri.imponib
            *IF(bodycri.tipriga="I", 1, 0)
            *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, -1)
            *IF(aliq.modo="E",1,0))                                              'IVA_Esente',
-           
+
        SUM(bodycri.imponib
            *IF(bodycri.tipriga="I", 1, 0)
            *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, -1)
            *IF(aliq.modo="F",1,0))                                              'IVA_FuoriCampo',
-       
+
        0                                                                        'selected',
-       
+
        SUM(1
-           *IF((regiva.tipo="V" AND causale.pralcf= 1)
-             OR(regiva.tipo="A" AND causale.pralcf=-1), 1, 0)
+#           *IF((regiva.tipo="V" AND causale.pralcf= 1)
+#             OR(regiva.tipo="A" AND causale.pralcf=-1), 1, 0)
+           *abs(causale.pralcf)
+           *IF(CONCAT(regiva.tipo,bodyanag.segno) IN ("VD", "AD"), 1, 0)
            *IF((tipana.tipo="C" AND statocli.id IS NULL or statocli.codice="IT")
              OR(tipana.tipo="F" AND statofor.id IS NULL or statofor.codice="IT"), 1, 0)
-           *IF(bodycri.tipriga="I", 1, 0))                                      'fa_att_cnt',
-       
+#           *IF(bodycri.tipriga="I", 1, 0)
+           *IF(bodycri.tipriga IN ("I", "O"), 1, 0)
+            )                                      'fa_att_cnt',
+
+#       SUM(bodycri.imponib
+#           *causale.pralcf
+#           *IF(regiva.tipo="V", 1, 0)
+#           *IF((tipana.tipo="C" AND statocli.id IS NULL or statocli.codice="IT")
+#             OR(tipana.tipo="F" AND statofor.id IS NULL or statofor.codice="IT"), 1, 0)
+#           *IF(bodycri.tipriga="I", 1, 0)
+#           *IF(reg.tipreg="E",0,
+#               IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, 0)))  'fa_att_tot',
        SUM(bodycri.imponib
-           *causale.pralcf
-           *IF(regiva.tipo="V", 1, 0)
-           *IF((tipana.tipo="C" AND statocli.id IS NULL or statocli.codice="IT")
-             OR(tipana.tipo="F" AND statofor.id IS NULL or statofor.codice="IT"), 1, 0)
-           *IF(bodycri.tipriga="I", 1, 0)
-           *IF(reg.tipreg="E",0,
-               IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, 0)))  'fa_att_tot',
-       
-       SUM((bodycri.imposta+IF(bodycri.indeduc IS NULL, 0, bodycri.indeduc))
-           *causale.pralcf
-           *IF(regiva.tipo="V", 1, 0)
+#           *causale.pralcf
+           *abs(causale.pralcf)
+#           *IF(regiva.tipo="V", 1, 0)
+           *IF(CONCAT(regiva.tipo,bodyanag.segno) IN ("VD"), 1, 0)
            *IF((tipana.tipo="C" AND statocli.id IS NULL or statocli.codice="IT")
              OR(tipana.tipo="F" AND statofor.id IS NULL or statofor.codice="IT"), 1, 0)
            *IF(bodycri.tipriga IN ("I", "O"), 1, 0)
-           *IF(reg.tipreg="E",1,
-               IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, 0)))  'fa_att_iva',
-       
+           *IF(reg.tipreg="E",0, IF(bodycri.segno="A", 1, -1))
+#           *IF(bodycri.tipriga="I", 1, 0)
+#           *IF(reg.tipreg="E",0, IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, 0))
+           )  'fa_att_tot',
+
+       SUM((bodycri.imposta+IF(bodycri.indeduc IS NULL, 0, bodycri.indeduc))
+#           *causale.pralcf
+           *abs(causale.pralcf)
+#           *IF(regiva.tipo="V", 1, 0)
+           *IF(CONCAT(regiva.tipo,bodyanag.segno) IN ("VD"), 1, 0)
+           *IF((tipana.tipo="C" AND statocli.id IS NULL or statocli.codice="IT")
+             OR(tipana.tipo="F" AND statofor.id IS NULL or statofor.codice="IT"), 1, 0)
+           *IF(bodycri.tipriga IN ("I", "O"), 1, 0)
+           *IF(reg.tipreg="E",0, IF(bodycri.segno="A", 1, -1))
+           )  'fa_att_iva',
+
        0                                                                        'fa_att_ine',
-       
+
        SUM(bodycri.imponib
-           *IF(causale.pralcf=-1, 1, 0)
-           *IF(regiva.tipo="A", 1, 0)
+#           *IF(causale.pralcf=-1, 1, 0)
+           *-abs(causale.pralcf)
+#           *IF(regiva.tipo="A", 1, 0)
+           *IF(CONCAT(regiva.tipo,bodyanag.segno) IN ("AD"), 1, 0)
            *IF((tipana.tipo="C" AND statocli.id IS NULL or statocli.codice="IT")
              OR(tipana.tipo="F" AND statofor.id IS NULL or statofor.codice="IT"), 1, 0)
-           *IF(bodycri.tipriga="I", 1, 0)
-           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 0, 1))  'fa_att_vim',
-       
+#           *IF(bodycri.tipriga="I", 1, 0)
+           *IF(bodycri.tipriga IN ("I", "O"), 1, 0)
+           *IF(reg.tipreg="E",0, IF(bodycri.segno="D", 1, -1))
+#           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 0, 1)
+           )  'fa_att_vim',
+
        SUM((bodycri.imposta+IF(bodycri.indeduc IS NULL, 0, bodycri.indeduc))
-           *IF(causale.pralcf=-1, 1, 0)
-           *IF(regiva.tipo="A", 1, 0)
+#           *IF(causale.pralcf=-1, 1, 0)
+           *-abs(causale.pralcf)
+#           *IF(regiva.tipo="A", 1, 0)
+           *IF(CONCAT(regiva.tipo,bodyanag.segno) IN ("AD"), 1, 0)
            *IF((tipana.tipo="C" AND statocli.id IS NULL or statocli.codice="IT")
              OR(tipana.tipo="F" AND statofor.id IS NULL or statofor.codice="IT"), 1, 0)
-           *IF(bodycri.tipriga="I", 1, 0)
-           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 0, 1))  'fa_att_viv',
-       
+#           *IF(bodycri.tipriga="I", 1, 0)
+           *IF(bodycri.tipriga IN ("I", "O"), 1, 0)
+           *IF(reg.tipreg="E",0, IF(bodycri.segno="D", 1, -1))
+#           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 0, 1)
+           )  'fa_att_viv',
+
        SUM(1
-           *IF((regiva.tipo="A" AND causale.pralcf= 1)
-             OR(regiva.tipo="V" AND causale.pralcf=-1), 1, 0)
+#           *IF((regiva.tipo="A" AND causale.pralcf= 1)
+#             OR(regiva.tipo="V" AND causale.pralcf=-1), 1, 0)
+           *IF(CONCAT(regiva.tipo,bodyanag.segno) IN ("AA", "VA"), 1, 0)
            *IF((tipana.tipo="C" AND statocli.id IS NULL or statocli.codice="IT")
              OR(tipana.tipo="F" AND statofor.id IS NULL or statofor.codice="IT"), 1, 0)
-           *IF(bodycri.tipriga="I", 1, 0))                                      'fa_pas_cnt',
-       
+#           *IF(bodycri.tipriga="I", 1, 0)
+           *IF(bodycri.tipriga IN ("I", "O"), 1, 0)
+            )                                      'fa_pas_cnt',
+
        SUM(bodycri.imponib
-           *causale.pralcf
-           *IF(regiva.tipo="A", 1, 0)
+#           *causale.pralcf
+           *abs(causale.pralcf)
+#           *IF(regiva.tipo="A", 1, 0)
+           *IF(CONCAT(regiva.tipo,bodyanag.segno) IN ("AA"), 1, 0)
            *IF((tipana.tipo="C" AND statocli.id IS NULL or statocli.codice="IT")
              OR(tipana.tipo="F" AND statofor.id IS NULL or statofor.codice="IT"), 1, 0)
-           *IF(bodycri.tipriga="I", 1, 0)
-           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, 0))  'fa_pas_tot',
-       
+#           *IF(bodycri.tipriga="I", 1, 0)
+           *IF(bodycri.tipriga IN ("I", "O"), 1, 0)
+           *IF(reg.tipreg="E",0, IF(bodycri.segno="D", 1, -1))
+#           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, 0)
+            )  'fa_pas_tot',
+
        SUM((bodycri.imposta+IF(bodycri.indeduc IS NULL, 0, bodycri.indeduc))
-           *causale.pralcf
-           *IF(regiva.tipo="A", 1, 0)
+#           *causale.pralcf
+           *abs(causale.pralcf)
+#           *IF(regiva.tipo="A", 1, 0)
+           *IF(CONCAT(regiva.tipo,bodyanag.segno) IN ("AA"), 1, 0)
            *IF((tipana.tipo="C" AND statocli.id IS NULL or statocli.codice="IT")
              OR(tipana.tipo="F" AND statofor.id IS NULL or statofor.codice="IT"), 1, 0)
            *IF(bodycri.tipriga IN ("I", "O"), 1, 0)
-           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, 0))  'fa_pas_iva',
-       
+           *IF(reg.tipreg="E",0, IF(bodycri.segno="D", 1, -1))
+#           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, 0)
+            )  'fa_pas_iva',
+
        0                                                                        'fa_pas_ine',
-       
+
        SUM(bodycri.imponib
-           *IF(causale.pralcf=-1, 1, 0)
-           *IF(regiva.tipo="V", 1, 0)
+#           *IF(causale.pralcf=-1, 1, 0)
+           *-abs(causale.pralcf)
+#           *IF(regiva.tipo="V", 1, 0)
+           *IF(CONCAT(regiva.tipo,bodyanag.segno) IN ("VA"), 1, 0)
            *IF((tipana.tipo="C" AND statocli.id IS NULL or statocli.codice="IT")
              OR(tipana.tipo="F" AND statofor.id IS NULL or statofor.codice="IT"), 1, 0)
-           *IF(bodycri.tipriga="I", 1, 0)
-           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 0, 1))  'fa_pas_vim',
-       
+#           *IF(bodycri.tipriga="I", 1, 0)
+           *IF(bodycri.tipriga IN ("I", "O"), 1, 0)
+           *IF(reg.tipreg="E",0, IF(bodycri.segno="A", 1, -1))
+#           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 0, 1)
+            )  'fa_pas_vim',
+
        SUM((bodycri.imposta+IF(bodycri.indeduc IS NULL, 0, bodycri.indeduc))
-           *IF(causale.pralcf=-1, 1, 0)
-           *IF(regiva.tipo="V", 1, 0)
+#           *IF(causale.pralcf=-1, 1, 0)
+           *-abs(causale.pralcf)
+#           *IF(regiva.tipo="V", 1, 0)
+           *IF(CONCAT(regiva.tipo,bodyanag.segno) IN ("VA"), 1, 0)
            *IF((tipana.tipo="C" AND statocli.id IS NULL or statocli.codice="IT")
              OR(tipana.tipo="F" AND statofor.id IS NULL or statofor.codice="IT"), 1, 0)
-           *IF(bodycri.tipriga="I", 1, 0)
-           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 0, 1))  'fa_pas_viv',
-           
+#           *IF(bodycri.tipriga="I", 1, 0)
+           *IF(bodycri.tipriga IN ("I", "O"), 1, 0)
+           *IF(reg.tipreg="E",0, IF(bodycri.segno="A", 1, -1))
+#           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 0, 1)
+            )  'fa_pas_viv',
+
        SUM(1
-           *IF((regiva.tipo="V" AND causale.pralcf= 1)
-             OR(regiva.tipo="A" AND causale.pralcf=-1), 1, 0)
+#           *IF((regiva.tipo="V" AND causale.pralcf= 1)
+#             OR(regiva.tipo="A" AND causale.pralcf=-1), 1, 0)
+           *abs(causale.pralcf)
+           *IF(CONCAT(regiva.tipo,bodyanag.segno) IN ("AD", "VD", "CD"), 1, 0)
            *IF((tipana.tipo="C" AND statocli.codice != "IT")
              OR(tipana.tipo="F" AND statofor.codice != "IT"), 1, 0)
-           *IF(bodycri.tipriga="I", 1, 0))                                      'bl_att_cnt',
-       
+#           *IF(bodycri.tipriga="I", 1, 0)
+           *IF(bodycri.tipriga IN ("I", "O"), 1, 0)
+            )                                      'bl_att_cnt',
+
        SUM(bodycri.imponib
-           *causale.pralcf
-           *IF(regiva.tipo="V", 1, 0)
+#           *causale.pralcf
+           *abs(causale.pralcf)
+#           *IF(regiva.tipo="V", 1, 0)
+           *IF(CONCAT(regiva.tipo,bodyanag.segno) IN ("VD","CD"), 1,
+            IF(CONCAT(regiva.tipo,bodyanag.segno) IN ("AD"), 1, 0))
            *IF((tipana.tipo="C" AND statocli.codice != "IT")
              OR(tipana.tipo="F" AND statofor.codice != "IT"), 1, 0)
-           *IF(bodycri.tipriga="I", 1, 0)
-           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, 0))  'bl_att_tot',
-       
+#           *IF(bodycri.tipriga="I", 1, 0)
+           *IF(bodycri.tipriga IN ("I", "O"), 1, 0)
+           *IF(reg.tipreg="E",0, IF(bodycri.segno="A", 1, -1))
+#           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, 0)
+           )  'bl_att_tot',
+
        SUM((bodycri.imposta+IF(bodycri.indeduc IS NULL, 0, bodycri.indeduc))
-           *causale.pralcf
-           *IF(regiva.tipo="V", 1, 0)
+#           *causale.pralcf
+           *abs(causale.pralcf)
+#           *IF(regiva.tipo="V", 1, 0)
+           *IF(CONCAT(regiva.tipo,bodyanag.segno) IN ("VD","CD"), 1,
+            IF(CONCAT(regiva.tipo,bodyanag.segno) IN ("AD"), 1, 0))
+           *IF((tipana.tipo="C" AND statocli.codice != "IT")
+             OR(tipana.tipo="F" AND statofor.codice != "IT"), 1, 0)
+#           *IF(bodycri.tipriga="I", 1, 0)
+           *IF(bodycri.tipriga IN ("I", "O"), 1, 0)
+           *IF(reg.tipreg="E",0, IF(bodycri.segno="A", 1, -1))
+#           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, 0)
+            )  'bl_att_iva',
+
+       SUM(1
+#           *IF((regiva.tipo="A" AND causale.pralcf= 1)
+#             OR(regiva.tipo="V" AND causale.pralcf=-1), 1, 0)
+           *IF(CONCAT(regiva.tipo,bodyanag.segno) IN ("AA", "VA", "CA"), 1, 0)
+           *IF((tipana.tipo="C" AND statocli.codice != "IT")
+             OR(tipana.tipo="F" AND statofor.codice != "IT"), 1, 0)
+#           *IF(bodycri.tipriga="I", 1, 0)
+           *IF(bodycri.tipriga IN ("I", "O"), 1, 0)
+            )                                      'bl_pas_cnt',
+
+       SUM(bodycri.imponib
+#           *causale.pralcf
+           *abs(causale.pralcf)
+#           *IF(regiva.tipo="A", 1, 0)
+           *IF(CONCAT(regiva.tipo,bodyanag.segno) IN ("VA","CA"), 1,
+            IF(CONCAT(regiva.tipo,bodyanag.segno) IN ("AA"), 1, 0))
+           *IF((tipana.tipo="C" AND statocli.codice != "IT")
+             OR(tipana.tipo="F" AND statofor.codice != "IT"), 1, 0)
+#           *IF(bodycri.tipriga="I", 1, 0)
+           *IF(bodycri.tipriga IN ("I", "O"), 1, 0)
+           *IF(reg.tipreg="E",0, IF(bodycri.segno="D", 1, -1))
+#           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, 0)
+            )  'bl_pas_tot',
+
+       SUM((bodycri.imposta+IF(bodycri.indeduc IS NULL, 0, bodycri.indeduc))
+#           *causale.pralcf
+           *abs(causale.pralcf)
+#           *IF(regiva.tipo="A", 1, 0)
+           *IF(CONCAT(regiva.tipo,bodyanag.segno) IN ("VA","CA"), 1,
+            IF(CONCAT(regiva.tipo,bodyanag.segno) IN ("AA"), 1, 0))
            *IF((tipana.tipo="C" AND statocli.codice != "IT")
              OR(tipana.tipo="F" AND statofor.codice != "IT"), 1, 0)
            *IF(bodycri.tipriga IN ("I", "O"), 1, 0)
-           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, 0))  'bl_att_iva',
-            
-       SUM(1
-           *IF((regiva.tipo="A" AND causale.pralcf= 1)
-             OR(regiva.tipo="V" AND causale.pralcf=-1), 1, 0)
-           *IF((tipana.tipo="C" AND statocli.codice != "IT")
-             OR(tipana.tipo="F" AND statofor.codice != "IT"), 1, 0)
-           *IF(bodycri.tipriga="I", 1, 0))                                      'bl_pas_cnt',
-       
-       SUM(bodycri.imponib
-           *causale.pralcf
-           *IF(regiva.tipo="A", 1, 0)
-           *IF((tipana.tipo="C" AND statocli.codice != "IT")
-             OR(tipana.tipo="F" AND statofor.codice != "IT"), 1, 0)
-           *IF(bodycri.tipriga="I", 1, 0)
-           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, 0))  'bl_pas_tot',
-       
-       SUM((bodycri.imposta+IF(bodycri.indeduc IS NULL, 0, bodycri.indeduc))
-           *causale.pralcf
-           *IF(regiva.tipo="A", 1, 0)
-           *IF((tipana.tipo="C" AND statocli.codice != "IT")
-             OR(tipana.tipo="F" AND statofor.codice != "IT"), 1, 0)
-           *IF(bodycri.tipriga IN ("I", "O"), 1, 0)
-           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, 0))  'bl_pas_iva',
-           
+           *IF(reg.tipreg="E",0, IF(bodycri.segno="D", 1, -1))
+#           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, 0)
+            )  'bl_pas_iva',
+
        SUM(1
            *IF((regiva.tipo="C" AND causale.pralcf= 1), 1, 0)
            *IF((tipana.tipo="C" AND statocli.id IS NULL or statocli.codice="IT")
              OR(tipana.tipo="F" AND statofor.id IS NULL or statofor.codice="IT"), 1, 0)
-           *IF(bodycri.tipriga="I", 1, 0))                                      'sa_att_cnt',
-       
+#           *IF(bodycri.tipriga="I", 1, 0)
+           *IF(bodycri.tipriga IN ("I", "O"), 1, 0)
+            )                                      'sa_att_cnt',
+
        SUM(bodycri.importo
            *causale.pralcf
            *IF((regiva.tipo="C" AND causale.pralcf= 1), 1, 0)
            *IF((tipana.tipo="C" AND statocli.id IS NULL or statocli.codice="IT")
              OR(tipana.tipo="F" AND statofor.id IS NULL or statofor.codice="IT"), 1, 0)
-           *IF(bodycri.tipriga="I", 1, 0)
-           *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, 0))  'sa_att_tot'
+#           *IF(bodycri.tipriga="I", 1, 0)
+           *IF(bodycri.tipriga IN ("I", "O"), 1, 0)
+            )  'sa_att_tot'
 
 FROM contab_b bodyanag
 
@@ -3842,8 +4201,14 @@ INNER JOIN cfgcontab causale ON causale.id=reg.id_caus
 
 WHERE %(filters)s
 
-GROUP BY anag.descriz, reg.datdoc, reg.numdoc, regiva.tipo, regiva.codice
-ORDER BY anag.descriz, reg.datdoc, reg.numdoc, regiva.tipo, regiva.codice
+GROUP BY anag.descriz, reg.datdoc, reg.numdoc, regiva.tipo, regiva.codice, reg.id
+ORDER BY anag.descriz, reg.datdoc, reg.numdoc, regiva.tipo, regiva.codice, reg.id
+
+
+
+
+
+
         """ % locals()
 #         print cmd
         db = adb.db.__database__
