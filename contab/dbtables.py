@@ -4188,7 +4188,7 @@ INNER JOIN pdctip    tipana  ON tipana.id=anag.id_tipo
  LEFT JOIN fornit    anagfor ON anagfor.id=anag.id
 
  LEFT JOIN x4.stati  statocli ON statocli.id=anagcli.id_stato
- LEFT JOIN x4.stati  statofor ON statofor.id=anagcli.id_stato
+ LEFT JOIN x4.stati  statofor ON statofor.id=anagfor.id_stato
 
 INNER JOIN contab_h  reg     ON reg.id=bodyanag.id_reg
 INNER JOIN           regiva  ON regiva.id=reg.id_regiva
@@ -4201,13 +4201,8 @@ INNER JOIN cfgcontab causale ON causale.id=reg.id_caus
 
 WHERE %(filters)s
 
-GROUP BY anag.descriz, reg.datdoc, reg.numdoc, regiva.tipo, regiva.codice, reg.id
-ORDER BY anag.descriz, reg.datdoc, reg.numdoc, regiva.tipo, regiva.codice, reg.id
-
-
-
-
-
+GROUP BY anag.descriz, anag.codice, reg.datdoc, reg.numdoc, regiva.tipo, regiva.codice, reg.id
+ORDER BY anag.descriz, anag.codice, reg.datdoc, reg.numdoc, regiva.tipo, regiva.codice, reg.id
 
         """ % locals()
 #         print cmd
@@ -4923,9 +4918,11 @@ class Spesometro2013_AcquistiVendite(Spesometro2011_AcquistiVendite):
         colsan = self._GetFieldIndex('sa_att_cnt')     #quadro SA op.attive - num. operazioni
         colsat = self._GetFieldIndex('sa_att_tot')     #quadro SA op.attive - totale imponibile, non imponibile, esente, imposta
         
-        def get_key(regiva_tipo, anag_descriz):
+        def get_key(regiva_tipo, anag_descriz, anag_id):
+#        def get_key(regiva_tipo, anag_descriz):
 #            return '%s-%s' % (regiva_tipo, anag_descriz)
-            return anag_descriz
+#            return anag_descriz
+            return anag_id
         
         rs1 = self.GetRecordset()
         rs2 = []
@@ -4973,7 +4970,8 @@ class Spesometro2013_AcquistiVendite(Spesometro2011_AcquistiVendite):
             if (r[colapr] == "A" and abs(r[colimp] or 0) < maxazi) or (r[colapr] == "P" and r[colsat] < maxpri):
                 continue
             
-            key = get_key(r[coltri], r[coldes])
+#            key = get_key(r[coltri], r[coldes])
+            key = get_key(r[coltri], r[coldes], r[colpdc])
             if key != lastkey:
                 rs2.append([]+r)
                 rs2[-1][coltri] = r[coltri]
