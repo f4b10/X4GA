@@ -268,6 +268,11 @@ class SyncManager(object):
                     field = doc.createElement("field")
                     field.setAttribute( 'name', k )
                     try:
+                        if type(dValue[k]).__name__=='bool':
+                            if dValue[k]:
+                                dValue[k]=1
+                            else:
+                                dValue[k]=0
                         v=dValue[k]
                         v=v.encode('utf-8')
                         dValue[k]=v
