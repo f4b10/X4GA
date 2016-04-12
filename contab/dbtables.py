@@ -5095,8 +5095,11 @@ class Spesometro2013_AcquistiVendite(Spesometro2011_AcquistiVendite):
                 q_bl.cittaest_sede = fmt_string(self.Anag_Citta)
                 q_bl.statest_sede = fmt_string(self.Anag_StatUnico)
                 q_bl.indirest_sede = fmt_string(self.Anag_Indirizzo)
-                q_bl.identif_iva = '%s%s' % (self.Anag_Nazione or '', self.Anag_PIVA)
-                
+                if len(self.Anag_PIVA or '')>0:
+                    q_bl.identif_iva = '%s%s' % (self.Anag_Nazione or '', self.Anag_PIVA)
+                else:
+                    q_bl.identif_iva = ''
+                    
                 if self.Anag_AziPer == "A":
                     q_bl.cognome_rap = fmt_string(self.Anag_Cognome or '')
                     q_bl.nome_rap = fmt_string(self.Anag_Nome or '')
