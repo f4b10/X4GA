@@ -424,7 +424,7 @@ class AnagPanel(aw.Panel):
         if self.SyncManager.NeedStore2Sync(self.db_tabname):
             self.SyncManager.StoreUpdate(op='DELETE', \
                                       dbTable=self.db_tabname, \
-                                      recId=self.db_recid)            
+                                      recId=self.db_recid)
 
     def BeforeInsertRecord(self):
         if self.SyncManager.NeedStore2Sync(self.db_tabname):
@@ -446,11 +446,11 @@ class AnagPanel(aw.Panel):
     def BeforeUpdateRecord(self):
         if self.SyncManager.NeedStore2Sync(self.db_tabname):
             self.recOld=self.db_rs[self.db_recno]
-            print 'tabella %s UPDATE (before)' % self.db_tabname
+            #print 'tabella %s UPDATE (before)' % self.db_tabname
 
     def AfterUpdateRecord(self, dbvalues):
         if self.SyncManager.NeedStore2Sync(self.db_tabname):
-            print 'tabella %s UPDATE (after)' % self.db_tabname
+            #print 'tabella %s UPDATE (after)' % self.db_tabname
             self.recNew=dbvalues
             for i, (col,ctr) in enumerate(self.db_datalink):
                 if not ctr.GetValue()==self.recOld[i]:
