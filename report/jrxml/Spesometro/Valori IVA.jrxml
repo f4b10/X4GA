@@ -65,7 +65,7 @@
 		<variableExpression><![CDATA[$V{NumRiga} + 1]]></variableExpression>
 		<initialValueExpression><![CDATA[0]]></initialValueExpression>
 	</variable>
-	<variable name="TotAllImpo" class="java.lang.Float" resetType="Group" resetGroup="globale" calculation="Sum">
+	<variable name="TotAllImpo" class="java.lang.Float" resetType="Group" incrementType="Column" resetGroup="globale" calculation="Sum">
 		<variableExpression><![CDATA[$V{TotAllImpo} + (RS.IVA_AllImpo or 0)]]></variableExpression>
 		<initialValueExpression><![CDATA[0]]></initialValueExpression>
 	</variable>
