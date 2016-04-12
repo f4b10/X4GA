@@ -3917,6 +3917,9 @@ SELECT reg.id              'Reg_Id',
 
 
        SUM(bodycri.imponib
+# ------ prima non c'era
+           *IF(bodycri.tipriga IN ("I", "O"), 1, 0)
+# ------ prima non c'era
            *IF(CONCAT(regiva.tipo,bodycri.segno) IN ("VA", "CA", "AD"), 1, -1)) 'IVA_AllImpo',
 
        SUM(bodycri.imponib
