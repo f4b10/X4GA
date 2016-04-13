@@ -321,7 +321,7 @@ class SyncManager(object):
         if not os.path.exists(fullName):
             wait = aw.awu.WaitDialog(None, message="Attesa Dati x sincronizzazione...",
                                            maximum   = 60,
-                                           style=wx.ICON_INFORMATION)            
+                                           style=wx.ICON_INFORMATION)
             for i in range(1,60):
                 wait.SetMessage("%s" % i)
                 if os.path.exists(fullName):
@@ -331,7 +331,7 @@ class SyncManager(object):
             try:
                 wait.Destroy()
             except:
-                pass                
+                pass
         if os.path.exists(fullName):
             #TODO: INSERIRE CONTROLLO SU CONGRUENZA VERSIONE
             spec=self.ReadXmlUpdate(fullName)
@@ -620,9 +620,14 @@ class SyncManager(object):
         for d in dirList:
             if d <= startDate:
                 dirDel    =os.path.join(self.GetUpdatePath(), d)
-                dirHistory=os.path.join(self.GetHistoryPath(), d)
-                if not os.path.exists(self.GetHistoryPath()):
-                    self._mkdir_recursive(self.GetHistoryPath())
+                aa=d[:4]
+                mm=d[4:6]
+                gg=d[6:8]
+                #dirHistory=os.path.join(self.GetHistoryPath(), d)
+                dirHistory = os.path.join(self.GetHistoryPath(), aa, mm, gg, d)
+                path, dir = os.path.split(dirHistory)
+                if not os.path.exists(path):
+                    self._mkdir_recursive(path)
                 try:
                     shutil.move(dirDel, dirHistory)
                 except:
