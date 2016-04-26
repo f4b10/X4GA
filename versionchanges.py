@@ -30,14 +30,18 @@ import mx.DateTime as dt
 history = (
 
     ('1.5.19', dt.Date(2016, 3, 8), (
-         ("BET1191",
-         """Aggiunta possibilità di personalizzazione a interrogazione documenti di magazzino"""),
-         ("BET1192",
-         """Introdotta possibilità di esportazione in csv per ListCtrl"""),
-         ("BET1193",
-         """Gestione effetti - Propone in automatico per il conto effetti l'ultimo conto utilizzato"""),
+         ("BET1195",
+         """Razionalizzate struttura delle cartelle deputate alla sincronizzazione"""),
          ("BET1194",
          """Migliorato riordinamenbto interattivo su griglie"""),
+         ("BET1193",
+         """Gestione effetti - Propone in automatico per il conto effetti l'ultimo conto utilizzato"""),
+         ("BET1192",
+         """Introdotta possibilità di esportazione in csv per ListCtrl"""),
+         ("BET1191",
+         """Aggiunta possibilità di personalizzazione a interrogazione documenti di magazzino"""),
+         ("BUG1158",
+         """Rimosso bug che in situazioni particolare provocave errere durante rispristino backup"""),
         ),),
 
 
