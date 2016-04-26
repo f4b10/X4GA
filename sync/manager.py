@@ -83,7 +83,7 @@ class SyncManager(object):
         return os.path.join(self.GetUsersPath(), '%03d' % idUser, '%03d.xml' % idUser)
 
     def GetBasePath(self):
-        return bt.SYNCWRKDIR
+        return os.path.join(bt.SYNCWRKDIR, 'DA_SEDE')
 
     def GetUsersPath(self):
         return os.path.join(self.GetBasePath(), 'USERSYNC')

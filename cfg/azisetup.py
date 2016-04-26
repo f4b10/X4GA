@@ -152,7 +152,7 @@ class _SetupPanel(aw.Panel):
             os.remove(name)
         newDestinatari=self.FindWindowByName('setup_syncDestinatari').GetValue().split('|')
         oldDestinatari=self.oldDestinatari.split('|')
-        userPath=os.path.join(self.FindWindowByName('setup_syncWrkDir').GetValue(), 'USERSYNC')
+        userPath=os.path.join(self.FindWindowByName('setup_syncWrkDir').GetValue(), 'DA_SEDE', 'USERSYNC')
         if not os.path.exists(userPath):
             self._mkdir_recursive(userPath)
         if os.path.exists(userPath):
