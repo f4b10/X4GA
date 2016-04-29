@@ -225,7 +225,7 @@ class AziendaSetupPanel(_SetupPanel):
         for ctr in aw.awu.GetAllChildrens(self):
             name=ctr.GetName()
             if name[:6] == 'setup_':
-                if ctr.GetName()[6:10] and not name=='setup_syncflag':
+                if name[6:10]=='sync' and not name=='setup_syncflag':
                     ctr.Enable(value)
 
 
