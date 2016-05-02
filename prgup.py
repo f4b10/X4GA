@@ -6,17 +6,17 @@
 # Copyright:    (C) 2011 Astra S.r.l. C.so Cavallotti, 122 18038 Sanremo (IM)
 # ------------------------------------------------------------------------------
 # This file is part of X4GA
-# 
+#
 # X4GA is free software: you can redistribute it and/or modify
 # it under the terms of the Affero GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # X4GA is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
@@ -92,7 +92,7 @@ RSVER_MESSAGE = 10
 
 
 class VersionsDb(adb.DbMem):
-    
+
     def __init__(self):
         adb.DbMem.__init__(self, 'prgname,prgtype,prgauth,prguurl,verinst,verdisp,verdesc,fileurl,typeurl,update,message')
         rs = []
@@ -101,13 +101,13 @@ class VersionsDb(adb.DbMem):
             serverx4 = serverx4[:-1]
         fileurl = '%s-%s.exe' % (wx.GetApp().setupname, Env.__version__)
         typeurl = 'H'
-        rs.append(['x4ga', 'X4 Gestione Aziendale', 'Astra S.r.l.', 
+        rs.append(['x4ga', 'X4 Gestione Aziendale', 'Astra S.r.l.',
                    serverx4, Env.__version__, '?', '', fileurl, typeurl, False, ''])
         try:
             import custapp
             fileurl = '%s-%s.zip' % (Env.MODVERSION_NAME, Env.__modversion__)
             typeurl = 'C'
-            rs.append([custapp.name, custapp.title, custapp.author, 
+            rs.append([custapp.name, custapp.title, custapp.author,
                        serverx4, Env.__modversion__, '?', '', fileurl, typeurl, False, ''])
         except:
             pass
@@ -121,14 +121,14 @@ class VersionsDb(adb.DbMem):
                 server = serverx4
             fileurl = '%s-%s.zip' % (p, m.version)
             typeurl = 'P'
-            rs.append([p, m.title, m.author, 
+            rs.append([p, m.title, m.author,
                        server, m.version, '?', m.description, fileurl, typeurl, False, ''])
         self.SetRecordset(rs)
-    
+
     def CheckUpdates(self):
-        
+
         downloads = []
-        
+
         for e in self:
             server = e.prguurl
             name = e.fileurl
@@ -180,47 +180,47 @@ class VersionsDb(adb.DbMem):
                 e.update = False
                 e.message = 'Ok'
                 e.verdisp = '-'
-        
+
         if err:
             raise Exception, err
-        
+
         return downloads
-        
-            
+
+
 
 
 # ------------------------------------------------------------------------------
 
 
 class VersionsGrid(dbglib.DbGridColoriAlternati):
-    
+
     def __init__(self, parent, dbver):
-        
+
         dbglib.DbGridColoriAlternati.__init__(self, parent,
                                               size=parent.GetClientSizeTuple())
-        
+
         cn = lambda db, col: db._GetFieldIndex(col, inline=True)
-        
+
         _STR = gl.GRID_VALUE_STRING
-        
+
         cols = (\
             ( 80, (RSVER_PRGNAME, "Package",   _STR, True)),
             (260, (RSVER_PRGTYPE, "Tipo",      _STR, True)),
             ( 80, (RSVER_VERINST, "Ver.Inst.", _STR, True)),
             ( 80, (RSVER_VERDISP, "Ver.Disp.", _STR, True)),
             (120, (RSVER_MESSAGE, "Azione",    _STR, True)),
-        )                                           
+        )
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
-        
+
         canedit = False
         canins = False
-        
+
         self.SetData(dbver.GetRecordset(), colmap, canedit, canins)
-        
+
         map(lambda c:\
             self.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
-        
+
         self.SetFitColumn(1)
         self.AutoSizeColumns()
         sz = wx.FlexGridSizer(1,0,0,0)
@@ -229,9 +229,9 @@ class VersionsGrid(dbglib.DbGridColoriAlternati):
         sz.Add(self, 0, wx.GROW|wx.ALL, 0)
         parent.SetSizer(sz)
         sz.SetSizeHints(parent)
-        
+
         self.Bind(gl.EVT_GRID_CELL_LEFT_DCLICK, self.OnDblClick)
-    
+
     def OnDblClick(self, event):
         event.Skip()
 
@@ -266,7 +266,7 @@ class ProgramUpdatePanel(aw.Panel):
     dlfile = None
     runexe = None
     download = False
-    
+
     def __init__(self, *args, **kwargs):
         aw.Panel.__init__(self, *args, **kwargs)
         self.downloads = []
@@ -287,11 +287,11 @@ class ProgramUpdatePanel(aw.Panel):
         self.Layout()
         self.Bind(wx.EVT_BUTTON, self.OnAction, id=wdr.ID_ACTION)
         #self.Bind(wx.EVT_BUTTON, self.OnInfo, id=wdr.ID_INFO)
-    
+
     def OnInfo(self, event):
         self.HttpInfo()
         event.Skip()
-    
+
     def OnAction(self, event):
         ci = lambda x: self.FindWindowById(x)
         but, msg = self.action, self.message
@@ -310,7 +310,7 @@ class ProgramUpdatePanel(aw.Panel):
                 self.SetStop("Download interrotto")
         elif self.mode == MODE_CLOSE:
             event.Skip()
-    
+
     def SetStop(self, msg):
         for cid, label in ((wdr.ID_MESSAGE, msg),
                            (wdr.ID_ACTION,  "Chiudi")):
@@ -318,7 +318,7 @@ class ProgramUpdatePanel(aw.Panel):
             self.FindWindowById(wdr.ID_CANCEL).Show(False)
             self.Layout()
         self.mode = MODE_CLOSE
-    
+
     def HttpQuery(self):
         but, msg = self.action, self.message
         setmsg = lambda x: msg.SetLabel(x)
@@ -340,7 +340,7 @@ class ProgramUpdatePanel(aw.Panel):
         except Exception, e:
             msgbox(self, message=repr(e.args))
             self.SetStop("Download annullato")
-    
+
     def GetDownloadPath(self):
         path = Env.Azienda.config.Updates_folder.replace('\\', '/')
         if path[-1] != '/': path += '/'
@@ -350,10 +350,10 @@ class ProgramUpdatePanel(aw.Panel):
             except OSError, e:
                 aw.awu.MsgDialog(self, "Impossibile creare la cartella per il download dei files:\n%s\n%s" % (path, repr(e.args)))
         return path
-    
+
     def GetTemporaryPath(self):
         return self.GetDownloadPath()+'temp/'
-        
+
     def HttpDownload(self):
         ci = lambda x: self.FindWindowById(x)
         but, msg = self.action, self.message
@@ -440,7 +440,7 @@ class ProgramUpdatePanel(aw.Panel):
         else:
             self.SetStop('Download terminato')
         return
-    
+
     def HttpInfo(self):
         dlpath = self.GetDownloadPath()
         tmpath = self.GetTemporaryPath()
@@ -488,10 +488,10 @@ class ProgramUpdatePanel(aw.Panel):
             dlg.ShowModal()
             dlg.Destroy()
         except Exception, e:
-            msgbox(self, message='Download non riuscito\n(%s)' % repr(e.args), 
+            msgbox(self, message='Download non riuscito\n(%s)' % repr(e.args),
                    style=wx.ICON_ERROR)
             return
-    
+
     def InstallUpdates(self):
         path = Env.Azienda.config.Updates_folder
         if not path:
@@ -509,7 +509,7 @@ class ProgramUpdatePanel(aw.Panel):
         #msgbox(self, message=\
                #"""Riavviare il programma per rendere effettive le modifiche""",
                #style=wx.ICON_INFORMATION)
-        msgbox(None, 
+        msgbox(None,
                "Il programma verrà riavviato per rendere effettive le modifiche",
                style=wx.ICON_INFORMATION)
         os.execl(sys.argv[0])
@@ -519,7 +519,7 @@ class ProgramUpdatePanel(aw.Panel):
 
 
 class ProgramUpdateDialog(aw.Dialog):
-    
+
     def __init__(self, *args, **kwargs):
         kwargs['title'] = 'Aggiornamenti'
         kwargs['style'] = wx.SIMPLE_BORDER#BORDER_RAISED
@@ -529,10 +529,13 @@ class ProgramUpdateDialog(aw.Dialog):
         self.Bind(wx.EVT_BUTTON, self.OnClose, id=wdr.ID_ACTION)
         self.Bind(wx.EVT_BUTTON, self.OnQuit, id=wdr.ID_CANCEL)
         self.CenterOnScreen()
-    
+
     def OnQuit(self, event):
-        self.EndModal(wx.ID_CANCEL)
-    
+        try:
+            self.EndModal(wx.ID_CANCEL)
+        except:
+            pass
+
     def OnClose(self, event):
         self.EndModal(wx.ID_OK)
 
@@ -544,15 +547,15 @@ class ProgramUpdatesSetupPanel(ConfigPanel):
     """
     Impostazione setup aggiornamenti
     """
-    
+
     def __init__(self, *args, **kwargs):
-        
+
         ConfigPanel.__init__(self, *args, **kwargs)
         wdr.ProgramUpdateSetupFunc(self)
         self.Bind(wx.EVT_BUTTON, self.OnConnTest, id=wdr.ID_BTNTEST)
         self.Bind(wx.EVT_BUTTON, self.OnPathFind, id=wdr.ID_BTNFIND)
         self.Bind(wx.EVT_BUTTON, self.OnSave,     id=wdr.ID_BTNOK)
-    
+
     def setConfig(self, *args, **kwargs):
         ConfigPanel.setConfig(self, *args, **kwargs)
         def cn(x):
@@ -560,7 +563,7 @@ class ProgramUpdatesSetupPanel(ConfigPanel):
         up = cn('Updates_folder')
         if ':' in up.GetValue():
             up.SetValue('')
-    
+
     def OnConnTest(self, event):
         msg = None
         icon = wx.ICON_ERROR
@@ -593,7 +596,7 @@ class ProgramUpdatesSetupPanel(ConfigPanel):
         if msg:
             msgbox(self, message=msg, style=icon|wx.OK)
         event.Skip()
-    
+
     def OnPathFind(self, event):
         dlg = wx.DirDialog(self, "Seleziona la cartella dove mettere gli aggiornamenti scaricati:",
                           style=wx.DD_DEFAULT_STYLE|wx.DD_NEW_DIR_BUTTON)
