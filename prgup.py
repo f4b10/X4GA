@@ -537,7 +537,10 @@ class ProgramUpdateDialog(aw.Dialog):
             pass
 
     def OnClose(self, event):
-        self.EndModal(wx.ID_OK)
+        try:
+            self.EndModal(wx.ID_OK)
+        except:
+            pass
 
 
 # ------------------------------------------------------------------------------
