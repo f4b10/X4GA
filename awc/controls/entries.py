@@ -6,17 +6,17 @@
 # Copyright:    (C) 2011 Astra S.r.l. C.so Cavallotti, 122 18038 Sanremo (IM)
 # ------------------------------------------------------------------------------
 # This file is part of X4GA
-# 
+#
 # X4GA is free software: you can redistribute it and/or modify
 # it under the terms of the Affero GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # X4GA is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
@@ -39,8 +39,8 @@ class _EntryCtrlMixin(wx.Window, cmix.ControlsMixin):
     contenuto nel controllo.
     """
     address = None
-    
-    def __init__(self, parent, id=-1, value=None, 
+
+    def __init__(self, parent, id=-1, value=None,
                  pos=wx.DefaultPosition, size=wx.DefaultSize, style=0):
         wx.Window.__init__(self, parent, id, pos, size, style=wx.NO_BORDER)
         cmix.ControlsMixin.__init__(self)
@@ -51,7 +51,7 @@ class _EntryCtrlMixin(wx.Window, cmix.ControlsMixin):
         self.Bind(wx.EVT_SET_FOCUS,  self._OnFocusGained)
         self.Bind(wx.EVT_BUTTON, self.OnAction, id=wdr.ID_ACTION)
         self.Bind(wx.EVT_SIZE, self.OnSize)
-    
+
     def OnSize(self, event):
         ci = lambda x: self.FindWindowById(x)
         w = event.GetSize()[0]
@@ -64,10 +64,10 @@ class _EntryCtrlMixin(wx.Window, cmix.ControlsMixin):
         dx = 0
         ci(wdr.ID_ADDRESS).SetSize((w-bs-dx, h))
         event.Skip()
-    
+
     def GetFiller(self):
         raise Exception, "Must subclass"
-    
+
     def OnChar(self, event):
         if not self.address.IsEditable(): return
         obj = event.GetEventObject()
@@ -88,40 +88,40 @@ class _EntryCtrlMixin(wx.Window, cmix.ControlsMixin):
                         l[n].SetFocus()
         else:
             event.Skip()
-    
+
     def _OnFocusGained(self, event):
         self.address.SetFocus()
         event.Skip()
-    
+
     def OnAction(self, event):
         raise Exception, "Must subclass"
-    
+
     def SetValue(self, val):
         self.address.SetValue(val)
-    
+
     def GetValue(self):
         return self.address.GetValue()
-    
+
     def Enable(self, e=True):
 #        wx.Window.Enable(self, e)
         self.address.Enable(e)
-    
+
     def Disable(self):
         self.Enable(False)
-    
+
     def IsEnabled(self):
 #        return wx.Window.IsEnabled(self)
         return self.address.IsEnabled()
-    
+
     def SetEditable(self, e=True):
         self.address.SetEditable(e)
-    
+
     def IsEditable(self):
         return self.address.IsEditable()
-    
+
     def SetForegroundColour(self, *args):
         return self.address.SetForegroundColour(*args)
-    
+
     def SetBackgroundColour(self, *args):
         return self.address.SetBackgroundColour(*args)
 
@@ -130,32 +130,32 @@ class _EntryCtrlMixin(wx.Window, cmix.ControlsMixin):
 
 
 class PartitaIvaEntryCtrl(_EntryCtrlMixin):
-    
+
     askforlink = False
     statectrl = None
-    
+
     def __init__(self, *args, **kwargs):
         _EntryCtrlMixin.__init__(self, *args, **kwargs)
         self.Layout()
         self.ctrpiva = ControllaPIVA()
         self.Bind(wx.EVT_TEXT, self.OnCheckPIva, id=wdr.ID_ADDRESS)
-    
+
     def SetAskForLink(cls, a):
         assert type(a) is bool
         cls.askforlink = a
     SetAskForLink = classmethod(SetAskForLink)
-    
+
     def SetStateControl(self, stc):
         self.statectrl = stc
         def OnStateChanged(event):
             self.ctrpiva.stato = event.GetEventObject().GetValue()
             event.Skip()
         stc.Bind(wx.EVT_TEXT, OnStateChanged)
-    
+
     def OnCheckPIva(self, event):
         self.CheckPIva()
         event.Skip()
-    
+
     def CheckPIva(self):
         def cn(x):
             return self.FindWindowByName(x)
@@ -167,7 +167,7 @@ class PartitaIvaEntryCtrl(_EntryCtrlMixin):
             t.Refresh()
         else:
             t.AdjustBackgroundColor(focused=(t.FindFocus() == t))
-    
+
     def GetFiller(self):
         return wdr.PartitaIvaEntryFunc
 
@@ -238,10 +238,10 @@ class PartitaIvaEntryCtrl(_EntryCtrlMixin):
             self.SetFocus()
         else:
             awu.MsgDialog(self, message=c.GetStatus(), style=wx.ICON_ERROR)
-    
+
     def GetControllo(self):
         return self.ctrpiva
-    
+
     def SetMaxLength(self, ml):
         self.FindWindowByName('_piva').SetMaxLength(ml)
 
@@ -250,16 +250,16 @@ class PartitaIvaEntryCtrl(_EntryCtrlMixin):
 
 
 class CodiceFiscaleEntryCtrl(_EntryCtrlMixin):
-    
+
     def __init__(self, *args, **kwargs):
         _EntryCtrlMixin.__init__(self, *args, **kwargs)
         self.ctrcf = ControllaCodFisc()
         self.Bind(wx.EVT_TEXT, self.OnCheckCodFisc, id=wdr.ID_ADDRESS)
-    
+
     def OnCheckCodFisc(self, event):
         self.CheckCodFisc()
         event.Skip()
-    
+
     def CheckCodFisc(self):
         def cn(x):
             return self.FindWindowByName(x)
@@ -270,16 +270,16 @@ class CodiceFiscaleEntryCtrl(_EntryCtrlMixin):
             t.AdjustBackgroundColor(error=True)
         else:
             t.AdjustBackgroundColor(focused=(t.FindFocus() == t))
-    
+
     def GetFiller(self):
         return wdr.CodiceFiscaleEntryFunc
 
     def OnAction(self, event):
         pass
-    
+
     def GetControllo(self):
         return self.ctrcf
-    
+
     def SetMaxLength(self, ml):
         self.FindWindowByName('_codfisc').SetMaxLength(ml)
 
@@ -288,7 +288,7 @@ class CodiceFiscaleEntryCtrl(_EntryCtrlMixin):
 
 
 class PhoneEntryCtrl(_EntryCtrlMixin):
-    
+
     def GetFiller(self):
         return wdr.PhoneEntryFunc
 
@@ -310,12 +310,16 @@ class PhoneEntryCtrl(_EntryCtrlMixin):
                              style=wx.ICON_QUESTION|wx.YES_NO|wx.YES_DEFAULT) == wx.ID_YES:
                 os.startfile('callto://%s' % addr)
 
+    def SetMaxLength(self, maxLen):
+        self.FindWindowById(wdr.ID_ADDRESS).SetMaxLength(maxLen)
+
+
 
 # ------------------------------------------------------------------------------
 
 
 class MailEntryCtrl(_EntryCtrlMixin):
-    
+
     def GetFiller(self):
         return wdr.MailEntryFunc
 
@@ -328,12 +332,14 @@ class MailEntryCtrl(_EntryCtrlMixin):
         if addr:
             os.startfile('mailto:%s' % addr)
 
+    def SetMaxLength(self, maxLen):
+        self.FindWindowById(wdr.ID_ADDRESS).SetMaxLength(maxLen)
 
 # ------------------------------------------------------------------------------
 
 
 class XmppEntryCtrl(_EntryCtrlMixin):
-    
+
     def GetFiller(self):
         return wdr.XmppEntryFunc
 
@@ -352,7 +358,7 @@ class XmppEntryCtrl(_EntryCtrlMixin):
 
 
 class HttpEntryCtrl(_EntryCtrlMixin):
-    
+
     def GetFiller(self):
         return wdr.HttpEntryFunc
 
@@ -371,7 +377,7 @@ class HttpEntryCtrl(_EntryCtrlMixin):
 
 class FolderEntryCtrl(_EntryCtrlMixin):
     request_description = "Seleziona la cartella:"
-    
+
     def GetFiller(self):
         return wdr.FolderEntryFunc
 
@@ -394,7 +400,7 @@ class FolderEntryCtrl(_EntryCtrlMixin):
 
 class FileEntryCtrl(_EntryCtrlMixin):
     request_description = "Seleziona il file:"
-    
+
     def GetFiller(self):
         return wdr.FileEntryFunc
 
@@ -416,16 +422,16 @@ class FileEntryCtrl(_EntryCtrlMixin):
                 name = dlg.GetFilename().replace(cwd+'\\', './').replace('\\', '/')
             addr.SetValue(name)
         dlg.Destroy()
-    
+
     def GetDialogValue(self, dlg):
-        return 
+        return
 
 
 # ------------------------------------------------------------------------------
 
 
 class FullPathFileEntryCtrl(FileEntryCtrl):
-    
+
     def FileChoice(self):
         return FileEntryCtrl.FileChoice(self, fullpath=True)
 
@@ -454,19 +460,19 @@ def SetGoogleCloudPrintPassword(password):
 
 
 class PrintersComboBox(wx.ComboBox):
-    
+
     names = None
     queues = None
-    
+
     def __init__(self, *args, **kwargs):
-        
+
         wx.ComboBox.__init__(self, *args, **kwargs)
         self.names = []
         self.queues = []
         self.types = []
-        
+
         from report import gcplib
-        
+
         if GCP_ENABLED and GCP_USERNAME and GCP_PASSWORD:
             wx.BeginBusyCursor()
             try:
@@ -523,16 +529,16 @@ class PrintersComboBox(wx.ComboBox):
         self.names.append('')
         self.queues.append('')
         self.types.append('dummy')
-    
+
     def GetNames(self):
         return self.names
-    
+
     def GetQueues(self):
         return self.queues
-    
+
     def GetTypes(self):
         return self.types
-    
+
     def SetValue(self, v):
         if sys.platform == 'win32':
             if v is None:
@@ -543,7 +549,7 @@ class PrintersComboBox(wx.ComboBox):
                 if v in self.queues:
                     n = self.queues.index(v)
                     self.SetSelection(n)
-    
+
     def GetValue(self):
         if sys.platform == 'win32':
             v = wx.ComboBox.GetValue(self)
