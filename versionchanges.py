@@ -28,6 +28,10 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
+    ('1.5.20', dt.Date(2016, 5, 4), (
+         ("BET1196",
+         """Introdotto metodo SetMaxLenght() per le classi PhoneEntryCtrl e MailEntryCtrl"""),
+        ),),
 
     ('1.5.19', dt.Date(2016, 3, 8), (
          ("BET1195",
