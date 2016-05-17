@@ -37,7 +37,7 @@ class UnoZeroCheckBox(CheckBox):
     def __init__(self, *args, **kwargs):
         CheckBox.__init__(self, *args, **kwargs)
         self.SetDataLink(values={True: 1, False: 0})
-    
+
     def SetValue(self, v):
         if isinstance(v, (str, unicode)):
             v = int(v)
@@ -90,9 +90,9 @@ class DestinatariSync(CheckListBox):
     def GetUtenti(self):
         cur=Env.Azienda.DB.connection.cursor()
         sql = r"""
-        SELECT id_utente, utenti.codice, utenti.descriz FROM X4.diritti d
-  join X4.aziende on d.id_azienda=aziende.id
-  join X4.utenti on d.id_utente=utenti.id
+        SELECT id_utente, utenti.codice, utenti.descriz FROM x4.diritti d
+  join x4.aziende on d.id_azienda=aziende.id
+  join x4.utenti on d.id_utente=utenti.id
   where attivo=1 and aziende.codice="%s";""" % (Env.Azienda.codice)
         cur.execute(sql)
         Utenti= cur.fetchall()
@@ -115,10 +115,10 @@ ID_BTNOK = 15001
 
 def AziendaSetup( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
-    
+
     item2 = WorkZoneNotebook( parent, ID_NOTEBOOK, wx.DefaultPosition, wx.DefaultSize, 0 )
     item1 = item2
-    
+
     item3 = wx.Panel( item2, -1 )
     DatiAziendaFunc(item3, False)
     item2.AddPage( item3, "Dati azienda" )
@@ -142,7 +142,7 @@ def AziendaSetup( parent, call_fit = True, set_sizer = True ):
     item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
     item8 = wx.FlexGridSizer( 1, 0, 0, 0 )
-    
+
     item9 = wx.Button( parent, ID_BTNOK, "OK", wx.DefaultPosition, wx.DefaultSize, 0 )
     item9.SetDefault()
     item9.SetName( "btnok" )
@@ -158,7 +158,7 @@ def AziendaSetup( parent, call_fit = True, set_sizer = True ):
         parent.SetSizer( item0 )
         if call_fit == True:
             item0.SetSizeHints( parent )
-    
+
     return item0
 
 ID_TEXT = 15002
@@ -180,14 +180,14 @@ ID_SCADORD = 15017
 
 def ContabSetup( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
-    
+
     item1 = wx.FlexGridSizer( 0, 2, 0, 0 )
-    
+
     item3 = wx.StaticBox( parent, -1, "Esercizio contabile" )
     item2 = wx.StaticBoxSizer( item3, wx.VERTICAL )
-    
+
     item4 = wx.FlexGridSizer( 1, 0, 0, 0 )
-    
+
     item5 = wx.StaticText( parent, ID_TEXT, "Giorno e mese di inizio dell'esercizio contabile:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item4.Add( item5, 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
 
@@ -213,9 +213,9 @@ def ContabSetup( parent, call_fit = True, set_sizer = True ):
 
     item11 = wx.StaticBox( parent, -1, "Spesometro" )
     item10 = wx.StaticBoxSizer( item11, wx.VERTICAL )
-    
+
     item12 = wx.FlexGridSizer( 0, 2, 0, 0 )
-    
+
     item13 = wx.StaticText( parent, ID_TEXT, "Cod.Attività Ateco2007:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item12.Add( item13, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
 
@@ -232,18 +232,18 @@ def ContabSetup( parent, call_fit = True, set_sizer = True ):
     item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item15 = wx.FlexGridSizer( 1, 0, 0, 0 )
-    
-    item16 = SovrapposizioneRadioBox( parent, ID_CONSOVGES, "Chiusure contabili", wx.DefaultPosition, wx.DefaultSize, 
+
+    item16 = SovrapposizioneRadioBox( parent, ID_CONSOVGES, "Chiusure contabili", wx.DefaultPosition, wx.DefaultSize,
         ["Senza sovrapposizione d'esercizio","Con sovrapposizione d'esercizio"] , 1, wx.RA_SPECIFY_COLS )
     item16.SetName( "setup_consovges" )
     item15.Add( item16, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item17 = RadioBox( parent, ID_RADIOBOX, "Tipo di gestione dell'IVA", wx.DefaultPosition, wx.DefaultSize, 
+    item17 = RadioBox( parent, ID_RADIOBOX, "Tipo di gestione dell'IVA", wx.DefaultPosition, wx.DefaultSize,
         ["Ordinaria","Semplificata"] , 1, wx.RA_SPECIFY_COLS )
     item17.SetName( "setup_tipo_contab" )
     item15.Add( item17, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item18 = RadioBox( parent, ID_RADIOBOX, "Periodicità di liquidazione IVA", wx.DefaultPosition, wx.DefaultSize, 
+    item18 = RadioBox( parent, ID_RADIOBOX, "Periodicità di liquidazione IVA", wx.DefaultPosition, wx.DefaultSize,
         ["Mensile","Trimestrale"] , 1, wx.RA_SPECIFY_COLS )
     item18.SetName( "setup_liqiva_periodic" )
     item15.Add( item18, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
@@ -256,9 +256,9 @@ def ContabSetup( parent, call_fit = True, set_sizer = True ):
 
     item20 = wx.StaticBox( parent, -1, "Impostazione valuta di conto" )
     item19 = wx.StaticBoxSizer( item20, wx.VERTICAL )
-    
+
     item21 = wx.FlexGridSizer( 0, 2, 0, 0 )
-    
+
     item22 = wx.StaticText( parent, ID_TEXT, "Valuta di conto:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item21.Add( item22, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
 
@@ -279,7 +279,7 @@ def ContabSetup( parent, call_fit = True, set_sizer = True ):
 
     item27 = wx.StaticBox( parent, -1, "Gestione fidi clienti" )
     item26 = wx.StaticBoxSizer( item27, wx.VERTICAL )
-    
+
     item28 = UnoZeroCheckBox( parent, ID_CHECKBOX, "Attiva la gestione dei fidi sui clienti", wx.DefaultPosition, wx.DefaultSize, 0 )
     item28.SetName( "setup_gesfidicli" )
     item26.Add( item28, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
@@ -288,7 +288,7 @@ def ContabSetup( parent, call_fit = True, set_sizer = True ):
 
     item30 = wx.StaticBox( parent, -1, "Bilanci" )
     item29 = wx.StaticBoxSizer( item30, wx.HORIZONTAL )
-    
+
     item31 = UnoZeroCheckBox( parent, ID_CONBILRICL, "Attiva riclassificazioni di bilancio", wx.DefaultPosition, wx.DefaultSize, 0 )
     item31.SetName( "setup_conbilricl" )
     item29.Add( item31, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
@@ -301,7 +301,7 @@ def ContabSetup( parent, call_fit = True, set_sizer = True ):
 
     item34 = wx.StaticBox( parent, -1, "Ritenute d'Acconto" )
     item33 = wx.StaticBoxSizer( item34, wx.HORIZONTAL )
-    
+
     item35 = RitAccCheckBox( parent, ID_CONATTRITACC, "Attiva gestione", wx.DefaultPosition, wx.DefaultSize, 0 )
     item35.SetName( "setup_conattritacc" )
     item33.Add( item35, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
@@ -320,7 +320,7 @@ def ContabSetup( parent, call_fit = True, set_sizer = True ):
 
     item0.Add( item33, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item40 = OrdPartiteRadioBox( parent, ID_SCADORD, "Ordinameno scadenzari clienti/fornitori", wx.DefaultPosition, wx.DefaultSize, 
+    item40 = OrdPartiteRadioBox( parent, ID_SCADORD, "Ordinameno scadenzari clienti/fornitori", wx.DefaultPosition, wx.DefaultSize,
         ["Data scadenza","Data documento"] , 1, wx.RA_SPECIFY_ROWS )
     item40.SetName( "setup_scadord" )
     item0.Add( item40, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
@@ -331,7 +331,7 @@ def ContabSetup( parent, call_fit = True, set_sizer = True ):
         parent.SetSizer( item0 )
         if call_fit == True:
             item0.SetSizeHints( parent )
-    
+
     return item0
 
 ID_MAGDEFAULT = 15018
@@ -397,12 +397,12 @@ ID_MAGPROVSEQ = 15077
 
 def MagazzSetup( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
-    
+
     item2 = wx.StaticBox( parent, -1, "Magazzino di default per operazioni di carico/scarico e immissione documenti" )
     item1 = wx.StaticBoxSizer( item2, wx.VERTICAL )
-    
+
     item3 = wx.FlexGridSizer( 1, 0, 0, 0 )
-    
+
     item4 = wx.StaticText( parent, ID_TEXT, "Magazzino:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item3.Add( item4, 0, wx.ALIGN_CENTER|wx.TOP|wx.BOTTOM, 5 )
 
@@ -416,12 +416,12 @@ def MagazzSetup( parent, call_fit = True, set_sizer = True ):
     item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
 
     item6 = wx.FlexGridSizer( 1, 0, 0, 0 )
-    
+
     item8 = wx.StaticBox( parent, -1, "Numero di decimali da gestire" )
     item7 = wx.StaticBoxSizer( item8, wx.VERTICAL )
-    
+
     item9 = wx.FlexGridSizer( 1, 0, 0, 0 )
-    
+
     item10 = wx.StaticText( parent, ID_TEXT, "Quantità:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item9.Add( item10, 0, wx.ALIGN_CENTER|wx.TOP|wx.BOTTOM, 5 )
 
@@ -440,9 +440,9 @@ def MagazzSetup( parent, call_fit = True, set_sizer = True ):
 
     item15 = wx.StaticBox( parent, -1, "Prezzi" )
     item14 = wx.StaticBoxSizer( item15, wx.VERTICAL )
-    
+
     item16 = wx.FlexGridSizer( 1, 0, 0, 0 )
-    
+
     item17 = wx.StaticText( parent, ID_TEXT, "Ricarica predefinita:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item16.Add( item17, 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
 
@@ -455,7 +455,7 @@ def MagazzSetup( parent, call_fit = True, set_sizer = True ):
 
     item20 = wx.StaticBox( parent, -1, "Confezioni" )
     item19 = wx.StaticBoxSizer( item20, wx.VERTICAL )
-    
+
     item21 = UnoZeroCheckBox( parent, ID_MAGPZCONF, "Gestisci", wx.DefaultPosition, wx.DefaultSize, 0 )
     item21.SetName( "setup_magpzconf" )
     item19.Add( item21, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
@@ -473,13 +473,13 @@ def MagazzSetup( parent, call_fit = True, set_sizer = True ):
     item0.Add( item6, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item23 = wx.FlexGridSizer( 1, 0, 0, 0 )
-    
-    item24 = ScorpIvaRadioBox( parent, ID_MAGSCORPCOS, "I costi su scheda prodotto sono:", wx.DefaultPosition, wx.DefaultSize, 
+
+    item24 = ScorpIvaRadioBox( parent, ID_MAGSCORPCOS, "I costi su scheda prodotto sono:", wx.DefaultPosition, wx.DefaultSize,
         ["Imponibili: l'IVA sarà aggiunta","Ivati: l'IVA sarà scorporata"] , 1, wx.RA_SPECIFY_COLS )
     item24.SetName( "setup_magscorpcos" )
     item23.Add( item24, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item25 = ScorpIvaRadioBox( parent, ID_MAGSCORPPRE, "I prezzi su scheda prodotto sono:", wx.DefaultPosition, wx.DefaultSize, 
+    item25 = ScorpIvaRadioBox( parent, ID_MAGSCORPPRE, "I prezzi su scheda prodotto sono:", wx.DefaultPosition, wx.DefaultSize,
         ["Imponibili: l'IVA sarà aggiunta","Ivati: l'IVA sarà scorporata"] , 1, wx.RA_SPECIFY_COLS )
     item25.SetName( "setup_magscorppre" )
     item23.Add( item25, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
@@ -491,12 +491,12 @@ def MagazzSetup( parent, call_fit = True, set_sizer = True ):
     item0.Add( item23, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item26 = wx.FlexGridSizer( 1, 0, 0, 0 )
-    
+
     item28 = wx.StaticBox( parent, -1, "Gestisci" )
     item27 = wx.StaticBoxSizer( item28, wx.VERTICAL )
-    
+
     item29 = wx.FlexGridSizer( 0, 2, 0, 0 )
-    
+
     item30 = wx.StaticText( parent, ID_TEXT, "Ricariche:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item29.Add( item30, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
 
@@ -515,7 +515,7 @@ def MagazzSetup( parent, call_fit = True, set_sizer = True ):
 
     item35 = wx.StaticBox( parent, -1, "" )
     item34 = wx.StaticBoxSizer( item35, wx.VERTICAL )
-    
+
     item36 = UnoZeroCheckBox( parent, ID_MAGSCOCAT, "Attiva sconti per categoria", wx.DefaultPosition, wx.DefaultSize, 0 )
     item36.SetName( "setup_magscocat" )
     item34.Add( item36, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
@@ -528,7 +528,7 @@ def MagazzSetup( parent, call_fit = True, set_sizer = True ):
 
     item39 = wx.StaticBox( parent, -1, "Codifica barcodes" )
     item38 = wx.StaticBoxSizer( item39, wx.HORIZONTAL )
-    
+
     item40 = wx.StaticText( parent, ID_TEXT, "EAN13 C.C.:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item38.Add( item40, 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
 
@@ -540,7 +540,7 @@ def MagazzSetup( parent, call_fit = True, set_sizer = True ):
 
     item43 = wx.StaticBox( parent, -1, "Chiusura" )
     item42 = wx.StaticBoxSizer( item43, wx.HORIZONTAL )
-    
+
     item44 = wx.StaticText( parent, ID_TEXT, "Data ultima chiusura magazzino:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item42.Add( item44, 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
 
@@ -555,12 +555,12 @@ def MagazzSetup( parent, call_fit = True, set_sizer = True ):
     item0.Add( item26, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item46 = wx.FlexGridSizer( 1, 0, 0, 0 )
-    
+
     item48 = wx.StaticBox( parent, -1, "Gestione Listini di vendita" )
     item47 = wx.StaticBoxSizer( item48, wx.VERTICAL )
-    
+
     item49 = wx.FlexGridSizer( 1, 0, 0, 0 )
-    
+
     item50 = wx.StaticText( parent, ID_TEXT, "Num.Listini:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item49.Add( item50, 0, wx.ALIGN_CENTER|wx.BOTTOM, 5 )
 
@@ -575,7 +575,7 @@ def MagazzSetup( parent, call_fit = True, set_sizer = True ):
     item47.Add( item49, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item53 = wx.BoxSizer( wx.HORIZONTAL )
-    
+
     item54 = UnoZeroCheckBox( parent, ID_MAGBCOLIS, "Barcode", wx.DefaultPosition, wx.DefaultSize, 0 )
     item54.SetToolTip( wx.ToolTip("Attiva la gestione dei listini per data") )
     item54.SetName( "setup_magbcolis" )
@@ -597,9 +597,9 @@ def MagazzSetup( parent, call_fit = True, set_sizer = True ):
 
     item58 = wx.StaticBox( parent, -1, "Listini variabili per:" )
     item57 = wx.StaticBoxSizer( item58, wx.VERTICAL )
-    
+
     item59 = wx.FlexGridSizer( 0, 2, 0, 0 )
-    
+
     item60 = UnoZeroCheckBox( parent, ID_MAGVLIFOR, "Fornit", wx.DefaultPosition, wx.DefaultSize, 0 )
     item60.SetName( "setup_magvlifor" )
     item59.Add( item60, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
@@ -622,9 +622,9 @@ def MagazzSetup( parent, call_fit = True, set_sizer = True ):
 
     item65 = wx.StaticBox( parent, -1, "Sui listini:" )
     item64 = wx.StaticBoxSizer( item65, wx.VERTICAL )
-    
+
     item66 = wx.FlexGridSizer( 0, 2, 0, 0 )
-    
+
     item67 = wx.StaticText( parent, ID_TEXT, "Ricar:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item66.Add( item67, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
@@ -643,7 +643,7 @@ def MagazzSetup( parent, call_fit = True, set_sizer = True ):
 
     item72 = wx.StaticBox( parent, -1, "Promoz." )
     item71 = wx.StaticBoxSizer( item72, wx.HORIZONTAL )
-    
+
     item73 = UnoZeroCheckBox( parent, ID_MAGPPROMO, "Attiva", wx.DefaultPosition, wx.DefaultSize, 0 )
     item73.SetToolTip( wx.ToolTip("Attiva le condizioni promozionali sui prodotti") )
     item73.SetName( "setup_magppromo" )
@@ -653,9 +653,9 @@ def MagazzSetup( parent, call_fit = True, set_sizer = True ):
 
     item75 = wx.StaticBox( parent, -1, "Su gruppo pr.:" )
     item74 = wx.StaticBoxSizer( item75, wx.VERTICAL )
-    
+
     item76 = wx.FlexGridSizer( 0, 2, 0, 0 )
-    
+
     item77 = wx.StaticText( parent, ID_TEXT, "Ricar:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item76.Add( item77, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
@@ -674,9 +674,9 @@ def MagazzSetup( parent, call_fit = True, set_sizer = True ):
 
     item82 = wx.StaticBox( parent, -1, "Visualizza %effettiva:" )
     item81 = wx.StaticBoxSizer( item82, wx.VERTICAL )
-    
+
     item83 = wx.FlexGridSizer( 0, 3, 0, 0 )
-    
+
     item84 = wx.StaticText( parent, ID_TEXT, "Ricarica:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item83.Add( item84, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
 
@@ -709,9 +709,9 @@ def MagazzSetup( parent, call_fit = True, set_sizer = True ):
 
     item91 = wx.StaticBox( parent, -1, "Su prodotto:" )
     item90 = wx.StaticBoxSizer( item91, wx.VERTICAL )
-    
+
     item92 = wx.FlexGridSizer( 0, 2, 0, 0 )
-    
+
     item93 = wx.StaticText( parent, ID_TEXT, "Ricar:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item92.Add( item93, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
@@ -737,12 +737,12 @@ def MagazzSetup( parent, call_fit = True, set_sizer = True ):
     item0.Add( item46, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item97 = wx.FlexGridSizer( 1, 0, 0, 0 )
-    
+
     item99 = wx.StaticBox( parent, -1, "Griglie prezzi Clienti/Fornitori" )
     item98 = wx.StaticBoxSizer( item99, wx.HORIZONTAL )
-    
+
     item100 = wx.FlexGridSizer( 0, 1, 0, 0 )
-    
+
     item101 = UnoZeroCheckBox( parent, ID_MAGATTGRIP, "Attiva clienti", wx.DefaultPosition, wx.DefaultSize, 0 )
     item101.SetToolTip( wx.ToolTip("Attiva la gestione delle griglie prezzi di vendita sui clienti") )
     item101.SetName( "setup_magattgrip" )
@@ -759,7 +759,7 @@ def MagazzSetup( parent, call_fit = True, set_sizer = True ):
     item98.Add( item103, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL|wx.RIGHT, 5 )
 
     item104 = wx.FlexGridSizer( 0, 1, 0, 0 )
-    
+
     item105 = UnoZeroCheckBox( parent, ID_MAGATTGRIF, "Attiva fornitori", wx.DefaultPosition, wx.DefaultSize, 0 )
     item105.SetToolTip( wx.ToolTip("Attiva la gestione delle griglie prezzi di acquisto sui fornitori") )
     item105.SetName( "setup_magattgrif" )
@@ -776,7 +776,7 @@ def MagazzSetup( parent, call_fit = True, set_sizer = True ):
     item98.Add( item107, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL|wx.RIGHT, 5 )
 
     item108 = wx.FlexGridSizer( 0, 1, 0, 0 )
-    
+
     item109 = UnoZeroCheckBox( parent, ID_MAGAGGGRIP, "Aggiorna da doc.", wx.DefaultPosition, wx.DefaultSize, 0 )
     item109.SetToolTip( wx.ToolTip("Attiva la facoltÃ  di creare/aggiornare la griglia dal dataentry di magazzino") )
     item109.SetName( "setup_magagggrip" )
@@ -800,10 +800,10 @@ def MagazzSetup( parent, call_fit = True, set_sizer = True ):
     item97.Add( item98, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
 
     item113 = wx.FlexGridSizer( 0, 1, 0, 0 )
-    
+
     item115 = wx.StaticBox( parent, -1, "Vettori" )
     item114 = wx.StaticBoxSizer( item115, wx.HORIZONTAL )
-    
+
     item116 = UnoZeroCheckBox( parent, ID_MAGNOCODEVET, "Variaz.manuale", wx.DefaultPosition, wx.DefaultSize, 0 )
     item116.SetToolTip( wx.ToolTip("Attiva la possibilitÃ  di variazione manuale del vettore sul singolo documento, senza doverlo codificare") )
     item116.SetName( "setup_magnocodevet" )
@@ -823,7 +823,7 @@ def MagazzSetup( parent, call_fit = True, set_sizer = True ):
 
     item120 = wx.StaticBox( parent, -1, "Destinazioni merce" )
     item119 = wx.StaticBoxSizer( item120, wx.HORIZONTAL )
-    
+
     item121 = UnoZeroCheckBox( parent, ID_MAGNOCODEDES, "Variaz.manuale", wx.DefaultPosition, wx.DefaultSize, 0 )
     item121.SetToolTip( wx.ToolTip("Attiva la possibilitÃ  di variazione manuale della destinazione merce sul singolo documento, senza doverla codificare") )
     item121.SetName( "setup_magnocodedes" )
@@ -847,10 +847,10 @@ def MagazzSetup( parent, call_fit = True, set_sizer = True ):
     item0.Add( item97, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item123 = wx.FlexGridSizer( 1, 0, 0, 0 )
-    
+
     item125 = wx.StaticBox( parent, -1, "Immagine del prodotto" )
     item124 = wx.StaticBoxSizer( item125, wx.VERTICAL )
-    
+
     item126 = UnoZeroCheckBox( parent, ID_MAGIMGPROD, "Attiva se presente", wx.DefaultPosition, wx.DefaultSize, 0 )
     item126.SetName( "setup_magimgprod" )
     item124.Add( item126, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
@@ -859,7 +859,7 @@ def MagazzSetup( parent, call_fit = True, set_sizer = True ):
 
     item128 = wx.StaticBox( parent, -1, "Ricerca prodotti" )
     item127 = wx.StaticBoxSizer( item128, wx.HORIZONTAL )
-    
+
     item129 = CheckBox( parent, ID_MAGDIGSEARCH, "Cerca in digitaz. codice", wx.DefaultPosition, wx.DefaultSize, 0 )
     item129.SetName( "setup_magdigsearch" )
     item127.Add( item129, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
@@ -883,7 +883,7 @@ def MagazzSetup( parent, call_fit = True, set_sizer = True ):
     item127.Add( item134, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
 
     item135 = wx.FlexGridSizer( 0, 1, 0, 0 )
-    
+
     item136 = UnoZeroCheckBox( parent, ID_MAGVISCOS, "Costo", wx.DefaultPosition, wx.DefaultSize, 0 )
     item136.SetName( "setup_magviscos" )
     item135.Add( item136, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
@@ -895,7 +895,7 @@ def MagazzSetup( parent, call_fit = True, set_sizer = True ):
     item127.Add( item135, 0, wx.ALIGN_CENTER, 5 )
 
     item138 = wx.FlexGridSizer( 0, 1, 0, 0 )
-    
+
     item139 = UnoZeroCheckBox( parent, ID_MAGVISCPF, "Cod.Forn.", wx.DefaultPosition, wx.DefaultSize, 0 )
     item139.SetName( "setup_magviscpf" )
     item138.Add( item139, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
@@ -913,10 +913,10 @@ def MagazzSetup( parent, call_fit = True, set_sizer = True ):
     item0.Add( item123, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item141 = wx.FlexGridSizer( 1, 0, 0, 0 )
-    
+
     item143 = wx.StaticBox( parent, -1, "Provvigioni" )
     item142 = wx.StaticBoxSizer( item143, wx.HORIZONTAL )
-    
+
     item144 = UnoZeroCheckBox( parent, ID_MAGPROVATT, "Attiva", wx.DefaultPosition, wx.DefaultSize, 0 )
     item144.SetName( "setup_magprovatt" )
     item142.Add( item144, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 5 )
@@ -931,14 +931,14 @@ def MagazzSetup( parent, call_fit = True, set_sizer = True ):
 
     item141.Add( item142, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
-    item147 = MagProvMovRadioBox( parent, ID_MAGPROVMOV, "Provvig. sui movimenti", wx.DefaultPosition, wx.DefaultSize, 
+    item147 = MagProvMovRadioBox( parent, ID_MAGPROVMOV, "Provvig. sui movimenti", wx.DefaultPosition, wx.DefaultSize,
         ["Default","Eredita"] , 1, wx.RA_SPECIFY_ROWS )
     item147.SetName( "setup_magprovmov" )
     item141.Add( item147, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 
     item149 = wx.StaticBox( parent, -1, "Gerarchia ereditarietà" )
     item148 = wx.StaticBoxSizer( item149, wx.HORIZONTAL )
-    
+
     item150 = wx.StaticText( parent, ID_TEXT, "Sequenza priorità provvig.:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item148.Add( item150, 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
 
@@ -958,7 +958,7 @@ def MagazzSetup( parent, call_fit = True, set_sizer = True ):
         parent.SetSizer( item0 )
         if call_fit == True:
             item0.SetSizeHints( parent )
-    
+
     return item0
 
 ID_OPTLINKINDEX = 15078
@@ -979,10 +979,10 @@ ID_GC_PRINT = 15092
 
 def OpzioniFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
-    
+
     item2 = wx.StaticBox( parent, -1, "MySql" )
     item1 = wx.StaticBoxSizer( item2, wx.HORIZONTAL )
-    
+
     item3 = UnoZeroCheckBox( parent, ID_OPTLINKINDEX, "Attiva compatibilità SqlAlchemy (Engine INNODB)", wx.DefaultPosition, wx.DefaultSize, 0 )
     item3.SetName( "setup_optlinkindex" )
     item1.Add( item3, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
@@ -991,7 +991,7 @@ def OpzioniFunc( parent, call_fit = True, set_sizer = True ):
 
     item5 = wx.StaticBox( parent, -1, "Notifiche" )
     item4 = wx.StaticBoxSizer( item5, wx.VERTICAL )
-    
+
     item6 = UnoZeroCheckBox( parent, ID_OPTNOTIFICHE, "Attiva notifiche (Email, XMPP)", wx.DefaultPosition, wx.DefaultSize, 0 )
     item6.SetName( "setup_optnotifiche" )
     item4.Add( item6, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
@@ -1000,9 +1000,9 @@ def OpzioniFunc( parent, call_fit = True, set_sizer = True ):
 
     item8 = wx.StaticBox( parent, -1, "Ricerche" )
     item7 = wx.StaticBoxSizer( item8, wx.VERTICAL )
-    
+
     item9 = wx.FlexGridSizer( 1, 0, 0, 0 )
-    
+
     item10 = UnoZeroCheckBox( parent, ID_OPTTABSEARCH, "Attiva la ricerca con il tasto Tab", wx.DefaultPosition, wx.DefaultSize, 0 )
     item10.SetName( "setup_opttabsearch" )
     item9.Add( item10, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
@@ -1028,7 +1028,7 @@ def OpzioniFunc( parent, call_fit = True, set_sizer = True ):
     item7.Add( item15, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
     item16 = wx.FlexGridSizer( 0, 3, 0, 0 )
-    
+
     item17 = wx.StaticText( parent, ID_TEXT, "", wx.DefaultPosition, wx.DefaultSize, 0 )
     item16.Add( item17, 0, wx.ALIGN_CENTER|wx.RIGHT|wx.TOP, 5 )
 
@@ -1081,7 +1081,7 @@ def OpzioniFunc( parent, call_fit = True, set_sizer = True ):
 
     item30 = wx.StaticBox( parent, -1, "Percorso backup azienda" )
     item29 = wx.StaticBoxSizer( item30, wx.VERTICAL )
-    
+
     item31 = FolderEntryCtrl( parent, ID_BACKUPDIR, "", wx.DefaultPosition, [280,-1], 0 )
     item31.SetName( "setup_optbackupdir" )
     item29.Add( item31, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 5 )
@@ -1090,9 +1090,9 @@ def OpzioniFunc( parent, call_fit = True, set_sizer = True ):
 
     item33 = wx.StaticBox( parent, -1, "Google Account" )
     item32 = wx.StaticBoxSizer( item33, wx.VERTICAL )
-    
+
     item34 = wx.FlexGridSizer( 1, 0, 0, 0 )
-    
+
     item35 = wx.StaticText( parent, ID_TEXT, "Username:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item34.Add( item35, 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
 
@@ -1125,7 +1125,7 @@ def OpzioniFunc( parent, call_fit = True, set_sizer = True ):
         parent.SetSizer( item0 )
         if call_fit == True:
             item0.SetSizeHints( parent )
-    
+
     return item0
 
 ID_TEXTCTRL = 15093
@@ -1133,12 +1133,12 @@ ID_AZIENDA_LOGO = 15094
 
 def DatiAziendaFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
-    
+
     item2 = wx.StaticBox( parent, -1, "Intestazione azienda" )
     item1 = wx.StaticBoxSizer( item2, wx.VERTICAL )
-    
+
     item3 = wx.FlexGridSizer( 1, 0, 0, 0 )
-    
+
     item4 = wx.StaticText( parent, ID_TEXT, "Codice:", wx.DefaultPosition, [100,-1], wx.ALIGN_RIGHT )
     item3.Add( item4, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 
@@ -1152,7 +1152,7 @@ def DatiAziendaFunc( parent, call_fit = True, set_sizer = True ):
     item1.Add( item6, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 5 )
 
     item7 = wx.FlexGridSizer( 0, 2, 0, 0 )
-    
+
     item8 = wx.StaticText( parent, ID_TEXT, "Ragione Sociale:", wx.DefaultPosition, [100,-1], wx.ALIGN_RIGHT )
     item7.Add( item8, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
 
@@ -1171,7 +1171,7 @@ def DatiAziendaFunc( parent, call_fit = True, set_sizer = True ):
     item7.Add( item12, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
 
     item13 = wx.FlexGridSizer( 1, 0, 0, 0 )
-    
+
     item14 = TextCtrl_LC( parent, ID_TEXTCTRL, "", wx.DefaultPosition, [60,-1], 0 )
     item14.SetName( "setup_azienda_cap" )
     item13.Add( item14, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
@@ -1192,7 +1192,7 @@ def DatiAziendaFunc( parent, call_fit = True, set_sizer = True ):
     item7.Add( item17, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
 
     item18 = wx.FlexGridSizer( 1, 0, 0, 0 )
-    
+
     item19 = TextCtrl( parent, ID_TEXTCTRL, "", wx.DefaultPosition, [120,-1], 0 )
     item19.SetName( "setup_azienda_codfisc" )
     item18.Add( item19, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
@@ -1221,7 +1221,7 @@ def DatiAziendaFunc( parent, call_fit = True, set_sizer = True ):
     item7.Add( item24, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
 
     item25 = wx.FlexGridSizer( 1, 0, 0, 0 )
-    
+
     item26 = TextCtrl_LC( parent, ID_TEXTCTRL, "", wx.DefaultPosition, wx.DefaultSize, 0 )
     item26.SetName( "setup_azienda_numtel" )
     item25.Add( item26, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
@@ -1260,7 +1260,7 @@ def DatiAziendaFunc( parent, call_fit = True, set_sizer = True ):
     item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
     item33 = wx.FlexGridSizer( 0, 2, 0, 0 )
-    
+
     item34 = wx.StaticText( parent, ID_TEXT, "Logo:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item33.Add( item34, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
@@ -1289,7 +1289,7 @@ def DatiAziendaFunc( parent, call_fit = True, set_sizer = True ):
         parent.SetSizer( item0 )
         if call_fit == True:
             item0.SetSizeHints( parent )
-    
+
     return item0
 
 ID_IMPORTFOLDER = 15095
@@ -1298,16 +1298,16 @@ ID_LTAB = 15097
 
 def SyncFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 3, 0, 0 )
-    
+
     item1 = wx.FlexGridSizer( 0, 1, 0, 0 )
-    
+
     item2 = wx.FlexGridSizer( 0, 2, 0, 0 )
-    
+
     item3 = UnoZeroCheckBox( parent, ID_CHECKBOX, "Sincronizzazione Attiva", wx.DefaultPosition, wx.DefaultSize, 0 )
     item3.SetName( "setup_syncflag" )
     item2.Add( item3, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
-    item4 = TipoSync( parent, ID_RADIOBOX, "", wx.DefaultPosition, wx.DefaultSize, 
+    item4 = TipoSync( parent, ID_RADIOBOX, "", wx.DefaultPosition, wx.DefaultSize,
         ["Master Sql Sever","Slave  Sql Sever"] , 1, wx.NO_BORDER|wx.RA_SPECIFY_ROWS )
     item4.SetName( "setup_syncTipoServer" )
     item2.Add( item4, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
@@ -1317,7 +1317,7 @@ def SyncFunc( parent, call_fit = True, set_sizer = True ):
     item1.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
     item5 = wx.FlexGridSizer( 0, 2, 0, 0 )
-    
+
     item6 = wx.StaticText( parent, ID_TEXT, "Cartella Sincronizzazioni", wx.DefaultPosition, wx.DefaultSize, 0 )
     item5.Add( item6, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
@@ -1330,7 +1330,7 @@ def SyncFunc( parent, call_fit = True, set_sizer = True ):
     item1.Add( item5, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
     item8 = wx.FlexGridSizer( 0, 2, 0, 0 )
-    
+
     item9 = wx.StaticText( parent, ID_TEXT, "Destinatari Trasferimenti", wx.DefaultPosition, wx.DefaultSize, 0 )
     item8.Add( item9, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
@@ -1367,7 +1367,7 @@ def SyncFunc( parent, call_fit = True, set_sizer = True ):
         parent.SetSizer( item0 )
         if call_fit == True:
             item0.SetSizeHints( parent )
-    
+
     return item0
 
 # Menubar functions

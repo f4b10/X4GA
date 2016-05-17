@@ -67,7 +67,10 @@ class _automatmixin(object):
         """
         try:
             for key, (ctr, des) in self.auto.iteritems():
-                ctr.SetValue(self.LoadAutomat(key))
+                try:
+                    ctr.SetValue(self.LoadAutomat(key))
+                except:
+                    pass
         except MySQLdb.Error, e:
             awu.MsgDialogDbError(self, e)
     
@@ -92,7 +95,10 @@ class _automatmixin(object):
         """
         dberr = None
         for key, (ctr, des) in self.auto.iteritems():
-            id = ctr.GetValue()
+            try:
+                id = ctr.GetValue()
+            except:
+                pass
             cmd = """INSERT INTO %s (codice, descriz, aut_id) """\
                   """VALUES (%%s, %%s, %%s);""" % self.table
             try:
