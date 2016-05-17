@@ -29,6 +29,8 @@ import mx.DateTime as dt
 
 history = (
     ('1.5.20', dt.Date(2016, 5, 4), (
+         ("BET1197",
+         """Resa compatibile a server Sql Maria DB"""),
          ("BET1196",
          """Introdotto metodo SetMaxLenght() per le classi PhoneEntryCtrl e MailEntryCtrl"""),
         ),),
