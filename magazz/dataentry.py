@@ -2429,12 +2429,16 @@ class MagazzPanel(aw.Panel,\
         def cn(x):
             return self.FindWindowByName(x)
         enable = enable and bool(bt.CONATTRITACC and self.dbdoc.cfgdoc.sogritacc)
-        for name in 'dati tot'.split():
-            cn('panritacc%s'%name).Enable(enable)
-        enable = enable and cn('sogritacc').GetValue()
-        for name in 'per com imp'.split():
-            cn('%sritacc'%name).Enable(enable)
-        cn('butritacc').Enable(enable)
+		#TODO: inserito perche' banco non prevede ritenuta d'acconto
+        try:
+            for name in 'dati tot'.split():
+                cn('panritacc%s'%name).Enable(enable)
+            enable = enable and cn('sogritacc').GetValue()
+            for name in 'per com imp'.split():
+                cn('%sritacc'%name).Enable(enable)
+            cn('butritacc').Enable(enable)
+        except:
+            pass
 
     def EnableDatiAcc(self):
         doc = self.dbdoc
