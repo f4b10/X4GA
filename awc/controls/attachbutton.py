@@ -24,7 +24,11 @@
 
 import sys, os, subprocess
 def opj(x,y):
-    return os.path.join(x,y).replace('\\', '/')
+    try:
+        ret=os.path.join(x,y).replace('\\', '/')
+    except:
+        ret=''
+    return ret
 
 import wx
 import wx.lib.colourdb as colourdb
