@@ -6,17 +6,17 @@
 # Copyright:    (C) 2011 Astra S.r.l. C.so Cavallotti, 122 18038 Sanremo (IM)
 # ------------------------------------------------------------------------------
 # This file is part of X4GA
-# 
+#
 # X4GA is free software: you can redistribute it and/or modify
 # it under the terms of the Affero GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # X4GA is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
@@ -85,35 +85,35 @@ class _PdcInterrFrameMixin(object):
 
 
 class GridMastro(dbglib.DbGridColoriAlternati):
-    
+
     def __init__(self, *args, **kwargs):
-        
+
         parent = args[0]
         size = parent.GetClientSizeTuple()
-        
+
         dbglib.DbGridColoriAlternati.__init__(self, parent, -1, size=size)
-        
+
         self.dbmas = dbc.PdcMastro()
-        
+
         cn = lambda db, col: db._GetFieldIndex(col, inline=True)
-        
+
         pdc = self.dbmas
         mov = pdc.GetMastro()
         reg = mov.reg
         cau = reg.caus
         riv = reg.regiva
         pcp = mov.pdccp
-        
+
         self.colsegno = cn(mov, 'segno')
         self.colcaues = cn(mov.reg.caus, 'esercizio')
         self.coltpreg = cn(mov.reg, 'tipreg')
         self.coltprig = cn(mov, 'tipriga')
-        
+
         _NUM = gl.GRID_VALUE_NUMBER+":6"
         _STR = gl.GRID_VALUE_STRING
         _DAT = gl.GRID_VALUE_DATETIME
         _FLV = bt.GetValIntMaskInfo()
-        
+
         cols = (\
             ( 80, (cn(reg, "datreg"),    "Data reg.", _DAT, True )),
             ( 40, (cn(cau, "codice"),    "Cod.",      _STR, True )),
@@ -131,27 +131,27 @@ class GridMastro(dbglib.DbGridColoriAlternati):
             (240, (cn(mov, "note"),      "Note",      _STR, True )),
             (  1, (cn(reg, "id"),        "#reg",      _STR, True )),
             (  1, (cn(mov, "id"),        "#mov",      _STR, True )),
-        ) 
-        
-        self._cols=cols                                          
+        )
+
+        self._cols=cols
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
-        
+
         canedit = False
         canins = False
-        
+
         rs = mov.GetRecordset()
-        
+
         self.SetData( rs, colmap, canedit, canins)
-        
+
         self._fgcold, self._fgcola = contab.GetColorsDA()
         self._fgcoli = Env.Azienda.Colours.GetColour('grey40')
-        
+
         self.SetCellDynAttr(self.GetAttr)
-        
+
         map(lambda c:\
             self.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
-        
+
         self.SetAnchorColumns(9, (2, 7))
         self.AutoSizeColumns()
         sz = wx.FlexGridSizer(1,0,0,0)
@@ -160,15 +160,15 @@ class GridMastro(dbglib.DbGridColoriAlternati):
         sz.Add(self, 0, wx.GROW|wx.ALL, 0)
         parent.SetSizer(sz)
         sz.SetSizeHints(parent)
-        
+
         self.Bind(gl.EVT_GRID_CELL_LEFT_DCLICK, self.OnDblClick)
-    
-    
+
+
 
     def GetDbColumns(self):
         return self._cols
-    
-    
+
+
     def GetAttr(self, row, col, rscol, attr=gl.GridCellAttr):
         attr = dbglib.DbGridColoriAlternati.GetAttr(self, row, col, rscol, attr)
         rsmov = self.dbmas.GetMastro().GetRecordset()
@@ -191,7 +191,7 @@ class GridMastro(dbglib.DbGridColoriAlternati):
             except:
                 pass
         return attr
-    
+
     def OnDblClick(self, event):
         pdc = self.dbmas
         mov = pdc.GetMastro()
@@ -205,7 +205,7 @@ class GridMastro(dbglib.DbGridColoriAlternati):
                 dlg.SetOneRegOnly(mov.id_reg)
                 wx.EndBusyCursor()
                 if dlg.ShowModal() in (ctb.REG_MODIFIED, ctb.REG_DELETED):
-                    evt = contab.RegChangedEvent(contab._evtREGCHANGED, 
+                    evt = contab.RegChangedEvent(contab._evtREGCHANGED,
                                                  self.GetId())
                     evt.SetEventObject(self)
                     evt.SetId(self.GetId())
@@ -215,7 +215,7 @@ class GridMastro(dbglib.DbGridColoriAlternati):
                 event.Skip()
         except:
             pass
-    
+
     def UpdateGrid(self):
         self.ChangeData(self.dbmas.GetMastro().GetRecordset())
 
@@ -227,37 +227,37 @@ class _PdcInterrMixin(object):
     panel = None
     panmastro = None
     pref = None
-    
+
     def __init__(self, baseclass):
         object.__init__(self)
         self.baseclass = baseclass
         self.preftab = 0
-    
+
     def SetPref(self, pref):
         self.preftab = pref
-    
+
     def InitControls(self, *args, **kwargs):
         self.baseclass.InitControls(self, *args, **kwargs)
-        
+
         ci = lambda x: self.FindWindowById(x)
         nb = ci(rel_wdr.ID_WORKZONE)
-        
+
         if getattr(Env.Azienda.Login.userdata, 'can_contabint', True):
             p = aw.Panel(nb)
             nb.AddPage(p, "Mastro")
             self.preftab = nb.GetPageCount()
-        
+
         self.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanging, nb)
-    
+
     def UpdateDataControls(self, *args, **kwargs):
         self.baseclass.UpdateDataControls(self, *args, **kwargs)
         self.TestForUpdates()
-    
+
     def OnPageChanging(self, event):
         nb = event.GetEventObject()
         self.TestForUpdates(event.GetSelection())
         event.Skip()
-    
+
     def TestForUpdates(self, ntab=None, mastroaddfilter=None):
         nb = self.FindWindowById(rel_wdr.ID_WORKZONE)
         if ntab is None:
@@ -292,49 +292,49 @@ VIEW_PROGR = 1
 VIEW_MODE = VIEW_SALDI
 
 class PdcMastroPanel(aw.Panel):
-    
+
     def __init__(self, parent):
         aw.Panel.__init__(self, parent)
         wdr.PdcMastroFunc(self)
-        
+
         ci = lambda x: self.FindWindowById(x)
-        
+
         ci(wdr.ID_MASSEGNO).SetSelection(0)
-        
+
         pp = ci(wdr.ID_MASPANGRID)
         self.gridmas = GridMastro(pp)
         self.viewmode = VIEW_MODE
         self.pdcid = None
         self.UpdateButtonView()
-        
+
         pe = ProgrEsercizio()
         ec = pe.GetEsercizioInCorso()
         ds = pe.GetEsercizioDates(ec)[0]
         self.FindWindowById(wdr.ID_MAS_DATINI).SetValue(ds)
         self.gridmas.dbmas.SetDateStart(ds)
-        
+
         for cid, col in ((wdr.ID_PANCOLMASD, self.gridmas._fgcold),
                          (wdr.ID_PANCOLMASA, self.gridmas._fgcola),
                          (wdr.ID_PANCOLMASI, self.gridmas._fgcoli),):
             ci(cid).SetBackgroundColour(col)
-        
+
         for evt, func, cid in (
             (wx.EVT_BUTTON, self.OnUpdateFilters, wdr.ID_MASBTNUPD),
             (wx.EVT_BUTTON, self.OnChangeTotals,  wdr.ID_MASBTNPRO),
             (wx.EVT_BUTTON, self.OnStampa,        wdr.ID_MASBTNPRT),
             (wx.EVT_BUTTON, self.OnResetImporti,  wdr.ID_MASRESET)):
             self.Bind(evt, func, id=cid)
-        
+
         self.Bind(contab.EVT_REGCHANGED, self.OnUpdateFilters)
-        
+
         def cn(x):
             return self.FindWindowByName(x)
-        
+
         self.Bind(wx.EVT_CHOICE, self.OnEsercizioChanged, cn('masesercizio'))
-        
+
         self.HelpBuilder_SetDir('anag.pdcrel')
         self.SetName('MastroPage')
-    
+
     def OnResetImporti(self, event):
         def cn(x):
             return self.FindWindowByName(x)
@@ -342,7 +342,7 @@ class PdcMastroPanel(aw.Panel):
             cn(name).SetValue(0)
         cn('massegno').SetSelection(0)
         event.Skip()
-    
+
     def OnEsercizioChanged(self, event):
         cn = self.FindWindowByName
         pe = ProgrEsercizio()
@@ -351,44 +351,44 @@ class PdcMastroPanel(aw.Panel):
         self.UpdateFilters()
         self.UpdateGrid(self.pdcid)
         event.Skip()
-    
+
     def OnStampa(self, event):
         self.StampaMastrino()
         event.Skip()
-    
+
     def OnUpdateFilters(self, event):
         self.UpdateFilters()
         self.UpdateGrid(self.pdcid)
         event.Skip()
-    
+
     def OnChangeTotals(self, event):
         self.viewmode = 1-self.viewmode
         self.UpdateButtonView()
         self.UpdateTotals()
         event.Skip()
-    
+
     def UpdateButtonView(self):
         if self.viewmode == VIEW_SALDI:
             label = "Progressivi"
         else:
             label = "Saldi"
         self.FindWindowById(wdr.ID_MASBTNPRO).SetLabel(label)
-    
+
     def UpdateFilters(self, addfilter=None):
-        
+
         cn = lambda x: self.FindWindowByName(x)
-        
+
         pdc = self.gridmas.dbmas
         pdc.SetRigheIva(cn('masincrigiva').GetValue())
         if addfilter:
             pdc.GetMastro().AddBaseFilter(addfilter)
         pdc.ClearMovFilters()
-        
+
         e, ds, de = map(lambda x: cn(x).GetValue(), 'masesercizio masdatini masdatmov'.split())
         pdc.SetDateStart(ds, esercizio=e)
         pdc.SetDateEnd(de)
         pdc.SetEsercizio(e)
-        
+
         for tab, field, name, op in (\
             ("reg",    "id_caus",   "masid_caus",   "=" ),\
             ("reg",    "id_regiva", "masid_regiva", "=" ),\
@@ -396,7 +396,7 @@ class PdcMastroPanel(aw.Panel):
             val = cn(name).GetValue()
             if val is not None:
                 pdc.AddMovFilter("%s.%s%s%%s" % (tab, field, op), val)
-        
+
         tipreg_filt = []
         if cn('mastipregacq').IsChecked():
             tipreg_filt.append('regiva.tipo="A"')
@@ -409,7 +409,7 @@ class PdcMastroPanel(aw.Panel):
         if tipreg_filt:
             tipreg_filt = ' OR '.join(tipreg_filt)
             pdc.AddMovFilter(tipreg_filt)
-        
+
         for n, op in ((1, '>='),
                       (2, '<=')):
             v = cn('maslimimp%d'%n).GetValue()
@@ -418,7 +418,7 @@ class PdcMastroPanel(aw.Panel):
         s = cn('massegno').GetSelection()
         if s>0:
             pdc.AddMovFilter(r"mov.segno=%s", "DA"[s-1])
-    
+
     def UpdateGrid(self, pdcid=None, addfilter=None):
         if True:#pdcid is not None:
             self.UpdateFilters(addfilter=addfilter)
@@ -460,20 +460,20 @@ class PdcMastroPanel(aw.Panel):
 
 
 class ScadenzarioColorsGridMixin(object):
-    
+
     def __init__(self, dbpcf):
-        
+
         object.__init__(self)
-        
+
         def cn(db, col):
             return db._GetFieldIndex(col, inline=True)
-        
+
         self.colsca, self.colimp, self.colpar, self.colins =\
             [cn(dbpcf, x) for x in ('datscad',
                                     'imptot',
                                     'imppar',
                                     'insoluto')]
-        
+
         self._bcpag, self._bcasc, self._bcsca,\
         self._bcina, self._bcinp, self._bctot =\
             [bc.GetColour(c) for c in ('forestgreen', #pagato
@@ -482,7 +482,7 @@ class ScadenzarioColorsGridMixin(object):
                                        'orangered',   #insoluto attivo
                                        'magenta2',    #insoluto pagato
                                        'blue4')]      #totali di colonna
-    
+
     def ScadenzarioColorsGetAttr(self, rspcf, row, col, rscol, attr=gl.GridCellAttr):
         attr = dbglib.DbGridColoriAlternati.GetAttr(self, row, col, rscol, attr)
         fgcol = bc.NORMAL_FOREGROUND
@@ -516,31 +516,31 @@ class ScadenzarioColorsGridMixin(object):
 
 class GridScadenzario(dbglib.DbGridColoriAlternati,
                       ScadenzarioColorsGridMixin):
-    
+
     def __init__(self, parent, dbscad):
-        
-        dbglib.DbGridColoriAlternati.__init__(self, parent, -1, 
+
+        dbglib.DbGridColoriAlternati.__init__(self, parent, -1,
                                               size=parent.GetClientSizeTuple())
-        
+
         self.dbscad = dbscad
-        
+
         def cn(db, col):
             return db._GetFieldIndex(col, inline=True)
-        
+
         pdc = self.dbscad
         pcf = pdc.GetPartite()
         cau = pcf.caus
         mpa = pcf.modpag
-        
+
         ScadenzarioColorsGridMixin.__init__(self, pcf)
-        
+
         _NUM = gl.GRID_VALUE_NUMBER
         _STR = gl.GRID_VALUE_STRING
         _DAT = gl.GRID_VALUE_DATETIME
         _CHK = gl.GRID_VALUE_BOOL
         _FLV = bt.GetValIntMaskInfo()
         _RIB = _CHK+":1,0"
-        
+
         cols = (\
             ( 80, (cn(pcf, "datscad"), "Scadenza",      _DAT, True )),
             ( -1, (cn(pcf, "riba"),    "R.B.",          _RIB, True )),
@@ -559,24 +559,24 @@ class GridScadenzario(dbglib.DbGridColoriAlternati,
         self._cols=cols
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
-        
+
         nci = pcf._GetFieldIndex('imptot')
         ncp = pcf._GetFieldIndex('imppar')
-        
+
         canedit = False
         canins = False
-        
+
         rs = pcf.GetRecordset()
-        
+
         self.SetData( rs, colmap, canedit, canins)
-        
+
         self.AddTotalsRow(3,'Totali:',(cn(pcf, "saldo"),
                                        cn(pcf, "imptot"),
                                        cn(pcf, "imppar")))
-        
+
         map(lambda c:\
             self.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
-        
+
 #        self.SetFitColumn(-4) #note
         self.SetAnchorColumns(8, (3, 5))
         self.AutoSizeColumns()
@@ -586,16 +586,16 @@ class GridScadenzario(dbglib.DbGridColoriAlternati,
         sz.Add(self, 0, wx.GROW|wx.ALL, 0)
         parent.SetSizer(sz)
         sz.SetSizeHints(parent)
-        
+
         self.Bind(gl.EVT_GRID_CELL_LEFT_DCLICK, self.OnDblClick)
-    
+
     def GetAttr(self, row, col, rscol, attr=gl.GridCellAttr):
         rspcf = self.dbscad.GetPartite().GetRecordset()
         return self.ScadenzarioColorsGetAttr(rspcf, row, col, rscol, attr)
-    
+
     def UpdateGrid(self):
         self.ChangeData(self.dbscad.GetPartite().GetRecordset())
-    
+
     def OnDblClick(self, event):
         row = event.GetRow()
         if self.IsOnTotalRow(row):
@@ -620,21 +620,21 @@ class GridScadenzario(dbglib.DbGridColoriAlternati,
 
 
 class ScadenzarioColorsPanelMixin(object):
-    
+
     def __init__(self, gridpcf):
-        
+
         object.__init__(self)
-        
+
         def ci(cid):
             return self.FindWindowById(cid)
-        
+
         for cid, col in ((wdr.ID_PANCOLSCAPAG, gridpcf._bcpag),
                          (wdr.ID_PANCOLSCAASC, gridpcf._bcasc),
                          (wdr.ID_PANCOLSCASCA, gridpcf._bcsca),
                          (wdr.ID_PANCOLSCAINA, gridpcf._bcina),
                          (wdr.ID_PANCOLSCAINP, gridpcf._bcinp)):
             ci(cid).SetBackgroundColour(col)
-        
+
 
 
 # ------------------------------------------------------------------------------
@@ -654,29 +654,29 @@ class EmailPreviewEvent(wx.PyCommandEvent):
 
 
 class CliForEmailsGrid(dbglib.DbGridColoriAlternati):
-    
+
     emaid = None
-    
+
     def __init__(self, parent, dbema):
-        
-        dbglib.DbGridColoriAlternati.__init__(self, parent, -1, 
+
+        dbglib.DbGridColoriAlternati.__init__(self, parent, -1,
                                               size=parent.GetClientSizeTuple())
-        
+
         self.dbema = dbema
-        
+
         def cn(db, col):
             return db._GetFieldIndex(col, inline=True)
-        
+
         ema = self.dbema
         doc = ema.doc
         tpd = doc.tipdoc
-        
+
         _NUM = gl.GRID_VALUE_NUMBER
         _STR = gl.GRID_VALUE_STRING
         _DAT = gl.GRID_VALUE_DATETIME
         _DTM = gl.GRID_VALUE_DATETIME+":with:time"
         _CHK = gl.GRID_VALUE_BOOL
-        
+
         cols = (\
             (140, (cn(ema, "datsend"), "Spedizione", _DTM, True )),
             ( 40, (cn(tpd, "codice"),  "Cod.",       _STR, True )),
@@ -689,12 +689,12 @@ class CliForEmailsGrid(dbglib.DbGridColoriAlternati):
             )
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
-        
+
         self.SetData(ema.GetRecordset(), colmap)
-        
+
         map(lambda c:\
             self.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
-        
+
         self.SetFitColumn(5)
         self.AutoSizeColumns()
         sz = wx.FlexGridSizer(1,0,0,0)
@@ -703,9 +703,9 @@ class CliForEmailsGrid(dbglib.DbGridColoriAlternati):
         sz.Add(self, 0, wx.GROW|wx.ALL, 0)
         parent.SetSizer(sz)
         sz.SetSizeHints(parent)
-        
+
         self.Bind(gl.EVT_GRID_CMD_SELECT_CELL, self.OnCellSelected)
-    
+
     def OnCellSelected(self, event):
         row = event.GetRow()
         ema = self.dbema
@@ -724,7 +724,7 @@ class CliForEmailsGrid(dbglib.DbGridColoriAlternati):
 
 
 class CliForEmailsPanel(wx.Panel):
-    
+
     def __init__(self, *args, **kwargs):
         wx.Panel.__init__(self, *args, **kwargs)
         wdr.DocsEmailFunc(self)
@@ -734,14 +734,14 @@ class CliForEmailsPanel(wx.Panel):
         self.gridemail = CliForEmailsGrid(cn('pangridemail'), self.dbema)
         self.Bind(EVT_EMAILPREVIEW, self.OnPreview)
         self.Bind(wx.EVT_BUTTON, self.OnOpenPdf, cn('butemailopenpdf'))
-    
+
     def OnOpenPdf(self, event):
         ema = self.dbema
         row = self.gridemail.GetSelectedRows()[0]
         if 0 <= row < ema.RowsCount():
             self.OpenPdf(ema.id)
             event.Skip()
-    
+
     def OpenPdf(self, email_id):
         ema = adb.DbTable(bt.TABNAME_DOCSEMAIL, 'emails')
         if not ema.Get(email_id) or not ema.OneRow():
@@ -754,11 +754,11 @@ class CliForEmailsPanel(wx.Panel):
         tmpfile.write(ema.documento)
         tmpfile.close()
         os.startfile(tmpname)
-    
+
     def OnPreview(self, event):
         self.PreviewMessage(event.GetEmailId())
         event.Skip()
-    
+
     def PreviewMessage(self, email_id):
         ema = adb.DbTable(bt.TABNAME_DOCSEMAIL, 'emails')
         ema.Get(email_id)
@@ -776,7 +776,7 @@ class CliForEmailsPanel(wx.Panel):
                 c.SetValue(v or '')
             else:
                 c.SetLabel(v or '')
-    
+
     def UpdateGrid(self, pdcid=None):
         if True:#pdcid is not None:
             self.pdcid = pdcid
@@ -790,7 +790,7 @@ class CliForEmailsPanel(wx.Panel):
         g.SetGridCursor(0, 0)
         g.MakeCellVisible(0, 0)
         self.PreviewMessage(db.id)
-        
+
 
 
 # ------------------------------------------------------------------------------
@@ -800,36 +800,36 @@ class _PdcCliForInterrMixin(_PdcInterrMixin):
     panscad = None
     panmag = None
     panemail = None
-    
+
     #totali x test quadratura totale partite/saldo contabile
     _pcfquadcont_pcf = 0 #totale partite
     _pcfquadcont_mas = 0 #saldo contabile
-    
+
     def InitControls(self, *args, **kwargs):
-        
+
         _PdcInterrMixin.InitControls(self, *args, **kwargs)
-        
+
         nb = self.FindWindowById(rel_wdr.ID_WORKZONE)
-        
+
         if getattr(Env.Azienda.Login.userdata, 'can_contabsca', True):
             p = aw.Panel(nb)
             nb.AddPage(p, "Scadenzario")
-        
+
         if getattr(Env.Azienda.Login.userdata, 'can_magazzint', True):
             p = aw.Panel(nb)
             nb.AddPage(p, "Magazzino")
-        
+
         if bt.MAGDEMSENDFLAG:
             p = aw.Panel(nb)
             nb.AddPage(p, "Email")
-    
+
     def TestForUpdates(self, ntab=None):
-        
+
         _PdcInterrMixin.TestForUpdates(self, ntab)
         nb = self.FindWindowById(rel_wdr.ID_WORKZONE)
         if ntab is None:
             ntab = nb.GetSelection()
-            
+
         if   "Scadenzario" in nb.GetPageText(ntab):
             if self.panscad is None:
                 wx.BeginBusyCursor()
@@ -842,7 +842,7 @@ class _PdcCliForInterrMixin(_PdcInterrMixin):
                     wx.EndBusyCursor()
             self.panscad.UpdateGrid(pdcid=self.db_recid)
             self.panscad.TestQuadCont()
-            
+
         elif "Magazzino" in nb.GetPageText(ntab):
             if self.panmag is None:
                 wx.BeginBusyCursor()
@@ -856,7 +856,7 @@ class _PdcCliForInterrMixin(_PdcInterrMixin):
                 finally:
                     wx.EndBusyCursor()
             self.panmag.UpdateGrids(pdcid=self.db_recid)
-        
+
         elif "Email" in nb.GetPageText(ntab):
             if self.panemail is None:
                 wx.BeginBusyCursor()
@@ -868,8 +868,8 @@ class _PdcCliForInterrMixin(_PdcInterrMixin):
                 finally:
                     wx.EndBusyCursor()
             self.panemail.UpdateGrid(pdcid=self.db_recid)
-            
-        
+
+
         return nb
 
 
@@ -878,14 +878,14 @@ class _PdcCliForInterrMixin(_PdcInterrMixin):
 
 class PdcScadenzarioPanel(aw.Panel,
                           ScadenzarioColorsPanelMixin):
-    
+
     def __init__(self, parent, cfm):
         aw.Panel.__init__(self, parent)
         self.cliformixin = cfm
         pt = wx.Panel(self, wdr.ID_PCFTOTALI)
         wdr.PcfTotaliFunc(pt)
         wdr.PdcScadenzarioFunc(self)
-        
+
         self.dbscad = dbc.PdcScadenzario(\
             today=Env.Azienda.Login.dataElab,\
             giorni_rb=30)
@@ -894,19 +894,19 @@ class PdcScadenzarioPanel(aw.Panel,
         else:
             tabanag = bt.TABNAME_FORNIT
         self.dbscad.AddJoin(tabanag, 'anag', idLeft='id', idRight='id')
-        
+
         ci = lambda x: self.FindWindowById(x)
-        
+
         pp = ci(wdr.ID_PCFPANGRID)
         self.gridpcf = GridScadenzario(pp, self.dbscad)
         self.pdcid = None
-        
+
         a = adb.DbTable(bt.TABNAME_CFGSETUP)
         if a.Retrieve('chiave=%s', 'scadord') and a.OneRow():
             ci(wdr.ID_PCFORDERSCA).SetValue(a.flag)
-        
+
         ScadenzarioColorsPanelMixin.__init__(self, self.gridpcf)
-        
+
         for cid, evt, func in (
             (wdr.ID_PCFBUTUPD,    wx.EVT_BUTTON,   self.OnUpdateFilters),
             (wdr.ID_PCFONLYINSO,  wx.EVT_CHECKBOX, self.OnUpdateFilters),
@@ -915,33 +915,33 @@ class PdcScadenzarioPanel(aw.Panel,
             (wdr.ID_PCFBTNPRT,    wx.EVT_BUTTON,   self.OnStampa)):
             self.Bind(evt, func, id=cid)
         self.Bind(contab.EVT_PCFCHANGED, self.OnPcfChanged)
-        
+
         self.HelpBuilder_SetDir('anag.pdcrel_CliFor')
         self.SetName('CliForScadPage')
 
     def OnStampa(self, event):
         self.StampaScadenzario()
         event.Skip()
-    
+
     def StampaScadenzario(self):
         db = self.gridpcf.dbscad
         rpt.Report(self, db, "Scadenzario clienti-fornitori", testrec=db.mastro)
-    
+
     def OnPcfChanged(self, event):
         self.UpdateGrid(pdcid=self.pdcid)
         self.TestQuadCont()
         event.Skip()
-    
+
     def OnUpdateFilters(self, event):
         self.UpdateGrid(self.pdcid)
         event.Skip()
-    
+
     def UpdateFilters(self):
-        
+
         pdc = self.dbscad
-        
+
         pdc.ClearPcfFilters()
-        
+
         for name, field, op in (\
             ('pcfdatdoc1', 'datdoc',    '>='),
             ('pcfdatdoc2', 'datdoc',    '<='),
@@ -956,7 +956,7 @@ class PdcScadenzarioPanel(aw.Panel,
                            ('pcfonlyinso', 'insoluto=1'),):
             if self.FindWindowByName(name).IsChecked():
                 pdc.AddPcfFilter(filt)
-        
+
         pcf = pdc.mastro
         pcf.ClearOrders()
         if self.FindWindowByName('pcfordersca').GetValue() == "D":
@@ -965,7 +965,7 @@ class PdcScadenzarioPanel(aw.Panel,
             pcf.AddOrder('mastro.datscad')
         pcf.AddOrder('mastro.numdoc')
         pcf.AddOrder('mastro.numdoc')
-    
+
     def UpdateGrid(self, pdcid=None):
         if True:#pdcid is not None:
             self.UpdateFilters()
@@ -1005,7 +1005,7 @@ class PdcScadenzarioPanel(aw.Panel,
              (sintesi.total_riba_ins_scaduto  or 0)),\
             ):
             self.FindWindowByName("pcf%s" % name).SetValue(total)
-    
+
     def TestQuadCont(self):
         if not self.pdcid: return
         cfm = self.cliformixin
@@ -1032,7 +1032,7 @@ class PdcScadenzarioPanel(aw.Panel,
         ctrsquad.Show(squad)
         if squad:
             ctrsquad.SetSize((180,23)) #workaround, dopo show rimane width=0 boh
-    
+
     def OnVediSquadCont(self, event):
         dlg = aw.Dialog(self, -1, "Squadratura")
         wdr.PcfShowSquadContFunc(dlg)
@@ -1071,11 +1071,11 @@ class PdcScadenzarioPanel(aw.Panel,
 
 
 class CasseInterrPanel(anag.casse.CassePanel, _PdcInterrMixin):
-    
+
     def __init__(self, *args, **kwargs):
         anag.casse.CassePanel.__init__(self, *args, **kwargs)
         _PdcInterrMixin.__init__(self, anag.casse.CassePanel)
-    
+
     def InitControls(self, *args, **kwargs):
         _PdcInterrMixin.InitControls(self, *args, **kwargs)
 
@@ -1119,11 +1119,11 @@ class CasseInterrDialog(ga._AnagDialog, _PdcInterrFrameMixin):
 
 
 class BancheInterrPanel(anag.banche.BanchePanel, _PdcInterrMixin):
-    
+
     def __init__(self, *args, **kwargs):
         anag.banche.BanchePanel.__init__(self, *args, **kwargs)
         _PdcInterrMixin.__init__(self, anag.banche.BanchePanel)
-    
+
     def InitControls(self, *args, **kwargs):
         _PdcInterrMixin.InitControls(self, *args, **kwargs)
 
@@ -1167,32 +1167,32 @@ class BancheInterrDialog(ga._AnagDialog, _PdcInterrFrameMixin):
 
 
 class EffettiPresentatiRiepDataGrid(dbglib.DbGridColoriAlternati):
-    
+
     def __init__(self, parent, dbriep):
-        
-        dbglib.DbGridColoriAlternati.__init__(self, parent, -1, 
+
+        dbglib.DbGridColoriAlternati.__init__(self, parent, -1,
                                               size=parent.GetClientSizeTuple())
-        
+
         riep = dbriep
-        
+
         def cn(col):
             return riep._GetFieldIndex(col, inline=True)
-        
+
         _NUM = gl.GRID_VALUE_NUMBER
         _DAT = gl.GRID_VALUE_DATETIME
-        
+
         cols = (\
             ( 80, (cn("effdate"),       "Data", _DAT, True )),
             ( 40, (cn("count_effetti"), "Num.", _NUM, True )),
-        )                                           
+        )
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
-        
+
         self.SetData(riep.GetRecordset(), colmap)
-        
+
         map(lambda c:\
             self.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
-        
+
         self.SetFitColumn(1)
         self.AutoSizeColumns()
         sz = wx.FlexGridSizer(1,0,0,0)
@@ -1201,9 +1201,9 @@ class EffettiPresentatiRiepDataGrid(dbglib.DbGridColoriAlternati):
         sz.Add(self, 0, wx.GROW|wx.ALL, 0)
         parent.SetSizer(sz)
         sz.SetSizeHints(parent)
-        
+
         self.Bind(gl.EVT_GRID_CELL_LEFT_CLICK, self.OnRigaSel)
-    
+
     def OnRigaSel(self, event):
         event.Skip()
 
@@ -1213,30 +1213,30 @@ class EffettiPresentatiRiepDataGrid(dbglib.DbGridColoriAlternati):
 
 class EffettiPresentatiGrid(dbglib.DbGridColoriAlternati,
                             ScadenzarioColorsGridMixin):
-    
+
     datpres = None
     def SetDatPres(self, dp):
         self.datpres = dp
-    
+
     def __init__(self, parent, dbpcf):
-        
-        dbglib.DbGridColoriAlternati.__init__(self, parent, -1, 
+
+        dbglib.DbGridColoriAlternati.__init__(self, parent, -1,
                                               size=parent.GetClientSizeTuple())
         self.dbpcf = dbpcf
         pcf = dbpcf
         pdc = pcf.pdc
         cau = pcf.caus
         mpa = pcf.modpag
-        
+
         ScadenzarioColorsGridMixin.__init__(self, self.dbpcf)
-        
+
         def cn(tab, col):
             return tab._GetFieldIndex(col, inline=True)
-        
+
         _STR = gl.GRID_VALUE_STRING
         _DAT = gl.GRID_VALUE_DATETIME
         _IMP = bt.GetValIntMaskInfo()
-        
+
         cols = (\
             ( 80, (cn(pcf, "datscad"),  "Scadenza",       _DAT, True)),
             ( 60, (cn(pdc, "codice"),   "Cod.",           _STR, True)),
@@ -1253,19 +1253,19 @@ class EffettiPresentatiGrid(dbglib.DbGridColoriAlternati,
             (  1, (cn(cau, "id"),       "#cau",           _STR, True)),
             (  1, (cn(pdc, "id"),       "#pdc",           _STR, True)),
             (  1, (cn(mpa, "id"),       "#mpa",           _STR, True)),
-        )                                           
+        )
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
-        
+
         self.SetData(pcf.GetRecordset(), colmap)
-        
+
         self.AddTotalsRow(2, 'Totali:', (cn(pcf, "impeff"),
                                          cn(pcf, "imptot"),
                                          cn(pcf, "imppar"),
                                          cn(pcf, "saldo"),))
         map(lambda c:\
             self.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
-        
+
         self.SetAnchorColumns(3, 2)
 #        self.SetFitColumn(2)
         self.AutoSizeColumns()
@@ -1275,13 +1275,13 @@ class EffettiPresentatiGrid(dbglib.DbGridColoriAlternati,
         sz.Add(self, 0, wx.GROW|wx.ALL, 0)
         parent.SetSizer(sz)
         sz.SetSizeHints(parent)
-        
+
         self.Bind(gl.EVT_GRID_CELL_LEFT_DCLICK, self.OnApriPcf)
-    
+
     def GetAttr(self, row, col, rscol, attr=gl.GridCellAttr):
         rspcf = self.dbpcf.GetRecordset()
         return self.ScadenzarioColorsGetAttr(rspcf, row, col, rscol, attr)
-    
+
     def OnApriPcf(self, event):
         row = event.GetRow()
         pcf = self.dbpcf
@@ -1301,7 +1301,7 @@ class EffettiPresentatiGrid(dbglib.DbGridColoriAlternati,
 
 class EffettiPresentatiPanel(wx.Panel,
                              ScadenzarioColorsPanelMixin):
-    
+
     pdcid = None
     pdccod = None
     pdcdes = None
@@ -1309,7 +1309,7 @@ class EffettiPresentatiPanel(wx.Panel,
         self.pdcid = pdcid
         self.pdccod = cod
         self.pdcdes = des
-    
+
     def __init__(self, *args, **kwargs):
         wx.Panel.__init__(self, *args, **kwargs)
         wdr.EffettiPresentatiFunc(self)
@@ -1323,20 +1323,20 @@ class EffettiPresentatiPanel(wx.Panel,
         ScadenzarioColorsPanelMixin.__init__(self, self.gridpcf)
         self.gridriep.Bind(gl.EVT_GRID_CMD_SELECT_CELL, self.OnUpdatePcf)
         self.Bind(wx.EVT_BUTTON, self.OnPrint, cn('btn_pcfprt'))
-    
+
     def OnPrint(self, event):
         db = self.dbpcf
         db._info.contoef = '%s %s' % (self.pdccod, self.pdcdes)
         db._info.datpres = self.gridpcf.datpres
         rpt.Report(self, self.dbpcf, "Lista effetti presentati")
         event.Skip()
-    
+
     def UpdateFilters(self):
         r = self.dbriep
         r.ClearFilters()
         r.AddFilter('pcf.id_effpdc=%s', self.pdcid)
         r.Retrieve()
-    
+
     def OnUpdatePcf(self, event):
         riep = self.dbriep
         row = event.GetRow()
@@ -1352,7 +1352,7 @@ class EffettiPresentatiPanel(wx.Panel,
         self.gridpcf.ChangeData(pcf.GetRecordset())
         self.gridpcf.SetDatPres(riep.effdate)
         event.Skip()
-    
+
     def UpdateGrid(self):
         self.gridriep.ChangeData(self.dbriep.GetRecordset())
 
@@ -1361,13 +1361,13 @@ class EffettiPresentatiPanel(wx.Panel,
 
 
 class EffettiInterrPanel(anag.effetti.EffettiPanel, _PdcInterrMixin):
-    
+
     panpres = None
-    
+
     def __init__(self, *args, **kwargs):
         anag.effetti.EffettiPanel.__init__(self, *args, **kwargs)
         _PdcInterrMixin.__init__(self, anag.effetti.EffettiPanel)
-    
+
     def InitControls(self, *args, **kwargs):
         _PdcInterrMixin.InitControls(self, *args, **kwargs)
         nb = self.FindWindowById(rel_wdr.ID_WORKZONE)
@@ -1375,12 +1375,12 @@ class EffettiInterrPanel(anag.effetti.EffettiPanel, _PdcInterrMixin):
         nb.AddPage(p, "Presentazioni")
 
     def TestForUpdates(self, ntab=None):
-        
+
         _PdcInterrMixin.TestForUpdates(self, ntab)
         nb = self.FindWindowById(rel_wdr.ID_WORKZONE)
         if ntab is None:
             ntab = nb.GetSelection()
-            
+
         if "Presentazioni" in nb.GetPageText(ntab):
             if self.panpres is None:
                 wx.BeginBusyCursor()
@@ -1393,14 +1393,14 @@ class EffettiInterrPanel(anag.effetti.EffettiPanel, _PdcInterrMixin):
                     wx.EndBusyCursor()
             def cn(x):
                 return self.FindWindowByName(x)
-            self.panpres.SetPdcId(self.db_recid, 
+            self.panpres.SetPdcId(self.db_recid,
                                   cn('codice').GetValue(),
                                   cn('descriz').GetValue())
             self.panpres.UpdateFilters()
             self.panpres.UpdateGrid()
-        
+
         return nb
-    
+
     def UpdateDataControls(self, *args, **kwargs):
         return _PdcInterrMixin.UpdateDataControls(self, *args, **kwargs)
 
@@ -1441,18 +1441,18 @@ class EffettiInterrDialog(ga._AnagDialog, _PdcInterrFrameMixin):
 
 
 class ClientiInterrPanel(anag.clienti.ClientiPanel, _PdcCliForInterrMixin):
-    
+
     def __init__(self, *args, **kwargs):
         anag.clienti.ClientiPanel.__init__(self, *args, **kwargs)
         _PdcCliForInterrMixin.__init__(self, anag.clienti.ClientiPanel)
         self.panacconti = None
-    
+
     def InitControls(self, *args, **kwargs):
         _PdcCliForInterrMixin.InitControls(self, *args, **kwargs)
         if bt.MAGGESACC:
             self.InitAcconti()
             self.LoadAcconti()
-    
+
     def InitAcconti(self):
         nb = self.FindWindowByName('workzone')
         n = 0
@@ -1470,11 +1470,11 @@ class ClientiInterrPanel(anag.clienti.ClientiPanel, _PdcCliForInterrMixin):
                 rs.Hide()
             nb.InsertPage(n+1, p, 'Acconti')
             self.panacconti = p
-    
+
     def LoadAcconti(self):
         if self.panacconti is not None:
             self.panacconti.SetPdcId(self.db_recid)
-    
+
     def UpdateDataControls(self, *args, **kwargs):
         out = _PdcCliForInterrMixin.UpdateDataControls(self, *args, **kwargs)
         self.LoadAcconti()
@@ -1509,19 +1509,41 @@ class ClientiInterrDialog(ga._AnagDialog, _PdcInterrFrameMixin):
             kwargs['title'] = FRAME_TITLE_CLI
         ga._AnagDialog.__init__(self, *args, **kwargs)
         _PdcInterrFrameMixin.__init__(self)
-        self.LoadAnagPanel(ClientiInterrPanel(self, -1))
+
+        tipana=self.GetTipoAnagrafico()
+
+        self.LoadAnagPanel(ClientiInterrPanel(self, -1, tipana=tipana))
         TestInitialFrameSize(self)
+
+
+    def GetTipoAnagrafico(self):
+        tipana=None
+        try:
+            idTipo=self.Parent.Parent.Parent.Parent.dbdoc.config.id_pdctip
+            dbpdctip = adb.DbTable(bt.TABNAME_PDCTIP, 'tipana', writable=False)
+            dbpdctip.AddJoin(bt.TABNAME_PDCRANGE, 'pdcrange')
+            dbpdctip.Retrieve('tipana.id=%s' % idTipo )
+            if dbpdctip.OneRow():
+                print dbpdctip.id, dbpdctip.descriz, dbpdctip.codice, dbpdctip.id_pdcrange
+                tipana=dbpdctip.codice
+        except:
+            pass
+        return tipana
+
+
+
+
 
 
 # ------------------------------------------------------------------------------
 
 
 class FornitInterrPanel(anag.fornit.FornitPanel, _PdcCliForInterrMixin):
-    
+
     def __init__(self, *args, **kwargs):
         anag.fornit.FornitPanel.__init__(self, *args, **kwargs)
         _PdcCliForInterrMixin.__init__(self, anag.fornit.FornitPanel)
-    
+
     def InitControls(self, *args, **kwargs):
         _PdcCliForInterrMixin.InitControls(self, *args, **kwargs)
 
@@ -1565,17 +1587,17 @@ class FornitInterrDialog(ga._AnagDialog, _PdcInterrFrameMixin):
 
 
 class PdcInterrPanel(anag.pdc.PdcPanel, _PdcInterrMixin):
-    
+
     def __init__(self, *args, **kwargs):
         anag.pdc.PdcPanel.__init__(self, *args, **kwargs)
         _PdcInterrMixin.__init__(self, anag.pdc.PdcPanel)
-    
+
     def InitControls(self, *args, **kwargs):
         _PdcInterrMixin.InitControls(self, *args, **kwargs)
 
     def UpdateDataControls(self, *args, **kwargs):
         return _PdcInterrMixin.UpdateDataControls(self, *args, **kwargs)
-    
+
 
 # ------------------------------------------------------------------------------
 
