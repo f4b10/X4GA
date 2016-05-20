@@ -6,17 +6,17 @@
 # Copyright:    (C) 2011 Astra S.r.l. C.so Cavallotti, 122 18038 Sanremo (IM)
 # ------------------------------------------------------------------------------
 # This file is part of X4GA
-# 
+#
 # X4GA is free software: you can redistribute it and/or modify
 # it under the terms of the Affero GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # X4GA is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
@@ -58,19 +58,19 @@ FRAME_TITLE = "Clienti"
 
 
 class ScontiCategoriaGrid(dbglib.ADB_Grid):
-    
+
     def __init__(self, parent, dbscc):
-        
+
         dbglib.ADB_Grid.__init__(self, parent, db_table=dbscc, can_edit=True, can_insert=True, on_menu_select='row')
-        
+
         self.dbscc = dbscc
         self.id_pdc = None
-        
+
         scc = dbscc
         cat = dbscc.catart
         def cn(tab, col):
             return tab._GetFieldIndex(col, inline=True)
-        self.AddColumn(cat, 'codice',  'Cod.', col_width=40, is_editable=True, 
+        self.AddColumn(cat, 'codice',  'Cod.', col_width=40, is_editable=True,
                        linktable_info={'class':   alib.LinkTableCatArt,
                                        'col_id':  cn(scc, 'id_catart'),
                                        'col_cod': cn(cat, 'codice'),
@@ -80,15 +80,15 @@ class ScontiCategoriaGrid(dbglib.ADB_Grid):
             self.AddColumn(scc, 'sconto%d'%n, 'Sc.%%%d'%n, col_type=self.TypeFloat(2, 2), is_editable=True)
         self.AddColumn(scc, 'id', '#scc', col_width=1)
         self.AddColumn(scc, 'id', '#cat', col_width=1)
-        
+
         self.CreateGrid()
-        
+
         self.AppendContextMenuVoice('Scheda categoria', self.OnSchedaCatArt)
         self.AppendContextMenuVoice('Elimina sconto', self.OnDeleteRow)
-    
+
     def SetPdc(self, idpdc):
         self.id_pdc = idpdc
-    
+
     def OnSchedaCatArt(self, event):
         row = self.GetSelectedRows()[0]
         if 0<=row<self.dbscc.RowsCount():
@@ -99,12 +99,12 @@ class ScontiCategoriaGrid(dbglib.ADB_Grid):
             d.ShowModal()
             d.Destroy()
         event.Skip()
-    
+
     def OnDeleteRow(self, event):
         row = self.GetSelectedRows()[0]
         self.DeleteRow(row)
         event.Skip()
-    
+
     def CreateNewRow(self):
         dbglib.ADB_Grid.CreateNewRow(self)
         self.db_table.id_pdc = self.id_pdc
@@ -114,69 +114,69 @@ class ScontiCategoriaGrid(dbglib.ADB_Grid):
 
 
 class VarListGrid(dbglib.ADB_Grid):
-    
+
     def __init__(self, parent, dbvli):
-        
+
         dbglib.ADB_Grid.__init__(self, parent, db_table=dbvli, can_edit=True, can_insert=True, on_menu_select='row')
-        
+
         self.dbvli = dbvli
         self.id_cliente = None
-        
+
         vli = dbvli
         fornit = dbvli.fornit
         marart = dbvli.marart
         catart = dbvli.catart
         gruart = dbvli.gruart
         tiplist = dbvli.tiplist
-        
+
         def cn(tab, col):
             return tab._GetFieldIndex(col, inline=True)
-        
+
         fit = True
-        
+
         if bt.MAGVLIFOR:
-            self.AddColumn(fornit, 'codice',  'Cod.', col_width=50, is_editable=True, 
+            self.AddColumn(fornit, 'codice',  'Cod.', col_width=50, is_editable=True,
                            linktable_info={'class':   alib.LinkTableFornit,
                                            'col_id':  cn(vli, 'id_fornit'),
                                            'col_cod': cn(fornit, 'codice'),
                                            'col_des': cn(fornit, 'descriz')})
             self.AddColumn(fornit, 'descriz', 'Fornitore', col_width=150, is_fittable=fit)
             fit = False
-        
+
         if bt.MAGVLIMAR:
-            self.AddColumn(marart, 'codice',  'Cod.', col_width=50, is_editable=True, 
+            self.AddColumn(marart, 'codice',  'Cod.', col_width=50, is_editable=True,
                            linktable_info={'class':   alib.LinkTableMarArt,
                                            'col_id':  cn(vli, 'id_marart'),
                                            'col_cod': cn(marart, 'codice'),
                                            'col_des': cn(marart, 'descriz')})
             self.AddColumn(marart, 'descriz', 'Marca', col_width=150, is_fittable=fit)
             fit = False
-        
+
         if bt.MAGVLICAT:
-            self.AddColumn(catart, 'codice',  'Cod.', col_width=50, is_editable=True, 
+            self.AddColumn(catart, 'codice',  'Cod.', col_width=50, is_editable=True,
                            linktable_info={'class':   alib.LinkTableCatArt,
                                            'col_id':  cn(vli, 'id_catart'),
                                            'col_cod': cn(catart, 'codice'),
                                            'col_des': cn(catart, 'descriz')})
             self.AddColumn(catart, 'descriz', 'Categoria', col_width=150, is_fittable=fit)
             fit = False
-        
+
         if bt.MAGVLIGRU:
-            self.AddColumn(gruart, 'codice',  'Cod.', col_width=50, is_editable=True, 
+            self.AddColumn(gruart, 'codice',  'Cod.', col_width=50, is_editable=True,
                            linktable_info={'class':   alib.LinkTableGruArt,
                                            'col_id':  cn(vli, 'id_gruart'),
                                            'col_cod': cn(gruart, 'codice'),
                                            'col_des': cn(gruart, 'descriz')})
             self.AddColumn(gruart, 'descriz', 'Gruppo', col_width=150, is_fittable=fit)
             fit = False
-        
-        self.AddColumn(tiplist, 'codice',  'Cod.', col_width=50, is_editable=True, 
+
+        self.AddColumn(tiplist, 'codice',  'Cod.', col_width=50, is_editable=True,
                        linktable_info={'class':   alib.LinkTableTipList,
                                        'col_id':  cn(vli, 'id_tiplist'),
                                        'col_cod': cn(tiplist, 'codice'),
                                        'col_des': cn(tiplist, 'descriz')})
         self.AddColumn(tiplist, 'descriz', 'Tipo listino', col_width=150)
-        
+
         self.AddColumn(vli, 'id',        '#vli', col_width=1)
         if bt.MAGVLIFOR:
             self.AddColumn(vli, 'id_fornit', '#for', col_width=1)
@@ -190,14 +190,14 @@ class VarListGrid(dbglib.ADB_Grid):
         if bt.MAGVLIGRU:
             self.AddColumn(vli, 'id_gruart', '#gru', col_width=1)
             self.AppendContextMenuVoice('Scheda gruppo', self.OnSchedaGruArt)
-        
+
         self.CreateGrid()
-        
+
         self.AppendContextMenuVoice('Elimina listino variabile', self.OnDeleteRow)
-    
+
     def SetPdc(self, idpdc):
         self.id_pdc = idpdc
-    
+
     def OnSchedaFornit(self, event):
         row = self.GetSelectedRows()[0]
         vli = self.dbvli
@@ -209,7 +209,7 @@ class VarListGrid(dbglib.ADB_Grid):
             d.ShowModal()
             d.Destroy()
         event.Skip()
-    
+
     def OnSchedaMarArt(self, event):
         row = self.GetSelectedRows()[0]
         vli = self.dbvli
@@ -221,7 +221,7 @@ class VarListGrid(dbglib.ADB_Grid):
             d.ShowModal()
             d.Destroy()
         event.Skip()
-    
+
     def OnSchedaCatArt(self, event):
         row = self.GetSelectedRows()[0]
         vli = self.dbvli
@@ -233,7 +233,7 @@ class VarListGrid(dbglib.ADB_Grid):
             d.ShowModal()
             d.Destroy()
         event.Skip()
-    
+
     def OnSchedaGruArt(self, event):
         row = self.GetSelectedRows()[0]
         vli = self.dbvli
@@ -245,12 +245,12 @@ class VarListGrid(dbglib.ADB_Grid):
             d.ShowModal()
             d.Destroy()
         event.Skip()
-    
+
     def OnDeleteRow(self, event):
         row = self.GetSelectedRows()[0]
         self.DeleteRow(row)
         event.Skip()
-    
+
     def CreateNewRow(self):
         dbglib.ADB_Grid.CreateNewRow(self)
         self.db_table.id_cliente = self.id_pdc
@@ -264,15 +264,23 @@ class ClientiPanel(pdcrel._CliForPanel):
     Gestione della tabella clienti.
     """
     def __init__(self, *args, **kwargs):
-        
-        self.pdctipo = "C"
+        tipana=None
+        try:
+            tipana=kwargs.pop('tipana')
+        except:
+            tipana=''
+        if tipana==None:
+            self.pdctipo = "C"
+        else:
+            self.pdctipo = tipana
+
         self.tabanag = Azienda.BaseTab.TABNAME_CLIENTI
         pdcrel._CliForPanel.__init__(self, *args, **kwargs)
-        
+
         self.anag_db_columns = [ c for c in Azienda.BaseTab.tabelle\
                                  [bt.TABSETUP_TABLE_CLIENTI]\
                                  [bt.TABSETUP_TABLESTRUCTURE] ]
-        
+
         self._sqlrelfrm +=\
             " LEFT JOIN %s AS agente   ON anag.id_agente=agente.id"\
             " LEFT JOIN %s AS zona     ON anag.id_zona=zona.id"\
@@ -285,7 +293,7 @@ class ClientiPanel(pdcrel._CliForPanel):
             " LEFT JOIN %s AS tiplist  ON anag.id_tiplist=tiplist.id"\
             " LEFT JOIN %s AS aliqiva  ON anag.id_aliqiva=aliqiva.id"\
             " LEFT JOIN %s AS bancapag ON anag.id_bancapag=bancapag.id"\
-            % (bt.TABNAME_AGENTI,                       
+            % (bt.TABNAME_AGENTI,
                bt.TABNAME_ZONE,
                'x4.stati',
                bt.TABNAME_CATCLI,
@@ -297,9 +305,9 @@ class ClientiPanel(pdcrel._CliForPanel):
                bt.TABNAME_ALIQIVA,
                bt.TABNAME_PDC,
            )
-        
+
         self._sqlrelcol += ', status.hidesearch'
-        
+
         self._valfilters['agente'] =   ['agente.codice',    None, None]
         self._valfilters['zona'] =     ['zona.codice',      None, None]
         self._valfilters['stato'] =    ['stato.codice',     None, None]
@@ -314,10 +322,10 @@ class ClientiPanel(pdcrel._CliForPanel):
         self._valfilters['citta'] =    ['anag.citta',       None, None]
         self._valfilters['prov'] =     ['anag.prov',        None, None]
         self._valfilters['note'] =     ['anag.note',        None, None]
-        self._cntfilters.append('citta')               
+        self._cntfilters.append('citta')
         self._cntfilters.append('note')
         self._hasfilters = True
-        
+
         self._Auto_AddKeys( { "pdctip_clienti": True,
                               "bilmas_clienti": True,
                               "bilcon_clienti": True,
@@ -327,7 +335,7 @@ class ClientiPanel(pdcrel._CliForPanel):
         self._auto_bilmas = getattr(self, "_auto_bilmas_clienti", None)
         self._auto_bilcon = getattr(self, "_auto_bilcon_clienti", None)
         self._auto_bilcee = getattr(self, "_auto_bilcee_clienti", None)
-        
+
         self.db_report = "Lista Clienti"
 
     def InitAnagCard(self, parent):
@@ -339,12 +347,12 @@ class ClientiPanel(pdcrel._CliForPanel):
         cn('allegcf').SetDataLink('allegcf', {True:  1, False: 0})
         cn('piva').SetStateControl(cn('nazione'))
         self.InitGrigliaPrezzi()
-        
+
         self.Bind(EVT_LINKTABCHANGED, self.OnPdcGrpChanged, cn('id_pdcgrp'))
         self.Bind(EVT_LINKTABCHANGED, self.OnStatoChanged, cn('id_stato'))
-        
+
         return p
-    
+
     def OnStatoChanged(self, event):
         cn = self.FindWindowByName
         cn('nazione').SetValue(cn('id_stato').GetVatPrefix())
@@ -353,11 +361,11 @@ class ClientiPanel(pdcrel._CliForPanel):
         if not sbl:
             cn('is_blacklisted').SetValue(0)
         event.Skip()
-    
+
     def OnPdcGrpChanged(self, event):
         self.LoadGriglia()
         event.Skip()
-    
+
     def GetLinkTableClass(self):
         return alib.LinkTableCliente
 
@@ -371,11 +379,11 @@ class ClientiPanel(pdcrel._CliForPanel):
         dlg.ShowModal()
         dlg.Destroy()
         event.Skip()
-    
+
     def InitControls(self, *args, **kwargs):
-        
+
         pdcrel._CliForPanel.InitControls(self, *args, **kwargs)
-        
+
         cn = self.FindWindowByName
         nb = cn('commzone')
         for n in range(nb.GetPageCount()):
@@ -390,26 +398,26 @@ class ClientiPanel(pdcrel._CliForPanel):
                     if c:
                         c.Hide()
                     nb.SetPageText(n, 'Sconti')
-        
+
         for n in range(9):
             if n+1>bt.MAGNUMSCO:
                 for prefix in 'labsco sconto'.split():
                     c = cn('%s%d' % (prefix, n+1))
                     if c:
                         c.Hide()
-        
+
         if bt.MAGSCOCAT:
             p = wx.Panel(nb)
             self.InitScontiCC(p)
-            nb.AddPage(p, 'Sconti per categoria')    
+            nb.AddPage(p, 'Sconti per categoria')
             self.LoadScontiCC()
-        
+
         if bt.MAGROWLIS and (bt.MAGVLIFOR or bt.MAGVLIMAR or bt.MAGVLICAT or bt.MAGVLIGRU):
             p = wx.Panel(nb)
             self.InitVarList(p)
             nb.AddPage(p, 'Listini variabili')
             self.LoadVarList()
-    
+
     def GetSpecializedSearchPanel(self, parent):
         p = aw.Panel(parent, -1)
         wdr.ClientiSpecSearchFunc(p)
@@ -423,7 +431,7 @@ class ClientiPanel(pdcrel._CliForPanel):
             if bt.MAGROWLIS:
                 self.WriteVarList(); self.LoadVarList()
         return written
-    
+
     def UpdateDataControls( self, recno ):
         pdcrel._CliForPanel.UpdateDataControls( self, recno )
         if self.loadrelated:
@@ -433,57 +441,57 @@ class ClientiPanel(pdcrel._CliForPanel):
             if bt.MAGROWLIS and (bt.MAGVLIFOR or bt.MAGVLIMAR or bt.MAGVLICAT or bt.MAGVLIGRU):
                 self.LoadVarList()
                 self._grid_vli.SetGridCursor(0,1)
-    
+
     def SetInsertMode(self, *args, **kwargs):
         out = pdcrel._CliForPanel.SetInsertMode(self, *args, **kwargs)
         if out and not self.valuesearch:
             self.FindWindowById(wdr.ID_ALLEGCF).SetValue(1)
         return out
-    
+
     def GetOrdStampaDialog(self):
         return OrdStampaDialog(self, -1, 'Lista clienti')
-    
+
     def GetOrdStampaRaggr(self, db, rag):
         r = {#nessun raggruppamento
              "N": (None,
                    lambda: '1',
                    None),
              #agente
-             "A": ('agente.codice', 
+             "A": ('agente.codice',
                    lambda: db.anag.id_agente,
-                   lambda: 'Agente: %s %s' % (db.anag.agente.codice, 
+                   lambda: 'Agente: %s %s' % (db.anag.agente.codice,
                                               db.anag.agente.descriz)),
              #zona
              "Z": ('zona.codice',
                    lambda: db.anag.id_zona,
-                   lambda: 'Zona: %s %s' % (db.anag.zona.codice, 
+                   lambda: 'Zona: %s %s' % (db.anag.zona.codice,
                                             db.anag.zona.descriz)),
              #categoria
-             "C": ('catana.codice', 
+             "C": ('catana.codice',
                    lambda: db.anag.id_categ,
-                   lambda: 'Categoria: %s %s' % (db.anag.catana.codice, 
+                   lambda: 'Categoria: %s %s' % (db.anag.catana.codice,
                                                  db.anag.catana.descriz)),
              #status
-             "S": ('status.codice', 
+             "S": ('status.codice',
                    lambda: db.anag.id_status,
-                   lambda: 'Status: %s %s' % (db.anag.status.codice, 
+                   lambda: 'Status: %s %s' % (db.anag.status.codice,
                                               db.anag.status.descriz)),
              #mod.pagamento
-             "P": ('modpag.codice', 
+             "P": ('modpag.codice',
                    lambda: db.anag.id_modpag,
-                   lambda: 'Mod.Pagamento: %s %s' % (db.anag.modpag.codice, 
+                   lambda: 'Mod.Pagamento: %s %s' % (db.anag.modpag.codice,
                                                      db.anag.modpag.descriz)),
              #città
-             "c": ('anag.citta', 
+             "c": ('anag.citta',
                    lambda: db.anag.citta,
                    lambda: 'Città: %s' % db.anag.citta),
          }
         return r[rag]
-    
+
     def InitScontiCC(self, parent):
         self.dbscc = dba.TabScontiCC()
         self._grid_scc = ScontiCategoriaGrid(parent, self.dbscc)
-    
+
     def LoadScontiCC(self):
         scc = self.dbscc
         if self.db_recid is None:
@@ -492,7 +500,7 @@ class ClientiPanel(pdcrel._CliForPanel):
             scc.Retrieve('scc.id_pdc=%s', self.db_recid)
             self._grid_scc.SetPdc(self.db_recid)
         self._grid_scc.ResetView()
-    
+
     def WriteScontiCC(self):
         scc = self.dbscc
         for s in scc:
@@ -500,11 +508,11 @@ class ClientiPanel(pdcrel._CliForPanel):
                 s.id_pdc = self.db_recid
         if not scc.Save():
             aw.awu.MsgDialog(self, message=repr(scc.GetError()))
-    
+
     def InitVarList(self, parent):
         self.dbvli = dba.TabVarList()
         self._grid_vli = VarListGrid(parent, self.dbvli)
-    
+
     def LoadVarList(self):
         if bt.MAGROWLIS and (bt.MAGVLIFOR or bt.MAGVLIMAR or bt.MAGVLICAT or bt.MAGVLIGRU):
             vli = self.dbvli
@@ -514,7 +522,7 @@ class ClientiPanel(pdcrel._CliForPanel):
                 vli.Retrieve('vli.id_cliente=%s', self.db_recid)
                 self._grid_vli.SetPdc(self.db_recid)
             self._grid_vli.ResetView()
-    
+
     def WriteVarList(self):
         if bt.MAGROWLIS and (bt.MAGVLIFOR or bt.MAGVLIMAR or bt.MAGVLICAT or bt.MAGVLIGRU):
             vli = self.dbvli
@@ -547,11 +555,11 @@ class OrdStampaDialog(aw.Dialog):
         self.AddSizedPanel(OrdStampaPanel(self, -1))
         self.CenterOnScreen()
         self.Bind(wx.EVT_BUTTON, self.OnSelect, id=wdr.ID_SELECT)
-    
+
     def OnSelect(self, event):
         self.EndModal(wx.ID_OK)
         event.Skip()
-    
+
     def GetRaggr(self):
         rag = self.FindWindowById(wdr.ID_RAGGR).GetValue()
         if rag == "N":
