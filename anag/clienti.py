@@ -264,15 +264,19 @@ class ClientiPanel(pdcrel._CliForPanel):
     Gestione della tabella clienti.
     """
     def __init__(self, *args, **kwargs):
-        tipana=None
-        try:
-            tipana=kwargs.pop('tipana')
-        except:
-            tipana=''
-        if tipana==None:
-            self.pdctipo = "C"
-        else:
-            self.pdctipo = tipana
+        #=======================================================================
+        # tipana=None
+        # try:
+        #     tipana=kwargs.pop('tipana')
+        # except:
+        #     tipana=''
+        # if tipana==None:
+        #     self.pdctipo = "C"
+        # else:
+        #     self.pdctipo = tipana
+        #=======================================================================
+
+        self.pdctipo='C'
 
         self.tabanag = Azienda.BaseTab.TABNAME_CLIENTI
         pdcrel._CliForPanel.__init__(self, *args, **kwargs)

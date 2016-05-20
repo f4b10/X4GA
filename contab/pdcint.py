@@ -1441,8 +1441,12 @@ class EffettiInterrDialog(ga._AnagDialog, _PdcInterrFrameMixin):
 
 
 class ClientiInterrPanel(anag.clienti.ClientiPanel, _PdcCliForInterrMixin):
+    idTipoAnag= None
 
     def __init__(self, *args, **kwargs):
+        self.idTipoAnag=kwargs.pop('idTipana', None)
+        
+        
         anag.clienti.ClientiPanel.__init__(self, *args, **kwargs)
         _PdcCliForInterrMixin.__init__(self, anag.clienti.ClientiPanel)
         self.panacconti = None
@@ -1478,6 +1482,11 @@ class ClientiInterrPanel(anag.clienti.ClientiPanel, _PdcCliForInterrMixin):
     def UpdateDataControls(self, *args, **kwargs):
         out = _PdcCliForInterrMixin.UpdateDataControls(self, *args, **kwargs)
         self.LoadAcconti()
+        if self.idTipoAnag:
+            self.FindWindowByName('id_tipo').SetValue(self.idTipoAnag)
+        
+        
+        
         return out
 
 
@@ -1510,25 +1519,30 @@ class ClientiInterrDialog(ga._AnagDialog, _PdcInterrFrameMixin):
         ga._AnagDialog.__init__(self, *args, **kwargs)
         _PdcInterrFrameMixin.__init__(self)
 
-        tipana=self.GetTipoAnagrafico()
+        #self.LoadAnagPanel(ClientiInterrPanel(self, -1))
 
-        self.LoadAnagPanel(ClientiInterrPanel(self, -1, tipana=tipana))
+        #TODO: INTRODURRE LOGICA PER INSERIMENTO ANAGRAFICA
+        
+        idTipana=self.GetTipoAnagrafico()
+        self.LoadAnagPanel(ClientiInterrPanel(self, -1, idTipana=idTipana))
         TestInitialFrameSize(self)
 
 
     def GetTipoAnagrafico(self):
-        tipana=None
+        idTipo=None
         try:
             idTipo=self.Parent.Parent.Parent.Parent.dbdoc.config.id_pdctip
-            dbpdctip = adb.DbTable(bt.TABNAME_PDCTIP, 'tipana', writable=False)
-            dbpdctip.AddJoin(bt.TABNAME_PDCRANGE, 'pdcrange')
-            dbpdctip.Retrieve('tipana.id=%s' % idTipo )
-            if dbpdctip.OneRow():
-                print dbpdctip.id, dbpdctip.descriz, dbpdctip.codice, dbpdctip.id_pdcrange
-                tipana=dbpdctip.codice
+            #===================================================================
+            # dbpdctip = adb.DbTable(bt.TABNAME_PDCTIP, 'tipana', writable=False)
+            # dbpdctip.AddJoin(bt.TABNAME_PDCRANGE, 'pdcrange')
+            # dbpdctip.Retrieve('tipana.id=%s' % idTipo )
+            # if dbpdctip.OneRow():
+            #     print dbpdctip.id, dbpdctip.descriz, dbpdctip.codice, dbpdctip.id_pdcrange
+            #     tipana=dbpdctip.codice
+            #===================================================================
         except:
             pass
-        return tipana
+        return idTipo
 
 
 
