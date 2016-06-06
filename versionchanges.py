@@ -28,13 +28,16 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
+    ('1.5.22', dt.Date(2016, 6, 6), (
+         ("BET1198",
+         """Aggiunta possibilità di bypassare maschera di login fornendo opportuno parametro da riga di comando."""),
+        ),),
     ('1.5.20', dt.Date(2016, 5, 4), (
          ("BET1197",
          """Resa compatibile a server Sql Maria DB"""),
          ("BET1196",
          """Introdotto metodo SetMaxLenght() per le classi PhoneEntryCtrl e MailEntryCtrl"""),
         ),),
-
     ('1.5.19', dt.Date(2016, 3, 8), (
          ("BET1195",
          """Razionalizzate struttura delle cartelle deputate alla sincronizzazione"""),

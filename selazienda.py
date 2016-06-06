@@ -215,6 +215,38 @@ class SelAziendaPanel(aw.Panel):
         ci(ID_PSWD).Bind(wx.EVT_KEY_UP, self.OnTestKey)
 
         self.UpdateServerUrl(0)
+        self.SkipAutentication()
+
+    def SkipAutentication(self):
+        self.codAzi2Skip=None
+        if 'login' in Env.Azienda.params:
+            try:
+                if not 'server:' in Env.Azienda.params['login']:
+                    nome, des, port =Env.dbservers[0]
+                    server='server:%s/' % des
+                    Env.Azienda.params['login']='%s%s' % (server, Env.Azienda.params['login'] )
+                serverPar, userPar, pswPar, codaziPar = Env.Azienda.params['login'].split('/')
+                servername=serverPar.split(':')[1]
+                user=userPar.split(':')[1]
+                psw=pswPar.split(':')[1]
+                codazi=codaziPar.split(':')[1]
+                self.codAzi2Skip=codazi
+                oServer=self.FindWindowById(ID_SERVER)
+                oServer.GetCount()
+                for i in range(0, oServer.GetCount()-1):
+                    if servername==oServer.GetString(i):
+                        oServer.SetSelection(i)
+                        break
+                oUser=self.FindWindowById(ID_USER)
+                oUser.SetValue(user)
+                oPsw=self.FindWindowById(ID_PSWD)
+                oPsw.SetValue(psw)
+                
+                wx.CallAfter(self.OnLogin, wx.EVT_BUTTON)
+                wx.CallAfter(self.OnSelect, wx.EVT_BUTTON)
+                skip=True
+            except:
+                pass
 
     def OnTestKey(self, event):
         self.test_mod_name = not event.ControlDown()
@@ -343,7 +375,10 @@ class SelAziendaPanel(aw.Panel):
 
         self.UpdateUserControls()
         self.UpdateAziendaDetails()
-        event.Skip()
+        try:
+            event.Skip()
+        except:
+            pass
 
 
     def mysql_hash_password(self, password):
@@ -399,7 +434,10 @@ class SelAziendaPanel(aw.Panel):
 
     def OnSelect(self, event):
         self.AziSelect()
-        event.Skip()
+        try:
+            event.Skip()
+        except:
+            pass
 
     def AziSelect(self):
 
@@ -415,6 +453,15 @@ class SelAziendaPanel(aw.Panel):
         if row >= self.dbaz.RowsCount():
             ErrMsg("Nessuna azienda selezionata")
             return 0
+
+
+        if not self.codAzi2Skip==None:
+            row=0
+            dbaz.MoveRow(0)
+            for i, r in enumerate(dbaz):
+                if r.codice==self.codAzi2Skip:
+                    row=i
+                    break
 
         dbaz.MoveRow(row)
 

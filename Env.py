@@ -681,7 +681,26 @@ class Azienda(object):
               'onexit-execute': '',
               'redirect-output': 0,
               'show-syspath': 0,
-              'custom-menu': '',}
+              'custom-menu': '',
+              'login': '',}
+
+    """
+    il parametro login puo' essere utilizzato per bypassare la videata di autenticazione
+    e di seleziona azienda.
+    il parametro deve essere fornito con il seguente formato:
+
+    --login=server:SSS/user:UUU/password:PPP/azienda:CCC
+    dove:
+    SSS    è il nome del server MySql così come presentato nella casella di riepilogo
+           della videata standard di login a X4. (Se omesso viene acquisito come server il primo server della lista)
+    UUU    è il nome dell'utente con cui si intende accedere
+    PPP    è la password associata all'utente indicato
+    CCC    è il codice dell'azienda su cui si intende operare
+
+    """
+
+
+
     try:
         optlist, args = getopt.getopt(args, '', ['%s=' % key for key in params])
         for opt, val in optlist:
