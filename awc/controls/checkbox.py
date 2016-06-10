@@ -142,6 +142,45 @@ class CheckListBox(wx.CheckListBox):
 
 # ------------------------------------------------------------------------------
 
+class CheckListBox4Sync(CheckListBox):
+    externalCheck=None
+
+    def __init__(self, *args, **kwargs):
+
+        CheckListBox.__init__(self, *args, **kwargs)
+        self.externalCheck=[]
+
+    def GetValue(self):
+        check=''
+        lChecked=self.GetSelections()
+        for e in lChecked:
+            check='%s%s|' % (check, self.GetPyData(e))
+        for e in self.externalCheck:
+            check='%s%s|' % (check, e)
+        return check[:-1]
+
+    def SetValue(self, v=''):
+        lChecked=v.split('|')
+        for n in lChecked:
+            if not self.IsPresent(n):
+                self.AddNotPresent(n)
+        for e in range(self.GetCount()):
+            if self.GetPyData(e) in lChecked:
+                self.Check(e, check=True)
+
+    def IsPresent(self, tableName):
+        isPresent=False
+        for e in range(self.GetCount()):
+            if self.GetPyData(e) == tableName:
+                isPresent=True
+                break
+        return isPresent
+
+    def AddNotPresent(self, tableName):
+        self.externalCheck.append(tableName)
+
+# ------------------------------------------------------------------------------
+
 
 class UnoZeroCheckBox(CheckBox):
 
