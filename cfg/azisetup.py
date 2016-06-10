@@ -97,11 +97,6 @@ class _SetupPanel(aw.Panel):
                         val = db.data
                     else:
                         val = self.DecodeValue(db.descriz, name, ctr.GetWindowStyle() & wx.TE_PASSWORD == wx.TE_PASSWORD)
-                        if name=='syncTabelle':
-                            print val
-                        
-                        
-                        
                     ctr.SetValue(val)
 
     def SetupWrite(self):
