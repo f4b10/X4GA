@@ -31,6 +31,8 @@ history = (
     ('1.5.22', dt.Date(2016, 6, 6), (
          ("BET1198",
          """Aggiunta possibilità di bypassare maschera di login fornendo opportuno parametro da riga di comando."""),
+         ("BUG1159",
+         """Rimosso bug in memorizzazione configurazione sincronizzazione."""),
         ),),
     ('1.5.20', dt.Date(2016, 5, 4), (
          ("BET1197",
