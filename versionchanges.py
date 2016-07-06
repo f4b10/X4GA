@@ -28,6 +28,10 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
+    ('1.5.24', dt.Date(2016, 7, 6), (
+         ("BET1198",
+         """Introdotta gestione errore nel caso non si abbia accesso a tabella diritti."""),
+        ),),
     ('1.5.22', dt.Date(2016, 6, 6), (
          ("BET1198",
          """Aggiunta possibilità di bypassare maschera di login fornendo opportuno parametro da riga di comando."""),
