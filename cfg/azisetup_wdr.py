@@ -94,11 +94,13 @@ class DestinatariSync(CheckListBox):
   join X4.aziende on d.id_azienda=aziende.id
   join X4.utenti on d.id_utente=utenti.id
   where attivo=1 and aziende.codice="%s";""" % (Env.Azienda.codice)
-        cur.execute(sql)
-        Utenti= cur.fetchall()
+        try:
+            cur.execute(sql)
+            Utenti= cur.fetchall()
+        except:
+            Utenti= ()
         cur.close()
         return Utenti
-
 class TabelleSync(CheckListBox4Sync):
     def __init__(self, *args, **kwargs):
         CheckListBox4Sync.__init__(self, *args, **kwargs)
