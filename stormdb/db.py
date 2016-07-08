@@ -720,7 +720,9 @@ class DB(object):
                 try:
                     self.Retrieve('SELECT VERSION()')
                     mySqlVersion = self.rs[0][0][:3]
-                    if mySqlVersion >= '5.5':
+                    if mySqlVersion >= '10.' and 'MariaDB' in self.rs[0][0]:
+                        fields += ',index_comment'
+                    elif mySqlVersion >= '5.5' :
                         fields += ',index_comment'
                 except:
                     pass

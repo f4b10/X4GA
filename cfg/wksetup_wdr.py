@@ -279,6 +279,13 @@ def DbMySql( parent, call_fit = True, set_sizer = True ):
 
     item0.Add( item9, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 0 )
 
+    item14 = wx.StaticText( parent, ID_TEXT, "Database:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item0.Add( item14, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+
+    item15 = wx.StaticText( parent, ID_TEXT, "", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item15.SetName( "version" )
+    item0.Add( item15, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
     item0.AddGrowableCol( 1 )
 
     if set_sizer == True:

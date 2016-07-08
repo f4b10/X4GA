@@ -29,6 +29,10 @@ import mx.DateTime as dt
 
 history = (
     ('1.5.24', dt.Date(2016, 7, 6), (
+         ("BET1200",
+         """Visualizzazione Versione database al test connessione in setup workstation."""),
+         ("BET1199",
+         """Test se in presenza di database MariaDb."""),
          ("BET1198",
          """Introdotta gestione errore nel caso non si abbia accesso a tabella diritti."""),
         ),),

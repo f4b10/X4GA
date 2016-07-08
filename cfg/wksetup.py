@@ -203,6 +203,8 @@ class WorkstationSetupPanel(ConfigPanel):
             else:
                 out = None
             return out
+        
+        self.nbServer.GetPage(tabno).FindWindowByName('version').SetLabel('')
         host, port, user, pswd, = map(lambda x: FindWindow(x).GetValue(),
                                       ('host', 'port', 'user', 'pswd'))
         if not host or not port or not user or not pswd:
@@ -213,7 +215,7 @@ class WorkstationSetupPanel(ConfigPanel):
         ok = test.Connect(host=host, user=user, passwd=pswd, db=None)#, db='x4')
         if ok:
             if test.Retrieve('SELECT VERSION()'):
-                print test.rs[0][0]
+                self.nbServer.GetPage(tabno).FindWindowByName('version').SetLabel(test.rs[0][0])
             test.Close()
             msg = 'Connessione riuscita'
             icon = wx.ICON_INFORMATION
