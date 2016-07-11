@@ -215,7 +215,13 @@ class WorkstationSetupPanel(ConfigPanel):
         ok = test.Connect(host=host, user=user, passwd=pswd, db=None)#, db='x4')
         if ok:
             if test.Retrieve('SELECT VERSION()'):
-                self.nbServer.GetPage(tabno).FindWindowByName('version').SetLabel(test.rs[0][0])
+                version=test.rs[0][0]
+                try:
+                    if test.Retrieve('SHOW VARIABLES WHERE Variable_Name LIKE "datadir"'):
+                        version='%s (data in %s)' % (version, test.rs[0][1])
+                except:
+                    pass
+                self.nbServer.GetPage(tabno).FindWindowByName('version').SetLabel(version)
             test.Close()
             msg = 'Connessione riuscita'
             icon = wx.ICON_INFORMATION
