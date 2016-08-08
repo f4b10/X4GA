@@ -90,9 +90,9 @@ class DestinatariSync(CheckListBox):
     def GetUtenti(self):
         cur=Env.Azienda.DB.connection.cursor()
         sql = r"""
-        SELECT id_utente, utenti.codice, utenti.descriz FROM X4.diritti d
-  join X4.aziende on d.id_azienda=aziende.id
-  join X4.utenti on d.id_utente=utenti.id
+        SELECT id_utente, utenti.codice, utenti.descriz FROM x4.diritti d
+  join x4.aziende on d.id_azienda=aziende.id
+  join x4.utenti on d.id_utente=utenti.id
   where attivo=1 and aziende.codice="%s";""" % (Env.Azienda.codice)
         try:
             cur.execute(sql)
