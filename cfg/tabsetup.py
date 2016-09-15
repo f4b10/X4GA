@@ -352,7 +352,17 @@ class TabSetupPanel(aw.Panel):
 
                     #test lunghezza
                     if not change and flen:
-                        change = struphys[n][2] < (flen + (fdec or 0))
+                        # inserito test su tipo data VARCHAR perchè in presenza di tale tipo di
+                        # dato la struttura fisica ritorna la lunghezza effettiva del campo moltiplicato 3
+                        if ftype == 'VARCHAR':
+                            lenPhys=(struphys[n][2])/3
+                        else:
+                            lenPhys=struphys[n][2]
+
+                        change = lenPhys < (flen + (fdec or 0))
+                        #=======================================================
+                        # change = struphys[n][2] < (flen + (fdec or 0))
+                        #=======================================================
                         if change:
                             adeg.append((fname, ADEG_WRONGLENGHT))
 
