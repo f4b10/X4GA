@@ -28,6 +28,10 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
+    ('1.5.26', dt.Date(2016, 9, 15), (
+         ("BUG1160",
+         """Rimosso bug su adeguamento struttura tabelle in presenza di campi VARCHAR."""),
+        ),),
     ('1.5.25', dt.Date(2016, 8, 8), (
          ("BUG1159",
          """Rimosso bug su query tabella diritti (case sensitive per MariaDb)."""),
