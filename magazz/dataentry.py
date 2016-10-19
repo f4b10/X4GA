@@ -94,7 +94,7 @@ annsearch = True
 ricsearch = True
 
 def DbgMsg(x):
-    #print x
+    #print '[standard] ->%s' % x
     pass
 
 
@@ -297,7 +297,9 @@ class MagazzPanel(aw.Panel,\
     gridbodyclass = GridBody
 
     def __init__(self, *args, **kwargs):
-
+        postinit=True
+        if kwargs.has_key('postinit'):
+            postinit = kwargs.pop('postinit', False)
         aw.Panel.__init__(self, *args, **kwargs)
 
         global today
@@ -357,6 +359,14 @@ class MagazzPanel(aw.Panel,\
         self.caufilt = None
 
         wdr.DialogFunc(self, True)
+
+        self.boxanag = None
+        self.boxdest = None
+        if postinit:
+            self.Post_Init()
+
+    def Post_Init(self):
+
         self.InitPanelTot()
 
         cn = self.FindWindowByName
@@ -365,8 +375,6 @@ class MagazzPanel(aw.Panel,\
         cn('scadwarning').SetLabel('')
         cn('butfido').Disable()
 
-        self.boxanag = None
-        self.boxdest = None
         ctrls = aw.awu.GetAllChildrens(self)
         for c in ctrls:
             if isinstance(c, wx.StaticBox):
@@ -1408,6 +1416,7 @@ class MagazzPanel(aw.Panel,\
                     self.controls["numiva"].SetValue(doc.numiva)
 
     def OnHeadChanged(self, event):
+
 
         if self.status == STATUS_SELCAUS:
             self.UpdateButtons()
@@ -2643,6 +2652,7 @@ class MagazzPanel(aw.Panel,\
         ana = self.dbanag
         docs = doc.cfgdoc.AcquisDocs()
         dlgsel = dma.SelDocDialog(self, doc.id_pdc, doc.id_dest, docs)
+        dlgsel.SetSize((900,500))
         dlgsel.CenterOnScreen()
         acqdocid = dlgsel.ShowModal()
         dlgsel.Destroy()
