@@ -2795,7 +2795,10 @@ class CtrFidoCliente(adb.DbTable):
         if p.min_farpcf_date is None:
             self._ggs = 0
         else:
-            dy,dm,dd = map(int, p.min_farpcf_date.split('-'))
+            if type(p.min_farpcf_date)==type(str):
+                dy,dm,dd = map(int, p.min_farpcf_date.split('-'))
+            else:
+                dy,dm,dd = map(int, p.min_farpcf_date.strftime('%d-%m-%Y').split('-'))
             dd = Env.Azienda.Login.dataElab-Env.DateTime.Date(dy,dm,dd)
             self._ggs = dd.days
         if exclude:
