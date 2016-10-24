@@ -2795,7 +2795,7 @@ class CtrFidoCliente(adb.DbTable):
         if p.min_farpcf_date is None:
             self._ggs = 0
         else:
-            if type(p.min_farpcf_date)==type(str):
+            if isinstance(p.min_farpcf_date, basestring):
                 dy,dm,dd = map(int, p.min_farpcf_date.split('-'))
             else:
                 dy,dm,dd = map(int, p.min_farpcf_date.strftime('%d-%m-%Y').split('-'))
