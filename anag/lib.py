@@ -6,17 +6,17 @@
 # Copyright:    (C) 2011 Astra S.r.l. C.so Cavallotti, 122 18038 Sanremo (IM)
 # ------------------------------------------------------------------------------
 # This file is part of X4GA
-# 
+#
 # X4GA is free software: you can redistribute it and/or modify
 # it under the terms of the Affero GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # X4GA is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
@@ -42,13 +42,13 @@ from awc.util import TimedPopupMessageFrame
 
 
 class LinkTableHideSearchMixin(object):
-    
+
     filter_to_hide = None
-    
+
     def SetFilterToHide(self, f):
         self.filter_to_hide = f
         self.SetDisplayHidden()
-    
+
     display_hidden = False
     def SetDisplayHidden(self, dh=None, popup=False):
         if dh is not None:
@@ -68,12 +68,12 @@ class LinkTableHideSearchMixin(object):
             if f:
                 wx.CallAfter(lambda: f.SetFocus())
                 self.HideFilterLinksTitle()
-    
+
     def ToggleDisplayHidden(self):
         old = self.display_hidden
         self.SetDisplayHidden(not self.display_hidden, popup=True)
         return old
-    
+
     def OnChar(self, event):
         if not self._ctrcod.IsEditable() or not self.IsShown(): return
         if event.GetKeyCode() == wx.WXK_F2:
@@ -81,7 +81,7 @@ class LinkTableHideSearchMixin(object):
             event.Skip()
             return
         LinkTable.OnChar(self, event)
-    
+
     def GetExtraToolTip(self):
         return "\n(F2) Visualizza/nasconde elementi nascosti"
 
@@ -97,7 +97,7 @@ class LinkTableProd(LinkTable, LinkTableHideSearchMixin):
     ppmag = None
     barcode_readed = False
     tabsearch_oncode = True
-    
+
     def __init__(self, parent, id, name=None, **kwargs):
         LinkTable.__init__(self, parent, id, **kwargs)
         self.digitsearch_oncode = Env.Azienda.BaseTab.MAGDIGSEARCH
@@ -163,30 +163,30 @@ class LinkTableProd(LinkTable, LinkTableHideSearchMixin):
             cc = self._ctrcod
             s = cc.GetWindowStyle()
             cc.SetWindowStyle(s | wx.TE_PROCESS_ENTER)
-    
+
     def GetExtraToolTip(self):
         return LinkTableHideSearchMixin.GetExtraToolTip(self)
-    
+
     def OnChar(self, event):
         LinkTableHideSearchMixin.OnChar(self, event)
-    
+
     def GetSql(self, count=False):
         if count:
             cmd = 'SELECT COUNT(*)'
         else:
             cmd = self.GetSqlSelect()
         return cmd+self.GetSqlFrom()
-    
+
     def GetSqlSelect(self):
-        
-        out = """SELECT prod.id, 
-                        prod.codice, 
-                        prod.descriz, 
+
+        out = """SELECT prod.id,
+                        prod.codice,
+                        prod.descriz,
                         prod.codfor AS codfor,
-                        prod.barcode AS barcode, 
+                        prod.barcode AS barcode,
                         prod.costo,
                         prod.prezzo"""
-                    
+
         if bt.MAGVISGIA:
             tabprogr = bt.TABNAME_PRODPRO
             if self.ppmag:
@@ -194,33 +194,35 @@ class LinkTableProd(LinkTable, LinkTableHideSearchMixin):
             else:
                 testmag = ''
             out += ',\n'
-            out += ("""(SELECT SUM(IF(pp.ini IS NULL,0,pp.ini)+IF(pp.car IS NULL,0,pp.car)-IF(pp.sca IS NULL,0,pp.sca)) 
+            out += ("""(SELECT SUM(IF(pp.ini IS NULL,0,pp.ini)+IF(pp.car IS NULL,0,pp.car)-IF(pp.sca IS NULL,0,pp.sca))
                           FROM %(tabprogr)s pp
-                         WHERE pp.id_prod=prod.id %(testmag)s) 'giac', 
-                        NULL AS magid""" % locals()).replace('\n', ' ')        
+                         WHERE pp.id_prod=prod.id %(testmag)s) 'giac',
+                        NULL AS magid""" % locals()).replace('\n', ' ')
         return out
-    
+
     def GetSqlFrom(self):
-        
+
         out = """
         FROM %s prod
-        LEFT JOIN %s status ON prod.id_status=status.id"""\
-            % (self.db_name, bt.TABNAME_STATART)
-        
+        LEFT JOIN %s status ON prod.id_status=status.id
+        LEFT JOIN %s catart ON prod.id_catart=catart.id
+        """\
+            % (self.db_name, bt.TABNAME_STATART, bt.TABNAME_CATART)
+
 #        if bt.MAGVISGIA:
 #            out += """
 #        LEFT JOIN %s pp ON pp.id_prod=prod.id"""\
 #            % Env.Azienda.BaseTab.TABNAME_PRODPRO
-        
+
         return out
-    
+
 #    def GetSqlGroup(self):
 #        if bt.MAGVISGIA:
 #            out = "GROUP BY prod.id"
 #        else:
 #            out = ""
 #        return out
-#    
+#
 #    def GetSqlHaving(self):
 #        cmd = ''
 #        par = []
@@ -231,37 +233,37 @@ class LinkTableProd(LinkTable, LinkTableHideSearchMixin):
 #            if cmd:
 #                cmd = " HAVING "+cmd[5:]
 #        return cmd, par
-#    
+#
     def GetDataGridStructure(self):
-        
+
         _STR = gridlib.GRID_VALUE_STRING
         _QTA = bt.GetMagQtaMaskInfo()
         _PRE = bt.GetMagPreMaskInfo()
-        
+
         out = [( -1, ( 1, "Cod.",        _STR, False)),
                (200, ( 2, "Descrizione", _STR, False)),]
-        
+
         if bt.MAGVISCPF:
             out.append((110, ( 3, "Cod.Forn.", _STR, False)))
-        
+
         if bt.MAGVISBCD:
             out.append((110, ( 4, "Barcode",   _STR, False)))
-        
+
         if bt.MAGVISCOS:
             out.append((110, ( 5, "Costo",     _PRE, False)))
-        
+
         if bt.MAGVISPRE:
             out.append((110, ( 6, "Prezzo",    _PRE, False)))
-        
+
         if bt.MAGVISGIA:
             out.append((120, ( 7, "Giacenza",  _QTA, False)))
-        
+
         return out
-    
+
     def GetDataGridColumns(self):
         cols = self.GetDataGridStructure()
         return [c[1] for c in cols]
-    
+
     def AdjustColumnsSize(self, grid):
         cols = self.GetDataGridStructure()
         colsize = [c[0] for c in cols]
@@ -269,7 +271,7 @@ class LinkTableProd(LinkTable, LinkTableHideSearchMixin):
             if w>=0:
                 grid.SetColumnDefaultSize(n, w)
                 #grid.SetColSize(n, w)
-    
+
     def GetSqlTextSearch(self, obj, forceAll, exact):
         cmd, par = LinkTable.GetSqlTextSearch(self, obj, forceAll, exact)
         fltv = obj.GetValue()
@@ -287,7 +289,7 @@ class LinkTableProd(LinkTable, LinkTableHideSearchMixin):
             cmd += "%s.barcode=%%s" % self.db_alias
             par.append(fltv.rstrip())
         return cmd, par
-    
+
     def SetValue(self, id, txt=None, **kw):
         LinkTable.SetValue(self, id, txt, **kw)
         if txt and self._rs:
@@ -300,7 +302,7 @@ class LinkTableProd(LinkTable, LinkTableHideSearchMixin):
 
 
 class LinkTableTipList(LinkTable):
-    
+
     def __init__(self, parent, id, name=None, **kwargs):
         LinkTable.__init__(self, parent, id, **kwargs)
         if name:
@@ -315,7 +317,7 @@ class LinkTableTipList(LinkTable):
 
 
 class LinkTableTipArt(LinkTable):
-    
+
     def __init__(self, parent, id, name=None, **kwargs):
         LinkTable.__init__(self, parent, id, **kwargs)
         if name:
@@ -330,7 +332,7 @@ class LinkTableTipArt(LinkTable):
 
 
 class LinkTableCatArt(LinkTable):
-    
+
     def __init__(self, parent, id, name=None, **kwargs):
         LinkTable.__init__(self, parent, id, **kwargs)
         if name:
@@ -345,7 +347,7 @@ class LinkTableCatArt(LinkTable):
 
 
 class LinkTableCatCli(LinkTable):
-    
+
     def __init__(self, parent, id, name=None, **kwargs):
         LinkTable.__init__(self, parent, id, **kwargs)
         if name:
@@ -360,7 +362,7 @@ class LinkTableCatCli(LinkTable):
 
 
 class LinkTableCatFor(LinkTable):
-    
+
     def __init__(self, parent, id, name=None, **kwargs):
         LinkTable.__init__(self, parent, id, **kwargs)
         if name:
@@ -375,7 +377,7 @@ class LinkTableCatFor(LinkTable):
 
 
 class LinkTableGruArt(LinkTable):
-    
+
     def __init__(self, parent, id, name=None, **kwargs):
         LinkTable.__init__(self, parent, id, **kwargs)
         if name:
@@ -390,7 +392,7 @@ class LinkTableGruArt(LinkTable):
 
 
 class LinkTableMarArt(LinkTable):
-    
+
     def __init__(self, parent, id, name=None, **kwargs):
         LinkTable.__init__(self, parent, id, **kwargs)
         if name:
@@ -405,7 +407,7 @@ class LinkTableMarArt(LinkTable):
 
 
 class LinkTableStatArt(LinkTable):
-    
+
     def __init__(self, parent, id, name=None, **kwargs):
         LinkTable.__init__(self, parent, id, **kwargs)
         if name:
@@ -420,7 +422,7 @@ class LinkTableStatArt(LinkTable):
 
 
 class LinkTableStatCli(LinkTable):
-    
+
     def __init__(self, parent, id, name=None, **kwargs):
         LinkTable.__init__(self, parent, id, **kwargs)
         if name:
@@ -435,7 +437,7 @@ class LinkTableStatCli(LinkTable):
 
 
 class LinkTableStatFor(LinkTable):
-    
+
     def __init__(self, parent, id, name=None, **kwargs):
         LinkTable.__init__(self, parent, id, **kwargs)
         if name:
@@ -450,7 +452,7 @@ class LinkTableStatFor(LinkTable):
 
 
 class LinkTableStatPdc(LinkTable):
-    
+
     def __init__(self, parent, id, name=None, **kwargs):
         LinkTable.__init__(self, parent, id, **kwargs)
         if name:
@@ -465,7 +467,7 @@ class LinkTableStatPdc(LinkTable):
 
 
 class LinkTableGruPrez(LinkTable):
-    
+
     def __init__(self, parent, id, name=None, **kwargs):
         LinkTable.__init__(self, parent, id, **kwargs)
         from anag.gruprez import GruPrezDialog
@@ -504,12 +506,12 @@ class LinkTabProdAttr(dbg.LinkTabAttr):
 
 
 class _LinkTablePdcMixin(LinkTable):
-    
+
     _codewidth = 50
-    
+
     tipanacods = ''
     filter_by_descriz = True
-    
+
     def __init__(self, parent, id, name=None, **kwargs):
         fromgrid = kwargs.pop('fromgrid', False)
         LinkTable.__init__(self, parent, id, **kwargs)
@@ -527,7 +529,7 @@ class _LinkTablePdcMixin(LinkTable):
         self.dbtip = dba.PdcTip()
         if self.tipanacods:
             self.SetPdcTipCods(self.tipanacods)
-    
+
     def SetInitFocusCD(self, fromgrid):
         if fromgrid:
             f = bt.OPTLNKGRDPDC
@@ -538,7 +540,7 @@ class _LinkTablePdcMixin(LinkTable):
             if f is None:
                 f = INITFOCUS_DESCRIZ
         self.SetInitFocus(f)
-    
+
     def SetPdcTipCods(self, tipanacods):
         out = False
         dbtip = self.dbtip
@@ -553,10 +555,10 @@ class _LinkTablePdcMixin(LinkTable):
             self.tipanacods = tipanacods
             out = True
         return out
-    
+
     def GetDialogClass(self):
         return autil.GetPdcDialogClass(self.filtervalues[0][1])
-    
+
     def GetSql(self, count=False):
         bt = Env.Azienda.BaseTab
         if count:
@@ -585,7 +587,7 @@ class _LinkTablePdcMixin(LinkTable):
           JOIN %(bilcon)s bilcon ON pdc.id_bilcon=bilcon.id
           """ % locals()
         return cmd
-    
+
     def GetValueSearchSqlJoins(self):
         tipanaid = self.filtervalues[0][1]
         tipo = autil.GetPdcTipo(tipanaid)
@@ -611,19 +613,19 @@ class LinkTablePdc(_LinkTablePdcMixin, LinkTableHideSearchMixin):
     """
     LinkTable su pdc x selezionare un sottoconto.
     """
-    
+
     def __init__(self, *args, **kwargs):
         _LinkTablePdcMixin.__init__(self, *args, **kwargs)
         LinkTableHideSearchMixin.__init__(self)
         self.SetFilterToHide("(statpdc.hidesearch IS NULL or statpdc.hidesearch<>1)")
         self.SetMinWidth(300)
-    
+
     def GetExtraToolTip(self):
         return LinkTableHideSearchMixin.GetExtraToolTip(self)
-    
+
     def OnChar(self, event):
         LinkTableHideSearchMixin.OnChar(self, event)
-    
+
     def GetSql(self, count=False):
         bt = Env.Azienda.BaseTab
         if count:
@@ -656,7 +658,7 @@ class _LinkTablePdcCostiRicavi(_LinkTablePdcMixin):
         _LinkTablePdcMixin.__init__(self, parent, id)
         self.SetName(name)
         auto = adb.DbTable(Env.Azienda.BaseTab.TABNAME_CFGAUTOM, 'auto', writable=False)
-        if auto.Retrieve('auto.codice=%s', 
+        if auto.Retrieve('auto.codice=%s',
                          'pdctip_%s' % self.tipo_cr) and auto.OneRow():
             self.SetFilterValue(auto.aut_id)
             self.SetFilterFilter('1')
@@ -704,16 +706,16 @@ class LinkTableCliFor(_LinkTablePdcMixin, LinkTableHideSearchMixin):
     """
     LinkTable su pdc x selezionare clienti o fornitori.
     """
-    
+
     tipanacods = "CF"
-    
+
     def __init__(self, *args, **kwargs):
         _LinkTablePdcMixin.__init__(self, *args, **kwargs)
         LinkTableHideSearchMixin.__init__(self)
         self.SetFilterToHide("(statcli.hidesearch IS NULL or statcli.hidesearch<>1) AND (statfor.hidesearch IS NULL or statfor.hidesearch<>1)")
         self.SetMinWidth(900)
         self.SetGridMaxDescWidth(300)
-    
+
     def SetInitFocusCD(self, fromgrid):
         if fromgrid:
             f = bt.OPTLNKGRDCLI
@@ -724,13 +726,13 @@ class LinkTableCliFor(_LinkTablePdcMixin, LinkTableHideSearchMixin):
             if f is None:
                 f = INITFOCUS_DESCRIZ
         self.SetInitFocus(f)
-    
+
     def GetExtraToolTip(self):
         return LinkTableHideSearchMixin.GetExtraToolTip(self)
-    
+
     def OnChar(self, event):
         LinkTableHideSearchMixin.OnChar(self, event)
-    
+
     def GetSql(self, count=False):
         bt = Env.Azienda.BaseTab
         if count:
@@ -764,7 +766,7 @@ class LinkTableCliFor(_LinkTablePdcMixin, LinkTableHideSearchMixin):
           LEFT JOIN %(statfor)s statfor ON anafor.id_status=statfor.id
           """ % locals()
         return cmd
-    
+
     def SetDataGrid(self, grid, rs):
         _STR = gridlib.GRID_VALUE_STRING
         cols = (( -1, ( 1, "Cod.",        _STR, False)),
@@ -800,7 +802,7 @@ class LinkTableCliFor(_LinkTablePdcMixin, LinkTableHideSearchMixin):
                 par.append(val)
                 par.append(val)
         return cmd, par
-    
+
     def HelpChoice(self, obj, *args, **kwargs):
         if obj is self._ctrdes:
             val = obj.GetValue()
@@ -817,9 +819,9 @@ class LinkTableCliFor(_LinkTablePdcMixin, LinkTableHideSearchMixin):
 
 
 class LinkTableCliente(LinkTableCliFor):
-    
+
     tipanacods = "C"
-    
+
     def SetInitFocusCD(self, fromgrid):
         if fromgrid:
             f = bt.OPTLNKGRDCLI
@@ -836,9 +838,9 @@ class LinkTableCliente(LinkTableCliFor):
 
 
 class LinkTableFornit(LinkTableCliFor):
-    
+
     tipanacods = "F"
-    
+
     def SetInitFocusCD(self, fromgrid):
         if fromgrid:
             f = bt.OPTLNKGRDFOR
@@ -855,14 +857,14 @@ class LinkTableFornit(LinkTableCliFor):
 
 
 class LinkTableEffetto(_LinkTablePdcMixin):
-    
+
     tipanacods = "D"
-    
+
     def __init__(self, *args, **kwargs):
         _LinkTablePdcMixin.__init__(self, *args, **kwargs)
         self.SetInitFocus(INITFOCUS_DESCRIZ)
         self.SetMinWidth(400)
-    
+
     def GetSql(self, count=False):
         bt = Env.Azienda.BaseTab
         if count:
@@ -884,7 +886,7 @@ class LinkTableEffetto(_LinkTablePdcMixin):
           LEFT JOIN %(effetti)s eff ON eff.id=pdc.id
           """ % locals()
         return cmd
-    
+
     def SetDataGrid(self, grid, rs):
         _STR = gridlib.GRID_VALUE_STRING
         cols = (( -1, ( 1, "Cod.",        _STR, False)),
@@ -921,13 +923,13 @@ class LinkTableAliqIva(LinkTable):
 
 
 class LinkTableRegIva(LinkTable):
-    
+
     def __init__(self, parent, id, name=None, **kwargs):
         LinkTable.__init__(self, parent, id, **kwargs)
         from cfg.regiva import RegIvaDialog
         self.SetDataLink(Env.Azienda.BaseTab.TABNAME_REGIVA, name, RegIvaDialog)
         self.canins = False
-    
+
     def GetSql(self, count=False):
         if count:
             fields = 'COUNT(*)'
@@ -954,12 +956,12 @@ class LinkTableRegIvaNoScheda(LinkTable):
 
 
 class LinkTableCauContab(LinkTable):
-    
+
     def __init__(self, parent, id, name=None, **kwargs):
         LinkTable.__init__(self, parent, id, **kwargs)
         self.SetDataLink(Env.Azienda.BaseTab.TABNAME_CFGCONTAB, name, None)
         self.SetMinWidth(400)
-    
+
     def GetSql(self, count=False):
         if count:
             fields = 'COUNT(*)'
@@ -969,7 +971,7 @@ class LinkTableCauContab(LinkTable):
         alias = self.db_alias
         return """SELECT %(fields)s
                   FROM %(table)s %(alias)s""" % locals()
-    
+
     def SetDataGrid(self, grid, rs):
         _STR = gridlib.GRID_VALUE_STRING
         cols = (( -1, ( 1, "Cod.",      _STR, False)),
@@ -1006,16 +1008,16 @@ class LinkTableDocMagazz(LinkTable):
 
 
 class LinkTableMovMagazz(LinkTable):
-    
+
     tipdoc = None
-    
+
     def __init__(self, parent, id, name=None, docfather=None, **kwargs):
         LinkTable.__init__(self, parent, id, **kwargs)
         self.SetDataLink(Env.Azienda.BaseTab.TABNAME_CFGMAGMOV, name, None)
         self.SetMinWidth(500)
         if docfather:
             self.SetDocFather(docfather)
-    
+
     def SetTipoDoc(self, td):
         self.tipdoc = td
         if td is None:
@@ -1023,7 +1025,7 @@ class LinkTableMovMagazz(LinkTable):
         else:
             flt = "id_tipdoc=%d" % td
         self.SetFilter(flt)
-    
+
     def GetSql(self, count=False):
         tabmov = Env.Azienda.BaseTab.TABNAME_CFGMAGMOV
         tabdoc = Env.Azienda.BaseTab.TABNAME_CFGMAGDOC
@@ -1031,18 +1033,18 @@ class LinkTableMovMagazz(LinkTable):
         if count:
             fields = 'COUNT(*)'
         else:
-            fields = """tm.id, tm.codice, tm.descriz, 
-                        td.id      AS 'tipdoc_id', 
-                        td.codice  AS 'tipdoc_codice', 
-                        td.descriz AS 'tipdoc_descriz' 
+            fields = """tm.id, tm.codice, tm.descriz,
+                        td.id      AS 'tipdoc_id',
+                        td.codice  AS 'tipdoc_codice',
+                        td.descriz AS 'tipdoc_descriz'
                """
         return """SELECT %(fields)s
                   FROM %(tabmov)s tm
                   JOIN %(tabdoc)s td ON tm.id_tipdoc=td.id""" % locals()
-    
+
     def GetSqlOrder(self, field):
         return """td.%s, tm.%s""" % (field, field)
-    
+
     def SetDataGrid(self, grid, rs):
         _STR = gridlib.GRID_VALUE_STRING
         cols = (( -1, ( 1, "Cod.",      _STR, False)),
@@ -1057,12 +1059,12 @@ class LinkTableMovMagazz(LinkTable):
             if w>=0:
                 grid.SetColumnDefaultSize(n, w)
                 #grid.SetColSize(n, w)
-    
+
     def SetDocFather(self, ctrdoc):
         assert isinstance(ctrdoc, LinkTableDocMagazz)
         from awc.controls.linktable import EVT_LINKTABCHANGED
         self.GetParent().Bind(EVT_LINKTABCHANGED, self.OnDocChanged, ctrdoc)
-    
+
     def OnDocChanged(self, event):
         self.SetTipoDoc(event.GetEventObject().GetValue())
         event.Skip()
@@ -1293,7 +1295,7 @@ class LinkTabTipoEventoAttr(dbg.LinkTabAttr):
 
 
 class LinkTableBilCee(LinkTable):
-    
+
     def __init__(self, parent, id, name, **kwargs):
         LinkTable.__init__(self, parent, id, **kwargs)
         self.digitsearch_oncode = False
@@ -1304,22 +1306,22 @@ class LinkTableBilCee(LinkTable):
         self.SetFilter('bilcee.selectable=1')
         self.SetCodeWidth(80)
         self.SetMinWidth(640)
-    
+
     def GetSql(self, count=False):
         if count:
             fields = 'COUNT(*)'
         else:
-            fields = """bilcee.id, bilcee.codice, bilcee.descriz, 
-                        bilcee.sezione, bilcee.voce, bilcee.capitolo, 
+            fields = """bilcee.id, bilcee.codice, bilcee.descriz,
+                        bilcee.sezione, bilcee.voce, bilcee.capitolo,
                         bilcee.dettaglio, bilcee.subdett
             """
         return """SELECT %(fields)s
                   FROM x4.bilcee AS bilcee""" % locals()
-    
+
     def GetDataGridColumns(self):
         cols = self.GetDataGridStructure()
         return [c[1] for c in cols]
-    
+
     def _GetColMap(self):
         _STR = gridlib.GRID_VALUE_STRING
         return (( 35, ( 3, "Sez.",        _STR, False)),
@@ -1329,17 +1331,17 @@ class LinkTableBilCee(LinkTable):
                 ( 35, ( 7, "Sub",         _STR, False)),
                 (300, ( 2, "Descrizione", _STR, False)),
             )
-    
+
     def SetDataGrid(self, grid, rs):
         cols = self._GetColMap()
         colmap  = [c[1] for c in cols]
         grid.SetData(rs, colmap)
-    
+
     def GetGridColumnSizes(self):
         cols = self._GetColMap()
         colsize = [c[0] for c in cols]
         return colsize
-    
+
     def GetGridColumn2Fit(self):
         return 5
 
@@ -1348,7 +1350,7 @@ class LinkTableBilCee(LinkTable):
 
 
 class LinkTableOperatori(LinkTable):
-    
+
     def __init__(self, parent, id, name=None, **kwargs):
         LinkTable.__init__(self, parent, id, **kwargs)
 #        self.digitsearch_oncode = Env.Azienda.BaseTab.MAGDIGSEARCH
@@ -1357,15 +1359,15 @@ class LinkTableOperatori(LinkTable):
             self.SetName(name)
         self.cardclass = None
         self.SetNameAlias()
-    
+
     def SetDataLink(self, *args, **kwargs):
         LinkTable.SetDataLink(self, *args, **kwargs)
         self.SetNameAlias()
-    
+
     def SetNameAlias(self):
         self.db_name = 'x4.utenti'
         self.db_alias = 'utenti'
-        
+
     def GetSql(self, count=False):
         table = self.db_name
         alias = self.db_alias
@@ -1373,7 +1375,7 @@ class LinkTableOperatori(LinkTable):
             fields = 'COUNT(*)'
         else:
             fields = 'utenti.id, utenti.codice, utenti.descriz'
-        return """SELECT %(fields)s 
+        return """SELECT %(fields)s
                     FROM %(table)s AS %(alias)s""" % locals()
 
 
@@ -1395,7 +1397,7 @@ class LinkTabOperatoriAttr(dbg.LinkTabAttr):
 
 
 class LinkTableStati(LinkTable):
-    
+
     def __init__(self, parent, id, name=None, **kwargs):
         LinkTable.__init__(self, parent, id, **kwargs)
         if name:
@@ -1403,11 +1405,11 @@ class LinkTableStati(LinkTable):
         self.SetNameAlias()
         from cfg.stati import StatiDialog
         self.cardclass = StatiDialog
-    
+
     def SetNameAlias(self):
         self.db_name = 'x4.stati'
         self.db_alias = 'stati'
-        
+
     def GetSql(self, count=False):
         table = self.db_name
         alias = self.db_alias
@@ -1417,22 +1419,22 @@ class LinkTableStati(LinkTable):
             fields = 'stati.id, stati.codice, stati.descriz, stati.is_cee, stati.is_blacklisted, stati.vatprefix'
         return """SELECT %(fields)s """\
                """FROM %(table)s AS %(alias)s""" % locals()
-    
+
     def IsCee(self):
         if self._rs:
             return self._rs[3] == 1
         return False
-    
+
     def IsBlacklisted(self):
         if self._rs:
             return self._rs[4] == 1
         return False
-    
+
     def GetVatPrefix(self):
         if self._rs:
             return self._rs[5]
         return None
-    
+
     def SetValueHome(self):
         db = adb.db.__database__
         cmd = self.GetSql()+' WHERE stati.codice="IT"'
@@ -1441,7 +1443,7 @@ class LinkTableStati(LinkTable):
                 self.SetValue(db.rs[0][0])
                 return True
         return False
-        
+
 
 
 # ------------------------------------------------------------------------------
@@ -1462,7 +1464,7 @@ class LinkTabStatiAttr(dbg.LinkTabAttr):
 
 
 class LinkTableTraCau(LinkTable):
-    
+
     def __init__(self, parent, id, name=None, **kwargs):
         LinkTable.__init__(self, parent, id, **kwargs)
         if name:
@@ -1470,7 +1472,7 @@ class LinkTableTraCau(LinkTable):
         self.SetNameAlias()
         from anag.trasp import TraCauDialog
         self.cardclass = TraCauDialog
-    
+
     def SetNameAlias(self):
         self.db_name = bt.TABNAME_TRACAU
         self.db_alias = 'tracau'
@@ -1494,7 +1496,7 @@ class LinkTabTraCauAttr(dbg.LinkTabAttr):
 
 
 class LinkTableTraCur(LinkTable):
-    
+
     def __init__(self, parent, id, name=None, **kwargs):
         LinkTable.__init__(self, parent, id, **kwargs)
         if name:
@@ -1502,7 +1504,7 @@ class LinkTableTraCur(LinkTable):
         self.SetNameAlias()
         from anag.trasp import TraCurDialog
         self.cardclass = TraCurDialog
-    
+
     def SetNameAlias(self):
         self.db_name = bt.TABNAME_TRACUR
         self.db_alias = 'tracur'
@@ -1526,7 +1528,7 @@ class LinkTabTraCurAttr(dbg.LinkTabAttr):
 
 
 class LinkTableTraPor(LinkTable):
-    
+
     def __init__(self, parent, id, name=None, **kwargs):
         LinkTable.__init__(self, parent, id, **kwargs)
         if name:
@@ -1534,7 +1536,7 @@ class LinkTableTraPor(LinkTable):
         self.SetNameAlias()
         from anag.trasp import TraPorDialog
         self.cardclass = TraPorDialog
-    
+
     def SetNameAlias(self):
         self.db_name = bt.TABNAME_TRAPOR
         self.db_alias = 'trapor'
@@ -1558,7 +1560,7 @@ class LinkTabTraPorAttr(dbg.LinkTabAttr):
 
 
 class LinkTableTraAsp(LinkTable):
-    
+
     def __init__(self, parent, id, name=None, **kwargs):
         LinkTable.__init__(self, parent, id, **kwargs)
         if name:
@@ -1566,7 +1568,7 @@ class LinkTableTraAsp(LinkTable):
         self.SetNameAlias()
         from anag.trasp import TraAspDialog
         self.cardclass = TraAspDialog
-    
+
     def SetNameAlias(self):
         self.db_name = bt.TABNAME_TRAASP
         self.db_alias = 'traasp'
@@ -1590,7 +1592,7 @@ class LinkTabTraAspAttr(dbg.LinkTabAttr):
 
 
 class LinkTableTraVet(LinkTable):
-    
+
     def __init__(self, parent, id, name=None, **kwargs):
         LinkTable.__init__(self, parent, id, **kwargs)
         if name:
@@ -1598,11 +1600,11 @@ class LinkTableTraVet(LinkTable):
         self.SetNameAlias()
         from anag.trasp import TraVetDialog
         self.cardclass = TraVetDialog
-    
+
     def SetNameAlias(self):
         self.db_name = bt.TABNAME_TRAVET
         self.db_alias = 'travet'
-        
+
     def GetSql(self, count=False):
         table = self.db_name
         alias = self.db_alias
@@ -1610,12 +1612,12 @@ class LinkTableTraVet(LinkTable):
             fields = 'COUNT(*)'
         else:
             fields = 'travet.id, travet.codice, travet.descriz, travet.indirizzo, travet.cap, travet.citta, travet.prov'
-        return """SELECT %(fields)s 
+        return """SELECT %(fields)s
                     FROM %(table)s AS %(alias)s""" % locals()
-    
+
     def GetFullDescription(self):
         if self._rs:
-            _, _, des, ind, cap, cit, prv, stt = self._rs 
+            _, _, des, ind, cap, cit, prv, stt = self._rs
             out = des
             if ind: out += (' %' % ind)
             if cap: out += (' %' % cap)
@@ -1643,7 +1645,7 @@ class LinkTabTraVetAttr(dbg.LinkTabAttr):
 
 
 class LinkTableTraCon(LinkTable):
-    
+
     def __init__(self, parent, id, name=None, **kwargs):
         LinkTable.__init__(self, parent, id, **kwargs)
         if name:
@@ -1651,7 +1653,7 @@ class LinkTableTraCon(LinkTable):
         self.SetNameAlias()
         from anag.trasp import TraConDialog
         self.cardclass = TraConDialog
-    
+
     def SetNameAlias(self):
         self.db_name = bt.TABNAME_TRACON
         self.db_alias = 'tracon'
@@ -1675,7 +1677,7 @@ class LinkTabTraConAttr(dbg.LinkTabAttr):
 
 
 class LinkTableZona(LinkTable):
-    
+
     def __init__(self, parent, id, name=None, **kwargs):
         LinkTable.__init__(self, parent, id, **kwargs)
         if name:
@@ -1683,7 +1685,7 @@ class LinkTableZona(LinkTable):
         self.SetNameAlias()
         from anag.zone import ZoneDialog
         self.cardclass = ZoneDialog
-    
+
     def SetNameAlias(self):
         self.db_name = bt.TABNAME_ZONE
         self.db_alias = 'zona'
