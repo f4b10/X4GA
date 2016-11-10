@@ -24,7 +24,19 @@ bt = Azienda.BaseTab
 
 from anag.lib import LinkTablePdc, LinkTablePdcCosti, LinkTablePdcRicavi
 
+from awc.controls.checkbox import CheckBox, CheckListBox, CheckListFromText
 
+import stormdb
+
+class AttivaCausali(CheckListFromText):
+    def __init__(self, *args, **kwargs):
+        CheckListFromText.__init__(self, *args, **kwargs)
+        
+        c=stormdb.DbTable(bt.TABNAME_CFGMAGDOC)
+        c.Retrieve()        
+        for t in c:
+            self.Append('%s - %s' % (c.codice, c.descriz))
+            self.SetPyData(self.GetCount()-1,'%s' % c.id)
 
 # Window functions
 
@@ -60,9 +72,10 @@ def CatArtCardFunc( parent, call_fit = True, set_sizer = True ):
 ID_TEXT = 16002
 ID_PDCACQ = 16003
 ID_PDCVEN = 16004
+ID_LTAB = 16005
 
 def CatArtCardAnagFunc( parent, call_fit = True, set_sizer = True ):
-    item0 = wx.BoxSizer( wx.VERTICAL )
+    item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
     item2 = wx.StaticBox( parent, -1, "Nella contabilizzazione dal magazzino, usa i seguenti sottoconti:" )
     item1 = wx.StaticBoxSizer( item2, wx.VERTICAL )
@@ -87,7 +100,28 @@ def CatArtCardAnagFunc( parent, call_fit = True, set_sizer = True ):
 
     item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item0.Add( [ 350, 160 ] , 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+    item8 = wx.BoxSizer( wx.HORIZONTAL )
+    
+    item9 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    
+    item10 = wx.StaticText( parent, ID_TEXT, "Accessibile dai seguenti documenti", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item9.Add( item10, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item11 = AttivaCausali( parent, ID_LTAB, wx.DefaultPosition, [220,300], [], 0 )
+    item11.SetName( "caudoc" )
+    item9.Add( item11, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item9.AddGrowableCol( 0 )
+
+    item9.AddGrowableRow( 1 )
+
+    item8.Add( item9, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item0.Add( item8, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item0.AddGrowableCol( 0 )
+
+    item0.AddGrowableRow( 1 )
 
     if set_sizer == True:
         parent.SetSizer( item0 )
