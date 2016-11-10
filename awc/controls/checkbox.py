@@ -179,6 +179,41 @@ class CheckListBox4Sync(CheckListBox):
     def AddNotPresent(self, tableName):
         self.externalCheck.append(tableName)
 
+
+class CheckListFromText(CheckListBox):
+    externalCheck=None
+    def __init__(self, *args, **kwargs):
+        CheckListBox.__init__(self, *args, **kwargs)
+        self.externalCheck=[]
+
+    def GetValue(self):
+        check='|'
+        lChecked=self.GetSelections()
+        for e in lChecked:
+            check='%s%s|' % (check, self.GetPyData(e))
+        return check
+
+    def SetValue(self, v=''):
+        lChecked=v.split('|')
+        for n in lChecked:
+            if not self.IsPresent(n):
+                self.AddNotPresent(n)
+        for e in range(self.GetCount()):
+            self.Check(e, self.GetPyData(e) in lChecked)
+
+    def IsPresent(self, tag):
+        isPresent=False
+        for e in range(self.GetCount()):
+            if self.GetPyData(e) == tag:
+                isPresent=True
+                break
+        return isPresent
+
+    def AddNotPresent(self, tag):
+        self.externalCheck.append(tag)
+
+
+
 # ------------------------------------------------------------------------------
 
 
