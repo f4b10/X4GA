@@ -6,17 +6,17 @@
 # Copyright:    (C) 2011 Astra S.r.l. C.so Cavallotti, 122 18038 Sanremo (IM)
 # ------------------------------------------------------------------------------
 # This file is part of X4GA
-# 
+#
 # X4GA is free software: you can redistribute it and/or modify
 # it under the terms of the Affero GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # X4GA is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
@@ -26,21 +26,21 @@ import os, sys
 import wx
 
 
-def PdfPrint(filename, printer, copies=1, cbex=None, usedde=False, cmdprint=False, pdfcmd=None):
+def PdfPrint(filename, printer, copies=1, cbex=None, usedde=False, cmdprint=False, pdfcmd=None, commandprint=None):
     """ print a pdf """
-    
+
     out = False
     if usedde:
-        
+
         ## create a DDE connection and open acrobat if possible
         res = _checkAcrobatOpen(1, cbex)
-    
+
         if not res:
             return
-        
+
         ddeServer = res[0]
         ddeConv = res[1]
-        
+
         try:
             for n in range(copies):
                 if n>0:
@@ -49,9 +49,28 @@ def PdfPrint(filename, printer, copies=1, cbex=None, usedde=False, cmdprint=Fals
             out = True
         except:
             pass
-        
+
         ddeServer.Destroy()
-    
+
+    if commandprint and bool(pdfcmd):
+        import subprocess
+        try:
+            oldPar=commandprint.split()
+            newPar=[]
+            for p in oldPar:
+                p=p.replace('<pgm_pdf>', pdfcmd)
+                p=p.replace('<file_pdf>', filename)
+                p=p.replace('<printer>', printer)
+                newPar.append(p)
+            subprocess.Popen(newPar)
+            out = True
+        except:
+            import awc.util as awu
+            msg="Controllare Parametri per stampa diretta nel setup workstation."
+            awu.MsgDialog(None, msg, style=wx.ICON_ERROR)
+            pass
+
+
     if cmdprint and bool(pdfcmd):
         import subprocess
         try:
@@ -59,19 +78,19 @@ def PdfPrint(filename, printer, copies=1, cbex=None, usedde=False, cmdprint=Fals
             out = True
         except:
             pass
-    
+
     if cbex:
         cbex()
-    
+
     return out
 
 #------------------------------------------------------------------------------
 
 def PdfView(filename, cbex=None, usedde=False, pdfcmd=None):
-    
+
     out = False
     dorun = not usedde
-    
+
     if usedde:
         res = _checkAcrobatOpen(1, cbex)
         if res:
@@ -87,7 +106,7 @@ def PdfView(filename, cbex=None, usedde=False, pdfcmd=None):
                 cbex()
         else:
             dorun = True
-        
+
     elif pdfcmd:
         import subprocess
         try:
@@ -95,7 +114,7 @@ def PdfView(filename, cbex=None, usedde=False, pdfcmd=None):
             dorun = False
         except:
             pass
-    
+
     if dorun:
         try:
             os.startfile(filename)
@@ -109,7 +128,7 @@ def PdfView(filename, cbex=None, usedde=False, pdfcmd=None):
             awu.MsgDialog(None, msg, style=wx.ICON_ERROR)
         except Exception, e:
             pass
-    
+
     return out
 
 #------------------------------------------------------------------------------
@@ -118,7 +137,7 @@ def _launchAcrobat():
     try:
         """ try to find the acrobat executable and launch it """
         import win32api, win32con
-        r = win32api.RegOpenKeyEx(win32con.HKEY_CLASSES_ROOT, 
+        r = win32api.RegOpenKeyEx(win32con.HKEY_CLASSES_ROOT,
                                   'AcroExch.Document\\Shell\\Open\\Command')
         v = win32api.RegEnumValue(r, 0)
         r.Close()

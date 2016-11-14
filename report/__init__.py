@@ -6,17 +6,17 @@
 # Copyright:    (C) 2011 Astra S.r.l. C.so Cavallotti, 122 18038 Sanremo (IM)
 # ------------------------------------------------------------------------------
 # This file is part of X4GA
-# 
+#
 # X4GA is free software: you can redistribute it and/or modify
 # it under the terms of the Affero GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # X4GA is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
@@ -128,11 +128,23 @@ def can_direct_print():
         return True
     if directprint and bool(pdfcmd):
         return True
+    if len(commandprint)>0 and bool(pdfcmd):
+        return True
     return False
+
+commandprint = '' #comando stampadiretta pr specifico lettore pdf (tag <pgm_pdf> <file_pdf>)
+def SetCommandPrint(name):
+    global commandprint
+    commandprint = name
+def GetCommandPrint():
+    return commandprint
+
+
+
 
 
 class MultiReportStandardDialog(wx.Dialog):
-    
+
     reportname = None
     printername = None
     bitmap = None
@@ -140,7 +152,7 @@ class MultiReportStandardDialog(wx.Dialog):
     _copies = None
     _can_preview = None
     _can_print = None
-    
+
     def __init__(self, *args, **kwargs):
         self._can_preview = kwargs.pop('can_preview', True)
         self._can_print = kwargs.pop('can_print', True)
@@ -149,7 +161,7 @@ class MultiReportStandardDialog(wx.Dialog):
         self.CenterOnScreen()
         def cn(x):
             return self.FindWindowByName(x)
-        
+
         if (actiondefault == 'view' or not can_direct_print()) and self._can_preview:
             cn('btnpreview').SetDefault()
             self._action = 'VIEW'
@@ -165,24 +177,24 @@ class MultiReportStandardDialog(wx.Dialog):
         for name, func in (('btnpreview', self.OnPreview),
                            ('btnprint', self.OnPrint)):
             self.Bind(wx.EVT_BUTTON, func, cn(name))
-    
+
     def SetEmailOnlyButton(self, totemail):
         cn = self.FindWindowByName
         cn('btnpreview').SetLabel('Spedisci %d email' % totemail)
         cn('btnprint').Hide()
         self.Layout()
-    
+
     def OnLaunch(self, event):
         self._SetOutput(self._action)
-    
+
     def OnPrinterChanged(self, event):
         self.FindWindowByName('btnprint').Enable()
         event.Skip()
-    
+
     def FillControls(self):
         wdr.MultiReportBottomPanel = wdr.MultiReportStandardBottomPanel
         wdr.MultiReportFunc(self)
-    
+
     def ShowModal(self, *args, **kwargs):
         def cn(x):
             return self.FindWindowByName(x)
@@ -196,11 +208,11 @@ class MultiReportStandardDialog(wx.Dialog):
             c.SetValue(1)
         self.FindWindowByName('reports').SetFocus()
         return wx.Dialog.ShowModal(self, *args, **kwargs)
-    
+
     def OnHiLite(self, event):
         self.HiLite()
         event.Skip()
-    
+
     def HiLite(self):
         ci = lambda x: self.FindWindowById(x)
         reports = ci(wdr.ID_REPORTS)
@@ -221,20 +233,20 @@ class MultiReportStandardDialog(wx.Dialog):
                     note.SetValue(text)
                 except:
                     note.SetValue('')
-    
+
     def OnPrint(self, event):
         self._SetOutput('PRINT')
         event.Skip()
-    
+
     def OnPreview(self, event):
         self._SetOutput('VIEW')
         event.Skip()
-    
+
     def _SetOutput(self, tipo):
         self._action = tipo
         if not can_direct_print():
             self.EndModal(wx.ID_OK)
-        reports, printers, copies = map(lambda x: self.FindWindowByName(x), 
+        reports, printers, copies = map(lambda x: self.FindWindowByName(x),
                                 'reports printername numcopie'.split())
         n = reports.GetSelection()
         if n>=0:
@@ -249,7 +261,7 @@ class MultiReportStandardDialog(wx.Dialog):
                     SetUpdateLastPrinter(False)
             self._copies = copies.GetValue()
             self.EndModal(wx.ID_OK)
-    
+
     def SetReport(self, path, name, multi_default=None):
         ci = lambda x: self.FindWindowById(x)
         ci(wdr.ID_REPORTNAME).SetLabel(name)
@@ -288,37 +300,37 @@ class MultiReportStandardDialog(wx.Dialog):
             else:
                 prt = None
             reports.Append(epura(name), (r, bmp, note, prt))
-        
-        
+
+
         if reports.GetCount()>0:
             reports.SetSelection(sel or 0)
             self.HiLite()
-    
+
     def GetReportName(self):
         return self.reportname
-    
+
     def SetPrinter(self, printer):
         p = self.FindWindowByName('printername')
         q = p.GetQueues()
         if printer in q:
             self.printername = printer
             p.SetSelection(q.index(printer))
-    
+
     def GetPrinterName(self):
         return self.printername
-    
+
     def SetCopies(self, c=1):
         self._copies = c
         self.FindWindowByName('numcopie').SetValue(c)
-    
+
     def GetCopies(self):
         return self._copies
-    
+
     def GetAction(self):
         return self._action
-    
+
     def GetLabelOffset(self):
-        return [self.FindWindowById(x).GetValue() for x in (wdr.ID_ROW0, 
+        return [self.FindWindowById(x).GetValue() for x in (wdr.ID_ROW0,
                                                             wdr.ID_COL0)]
 
 
@@ -329,29 +341,29 @@ class Report:
     """
     Generatore reportistica
     """
-    
+
     ChoiceDialog = MultiReportStandardDialog
-    
+
     usedReport = None
     usedDialog = None
-    
-    def __init__(self, parent, dbt, rptdef, rptout=None, output="VIEW", 
+
+    def __init__(self, parent, dbt, rptdef, rptout=None, output="VIEW",
                  desc=None, tipo=TYPE_PDF, noMove=False, exitOnGroup=False,
                  rowFunc=None, testrec=None, dbfunc=None, rowFilter=None,
-                 messages=True, printer=None, copies=None, 
-                 changepathname=None, changefilename=None, forcechoice=False, 
-                 emailbutton=0, multi_default=None, 
+                 messages=True, printer=None, copies=None,
+                 changepathname=None, changefilename=None, forcechoice=False,
+                 emailbutton=0, multi_default=None,
                  otherquestions_filler=None, otherquestions_reactor=None,
                  multicopia_init=None, multicopia_reactor=None,
                  can_preview=True, can_print=True,
                  **oa):
-        
+
         self.messages = messages
         self.parameters = {}
-        
+
         if not self.TestData(parent, dbt, testrec):
             return
-        
+
         #ricerca del report
         for pathsrc in self.GetPaths():
             test = "%s/%s" % (pathsrc, rptdef)
@@ -381,7 +393,7 @@ class Report:
         if rptdef is not None:
             global usedpath
             usedpath = pathsrc
-        
+
         if not os.path.exists(rptdef):
             err = "Manca la definizione del report %s" % rptdef
             if self.messages:
@@ -389,16 +401,16 @@ class Report:
             else:
                 raise Exception, err
             return
-        
+
         if dbfunc is not None:
             dbt = dbfunc(rptdef.replace('.jrxml',''), self)
-        
+
         if dbt is None:
             return
-        
+
         if not self.TestData(parent, dbt, testrec, datareq=True):
             return
-        
+
         if rptout is None:
             if changefilename:
                 rptout = changefilename
@@ -413,16 +425,16 @@ class Report:
                 else:
                     pp = changepathname
             rptout = "%s/%s." % (pp, rptout)
-        
+
         if desc is None:
             desc = "documento"
-        
+
         if tipo == TYPE_PDF:
             if rptout[-4:].lower() != '.pdf':
                 if rptout[-1] != '.':
                     rptout += "."
                 rptout += "pdf"
-            
+
             basePath, _ = os.path.split(rptout)
             try:
                 if not os.path.isdir(basePath):
@@ -434,7 +446,7 @@ class Report:
                     return None
                 else:
                     raise Exception, msg
-            
+
             p = self.parameters
             p['rptdef'] = rptdef
             p['rptout'] = rptout
@@ -456,17 +468,18 @@ class Report:
             p['multicopia_init'] = multicopia_init
             p['multicopia_reactor'] = multicopia_reactor
             p['otherargs'] = oa
+            p['commandprint'] = commandprint
             self.usedReport = self.StartReport()
-            
+
             if updatelastprinter:
                 self.set_default_printer(printer)
-    
+
     def get_default_printer(self):
         return GetPrinterName()
-    
+
     def set_default_printer(self, printer):
         SetPrinterName(printer)
-    
+
     def StartReport(self, rptout=None):
         p = self.parameters
         rptdef = p['rptdef']
@@ -499,6 +512,7 @@ class Report:
         copies = p['copies']
         multicopia_init = p['multicopia_init']
         multicopia_reactor = p['multicopia_reactor']
+        commandprint = p['commandprint']
         oa = p['otherargs']
         return PrintRpt(rptdef, rptout, output, dbTable=dbt,
                         parentWindow=parentWindow,
@@ -507,8 +521,8 @@ class Report:
                         noMove=noMove,
                         exitOnGroup=exitOnGroup,
                         rowFunc=rowFunc,
-                        rowFilter=rowFilter, 
-                        messages=messages, 
+                        rowFilter=rowFilter,
+                        messages=messages,
                         usedde=dde,
                         cmdprint=cmdprint,
                         printer=printer,
@@ -517,8 +531,9 @@ class Report:
                         pdfcmd=pdfcmd,
                         multicopia_init=multicopia_init,
                         multicopia_reactor=multicopia_reactor,
+                        commandprint = commandprint,
                         **oa)
-        
+
     def GetMultiReport(self, parent, path, name, printer, copies, emailbutton, multi_default=None, otherquestions_filler=None, can_preview=True, can_print=True):
         rptdef = None
         action = None
@@ -542,16 +557,16 @@ class Report:
         dlg.Destroy()
         self.ReportSelected(dlg)
         return rptdef, printer, action, copies
-    
+
     def ReportSelected(self, dlg):
         self.usedDialog = dlg
-    
+
     def GetFileName(self):
         out = None
         if self.usedReport:
             out = self.usedReport.nameOutputFile
         return out
-    
+
     def GetPaths(cls):
         paths = []
         if len(pathsub)>0:
@@ -561,13 +576,13 @@ class Report:
         paths.append(pathrpt)
         return paths
     GetPaths = classmethod(GetPaths)
-    
+
     def GetUsedReport(self):
         return self.usedReport
-    
+
     def GetUsedDialog(self):
         return self.usedDialog
-    
+
     def TestData(self, parent, dbt, testrec, datareq=False):
         ok = True
         if testrec is None:
@@ -583,10 +598,10 @@ class Report:
                 else:
                     raise Exception, msg
         return ok
-        
+
     def SetRange(self, range):
         pass
-    
+
     def SetValue(self, val):
         self.progr.Update(val)
 
@@ -595,7 +610,7 @@ class Report:
 
 
 class MultiReportLabelsDialog(MultiReportStandardDialog):
-    
+
     def FillControls(self):
         wdr.MultiReportBottomPanel = wdr.MultiReportLabelsBottomPanel
         wdr.MultiReportFunc(self)
@@ -609,23 +624,23 @@ class MultiReportLabelsDialog(MultiReportStandardDialog):
 
 
 class ReportLabels(Report):
-    
+
     ChoiceDialog = MultiReportLabelsDialog
     row0 = 1
     col0 = 1
-    
+
     def get_default_printer(self):
         return GetLabelerName()
-    
+
     def set_default_printer(self, printer):
         SetLabelerName(printer)
-    
+
     def GetLabelOffsetRow(self):
         return self.row0
-    
+
     def GetLabelOffsetCol(self):
         return self.col0
-    
+
     def ReportSelected(self, dlg):
         Report.ReportSelected(self, dlg)
         for name in 'row0 col0'.split():
@@ -673,18 +688,18 @@ def get_report(rptdef):
 
 
 if __name__ == "__main__":
-   
+
     class TryReport(wx.App):
         def OnInit(self):
             wx.InitAllImageHandlers()
             dialog = wx.Dialog( None, -1, "SuperApp", [0,0], [100,76] )
             return True
-        
+
     app = TryReport(True)
-    
+
     db = adb.DB()
     db.Connect()
-    
+
     pdc = adb.DbTable("pdc", writable=False)
     mas = pdc.AddJoin("bilmas")
     con = pdc.AddJoin("bilcon")
