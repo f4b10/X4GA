@@ -28,6 +28,13 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
+    ('1.5.27', dt.Date(2016, 11, 10), (
+         ("BET1202",
+         """Introdotta la possibilità di specificare i parametri della stampa diretta pdf in funzione del lettore pdf utilizzato."""),
+         ("BET1203",
+         """Introdotta la possibilità di specificare per ogni categoria di magazzino quali siano i documenti in cui esse siano visiabili."""),
+        ),),
+
     ('1.5.26', dt.Date(2016, 9, 15), (
          ("BUG1160",
          """Rimosso bug su adeguamento struttura tabelle in presenza di campi VARCHAR."""),
