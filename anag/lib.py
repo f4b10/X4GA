@@ -177,6 +177,98 @@ class LinkTableProd(LinkTable, LinkTableHideSearchMixin):
             cmd = self.GetSqlSelect()
         return cmd+self.GetSqlFrom()
 
+
+    def GetSqlSearch(self, obj, forceAll, exact, count=False):
+        cmd = None
+        par = []
+        if obj == self._ctrcod:
+            fltf = self.codice_fieldname
+            fltv = self._ctrcod.GetValue()#.strip()
+        elif obj == self._ctrdes:
+            fltf = self.descriz_fieldname
+            fltv = self._ctrdes.GetValue()#.strip()
+        else:
+            fltf = None
+        if fltf:
+            if exact is None:
+                exact = (fltf == self.codice_fieldname and self.exactcode)
+            cmd = self.GetSql(count=count)
+            filter = ""
+            if self.basefilter:
+                #filtro base da SetFilter - ha prevalenza su tutto
+                filter = AndApp("(%s)" % self.basefilter, filter)
+                
+            try:
+                chk = Env.GetAncestorByName(self, 'vincolocat' )
+                if chk.IsChecked():
+                    filter=""
+                else:
+                    v=Env.GetAncestorByName(self, 'causale' ).GetValue()
+                    filter = """
+                    FIND_IN_SET("%s", REPLACE(catart.caudoc, "|", ","))>0
+                    or catart.caudoc is null
+                    or length(catart.caudoc)=0
+                    """\
+                    % v
+            except:
+                pass
+                
+                
+            if self.filter:
+                #filtro base da SetFilter - ha prevalenza su tutto
+                filter = AndApp("(%s)" % self.filter, filter)
+            for col,val,tit in self.filtervalues:
+                #filtri da filterlinks
+                if val is not None:
+                    filter = AndApp(filter, "%s=%%s" % col)
+                    par.append(val)
+            if self.valuesearch:
+                #filtri da cerca valori
+                cmd += self.GetValueSearchSqlJoins()
+                for tab, col, val in self.valuesearch:
+                    op = '='
+                    if type(val) in (str, unicode):
+                        val = val.replace(r'%', '')
+                        val = val.replace('..', r'%')
+                        if self.space_search:
+                            val = val.replace(' ', r'%')
+                        endby = val.startswith("*")
+                        if endby:
+                            val = "%%%s" % val[1:]
+                        if val.endswith("*"):
+                            val = val[:-1]
+                        if not endby:
+                            val += "%"
+                        if '%' in val:
+                            op = ' LIKE '
+                    filter = AndApp(filter, "%s.%s%s%%s" % (tab, col, op))
+                    par.append(val)
+            flttxt, partxt = self.GetSqlTextSearch(obj, forceAll, exact)
+            if flttxt:
+                if filter:
+                    filter = AndApp(filter, "(%s)" % flttxt)
+                else:
+                    filter = flttxt
+                par += partxt
+            if self.filterdyn:
+                fd = self.filterdyn()
+                if fd:
+                    if filter:
+                        filter = "(%s) AND " % filter
+                    filter += fd
+            if filter:
+                cmd += " WHERE %s " % filter
+            g = self.GetSqlGroup()
+            if g:
+                cmd += (' '+g)
+            g, p = self.GetSqlHaving()
+            if g:
+                cmd += (' '+g)
+                par += p
+            if not count:
+                cmd += " ORDER BY %s" % self.GetSqlOrder(fltf)
+        return cmd, par
+
     def GetSqlSelect(self):
 
         out = """SELECT prod.id,
