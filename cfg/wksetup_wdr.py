@@ -695,6 +695,7 @@ def SetupDatabaseFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
+ID_TEXTCTRL = 15037
 
 def SetupReportFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.BoxSizer( wx.VERTICAL )
@@ -782,6 +783,14 @@ def SetupReportFunc( parent, call_fit = True, set_sizer = True ):
     item25 = CmdPrintCheckBox( parent, ID_RPTCMDPRINT, "Usa programma apertura con /t per stampare direttamente", wx.DefaultPosition, wx.DefaultSize, 0 )
     item25.SetName( "Report_cmdprint" )
     item22.Add( item25, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+
+    item26 = wx.StaticText( parent, ID_TEXT, "Paramertri per stampa diretta (in funzione del lettore pdf in uso)", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item22.Add( item26, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+
+    item27 = wx.TextCtrl( parent, ID_TEXTCTRL, "", wx.DefaultPosition, [80,-1], 0 )
+    item27.SetToolTip( wx.ToolTip("<pgm_pdf> -nome programma pdf <file_pdf>-file pdf da stampare") )
+    item27.SetName( "Report_cmd2print" )
+    item22.Add( item27, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item21.Add( item22, 0, wx.GROW|wx.ALL, 5 )
 
