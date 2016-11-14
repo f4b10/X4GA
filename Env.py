@@ -72,6 +72,19 @@ def opj(x,y):
     return os.path.join(x,y).replace('\\', '/')
 
 
+def GetAncestorByName(obj, objName):
+    foundObj=None
+    p=obj
+    try:
+        for i in  range(100):
+            p=p.GetParent()
+            foundObj=p.FindWindowByName(objName)
+            if foundObj:
+                break
+    except:
+        pass
+    return foundObj
+
 config_base_path = '.'
 plugin_base_path = './plugin'
 custom_base_path = './cust'
@@ -278,7 +291,9 @@ class GeneralSetup(Setup):
                   ('action',  'view'),                  #azione di default: view/print
                   ('pdfcmd',  ''),                      #comando apertura pdf a fine stampa
                   ('prtdef',  ''),                      #nome stampante di default
-                  ('labeler', ''),)),                   #nome stampante etichettatrice
+                  ('labeler', ''),                      #nome stampante etichettatrice
+                  ('cmd2print', ''),                    #comando per stampa diretta
+                  )),
 
                 ('Site',                                #configurazione installazione
                  (('name',   'sede'),                   #nome sito
@@ -363,6 +378,9 @@ class GeneralSetup(Setup):
 
             elif opt == 'labeler':
                 report.SetLabelerName((val or '').replace('/', '\\'))
+
+            elif opt == 'cmd2print':
+                report.SetCommandPrint((val or '').replace('/', '\\'))
 
             elif opt == 'output':
                 if val.startswith('./') and sys.platform.startswith('linux'):
@@ -2479,11 +2497,12 @@ class Azienda(object):
 
 
             cls.catart =\
-              [ [ "id",         "INT",    idw, None, "ID Categoria merce", "AUTO_INCREMENT" ],
-                [ "codice",     "CHAR",    10, None, "Codice", None ],
-                [ "descriz",    "VARCHAR", 60, None, "Descrizione", None ],
-                [ "id_pdcacq",  "INT",    idw, None, "ID Pdc collegamento contabile su acquisti", None ],
-                [ "id_pdcven",  "INT",    idw, None, "ID Pdc collegamento contabile su vendite", None ],
+              [ [ "id",         "INT",      idw, None, "ID Categoria merce", "AUTO_INCREMENT" ],
+                [ "codice",     "CHAR",      10, None, "Codice", None ],
+                [ "descriz",    "VARCHAR",   60, None, "Descrizione", None ],
+                [ "caudoc",     "VARCHAR", 1024, None, "Causali Attive", None ],
+                [ "id_pdcacq",  "INT",      idw, None, "ID Pdc collegamento contabile su acquisti", None ],
+                [ "id_pdcven",  "INT",      idw, None, "ID Pdc collegamento contabile su vendite", None ],
             ]
 
             cls.set_constraints(cls.TABNAME_CATART,
