@@ -197,7 +197,7 @@ class LinkTableProd(LinkTable, LinkTableHideSearchMixin):
             if self.basefilter:
                 #filtro base da SetFilter - ha prevalenza su tutto
                 filter = AndApp("(%s)" % self.basefilter, filter)
-                
+
             try:
                 chk = Env.GetAncestorByName(self, 'vincolocat' )
                 if chk.IsChecked():
@@ -206,14 +206,20 @@ class LinkTableProd(LinkTable, LinkTableHideSearchMixin):
                     v=Env.GetAncestorByName(self, 'causale' ).GetValue()
                     filter = """
                     FIND_IN_SET("%s", REPLACE(catart.caudoc, "|", ","))>0
-                    or catart.caudoc is null
-                    or length(catart.caudoc)=0
                     """\
                     % v
+                    #===========================================================
+                    # filter = """
+                    # FIND_IN_SET("%s", REPLACE(catart.caudoc, "|", ","))>0
+                    # or catart.caudoc is null
+                    # or length(catart.caudoc)=0
+                    # """\
+                    # % v
+                    #===========================================================
             except:
                 pass
-                
-                
+
+
             if self.filter:
                 #filtro base da SetFilter - ha prevalenza su tutto
                 filter = AndApp("(%s)" % self.filter, filter)
