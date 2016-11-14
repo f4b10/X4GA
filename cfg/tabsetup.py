@@ -341,14 +341,14 @@ class TabSetupPanel(aw.Panel):
                         change = True
 
                     #test congruenza tipologia
-                    
+
                     if not change:
                         if (not struphys[n][1] == "CHAR" and ftype == "STRING"):
                             change = struphys[n][1] != ftype and not\
                                    (struphys[n][1] in blobs and ftype in blobs)
                             if change:
                                 adeg.append((fname, ADEG_WRONGTYPE))
-                                
+
 
                     #test lunghezza
                     if not change and flen:
@@ -499,7 +499,7 @@ class TabSetupDialog(aw.Dialog):
             else:
                 engine='MYISAM'
             self.ChangeEngine(engine)
-        
+
         self.Show()
         self.panel.Analizza(reindex=self.reindex)
         self.Show(False)
@@ -532,7 +532,7 @@ class TabSetupDialog(aw.Dialog):
                 self.AddForeignKey(passo='3/3')
                 print '='*80
             self.waitEngine.Destroy()
-            
+
 
 
     def SetEngine(self, engine=None):
@@ -1697,6 +1697,11 @@ class AdeguaPanel(aw.Panel):
                 #self.GetParent().EndModal(2)
                 errors = True
 
+            if tab=='catart':
+                for change in self.adeg[tab]:
+                    fl, tipo = change
+                    if fl=='caudoc' and tipo==1:
+                        self.UpdateCatart()
             wait.SetValue(n)
 
         wait.Destroy()
@@ -1713,6 +1718,28 @@ class AdeguaPanel(aw.Panel):
                              """alla corrente versione %s""" % Env.__version__,\
                              style=wx.ICON_INFORMATION)
             self.GetParent().EndModal(1)
+
+
+
+    def UpdateCatart(self):
+        wrk=''
+        bt = Env.Azienda.BaseTab
+        tab = adb.DbTable(bt.TABNAME_CFGMAGDOC, writable=False)
+        tab.Retrieve()
+        for r in  tab:
+            wrk = '%s|%s' % (wrk, r.id)
+        print wrk
+        try:
+            tab = adb.DbTable(bt.TABNAME_CATART)
+            c = tab._info.db._dbCon.cursor()
+            sql="update catart set caudoc='%s';" % wrk
+            c.execute(sql)
+        except:
+            pass
+        
+
+
+
 
 
 # ------------------------------------------------------------------------------
