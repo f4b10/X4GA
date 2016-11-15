@@ -17,6 +17,7 @@ from awc.controls.textctrl import TextCtrl, TextCtrl_LC
 from awc.controls.numctrl import NumCtrl
 from awc.controls.radiobox import RadioBox
 from awc.controls.checkbox import CheckBox
+from awc.controls.checkbox import CheckListFromText
 from awc.controls.linktable import LinkTable
 from awc.controls.dbgrid import DbGrid
 from awc.controls.entries import PrintersComboBox
@@ -33,6 +34,64 @@ import anag.lib as alib
 
 from Env import Azienda
 bt = Azienda.BaseTab
+
+
+
+import stormdb
+
+class AttivaCategorie(CheckListFromText):
+    def __init__(self, *args, **kwargs):
+        CheckListFromText.__init__(self, *args, **kwargs)
+        self.tabCatArt=stormdb.DbTable(bt.TABNAME_CATART)
+        c=self.tabCatArt
+        c.Retrieve()
+        for t in c:
+            self.Append('%s - %s' % (c.codice, c.descriz))
+            self.SetPyData(self.GetCount()-1,'%s' % c.id)
+
+    def SetCatartAttive(self, id):
+        wrk='|'
+        for r in self.tabCatArt:
+            if '|%s|'% id in r.caudoc:
+                wrk='%s%s|' % (wrk, r.id)
+        self.SetValue(wrk)
+
+    def Save(self, idCfgDocMag):
+        catAttive = self.GetValue()
+        for r in self.tabCatArt:
+            if '|%s|'%r.id in catAttive:
+                if not '|%s|'%idCfgDocMag in r.caudoc:
+                    r.caudoc=u'%s|%s|'% (r.caudoc, idCfgDocMag)
+            else:
+                r.caudoc=r.caudoc.replace('|%s|'%idCfgDocMag, '|')
+            r.Save()
+
+    def ShowContextMenu(self, position):
+
+        self.ResetContextMenu()
+        self.AppendContextMenuVoice('Seleziona tutto', self._SelectAll)
+        self.AppendContextMenuVoice('Deseleziona tutto', self._DeselectAll)
+        self.AppendContextMenuVoice('-', None)
+        self.AppendContextMenuVoice('Inverti Seleziona', self._SwitchSelect)
+        CheckListFromText.ShowContextMenu(self, position)
+
+    def _SelectAll(self, event):
+        for i in range(len(self.GetItems())):
+            self.Check(i)
+        self.SetDataChanged()
+        event.Skip()
+
+    def _DeselectAll(self, event):
+        for i in range(len(self.GetItems())):
+            self.Check(i, False)
+        self.SetDataChanged()
+        event.Skip()
+
+    def _SwitchSelect(self, event):
+        for i in range(len(self.GetItems())):
+            self.Check(i, not self.IsChecked(i))
+        self.SetDataChanged()
+        event.Skip()
 
 class RCheckBox(CheckBox):
     def __init__(self, parent, id, label, pos, size, style):
@@ -117,8 +176,12 @@ def CauMagazzCardFunc( parent, call_fit = True, set_sizer = True ):
     item3.AddPage( item6, "Setup movimenti" )
 
     item7 = wx.Panel( item3, -1 )
-    Doc3Func(item7, False)
-    item3.AddPage( item7, "Testo email" )
+    Doc4Func(item7, False)
+    item3.AddPage( item7, "Categorie Prodotti" )
+
+    item8 = wx.Panel( item3, -1 )
+    Doc3Func(item8, False)
+    item3.AddPage( item8, "Testo email" )
 
     item0.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
@@ -1638,6 +1701,35 @@ def Mov2Func( parent, call_fit = True, set_sizer = True ):
     item1.AddGrowableCol( 2 )
 
     item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    if set_sizer == True:
+        parent.SetSizer( item0 )
+        if call_fit == True:
+            item0.SetSizeHints( parent )
+    
+    return item0
+
+ID_LTAB = 16145
+
+def Doc4Func( parent, call_fit = True, set_sizer = True ):
+    item0 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    
+    item1 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    
+    item2 = wx.StaticText( parent, ID_TEXT, "Categorie Articoli Visibili", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item1.Add( item2, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item3 = AttivaCategorie( parent, ID_LTAB, wx.DefaultPosition, [220,300], [], 0 )
+    item3.SetName( "catdoc" )
+    item1.Add( item3, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item1.AddGrowableRow( 1 )
+
+    item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+
+    item0.AddGrowableCol( 0 )
+
+    item0.AddGrowableRow( 0 )
 
     if set_sizer == True:
         parent.SetSizer( item0 )

@@ -31,12 +31,43 @@ import stormdb
 class AttivaCausali(CheckListFromText):
     def __init__(self, *args, **kwargs):
         CheckListFromText.__init__(self, *args, **kwargs)
-        
+
         c=stormdb.DbTable(bt.TABNAME_CFGMAGDOC)
-        c.Retrieve()        
+        c.Retrieve()
         for t in c:
             self.Append('%s - %s' % (c.codice, c.descriz))
             self.SetPyData(self.GetCount()-1,'%s' % c.id)
+
+
+    def ShowContextMenu(self, position):
+
+        self.ResetContextMenu()
+        self.AppendContextMenuVoice('Seleziona tutto', self._SelectAll)
+        self.AppendContextMenuVoice('Deseleziona tutto', self._DeselectAll)
+        self.AppendContextMenuVoice('-', None)
+        self.AppendContextMenuVoice('Inverti Seleziona', self._SwitchSelect)
+        CheckListFromText.ShowContextMenu(self, position)
+
+    def _SelectAll(self, event):
+        for i in range(len(self.GetItems())):
+            self.Check(i)
+        self.SetDataChanged()
+        event.Skip()
+
+    def _DeselectAll(self, event):
+        for i in range(len(self.GetItems())):
+            self.Check(i, False)
+        self.SetDataChanged()
+        event.Skip()
+
+    def _SwitchSelect(self, event):
+        for i in range(len(self.GetItems())):
+            self.Check(i, not self.IsChecked(i))
+        self.SetDataChanged()
+        event.Skip()
+
+
+
 
 # Window functions
 

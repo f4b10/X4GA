@@ -6,17 +6,17 @@
 # Copyright:    (C) 2011 Astra S.r.l. C.so Cavallotti, 122 18038 Sanremo (IM)
 # ------------------------------------------------------------------------------
 # This file is part of X4GA
-# 
+#
 # X4GA is free software: you can redistribute it and/or modify
 # it under the terms of the Affero GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # X4GA is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
@@ -114,36 +114,36 @@ PERM_SCRIVI = 4
 
 
 class PermUteGrid(dbglib.DbGridColoriAlternati):
-    
+
     def __init__(self, parent, rsper):
-        
+
         _STR = gl.GRID_VALUE_STRING
         _CHK = gl.GRID_VALUE_BOOL+":1,0"
-        
+
         coldef = ((120, (PERM_UTEDES, "Utente", _STR, False)),
                   ( 50, (PERM_LEGGI,  "Legge",  _CHK, False)),
                   ( 50, (PERM_SCRIVI, "Scrive", _CHK, False)),
-        )        
-        
+        )
+
         sizes =  [c[0] for c in coldef]
         colmap = [c[1] for c in coldef]
-        
+
         canedit = True
         canins = False
-        
+
         afteredit = None
-        
-        dbglib.DbGridColoriAlternati.__init__(self, 
-                                              parent, 
+
+        dbglib.DbGridColoriAlternati.__init__(self,
+                                              parent,
                                               size=parent.GetClientSizeTuple())
-        
+
         self.rsper = rsper
         self.SetData(self.rsper, colmap, canedit, canins,\
                      None, afteredit,\
                      lambda *x: self.AddNewRow)
-        
+
         self.SetEditableColumns(())
-        
+
         for c,s in enumerate(sizes):
             self.SetColumnDefaultSize(c,s)
         self.SetFitColumn(0)
@@ -154,9 +154,9 @@ class PermUteGrid(dbglib.DbGridColoriAlternati):
         sz.Add(self, 0, wx.GROW|wx.ALL, 0)
         parent.SetSizer(sz)
         sz.SetSizeHints(parent)
-        
+
         self.Bind(gl.EVT_GRID_CELL_LEFT_CLICK, self.OnCellClick)
-    
+
     def OnCellClick(self, event):
         row = event.GetRow()
         if 0 <= row < len(self.rsper):
@@ -169,41 +169,41 @@ class PermUteGrid(dbglib.DbGridColoriAlternati):
                 self.rsper[row][i] = 1-(self.rsper[row][i] or 0)
             self.Refresh()
         event.Skip()
-    
-    
+
+
 # ------------------------------------------------------------------------------
 
 
 class DefMovGrid(dbglib.DbGridColoriAlternati):
-    
+
     def __init__(self, parent, dbmov):
-        
+
         coldef = (\
             ( 40, (RSMOV_CODICE,  "Cod.",      gl.GRID_VALUE_STRING, False)),
             (160, (RSMOV_DESCRIZ, "Movimento", gl.GRID_VALUE_STRING, False)),
             (  1, (RSMOV_ID,      "#mov",      gl.GRID_VALUE_NUMBER, False)),
-        )        
-        
+        )
+
         sizes =  [c[0] for c in coldef]
         colmap = [c[1] for c in coldef]
-        
+
         canedit = True
         canins = False
-        
+
         afteredit = None
-        
-        dbglib.DbGridColoriAlternati.__init__(self, 
-                                              parent, 
+
+        dbglib.DbGridColoriAlternati.__init__(self,
+                                              parent,
                                               size=parent.GetClientSizeTuple())
-        
+
         self.dbmov = dbmov
         self.SetData(dbmov.GetRecordset(), colmap, canedit, canins,\
                      None, afteredit,\
                      lambda *x: self.AddNewRow)
-        
+
         self.SetColMaxChar(RSMOV_CODICE, 10)
         self.SetColMaxChar(RSMOV_DESCRIZ, 20)
-        
+
         self.SetCellDynAttr(self.GetAttr)
         for c,s in enumerate(sizes):
             self.SetColumnDefaultSize(c,s)
@@ -215,21 +215,21 @@ class DefMovGrid(dbglib.DbGridColoriAlternati):
         sz.Add(self, 0, wx.GROW|wx.ALL, 0)
         parent.SetSizer(sz)
         sz.SetSizeHints(parent)
-        
+
         self.Bind(gl.EVT_GRID_CMD_SELECT_CELL, self.OnCellSelected)
-    
+
     def OnCellSelected(self, event):
         self.SelectRow(event.GetRow())
         event.Skip()
-    
+
     def GetAttr(self, row, col, rscol, attr=gl.GridCellAttr):
-        
+
         attr = dbglib.DbGridColoriAlternati.GetAttr(self, row, col, rscol, attr)
-        
+
         #blocco editazione su cella ID
         readonly = (rscol == RSMOV_ID)
         attr.SetReadOnly(readonly)
-        
+
         #impostazione colori
         if 0 <= row < self.dbmov.RowsCount():
             bgcol = None
@@ -240,9 +240,9 @@ class DefMovGrid(dbglib.DbGridColoriAlternati):
             #attr.SetTextColour(fgcol)
             if bgcol:
                 attr.SetBackgroundColour(bgcol)
-        
+
         return attr
-    
+
     def IsRowOk(self, row):
         mov = self.dbmov.GetRecordset()[row]
         valok = True
@@ -251,7 +251,7 @@ class DefMovGrid(dbglib.DbGridColoriAlternati):
             if not valok:
                 break
         return valok
-    
+
     def AddNewRow(self):
         dbmov = self.dbmov
         dbmov.CreateNewRow()
@@ -261,8 +261,8 @@ class DefMovGrid(dbglib.DbGridColoriAlternati):
             if val is not None:
                 setattr(dbmov, col, val)
         return True
-    
-    
+
+
 # ------------------------------------------------------------------------------
 
 
@@ -271,16 +271,16 @@ class CauMagazzPanel(ga.AnagPanel):
     Gestione tabella Causali contabilità.
     """
     def __init__(self, *args, **kwargs):
-        
+
         ga.AnagPanel.__init__(self, *args, **kwargs)
         self.SetDbSetup( bt.tabelle[ bt.TABSETUP_TABLE_CFGMAGDOC ] )
-        
+
         self.dbmov = adb.DbTable(bt.TABNAME_CFGMAGMOV, 'tipmov', fields=movfields)
         self.dbmov.AddOrder('tipmov.codice')
         self.dbmov.Reset()
         self._grid_mov = None
         self.loadmovs = True
-    
+
     def InitControls(self, *args, **kwargs):
         ga.AnagPanel.InitControls(self, *args, **kwargs)
         cols = bt.tabelle[bt.TABSETUP_TABLE_CFGMAGMOV][bt.TABSETUP_TABLESTRUCTURE]
@@ -288,7 +288,7 @@ class CauMagazzPanel(ga.AnagPanel):
         controls = aw.awu.GetNamedChildrens(cn('docbook').GetPage(2), [col[0] for col in cols])
         lnk = [ ( ctr.GetName(), ctr ) for ctr in controls ]
         self.SetControlsMaxLength(cols, lnk)
-    
+
     def InitAnagCard(self, parent):
         cn = self.FindWindowByName
         ci = self.FindWindowById
@@ -330,7 +330,7 @@ class CauMagazzPanel(ga.AnagPanel):
             ctr = cn(name)
             ctr.SetDataLink(name, val)
             self.Bind(wx.EVT_RADIOBOX, self.OnChanged, ctr)
-        
+
         for name, val in ( ("valuta",     { True: 'X', False: ' '} ),
                            ("ctrnum",     { True: 'X', False: ' '} ),
                            ("aggnum",     { True: 'X', False: ' '} ),
@@ -407,20 +407,24 @@ class CauMagazzPanel(ga.AnagPanel):
             ctr = cn(name)
             ctr.SetDataLink(name, val)
             self.Bind(wx.EVT_CHECKBOX, self.OnChanged, ctr)
-        
+
+        self.FindWindowByName('catdoc').Bind(wx.EVT_CHECKLISTBOX, self.OnChanged)
+        self.FindWindowByName('catdoc').SetDataChanged=self.SetDataChanged
+
+
 #        cn('lendescriz').Bind(wx.EVT_KILL_FOCUS, self.OnChanged)
         for name in 'lendescriz prtdestot'.split():
             cn(name).Bind(wx.EVT_KILL_FOCUS, self.OnChanged)
         self.Bind(ga.linktable.EVT_LINKTABCHANGED, self.OnChanged, ci(wdr.ID_CTRPDC))
-        
+
         self.Bind(wx.EVT_BUTTON, self.OnNewMov,  id = wdr.ID_BUTNEWMOV)
         self.Bind(wx.EVT_BUTTON, self.OnDelMov,  id = wdr.ID_BUTDELMOV)
-        
+
         self.EnableDatiAcc()
-        
+
         DB = Env.Azienda.DB
         db = Env.adb.DB(globalConnection=False)
-        
+
         self.permute = []
         if db.Connect(host=DB.servername,
                       user=DB.username,
@@ -440,12 +444,12 @@ class CauMagazzPanel(ga.AnagPanel):
             db.Close()
         else:
             awc.util.MsgDialog(self, repr(db.dbError.description))
-        
+
         self.gridperm = PermUteGrid(cn('pangridperm'), self.permute)
         self.dbperm = PermessiUtenti(ambito='caumagazz')
-        
+
         return p
-    
+
     def UpdateControls(self, row):
         dbmov = self.dbmov
         if 0 <= row < dbmov.RowsCount():
@@ -454,27 +458,27 @@ class CauMagazzPanel(ga.AnagPanel):
                 ctr = self.FindWindowByName(field)
                 if ctr:
                     ctr.SetValue(getattr(dbmov, field))
-    
+
     def OnGridMovCellChanged(self, event):
         row = event.GetRow()
         self.UpdateFromControls(row)
         self._grid_mov.ResetView()
         event.Skip()
-    
+
     def OnGridMovCellSelected(self, event, *args):
         self.UpdateControls(event.GetRow())
         event.Skip()
-    
+
     def DeleteDataRecord(self):
         try:
-            self.db_curs.execute( "DELETE FROM %s WHERE id_tipdoc=%d;"  
-                                  % ( bt.TABNAME_CFGMAGMOV, 
+            self.db_curs.execute( "DELETE FROM %s WHERE id_tipdoc=%d;"
+                                  % ( bt.TABNAME_CFGMAGMOV,
                                       self.db_recid ) )
         except MySQLdb.Error, e:
             MsgDialogDbError(self, e)
             return False
         return ga.AnagPanel.DeleteDataRecord(self)
-    
+
     def OnChanged(self, event):
         self.SetDataChanged()
         sr = self._grid_mov.GetSelectedRows()
@@ -484,7 +488,7 @@ class CauMagazzPanel(ga.AnagPanel):
         if event.GetEventObject().GetName() == 'askdatiacc':
             self.EnableDatiAcc()
         event.Skip()
-    
+
     def UpdateFromControls(self, row):
         dbmov = self.dbmov
         if 0 <= row < dbmov.RowsCount():
@@ -493,11 +497,11 @@ class CauMagazzPanel(ga.AnagPanel):
                 ctr = self.FindWindowByName(field)
                 if ctr:
                     setattr(dbmov, field, ctr.GetValue())
-    
+
     def EnableDatiAcc(self):
         e = self.FindWindowByName('askdatiacc').GetValue() == 'X'
         map(lambda x: x.Enable(e), [x for x in GetAllChildrens(self)
-                                    if x.GetName().startswith('asktra') 
+                                    if x.GetName().startswith('asktra')
                                     or x.GetName().startswith('id_tra')])
 
     def UpdateButtonsState( self ):
@@ -512,13 +516,13 @@ class CauMagazzPanel(ga.AnagPanel):
                 ctr = self.FindWindowById(ID_BTN_RECSAVE)
                 if ctr:
                     ctr.Enable(False)
-    
+
     def OnNewMov(self, event):
         self._grid_mov.AddNewRow()
         self._grid_mov.ResetView()
         self._grid_mov.SetGridCursor(self.dbmov.RowsCount()-1,1)
         event.Skip()
-    
+
     def OnDelMov(self, event):
         dbmov = self.dbmov
         for row in self._grid_mov.GetSelectedRows():
@@ -546,7 +550,7 @@ class CauMagazzPanel(ga.AnagPanel):
                     dbmov._info.iterCount -= 1
                     self.SetDataChanged()
                     event.Skip()
-    
+
     def UpdateDataRecord( self ):
         cn = lambda x: self.FindWindowByName(x)
         for i in range(4):
@@ -589,7 +593,7 @@ class CauMagazzPanel(ga.AnagPanel):
 #                pass
 #            self.LoadMovs()
         return written
-    
+
     def TransferDataFromWindow(self):
         out = ga.AnagPanel.TransferDataFromWindow(self)
         if out:
@@ -610,8 +614,9 @@ class CauMagazzPanel(ga.AnagPanel):
             if not p.IsEmpty():
                 if not p.Save():
                     awc.util.MsgDialog(self, repr(p.GetError()))
+            self.FindWindowByName('catdoc').Save(self.db_recid)
         return out
-    
+
     def UpdateDataControls( self, recno ):
         ga.AnagPanel.UpdateDataControls( self, recno )
         cn = lambda x: self.FindWindowByName(x)
@@ -640,16 +645,19 @@ class CauMagazzPanel(ga.AnagPanel):
             pu[n][PERM_LEGGI] = l
             pu[n][PERM_SCRIVI] = s
         self.gridperm.ResetView()
-    
+        self.FindWindowByName('catdoc').SetCatartAttive(self.FindWindowByName('id').GetValue())
+
+
+
     def CopyFrom_DoCopy(self, idcopy):
         ga.AnagPanel.CopyFrom_DoCopy(self, idcopy)
         self.LoadMovs(idcopy)
         for mov in self.dbmov:
             mov.id = None
-    
+
     def LoadMovs(self, recid=None):
         if recid is None:
-            recid = self.db_recid 
+            recid = self.db_recid
         self.dbmov.Retrieve('tipmov.id_tipdoc=%s', recid)
         self._grid_mov.ChangeData(self.dbmov.GetRecordset())
 

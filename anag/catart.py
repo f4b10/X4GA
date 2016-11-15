@@ -43,9 +43,15 @@ class CatArtPanel(ga.AnagPanel):
                          Azienda.BaseTab.TABSETUP_TABLE_CATART ] )
         self.db_report = "Categorie merce"
 
+        
+
+
+
+
     def InitAnagCard(self, parent):
         p = wx.Panel( parent, -1)
         wdr.CatArtCardFunc( p, True )
+        self.FindWindowByName('caudoc').SetDataChanged=self.SetDataChanged
         return p
 
 
