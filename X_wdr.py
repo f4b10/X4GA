@@ -137,6 +137,7 @@ class AboutPanel(wx.Panel):
                     txt += '\n%s\n' % tag.replace('\n', ' ')
                     txt += '%s\n' % chg.replace('\n', ' ')
                 txt += '\n'
+            txt=txt.replace('<crlf>', '\n')
             vertxt = cn(name)
             vertxt.SetValue(txt)
             vertxt.SetEditable(False)

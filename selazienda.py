@@ -233,7 +233,7 @@ class SelAziendaPanel(aw.Panel):
                 self.codAzi2Skip=codazi
                 oServer=self.FindWindowById(ID_SERVER)
                 oServer.GetCount()
-                for i in range(0, oServer.GetCount()-1):
+                for i in range(0, oServer.GetCount()):
                     if servername==oServer.GetString(i):
                         oServer.SetSelection(i)
                         break

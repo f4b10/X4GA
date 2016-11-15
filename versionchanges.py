@@ -55,7 +55,16 @@ history = (
         ),),
     ('1.5.22', dt.Date(2016, 6, 6), (
          ("BET1198",
-         """Aggiunta possibilità di bypassare maschera di login fornendo opportuno parametro da riga di comando."""),
+         """Aggiunta possibilità di bypassare maschera di login fornendo opportuno parametro da riga di comando.<crlf>
+Il parametro da passare deve avere il seguente formato:<crlf>
+--login=server:SSS/user:UUU/password:PPP/azienda:CCC<crlf>
+dove:<crlf>
+SSS    è il nome del server MySql così come presentato nella casella di riepilogo
+       della videata standard di login a X4. (Se omesso viene acquisito come server il primo server della lista)<crlf>
+UUU    è il nome dell'utente con cui si intende accedere<crlf>
+PPP    è la password associata all'utente indicato<crlf>
+CCC    è il codice dell'azienda su cui si intende operare         
+         """),
          ("BUG1159",
          """Rimosso bug in memorizzazione configurazione sincronizzazione."""),
         ),),
