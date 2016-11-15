@@ -105,11 +105,49 @@ class RCheckBox(CheckBox):
 
 class CheckListBox(wx.CheckListBox):
     PyData=None
+    _context_menu = None
 
     def __init__(self, *args, **kwargs):
 
         wx.CheckListBox.__init__(self, *args, **kwargs)
         self.PyData={}
+        self._context_menu = []        
+        self.Bind(wx.EVT_RIGHT_UP, self.OnContextMenu)
+        
+
+    def OnContextMenu(self, evt):
+        self.ShowContextMenu(evt.GetPosition())
+        evt.Skip()
+
+    def ResetContextMenu(self):
+        del self._context_menu[:]
+
+    def AppendContextMenuVoice(self, label, function, is_enabled=True):
+        self._context_menu.append({'label': label,
+                                   'function': function,
+                                   'is_enabled': is_enabled,})
+
+
+
+    def ShowContextMenu(self, position):
+        if not self._context_menu:
+            return
+        menu = wx.Menu()
+        for voice in self._context_menu:
+            voice_id = voice.get('id', None) or wx.NewId()
+            voice_label = voice.get('label')
+            voice_func = voice.get('function')
+            voice_enabled = voice.get('is_enabled', True)
+            if voice_label == '-':
+                menu.AppendSeparator()
+            else:
+                menu.Append(voice_id, voice_label)
+                menu.Enable(voice_id, voice_enabled)
+            self.Bind(wx.EVT_MENU, voice_func, id=voice_id)
+        self.PopupMenu(menu, position)
+        menu.Destroy()
+
+        
 
     def GetSelections(self):
         sel = []
