@@ -318,11 +318,6 @@ class TabSetupPanel(aw.Panel):
                 #     except:
                 #         pass
                 #===============================================================
-
-
-
-
-
                 tab.Get(-1)
                 tabchange = False
                 tabcreate = False
@@ -1722,12 +1717,12 @@ class AdeguaPanel(aw.Panel):
 
 
     def UpdateCatart(self):
-        wrk=''
+        wrk='|'
         bt = Env.Azienda.BaseTab
         tab = adb.DbTable(bt.TABNAME_CFGMAGDOC, writable=False)
         tab.Retrieve()
         for r in  tab:
-            wrk = '%s|%s' % (wrk, r.id)
+            wrk = '%s%s|' % (wrk, r.id)
         print wrk
         try:
             tab = adb.DbTable(bt.TABNAME_CATART)
@@ -1736,7 +1731,7 @@ class AdeguaPanel(aw.Panel):
             c.execute(sql)
         except:
             pass
-        
+
 
 
 
