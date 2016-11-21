@@ -319,6 +319,8 @@ def SelFunc( parent, call_fit = True, set_sizer = True ):
 
     item59 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
+    item59.Add( [ 20, 20 ] , 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+
     item60 = wx.Button( parent, ID_STORY, "Elaborazioni precedenti", wx.DefaultPosition, wx.DefaultSize, 0 )
     item60.SetName( "story" )
     item59.Add( item60, 0, wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
@@ -327,7 +329,9 @@ def SelFunc( parent, call_fit = True, set_sizer = True ):
     item61.SetName( "butest" )
     item59.Add( item61, 0, wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM|wx.ALL, 5 )
 
-    item0.Add( item59, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item59.AddGrowableCol( 0 )
+
+    item0.Add( item59, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item0.Add( [ 20, 160 ] , 0, wx.ALIGN_CENTER, 5 )
 
@@ -397,17 +401,24 @@ def DocRagFunc( parent, call_fit = True, set_sizer = True ):
     item13 = wx.StaticLine( parent, ID_LINE, wx.DefaultPosition, [20,-1], wx.LI_HORIZONTAL )
     item0.Add( item13, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item14 = wx.BoxSizer( wx.HORIZONTAL )
+    item14 = wx.FlexGridSizer( 0, 3, 0, 0 )
     
-    item15 = wx.Button( parent, ID_LISTRAG, "Lista documenti estratti", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item15.SetName( "listrag" )
-    item14.Add( item15, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+    item15 = wx.StaticText( parent, ID_TEXT, "", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item15.SetFont( wx.Font( 14, wx.ROMAN, wx.NORMAL, wx.NORMAL ) )
+    item15.SetName( "msgEstratti" )
+    item14.Add( item15, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item16 = wx.Button( parent, ID_BUTRAG, "Avvia raggruppamento", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item16.SetName( "butrag" )
+    item16 = wx.Button( parent, ID_LISTRAG, "Lista documenti estratti", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item16.SetName( "listrag" )
     item14.Add( item16, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
-    item0.Add( item14, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item17 = wx.Button( parent, ID_BUTRAG, "Avvia raggruppamento", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item17.SetName( "butrag" )
+    item14.Add( item17, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+    item14.AddGrowableCol( 0 )
+
+    item0.Add( item14, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item0.AddGrowableCol( 0 )
 
@@ -515,17 +526,24 @@ def DocGenFunc( parent, call_fit = True, set_sizer = True ):
     item11 = wx.StaticLine( parent, ID_LINE, wx.DefaultPosition, [20,-1], wx.LI_HORIZONTAL )
     item0.Add( item11, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item12 = wx.BoxSizer( wx.HORIZONTAL )
+    item12 = wx.FlexGridSizer( 0, 3, 0, 0 )
     
-    item13 = wx.Button( parent, ID_LISTGEN, "Lista documenti generati", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item13.SetName( "listgen" )
-    item12.Add( item13, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+    item13 = wx.StaticText( parent, ID_TEXT, "text", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item13.SetFont( wx.Font( 14, wx.ROMAN, wx.NORMAL, wx.NORMAL ) )
+    item13.SetName( "msgGenerati" )
+    item12.Add( item13, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item14 = wx.Button( parent, ID_BUTCONF, "Conferma generazione", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item14.SetName( "butconf" )
-    item12.Add( item14, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+    item14 = wx.Button( parent, ID_LISTGEN, "Lista documenti generati", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item14.SetName( "listgen" )
+    item12.Add( item14, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item0.Add( item12, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item15 = wx.Button( parent, ID_BUTCONF, "Conferma generazione", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item15.SetName( "butconf" )
+    item12.Add( item15, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+    item12.AddGrowableCol( 0 )
+
+    item0.Add( item12, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item0.AddGrowableCol( 0 )
 

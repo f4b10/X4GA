@@ -718,7 +718,7 @@ class NumericCellEditor(gridlib.PyGridCellEditor, CellEditorsMixin):
         val = self._tc.GetValue()
         if val != self.startValue:
             table = grid.GetTable()
-            data = table.data
+            #----data = table.data
             # callback x valid. cella prima dell'aggiornamento del recordset
             if table.TestAfterEdit(CELLEDIT_BEFORE_UPDATE, row, col, val):
                 # callback x creazione nuova riga
@@ -726,6 +726,7 @@ class NumericCellEditor(gridlib.PyGridCellEditor, CellEditorsMixin):
                     # aggiornamento recordset
                     rscol = table.rsColumns[col]
                     if rscol>=0:
+                        data = table.data
                         #data[row][rscol] = val
                         data[row][rscol] = self._tc.GetValue() #potrebbe essere stato variato dai callback
                     table.ForceResetView()

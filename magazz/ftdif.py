@@ -6,17 +6,17 @@
 # Copyright:    (C) 2011 Astra S.r.l. C.so Cavallotti, 122 18038 Sanremo (IM)
 # ------------------------------------------------------------------------------
 # This file is part of X4GA
-# 
+#
 # X4GA is free software: you can redistribute it and/or modify
 # it under the terms of the Affero GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # X4GA is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
@@ -33,11 +33,13 @@ bt = dbm.bt
 adb = dbm.adb
 dt = dbm.mx.DateTime
 
+import magazz
 import magazz.ftdif_wdr as wdr
 
 from awc.controls.datectrl import EVT_DATECHANGED
 
 import report as rpt
+import stormdb as adb
 
 
 stdcolor = dbm.Env.Azienda.Colours
@@ -47,6 +49,7 @@ FRAME_TITLE = "Fatturazione differita"
 
 LISTEFOLDER = "Liste di controllo Operazioni Differite"
 
+_DEBUG = True
 
 class GridDocRag(dbglib.DbGridColoriAlternati):
     """
@@ -58,10 +61,46 @@ class GridDocRag(dbglib.DbGridColoriAlternati):
         parent griglia  (wx.Panel)
         dbtable documenti (derivati da magazz.dbtables.DocAll)
         """
-        
+
         size = parent.GetClientSizeTuple()
-        
+
         self.dbdoc = dbdoc
+
+        cols = self.GetDbColumns()
+
+        colmap  = [c[1] for c in cols]
+        colsize = [c[0] for c in cols]
+        canedit = False
+        canins = False
+
+        dbglib.DbGridColoriAlternati.__init__(self, parent, -1, size=size, style=0)
+
+        links = None
+
+        afteredit = None
+        self.SetData( self.dbdoc.GetRecordset(), colmap, canedit, canins,\
+                      links, afteredit)
+
+        map(lambda c:\
+            self.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
+
+        self.AutoSizeColumns()
+        sz = wx.FlexGridSizer(1,0,0,0)
+        sz.AddGrowableCol( 0 )
+        sz.AddGrowableRow( 0 )
+        sz.Add(self, 0, wx.GROW|wx.ALL, 0)
+        parent.SetSizer(sz)
+        sz.SetSizeHints(parent)
+
+        self.inclescl = True
+
+        self.Bind(gl.EVT_GRID_SELECT_CELL, self.OnDocRagInclEscl)
+        self.Bind(gl.EVT_GRID_CELL_LEFT_DCLICK, self.OnCallDoc)
+
+
+    def GetDbColumns(self):
+        def cn(db, col):
+            return db._GetFieldIndex(col, inline=True)
         doc = self.dbdoc
         mag = doc.magazz
         tpd = doc.tipdoc
@@ -70,18 +109,15 @@ class GridDocRag(dbglib.DbGridColoriAlternati):
         mpa = doc.modpag
         cat = doc.tracau
         tot = doc.tot
-        
-        def cn(db, col):
-            return db._GetFieldIndex(col, inline=True)
-        
+
         self.col_p0 = cn(tot, 'total_prezzizero')
-        
+
         _NUM = gl.GRID_VALUE_NUMBER
         _FLT = bt.GetValIntMaskInfo()
         _STR = gl.GRID_VALUE_STRING
         _DAT = gl.GRID_VALUE_DATETIME
         _CHK = gl.GRID_VALUE_BOOL+":True,False"
-        
+
         cols = (
             ( 30, (cn(doc, 'raggruppa'),     "Rag.",           _CHK, True)),
             ( 35, (cn(mag, 'codice'),        "Mag.",           _STR, True)),
@@ -100,36 +136,49 @@ class GridDocRag(dbglib.DbGridColoriAlternati):
             (120, (cn(mpa, 'descriz'),       "Mod.Pagamento",  _STR, True)),
             ( 40, (cn(des, 'codice'),        "Cod.",           _STR, True)),
             (250, (cn(des, 'descriz'),       "Destinazione",   _STR, True)),
+            (  1, (cn(doc, 'id'),            "#id",            _STR, True)),
+            (  1, (cn(doc, 'changed'),       "#flg",           _CHK, True)),
             )
-        
-        colmap  = [c[1] for c in cols]
-        colsize = [c[0] for c in cols]
-        canedit = False
-        canins = False
-        
-        dbglib.DbGridColoriAlternati.__init__(self, parent, -1, size=size, style=0)
-        
-        links = None
-        
-        afteredit = None
-        self.SetData( self.dbdoc.GetRecordset(), colmap, canedit, canins,\
-                      links, afteredit)
-        
-        map(lambda c:\
-            self.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
-        
-        self.AutoSizeColumns()
-        sz = wx.FlexGridSizer(1,0,0,0)
-        sz.AddGrowableCol( 0 )
-        sz.AddGrowableRow( 0 )
-        sz.Add(self, 0, wx.GROW|wx.ALL, 0)
-        parent.SetSizer(sz)
-        sz.SetSizeHints(parent)
-        
-        self.inclescl = True
-        
-        self.Bind(gl.EVT_GRID_SELECT_CELL, self.OnDocRagInclEscl)
-    
+
+        return cols
+
+
+
+
+    def GetFieldColInGrid(self, fieldName, ):
+        idx=self.dbdoc.GetAllColumnsNames().index(fieldName)
+        item= [item for item in self.GetDbColumns() if item[1][0]==idx]
+        return item[0][1][0]
+
+
+
+    def OnCallDoc(self, event):
+        # richiamo documento dai documenti estratti
+        assert isinstance(self, dbglib.DbGrid)
+        row = event.GetRow()
+        dbdoc = self.dbdoc
+        if 0 <= row < dbdoc.RowsCount():
+            dbdoc.MoveRow(row)
+            if magazz.CheckPermUte(dbdoc.id_tipdoc, 'leggi'):
+                wx.BeginBusyCursor()
+                try:
+                    Dialog = magazz.GetDataentryDialogClass()
+                    dlg = Dialog(aw.awu.GetParentFrame(self))
+                    dlg.SetOneDocOnly(dbdoc.id)
+                    dlg.CenterOnScreen()
+                finally:
+                    wx.EndBusyCursor()
+                r = dlg.ShowModal()
+                if r in (magazz.DOC_MODIFIED, magazz.DOC_DELETED):
+                    self.UpdateGrid()
+                    if r == magazz.DOC_MODIFIED:
+                        wx.CallAfter(lambda: self.SelectRow(row))
+                dlg.Destroy()
+        event.Skip()
+
+    def UpdateGrid(self):
+        self.SetStatus(True)
+
     def GetAttr(self, row, col, rscol, attr=dbglib.gridlib.GridCellAttr):
         attr = dbglib.DbGridColoriAlternati.GetAttr(self, row, col, rscol, attr)
         if 0 <= row < self.dbdoc.RowsCount():
@@ -137,8 +186,35 @@ class GridDocRag(dbglib.DbGridColoriAlternati):
             if (rs[row][self.col_p0] or 0) > 0:
                 attr.SetTextColour(Env.Azienda.Colours.VALERR_FOREGROUND)
                 attr.SetBackgroundColour(Env.Azienda.Colours.VALERR_BACKGROUND)
+            elif rs[row][self.GetFieldColInGrid('changed')] and col==12:                 
+                #attr.SetTextColour(Env.Azienda.Colours.VALERR_BACKGROUND)
+                attr.SetTextColour(Env.Azienda.Colours.VALERR_FOREGROUND)
+                attr.SetBackgroundColour(Env.Azienda.Colours.VALERR_BACKGROUND)
         return attr
-    
+
+
+    #===========================================================================
+    # def DrawLines(self, focused=False):
+    #     if focused:
+    #         tx = self._textcolor_sel_on
+    #         row=self.GridCursorRow
+    #         rs = self.dbdoc.GetRecordset()            
+    #         if rs[row-1][self.GetFieldColInGrid('changed')]:
+    #             tx = Env.Azienda.Colours.VALERR_BACKGROUND
+    #             
+    #         cb = self._gridcolor_sel_on
+    #         cl = self._gridcolor_on
+    #     else:
+    #         tx = 'white'#self._textcolor_sel_off #pare che senza focus la riga di selezione abbia sempre background grigio
+    #         cb = self._gridcolor_sel_off
+    #         cl = self._gridcolor_off
+    #     self.SetSelectionForeground(tx)
+    #     self.SetSelectionBackground(cb)
+    #     self.SetGridLineColour(cl)
+    #===========================================================================
+
+
+
     def OnDocRagInclEscl(self, event):
         if event.GetCol() == 0 and self.inclescl:
             col = self.dbdoc._GetFieldIndex('raggruppa', inline=True)
@@ -163,9 +239,9 @@ class GridDocGen(dbglib.DbGrid):
         parent griglia  (wx.Panel)
         dbtable documenti (derivati da magazz.dbtables.DocAll)
         """
-        
+
         size = parent.GetClientSizeTuple()
-        
+
         self.dbdoc = dbdoc
         doc = self.dbdoc
         mag = doc.magazz
@@ -176,51 +252,52 @@ class GridDocGen(dbglib.DbGrid):
         spe = doc.speinc
         ban = doc.bancf
         tot = doc.tot
-        
+
         cn = lambda db, col: db._GetFieldIndex(col, inline=True)
-        
+
         _NUM = gl.GRID_VALUE_NUMBER
         _FLT = bt.GetValIntMaskInfo()
         _STR = gl.GRID_VALUE_STRING
         _DAT = gl.GRID_VALUE_DATETIME
         _CHK = gl.GRID_VALUE_BOOL
-        
+
         cols = (
-            ( 35, (cn(mag, 'codice'),        "Mag.",           _STR, True)),
-            ( 35, (cn(cau, 'codice'),        "Cod.",           _STR, True)),
-            (120, (cn(cau, 'descriz'),       "Documento",      _STR, True)),
-            ( 50, (cn(doc, 'numdoc'),        "Num.",           _NUM, True)),
-            ( 80, (cn(doc, 'datdoc'),        "Data Doc.",      _DAT, True)),
-            ( 80, (cn(doc, 'datreg'),        "Data reg.",      _DAT, True)),
-            ( 50, (cn(pdc, 'codice'),        "Cod.",           _STR, True)),
-            (250, (cn(pdc, 'descriz'),       "Anagrafica",     _STR, True)),
-            (120, (cn(tot, 'total_imponib'), "Tot.Imponibile", _FLT, True)),
-            ( 40, (cn(mpa, 'codice'),        "Cod.",           _STR, True)),
-            (120, (cn(mpa, 'descriz'),       "Mod.Pagamento",  _STR, True)),
-            ( 35, (cn(spe, 'codice'),        "Cod.",           _STR, True)),
-            (120, (cn(spe, 'descriz'),       "Spese incasso",  _STR, True)),
-            ( 35, (cn(ban, 'codice'),        "Cod.",           _STR, True)),
-            (160, (cn(ban, 'descriz'),       "Banca appoggio", _STR, True)),
-            ( 35, (cn(des, 'codice'),        "Cod.",           _STR, True)),
-            (250, (cn(des, 'descriz'),       "Destinazione",   _STR, True)),
+            ( 35, (cn(mag, 'codice'),          "Mag.",           _STR, True)),
+            ( 35, (cn(cau, 'codice'),          "Cod.",           _STR, True)),
+            (120, (cn(cau, 'descriz'),         "Documento",      _STR, True)),
+            ( 50, (cn(doc, 'numdoc'),          "Num.",           _NUM, True)),
+            ( 80, (cn(doc, 'datdoc'),          "Data Doc.",      _DAT, True)),
+            ( 80, (cn(doc, 'datreg'),          "Data reg.",      _DAT, True)),
+            ( 50, (cn(pdc, 'codice'),          "Cod.",           _STR, True)),
+            (250, (cn(pdc, 'descriz'),         "Anagrafica",     _STR, True)),
+            (120, (cn(tot, 'total_imponib'),   "Tot.Imponibile", _FLT, True)),
+            ( 40, (cn(mpa, 'codice'),          "Cod.",           _STR, True)),
+            (120, (cn(mpa, 'descriz'),         "Mod.Pagamento",  _STR, True)),
+            ( 35, (cn(spe, 'codice'),          "Cod.",           _STR, True)),
+            (120, (cn(spe, 'descriz'),         "Spese incasso",  _STR, True)),
+            ( 35, (cn(ban, 'codice'),          "Cod.",           _STR, True)),
+            (160, (cn(ban, 'descriz'),         "Banca appoggio", _STR, True)),
+            ( 35, (cn(des, 'codice'),          "Cod.",           _STR, True)),
+            (250, (cn(des, 'descriz'),         "Destinazione",   _STR, True)),
+            (  1, (cn(doc, 'original_id_doc'), "#idDoc",         _STR, True)),
         )
-        
+
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
         canedit = False
         canins = False
-        
+
         dbglib.DbGrid.__init__(self, parent, -1, size=size, style=0)
-        
+
         links = None
-        
+
         afteredit = None
         self.SetData( self.dbdoc.GetRecordset(), colmap, canedit, canins,\
                       links, afteredit)
-        
+
         map(lambda c:\
             self.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
-        
+
         self.AutoSizeColumns()
         sz = wx.FlexGridSizer(1,0,0,0)
         sz.AddGrowableCol( 0 )
@@ -230,6 +307,9 @@ class GridDocGen(dbglib.DbGrid):
         sz.SetSizeHints(parent)
 
 
+
+
+
 # ------------------------------------------------------------------------------
 
 
@@ -237,23 +317,100 @@ class GridMovRag(dbglib.DbGrid):
     """
     Griglia dettaglio movimenti
     """
-    def __init__(self, parent, dbmov):
+    def __init__(self, parent, dbmov, gridFather=None):
         """
         Parametri:
         parent griglia  (wx.Panel)
         dbtable movimenti (derivati da magazz.dbftd.MovAll)
         """
-        
+
         size = parent.GetClientSizeTuple()
-        
+
         self.dbmov = dbmov
-        mov = self.dbmov
-        tpm = mov.tipmov
-        pro = mov.prod
-        iva = mov.iva
-        
+        self.gridFather=gridFather
+
+        cols = self.GetDbColumns()
+
+        colmap  = [c[1] for c in cols]
+        colsize = [c[0] for c in cols]
+        canedit = True
+        canins = False
+
+#===============================================================================
+#         def BeforeEdit(row, gridcol, col, value):
+#             print 'before'
+#             return True
+#
+#         def AfterEdit(row, gridcol, col, value):
+#             print 'after'
+#             return True
+#
+#         afterEdit = ((dbglib.CELLEDI
+#                       T_BEFORE_UPDATE, 1, BeforeEdit,),
+#                      (dbglib.CELLEDIT_AFTER_UPDATE, 1, AfterEdit,),)
+#===============================================================================
+
+        afterEdit = ( (dbglib.CELLEDIT_BEFORE_UPDATE, -1, self.OnBeforeValueChanged),
+                      (dbglib.CELLEDIT_AFTER_UPDATE, -1,  self.OnAfterValueChanged),)
+
+        dbglib.DbGrid.__init__(self, parent, -1, size=size, style=0)
+
+        links = None
+
+        #afteredit = None
+        self.SetData( self.dbmov.GetRecordset(), colmap, canedit, canins,\
+                      links, afterEdit)
+
+        map(lambda c:\
+            self.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
+
+        self.AutoSizeColumns()
+        sz = wx.FlexGridSizer(1,0,0,0)
+        sz.AddGrowableCol( 0 )
+        sz.AddGrowableRow( 0 )
+        sz.Add(self, 0, wx.GROW|wx.ALL, 0)
+        parent.SetSizer(sz)
+        sz.SetSizeHints(parent)
+
+
+        self.Bind(gl.EVT_GRID_CELL_LEFT_DCLICK, self.OnCallDoc)
+
+    def OnCallDoc(self, event):
+        # richiamo documento dai movimenti estratti
+        assert isinstance(self, dbglib.DbGrid)
+        row = event.GetRow()
+        dbmov = self.dbmov
+        if 0 <= row < dbmov.RowsCount():
+            dbmov.MoveRow(row)
+            print 'id doc: %s' % dbmov.id_doc
+            if self.CheckPermUte(dbmov.id_doc, 'leggi'):
+                wx.BeginBusyCursor()
+                try:
+                    Dialog = magazz.GetDataentryDialogClass()
+                    dlg = Dialog(aw.awu.GetParentFrame(self))
+                    dlg.SetOneDocOnly(dbmov.id_doc)
+                    dlg.CenterOnScreen()
+                finally:
+                    wx.EndBusyCursor()
+                r = dlg.ShowModal()
+                if r in (magazz.DOC_MODIFIED, magazz.DOC_DELETED):
+                    self.UpdateGrid()
+                    if r == magazz.DOC_MODIFIED:
+                        wx.CallAfter(lambda: self.SelectRow(row))
+                dlg.Destroy()
+        event.Skip()
+
+    def UpdateGrid(self):
+        self.SetStatus(True)
+
+    def CheckPermUte(self, idDoc, perm):
+        dbDoc=adb.DbTable(bt.TABNAME_MOVMAG_H)
+        dbDoc.Get(idDoc)
+        return magazz.CheckPermUte(dbDoc.id_tipdoc, perm)
+
+    def GetDbColumns(self):
         cn = lambda db, col: db._GetFieldIndex(col, inline=True)
-        
+
         _NUM = gl.GRID_VALUE_NUMBER
         _FLT = bt.GetValIntMaskInfo()
         _FLQ = bt.GetMagQtaMaskInfo()
@@ -262,7 +419,136 @@ class GridMovRag(dbglib.DbGrid):
         _STR = gl.GRID_VALUE_STRING
         _DAT = gl.GRID_VALUE_DATETIME
         _CHK = gl.GRID_VALUE_BOOL+":True,False"
-        
+
+        mov = self.dbmov
+        tpm = mov.tipmov
+        pro = mov.prod
+        iva = mov.iva
+
+        cols = []
+        a = cols.append
+        a(( 30, (cn(tpm, 'codice'),  "M.",           _STR, False)))
+        a(( 90, (cn(pro, 'codice'),  "Cod.",         _STR, False)))
+        a((280, (cn(mov, 'descriz'), "Descrizione",  _STR, False)))
+        a(( 20, (cn(mov, 'um'),      "U.M.",         _STR, False)))
+        a(( 90, (cn(mov, 'qta'),     "Qtà",          _FLQ, True)))
+        a((100, (cn(mov, 'prezzo'),  "Prezzo",       _FLP, True)))
+        if bt.MAGNUMSCO >= 1:
+            a(( 40, (cn(mov, 'sconto1'), "Sc.%"+'1'*int(bt.MAGNUMSCO>1), _FLS, True)))
+        if bt.MAGNUMSCO >= 2:
+            a(( 40, (cn(mov, 'sconto2'), "Sc.%2",    _FLS, True)))
+        if bt.MAGNUMSCO >= 3:
+            a(( 40, (cn(mov, 'sconto3'), "Sc.%3",    _FLS, True)))
+        if bt.MAGNUMSCO >= 4:
+            a(( 40, (cn(mov, 'sconto4'), "Sc.%4",    _FLS, True)))
+        if bt.MAGNUMSCO >= 5:
+            a(( 40, (cn(mov, 'sconto5'), "Sc.%5",    _FLS, True)))
+        if bt.MAGNUMSCO >= 6:
+            a(( 40, (cn(mov, 'sconto6'), "Sc.%6",    _FLS, True)))
+        a((110, (cn(mov, 'importo'), "Importo",      _FLT, False)))
+        a(( 30, (cn(iva, 'codice'),  "Cod.",         _STR, False)))
+        a(( 90, (cn(iva, 'descriz'), "Aliquota IVA", _STR, False)))
+        a(( 90, (cn(tpm, 'descriz'), "Movimento",    _STR, False)))
+        a((200, (cn(mov, 'note'),    "Note",         _STR, False)))
+
+        a((  1, (cn(mov, 'id_doc'),  "#idDoc",        _STR, False)))
+        a((  1, (cn(mov, 'id'),      "#id",           _STR, False)))
+        return cols
+
+
+    def GetFieldColInGrid(self, fieldName):
+        idx=self.dbmov.GetAllColumnsNames().index(fieldName)
+        item= [item for item in self.GetDbColumns() if item[1][0]==idx]
+        return item[0][1][0]
+
+    def OnBeforeValueChanged(self, row, gridcol, col, value):
+        changed = False
+        table = self.GetTable()
+        data = table.data
+        newData=[]
+        for r in data:
+            newData.append(list(r))
+        self.GetTable().data=newData
+        data = self.GetTable().data
+
+        return True
+
+    def OnAfterValueChanged(self, row, gridcol, col, value):
+        table = self.GetTable()
+        data = table.data
+        sconto={}
+        for n in ['sconto1', 'sconto2', 'sconto3', 'sconto4', 'sconto5', 'sconto6']:
+            try:
+                sconto[n]=data[row][self.GetFieldColInGrid(n)]
+            except:
+                sconto[n]=0
+        data[row][self.GetFieldColInGrid('importo')]=round(
+                                                           data[row][self.GetFieldColInGrid('qta')]*data[row][self.GetFieldColInGrid('prezzo')]\
+                                                            *(100-sconto['sconto1'])/100\
+                                                            *(100-sconto['sconto2'])/100\
+                                                            *(100-sconto['sconto3'])/100\
+                                                            *(100-sconto['sconto4'])/100\
+                                                            *(100-sconto['sconto5'])/100\
+                                                            *(100-sconto['sconto6'])/100, bt.VALINT_DECIMALS)
+        id=data[row][self.GetFieldColInGrid('id')]
+        idDoc=data[row][self.GetFieldColInGrid('id_doc')]
+        self.UpdateMovDoc(id,
+                          idDoc,
+                          qta=data[row][self.GetFieldColInGrid('qta')],
+                          prezzo=data[row][self.GetFieldColInGrid('prezzo')],
+                          sconto1=sconto['sconto1'],
+                          sconto2=sconto['sconto2'],
+                          sconto3=sconto['sconto3'],
+                          sconto4=sconto['sconto4'],
+                          sconto5=sconto['sconto5'],
+                          sconto6=sconto['sconto6'],
+                          importo=data[row][self.GetFieldColInGrid('importo')])
+        self.gridFather.Refresh()
+        self.SetStatus(True)
+
+    def UpdateMovDoc(self, id, idDoc, qta=0, prezzo=0, sconto1=0, sconto2=0, sconto3=0, sconto4=0, sconto5=0, sconto6=0, importo=0):
+        dbWork=adb.DbTable(bt.TABNAME_MOVMAG_B)
+        if dbWork.Get(id):
+            dbWork.qta     = qta
+            dbWork.prezzo  = prezzo
+            dbWork.sconto1 = sconto1
+            dbWork.sconto2 = sconto2
+            dbWork.sconto3 = sconto3
+            dbWork.sconto4 = sconto4
+            dbWork.sconto5 = sconto5
+            dbWork.sconto6 = sconto6
+            dbWork.importo = importo
+            if dbWork.Save():
+                obj=Env.GetAncestorByName(self, 'pgedoc').GetChildren()[0]
+                row=None
+                for i, r in enumerate(obj.GetTable().data):
+                    if r[0]==idDoc:
+                        row=i
+                        break
+                obj.GetTable().data[row][obj.GetFieldColInGrid('changed')] = True
+                pass
+
+# ------------------------------------------------------------------------------
+
+
+class GridMovGen(GridMovRag):
+    def GetDbColumns(self):
+        cn = lambda db, col: db._GetFieldIndex(col, inline=True)
+
+        _NUM = gl.GRID_VALUE_NUMBER
+        _FLT = bt.GetValIntMaskInfo()
+        _FLQ = bt.GetMagQtaMaskInfo()
+        _FLP = bt.GetMagPreMaskInfo()
+        _FLS = bt.GetMagScoMaskInfo()
+        _STR = gl.GRID_VALUE_STRING
+        _DAT = gl.GRID_VALUE_DATETIME
+        _CHK = gl.GRID_VALUE_BOOL+":True,False"
+
+        mov = self.dbmov
+        tpm = mov.tipmov
+        pro = mov.prod
+        iva = mov.iva
+
         cols = []
         a = cols.append
         a(( 30, (cn(tpm, 'codice'),  "M.",           _STR, True)))
@@ -288,59 +574,82 @@ class GridMovRag(dbglib.DbGrid):
         a(( 90, (cn(iva, 'descriz'), "Aliquota IVA", _STR, True)))
         a(( 90, (cn(tpm, 'descriz'), "Movimento",    _STR, True)))
         a((200, (cn(mov, 'note'),    "Note",         _STR, True)))
-        
-        colmap  = [c[1] for c in cols]
-        colsize = [c[0] for c in cols]
-        canedit = False
-        canins = False
-        
-        dbglib.DbGrid.__init__(self, parent, -1, size=size, style=0)
-        
-        links = None
-        
-        afteredit = None
-        self.SetData( self.dbmov.GetRecordset(), colmap, canedit, canins,\
-                      links, afteredit)
-        
-        map(lambda c:\
-            self.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
-        
-        self.AutoSizeColumns()
-        sz = wx.FlexGridSizer(1,0,0,0)
-        sz.AddGrowableCol( 0 )
-        sz.AddGrowableRow( 0 )
-        sz.Add(self, 0, wx.GROW|wx.ALL, 0)
-        parent.SetSizer(sz)
-        sz.SetSizeHints(parent)
 
 
-# ------------------------------------------------------------------------------
+        a((  1, (cn(mov, 'id_doc'),           "#numDoc",    _STR, True)))
+        a((  1, (cn(mov, 'original_id'),      "#id",        _STR, True)))
+        a((  1, (cn(mov, 'original_id_doc'),  "#idDoc",     _STR, True)))
+        return cols
 
 
-class GridMovGen(GridMovRag):
-    pass
+
+    def OnCallDoc(self, event):
+        # richiamno documento dai movimenti generati
+        assert isinstance(self, dbglib.DbGrid)
+        row = event.GetRow()
+        dbmov = self.dbmov
+
+        idx_id    = self.dbmov.GetAllColumnsNames().index('original_id')
+        idx_iddoc = self.dbmov.GetAllColumnsNames().index('original_id_doc')
+
+        if 0 <= row < len(self.GetTable().data):
+            r=self.GetTable().data[row]
+            id=r[idx_id]
+            idDoc=r[idx_iddoc]
+            if self.CheckPermUte(idDoc, 'leggi'):
+                wx.BeginBusyCursor()
+                try:
+                    Dialog = magazz.GetDataentryDialogClass()
+                    dlg = Dialog(aw.awu.GetParentFrame(self))
+                    dlg.SetOneDocOnly(idDoc)
+                    dlg.CenterOnScreen()
+                finally:
+                    wx.EndBusyCursor()
+                r = dlg.ShowModal()
+                if r in (magazz.DOC_MODIFIED, magazz.DOC_DELETED):
+                    self.UpdateGrid()
+                    if r == magazz.DOC_MODIFIED:
+                        wx.CallAfter(lambda: self.SelectRow(row))
+                dlg.Destroy()
+        event.Skip()
+
+    def UpdateGrid(self):
+        self.SetStatus(True)
+
+    def CheckPermUte(self, idDoc, perm):
+        dbDoc=adb.DbTable(bt.TABNAME_MOVMAG_H)
+        dbDoc.Get(idDoc)
+        return magazz.CheckPermUte(dbDoc.id_tipdoc, perm)
+
+
 
 
 # ------------------------------------------------------------------------------
 
 
 class FtDifPanel(aw.Panel):
-    
+
+    needRecalc=None
+
+
     def __init__(self, *args, **kwargs):
-        
+
         aw.Panel.__init__(self, *args, **kwargs)
         wdr.FtdSelFunc(self)
         cn = self.FindWindowByName
-        
+
+
+        self.SetStatus()
+
         #fatturazione differita
         self.ftd = ftd.FtDif()
         self.ftd.docrag.ShowDialog(self)
-        
+
         self.dbdoc = dbm.DocMag()
-        
+
         #inizializzazione controlli
         today = Env.Azienda.Esercizio.dataElab
-        
+
         d1 = today
         if d1.day < 15:
             d1 -= 10
@@ -349,19 +658,30 @@ class FtDifPanel(aw.Panel):
         else:
             d1 = dt.DateTime(d1.year, d1.month, 1)
             d2 = today
-        
+
+        if _DEBUG:
+            d1 = dt.DateTime(2016, 5, 1)
+            d2 = dt.DateTime(2016, 5, 31)
+
+
+
         for name, val in (('datmin', d1),
                           ('datmax', d2),
                           ('datdoc', d2)):
             cn(name).SetValue(val)
-        
+
         cn('datlast').Disable()
         cn('numlast').Disable()
-        
+
+
+
         #griglie doc/mov estratti
         self.gridocrag = GridDocRag(cn('pgedoc'), self.ftd.docrag)
-        self.grimovrag = GridMovRag(cn('pgemov'), self.ftd.movrag)
-        
+        self.gridocrag.SetStatus = self.SetStatus
+
+        self.grimovrag = GridMovRag(cn('pgemov'), self.ftd.movrag, gridFather=self.gridocrag)
+        self.grimovrag.SetStatus = self.SetStatus
+
         #def MenuPopup(self, event, row):
             #def _DeleteRow(*args):
                 #self.OnDocRagDel(event)
@@ -375,24 +695,27 @@ class FtDifPanel(aw.Panel):
             #self.gridocrag.PopupMenu(menu, (xo, yo))
             #menu.Destroy()
             #event.Skip()
-        
+
         #def _OnLabelRightClick(event, self=self):
             #row = event.GetRow()
             #if 0 <= row < self.ftd.docrag.RowsCount():
                 #self.gridocrag.SelectRow(row)
                 #MenuPopup(self, event, row)
-        
+
         #self.gridocrag.Bind(gl.EVT_GRID_LABEL_RIGHT_CLICK, _OnLabelRightClick)
         #self.gridocrag.Bind(gl.EVT_GRID_CELL_RIGHT_CLICK, _OnLabelRightClick)
-        
+
         self.gridocrag.Bind(gl.EVT_GRID_SELECT_CELL, self.OnDocRagSelected)
-        
+
         #griglie doc/mov generati
         self.gridocgen = GridDocGen(cn('pggdoc'), self.ftd.docgen)
         self.grimovgen = GridMovGen(cn('pggmov'), self.ftd.movgen)
-        
+
+        self.grimovgen.SetStatus=self.SetStatus
+
+
         self.gridocgen.Bind(gl.EVT_GRID_SELECT_CELL, self.OnDocGenSelected)
-        
+
         #artifizio: x evidenziare con colori alternati insiemi di documenti
         #diversi raggruppati nello stesso documento generato, viene aggiunta
         #una colonna fittizia 'docset' nel corpo dei movimenti generati, che
@@ -409,7 +732,7 @@ class FtDifPanel(aw.Panel):
                     attr.SetBackgroundColour(colors[rowrs[msc] % 2])
                 return attr
             self.grimovgen.SetCellDynAttr(MovGenGetAttr)
-        
+
         for evt, cbf, name in (
             (EVT_DATECHANGED, self.OnDatDocChanged, 'datdoc'),
             (wx.EVT_BUTTON,   self.OnEstrai,        'butest'),
@@ -420,15 +743,29 @@ class FtDifPanel(aw.Panel):
             (wx.EVT_BUTTON,   self.OnHistory,       'story'),
             ):
             self.Bind(evt, cbf, cn(name))
-        
+
         self.Bind(gl.EVT_GRID_SELECT_CELL, self.OnDocRagInclEscl)
-    
+
+
+    def SetStatus(self, needRecalc=False):
+        self.needRecalc = needRecalc
+        for n in ['msgEstratti', 'msgGenerati', 'listrag', 'butrag', 'listgen', 'butconf']:
+            obj=self.FindWindowByName(n)
+            if obj:
+                if isinstance(obj, wx.StaticText):
+                    if self.needRecalc:
+                        obj.SetLabel("ATTENZIONE PROVVEDERE A RIESEGUIRE L'ESTRAZIONE")
+                    else:
+                        obj.SetLabel("")
+                elif isinstance(obj, wx.Button):
+                    obj.Enable(not needRecalc)
+
     def OnListaRag(self, event):
         docids = [str(d.id) for d in self.ftd.docrag if d.raggruppa == 1]
         docs = dbm.DocMag()
         docs.ShowDialog(self)
         msg = "Vuoi ordinare i documenti raggruppati per numero?"
-        x = aw.awu.MsgDialog(self, msg, 
+        x = aw.awu.MsgDialog(self, msg,
                              style=wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT)
         if x == wx.ID_NO:
             docs.ClearOrders()
@@ -440,15 +777,15 @@ class FtDifPanel(aw.Panel):
             return
         self.Stampa(docs, LISTEFOLDER, "Lista documenti da raggruppare")
         event.Skip()
-    
+
     def Stampa(self, dbt, rptname, rpttitle, **kwargs):
         dbt._info.titleprint = rpttitle
         rpt.Report(self, dbt, rptname, **kwargs)
-    
+
     def OnListaGen(self, event):
         #caricamento dbm.DocMag x stampa di tutti i documenti generati
         dg = self.ftd.docgen
-        wait = aw.awu.WaitDialog(self, 
+        wait = aw.awu.WaitDialog(self,
                                  message='Preparazione dei dati per la stampa',
                                  maximum = dg.RowsCount())
         docs = dbm.DocMag()
@@ -486,16 +823,16 @@ class FtDifPanel(aw.Panel):
                 dbt.allinea = 1
         self.Stampa(docs, LISTEFOLDER, "Lista documenti generati", rowFunc=LoadMovs)
         event.Skip()
-    
+
     def OnHistory(self, event):
         frame = FtDifHistoryFrame(self)
         frame.Show()
         event.Skip()
-    
+
     def OnDocRagInclEscl(self, event):
         self.UpdateDocRag()
         event.Skip()
-    
+
     #def OnDocRagDel(self, event):
         #row = event.GetRow()
         #self.gridocrag.DeleteRows(row)
@@ -507,7 +844,7 @@ class FtDifPanel(aw.Panel):
         #dr._info.iterCount -= 1
         #self.UpdateDocRag()
         #event.Skip()
-    
+
     def OnDocRagSelected(self, event):
         row = event.GetRow()
         if 0 <= row < self.ftd.docrag.RowsCount():
@@ -517,7 +854,7 @@ class FtDifPanel(aw.Panel):
             else:
                 aw.awu.MsgDialog(self, repr(self.ftd.movrag.GetError()))
             event.Skip()
-    
+
     def OnDocGenSelected(self, event):
         dg = self.ftd.docgen
         mg = self.ftd.movgen
@@ -534,16 +871,17 @@ class FtDifPanel(aw.Panel):
                         break
         self.grimovgen.ChangeData(movrs)
         event.Skip()
-    
+
     def OnEstrai(self, event):
         if self.Validate():
             self.Estrai()
+            self.SetStatus(False)
             event.Skip()
-    
+
     def OnRaggr(self, event):
         self.Raggruppa()
         event.Skip()
-    
+
     def Validate(self):
         cn = self.FindWindowByName
         ddoc, dmin, dmax = map(lambda x: cn(x).GetValue(), 'datdoc datmin datmax'.split())
@@ -589,15 +927,15 @@ class FtDifPanel(aw.Panel):
         else:
             do = True
         return do
-    
+
     def Estrai(self):
-        
+
         ftd = self.ftd
         cn = self.FindWindowByName
-        
+
         dr = ftd.docrag
         dg = ftd.docgen
-        
+
         for d, uname, tname in ((dg, 'sepall',  None),
                                 (dg, 'sepmp',   None),
                                 (dg, 'sepdest', None),
@@ -614,23 +952,23 @@ class FtDifPanel(aw.Panel):
                                 (dr, 'zona',    'solozona'),
                                 (dr, 'catcli',  'solocateg'),
                                 (dr, 'modpag',  'solomp'),):
-            
+
             c = cn(uname)
             if c:
                 v = c.GetValue()
             else:
                 v = getattr(self, uname, None)
-            
+
             name = tname
             if name is None:
                 name = uname
-            
+
             setattr(d, '_%s' % name, v)
-        
+
         ftd.docrag._tipidoc = [int(ddr.id_docrag)
                                for n, ddr in enumerate(ftd.ddr)
                                if cn('docs').IsChecked(n)]
-        
+
         ctrct = cn('cautra')
         if ctrct:
             ftd.docrag._cautras = [ct.id for n, ct in enumerate(self.dbtracau)
@@ -639,17 +977,17 @@ class FtDifPanel(aw.Panel):
                 ftd.docrag._cautras.append(None)
         else:
             ftd.docrag._cautras = [None]
-        
+
         #azzero contenuto griglie
         for grid in (self.gridocrag, self.grimovrag,
                      self.gridocgen, self.grimovgen):
             grid.ChangeData(())
-        
+
         try:
             ftd.Estrai()
         except Exception, e:
             aw.awu.MsgDialog(self, repr(e.args))
-        
+
         p0 = False
         dr = self.ftd.docrag
         cp0 = dr.tot._GetFieldIndex('total_prezzizero', inline=True)
@@ -661,9 +999,9 @@ class FtDifPanel(aw.Panel):
             c = cn(name)
             if c:
                 c.Enable(not p0)
-        
+
         self.UpdateDocRag()
-        
+
         if ftd.docrag.RowsCount() == 0:
             aw.awu.MsgDialog(self, "Nessun documento da raggruppare")
         else:
@@ -671,7 +1009,7 @@ class FtDifPanel(aw.Panel):
             self.gridocrag.ChangeData(ftd.docrag.GetRecordset())
             self.gridocrag.inclescl = True
             cn('workzone').SetSelection(1)
-    
+
     def UpdateDocRag(self):
         dr = self.ftd.docrag
         tot = {0: [0, 0], 1: [0, 0]}
@@ -686,7 +1024,7 @@ class FtDifPanel(aw.Panel):
                                ('docesclnum', 0, 0),
                                ('docescltot', 0, 1)):
             cn(name).SetValue(tot[rag][col])
-    
+
     def UpdateDocGen(self):
         cn = self.FindWindowByName
         dg = self.ftd.docgen
@@ -698,17 +1036,17 @@ class FtDifPanel(aw.Panel):
             n1, n2 = [dg._info.rs[row][col] for row in (0, dg.LastRow())]
         cn('docgenmin').SetValue(n1)
         cn('docgenmax').SetValue(n2)
-    
+
     def Raggruppa(self):
-        
+
         if self.ftd.docrag.RowsCount() == 0:
             aw.awu.MsgDialog(self, "Nessun documento estratto")
             return
-        
+
         cn = self.FindWindowByName
         self.ftd.docgen._firstdat = cn('datdoc').GetValue()
         self.ftd.docgen._firstnum = cn('numdoc').GetValue()
-        
+
         wait = aw.awu.WaitDialog(
             self, message="Raggruppamento documenti in corso...",
             maximum=self.ftd.docrag.RowsCount())
@@ -725,7 +1063,7 @@ class FtDifPanel(aw.Panel):
         self.UpdateDocGen()
         self.gridocgen.ChangeData(self.ftd.docgen.GetRecordset())
         cn('workzone').SetSelection(2)
-    
+
     def OnDatDocChanged(self, event):
         cn = self.FindWindowByName
         if event.GetValue() is not None:
@@ -733,11 +1071,11 @@ class FtDifPanel(aw.Panel):
             cn('datlast').SetValue(self.ftd.docgen._lastdat)
             cn('numlast').SetValue(self.ftd.docgen._lastnum)
             cn('numdoc').SetValue((self.ftd.docgen._lastnum or 0)+1)
-    
+
     def SetRaggr(self, fdid):
-        
+
         cn = self.FindWindowByName
-        
+
         ftd = self.ftd
         try:
             ftd.SetRaggr(fdid)
@@ -747,14 +1085,14 @@ class FtDifPanel(aw.Panel):
             enab = False
         for name in 'butest butrag'.split():
             cn(name).Enable(enab)
-        
+
         cn('desdoc').SetLabel(ftd.tipdoc.descriz)
-        
+
         l = cn('docs')
         for ddr in ftd.ddr:
             l.Append(ddr.tipdoc.descriz)
             l.Check(l.GetCount()-1)
-        
+
         for name, value in (('sepall',  ftd.f_sepall == 1),
                             ('sepmp',   ftd.f_sepmp == 1),
                             ('sepdest', ftd.f_sepdest == 1),
@@ -764,7 +1102,7 @@ class FtDifPanel(aw.Panel):
                 c.SetValue(value)
             else:
                 setattr(self, name, value)
-        
+
         ct = adb.DbTable(bt.TABNAME_TRACAU, 'tracau', writable=True)
         ct.AddOrder('esclftd')
         ct.AddOrder('codice')
@@ -779,13 +1117,13 @@ class FtDifPanel(aw.Panel):
                 if ct.esclftd != 1:
                     l.Check(l.GetCount()-1)
         self.dbtracau = ct
-        
+
         cn('pdc').SetFilter("id_tipo=%d" % ftd.tipdoc.id_pdctip)
-    
+
     def OnGenera(self, event):
         if self.Genera():
             event.Skip()
-    
+
     def Genera(self):
         out = False
         if aw.awu.MsgDialog(self, "Confermi la generazione dei documenti?",
@@ -794,10 +1132,10 @@ class FtDifPanel(aw.Panel):
             return
         wait = aw.awu.WaitDialog(self, message=
                                  '''Conferma dei documenti generati '''
-                                 '''in corso''', 
+                                 '''in corso''',
                                  maximum=self.ftd.docgen.RowsCount())
         WaitUpdate = lambda *x: wait.SetValue(self.ftd.docgen.RowNumber())
-        
+
         wx.BeginBusyCursor()
         try:
             self.ftd.Genera(WaitUpdate)
@@ -836,7 +1174,7 @@ class FtDifFrame(aw.Frame, _FtDif_Mixin):
         self.AddSizedPanel(self.ftdifpanel)
         self.CenterOnScreen()
         self.Bind(wx.EVT_BUTTON, self.OnClose, cn('butconf'))
-    
+
     def OnClose(self, event):
         self.Close()
         event.Skip()
@@ -855,24 +1193,24 @@ class FtDifHistoryGrid(dbglib.DbGrid):
         parent griglia  (wx.Panel)
         dbtable documenti (derivati da magazz.dbftd.FtDifHistory)
         """
-        
+
         size = parent.GetClientSizeTuple()
-        
+
         self.dbdocs = dbdocs
         d = dbdocs
         d.docrag = d
         g = d.docgen
         g.docgen = g
-        
+
         def cn(db, col):
             return db._GetFieldIndex(col, inline=True)
-        
+
         _NUM = gl.GRID_VALUE_NUMBER
         _FLT = bt.GetValIntMaskInfo()
         _STR = gl.GRID_VALUE_STRING
         _DAT = gl.GRID_VALUE_DATETIME
         _CHK = gl.GRID_VALUE_BOOL+":True,False"
-        
+
         cols = (\
             ( 30, (cn(d.cfgrag, 'codice'),  "Cod.",            _STR, True )),\
             (130, (cn(d.cfgrag, 'descriz'), "Doc.Raggruppato", _STR, True )),\
@@ -883,23 +1221,23 @@ class FtDifHistoryGrid(dbglib.DbGrid):
             ( 60, (cn(g.docgen, 'numdoc'),  "Num.",            _NUM, True )),\
             ( 80, (cn(g.docgen, 'datdoc'),  "Data",            _DAT, True )),\
             )
-        
+
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
         canedit = False
         canins = False
-        
+
         dbglib.DbGrid.__init__(self, parent, -1, size=size, style=0)
-        
+
         links = None
-        
+
         afteredit = None
         self.SetData(self.dbdocs.GetRecordset(), colmap, canedit, canins,\
                      links, afteredit)
-        
+
         map(lambda c:\
             self.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
-        
+
         self.AutoSizeColumns()
         sz = wx.FlexGridSizer(1,0,0,0)
         sz.AddGrowableCol( 0 )
@@ -913,23 +1251,23 @@ class FtDifHistoryGrid(dbglib.DbGrid):
 
 
 class FtDifHistoryPanel(aw.Panel):
-    
+
     def __init__(self, *args, **kwargs):
-        
+
         aw.Panel.__init__(self, *args, **kwargs)
         wdr.FtDifHistoryFunc(self)
         cn = self.FindWindowByName
-        
+
         self.dbdocs = ftd.FtDifHistory()
         self.dbdocs.ShowDialog(self)
-        
+
         self.grid = FtDifHistoryGrid(cn('storypangrid'), self.dbdocs)
-        
+
         self.UpdateGrid()
-        
+
         self.Bind(wx.EVT_BUTTON, self.OnUpdate, cn('storyupd'))
         self.Bind(wx.EVT_RADIOBOX, self.OnOrder, cn('storyorder'))
-    
+
     def OnOrder(self, event):
         docs = self.dbdocs
         sel = event.GetEventObject().GetSelection()
@@ -939,11 +1277,11 @@ class FtDifHistoryPanel(aw.Panel):
             docs.SetOrderRag()
         self.UpdateGrid()
         event.Skip()
-    
+
     def OnUpdate(self, event):
         self.UpdateGrid()
         event.Skip()
-    
+
     def UpdateGrid(self):
         cn = self.FindWindowByName
         dat1, dat2 = [cn(x).GetValue() for x in 'storydat1 storydat2'.split()]

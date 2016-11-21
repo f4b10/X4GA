@@ -28,6 +28,13 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
+    ('1.5.28', dt.Date(2016, 11, 10), (
+         ("BET1204",
+         """Introdotta la possibilità di richiamre documenti in fase di fatturaz.differita."""),
+         ("BET1205",
+         """Introdotta la possibilità di modificare quantità e prezzo su documenti raggruppati in fatturazione differita."""),
+        ),),
+
     ('1.5.27', dt.Date(2016, 11, 10), (
          ("BET1202",
          """Introdotta la possibilità di specificare i parametri della stampa diretta pdf in funzione del lettore pdf utilizzato."""),
@@ -63,7 +70,7 @@ SSS    è il nome del server MySql così come presentato nella casella di riepil
        della videata standard di login a X4. (Se omesso viene acquisito come server il primo server della lista)<crlf>
 UUU    è il nome dell'utente con cui si intende accedere<crlf>
 PPP    è la password associata all'utente indicato<crlf>
-CCC    è il codice dell'azienda su cui si intende operare         
+CCC    è il codice dell'azienda su cui si intende operare
          """),
          ("BUG1159",
          """Rimosso bug in memorizzazione configurazione sincronizzazione."""),

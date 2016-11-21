@@ -104,7 +104,12 @@ class FtDif(adb.DbTable):
             bt.TABNAME_CFGMAGMOV, 'tipmov')
         
         docgen = DocAll(alias='docgen', writable=True)
+        
+        docgen.AddField('docgen.original_id_doc', 'original_id_doc')
+        docgen.Get(-1)
+
         movgen = MovAll(alias='movgen', writable=True)
+        
         docgen._lastdat = None
         docgen._lastnum = None
         docgen._firstdat = None
@@ -116,6 +121,9 @@ class FtDif(adb.DbTable):
         #aggiungo colonna dummy su movimenti generati per distinzione visuale
         #in grid dettaglio documento generato
         movgen.AddField('movgen.id', 'docset')
+        movgen.AddField('movgen.original_id', 'original_id')
+        movgen.AddField('movgen.original_id_doc', 'original_id_doc')
+        
         movgen.Get(-1)
         self.docgen = docgen
         self.movgen = movgen
@@ -127,6 +135,8 @@ class FtDif(adb.DbTable):
         #aggiungo colonna dummy su documenti estratti per gestione flag di
         #raggruppamento, default=True su tutti i documenti estratti
         docrag.AddField('docrag.id>0', 'raggruppa')
+        docrag.AddField('False', 'changed')
+        #docrag.AddField('docrag.changed', 'changed')
         docrag.Get(-1)
         docrag._datmin = None
         docrag._datmax = None
@@ -159,6 +169,11 @@ class FtDif(adb.DbTable):
         self.docacq = {}
         
         self.Get(-1)
+
+
+
+
+
 
     def SetRaggr(self, fdid):
         
@@ -423,6 +438,12 @@ class FtDif(adb.DbTable):
                 
                 dg.CreateNewRow()
                 
+                dg.original_id_doc=dr.id
+                
+                
+                
+                
+                
                 #copia campi da documento origine
                 for field in dr.GetFieldNames():
                     if field != 'id' and not field in headfields:
@@ -528,6 +549,9 @@ class FtDif(adb.DbTable):
                     if field != 'id' and not field in bodyfields:
                         mg.__setattr__(field, mr.__getattr__(field))
                 
+                mg.original_id=mr.id
+                mg.original_id_doc=mr.id_doc
+                
                 bodyfields['id_tipmov'] = dr._movmap[m.id_tipmov]
                 bodyfields['id_moveva'] = mr.id
                 bodyfields['numriga'] = lastrig
@@ -570,7 +594,8 @@ class FtDif(adb.DbTable):
             mg.__setattr__(field, value)
         mg.__setattr__('descriz', "Rif.to %s n. %s del %s"\
                   % (doc.tipdoc.descriz, doc.numdoc, Env.StrDate(doc.datdoc)))
-        
+
+        mg.original_id_doc=dr.id
         return lastrig
     
     def Genera(self, func=None):
