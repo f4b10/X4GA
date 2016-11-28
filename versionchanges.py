@@ -28,6 +28,11 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
+    ('1.5.29', dt.Date(2016, 11, 26), (
+         ("BET1206",
+         """Introdotta classe TreeListCtrl che prevede esportazione dati."""),
+        ),),
+
     ('1.5.28', dt.Date(2016, 11, 10), (
          ("BET1204",
          """Introdotta la possibilità di richiamre documenti in fase di fatturaz.differita."""),
