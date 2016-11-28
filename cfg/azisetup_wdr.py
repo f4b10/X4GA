@@ -17,7 +17,7 @@ from awc.controls.numctrl import NumCtrl
 from awc.controls.radiobox import RadioBox
 from awc.controls.checkbox import CheckBox, CheckListBox, CheckListBox4Sync
 from awc.controls.linktable import LinkTable
-
+from awc.controls.treecolumn import TreeListCtrl
 from awc.controls.entries import FolderEntryCtrl
 
 from anag.basetab import WorkZoneNotebook, PhotoContainerPanel
