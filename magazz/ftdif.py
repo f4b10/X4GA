@@ -49,7 +49,8 @@ FRAME_TITLE = "Fatturazione differita"
 
 LISTEFOLDER = "Liste di controllo Operazioni Differite"
 
-_DEBUG = True
+import sys
+_DEBUG = True and not hasattr(sys, 'frozen')
 
 class GridDocRag(dbglib.DbGridColoriAlternati):
     """
