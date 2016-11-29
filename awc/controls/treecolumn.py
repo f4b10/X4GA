@@ -136,11 +136,16 @@ class TreeListCtrl(gizmos.TreeListCtrl):
         s.descriz=path
         s.Save()
 
-    def SetExportFile(self):
+    def SetOutputFileName(self, fileName=None):
+        if not fileName:
+            fileName="\export.html"
+        return fileName
+
+    def SetExportFile(self, outputFileName):
         self.GetLastPathUsed()
         outputFile=''
         exportPath=self.lastPath
-        filename='Centri_costo.html'
+        filename=self.SetOutputFileName(outputFileName)
         wildcard='*.html'
         dlg = wx.FileDialog(
             self, message="Esporta con nome", defaultDir=exportPath,
@@ -155,9 +160,9 @@ class TreeListCtrl(gizmos.TreeListCtrl):
                     outputFile=''
         return outputFile
 
-    def ExportHtml(self, modelName=None, titolo='', titoliColonna=['COLONNA']):
+    def ExportHtml(self, modelName=None, titolo='', titoliColonna=None, outputFileName=None):
         if os.path.exists(modelName):
-            outputFile=self.SetExportFile()
+            outputFile=self.SetExportFile(outputFileName)
             if len(outputFile)>0:
                 html=[]
                 input = open(modelName, "r")
@@ -170,8 +175,12 @@ class TreeListCtrl(gizmos.TreeListCtrl):
                     line=line.replace('<<titolo>>', titolo)
                     if line.find('<<TitoliColonne>>')>=0:
                         wrk=''
-                        for t in titoliColonna:
-                            wrk='%s<th>%s</th>' % (wrk, t)
+                        for nc in range(0, self.GetColumnCount()):
+                            wrk='%s<th>%s</th>' % (wrk, self.GetColumnText(nc))
+                        #=======================================================
+                        # for t in titoliColonna:
+                        #     wrk='%s<th>%s</th>' % (wrk, t)
+                        #=======================================================
                         line=line.replace('<<TitoliColonne>>', wrk)
 
                     if line.find('<<expand_level>>')>=0:
@@ -233,16 +242,19 @@ class TreeListCtrl(gizmos.TreeListCtrl):
 
     def _GetChildren(self, item):
         lChildren=[]
-        if self.ItemHasChildren(item):
-            wrkItem, cookie = self.GetFirstChild(item)
-            lChildren.append(wrkItem)
-            while wrkItem.IsOk():
-                try:
-                    wrkItem, cookie = self.GetNextChild(item, cookie)
-                    if wrkItem.IsOk():
-                        lChildren.append(wrkItem)
-                except:
-                    break
+        try:
+            if self.ItemHasChildren(item):
+                wrkItem, cookie = self.GetFirstChild(item)
+                lChildren.append(wrkItem)
+                while wrkItem.IsOk():
+                    try:
+                        wrkItem, cookie = self.GetNextChild(item, cookie)
+                        if wrkItem.IsOk():
+                            lChildren.append(wrkItem)
+                    except:
+                        break
+        except:
+            pass
         return lChildren
 
 
@@ -252,16 +264,47 @@ class TreeListCtrl(gizmos.TreeListCtrl):
         if item is None:
             item=self.GetRootItem()
         l=nLevel
-        if self.GetColumnCount()>1:
-            if idParent==0:
-                stru.append('<tr row-id="%s"><td>%s</td><td class="data" align="right"><font size="4">&euro;&nbsp;%s</font></td></tr>' % (idItem, self.GetItemText(item, 0), self.GetItemText(item, 1)))
-            else:
-                stru.append('<tr row-id="%s"     parent-id="%s">    <td>%s     </td><td class="data" align="right"><font size="4">&euro;&nbsp;%s</font></td></tr>' % (idItem, idParent, self.GetItemText(item, 0), self.GetItemText(item, 1)))
+        #--------------------------
+        wx.ALIGN_LEFT
+        wx.ALIGN_RIGHT
+        wx.ALIGN_CENTER
+        
+        
+        
+        
+        if idParent==0:
+            m1= '<tr row-id="%s">' % idItem
+            m2=''
+            for nc in range(0, self.GetColumnCount()):
+                align='left'
+                if self.GetColumnAlignment(nc)==wx.ALIGN_LEFT:
+                    align='left'
+                elif self.GetColumnAlignment(nc)==wx.ALIGN_RIGHT:
+                    align='right'
+                elif self.GetColumnAlignment(nc)==wx.ALIGN_CENTER:
+                    align='center'
+                m2='%s  <td class="data" align="%s">%s</td>' % (m2, align, self.GetItemText(item, nc))
+            m3='</tr>'
+            stru.append('%s%s%s' % (m1, m2, m3))
         else:
-            if idParent==0:
-                stru.append('<tr row-id="%s"><td>%s</td></tr>' % (idItem, self.GetItemText(item, 0)))
-            else:
-                stru.append('<tr row-id="%s"     parent-id="%s">    <td>%s     </td></tr>' % (idItem, idParent, self.GetItemText(item, 0)))
+            m1= '<tr row-id="%s"     parent-id="%s">'  % (idItem, idParent)
+            m2= ''
+            for nc in range(0, self.GetColumnCount()):
+                align='left'
+                if self.GetColumnAlignment(nc)==wx.ALIGN_LEFT:
+                    align='left'
+                elif self.GetColumnAlignment(nc)==wx.ALIGN_RIGHT:
+                    align='right'
+                elif self.GetColumnAlignment(nc)==wx.ALIGN_CENTER:
+                    align='center'
+                
+                
+                try:
+                    m2='%s  <td class="data" align="%s">%s</td>' % (m2, align, self.GetItemText(item, nc))
+                except:
+                    m2='%s  <td class="data">%s</td>' % (m2, '')
+            m3='</tr>'
+            stru.append('%s%s%s' % (m1, m2, m3))
         lChildren=self._GetChildren(item)
         if len(lChildren)>0:
             for son in lChildren:
