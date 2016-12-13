@@ -2130,6 +2130,14 @@ class MagazzPanel(aw.Panel,\
     def UpdateButtons(self, enable = True):
         status = self.status
         doc = self.dbdoc
+        
+        cfg = doc.cfgdoc
+        e = (doc.id_tipdoc is not None)
+        attivaBtnSave=e and not cfg.staobb 
+        if not attivaBtnSave:
+            if not doc.id==None:
+                attivaBtnSave=True
+        
         self.controls["butnew"].Enable(enable and\
                                        self.canedit and\
                                        self.canins and\
@@ -2143,7 +2151,8 @@ class MagazzPanel(aw.Panel,\
         self.controls["butsave"].Enable(enable and\
                                         status == STATUS_EDITING and\
                                         self._headok and\
-                                        self._scadok)
+                                        self._scadok and\
+                                        attivaBtnSave)
 
         self.controls["butprint"].Enable(enable and\
                                          status in (STATUS_DISPLAY,
