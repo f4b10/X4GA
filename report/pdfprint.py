@@ -62,7 +62,8 @@ def PdfPrint(filename, printer, copies=1, cbex=None, usedde=False, cmdprint=Fals
                 p=p.replace('<file_pdf>', filename)
                 p=p.replace('<printer>', printer)
                 newPar.append(p)
-            subprocess.Popen(newPar)
+            for n in range(copies):                
+                subprocess.Popen(newPar)
             out = True
         except:
             import awc.util as awu
