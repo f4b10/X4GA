@@ -1335,6 +1335,10 @@ class MagazzPanel(aw.Panel,\
         else:
             contact = ""
 
+        if cn('id_dest').GetValue()==None:
+            cn('enable_nocodedes').SetValue(True)
+
+
         if getattr(doc, 'enable_nocodedes', False):
             ddes = doc.nocodedes_descriz
             dind = doc.nocodedes_indirizzo
