@@ -94,7 +94,7 @@ annsearch = True
 ricsearch = True
 
 def DbgMsg(x):
-    #print '[standard] ->%s' % x
+    print '[standard] ->%s' % x
     pass
 
 
@@ -442,7 +442,10 @@ class MagazzPanel(aw.Panel,\
                            ("butprodsch", self.GridBodyOnSchedaProd),
                            ("butprodmas", self.GridBodyOnMastroMov),
                            ("butfido",    self.OnDisplayFidoCliente),
-                           ("butvediacc", self.OnDisplayAccontiCliente),):
+                           ("butvediacc", self.OnDisplayAccontiCliente),
+                           ("btnnext",    self.OnNext),
+                           ("btnprev",    self.OnPrevious),
+                           ):
             self.Bind(wx.EVT_BUTTON, func, self.controls[name])
 
         # bind eventi di cambiamento dati del documento
@@ -494,9 +497,13 @@ class MagazzPanel(aw.Panel,\
 
         for cid, func in ((wdr.ID_BTNBODYNEW,  self.GridBodyOnCreate),
                           (wdr.ID_BTNBODYDEL,  self.GridBodyOnDelete),
+                          (wdr.ID_BTNBODYADD,  self.GridBodyOnAdd),
                           (wdr.ID_BTNBODYPDT,  self.GridBodyOnAcqPDT),
                           (wdr.ID_BTNBODYETIC, self.GridBodyOnLabels)):
             self.Bind(wx.EVT_BUTTON, func, id=cid)
+
+
+        self.FindWindowById(wdr.ID_BTNBODYADD).Hide()
 
         for type in 'des vet'.split():
 
@@ -539,10 +546,117 @@ class MagazzPanel(aw.Panel,\
         self.SetAcceleratorKey('X', wdr.ID_BTN_DELETE, 'Elimina',         'Elimina il presente documento')
         self.SetAcceleratorKey('Q', wdr.ID_BTN_QUIT,   'Abbandona',       'Abbandona il documento senza salvare')
 
+        if Env.Azienda.config.get('Controls', 'functionkey', 0)=='1':
+            self.SetAcceleratorKey(wx.WXK_F9,  wdr.ID_BTN_PREV,  use_alt=False)
+            self.SetAcceleratorKey(wx.WXK_F10, wdr.ID_BTN_NEXT,  use_alt=False)
+            self.SetAcceleratorKey(wx.WXK_F6,  wdr.ID_BTN_PRINT, use_alt=False)
+            self.SetAcceleratorKey(wx.WXK_F12, wdr.ID_BTNBODYADD,use_alt=False)
+
+
+
+
+#===============================================================================
+#     def SetKeyAccelerator(self, nPage=0):
+#         self.SetAcceleratorTable(wx.NullAcceleratorTable)
+#
+#         bindings =[]
+#         bindings.append((wx.ACCEL_NORMAL,  wx.WXK_F10,            self.OnF10)          )
+#
+#===============================================================================
+
+
+
     def Layout_(self):
         s = self.GetSize()
         self.SetSize((s[0]+self._delta_xy, s[1]))
         self._delta_xy = 0-self._delta_xy
+
+    def GetExcludedNotebookPage(self, nb):
+        # Restituisce in una lista tutte le pagine non attive del documento indicate tramite
+        # il loro numero d'ordine all'interno del notebook
+        excl=[]
+        for p in range(nb.GetPageCount()):
+            if not self.dbdoc.cfgdoc.askdatiacc=='X' and nb.GetPageText(p)=='Dati accompagnatori':
+                excl.append(p)
+        return excl
+
+    def GetActiveNotebookPage(self, nb):
+        # Restituisce in una lista tutte le pagine attive del documento indicate tramite
+        # il loro numero d'ordine all'interno del notebook
+        excl = self.GetExcludedNotebookPage(nb)
+        allPage = range(nb.GetPageCount())
+        nbPage =  [x for x in allPage if x not in excl]
+        return nbPage
+
+    def GetNextPage(self, nb):
+        attPage = nb.GetSelection()
+        newPage = attPage
+        if self.dbdoc.cfgdoc.id:
+            nbPage= self.GetActiveNotebookPage(nb)
+            idx=nbPage.index(attPage)
+            if idx < len(nbPage)-1:
+                newPage=nbPage[idx+1]
+            else:
+                newPage=nbPage[0]
+        return newPage
+
+    def GetPreviousPage(self, nb):
+        attPage = nb.GetSelection()
+        newPage = attPage
+        if self.dbdoc.cfgdoc.id:
+            nbPage= self.GetActiveNotebookPage(nb)
+            idx=nbPage.index(attPage)
+            if idx >0:
+                newPage=nbPage[idx-1]
+            else:
+                newPage=nbPage[len(nbPage)-1]
+        return newPage
+
+    def OnNext(self, evt):
+        nb=self.FindWindowByName('workzone')
+        newPage = self.GetNextPage(nb)
+        nb.SetSelection(newPage)
+        evt.Skip()
+
+        #=======================================================================
+        #
+        # try:
+        #     newPage = self.GetNextPage(nb)
+        #     nb.SetSelection(newPage)
+        #     evt.Skip()
+        # except:
+        #     if self.dbdoc.cfgdoc.staobb==1:
+        #         if self.PrintDoc():
+        #             if self.status == STATUS_EDITING:
+        #                 if self.onedoconly_id:
+        #                     evt.Skip()
+        #                 else:
+        #                     self.SetRegStatus(STATUS_SELCAUS)
+        #     else:
+        #         nb.SetSelection(0)
+        #         evt.Skip()
+        #=======================================================================
+
+    def OnPrevious(self, evt):
+        DbgMsg('passa a fase precedente')
+        nb=self.FindWindowByName('workzone')
+        newPage = self.GetPreviousPage(nb)
+        nb.SetSelection(newPage)
+        evt.Skip()
+
+
+
+
+        #=======================================================================
+        # try:
+        #     newPage = self.GetPreviousPage(nb)
+        #     nb.SetSelection(newPage)
+        # except:
+        #     pass
+        # evt.Skip()
+        #=======================================================================
+
+
 
     def OnVariaDestin(self, event):
         def Enable(f):
@@ -2134,14 +2248,14 @@ class MagazzPanel(aw.Panel,\
     def UpdateButtons(self, enable = True):
         status = self.status
         doc = self.dbdoc
-        
+
         cfg = doc.cfgdoc
         e = (doc.id_tipdoc is not None)
-        attivaBtnSave=e and not cfg.staobb 
+        attivaBtnSave=e and not cfg.staobb
         if not attivaBtnSave:
             if not doc.id==None:
                 attivaBtnSave=True
-        
+
         self.controls["butnew"].Enable(enable and\
                                        self.canedit and\
                                        self.canins and\
@@ -3096,6 +3210,18 @@ class NumDocDialog(aw.Dialog):
         self.Bind(linktab.EVT_LINKTABCHANGED, self.OnDataChanged,\
                   id=wdr.ID_MAGAZZ)
         self.Bind(wx.EVT_BUTTON, self.OnSave, id=wdr.ID_BTNSAVE)
+        self.Bind(wx.EVT_BUTTON, self.OnQuit, id=wdr.ID_BTNABORT)
+
+        self.panel.SetDefaultItem(self.FindWindowById(wdr.ID_BTNSAVE))
+        self.panel.SetAcceleratorKey(wx.WXK_F6,  wdr.ID_BTNSAVE, use_alt=False)
+        self.panel.SetAcceleratorKey(wx.WXK_F10, wdr.ID_BTNSAVE,use_alt=False)
+        self.panel.SetAcceleratorKey(wx.WXK_ESCAPE, wdr.ID_BTNABORT,use_alt=False)
+        self.panel.SetAcceleratorKey(wx.WXK_F9, wdr.ID_BTNABORT,use_alt=False)
+
+
+    def OnQuit(self, evt):
+        self.Close()
+        evt.Skip()
 
     def OnDataChanged(self, event):
         def cn(x):

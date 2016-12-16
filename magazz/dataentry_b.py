@@ -6,17 +6,17 @@
 # Copyright:    (C) 2011 Astra S.r.l. C.so Cavallotti, 122 18038 Sanremo (IM)
 # ------------------------------------------------------------------------------
 # This file is part of X4GA
-# 
+#
 # X4GA is free software: you can redistribute it and/or modify
 # it under the terms of the Affero GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # X4GA is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
@@ -42,36 +42,40 @@ import magazz.barcodes as bcode
 
 import copy
 
+def DbgMsg(x):
+    print '[standard dataentry_b] ->%s' % x
+    pass
+
 
 class AcqPDTRiepGrid(dbglib.DbGridColoriAlternati):
-    
+
     _lastrow = None
-    
+
     def __init__(self, parent, db, *args, **kwargs):
-        
+
         kwargs['size'] = parent.GetClientSizeTuple()
         dbglib.DbGridColoriAlternati.__init__(self, parent, *args, **kwargs)
-        
+
         self.dbpdt = db
-        
+
         _STR = gl.GRID_VALUE_STRING
         _NUM = gl.GRID_VALUE_NUMBER
         _DAT = gl.GRID_VALUE_DATETIME
-        
+
         def cn(db, col):
             return db._GetFieldIndex(col)
-        
+
         cols = (( 140, (cn(db, 'descriz'), "Riferimento", _STR, True )),\
                 (  80, (cn(db, 'datins'),  "Data",        _DAT, True )),\
                 )
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
-        
+
         self.SetData(db.GetRecordset(), colmap, canEdit=False, canIns=False)
-        
+
         map(lambda c:\
             self.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
-        
+
         self.SetFitColumn(0)
         self.AutoSizeColumns()
         sz = wx.FlexGridSizer(1,0,0,0)
@@ -80,9 +84,9 @@ class AcqPDTRiepGrid(dbglib.DbGridColoriAlternati):
         sz.Add(self, 0, wx.GROW|wx.ALL, 0)
         parent.SetSizer(sz)
         sz.SetSizeHints(parent)
-        
+
         self.Bind(gl.EVT_GRID_CMD_SELECT_CELL, self.OnRowSel)
-    
+
     def OnRowSel(self, event):
         row = event.GetRow()
         if 0 <= row < self.dbpdt.RowsCount():
@@ -96,31 +100,31 @@ class AcqPDTRiepGrid(dbglib.DbGridColoriAlternati):
 
 
 class AcqPDTRigheGrid(dbglib.DbGridColoriAlternati):
-    
+
     def __init__(self, parent, dblet, *args, **kwargs):
-        
+
         kwargs['size'] = parent.GetClientSizeTuple()
         dbglib.DbGridColoriAlternati.__init__(self, parent, *args, **kwargs)
-        
+
         colcod = dblet.prod._GetFieldIndex('codice', inline=True)
         coldes = dblet.prod._GetFieldIndex('descriz', inline=True)
         colqta = dblet._GetFieldIndex('qta')
-        
+
         _STR = gl.GRID_VALUE_STRING
         _NUM = gl.GRID_VALUE_NUMBER
-        
+
         cols = (( 80, (colcod, "Cod.",     _STR, True  )),\
                 (200, (coldes, "Articolo", _STR, True  )),\
                 ( 90, (colqta, "Qta",      _NUM, True  )),\
                 )
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
-        
+
         self.SetData((), colmap, canEdit=False, canIns=False)
-        
+
         map(lambda c:\
             self.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
-        
+
         self.SetFitColumn(1)
         self.AutoSizeColumns()
         sz = wx.FlexGridSizer(1,0,0,0)
@@ -135,9 +139,9 @@ class AcqPDTRigheGrid(dbglib.DbGridColoriAlternati):
 
 
 class AcqPDTDialog(aw.Dialog):
-    
+
     dbpdt = None
-    
+
     def __init__(self, *args, **kwargs):
         self.dbpdt = kwargs.pop('dbpdt')
         aw.Dialog.__init__(self, *args, **kwargs)
@@ -152,11 +156,11 @@ class AcqPDTDialog(aw.Dialog):
                           (wdr.ID_BTNDELPDT, self.OnDel),):
             self.Bind(wx.EVT_BUTTON, func, id=cid)
         self.UpdateLett()
-    
+
     def OnUpdateLett(self, event):
         self.UpdateLett(event.GetRow())
         event.Skip()
-    
+
     def UpdateLett(self, row=0):
         db = self.dbpdt
         if 0 <= row < db.RowsCount():
@@ -165,13 +169,13 @@ class AcqPDTDialog(aw.Dialog):
         else:
             rs = ()
         self.gridlett.ChangeData(rs)
-    
+
     def OnAcq(self, event):
         if aw.awu.MsgDialog(self, 'Confermi l\'acquisizione delle letture ?',
                             style=wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT) == wx.ID_YES:
             self.EndModal(wx.ID_YES)
         event.Skip()
-    
+
     def OnDel(self, event):
         row = self.gridriep.GetSelectedRows()[0]
         p = self.dbpdt
@@ -189,7 +193,7 @@ class AcqPDTDialog(aw.Dialog):
 
 
 class LongDescrizPanel(wx.Panel):
-    
+
     def __init__(self, *args, **kwargs):
         wx.Panel.__init__(self, *args, **kwargs)
         wdr.LongDescrizBodyFunc(self)
@@ -199,12 +203,12 @@ class LongDescrizPanel(wx.Panel):
 
 
 class LongDescrizDialog(aw.Dialog):
-    
+
     def __init__(self, *args, **kwargs):
         aw.Dialog.__init__(self, *args, **kwargs)
         self.AddSizedPanel(LongDescrizPanel(self))
         self.Bind(wx.EVT_BUTTON, self.OnConfirm, self.FindWindowByName('butoklongdes'))
-    
+
     def SetLongDescriz(self, x, maxlen, editable):
         cn = self.FindWindowByName
         c = cn('longdescriz')
@@ -213,10 +217,10 @@ class LongDescrizDialog(aw.Dialog):
         if not editable:
             #c.SetReadOnly(True)
             cn('butoklongdes').Disable()
-    
+
     def GetLongDescriz(self):
         return self.FindWindowByName('longdescriz').GetValue()
-    
+
     def OnConfirm(self, event):
         self.EndModal(wx.ID_OK)
 
@@ -225,22 +229,22 @@ class LongDescrizDialog(aw.Dialog):
 
 
 class SelezionaMovimentoAccontoGrid(dbglib.DbGridColoriAlternati):
-    
+
     def __init__(self, parent, dbacc):
-        
-        dbglib.DbGridColoriAlternati.__init__(self, parent, 
+
+        dbglib.DbGridColoriAlternati.__init__(self, parent,
                                               size=parent.GetClientSizeTuple())
-        
+
         self.dbacc = dbacc
-        
+
         _STR = gl.GRID_VALUE_STRING
         _DAT = gl.GRID_VALUE_DATETIME
         _NUM = gl.GRID_VALUE_NUMBER
         _IMP = bt.GetValIntMaskInfo()
-        
+
         def cn(col):
             return dbacc._GetFieldIndex(col, inline=True)
-        
+
         cols = (( 40, (cn('accotpd_codice'),   "Cod.",        _STR, True )),
                 (150, (cn('accotpd_descriz'),  "Causale",     _STR, True )),
                 ( 50, (cn('accodoc_numdoc'),   "Num.",        _NUM, True )),
@@ -249,15 +253,15 @@ class SelezionaMovimentoAccontoGrid(dbglib.DbGridColoriAlternati):
                 ( 40, (cn('accoiva_codice'),   "IVA",         _STR, True )),
                 (110, (cn('acconto_disponib'), "Disponibile", _IMP, False)),
                 (300, (cn('accomov_descriz'),  "Descrizione", _STR, True )),)
-        
+
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
-        
+
         self.SetData((), colmap, canEdit=False, canIns=False)
-        
+
         map(lambda c:\
             self.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
-        
+
         self.SetFitColumn(1)
         self.AutoSizeColumns()
         sz = wx.FlexGridSizer(1,0,0,0)
@@ -272,27 +276,27 @@ class SelezionaMovimentoAccontoGrid(dbglib.DbGridColoriAlternati):
 
 
 class SelezionaMovimentoAccontoStorniGrid(dbglib.DbGridColoriAlternati):
-    
+
     def __init__(self, parent, dbmov):
-        
-        dbglib.DbGridColoriAlternati.__init__(self, parent, 
+
+        dbglib.DbGridColoriAlternati.__init__(self, parent,
                                               size=parent.GetClientSizeTuple())
-        
+
         self.dbmov = dbmov
         mov = dbmov
         tpm = mov.tipmov
         iva = mov.iva
         doc = mov.doc
         tpd = doc.tipdoc
-        
+
         _STR = gl.GRID_VALUE_STRING
         _DAT = gl.GRID_VALUE_DATETIME
         _NUM = gl.GRID_VALUE_NUMBER
         _IMP = bt.GetValIntMaskInfo()
-        
+
         def cn(tab, col):
             return tab._GetFieldIndex(col, inline=True)
-        
+
         cols = (( 40, (cn(tpd, 'codice'),           "Cod.",        _STR, True )),
                 (150, (cn(tpd, 'descriz'),          "Causale",     _STR, True )),
                 ( 50, (cn(doc, 'numdoc'),           "Num.",        _NUM, True )),
@@ -301,15 +305,15 @@ class SelezionaMovimentoAccontoStorniGrid(dbglib.DbGridColoriAlternati):
                 ( 40, (cn(iva, 'codice'),           "IVA",         _STR, True )),
                 (110, (cn(mov, 'acconto_disponib'), "Disponibile", _IMP, False)),
                 (300, (cn(mov, 'descriz'),          "Descrizione", _STR, True )),)
-        
+
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
-        
+
         self.SetData((), colmap, canEdit=False, canIns=False)
-        
+
         map(lambda c:\
             self.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
-        
+
         self.SetFitColumn(1)
         self.AutoSizeColumns()
         sz = wx.FlexGridSizer(1,0,0,0)
@@ -324,27 +328,27 @@ class SelezionaMovimentoAccontoStorniGrid(dbglib.DbGridColoriAlternati):
 
 
 class SelezionaMovimentoAccontoPanel(wx.Panel):
-    
+
     def __init__(self, *args, **kwargs):
-        
+
         wx.Panel.__init__(self, *args, **kwargs)
         self.SetName('accontipanel')
         self.pdcid = None
         self.lastmovaccid = None
         wdr.SelezionaMovimentoAccontoFunc(self)
         cn = self.FindWindowByName
-        
+
         self.dbacc = dbm.PdcSituazioneAcconti()
         self.dbacc.VediSoloAperti()
         self.gridacc = SelezionaMovimentoAccontoGrid(cn('pangridacc'), self.dbacc)
-        
+
         self.dbsto = dbm.PdcSituazioneStorniAcconto()
         self.gridsto = SelezionaMovimentoAccontoStorniGrid(cn('pangridsto'), self.dbsto)
-        
+
         self.Bind(wx.EVT_CHECKBOX, self.OnChiusi, cn('anchechiusi'))
         self.Bind(gl.EVT_GRID_CMD_SELECT_CELL, self.OnCellSelected, self.gridacc)
         self.Bind(gl.EVT_GRID_CELL_LEFT_DCLICK, self.OnSelectRow, self.gridacc)
-    
+
     def OnCellSelected(self, event):
         row = event.GetRow()
         acc = self.dbacc
@@ -355,23 +359,23 @@ class SelezionaMovimentoAccontoPanel(wx.Panel):
                 acc.MoveRow(row)
                 self.UpdateStorni(acc.accomov_id, acc.accomov_importo)
                 event.Skip()
-    
+
     def UpdateAnag(self):
         self.FindWindowByName('rsanag').SetLabel(self.dbacc.pdc_descriz)
-    
+
     def OnChiusi(self, event):
         self.UpdateData()
         event.Skip()
-    
+
     def OnSelectRow(self, event):
         self.dbacc.MoveRow(event.GetRow())
         if (self.dbacc.acconto_disponib or 0) > 0:
             event.Skip()
-    
+
     def SetPdcId(self, pdcid):
         self.pdcid = pdcid
         self.UpdateData()
-    
+
     def UpdateData(self):
         dbacc = self.dbacc
         if self.FindWindowByName('anchechiusi').IsChecked():
@@ -385,7 +389,7 @@ class SelezionaMovimentoAccontoPanel(wx.Panel):
             self.UpdateStorni(dbacc.accomov_id, dbacc.accomov_importo)
         else:
             self.UpdateStorni(None, 0)
-    
+
     def UpdateStorni(self, accomov_id, accdisp):
         mov = self.dbsto
         if accomov_id is None:
@@ -403,7 +407,7 @@ class SelezionaMovimentoAccontoPanel(wx.Panel):
 
 
 class SelezionaMovimentoAccontoDialog(aw.Dialog):
-    
+
     def __init__(self, *args, **kwargs):
         if not 'title' in kwargs:
             kwargs['title'] = 'Situazione acconti cliente'
@@ -411,10 +415,10 @@ class SelezionaMovimentoAccontoDialog(aw.Dialog):
         self.panel = SelezionaMovimentoAccontoPanel(self)
         self.AddSizedPanel(self.panel)
         self.Bind(gl.EVT_GRID_CELL_LEFT_DCLICK, self.OnSelectRow)
-    
+
     def OnSelectRow(self, event):
         self.EndModal(wx.ID_OK)
-        
+
     def SetPdcId(self, *args, **kwargs):
         return self.panel.SetPdcId(*args, **kwargs)
 
@@ -428,14 +432,14 @@ class GridBody(object):
     """
     def __init__(self):
         object.__init__(self)
-        
+
         self.gridbody = None
         self.gridlist = None
         self.gridmovi = None
         self.lastmovid = None
         self.lastprod = None
         self.pdc_cg_tip = None
-        
+
         mov = self.dbdoc.mov
         m.RSMOV_codmov = mov.config._GetFieldIndex("codice", inline=True)
         m.RSMOV_desmov = mov.config._GetFieldIndex("descriz", inline=True)
@@ -447,7 +451,7 @@ class GridBody(object):
         m.RSMOV_deslis = mov.tiplist._GetFieldIndex("descriz", inline=True)
         m.RSMOV_PDCCG_cod = mov.pdccg._GetFieldIndex("codice", inline=True)
         m.RSMOV_PDCCG_des = mov.pdccg._GetFieldIndex("descriz", inline=True)
-        
+
         class UsableProdTable(adb.DbTable):
             def __init__(self):
                 adb.DbTable.__init__(self, bt.TABNAME_PROD, 'prod', writable=True)
@@ -459,18 +463,18 @@ class GridBody(object):
                 except:
                     pass
                 return out
-        
+
         self.dbprod = UsableProdTable()
         self.dbaliq = adb.DbTable(bt.TABNAME_ALIQIVA, "iva",  writable=True)
         self.dbinv = dbm.InventarioDaMovim()
-        
+
         self._cache_giacenze = {}
-    
+
     def SetPdcCgTip(self, pdc_cg_tip):
         self.pdc_cg_tip = pdc_cg_tip
-    
+
     def GridBodyDefColumns(self):
-        
+
         _NUM = gl.GRID_VALUE_NUMBER
         _STR = gl.GRID_VALUE_STRING
         _QTA = bt.GetMagQtaMaskInfo()
@@ -479,48 +483,48 @@ class GridBody(object):
         _SCO = bt.GetMagScoMaskInfo()
         _CHK = gl.GRID_VALUE_CHOICE+":1,0"
         _PZC = bt.GetMagQtaMaskInfo(numint=6)
-        
+
         viscosto = vismargine = False
         for tm in self.dbdoc.cfgdoc.tipmov:
             if (tm.mancosto or ' ') in 'VM':
                 viscosto = True
                 vismargine = (self.dbdoc.cfgdoc.scorpiva != '1')
                 break
-        
-        
+
+
         cols = []
         def a(x):
             cols.append(x)
             return len(cols)-1
-        
+
         for attr in dir(self):
             if attr.startswith('COL_'):
                 delattr(self, attr)
-        
+
         self.COL_codmov =  a(( 35, [m.RSMOV_codmov,    "Mov.",           _STR, True]))
         self.COL_codart =  a(( 80, [m.RSMOV_codart,    "Codice",         _STR, True]))
         self.COL_DESCRIZ = a((300, [m.RSMOV_DESCRIZ,   "Descrizione",    _STR, True]))
         self.COL_UM =      a(( 40, [m.RSMOV_UM,        "U.M.",           _STR, True]))
-        
+
         if bt.MAGPZCONF:
             self.COL_NMCONF = a((1, [m.RSMOV_NMCONF, "Confez.",          _PZC, True]))
             self.COL_PZCONF = a((1, [m.RSMOV_PZCONF, "Pz.Conf.",         _PZC, True]))
-        
+
         self.COL_QTA =     a((1, [m.RSMOV_QTA,       "Quantità",         _QTA, True]))
-        
+
         if bt.MAGROWLIS and self.dbdoc.cfgdoc.rowlist == 'X':
             self.COL_codlist = a((40, [m.RSMOV_codlis, "List.",         _STR, True]))
-        
+
         self.COL_PREZZO =  a((1, [m.RSMOV_PREZZO,    "Prezzo",           _PRE, True]))
-        
+
         if (bt.MAGATTGRIP or bt.MAGATTGRIF) and bt.MAGAGGGRIP:
             self.COL_AGGGRIP = a(( -1, [m.RSMOV_AGGGRIP, "AGP",          _CHK, True]))
-        
+
         numsco = bt.MAGNUMSCO
         c = self.dbdoc.cfgdoc.numsconti or 0
         if 0 < c < numsco:
             numsco = c
-        
+
         if numsco >= 1:
             self.COL_SC1 = a((  1, [m.RSMOV_SC1,       "Sc.%"+'1'*int(numsco>1), _SCO, True]))
         if numsco >= 2:
@@ -533,7 +537,7 @@ class GridBody(object):
             self.COL_SC5 = a((  1, [m.RSMOV_SC5,       "Sc.%5",          _SCO, True]))
         if numsco >= 6:
             self.COL_SC6 = a((  1, [m.RSMOV_SC6,       "Sc.%6",          _SCO, True]))
-        
+
         self.COL_IMPORTO = a((  1, [m.RSMOV_IMPORTO,   "Importo",        _IMP, True]))
         self.COL_codiva =  a(( 35, [m.RSMOV_codiva,    "Iva",            _STR, True]))
         self.COL_NOTE =    a((200, [m.RSMOV_NOTE,      "Note",           _STR, True]))
@@ -541,7 +545,7 @@ class GridBody(object):
         self.COL_desmov =  a((140, [m.RSMOV_desmov,    "Mov.",           _STR, True]))
         self.COL_pdccod =  a(( 50, [m.RSMOV_PDCCG_cod, "Cod.",           _STR, True]))
         self.COL_pdcdes =  a((200, [m.RSMOV_PDCCG_des, "Coll.Contabile", _STR, True]))
-        
+
         if viscosto:
             self.COL_COSTOU =      a((1, [m.RSMOV_COSTOU, "Costo U.",    _PRE, True]))
             self.COL_COSTOTOT =    a((1, [m.RSMOV_COSTOT, "Costo Tot.",  _IMP, True]))
@@ -549,13 +553,13 @@ class GridBody(object):
             self.COL_VENDITATOT =  a((1, [-1,             "T.Vendita",   _IMP, True]))
             self.COL_MARGINEVAL =  a((1, [-1,             "Margine",     _IMP, True]))
             self.COL_MARGINEPERC = a((1, [-1,             "Marg.%",      _SCO, True]))
-        
+
         self.COL_ID =      a((  1, [m.RSMOV_ID,        "#mov",           _STR, True]))
         self.COL_ID_PROD = a((  1, [m.RSMOV_ID_PROD,   "#pro",           _STR, True]))
         self.COL_ID_ALIQ = a((  1, [m.RSMOV_ID_IVA,    "#iva",           _STR, True]))
-        
+
         return cols
-    
+
     def GridBody_InsertNewColumn(self, columns, index_aftercol, cstru):
         columns.insert(index_aftercol+1, cstru)
         #sposto a destra di una colonne tutte quelle già esistenti, a partire da quella inserita
@@ -568,17 +572,17 @@ class GridBody(object):
         for column_name in column_names:
             setattr(self, column_name, getattr(self, column_name)+1)
         return index_aftercol+1
-        
+
     def GridBody_Init(self, parent):
-        
+
         if self.gridbody:
             wx.CallAfter(self.gridbody.Destroy)
-        
+
         #costruzione griglia dettaglio documento
         size = parent.GetClientSizeTuple()
-        
+
         cols = self.GridBodyDefColumns()
-        
+
         mov = self.dbdoc.mov
         cn = lambda tab, col: tab._GetFieldIndex(col, inline=True)
         self.avcol = cn(mov.config, "askvalori")
@@ -589,23 +593,23 @@ class GridBody(object):
         self.p0col = cn(mov.config, "canprezzo0")
         self.cacol = cn(mov, "id_prod")
         self.prcol = cn(mov, "perpro")
-        
+
         self.importo_col = cn(mov, 'importo')
         self.costot_col = cn(mov, 'costot')
         self.statftcli_col = cn(mov.config, 'statftcli')
         self.statcscli_col = cn(mov.config, 'statcscli')
-        
+
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
         canedit = True
         canins = True
-        
+
         links = self.GridBodyDefLinks()
         editors = self.GridBodyDefEditors()
         afteredit = self.GridBodyDefAfterEdit()
-        
+
         grid = dbglib.DbGrid(parent, -1, size=size, tableClass=self.GridBodyGetTable())
-        
+
         #imposto lungh. max. su campi char
         stru = bt.tabelle[bt.TABSETUP_TABLE_MOVMAG_B][bt.TABSETUP_TABLESTRUCTURE]
         for c_name, c_type, c_len, c_dec, c_desc, c_constr in stru:
@@ -613,7 +617,7 @@ class GridBody(object):
                 c = self.dbdoc.mov._GetFieldIndex(c_name, inline=True)
                 if c >= 0:
                     grid.SetColMaxChar(c, c_len)
-        
+
         #grid.SetColMaxChar(m.RSMOV_DESCRIZ, bt.getcolwidth(bt.TABNAME_MOVMAG_B, 'descriz'))
         #grid.SetColMaxChar(m.RSMOV_NOTE, bt.getStdNoteWidth())
         grid.SetData( self.dbdoc.mov._info.rs, colmap, canedit, canins,\
@@ -621,17 +625,17 @@ class GridBody(object):
                       editors=editors)
         grid.SetRowDynLabel(self.GridBodyGetRowLabel)
         grid.SetCellDynAttr(self.GridBodyGetAttr)
-        
+
         self._rowcol = None
-        
+
         grid.SetColumnsFunc(self.GridBodyMoveColumnAfterEdit)
-        
+
         grid.SetColDefault(self.COL_codart)
         grid.Bind(gl.EVT_GRID_SELECT_CELL, self.GridBodyOnSelected)
-        
+
         map(lambda c:\
             grid.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
-        
+
         grid.AutoSizeColumns()
         sz = wx.FlexGridSizer(1,0,0,0)
         sz.AddGrowableCol( 0 )
@@ -639,18 +643,22 @@ class GridBody(object):
         sz.Add(grid, 0, wx.GROW|wx.ALL, 0)
         parent.SetSizer(sz)
         sz.SetSizeHints(parent)
-        
+
         grid.Bind(gl.EVT_GRID_CELL_RIGHT_CLICK, self.GridBodyOnRightClick)
         grid.Bind(dbgred.EVT_EDITORSHOWN, self.GridBodyOnEditorShown)
         grid.Bind(gl.EVT_GRID_CELL_LEFT_CLICK, self.GridBodyOnClick)
         grid.Bind(wx.EVT_KEY_UP, self.GridBodyOnKeyPress)
-        
+
         self.gridbody = grid
-    
+        
+
+        
+        
+
     def GridBodyDefLinks(self):
-        
+
         import anag.lib as alib
-        
+
         links = []
         ltmov = dbglib.LinkTabAttr(bt.TABNAME_CFGMAGMOV, #table
                                    self.COL_codmov,      #grid col
@@ -660,9 +668,9 @@ class GridBody(object):
                                    None)                 #card class
         ltmov.AddBinding((self, self.GridBodyOnTipMovChanged))
         links.append(ltmov)
-        
+
         from anag.aliqiva import AliqIvaDialog
-        
+
         ltiva = dbglib.LinkTabAttr(bt.TABNAME_ALIQIVA, #table
                                    self.COL_codiva,    #grid col
                                    m.RSMOV_ID_IVA,     #rs col id
@@ -671,9 +679,9 @@ class GridBody(object):
                                    AliqIvaDialog,      #card class
                                    refresh=True)       #refresh flag
         links.append(ltiva)
-        
+
         from anag.pdc import PdcDialog
-        
+
         def SetPdcTip(tc, ed, x):
             f = tc.SetFocus
             def SetFocusLinkTablePdc(*x):
@@ -692,11 +700,11 @@ class GridBody(object):
                                     refresh=True,       #refresh flag
                                     oncreate=SetPdcTip) #on create call
         links.append(ltpdc)
-        
+
         if bt.MAGROWLIS and self.dbdoc.cfgdoc.rowlist == 'X':
-            
+
             from anag.tiplist import TipListDialog
-            
+
             ltlis = dbglib.LinkTabAttr(bt.TABNAME_TIPLIST, #table
                                        self.COL_codlist,   #grid col
                                        m.RSMOV_TIPLIST,    #rs col id
@@ -705,14 +713,14 @@ class GridBody(object):
                                        TipListDialog,      #card class
                                        refresh=True)       #refresh flag
             links.append(ltlis)
-        
+
         return links
-    
+
     def GridBodyDefEditors(self):
-        
+
         import anag.lib as alib
         from anag.prod import ProdDialog
-        
+
         editors = []
         prod_editor = alib.DataLinkProdCellEditor(bt.TABNAME_PROD, #table
                                                   m.RSMOV_ID_PROD, #rs col id
@@ -720,9 +728,9 @@ class GridBody(object):
                                                   -1,              #rs col des
                                                   ProdDialog)      #card class
         editors.append((self.COL_codart, prod_editor))
-        
+
         return editors
-    
+
     def GridBodyMoveColumnAfterEdit(self, grid, row, col):
         mov = self.dbdoc.mov
         if 0 <= row < mov.RowsCount():
@@ -754,15 +762,15 @@ class GridBody(object):
                 if col is not None:
                     col = grid.GetTable().rs2col(col)
         return row, col
-    
+
     def GridBodyDefAfterEdit(self):
         return ((dbglib.CELLEDIT_BEFORE_UPDATE, -1, self.GridBodyEditingValues),
                 (dbglib.CELLEDIT_AFTER_UPDATE, -1, self.GridBodyEditedValues),)
-    
+
     def GridBodyGetTable(self):
-        
+
         class GridBodyTable(dbglib.DbGridTable):
-            
+
             def GetDataValue(grid, row, col, gridcols=False):
                 out = None
                 if row<len(grid.data):
@@ -787,7 +795,7 @@ class GridBody(object):
                 if out is None:
                     out = dbglib.DbGridTable.GetDataValue(grid, row, col, gridcols)
                 return out
-            
+
             def GetValue(self, row, col):
                 out = None
                 if row<len(self.data):
@@ -800,9 +808,9 @@ class GridBody(object):
                 if out is None:
                     out = dbglib.DbGridTable.GetValue(self, row, col)
                 return out
-        
+
         return GridBodyTable
-    
+
     def GetFiltriCP(self):
         da = self.dbdoc.cfgdoc.descanag
         if 'clie' in da.lower():
@@ -810,7 +818,7 @@ class GridBody(object):
         else:
             tipid = self._auto_pdctip_costi
         return tipid, '1'
-    
+
     def GridBodyOnClick(self, event):
         if self.status == m.STATUS_EDITING and hasattr(self, 'COL_AGGGRIP'):
             mov = self.dbdoc.mov
@@ -822,10 +830,10 @@ class GridBody(object):
                         mov.agggrip = 1-(mov.agggrip or 0)
                         self.gridbody.ResetView()
         event.Skip()
-    
+
     def GridBodyOnKeyPress(self, event):
         pass
-    
+
     def GridBodyOnEditorShown(self, event):
         row, col = event.GetRow(), event.GetCol()
         t = self.gridbody.GetTable()
@@ -834,18 +842,18 @@ class GridBody(object):
         if t.rsColumns[col] == m.RSMOV_DESCRIZ:
             pass
         event.Skip()
-    
+
     def GridBodyOnLabels(self, event):
         self.GridBodyPrintEtichette()
         event.Skip()
-    
+
     def GridBodyPrintEtichette(self):
         dlg = bcode.SelQtaDialog(self)
         do = dlg.ShowModal() == wx.ID_OK
         dlg.Destroy()
         if not do:
             return
-        wait = aw.awu.WaitDialog(self.GetParent(), 
+        wait = aw.awu.WaitDialog(self.GetParent(),
                                  message='Preparazione etichette in corso...')
         try:
             db = dbm.ProdEticList()
@@ -874,7 +882,7 @@ class GridBody(object):
         dlg.SetProdEticList(db)
         dlg.ShowModal()
         dlg.Destroy()
-    
+
     def GridBodyOnLongDescriz(self, event):
         mov = self.dbdoc.mov
         d = LongDescrizDialog(self)
@@ -883,15 +891,15 @@ class GridBody(object):
             self.dbdoc.mov.descriz = d.GetLongDescriz()
             self.gridbody.Refresh()
         event.Skip()
-    
+
     def GridBodyOnSchedaProd(self, event):
         self.ApriSchedaProdotto(mas=False)
         event.Skip()
-    
+
     def GridBodyOnMastroMov(self, event):
         self.ApriSchedaProdotto(mas=True)
         event.Skip()
-    
+
     def ApriSchedaProdotto(self, mas):
         mov = self.dbdoc.mov
         assert isinstance(mov, adb.DbTable)
@@ -918,7 +926,7 @@ class GridBody(object):
         self.dbprod.Reset()
         self.lastprod = None
         self.UpdateProdZone(proid)
-    
+
     def GridBodyMakeMenuPopup(self):
         edit = self.status == m.STATUS_EDITING
         mov = self.dbdoc.mov
@@ -936,12 +944,12 @@ class GridBody(object):
                 voci.append(["Annulla provvigione manuale", self.GridBodyOnAnnPro, True])
             if bt.MAGGESACC == 1 and mov.config.is_accstor:
                 voci.append(['-', None, None])
-                if mov.id_movacc is None: 
+                if mov.id_movacc is None:
                     voci.append(['Aggancia Acconto', self.GridBodyOnLinkToAcconto, True])
-                else: 
+                else:
                     voci.append(['Sgancia da Acconto', self.GridBodyOnUnlinkFromAcconto, True])
         return voci
-    
+
     def GridBodyMenuPopup(self, event):
         row, col = event.GetRow(), event.GetCol()
         self.gridbody.SetGridCursor(row, col)
@@ -959,13 +967,13 @@ class GridBody(object):
         self.gridbody.PopupMenu(menu, (xo, yo))
         menu.Destroy()
         event.Skip()
-    
+
     def GridBodyOnRightClick(self, event):
         row = event.GetRow()
         if 0 <= row < self.dbdoc.mov.RowsCount():
             self.GridBodyMenuPopup(event)
             event.Skip()
-    
+
     def GridBodyOnLinkToAcconto(self, event):
         doc = self.dbdoc
         mov = doc.mov
@@ -986,26 +994,26 @@ class GridBody(object):
             mov.id_movacc = dbacc.accomov_id
             self.MakeTotals()
             self.gridbody.ForceRefresh()
-    
+
     def GridBodyOnUnlinkFromAcconto(self, event):
         self.dbdoc.mov.id_movacc = None
         self.gridbody.ForceRefresh()
         event.Skip()
-    
+
     def GridBodyOnAnnPro(self, event):
         self.dbdoc.mov.perpro = None
         self.gridbody.ForceRefresh()
         event.Skip()
-    
+
     def GridBodyOnAzzPro(self, event):
         self.dbdoc.mov.perpro = 0
         self.gridbody.ForceRefresh()
         event.Skip()
-    
+
     def GridBodyOnAcqPDT(self, event):
         self.GridBodyAcqPDT()
         event.Skip()
-    
+
     def GridBodyAcqPDT(self):
         doc = self.dbdoc
         pra = doc._info.pdtreadann
@@ -1061,7 +1069,7 @@ class GridBody(object):
             self.gridbody.ResetView()
             self.MakeTotals()
         dlg.Destroy()
-    
+
     def GridBodyReset(self):
         #self.gridbody.ResetView()
         mov = self.dbdoc.mov
@@ -1073,7 +1081,7 @@ class GridBody(object):
             self.lastmovid = mov.config.id
         self.lastprod = None
         self._cache_giacenze.clear()
-    
+
     def GridBodyOnTipMovChanged(self, event):
         idtipmov = event.GetEventObject().GetValue()
         if idtipmov is not None:
@@ -1177,7 +1185,7 @@ class GridBody(object):
         attr.SetReadOnly(readonly)
         attr.SetTextColour(fgcol)
         attr.SetBackgroundColour(bgcol)
-        
+
         return attr
 
     def GridBodyVerifyTipMov(self, row, gridcol, col, value):
@@ -1186,7 +1194,7 @@ class GridBody(object):
             mov.MoveRow(row)
             mov._info.askvprec = mov.config.askvalori
         return True
-    
+
     def GridBodyEditingValues(self, row, gridcol, col, value):
         if col == m.RSMOV_codmov and value is None:
             aw.awu.MsgDialog(self, 'Definire il tipo movimento', style=wx.ICON_ERROR)
@@ -1195,8 +1203,8 @@ class GridBody(object):
             prod = self.dbprod
             prod.Get(value)
             if not prod.IsUsableWithClasDoc(self.dbdoc.cfgdoc.clasdoc):
-                aw.awu.MsgDialog(self, "%s - %s\nIl prodotto non è utilizzabile in questo documento" % (prod.codice, prod.descriz), 
-                                 "Restrizioni sullo status (%s - %s)" % (prod.status.codice, prod.status.descriz), 
+                aw.awu.MsgDialog(self, "%s - %s\nIl prodotto non è utilizzabile in questo documento" % (prod.codice, prod.descriz),
+                                 "Restrizioni sullo status (%s - %s)" % (prod.status.codice, prod.status.descriz),
                                  style=wx.ICON_WARNING)
                 return False
             doc = self.dbdoc
@@ -1228,14 +1236,14 @@ class GridBody(object):
                     aw.awu.MsgDialog(self, "L'acconto disponibile è di %s" % a.sepnvi(a.acconto_disponib), style=wx.ICON_ERROR)
                     return False
         return True
-    
+
     def GridBodyEditedValues(self, row, gridcol, col, value):
-        
+
         resetview = False
         doc = self.dbdoc
         mov = doc.mov
         mov.MoveRow(row)
-        
+
         def DefImporto():
             i = round((mov.qta or 0)*(mov.prezzo or 0)\
                       *(100-(mov.sconto1 or 0))/100\
@@ -1254,7 +1262,7 @@ class GridBody(object):
             mov.importo = i
             if mov.costou and mov.qta:
                 mov.costot = round(mov.qta*mov.costou, bt.VALINT_DECIMALS)
-        
+
         if   col == m.RSMOV_codmov:
             mov.id_tipmov = value
             if "askvprec" in dir(mov._info):
@@ -1270,7 +1278,7 @@ class GridBody(object):
             if mov.config.tipologia == "I":
                 mov.id_prod = None
             self.GridBodyDefAliqIva()
-            
+
         elif col == m.RSMOV_DESCRIZ:
             mov.descriz = (value or '').replace('<CR>', '\n')
             resetview = True
@@ -1278,10 +1286,10 @@ class GridBody(object):
                 self.GridBodyDefAliqIva()
             #if mov.id_prod is None and mov.perpro is None:
                 #mov.perpro = 0
-                
+
         elif col == m.RSMOV_codiva:
             mov.id_aliqiva = value
-            
+
         elif col == m.RSMOV_codart:
             if self.dbprod.Get(value):
                 mov.id_prod = value
@@ -1351,29 +1359,29 @@ class GridBody(object):
                     mov.id_pdccg = mov.prod.id_pdcven
                 elif mov.prod.catart.id_pdcven:
                     mov.id_pdccg = mov.prod.catart.id_pdcven
-            
+
         elif col == m.RSMOV_PZCONF:
             mov.pzconf = value
             mov.qta = round(mov.pzconf*mov.nmconf, bt.MAGQTA_DECIMALS)
             DefImporto()
-            
+
         elif col == m.RSMOV_NMCONF:
             mov.nmconf = value
             mov.qta = round(mov.pzconf*mov.nmconf, bt.MAGQTA_DECIMALS)
             DefImporto()
             resetview = True
-            
+
         elif col in (m.RSMOV_QTA, m.RSMOV_PREZZO,\
                      m.RSMOV_SC1, m.RSMOV_SC2, m.RSMOV_SC3, m.RSMOV_SC4, m.RSMOV_SC5, m.RSMOV_SC6):
             DefImporto()
             resetview = True
-            
+
         elif hasattr(self, 'COL_codlist') and col == m.RSMOV_codlis:
             mov.id_tiplist = value
             if value is not None:
                 mov.prezzo, _, _, _, _, _, _, _ = doc.DefPrezzoSconti6(force_tiplist=value)
                 DefImporto()
-            
+
         elif col == m.RSMOV_IMPORTO:
             if value:
                 if mov.config.modimpricalc == "P":
@@ -1417,27 +1425,27 @@ class GridBody(object):
                         mov.sconto2 = mov.sconto3 = mov.sconto4 = mov.sconto5 = mov.sconto6 = 0
                 resetview = True
             mov.importo = value
-            
+
         elif col == m.RSMOV_COSTOU:
             mov.costou = value
             if value and mov.qta:
                 mov.costot = round(mov.qta*value, bt.VALINT_DECIMALS)
                 resetview = True
-        
+
         elif col == m.RSMOV_COSTOT:
             mov.costot = value
             if value and mov.qta:
                 mov.costou = round(mov.costot/mov.qta, bt.MAGPRE_DECIMALS)
                 resetview = True
-        
+
         elif col == -m.RSMOV_PERPRO:
             mov.perpro = value
             resetview = True
-            
+
         elif col == m.RSMOV_PDCCG_cod:
             mov.id_pdccg = value
             resetview = True
-            
+
         else:
             if col < len(self.dbdoc.mov.GetFieldNames()):
                 setattr(self.dbdoc.mov, self.dbdoc.mov.GetFieldNames()[col], value)
@@ -1445,33 +1453,33 @@ class GridBody(object):
         #--------------------------------------------- Ricalcola ricarica
         self.UpdateProdZonePRic()
         #--------------------------------------------- Ricalcola ricarica
-        
+
         self.MakeTotals(pesocolli=True)
-        
+
         if mov.config.tipologia == "P":
             resetview = True
-        
+
         if resetview:
             self.gridbody.ResetView()
-        
+
         return True
-    
+
     def GridBodyDefSconto(self, numsc, mov):
         sconto, tipo = self.dbdoc.DefSconto(numsc, mov)
         return sconto
-    
+
     def GridBodyDefPrezzoSconti(self, sconti6=False):
-        
+
         if sconti6:
             prezzo, tipo, sc1, sc2, sc3, sc4, sc5, sc6 = self.dbdoc.DefPrezzoSconti6()
             return prezzo, sc1, sc2, sc3, sc4, sc5, sc6
-        
+
         prezzo, tipo, sc1, sc2, sc3 = self.dbdoc.DefPrezzoSconti()
         return prezzo, sc1, sc2, sc3
-    
+
     def GridBodyDefPrezzoSconti6(self):
         return self.GridBodyDefPrezzoSconti(sconti6=True)
-    
+
     def GridBodyDefAliqIva(self):
         doc = self.dbdoc
         mov = doc.mov
@@ -1497,7 +1505,7 @@ class GridBody(object):
             if idaliq is None and hasattr(self, '_auto_magivadef'):
                 idaliq = self._auto_magivadef
         mov.id_aliqiva = idaliq
-    
+
     def GridBodyIsRowOK(self):
         valok = True
         mov = self.dbdoc.mov
@@ -1519,7 +1527,7 @@ class GridBody(object):
         elif mov.config.proobb and mov.id_prod is None and mov.perpro is None:
             valok = False
         return valok
-    
+
     def GridBodyAddNewRow(self, before_row=None):
         if self.status != m.STATUS_EDITING:
             #workaround: quando ho inserito una fattura e cerco di inserire un
@@ -1546,7 +1554,7 @@ class GridBody(object):
             doc.DefVarList()
         self.UpdateBodyButtons()
         return True
-    
+
     def GridBodyOnSelected(self, event):
         row, col = event.GetRow(), event.GetCol()
         self.UpdateBodyButtons(row)
@@ -1560,7 +1568,7 @@ class GridBody(object):
             proid = None
         self.UpdateProdZone(proid)
         event.Skip()
-    
+
     def GridBodySetTipMovFilter(self):
         editor = self.gridbody.GetCellEditor(0, self.COL_codmov)
         assert isinstance(editor, dbgred.DataLinkCellEditor),\
@@ -1574,7 +1582,7 @@ class GridBody(object):
             editor.lt_filter = "id_tipdoc=%s" % self.cauid
             if lt:
                 lt.SetFilter(editor.lt_filter)
-    
+
     def UpdateProdZonePRic(self):
         def cn(x): return self.FindWindowByName(x)
 #        def ci(x): return self.FindWindowById(x)
@@ -1597,7 +1605,7 @@ class GridBody(object):
                     bprc = 0
             cn('bodypric').SetValue(bprc)
 #            ci('ID_BODYPRIC').SetValue(bprc)
- 
+
 
     def UpdateProdZone(self, idpro):
         if idpro == self.lastprod:
@@ -1651,7 +1659,7 @@ class GridBody(object):
             idpdc = self.dbdoc.id_pdc
             self.gridmovi.UpdateGrid(idpdc, idpro)
         self.lastprod = idpro
-    
+
     def UpdateBodyButtons(self, row=None):
         disable = True
         if row is None:
@@ -1669,7 +1677,25 @@ class GridBody(object):
         if disable:
             self.controls["butnewrow"].Enable(False)
             self.controls["butdelrow"].Enable(False)
-    
+
+    def GridBodyOnAdd(self, event):
+        try:
+            DbgMsg('GridBodyOnAdd')
+            br = self.gridbody.GetGridCursorRow()
+            col = self.gridbody.GetGridCursorCol()
+
+            br = self.dbdoc.mov.RowsCount()
+            
+            print self.dbdoc.mov
+            
+            
+            self.gridbody.ResetView()
+            self.gridbody.SetGridCursor(br, 1)#self.dbdoc.mov.RowsCount()-1,0)
+            self.gridbody.SetFocus()
+
+        except:
+            pass
+
     def GridBodyOnCreate(self, event):
         br = self.gridbody.GetGridCursorRow()
         col = self.gridbody.GetGridCursorCol()
@@ -1706,7 +1732,7 @@ class GridBody(object):
                 self.MakeTotals()
                 self.UpdateBodyButtons()
         event.Skip()
-    
+
     def UpdatePanelBody(self):
         #if self.gridbody is not None:
             #self.gridbody.ResetView()
