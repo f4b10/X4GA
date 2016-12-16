@@ -575,6 +575,7 @@ def WorkstationSetup( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
+ID_FUNCKEY = 15037
 
 def SetupAspettoFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -592,6 +593,11 @@ def SetupAspettoFunc( parent, call_fit = True, set_sizer = True ):
         ["le celle della griglia","i controlli adiacenti alla griglia"] , 1, wx.RA_SPECIFY_COLS )
     item4.SetName( "Controls_tabgrid" )
     item2.Add( item4, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item5 = RadioBox( parent, ID_FUNCKEY, "Tasti funzione su doc.magazzino:", wx.DefaultPosition, wx.DefaultSize, 
+        ["abilitati","disabilitati"] , 1, wx.RA_SPECIFY_COLS )
+    item5.SetName( "Controls_funckey" )
+    item2.Add( item5, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
     item1.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
@@ -695,7 +701,7 @@ def SetupDatabaseFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_TEXTCTRL = 15037
+ID_TEXTCTRL = 15038
 
 def SetupReportFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.BoxSizer( wx.VERTICAL )

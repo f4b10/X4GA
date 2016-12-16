@@ -162,6 +162,9 @@ class WorkstationSetupPanel(ConfigPanel):
             c = cn(cid)
             c.SetDataLink(c.GetName(), {True: '1', False: '0'})
         cn(wdr.ID_TABGRID).SetDataLink('Controls_gridtabtraversal', '01')
+        cn(wdr.ID_FUNCKEY).SetDataLink('Controls_functionkey', '10')
+
+
 
         self.Bind(wx.EVT_CHECKBOX, self.OnCSVAsGrid, cn(wdr.ID_CSVASGRID))
 
@@ -203,7 +206,7 @@ class WorkstationSetupPanel(ConfigPanel):
             else:
                 out = None
             return out
-        
+
         self.nbServer.GetPage(tabno).FindWindowByName('version').SetLabel('')
         host, port, user, pswd, = map(lambda x: FindWindow(x).GetValue(),
                                       ('host', 'port', 'user', 'pswd'))

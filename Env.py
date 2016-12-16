@@ -323,7 +323,8 @@ class GeneralSetup(Setup):
 
                 ('Controls',                            #configurazione controlli
                  (('iconstype', 'Vista'),               #tipo di icone delle toolbar
-                  ('gridtabtraversal', '1'),)),         #flag navigazione con tasto "Alt"
+                  ('gridtabtraversal', '1'),            #flag navigazione con tasto "Alt"
+                  ('functionkey', '0'),)),              #flag utilizzo tasti funzione in doc. magazzino
              ]
 
         if config_stru:
