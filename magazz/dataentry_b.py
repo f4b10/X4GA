@@ -578,6 +578,7 @@ class GridBody(object):
         for r in self.dbdoc.cfgdoc.tipmov:
             if r.is_default:
                 self.default_tipmov=r.id
+                break
         if self.gridbody:
             wx.CallAfter(self.gridbody.Destroy)
 
@@ -1691,17 +1692,18 @@ class GridBody(object):
 
     def SetFirstTipMov(self):
         if self.default_tipmov:
-            if self.dbdoc.mov.RowsCount()==0: 
-                try:           
+            if self.dbdoc.mov.RowsCount()==0:
+                try:
                     self.GridBodyAddNewRow(before_row=0)
                     self.dbdoc.mov.id = self.default_tipmov
-                    self.GridBodyEditingValues(0, 1, 37, self.default_tipmov)
-                    self.GridBodyEditedValues(0, 1, 37, self.default_tipmov)
+                    idxCodMov=self.dbdoc.mov.config._GetFieldIndex("codice", inline=True)
+                    self.GridBodyEditingValues(0, 1, idxCodMov, self.default_tipmov)
+                    self.GridBodyEditedValues(0, 1, idxCodMov, self.default_tipmov)
                     self.gridbody.ChangeData(self.gridbody.GetTable().data)
                     self.lastmovid = self.default_tipmov
                 except:
                     pass
-        
+
 
     def GridBodyOnAdd(self, event):
         try:
@@ -1713,8 +1715,9 @@ class GridBody(object):
                 if self.default_tipmov:
                     self.GridBodyAddNewRow(before_row=br)
                     self.dbdoc.mov.id = self.default_tipmov
-                    self.GridBodyEditingValues(br, 1, 37, self.default_tipmov)
-                    self.GridBodyEditedValues(br, 1, 37, self.default_tipmov)
+                    idxCodMov=self.dbdoc.mov.config._GetFieldIndex("codice", inline=True)
+                    self.GridBodyEditingValues(br, 1, idxCodMov, self.default_tipmov)
+                    self.GridBodyEditedValues(br, 1, idxCodMov, self.default_tipmov)
                     self.gridbody.ChangeData(self.gridbody.GetTable().data)
                     self.lastmovid = self.default_tipmov
 
