@@ -103,6 +103,7 @@ fldap('acc_sepiva');   defap(0);    RSMOV_ACCSEPIVA =    43
 fldap('canprezzo0');   defap(0);    RSMOV_CANPREZZO0 =   44
 fldap('modimpricalc'); defap(0);    RSMOV_MODIMPRICALC = 45
 fldap('nomastroprod'); defap(0);    RSMOV_NOPRODMASTRO = 46
+fldap('is_default');   defap(0);    RSMOV_ISDEFAULT =    47
 
 
 
@@ -177,10 +178,10 @@ class PermUteGrid(dbglib.DbGridColoriAlternati):
 class DefMovGrid(dbglib.DbGridColoriAlternati):
 
     def __init__(self, parent, dbmov):
-
         coldef = (\
             ( 40, (RSMOV_CODICE,  "Cod.",      gl.GRID_VALUE_STRING, False)),
-            (160, (RSMOV_DESCRIZ, "Movimento", gl.GRID_VALUE_STRING, False)),
+            (140, (RSMOV_DESCRIZ, "Movimento", gl.GRID_VALUE_STRING, False)),
+            ( 30, (RSMOV_ISDEFAULT, "Pref.",   gl.GRID_VALUE_CHOICE+":1,0", False)),
             (  1, (RSMOV_ID,      "#mov",      gl.GRID_VALUE_NUMBER, False)),
         )
 
@@ -403,6 +404,7 @@ class CauMagazzPanel(ga.AnagPanel):
                            ("noivaprof",  { True: 1,   False: 0  } ),
                            ("rptcolli",   { True: 1,   False: 0  } ),
                            ("aanotedoc",  { True: 1,   False: 0  } ),
+                           ("is_default", { True: 1,   False: 0  } ),
                            ):
             ctr = cn(name)
             ctr.SetDataLink(name, val)
@@ -487,6 +489,16 @@ class CauMagazzPanel(ga.AnagPanel):
             self.UpdateFromControls(row)
         if event.GetEventObject().GetName() == 'askdatiacc':
             self.EnableDatiAcc()
+        elif event.GetEventObject().GetName() == 'is_default':
+            o=event.GetEventObject()
+            if o.IsChecked():
+                for i,r in enumerate(self.dbmov):
+                    if sr and i==row:
+                        r.is_default=1
+                    else:
+                        r.is_default=0
+            self._grid_mov.Refresh()
+            pass
         event.Skip()
 
     def UpdateFromControls(self, row):
