@@ -28,6 +28,13 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
+    ('1.5.30', dt.Date(2016, 12, 19), (
+         ("BET1208",
+         """Introdotta la gestione dei tasti funzioni nella gestione dei documenti di magazzino. L'opzione è attivabile dal setup workstation"""),
+         ("BET1207",
+         """Aggiunta la gestione del movimento di default all'atto dell'insermento dei documenti di magazzino."""),
+        ),),
+
     ('1.5.29', dt.Date(2016, 11, 26), (
          ("BET1206",
          """Introdotta classe TreeListCtrl che prevede esportazione dati."""),
