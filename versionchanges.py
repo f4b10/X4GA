@@ -29,10 +29,12 @@ import mx.DateTime as dt
 
 history = (
     ('1.5.30', dt.Date(2016, 12, 19), (
-         ("BET1208",
+         ("BET1209",
          """Introdotta la gestione dei tasti funzioni nella gestione dei documenti di magazzino. L'opzione è attivabile dal setup workstation"""),
-         ("BET1207",
+         ("BET1208",
          """Aggiunta la gestione del movimento di default all'atto dell'insermento dei documenti di magazzino."""),
+         ("BET1207",
+         """Aggiunta opzione su SetupAzienda per effettuare, in sede di registrazione Documento di Magazzino, la ricerca su contenuto descrizione prodotto digitando sequenza .. in corrispondenza del codice prodotto."""),
         ),),
 
     ('1.5.29', dt.Date(2016, 11, 26), (
