@@ -1035,6 +1035,7 @@ class Azienda(object):
         GESFIDICLI = False   #flag gestione fidi clienti
         MAGIMGPROD = False   #flag gestione immagine prodotto su scheda
         MAGDIGSEARCH = True  #flag ricerca prodotti in digitazione
+        MAGINDESCRIZ = False #flag ricerca per contenuto in descrizione
         MAGRETSEARCH = False #flag ricerca prodotti anche con invio
         MAGEXCSEARCH = False #flag ricerca esclusiva sul codice prodotto
         MAGATTGRIP = False   #flag attivazione griglie prezzi clienti
@@ -3954,6 +3955,7 @@ class Azienda(object):
                 ('GESFIDICLI',      'gesfidicli',         f, _str, 'del flag di attivazione fidi clienti'),
                 ('MAGIMGPROD',      'magimgprod',         f, _str, 'del flag di attivazione immagine prodotto'),
                 ('MAGDIGSEARCH',    'magdigsearch',       f, _int, 'del flag di ricerca immediata prodotti in digitazione codice'),
+                ('MAGINDESCRIZ',    'magindescriz',       f, _int, None),
                 ('MAGRETSEARCH',    'magretsearch',       f, _int, None),
                 ('MAGEXCSEARCH',    'magexcsearch',       f, _int, None),
                 ('OPTLINKINDEX',    'optlinkindex',       f, _int, None),

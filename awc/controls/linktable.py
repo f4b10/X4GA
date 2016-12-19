@@ -25,6 +25,10 @@ import string
 import wx
 import wx.lib.newevent
 
+import Env
+import anag
+
+
 import MySQLdb
 
 from linktable_wdr import LinkTableGridFunc, CodiceDescrizTextCtrl,\
@@ -738,6 +742,15 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
         obj = event.GetEventObject()
         active = (self.IsEnabled() and self.IsEditable())
 
+        if '..' in obj.GetValue():
+            if obj == self._ctrcod:
+                if Env.Azienda.BaseTab.MAGINDESCRIZ:
+                    if isinstance(self, anag.lib.LinkTableProd):
+                        value=obj.GetValue()
+                        self._ctrdes.SetValue(value)
+                        obj=self._ctrdes
+                        self.retsearch_ondescriz = True
+
         if event.GetKeyCode() == wx.WXK_DOWN and active:
             #FRECCIA GIU' richiama elenco
             self._fromkeydown = True
@@ -753,6 +766,9 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
                 elif obj == self._ctrcod:
                     self.Navigate(wx.NavigationKeyEvent.IsBackward)
             else:
+                
+                
+                
                 if obj == self._ctrcod:
                     do = True
                     if self.tabsearch_oncode:

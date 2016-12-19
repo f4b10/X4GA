@@ -395,6 +395,7 @@ class AziendaSetupPanel(_SetupPanel):
                    bt.GESFIDICLI,
                    bt.MAGIMGPROD,
                    bt.MAGDIGSEARCH,
+                   bt.MAGINDESCRIZ,
                    bt.MAGRETSEARCH,
                    bt.MAGEXCSEARCH,
                    bt.OPTLINKINDEX,
@@ -467,7 +468,6 @@ class AziendaSetupPanel(_SetupPanel):
                    bt.SYNCTABELLE,
                    )
 
-
             if not bt.OPTLINKINDEX == bool(cn('setup_optlinkindex').GetValue()):
                 reindex=True
             bt.TIPO_CONTAB = cn('setup_tipo_contab').GetValue()
@@ -487,6 +487,7 @@ class AziendaSetupPanel(_SetupPanel):
             bt.GESFIDICLI = cn('setup_gesfidicli').GetValue()
             bt.MAGIMGPROD = cn('setup_magimgprod').GetValue()
             bt.MAGDIGSEARCH = bool(cn('setup_magdigsearch').GetValue())
+            bt.MAGINDESCRIZ = bool(cn('setup_magindescriz').GetValue())
             bt.MAGRETSEARCH = bool(cn('setup_magretsearch').GetValue())
             bt.MAGEXCSEARCH = bool(cn('setup_magexcsearch').GetValue())
             bt.OPTLINKINDEX = bool(cn('setup_optlinkindex').GetValue())
@@ -579,6 +580,7 @@ class AziendaSetupPanel(_SetupPanel):
                 bt.GESFIDICLI,
                 bt.MAGIMGPROD,
                 bt.MAGDIGSEARCH,
+                bt.MAGINDESCRIZ,
                 bt.MAGRETSEARCH,
                 bt.MAGEXCSEARCH,
                 bt.OPTLINKINDEX,

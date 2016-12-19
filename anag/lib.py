@@ -199,6 +199,7 @@ class LinkTableProd(LinkTable, LinkTableHideSearchMixin):
                 filter = AndApp("(%s)" % self.basefilter, filter)
 
             try:
+                # Imposta filtro su categorie merceologiche abilitate se previsto
                 chk = Env.GetAncestorByName(self, 'vincolocat' )
                 if chk.IsChecked():
                     filter=""
@@ -208,14 +209,6 @@ class LinkTableProd(LinkTable, LinkTableHideSearchMixin):
                     FIND_IN_SET("%s", REPLACE(catart.caudoc, "|", ","))>0
                     """\
                     % v
-                    #===========================================================
-                    # filter = """
-                    # FIND_IN_SET("%s", REPLACE(catart.caudoc, "|", ","))>0
-                    # or catart.caudoc is null
-                    # or length(catart.caudoc)=0
-                    # """\
-                    # % v
-                    #===========================================================
             except:
                 pass
 
