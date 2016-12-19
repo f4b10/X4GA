@@ -574,7 +574,10 @@ class GridBody(object):
         return index_aftercol+1
 
     def GridBody_Init(self, parent):
-
+        self.default_tipmov=None
+        for r in self.dbdoc.cfgdoc.tipmov:
+            if r.is_default:
+                self.default_tipmov=r.id
         if self.gridbody:
             wx.CallAfter(self.gridbody.Destroy)
 
@@ -623,6 +626,8 @@ class GridBody(object):
         grid.SetData( self.dbdoc.mov._info.rs, colmap, canedit, canins,\
                       links, afteredit, self.GridBodyAddNewRow,
                       editors=editors)
+
+
         grid.SetRowDynLabel(self.GridBodyGetRowLabel)
         grid.SetCellDynAttr(self.GridBodyGetAttr)
 
@@ -650,10 +655,14 @@ class GridBody(object):
         grid.Bind(wx.EVT_KEY_UP, self.GridBodyOnKeyPress)
 
         self.gridbody = grid
-        
 
-        
-        
+
+    def CreateNewRow(self):
+        mov = self.dbmov
+        mov.CreateNewRow()
+        self.ForceResetView()
+        return True
+
 
     def GridBodyDefLinks(self):
 
@@ -1544,6 +1553,7 @@ class GridBody(object):
         mov.agggrip = int((bt.MAGATTGRIP or bt.MAGATTGRIF) and bt.MAGAGGGRIP and bt.MAGALWGRIP)
         if self.lastmovid is not None:
             mov.id_tipmov = self.lastmovid
+
         if before_row is not None:
             rsb = mov.GetRecordset()
             r = rsb.pop()
@@ -1678,20 +1688,41 @@ class GridBody(object):
             self.controls["butnewrow"].Enable(False)
             self.controls["butdelrow"].Enable(False)
 
+
+    def SetFirstTipMov(self):
+        if self.default_tipmov:
+            if self.dbdoc.mov.RowsCount()==0: 
+                try:           
+                    self.GridBodyAddNewRow(before_row=0)
+                    self.dbdoc.mov.id = self.default_tipmov
+                    self.GridBodyEditingValues(0, 1, 37, self.default_tipmov)
+                    self.GridBodyEditedValues(0, 1, 37, self.default_tipmov)
+                    self.gridbody.ChangeData(self.gridbody.GetTable().data)
+                    self.lastmovid = self.default_tipmov
+                except:
+                    pass
+        
+
     def GridBodyOnAdd(self, event):
         try:
             DbgMsg('GridBodyOnAdd')
             br = self.gridbody.GetGridCursorRow()
             col = self.gridbody.GetGridCursorCol()
-
             br = self.dbdoc.mov.RowsCount()
-            
-            print self.dbdoc.mov
-            
-            
+            if br==0:
+                if self.default_tipmov:
+                    self.GridBodyAddNewRow(before_row=br)
+                    self.dbdoc.mov.id = self.default_tipmov
+                    self.GridBodyEditingValues(br, 1, 37, self.default_tipmov)
+                    self.GridBodyEditedValues(br, 1, 37, self.default_tipmov)
+                    self.gridbody.ChangeData(self.gridbody.GetTable().data)
+                    self.lastmovid = self.default_tipmov
+
             self.gridbody.ResetView()
             self.gridbody.SetGridCursor(br, 1)#self.dbdoc.mov.RowsCount()-1,0)
+            self.GridBodyIsRowOK()
             self.gridbody.SetFocus()
+            self.FocusGained()
 
         except:
             pass

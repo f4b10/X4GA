@@ -741,7 +741,10 @@ class MagazzPanel(aw.Panel,\
         ci = self.FindWindowById
         wz = self.FindWindowByName('workzone')
         ntab = wz.GetSelection()
-        if ntab == 2:
+        
+        if ntab == 1:
+            self.SetFirstTipMov()
+        elif ntab == 2:
             #piede - totali
             self.UpdatePanelFoot()
             self.EnableFootControls()
