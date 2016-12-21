@@ -1701,6 +1701,7 @@ class GridBody(object):
                     self.GridBodyEditedValues(0, 1, idxCodMov, self.default_tipmov)
                     self.gridbody.ChangeData(self.gridbody.GetTable().data)
                     self.lastmovid = self.default_tipmov
+                    self.gridbody.SetGridCursor(0, 1)
                 except:
                     pass
 
