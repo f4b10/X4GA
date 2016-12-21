@@ -195,7 +195,9 @@ class CheckListBox4Sync(CheckListBox):
             check='%s%s|' % (check, self.GetPyData(e))
         for e in self.externalCheck:
             check='%s%s|' % (check, e)
-        return check[:-1]
+        check= check.replace('||','')
+        return check
+        #return check[:-1]
 
     def SetValue(self, v=''):
         lChecked=v.split('|')
