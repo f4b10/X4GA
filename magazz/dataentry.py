@@ -360,6 +360,7 @@ class MagazzPanel(aw.Panel,\
 
         wdr.DialogFunc(self, True)
 
+        self.FindWindowById(wdr.ID_BTN_PRINT1).Hide()
         self.boxanag = None
         self.boxdest = None
         if postinit:
@@ -439,6 +440,7 @@ class MagazzPanel(aw.Panel,\
                            ("butacquis",  self.OnButAcquis),
                            ("butdoc",     self.OnButDoc),
                            ("butprint",   self.OnButPrint),
+                           ("butprint1",  self.OnButPrint1),
                            ("butprodsch", self.GridBodyOnSchedaProd),
                            ("butprodmas", self.GridBodyOnMastroMov),
                            ("butfido",    self.OnDisplayFidoCliente),
@@ -547,9 +549,11 @@ class MagazzPanel(aw.Panel,\
         self.SetAcceleratorKey('Q', wdr.ID_BTN_QUIT,   'Abbandona',       'Abbandona il documento senza salvare')
 
         if Env.Azienda.config.get('Controls', 'functionkey', 0)=='1':
+            cn('btnPrev').SetLabel('F9 - Indietro')
+            cn('btnNext').SetLabel('F10 - Avanti')
             self.SetAcceleratorKey(wx.WXK_F9,  wdr.ID_BTN_PREV,  use_alt=False)
             self.SetAcceleratorKey(wx.WXK_F10, wdr.ID_BTN_NEXT,  use_alt=False)
-            self.SetAcceleratorKey(wx.WXK_F6,  wdr.ID_BTN_PRINT, use_alt=False)
+            self.SetAcceleratorKey(wx.WXK_F6,  wdr.ID_BTN_PRINT1, use_alt=False)
             self.SetAcceleratorKey(wx.WXK_F12, wdr.ID_BTNBODYADD,use_alt=False)
 
 
@@ -1133,6 +1137,15 @@ class MagazzPanel(aw.Panel,\
                 else:
                     self.SetRegStatus(STATUS_SELCAUS)
 
+    def OnButPrint1(self, event):
+        if self.PrintDoc(doc=None, skip_prompt=self.dbdoc.cfgdoc.noprompt=='X'):
+            if self.status == STATUS_EDITING:
+                if self.onedoconly_id:
+                    event.Skip()
+                else:
+                    self.SetRegStatus(STATUS_SELCAUS)
+
+
     def OnButModify(self, event):
         if self.status == STATUS_DISPLAY and self.canedit:
             if self.TestCanModify():
@@ -1248,7 +1261,7 @@ class MagazzPanel(aw.Panel,\
     def SetEnableHeadControls(self, s):
         self.setenablecontrols = s
 
-    def PrintDoc(self, doc=None):
+    def PrintDoc(self, doc=None, skip_prompt=False):
 
         if not self.Validate():
             return False
@@ -1322,12 +1335,15 @@ class MagazzPanel(aw.Panel,\
 
         pathname = doc.GetPrintPathName()
         filename = doc.GetPrintFileName()
+        
+        
         r = rpt.Report(self, doc, tool, noMove=True, startFunc=MoveFirst,
                        printer=cfg.printer, copies=copies,
                        changepathname=pathname, changefilename=filename,
                        otherquestions_filler=PrintOtherQuestionsFiller,
                        otherquestions_reactor=PrintOtherQuestionsReactor,
-                       multicopia_init=PrintMultiCopiaInit)
+                       multicopia_init=PrintMultiCopiaInit,
+                       skip_prompt = skip_prompt)
 
         out = False
         ur = r.GetUsedReport()
@@ -2202,7 +2218,10 @@ class MagazzPanel(aw.Panel,\
             c.SetPermissions(False, False)
         wx.CallAfter(lambda *x: self.SetEnableHeadControls(True))
         c = self.FindWindowByName('butprint')
-        l = d = 'Stampa'
+        if Env.Azienda.config.get('Controls', 'functionkey', 0)=='1':
+            l = d = 'F6 - Stampa'
+        else:
+            l = d = 'Stampa'
         if status == STATUS_EDITING:
             l += ' e chiudi'
             d += ' e chiude'
@@ -3216,6 +3235,13 @@ class NumDocDialog(aw.Dialog):
         self.Bind(wx.EVT_BUTTON, self.OnQuit, id=wdr.ID_BTNABORT)
 
         self.panel.SetDefaultItem(self.FindWindowById(wdr.ID_BTNSAVE))
+        
+        if Env.Azienda.config.get('Controls', 'functionkey', 0)=='1':
+            btn=self.FindWindowById(wdr.ID_BTNSAVE)
+            btn.SetLabel('F10 - %s' % btn.GetLabel())
+            btn=self.FindWindowById(wdr.ID_BTNABORT)
+            btn.SetLabel('F9 - %s' % btn.GetLabel())
+        
         self.panel.SetAcceleratorKey(wx.WXK_F6,  wdr.ID_BTNSAVE, use_alt=False)
         self.panel.SetAcceleratorKey(wx.WXK_F10, wdr.ID_BTNSAVE,use_alt=False)
         self.panel.SetAcceleratorKey(wx.WXK_ESCAPE, wdr.ID_BTNABORT,use_alt=False)

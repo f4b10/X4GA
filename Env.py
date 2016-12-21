@@ -2772,6 +2772,7 @@ class Azienda(object):
                 [ "totneg",     "CHAR",     1, None, "Flag permesso totale documento negativo", None ],
                 [ "tiposta",    "CHAR",     2, None, "Tipo stampa", None ],
                 [ "staobb",     "CHAR",     1, None, "Flag stampa obbligatoria", None ],
+                [ "noprompt",   "CHAR",     1, None, "Flag per skip prompt di stampa", None ],
                 [ "stanoc",     "CHAR",     1, None, "Flag stampa non contabile", None ],
                 [ "provvig",    "TINYINT",  1, None, "Flag calcolo provvigioni agenti", None ],
                 [ "toolprint",  "VARCHAR", 20, None, "Nome tool stampa documento", None ],

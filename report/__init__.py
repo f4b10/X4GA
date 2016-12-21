@@ -355,7 +355,7 @@ class Report:
                  emailbutton=0, multi_default=None,
                  otherquestions_filler=None, otherquestions_reactor=None,
                  multicopia_init=None, multicopia_reactor=None,
-                 can_preview=True, can_print=True,
+                 can_preview=True, can_print=True, skip_prompt=False,
                  **oa):
 
         self.messages = messages
@@ -373,10 +373,15 @@ class Report:
                     copies = 1
                     break
                 if not printer:
+                    skip_prompt = False
                     printer = self.get_default_printer()
                     SetUpdateLastPrinter(True)
                 if self.messages:
-                    rptdef, printer, def_output, copies = self.GetMultiReport(parent, test, rptdef, printer, copies, emailbutton, multi_default=multi_default, otherquestions_filler=otherquestions_filler, can_preview=can_preview, can_print=can_print)
+                    if skip_prompt and len(test)>0 and copies>0:
+                        rptdef=test+'.jrxml'
+                        def_output='PRINT'
+                    else:    
+                        rptdef, printer, def_output, copies = self.GetMultiReport(parent, test, rptdef, printer, copies, emailbutton, multi_default=multi_default, otherquestions_filler=otherquestions_filler, can_preview=can_preview, can_print=can_print)
                 else:
                     if os.path.isfile(test+'.jrxml'):
                         rptdef = test+'.jrxml'
@@ -384,7 +389,7 @@ class Report:
                         break
                     else:
                         raise Exception, "Multireport non attivabile senza interfaccia visuale"
-                if callable(otherquestions_reactor):
+                if not skip_prompt and callable(otherquestions_reactor):
                     otherquestions_reactor(self.usedDialog)
                 if output != "STORE":
                     output = def_output

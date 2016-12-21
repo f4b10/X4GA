@@ -28,6 +28,13 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
+    ('1.5.31', dt.Date(2016, 12, 21), (
+         ("BET1211",
+         """Aggiunta la possibilità di bypassare il prompt di stampa usando tasrti funzione."""),
+         ("BET1210",
+         """Perfezionata la visualizzazione dei tasti funzione."""),
+        ),),
+
     ('1.5.30', dt.Date(2016, 12, 19), (
          ("BET1209",
          """Introdotta la gestione dei tasti funzioni nella gestione dei documenti di magazzino. L'opzione è attivabile dal setup workstation"""),

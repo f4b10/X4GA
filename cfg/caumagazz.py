@@ -360,6 +360,7 @@ class CauMagazzPanel(ga.AnagPanel):
                            ("totneg",     { True: 'X', False: ' '} ),
                            ("colcg",      { True: 'X', False: ' '} ),
                            ("staobb",     { True: 'X', False: ' '} ),
+                           ("noprompt",   { True: 'X', False: ' '} ),
                            ("stanoc",     { True: 'X', False: ' '} ),
                            ("staintest",  { True: 'X', False: ' '} ),
                            ("stalogo",    { True: 'X', False: ' '} ),
