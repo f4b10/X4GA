@@ -77,6 +77,16 @@ class SendMailInfo(object):
 
 # ------------------------------------------------------------------------------
 
+class DocMagHead(adb.DbTable):
+
+    def __init__(self, *args, **kwargs):
+        adb.DbTable.__init__(self,\
+                             bt.TABNAME_MOVMAG_H,  "doc",\
+                             **kwargs)
+
+        self.AddJoin(\
+            bt.TABNAME_DESTIN,    "dest", join=adb.JOIN_LEFT)    
+
 
 class DocMag(adb.DbTable):
     """
