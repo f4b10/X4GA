@@ -1691,11 +1691,11 @@ class GridBody(object):
 
 
     def SetFirstTipMov(self):
-        if self.default_tipmov:
+        if self.default_tipmov or False:
             if self.dbdoc.mov.RowsCount()==0:
                 try:
                     self.GridBodyAddNewRow(before_row=0)
-                    self.dbdoc.mov.id = self.default_tipmov
+                    #self.dbdoc.mov.id = self.default_tipmov
                     idxCodMov=self.dbdoc.mov.config._GetFieldIndex("codice", inline=True)
                     self.GridBodyEditingValues(0, 1, idxCodMov, self.default_tipmov)
                     self.GridBodyEditedValues(0, 1, idxCodMov, self.default_tipmov)
@@ -1715,7 +1715,7 @@ class GridBody(object):
             if br==0:
                 if self.default_tipmov:
                     self.GridBodyAddNewRow(before_row=br)
-                    self.dbdoc.mov.id = self.default_tipmov
+                    #self.dbdoc.mov.id = self.default_tipmov
                     idxCodMov=self.dbdoc.mov.config._GetFieldIndex("codice", inline=True)
                     self.GridBodyEditingValues(br, 1, idxCodMov, self.default_tipmov)
                     self.GridBodyEditedValues(br, 1, idxCodMov, self.default_tipmov)

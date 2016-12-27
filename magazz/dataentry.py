@@ -20,6 +20,7 @@
 # You should have received a copy of the GNU General Public License
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
+from datetime import datetime, timedelta
 
 import lib
 
@@ -46,6 +47,13 @@ import report as rpt
 
 import magazz
 import magazz.dbtables as dbm
+
+from stormdb import DateTime,\
+     OPENMODE_READONLY, OPENMODE_WRITE, OPENMODE_STANDARD,\
+     JOIN_ALL, JOIN_LEFT, JOIN_RIGHT, ORDER_ASCENDING, ORDER_DESCENDING
+
+
+
 from magazz import\
      STATUS_SELCAUS, STATUS_GETKEY, STATUS_DISPLAY, STATUS_EDITING,\
      EDITING_HEAD, EDITING_BODY, EDITING_FOOT,\
@@ -82,6 +90,9 @@ import contab.scadedit as scadedit
 import contab.pdcint as pdcint
 
 from awc.controls.attachbutton import AttachTableList
+
+
+_GIORNI=180
 
 today = Env.Azienda.Esercizio.dataElab
 datregsrc1 = today-today.day+1
@@ -469,8 +480,11 @@ class MagazzPanel(aw.Panel,\
         # bind evento cambiamento sottoconto x agg.dati anagrafici
         self.Bind(linktab.EVT_LINKTABCHANGED, self.OnAnagChanged,\
                   id=wdr.ID_PDC)
-        #self.Bind(linktab.EVT_LINKTABCHANGED, self.OnDestChanged,\
-                  #id=wdr.ID_DEST)
+        self.Bind(linktab.EVT_LINKTABCHANGED, self.OnDestChanged,\
+                  id=wdr.ID_DEST)
+
+        cn('nocodedes_descriz').Bind(wx.EVT_KEY_DOWN, self.OnViewDest)
+
 
         # bind eventi di cambiamento dati di testata
         for name in 'f_ann f_acq'.split():
@@ -745,7 +759,7 @@ class MagazzPanel(aw.Panel,\
         ci = self.FindWindowById
         wz = self.FindWindowByName('workzone')
         ntab = wz.GetSelection()
-        
+
         if ntab == 1:
             self.SetFirstTipMov()
         elif ntab == 2:
@@ -1335,8 +1349,8 @@ class MagazzPanel(aw.Panel,\
 
         pathname = doc.GetPrintPathName()
         filename = doc.GetPrintFileName()
-        
-        
+
+
         r = rpt.Report(self, doc, tool, noMove=True, startFunc=MoveFirst,
                        printer=cfg.printer, copies=copies,
                        changepathname=pathname, changefilename=filename,
@@ -1468,8 +1482,16 @@ class MagazzPanel(aw.Panel,\
         else:
             contact = ""
 
-        if cn('id_dest').GetValue()==None:
-            cn('enable_nocodedes').SetValue(True)
+        #=======================================================================
+        # if cn('id_dest').GetValue()==None:
+        #     try:
+        #         #if bt.MAGNOCODEDES and bt.MAGNOCDEFDES:
+        #         if bt.MAGNOCODEDES:
+        #             self.dbdoc.enable_nocodedes = 1
+        #             #cn('enable_nocodedes').SetValue(True)
+        #     except:
+        #         DbgMsg('errore in nocode')
+        #=======================================================================
 
 
         if getattr(doc, 'enable_nocodedes', False):
@@ -1551,6 +1573,43 @@ class MagazzPanel(aw.Panel,\
                 if name == "numdoc" and doc.cfgdoc.numdoc == '3':
                     doc.numiva = value
                     self.controls["numiva"].SetValue(doc.numiva)
+
+
+    def OnViewDest(self, evt):
+        if self.FindWindowByName('nocodedes_descriz').IsEnabled():
+            keycode = evt.GetKeyCode()
+            if keycode==317:
+                DbgMsg('Visualizza destinatazioni precedenti')
+                dlg = ListDestDialog(self)
+                dlg.ShowModal()
+                dlg.Destroy()
+        evt.Skip()
+
+    def SetDestCodificato(self, id_dest):
+        self.dbdoc.enable_nocodedes=0
+        self.FindWindowByName('id_dest').SetValue(id_dest)
+        self.UpdateHeadDest()
+
+    def SetDestNonCodificato(self, des, ind, cap, citta, prov):
+        self.dbdoc.enable_nocodedes=1
+        self.FindWindowByName('nocodedes_descriz').SetValue(des)
+        self.FindWindowByName('nocodedes_indirizzo').SetValue(ind)
+        self.FindWindowByName('nocodedes_cap').SetValue(cap)
+        self.FindWindowByName('nocodedes_citta').SetValue(citta)
+        self.FindWindowByName('nocodedes_prov').SetValue(prov)
+        self.UpdateHeadDest()
+
+
+    def OnDestChanged(self, event):
+        if not event.GetEventObject().GetValue():
+            if bt.MAGNOCODEDES and bt.MAGNOCDEFDES:
+                self.dbdoc.enable_nocodedes = 1
+
+        else:
+            self.dbdoc.enable_nocodedes = 0
+        self.UpdateHeadDest()
+        DbgMsg('OnDestChanged')
+        event.Skip()
 
     def OnHeadChanged(self, event):
 
@@ -2558,7 +2617,9 @@ class MagazzPanel(aw.Panel,\
         c["id_agente"].Enable(en and cfg.askagente)
         c["id_zona"].Enable(en and cfg.askzona)
         c["id_tiplist"].Enable(en and cfg.asklist)
-        c["id_dest"].Enable(en and cfg.askdestin and not bool(getattr(self.dbdoc, 'enable_nocodedes', False)))
+        #c["id_dest"].Enable(en and cfg.askdestin and not bool(getattr(self.dbdoc, 'enable_nocodedes', False)))
+        c["id_dest"].Enable(en and cfg.askdestin )
+        DbgMsg('modifica abilitazione destinatario')
         c["id_aliqiva"].Enable(en)
         c["desrif"].Enable(en and cfg.askrifdesc)
         c["datrif"].Enable(en and cfg.askrifdata)
@@ -3235,13 +3296,13 @@ class NumDocDialog(aw.Dialog):
         self.Bind(wx.EVT_BUTTON, self.OnQuit, id=wdr.ID_BTNABORT)
 
         self.panel.SetDefaultItem(self.FindWindowById(wdr.ID_BTNSAVE))
-        
+
         if Env.Azienda.config.get('Controls', 'functionkey', 0)=='1':
             btn=self.FindWindowById(wdr.ID_BTNSAVE)
             btn.SetLabel('F10 - %s' % btn.GetLabel())
             btn=self.FindWindowById(wdr.ID_BTNABORT)
             btn.SetLabel('F9 - %s' % btn.GetLabel())
-        
+
         self.panel.SetAcceleratorKey(wx.WXK_F6,  wdr.ID_BTNSAVE, use_alt=False)
         self.panel.SetAcceleratorKey(wx.WXK_F10, wdr.ID_BTNSAVE,use_alt=False)
         self.panel.SetAcceleratorKey(wx.WXK_ESCAPE, wdr.ID_BTNABORT,use_alt=False)
@@ -3315,3 +3376,145 @@ class _FrameDialogMixin(object):
             self.FixTimerProblem()
             return True
         return False
+
+
+
+class ListDestDialog(aw.Dialog):
+    elencoDest=None
+
+    def __init__(self, parent, *args, **kwargs):
+        kwargs['title'] = 'Ultimi Destinatari utilizzati'
+        kwargs['style'] = wx.DEFAULT_DIALOG_STYLE
+        aw.Dialog.__init__(self, parent, **kwargs)
+        self.mainPanel=parent
+        self.panel = aw.Panel(self)
+        wdr.ViewDestFunc(self.panel)
+        self.AddSizedPanel(self.panel)
+        self.CenterOnScreen()
+        self.listDest=self.FindWindowByName('listDest')
+        #self.FindWindowByName('btnSelect').Bind(wx.EVT_BUTTON, self.OnSave)
+        self.FindWindowByName('btnAbort').Bind(wx.EVT_BUTTON, self.OnQuit)
+        #self.listDest.Bind(wx.EVT_LIST_ITEM_SELECTED, self.OnChangeSelected)
+        self.listDest.Bind(wx.EVT_LEFT_DCLICK, self.OnDoubleClick)
+        self.listDest.Bind(wx.EVT_KEY_UP, self.OnKeyDownSelectedList)
+
+
+
+        self.listDest.InsertColumn(0, 'id', width=35)
+        self.listDest.InsertColumn(1, 'Nome', width=200)
+        self.listDest.InsertColumn(2, 'Indirizzo', width=200)
+        self.listDest.InsertColumn(3, 'Cap', width=60)
+        self.listDest.InsertColumn(4, 'Città', width=125)
+        self.listDest.InsertColumn(5, 'Pr', width=25)
+
+        self.dbDoc=dbm.DocMagHead()
+        self.LoadDest()
+
+
+    def LoadDest(self):
+        self.elencoDest=[]
+        d = Env.Azienda.Login.dataElab - timedelta(days=_GIORNI)
+        self.dbDoc.AddFilter('doc.id_pdc=%s' % self.mainPanel.dbdoc.id_pdc)
+        self.dbDoc.AddFilter('doc.id_tipdoc=%s' % self.mainPanel.dbdoc.id_tipdoc)
+        self.dbDoc.AddFilter('doc.datdoc>="%s"' % d.strftime('%Y%m%d'))
+        self.dbDoc.AddOrder('doc.datdoc', ORDER_DESCENDING)
+        self.dbDoc.Retrieve()
+        i=0
+        for r in self.dbDoc:
+            if (r.nocodedes_descriz and len(r.nocodedes_descriz)>0) or r.id_dest:
+                i=i+1
+                if not self.DestAlreadyExist(r):
+                    d={}
+                    if r.id_dest:
+                        d['id_dest']=r.id_dest
+                        for k in ["descriz", "indirizzo", "cap", "citta", "prov"]:
+                            d[k]=getattr(r.dest, k)
+                    else:
+                        for k in ['id_dest', "nocodedes_descriz", "nocodedes_indirizzo", "nocodedes_cap", "nocodedes_citta", "nocodedes_prov", "nocodedes_id_stato"]:
+                            d[k]=getattr(r, k)
+                    self.elencoDest.append(d)
+        for i, e in enumerate(self.elencoDest):
+            if e['id_dest']:
+                self.listDest.InsertStringItem(i, '%s' % e['id_dest'])
+                for j, n in enumerate(['descriz', 'indirizzo', 'cap', 'citta', 'prov']):
+                    try:
+                        self.listDest.SetStringItem(i, j+1, e[n])
+                    except:
+                        self.listDest.SetStringItem(i, j+1, '')
+
+            else:
+                self.listDest.InsertStringItem(i, '')
+                for j, n in enumerate(["nocodedes_descriz", "nocodedes_indirizzo", "nocodedes_cap", "nocodedes_citta", "nocodedes_prov", "nocodedes_id_stato"]):
+                    try:
+                        self.listDest.SetStringItem(i, j+1, e[n])
+                    except:
+                        self.listDest.SetStringItem(i, j+1, '')
+        self.listDest.Focus(0)
+        self.listDest.Select(0)
+        pass
+
+    def DestAlreadyExist(self, r):
+        lFound=False
+        if r.id_dest:
+            for e in self.elencoDest:
+                if r.id_dest == e['id_dest']:
+                    lFound=True
+                    break
+        else:
+            for e in self.elencoDest:
+                if not e['id_dest']:
+                    isSame=True
+                    for n in ["nocodedes_descriz", "nocodedes_indirizzo", "nocodedes_cap", "nocodedes_citta", "nocodedes_prov", "nocodedes_id_stato"]:
+                        if not e[n]==getattr(r,n):
+                            isSame=False
+                            break
+                    if isSame:
+                        lFound=True
+                        break
+        return lFound
+
+    def OnQuit(self, evt):
+        self.Close()
+        evt.Skip()
+
+    def OnSave(self, evt):
+        self.UpdateDestDoc()
+        evt.Skip()
+
+    def OnDoubleClick(self, evt):
+        self.UpdateDestDoc()
+        evt.Skip()
+
+    def OnKeyDownSelectedList(self, evt):
+        keyCode=evt.GetKeyCode()
+        if keyCode==13:
+            self.UpdateDestDoc()
+        elif keyCode==27:
+            self.Close()
+        evt.Skip()
+
+
+
+
+
+    def UpdateDestDoc(self):
+        def num(s):
+            try:
+                return int(s)
+            except:
+                return 0
+        idx=self.listDest.GetFirstSelected()
+        id_dest=num(self.listDest.GetItem(idx, 0).GetText())
+        print id_dest
+        if id_dest==0:
+            print 'nocodedes'
+            des=item=self.listDest.GetItem(idx, 1).GetText()
+            ind=item=self.listDest.GetItem(idx, 2).GetText()
+            cap=item=self.listDest.GetItem(idx, 3).GetText()
+            citta=item=self.listDest.GetItem(idx, 4).GetText()
+            prov=item=self.listDest.GetItem(idx, 5).GetText()
+            self.mainPanel.SetDestNonCodificato(des, ind, cap, citta, prov)
+        else:
+            print 'codificato'
+            self.mainPanel.SetDestCodificato(id_dest)
+        self.EndModal(wx.ID_OK)

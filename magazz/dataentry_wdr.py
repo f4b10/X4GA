@@ -3620,6 +3620,36 @@ def ExtraVetDataFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
+ID_LISTDEST = 20262
+
+def ViewDestFunc( parent, call_fit = True, set_sizer = True ):
+    item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    
+    item1 = wx.ListCtrl( parent, ID_LISTDEST, wx.DefaultPosition, [700,250], wx.LC_REPORT|wx.SUNKEN_BORDER )
+    item1.SetName( "listDest" )
+    item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item2 = wx.FlexGridSizer( 0, 3, 0, 0 )
+    
+    item3 = wx.Button( parent, ID_BTNABORT, "Abbandona", wx.DefaultPosition, [90,-1], 0 )
+    item3.SetName( "btnAbort" )
+    item2.Add( item3, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item2.AddGrowableCol( 1 )
+
+    item0.Add( item2, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item0.AddGrowableCol( 0 )
+
+    item0.AddGrowableRow( 0 )
+
+    if set_sizer == True:
+        parent.SetSizer( item0 )
+        if call_fit == True:
+            item0.SetSizeHints( parent )
+    
+    return item0
+
 # Menubar functions
 
 # Toolbar functions
