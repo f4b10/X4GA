@@ -29,6 +29,9 @@ import mx.DateTime as dt
 
 history = (
     ('1.5.31', dt.Date(2016, 12, 21), (
+         ("BET1212",
+         """Aggiunta la possibilità di visualizzare le ultime destinazioni utilizzate all'atto dell'inserimento
+di un documento di magazzino che preveda la gestione di destinazioni non codificate."""),
          ("BET1211",
          """Aggiunta la possibilità di bypassare il prompt di stampa usando tasrti funzione."""),
          ("BET1210",
