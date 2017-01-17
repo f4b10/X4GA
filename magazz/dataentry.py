@@ -2084,13 +2084,13 @@ class MagazzPanel(aw.Panel,\
         self.onedoconly_id = iddoc
         if self.DocLoad(iddoc):
             if not self.controls['causale'].GetValue():
-                # Correzione per consentire la sola visualizzazione dei documenti senza permesso di scrittura
+                ## Correzione per consentire la sola visualizzazione dei documenti senza permesso di scrittura
                 self.InitCausale()
                 self.controls['causale'].SetValue(self.dbdoc.id_tipdoc)
                 if not magazz.CheckPermUte(self.dbdoc.id_tipdoc, 'scrivi', msg=False):
-                    self.controls["butmodif"].Enable(False)                
-                    self.controls["butmodif"].Hide()                
-            
+                    self.controls["butmodif"].Enable(False)
+                    self.controls["butmodif"].Hide()
+
             for name in 'butnew butsrc'.split():
                 self.FindWindowByName(name).Hide()
             p = self.GetParent()
