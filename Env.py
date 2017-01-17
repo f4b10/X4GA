@@ -3225,7 +3225,9 @@ class Azienda(object):
                 [ "attivo",     "TINYINT",   1, None, "Flag attivo", None ],
                 [ "leggi",      "TINYINT",   1, None, "Flag lettura", None ],
                 [ "scrivi",     "TINYINT",   1, None, "Flag scrittura", None ],
-                [ "permesso",   "CHAR",      1, None, "Tipo di permesso", None ], ]
+                [ "permesso",   "CHAR",      1, None, "Tipo di permesso", None ],
+                [ "gg",         "INT",       3, None, "ID utente", None ],
+                ]
 
             cls.cfgperm_indexes = [ ["PRIMARY KEY", "id"],
                                     ["UNIQUE KEY",  "ambito,id_rel,id_utente"], ]
