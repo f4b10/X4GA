@@ -2083,6 +2083,14 @@ class MagazzPanel(aw.Panel,\
     def SetOneDocOnly(self, iddoc):
         self.onedoconly_id = iddoc
         if self.DocLoad(iddoc):
+            if not self.controls['causale'].GetValue():
+                # Correzione per consentire la sola visualizzazione dei documenti senza permesso di scrittura
+                self.InitCausale()
+                self.controls['causale'].SetValue(self.dbdoc.id_tipdoc)
+                if not magazz.CheckPermUte(self.dbdoc.id_tipdoc, 'scrivi', msg=False):
+                    self.controls["butmodif"].Enable(False)                
+                    self.controls["butmodif"].Hide()                
+            
             for name in 'butnew butsrc'.split():
                 self.FindWindowByName(name).Hide()
             p = self.GetParent()
@@ -2127,8 +2135,12 @@ class MagazzPanel(aw.Panel,\
         #testo diritti utenti su causali magazzino
         from cfg.dbtables import PermessiUtenti
         p = PermessiUtenti(ambito='caumagazz')
-        p.Retrieve('perm.id_utente=%s AND perm.scrivi=1',
-                   Env.Azienda.Login.userid)
+        if self.onedoconly_id:
+            p.Retrieve('perm.id_utente=%s AND (perm.scrivi=1 or perm.leggi=1)',
+                       Env.Azienda.Login.userid)
+        else:
+            p.Retrieve('perm.id_utente=%s AND perm.scrivi=1',
+                       Env.Azienda.Login.userid)
         if not p.IsEmpty():
             if flt:
                 flt += " AND "
