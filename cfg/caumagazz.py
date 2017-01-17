@@ -112,6 +112,7 @@ PERM_UTECOD = 1
 PERM_UTEDES = 2
 PERM_LEGGI =  3
 PERM_SCRIVI = 4
+PERM_GIORNI = 5
 
 
 class PermUteGrid(dbglib.DbGridColoriAlternati):
@@ -120,12 +121,15 @@ class PermUteGrid(dbglib.DbGridColoriAlternati):
 
         _STR = gl.GRID_VALUE_STRING
         _CHK = gl.GRID_VALUE_BOOL+":1,0"
+        _INT = gl.GRID_VALUE_NUMBER
 
-        coldef = ((120, (PERM_UTEDES, "Utente", _STR, False)),
+
+
+        coldef = ((120, (PERM_UTEDES, "Utente", _STR, True)),
                   ( 50, (PERM_LEGGI,  "Legge",  _CHK, False)),
                   ( 50, (PERM_SCRIVI, "Scrive", _CHK, False)),
+                  ( 30, (PERM_GIORNI, "Giorni", _INT, True)),
         )
-
         sizes =  [c[0] for c in coldef]
         colmap = [c[1] for c in coldef]
 
@@ -143,7 +147,7 @@ class PermUteGrid(dbglib.DbGridColoriAlternati):
                      None, afteredit,\
                      lambda *x: self.AddNewRow)
 
-        self.SetEditableColumns(())
+        self.SetEditableColumns((0,1,2,3,))
 
         for c,s in enumerate(sizes):
             self.SetColumnDefaultSize(c,s)
@@ -157,19 +161,47 @@ class PermUteGrid(dbglib.DbGridColoriAlternati):
         sz.SetSizeHints(parent)
 
         self.Bind(gl.EVT_GRID_CELL_LEFT_CLICK, self.OnCellClick)
+        self.Bind(gl.EVT_GRID_CELL_RIGHT_CLICK, self.OnCellRClick)
 
     def OnCellClick(self, event):
         row = event.GetRow()
         if 0 <= row < len(self.rsper):
             col = event.GetCol()
-            if col in (1,2):   #colonne permesso leggi/scrvi
+            if col in (1,2):   #colonne permesso leggi/scrivi
                 if col == 1:
                     i = PERM_LEGGI
                 else:
                     i = PERM_SCRIVI
                 self.rsper[row][i] = 1-(self.rsper[row][i] or 0)
+            elif col == 3:
+                self.rsper[row][PERM_GIORNI]=1 + (self.rsper[row][PERM_GIORNI] or 0)
+            self.SetDataChanged()                
             self.Refresh()
         event.Skip()
+
+    def OnCellRClick(self, event):
+        row = event.GetRow()
+        if 0 <= row < len(self.rsper):
+            col = event.GetCol()
+            if  col == 3:
+                self.rsper[row][PERM_GIORNI]= max(0, (self.rsper[row][PERM_GIORNI] or 0) - 1)
+            self.SetDataChanged()                
+            self.Refresh()
+        event.Skip()
+
+
+    def SetDataChanged(self):
+        p=self
+        try:
+            for i in  range(100):
+                p=p.GetParent()
+                if 'BindChangedEvent' in dir(p):
+                    p.SetDataChanged(True)
+                    break
+        except:
+            pass
+
+
 
 
 # ------------------------------------------------------------------------------
@@ -441,7 +473,8 @@ class CauMagazzPanel(ga.AnagPanel):
                                          u.codice,    #PERM_UTECOD
                                          u.descriz,   #PERM_UTEDES
                                          0,           #PERM_LEGGI
-                                         0])          #PERM_SCRIVI
+                                         0,           #PERM_SCRIVI
+                                         0,])         #PERM_GIORNI
             else:
                 awc.util.MsgDialog(self, repr(u.GetError()))
             db.Close()
@@ -618,12 +651,14 @@ class CauMagazzPanel(ga.AnagPanel):
                            % bt.TABNAME_CFGPERM, (p.GetAmbito(), self.db_recid))
             p.Reset()
             pu = self.permute
-            for n, (puid, pucod, pudes, pleg, pscr) in enumerate(pu):
-                if pu[n][PERM_LEGGI] or pu[n][PERM_SCRIVI]:
+
+            for n, (puid, pucod, pudes, pleg, pscr, pgg) in enumerate(pu):
+                if pleg or pscr or pgg:
                     p.CreateNewRow()
                     p.id_utente = puid
-                    p.leggi = pu[n][PERM_LEGGI]
-                    p.scrivi = pu[n][PERM_SCRIVI]
+                    p.leggi  = pleg
+                    p.scrivi = pscr
+                    p.gg     = pgg
             if not p.IsEmpty():
                 if not p.Save():
                     awc.util.MsgDialog(self, repr(p.GetError()))
@@ -649,14 +684,16 @@ class CauMagazzPanel(ga.AnagPanel):
         else:
             p.Reset()
         pu = self.permute
-        for n, (puid, pucod, pudes, pleg, pscr) in enumerate(pu):
+        for n, (puid, pucod, pudes, pleg, pscr, pgg) in enumerate(pu):
             if p.Locate(lambda x: x.id_utente == puid):
                 l = p.leggi
                 s = p.scrivi
+                g = p.gg
             else:
-                l = s = 0
+                l = s = g = 0
             pu[n][PERM_LEGGI] = l
             pu[n][PERM_SCRIVI] = s
+            pu[n][PERM_GIORNI] = g
         self.gridperm.ResetView()
         self.FindWindowByName('catdoc').SetCatartAttive(self.FindWindowByName('id').GetValue())
 
