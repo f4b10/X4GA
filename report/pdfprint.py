@@ -75,7 +75,8 @@ def PdfPrint(filename, printer, copies=1, cbex=None, usedde=False, cmdprint=Fals
     if cmdprint and bool(pdfcmd):
         import subprocess
         try:
-            subprocess.Popen([pdfcmd, '/t', filename, printer])
+            for n in range(copies):                
+                subprocess.Popen([pdfcmd, '/t', filename, printer])
             out = True
         except:
             pass
