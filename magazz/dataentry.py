@@ -1350,7 +1350,6 @@ class MagazzPanel(aw.Panel,\
         pathname = doc.GetPrintPathName()
         filename = doc.GetPrintFileName()
 
-
         r = rpt.Report(self, doc, tool, noMove=True, startFunc=MoveFirst,
                        printer=cfg.printer, copies=copies,
                        changepathname=pathname, changefilename=filename,
@@ -2980,6 +2979,8 @@ class MagazzPanel(aw.Panel,\
                         mov.sconto6 = acq.sconto6
                         mov.f_ann = 0
                         riga += 1
+                    else:
+                        pass
                 if acq.annacq:
                     #segno x l'annullamento, in fase di scrittura, del movimento
                     #acquisito e contrassegnato x l'annullamento
@@ -3007,9 +3008,11 @@ class MagazzPanel(aw.Panel,\
                 doc.mov.MoveLast()
                 self.lastmovid = doc.mov.id_tipmov
         dlgacq.Destroy()
+        self.BeforeMakeTotals()
         self.MakeTotals()
 
-
+    def BeforeMakeTotals(self):
+        pass
 # ------------------------------------------------------------------------------
 
 
