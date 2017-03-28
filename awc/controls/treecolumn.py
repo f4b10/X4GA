@@ -106,8 +106,16 @@ class TreeListCtrl(gizmos.TreeListCtrl):
         os.startfile(tmpname)
 
     def OnExportHTML(self, event):
+        lFound=False
         p=self.GetParent()
-        p.ExportHtmlTree()
+        while not lFound:
+            try:
+                p.ExportHtmlTree()
+                lFound=True
+            except:
+                p=p.GetParent()
+                if p==None:
+                    lFound=True
         event.Skip()
 
     def GetMaxLevel(self):
@@ -209,10 +217,11 @@ class TreeListCtrl(gizmos.TreeListCtrl):
                             html.append(r)
                         line=''
                     html.append(line)
+
                 for r in html:
                     output.write('%s\n' % r)
-                input.close()
                 output.close()
+                input.close()
 
                 self.SaveLastPathUsed(outputFile)
                 id=aw.awu.MsgDialog(self, u"File di esportazione %s è stato generato.\nSi desidera visualizzarlo?" % outputFile, style=wx.ICON_QUESTION|wx.YES_NO)
@@ -275,13 +284,6 @@ class TreeListCtrl(gizmos.TreeListCtrl):
             item=self.GetRootItem()
         l=nLevel
         #--------------------------
-        wx.ALIGN_LEFT
-        wx.ALIGN_RIGHT
-        wx.ALIGN_CENTER
-
-
-
-
         if idParent==0:
             m1= '<tr row-id="%s">' % idItem
             m2=''
@@ -293,7 +295,14 @@ class TreeListCtrl(gizmos.TreeListCtrl):
                     align='right'
                 elif self.GetColumnAlignment(nc)==wx.ALIGN_CENTER:
                     align='center'
-                m2='%s  <td class="data" align="%s">%s</td>' % (m2, align, self.GetItemText(item, nc))
+                try:
+                    msg=self.GetItemText(item, nc)
+                    if u'®' in msg:
+                        msg=msg.replace(u'®', '&#174;')
+                    m2='%s  <td class="data" align="%s">%s</td>' % (m2, align, msg)
+                except:
+                    m2='%s  <td class="data" align="%s">%s</td>' % (m2, align, '')
+
             m3='</tr>'
             stru.append('%s%s%s' % (m1, m2, m3))
         else:
@@ -307,10 +316,13 @@ class TreeListCtrl(gizmos.TreeListCtrl):
                     align='right'
                 elif self.GetColumnAlignment(nc)==wx.ALIGN_CENTER:
                     align='center'
-
-
                 try:
-                    m2='%s  <td class="data" align="%s">%s</td>' % (m2, align, self.GetItemText(item, nc))
+                    msg=self.GetItemText(item, nc).replace(u'®', '&#174;')
+                    #===========================================================
+                    # if u'®' in msg:
+                    #     msg=msg.replace(u'®', '&#174;')
+                    #===========================================================
+                    m2='%s  <td class="data" align="%s">%s</td>' % (m2, align, msg)
                 except:
                     m2='%s  <td class="data">%s</td>' % (m2, '')
             m3='</tr>'
