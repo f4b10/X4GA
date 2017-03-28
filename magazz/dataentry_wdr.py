@@ -796,11 +796,15 @@ def DialogFunc( parent, call_fit = True, set_sizer = True ):
     item66.SetName( "btnPrev" )
     item65.Add( item66, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item65.Add( [ 20, 2 ] , 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
-
-    item67 = wx.Button( parent, ID_BTN_NEXT, "Avanti", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item67.SetName( "btnNext" )
+    item67 = wx.StaticText( parent, ID_TEXT, "", wx.DefaultPosition, [400,-1], wx.ALIGN_CENTRE )
+    item67.SetForegroundColour( wx.RED )
+    item67.SetFont( wx.Font( 12, wx.ROMAN, wx.NORMAL, wx.BOLD ) )
+    item67.SetName( "msgFido" )
     item65.Add( item67, 0, wx.ALIGN_CENTER, 5 )
+
+    item68 = wx.Button( parent, ID_BTN_NEXT, "Avanti", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item68.SetName( "btnNext" )
+    item65.Add( item68, 0, wx.ALIGN_CENTER, 5 )
 
     item65.AddGrowableCol( 1 )
 

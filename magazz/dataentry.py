@@ -93,7 +93,7 @@ from awc.controls.attachbutton import AttachTableList
 
 
 _GIORNI=180
-
+_DEBUG =False
 today = Env.Azienda.Esercizio.dataElab
 datregsrc1 = today-today.day+1
 datregsrc2 = today
@@ -105,8 +105,8 @@ annsearch = True
 ricsearch = True
 
 def DbgMsg(x):
-    print '[standard] ->%s' % x
-    pass
+    if _DEBUG:
+        print '[standard] ->%s' % x
 
 
 class PdcProdHistoryGrid(dbglib.DbGrid):
@@ -306,6 +306,8 @@ class MagazzPanel(aw.Panel,\
     onedoconly_id = None
     _testload = True
     gridbodyclass = GridBody
+    _fidoAlreadyView = None
+    _isReadOnly = None
 
     def __init__(self, *args, **kwargs):
         postinit=True
@@ -374,6 +376,8 @@ class MagazzPanel(aw.Panel,\
         self.FindWindowById(wdr.ID_BTN_PRINT1).Hide()
         self.boxanag = None
         self.boxdest = None
+        
+        self._isReadOnly = False
         if postinit:
             self.Post_Init()
 
@@ -550,6 +554,12 @@ class MagazzPanel(aw.Panel,\
 
 #        self.SetSize((1024,768))
 
+        self.msgFido=self.FindWindowByName('msgFido')
+
+
+
+
+
         self.Layout_()
         wx.CallAfter(self.Layout_)
 
@@ -570,6 +580,21 @@ class MagazzPanel(aw.Panel,\
             self.SetAcceleratorKey(wx.WXK_F6,  wdr.ID_BTN_PRINT1, use_alt=False)
             self.SetAcceleratorKey(wx.WXK_F12, wdr.ID_BTNBODYADD,use_alt=False)
 
+
+    def ResetFidoView(self):
+        DbgMsg('reset visualizzazione fido')
+        self._isReadOnly     =False
+        self._fidoAlreadyView=None
+        self.msgFido.SetLabel('')
+        wx.Yield()
+
+    def SetDocReadOnly(self):
+        self._isReadOnly=True
+        self.msgFido.SetLabel('MEMORIZZAZIONE INIBITA X SUPERAMENTO FIDO')
+        self.msgFido.Refresh()
+        wx.Yield()
+
+        self.FindWindowByName('butmodif').Enable(False)
 
 
 
@@ -1164,6 +1189,7 @@ class MagazzPanel(aw.Panel,\
         if self.status == STATUS_DISPLAY and self.canedit:
             if self.TestCanModify():
                 if self.TestPcf():
+                    #self.ResetFidoView()
                     self.SetRegStatus(STATUS_EDITING)
                     self.UpdateBodyButtons()
         event.Skip()
@@ -1209,6 +1235,8 @@ class MagazzPanel(aw.Panel,\
 
     def OnAnagChanged(self, event):
         DbgMsg('OnAnagChanged, control=%s' %event.GetEventObject().GetName())
+        self.ResetFidoView()
+        #self._fidoAlreadyView=False
         self.UpdateHeadAnag(initAll=True)
         doc = self.dbdoc
         cn = self.FindWindowByName
@@ -1827,10 +1855,12 @@ class MagazzPanel(aw.Panel,\
     def OnDocNew( self, event ):
         if self.status == STATUS_SELCAUS:
             if self.TestConfig():
+                self.ResetFidoView()
                 self.DocNew()
         event.Skip()
 
     def OnDocSearch( self, event ):
+        self.ResetFidoView()
         if self.status == STATUS_SELCAUS:
             if self.TestConfig():
                 self.DocSearch()
@@ -1897,6 +1927,16 @@ class MagazzPanel(aw.Panel,\
             if doc.id:
                 kwa['doc_id_ex'] = doc.id
             f = cf.CheckFido(doc.id_pdc, e, td, **kwa)
+            if messages:
+                if self._fidoAlreadyView==None:
+                    messages=True
+                else:
+                    idPdc, totDoc, consenso, isNew = self._fidoAlreadyView
+                    if idPdc == doc.id_pdc:
+                        if totDoc == td:
+                            messages=False
+
+            self.msgFido.SetLabel('')
             if f != 'OK' and messages:
                 r = MsgDialog(self,
                               """Sforamento del fido concesso al cliente\n"""
@@ -1904,8 +1944,27 @@ class MagazzPanel(aw.Panel,\
                               style=wx.ICON_WARNING|wx.YES_NO|wx.NO_DEFAULT)
                 if r != wx.ID_YES:
                     out = False
-            elif f != 'OK' and not messages:
-                out = False
+                    self.SetDocReadOnly()
+
+
+
+                self._fidoAlreadyView=[doc.id_pdc, td, out, doc.id==None]
+            if not messages:
+                if self._fidoAlreadyView==None:
+                    f != 'OK'
+                    out = False
+                else:
+                    idPdc, totDoc, consenso, isNew = self._fidoAlreadyView
+                    if idPdc == doc.id_pdc:
+                        out=consenso
+                        if not out:
+                            self.SetDocReadOnly()
+                    else:
+                        out=False
+            #===================================================================
+            # elif f != 'OK' and not messages:
+            #     out = False
+            #===================================================================
         return out
 
     def DocSave(self, doc=None):
@@ -2060,6 +2119,7 @@ class MagazzPanel(aw.Panel,\
                 event.Skip()
             else:
                 self.SetRegStatus(STATUS_SELCAUS)
+        self.ResetFidoView()
 
     def OnDocDelete(self, event):
         action = MsgDialog(self,\
@@ -2372,7 +2432,7 @@ class MagazzPanel(aw.Panel,\
                                          doc.cfgdoc.IsPrintable())
 
         self.controls["butmodif"].Enable(enable and\
-                                         status == STATUS_DISPLAY)
+                                         status == STATUS_DISPLAY and not self._isReadOnly)
 
         self.controls["butacquis"].Enable(enable and\
                                           status == STATUS_EDITING and\
