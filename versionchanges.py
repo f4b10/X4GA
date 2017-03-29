@@ -28,12 +28,19 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
+    ('1.5.32', dt.Date(2017, 03, 28), (
+         ("BET1214",
+         """In fase di acquisizione documento da evasione, aggiunta la possibilità di richiamare il metodo BeforeMakeTotals per scopi particolari."""),
+         ("BET1213",
+         """Perfezionata il controllo del fido cliente in fase di emissione documenti di magazzino."""),
+        ),),
+
     ('1.5.31', dt.Date(2016, 12, 21), (
          ("BET1212",
          """Aggiunta la possibilità di visualizzare le ultime destinazioni utilizzate all'atto dell'inserimento
 di un documento di magazzino che preveda la gestione di destinazioni non codificate."""),
          ("BET1211",
-         """Aggiunta la possibilità di bypassare il prompt di stampa usando tasrti funzione."""),
+         """Aggiunta la possibilità di bypassare il prompt di stampa usando tasti funzione."""),
          ("BET1210",
          """Perfezionata la visualizzazione dei tasti funzione."""),
         ),),
@@ -44,7 +51,7 @@ di un documento di magazzino che preveda la gestione di destinazioni non codific
          ("BET1208",
          """Aggiunta la gestione del movimento di default all'atto dell'insermento dei documenti di magazzino."""),
          ("BET1207",
-         """Aggiunta opzione su SetupAzienda per effettuare, in sede di registrazione Documento di Magazzino, la ricerca su contenuto descrizione prodotto digitando sequenza .. in corrispondenza del codice prodotto."""),
+         """Aggiunta opzione su [SetupAzienda>>Magazzino>>Ricerca Contenuto in Descrizione] per effettuare, in sede di registrazione Documento di Magazzino, la ricerca su contenuto descrizione prodotto digitando sequenza .. in corrispondenza del codice prodotto."""),
         ),),
 
     ('1.5.29', dt.Date(2016, 11, 26), (
