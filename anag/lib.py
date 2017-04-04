@@ -201,14 +201,13 @@ class LinkTableProd(LinkTable, LinkTableHideSearchMixin):
             try:
                 # Imposta filtro su categorie merceologiche abilitate se previsto
                 chk = Env.GetAncestorByName(self, 'vincolocat' )
-                if chk.IsChecked():
-                    filter=""
-                else:
+                if not chk.IsChecked():
                     v=Env.GetAncestorByName(self, 'causale' ).GetValue()
-                    filter = """
+                    filterCateg = """
                     FIND_IN_SET("%s", REPLACE(catart.caudoc, "|", ","))>0
                     """\
                     % v
+                    filter = AndApp("(%s)" % self.basefilter, filterCateg )
             except:
                 pass
 
