@@ -29,6 +29,10 @@ import mx.DateTime as dt
 
 history = (
     ('1.5.32', dt.Date(2017, 03, 28), (
+         ("BUG1161",
+         """Corretta la ricerca prodotti in data entry di magazzino che in seguito all'introduzione della
+ricerca prodotti per categorie abilitate non rispettava più lo status dei prodotti visualizzando anche quelli con status nascosto
+         """),
          ("BET1214",
          """In fase di acquisizione documento da evasione, aggiunta la possibilità di richiamare il metodo BeforeMakeTotals per scopi particolari."""),
          ("BET1213",
