@@ -893,14 +893,14 @@ class FtDifPanel(aw.Panel):
             for val, msg in ((ddoc, 'la data del documento'),
                              (ndoc, 'il numero del primo documento')):
                 if not val:
-                    err = 'Indicare %s da generare' % err
+                    err = 'Indicare %s da generare' % msg
                     break
         if not err:
             for val, msg in ((ddoc, 'la data del documento'),
                              (dmin, 'la data minima dei documenti'),
                              (dmax, 'la data massima dei documenti')):
                 if not val:
-                    err = 'Indicare %s da generare' % err
+                    err = 'Indicare %s da generare' % msg
                     break
         if not err:
             if dmin>dmax:

@@ -81,6 +81,7 @@ RSMOV_COSTOU =   26; a('costou')
 RSMOV_COSTOT =   27; a('costot')
 RSMOV_lastcol =\
 RSMOV_TIPLIST =  28; a('id_tiplist')
+RSMOV_ID_DDTACQ= 29; a('id_ddtacq')
 
 # i seguenti valori sono determinati in fase di caricamento tabelle
 RSMOV_codmov  = -1

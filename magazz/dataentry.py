@@ -3038,6 +3038,9 @@ class MagazzPanel(aw.Panel,\
                         mov.sconto5 = acq.sconto5
                         mov.sconto6 = acq.sconto6
                         mov.f_ann = 0
+                        
+                        mov.id_ddtacq = acq.doc.tipdoc.id
+                        
                         riga += 1
                     else:
                         pass

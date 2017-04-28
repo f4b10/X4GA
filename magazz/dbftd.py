@@ -549,6 +549,7 @@ class FtDif(adb.DbTable):
                     if field != 'id' and not field in bodyfields:
                         mg.__setattr__(field, mr.__getattr__(field))
                 
+                
                 mg.original_id=mr.id
                 mg.original_id_doc=mr.id_doc
                 
@@ -558,7 +559,8 @@ class FtDif(adb.DbTable):
                 
                 for field, value in bodyfields.iteritems():
                     mg.__setattr__(field, value)
-                
+
+                mg.id_ddtacq = dr.tipdoc.id
                 #id testate generate = -numero documento generato
                 mg.id_doc = -num
                 

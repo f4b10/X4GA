@@ -28,6 +28,12 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
+    ('1.5.33', dt.Date(2017, 04, 28), (
+         ("BET1215",
+         """Aggiunta su ogni riga di movimento di magazzino l'indicazione del tipo di documento
+da cui la riga è stata acquisita sia in caso di acquisizione di documento che di raggruppamento."""),
+        ),),
+
     ('1.5.32', dt.Date(2017, 03, 28), (
          ("BUG1161",
          """Corretta la ricerca prodotti in data entry di magazzino che in seguito all'introduzione della

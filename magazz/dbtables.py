@@ -836,7 +836,7 @@ class DocMag(adb.DbTable):
                     #aggiornamento ultimo numero di documento
                     progr.ClearFilters()
                     progr.AddFilter("progr.codice=%s",  "mag_lastdoc")
-                    progr.AddFilter("progr.keydiff=%s", self.datdoc.year)
+                    progr.AddFilter("progr.keydiff='%s'", self.datdoc.year)
                     progr.AddFilter("progr.key_id=%s",  self.id_tipdoc)
                     if progr.Retrieve():
                         if progr.IsEmpty():
