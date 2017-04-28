@@ -200,7 +200,10 @@ class CheckListBox4Sync(CheckListBox):
         #return check[:-1]
 
     def SetValue(self, v=''):
-        lChecked=v.split('|')
+        try:
+            lChecked=v.split('|')
+        except:
+            lChecked=[]
         for n in lChecked:
             if not self.IsPresent(n):
                 self.AddNotPresent(n)
