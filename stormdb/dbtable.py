@@ -363,7 +363,7 @@ class DbTable(object):
 
     def __init__(self, tabName, tabAlias=None, primaryKey="id",\
                  fields="*", writable=None, mandatoryFields="",\
-                 defaults=None, db=None, getFilters=None, forceInsert=False):
+                 defaults=None, db=None, getFilters=None, forceInsert=False, dbName=None):
         """
         Constructor.
         The only required parameter is the table name
@@ -381,6 +381,15 @@ class DbTable(object):
             database  (DB) database object used to execute all the database
                       commands (default=__connection__)
         """
+        if dbName:
+            import Env
+            host = Env.Azienda.DB.servername
+            user = Env.Azienda.DB.username
+            pswd = Env.Azienda.DB.password
+            dba = adb.db.DB(dbType=getattr(adb.db.__database__, '_dbType'), globalConnection=False)
+            dba.Connect(host=host, user=user, passwd=pswd, db=dbName)
+            db=dba
+        
         if db is None:
             db = adb.db.__database__
         if db is None:

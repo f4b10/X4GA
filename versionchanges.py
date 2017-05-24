@@ -28,6 +28,13 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
+    ('1.5.34', dt.Date(2017, 05, 20), (
+         ("BET1216",
+         """Aggiunto alla classe adb.DbTable il parametro dbName che, se presente,
+         consente di specificare il database in cui è presente la tabella che su
+         cui si intende operare."""),
+        ),),
+
     ('1.5.33', dt.Date(2017, 04, 28), (
          ("BET1215",
          """Aggiunta su ogni riga di movimento di magazzino l'indicazione del tipo di documento

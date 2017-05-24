@@ -1110,7 +1110,10 @@ class DB(object):
                             se_info.append((se_func, col_name, col_value))
                         else:
                             columns.append(col_name)
-                            values.append(self.ADB_DecodeValue(col_value, tab_stru[col_name]['conv']))
+                            try:
+                                values.append(self.ADB_DecodeValue(col_value, tab_stru[col_name]['conv']))
+                            except:
+                                values.append(None)
 
                     value_wildcards = ','.join([r'%s']*len(columns))
                     columns = ','.join(columns)
