@@ -28,13 +28,16 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
-    ('1.5.34', dt.Date(2017, 05, 20), (
+    ('1.5.35', dt.Date(2017, 06, 12), (
          ("BET1218",
          """Aggiunta la possibilità di richiamare dai menu esterni maschere di tipo aw.Dialog che
          verranno eseguite in maniera modale."""),
          ("BET1217",
          """Aggiunta dall'interno della gestione dei documenti di magazzino la possibilità di richiamare
          interrogazione prodotti, clienti e fornitori, ricorrendo rispettivamente ai tasti: Alt+1, Alt+2,r Alt+3."""),
+        ),),
+
+    ('1.5.34', dt.Date(2017, 05, 20), (
          ("BET1216",
          """Aggiunto alla classe adb.DbTable il parametro dbName che, se presente,
          consente di specificare il database in cui è presente la tabella che su
