@@ -444,7 +444,10 @@ class MagazzPanel(aw.Panel,\
                     c = cn('%s%d' % (prefix, n+1))
                     if c:
                         c.Hide()
-
+                        
+        for i in range(3):
+            self.controls["buthidden%s"%(i+1)].Hide()
+        self.controls["butextra"].Hide()            
         # bind eventi dei bottoni
         for name, func in (("butnew",     self.OnDocNew),
                            ("butsrc",     self.OnDocSearch),
@@ -456,6 +459,10 @@ class MagazzPanel(aw.Panel,\
                            ("butdoc",     self.OnButDoc),
                            ("butprint",   self.OnButPrint),
                            ("butprint1",  self.OnButPrint1),
+                           ("buthidden1", self.OnButHidden1),
+                           ("buthidden2", self.OnButHidden2),
+                           ("buthidden3", self.OnButHidden3),
+                           ("butextra",   self.OnButExtra),
                            ("butprodsch", self.GridBodyOnSchedaProd),
                            ("butprodmas", self.GridBodyOnMastroMov),
                            ("butfido",    self.OnDisplayFidoCliente),
@@ -572,6 +579,11 @@ class MagazzPanel(aw.Panel,\
         self.SetAcceleratorKey('X', wdr.ID_BTN_DELETE, 'Elimina',         'Elimina il presente documento')
         self.SetAcceleratorKey('Q', wdr.ID_BTN_QUIT,   'Abbandona',       'Abbandona il documento senza salvare')
 
+        
+        self.SetAcceleratorKey('1',  wdr.ID_BTN_HIDDEN1, use_alt=True, use_shift=False, use_ctrl=False)
+        self.SetAcceleratorKey('2',  wdr.ID_BTN_HIDDEN2, use_alt=True, use_shift=False, use_ctrl=False)
+        self.SetAcceleratorKey('3',  wdr.ID_BTN_HIDDEN3, use_alt=True, use_shift=False, use_ctrl=False)
+
         if Env.Azienda.config.get('Controls', 'functionkey', 0)=='1':
             cn('btnPrev').SetLabel('F9 - Indietro')
             cn('btnNext').SetLabel('F10 - Avanti')
@@ -580,6 +592,40 @@ class MagazzPanel(aw.Panel,\
             self.SetAcceleratorKey(wx.WXK_F6,  wdr.ID_BTN_PRINT1, use_alt=False)
             self.SetAcceleratorKey(wx.WXK_F12, wdr.ID_BTNBODYADD,use_alt=False)
 
+    def OnButHidden1(self, event):
+        self.LanchDialog(1)
+        event.Skip()
+
+    def OnButHidden2(self, event):
+        self.LanchDialog(2)
+        event.Skip()
+
+    def OnButHidden3(self, event):
+        self.LanchDialog(3)
+        event.Skip()
+
+    def OnButExtra(self, event):
+        event.Skip()
+
+    def LanchDialog(self, n):
+        wx.BeginBusyCursor()
+        try:
+            if n==1:
+                from magazz.prodint import ProdInterrDialog
+                dlg = ProdInterrDialog()
+            elif n==2:
+                from contab.pdcint import ClientiInterrDialog
+                dlg = ClientiInterrDialog()            
+            elif n==3:
+                from contab.pdcint import FornitInterrDialog            
+                dlg = FornitInterrDialog()
+            else:
+                pass
+            dlg.Center()
+            dlg.ShowModal()
+        except:
+            pass
+        wx.EndBusyCursor()
 
     def ResetFidoView(self):
         DbgMsg('reset visualizzazione fido')
@@ -1183,7 +1229,6 @@ class MagazzPanel(aw.Panel,\
                     event.Skip()
                 else:
                     self.SetRegStatus(STATUS_SELCAUS)
-
 
     def OnButModify(self, event):
         if self.status == STATUS_DISPLAY and self.canedit:
