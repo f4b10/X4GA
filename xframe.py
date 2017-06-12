@@ -1049,7 +1049,7 @@ class XFrame(aw.Frame):
     def LaunchToolPers(self, toolid):
         if toolid in self.toolpers:
             fc = self.toolpers[toolid]['frame']
-            self.LaunchFrame(fc)
+            self.LaunchFrame(fc, dialog=issubclass(fc,aw.Dialog))
     
     def CreateStdToolBar(self):
         old = self.GetToolBar()
@@ -1818,7 +1818,7 @@ class XFrame(aw.Frame):
         if quit:
             event.Skip()
     
-    def LaunchFrame(self, frameclass, size=None, show=True, centered=False, **kwargs):
+    def LaunchFrame(self, frameclass, size=None, show=True, centered=False, dialog=False,  **kwargs):
 #        wait = awu.WaitDialog(self, message="Caricamento modulo in corso.",
 #                              style=wx.SIMPLE_BORDER)
         wx.BeginBusyCursor()
@@ -1843,7 +1843,10 @@ class XFrame(aw.Frame):
                 s = frame.GetSize()
                 frame.SetSize((s[0]+1, s[1]+1))
                 frame.SetSize(s)
-                frame.Show()
+                if dialog:
+                    frame.ShowModal()
+                else:
+                    frame.Show()
                 frame.SetFocus()
         return frame
     
