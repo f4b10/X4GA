@@ -612,6 +612,7 @@ def SetupAspettoFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
+ID_TEXTCTRL = 15038
 
 def SetupSiteFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -653,6 +654,15 @@ def SetupSiteFunc( parent, call_fit = True, set_sizer = True ):
     item9.Add( item11, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
     item0.Add( item9, 0, wx.GROW|wx.ALL, 5 )
+
+    item13 = wx.StaticBox( parent, -1, "Cartella configurazione Workstation" )
+    item12 = wx.StaticBoxSizer( item13, wx.VERTICAL )
+    
+    item14 = TextCtrl( parent, ID_TEXTCTRL, "", wx.DefaultPosition, [80,-1], 0 )
+    item14.SetName( "x4config" )
+    item12.Add( item14, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item0.Add( item12, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
     item0.AddGrowableCol( 0 )
 
@@ -701,7 +711,6 @@ def SetupDatabaseFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_TEXTCTRL = 15038
 
 def SetupReportFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.BoxSizer( wx.VERTICAL )

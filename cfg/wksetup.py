@@ -130,6 +130,9 @@ class WorkstationSetupPanel(ConfigPanel):
 
         cn = lambda x: self.FindWindowById(x)
         self.nbServer = cn(wdr.ID_NOTEBOOK_MYSQL)
+        self.x4Config = self.FindWindowByName('x4config')
+        self.x4Config.SetReadOnly()
+        self.x4Config.SetValue('%s' % Env.config_base_path)
 
         if (Env.Azienda.config<>None):
             cfg = Env.Azienda.config
