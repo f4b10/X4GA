@@ -85,7 +85,7 @@ class DocMagHead(adb.DbTable):
                              **kwargs)
 
         self.AddJoin(\
-            bt.TABNAME_DESTIN,    "dest", join=adb.JOIN_LEFT)    
+            bt.TABNAME_DESTIN,    "dest", join=adb.JOIN_LEFT)
 
 
 class DocMag(adb.DbTable):
@@ -112,6 +112,7 @@ class DocMag(adb.DbTable):
                   |       +---->> list: listini associati al prodotto
                   +--> iva: aliquota iva del movimento
     """
+    datiAnag = None
     def __init__(self, writable=True, **kwargs):
         kwargs['writable'] = writable
         adb.DbTable.__init__(self,\
@@ -2409,61 +2410,70 @@ class DocMag(adb.DbTable):
         return pdcid
 
     def GetAnag(self):
-        out = None
-        tipo = self.pdc.tipana.tipo
-        if tipo is None:
-            dbtip = adb.DbTable(bt.TABNAME_PDCTIP, "tipana")
-            if dbtip.Get(self.cfgdoc.id_pdctip):
-                tipo = dbtip.tipo
-            del dbtip
-        tabanag = bt.TableName4TipAna(tipo)
-        if tabanag is None:
-            out = self.pdc
+        if self.datiAnag == None:
+            self.datiAnag = [None, None]
+
+        if self.pdc.id == self.datiAnag[0]:
+            out = self.datiAnag[1]
+            #print 'non ricarico %s' % self.pdc.id
         else:
-            anag = adb.DbTable(tabanag, "anag")
-            if tabanag in (bt.TABNAME_CLIENTI,
-                           bt.TABNAME_FORNIT):
-                anag.AddJoin(\
-                    bt.TABNAME_MODPAG,  "modpag", idLeft="id_modpag",\
-                    join=adb.JOIN_LEFT)
-                anag.AddJoin(\
-                    'x4.stati',         "stato",  idLeft="id_stato",\
-                    join=adb.JOIN_LEFT)
-                anag.AddJoin(\
-                    bt.TABNAME_SPEINC,  "spese",  idLeft="id_speinc",\
-                    join=adb.JOIN_LEFT)
-                anag.AddJoin(\
-                    bt.TABNAME_ZONE,    "zona",   idLeft="id_zona",\
-                    join=adb.JOIN_LEFT)
-                b = anag.AddMultiJoin(\
-                    bt.TABNAME_BANCF,   "banche", idRight="id_pdc",\
-                    join=adb.JOIN_LEFT)
-                anag.bancf = b #fix non togliere alias
-                b.AddOrder("banche.pref", adb.ORDER_DESCENDING)
-                if self.pdc.id is None:
-                    b.AddFilter("banche.id_pdc<0")
-                if tabanag == bt.TABNAME_CLIENTI:
+            #print 'ricarico %s' % self.pdc.id
+            out = None
+            tipo = self.pdc.tipana.tipo
+            if tipo is None:
+                dbtip = adb.DbTable(bt.TABNAME_PDCTIP, "tipana")
+                if dbtip.Get(self.cfgdoc.id_pdctip):
+                    tipo = dbtip.tipo
+                del dbtip
+            tabanag = bt.TableName4TipAna(tipo)
+            if tabanag is None:
+                out = self.pdc
+            else:
+                anag = adb.DbTable(tabanag, "anag")
+                if tabanag in (bt.TABNAME_CLIENTI,
+                               bt.TABNAME_FORNIT):
                     anag.AddJoin(\
-                        bt.TABNAME_AGENTI, "agente",   idLeft="id_agente",\
+                        bt.TABNAME_MODPAG,  "modpag", idLeft="id_modpag",\
                         join=adb.JOIN_LEFT)
                     anag.AddJoin(\
-                        bt.TABNAME_TIPLIST, "tiplist", idLeft="id_tiplist",\
+                        'x4.stati',         "stato",  idLeft="id_stato",\
                         join=adb.JOIN_LEFT)
                     anag.AddJoin(\
-                        bt.TABNAME_STATCLI, "status",  idLeft="id_status",\
+                        bt.TABNAME_SPEINC,  "spese",  idLeft="id_speinc",\
                         join=adb.JOIN_LEFT)
-                else:
                     anag.AddJoin(\
-                        bt.TABNAME_STATFOR, "status",  idLeft="id_status",\
+                        bt.TABNAME_ZONE,    "zona",   idLeft="id_zona",\
                         join=adb.JOIN_LEFT)
-                d = anag.AddMultiJoin(\
-                    bt.TABNAME_DESTIN, "dest",   idRight="id_pdc",\
-                    join=adb.JOIN_LEFT)
-                d.AddOrder("dest.pref", adb.ORDER_DESCENDING)
-                if self.pdc.id is None:
-                    d.AddFilter("dest.id_pdc<0")
-            anag.Get(self.pdc.id)
-            out = anag
+                    b = anag.AddMultiJoin(\
+                        bt.TABNAME_BANCF,   "banche", idRight="id_pdc",\
+                        join=adb.JOIN_LEFT)
+                    anag.bancf = b #fix non togliere alias
+                    b.AddOrder("banche.pref", adb.ORDER_DESCENDING)
+                    if self.pdc.id is None:
+                        b.AddFilter("banche.id_pdc<0")
+                    if tabanag == bt.TABNAME_CLIENTI:
+                        anag.AddJoin(\
+                            bt.TABNAME_AGENTI, "agente",   idLeft="id_agente",\
+                            join=adb.JOIN_LEFT)
+                        anag.AddJoin(\
+                            bt.TABNAME_TIPLIST, "tiplist", idLeft="id_tiplist",\
+                            join=adb.JOIN_LEFT)
+                        anag.AddJoin(\
+                            bt.TABNAME_STATCLI, "status",  idLeft="id_status",\
+                            join=adb.JOIN_LEFT)
+                    else:
+                        anag.AddJoin(\
+                            bt.TABNAME_STATFOR, "status",  idLeft="id_status",\
+                            join=adb.JOIN_LEFT)
+                    d = anag.AddMultiJoin(\
+                        bt.TABNAME_DESTIN, "dest",   idRight="id_pdc",\
+                        join=adb.JOIN_LEFT)
+                    d.AddOrder("dest.pref", adb.ORDER_DESCENDING)
+                    if self.pdc.id is None:
+                        d.AddFilter("dest.id_pdc<0")
+                anag.Get(self.pdc.id)
+                out = anag
+            self.datiAnag=[self.pdc.id, out]
         return out
 
     def GetAnagPrint(self, field):
@@ -2834,6 +2844,13 @@ class CtrFidoCliente(adb.DbTable):
                 if gr>0:
                     self._ritardi[p.pcf.id] = gr
         return out
+
+    def IsCliConFido(self, id_pdc):
+        soggetto=False
+        if self.Get(id_pdc):
+            if (self.fido_maximp or 0) >0 or (self.fido_maxesp or 0) >0 or (self.fido_maxpcf or 0) >0 or (self.fido_maxggs or 0) >0:
+                soggetto=True
+        return soggetto
 
 
 class SituazioneFidiClienti(adb.DbTable):
