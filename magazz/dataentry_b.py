@@ -42,8 +42,29 @@ import magazz.barcodes as bcode
 
 import copy
 
+
+import time
+
+_DEBUG=False
+
+def ElapsedTime(msg='', reset = False):
+    if _DEBUG:
+        global start_time
+        if reset:
+            start_time = time.time()
+        else:
+            try:
+                print '%s %s' % (msg, time.time() - start_time)
+            except:
+                print 'errore'
+            start_time = time.time()
+    return True
+
+
+
 def DbgMsg(x):
-    print '[standard dataentry_b] ->%s' % x
+    if _DEBUG:
+        print '[standard dataentry_b] ->%s' % x
     pass
 
 
@@ -1210,32 +1231,44 @@ class GridBody(object):
             aw.awu.MsgDialog(self, 'Definire il tipo movimento', style=wx.ICON_ERROR)
             return False
         elif col == m.RSMOV_codart:
+            ElapsedTime('', reset = True)
             prod = self.dbprod
             prod.Get(value)
+            ElapsedTime('prod.Get(value)')
             if not prod.IsUsableWithClasDoc(self.dbdoc.cfgdoc.clasdoc):
                 aw.awu.MsgDialog(self, "%s - %s\nIl prodotto non è utilizzabile in questo documento" % (prod.codice, prod.descriz),
                                  "Restrizioni sullo status (%s - %s)" % (prod.status.codice, prod.status.descriz),
                                  style=wx.ICON_WARNING)
                 return False
             doc = self.dbdoc
+            ElapsedTime('', reset = True)
             anag = doc._info.anag = doc.GetAnag()
-            grip = self.dbdoc._info.dbgrip
-            grip.ClearFilters()
-            grip.AddFilter("id_pdc=%s", getattr(anag, 'id_pdcgrp', None) or self.dbdoc.id_pdc)
-            grip.AddFilter("id_prod=%s", value)
-            if bt.MAGDATGRIP:
-                grip.AddFilter("data<=%s", self.dbdoc.datreg)
-            grip.Retrieve()
-            if grip.IsEmpty():
-                sp = getattr(anag, 'grpstop', None)
-                msg = "Il prodotto non è presente nella griglia dell'anagrafica"
-                if sp == 'G':
-                    msg += ".\nImpossibile procedere"
-                    aw.awu.MsgDialog(self, msg, style=wx.ICON_ERROR)
-                    return False
-                elif sp == 'F':
-                    msg += ",tuttavia è possibile forzare il suo utilizzo.\n\nDesideri utilizzare questo prodotto?"
-                    return aw.awu.MsgDialog(self, msg, style=wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT) == wx.ID_YES
+            ElapsedTime('doc.GetAnag()')
+
+            #===================================================================
+            # grip = self.dbdoc._info.dbgrip
+            # if not doc.cfgdoc.visultmov==1:
+            #     grip.Reset()
+            # else:
+            #     grip.ClearFilters()
+            #     grip.AddFilter("id_pdc=%s", getattr(anag, 'id_pdcgrp', None) or self.dbdoc.id_pdc)
+            #     grip.AddFilter("id_prod=%s", value)
+            #     if bt.MAGDATGRIP:
+            #         grip.AddFilter("data<=%s", self.dbdoc.datreg)
+            #     grip.Retrieve()
+            #     ElapsedTime('grip.Retrieve()')
+            #     if grip.IsEmpty():
+            #         sp = getattr(anag, 'grpstop', None)
+            #         msg = "Il prodotto non è presente nella griglia dell'anagrafica"
+            #         if sp == 'G':
+            #             msg += ".\nImpossibile procedere"
+            #             aw.awu.MsgDialog(self, msg, style=wx.ICON_ERROR)
+            #             return False
+            #         elif sp == 'F':
+            #             msg += ",tuttavia è possibile forzare il suo utilizzo.\n\nDesideri utilizzare questo prodotto?"
+            #             return aw.awu.MsgDialog(self, msg, style=wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT) == wx.ID_YES
+            #     ElapsedTime('self.grip.Retrieve()')
+            #===================================================================
         elif col == m.RSMOV_IMPORTO:
             doc = self.dbdoc
             mov = doc.mov
@@ -1357,12 +1390,16 @@ class GridBody(object):
                 elif mov.config.askvalori == 'V':
                     mov.importo, _, _, _, _, _, _ = self.GridBodyDefPrezzoSconti6()
                 self.GridBodyDefAliqIva()
+                #ElapsedTime('', reset = True)
                 self.UpdateProdZone(value)
+                #ElapsedTime('self.UpdateProdZone(value)')
                 if self.dbdoc.config.autoqtaonbc == 1:
                     c = self.gridbody.GetCellEditor(row,gridcol)._tc
                     if c.barcode_readed:
                         mov.qta = 1
+                        ElapsedTime('', reset = True)
                         DefImporto()
+                        ElapsedTime('DefImporto()')
                         self._rowcol = (row+1, gridcol)
             if self.dbdoc.config.colcg == 'X':
                 if mov.prod.id_pdcven:
@@ -1461,10 +1498,16 @@ class GridBody(object):
                 setattr(self.dbdoc.mov, self.dbdoc.mov.GetFieldNames()[col], value)
 
         #--------------------------------------------- Ricalcola ricarica
-        self.UpdateProdZonePRic()
+        ElapsedTime('', reset = True)
+        wx.CallAfter(self.UpdateProdZonePRic)
+        #self.UpdateProdZonePRic()
+        ElapsedTime('self.UpdateProdZonePRic()')
         #--------------------------------------------- Ricalcola ricarica
 
-        self.MakeTotals(pesocolli=True)
+        ElapsedTime('', reset = True)
+        #self.MakeTotals(pesocolli=True)
+        wx.CallAfter(self.MakeTotalPesoColli)
+        ElapsedTime('self.MakeTotals(pesocolli=True)')
 
         if mov.config.tipologia == "P":
             resetview = True
@@ -1473,6 +1516,9 @@ class GridBody(object):
             self.gridbody.ResetView()
 
         return True
+
+    def MakeTotalPesoColli(self):
+        self.MakeTotals(pesocolli=True)
 
     def GridBodyDefSconto(self, numsc, mov):
         sconto, tipo = self.dbdoc.DefSconto(numsc, mov)
@@ -1646,14 +1692,21 @@ class GridBody(object):
             #aggiorno dati prodotto
             pro = self.dbprod
             if pro.id != idpro:
+                ElapsedTime('', reset=True)
                 pro.Get(idpro)
+                ElapsedTime('UpdateProdZone - pro.Get(idpro)')
+
+
+            ElapsedTime('', reset=True)
             for c in aw.awu.GetAllChildrens(ci(wdr.ID_BODYSTATZONE)):
                 name = c.GetName()
                 if name is not None:
                     if name.startswith('datiprod_'):
                         name = name[9:]
                         if name in pro.GetFieldNames():
+                            #print name
                             c.SetValue(getattr(pro, name))
+            ElapsedTime('Assegna valori')
             for name, val, cond in (('bodygiac', giac, cfg.visgiac),
                                     ('bodycost', cstu, cfg.viscosto),
                                     ('bodycstm', cstm, cfg.viscosto)):
@@ -1667,8 +1720,11 @@ class GridBody(object):
             self.gridlist.Update(idpro)
         if cfg.visultmov:
             #aggiorno storico movimenti pdc/prod
+            ElapsedTime('', reset=True)
             idpdc = self.dbdoc.id_pdc
-            self.gridmovi.UpdateGrid(idpdc, idpro)
+            wx.CallAfter(self.gridmovi.UpdateGrid, idpdc, idpro)
+            #self.gridmovi.UpdateGrid(idpdc, idpro)
+            ElapsedTime('self.gridmovi.UpdateGrid(idpdc, idpro)')
         self.lastprod = idpro
 
     def UpdateBodyButtons(self, row=None):
@@ -1708,7 +1764,6 @@ class GridBody(object):
 
     def GridBodyOnAdd(self, event):
         try:
-            DbgMsg('GridBodyOnAdd')
             br = self.gridbody.GetGridCursorRow()
             col = self.gridbody.GetGridCursorCol()
             br = self.dbdoc.mov.RowsCount()
