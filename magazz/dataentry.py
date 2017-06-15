@@ -376,7 +376,7 @@ class MagazzPanel(aw.Panel,\
         self.FindWindowById(wdr.ID_BTN_PRINT1).Hide()
         self.boxanag = None
         self.boxdest = None
-        
+
         self._isReadOnly = False
         if postinit:
             self.Post_Init()
@@ -444,10 +444,10 @@ class MagazzPanel(aw.Panel,\
                     c = cn('%s%d' % (prefix, n+1))
                     if c:
                         c.Hide()
-                        
+
         for i in range(3):
             self.controls["buthidden%s"%(i+1)].Hide()
-        self.controls["butextra"].Hide()            
+        self.controls["butextra"].Hide()
         # bind eventi dei bottoni
         for name, func in (("butnew",     self.OnDocNew),
                            ("butsrc",     self.OnDocSearch),
@@ -563,10 +563,6 @@ class MagazzPanel(aw.Panel,\
 
         self.msgFido=self.FindWindowByName('msgFido')
 
-
-
-
-
         self.Layout_()
         wx.CallAfter(self.Layout_)
 
@@ -579,7 +575,7 @@ class MagazzPanel(aw.Panel,\
         self.SetAcceleratorKey('X', wdr.ID_BTN_DELETE, 'Elimina',         'Elimina il presente documento')
         self.SetAcceleratorKey('Q', wdr.ID_BTN_QUIT,   'Abbandona',       'Abbandona il documento senza salvare')
 
-        
+
         self.SetAcceleratorKey('1',  wdr.ID_BTN_HIDDEN1, use_alt=True, use_shift=False, use_ctrl=False)
         self.SetAcceleratorKey('2',  wdr.ID_BTN_HIDDEN2, use_alt=True, use_shift=False, use_ctrl=False)
         self.SetAcceleratorKey('3',  wdr.ID_BTN_HIDDEN3, use_alt=True, use_shift=False, use_ctrl=False)
@@ -615,9 +611,9 @@ class MagazzPanel(aw.Panel,\
                 dlg = ProdInterrDialog()
             elif n==2:
                 from contab.pdcint import ClientiInterrDialog
-                dlg = ClientiInterrDialog()            
+                dlg = ClientiInterrDialog()
             elif n==3:
-                from contab.pdcint import FornitInterrDialog            
+                from contab.pdcint import FornitInterrDialog
                 dlg = FornitInterrDialog()
             else:
                 pass
@@ -632,28 +628,14 @@ class MagazzPanel(aw.Panel,\
         self._isReadOnly     =False
         self._fidoAlreadyView=None
         self.msgFido.SetLabel('')
-        wx.Yield()
+        wx.YieldIfNeeded()
 
     def SetDocReadOnly(self):
         self._isReadOnly=True
         self.msgFido.SetLabel('MEMORIZZAZIONE INIBITA X SUPERAMENTO FIDO')
         self.msgFido.Refresh()
-        wx.Yield()
-
+        wx.YieldIfNeeded()
         self.FindWindowByName('butmodif').Enable(False)
-
-
-
-#===============================================================================
-#     def SetKeyAccelerator(self, nPage=0):
-#         self.SetAcceleratorTable(wx.NullAcceleratorTable)
-#
-#         bindings =[]
-#         bindings.append((wx.ACCEL_NORMAL,  wx.WXK_F10,            self.OnF10)          )
-#
-#===============================================================================
-
-
 
     def Layout_(self):
         s = self.GetSize()
@@ -1234,7 +1216,6 @@ class MagazzPanel(aw.Panel,\
         if self.status == STATUS_DISPLAY and self.canedit:
             if self.TestCanModify():
                 if self.TestPcf():
-                    #self.ResetFidoView()
                     self.SetRegStatus(STATUS_EDITING)
                     self.UpdateBodyButtons()
         event.Skip()
@@ -1281,7 +1262,6 @@ class MagazzPanel(aw.Panel,\
     def OnAnagChanged(self, event):
         DbgMsg('OnAnagChanged, control=%s' %event.GetEventObject().GetName())
         self.ResetFidoView()
-        #self._fidoAlreadyView=False
         self.UpdateHeadAnag(initAll=True)
         doc = self.dbdoc
         cn = self.FindWindowByName
@@ -1834,6 +1814,21 @@ class MagazzPanel(aw.Panel,\
             return self.FindWindowByName(x)
         cn('butfido').Enable(bt.GESFIDICLI == '1' and doc.cfgdoc.checkfido == 1)
 
+    def SetFidoView(self, view=True):
+        def cn(x):
+            return self.FindWindowByName(x)
+        btn=cn('butfido')
+        p=btn.GetParent()
+        if view:
+            p.situaFido.ShowItems(True)
+        else:
+            p.situaFido.ShowItems(False)
+
+
+
+
+
+
     def UpdateDatiEvas(self):
         doc = self.dbdoc
         cfg = doc.cfgdoc
@@ -1990,9 +1985,6 @@ class MagazzPanel(aw.Panel,\
                 if r != wx.ID_YES:
                     out = False
                     self.SetDocReadOnly()
-
-
-
                 self._fidoAlreadyView=[doc.id_pdc, td, out, doc.id==None]
             if not messages:
                 if self._fidoAlreadyView==None:
@@ -2006,10 +1998,6 @@ class MagazzPanel(aw.Panel,\
                             self.SetDocReadOnly()
                     else:
                         out=False
-            #===================================================================
-            # elif f != 'OK' and not messages:
-            #     out = False
-            #===================================================================
         return out
 
     def DocSave(self, doc=None):
@@ -3083,9 +3071,9 @@ class MagazzPanel(aw.Panel,\
                         mov.sconto5 = acq.sconto5
                         mov.sconto6 = acq.sconto6
                         mov.f_ann = 0
-                        
+
                         mov.id_ddtacq = acq.doc.tipdoc.id
-                        
+
                         riga += 1
                     else:
                         pass
