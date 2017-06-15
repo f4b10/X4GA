@@ -28,6 +28,13 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
+    ('1.5.36', dt.Date(2017, 06, 15), (
+         ("BET1220",
+         """Ottimizzazione in esecuzione documenti di magazzino."""),
+         ("BET1219",
+         """Visualizzazione cartella di configurazione in setup workstation."""),
+        ),),
+
     ('1.5.35', dt.Date(2017, 06, 12), (
          ("BET1218",
          """Aggiunta la possibilità di richiamare dai menu esterni maschere di tipo aw.Dialog che
