@@ -1199,6 +1199,7 @@ def HeadFunc( parent, call_fit = True, set_sizer = True ):
 
     item74 = wx.StaticBox( parent, -1, "Situazione scadenzario anagrafica" )
     item73 = wx.StaticBoxSizer( item74, wx.VERTICAL )
+    parent.situaFido = item73
     
     item75 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
