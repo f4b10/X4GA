@@ -52,8 +52,9 @@ class AttivaCategorie(CheckListFromText):
     def SetCatartAttive(self, id):
         wrk='|'
         for r in self.tabCatArt:
-            if '|%s|'% id in r.caudoc:
-                wrk='%s%s|' % (wrk, r.id)
+            if r.caudoc:
+                if '|%s|'% id in r.caudoc:
+                    wrk='%s%s|' % (wrk, r.id)
         self.SetValue(wrk)
 
     def Save(self, idCfgDocMag):
