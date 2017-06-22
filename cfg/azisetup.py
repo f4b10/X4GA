@@ -141,7 +141,10 @@ class _SetupPanel(aw.Panel):
         if self.Validate():
             if self.SetupWrite():
                 if bt.SYNCFLAG==1 and bt.SYNCTIPOSERVER=='M':
-                    self.UpdateDirStru()
+                    try:
+                        self.UpdateDirStru()
+                    except:
+                        pass
                 event.Skip()
 
 
