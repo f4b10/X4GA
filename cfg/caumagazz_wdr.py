@@ -60,13 +60,15 @@ class AttivaCategorie(CheckListFromText):
     def Save(self, idCfgDocMag):
         catAttive = self.GetValue()
         for r in self.tabCatArt:
+            if r.caudoc==None:
+                r.caudoc=''
             if '|%s|'%r.id in catAttive:
                 if not '|%s|'%idCfgDocMag in r.caudoc:
                     r.caudoc=u'%s|%s|'% (r.caudoc, idCfgDocMag)
             else:
                 r.caudoc=r.caudoc.replace('|%s|'%idCfgDocMag, '|')
             r.Save()
-
+			
     def ShowContextMenu(self, position):
 
         self.ResetContextMenu()
