@@ -1259,12 +1259,39 @@ class MagazzPanel(aw.Panel,\
         self.gridbody.ResetView()
         event.Skip()
 
+
+    def CheckDocumento(self):
+        warning = False
+        try:
+            print self.dbdoc.cfgdoc.chkdoccli
+            print self.dbanag.id_tipdocpre
+            if self.dbdoc.cfgdoc.chkdoccli==True:
+                if not self.dbanag.id_tipdocpre==None:
+                    if  not self.dbdoc.cfgdoc.id == self.dbanag.id_tipdocpre:
+                        warning = True
+        except:
+            pass
+        return warning
+        
+        
+
     def OnAnagChanged(self, event):
+        
+        
+        
         DbgMsg('OnAnagChanged, control=%s' %event.GetEventObject().GetName())
         self.ResetFidoView()
         self.UpdateHeadAnag(initAll=True)
         doc = self.dbdoc
         cn = self.FindWindowByName
+        
+        if self.CheckDocumento():
+            aw.awu.MsgDialog(self, "%s - %s\nAttenzione!\nL'anagrafica ha associato un'altro tipo di documento." % (doc.pdc.codice, doc.pdc.descriz),
+                             caption="Documento inconsueto",
+                             style=wx.ICON_WARNING)
+        
+        
+        
         try:
             if getattr(self.dbanag.status, 'nomov_%s' % doc.cfgdoc.clasdoc) == 1:
                 aw.awu.MsgDialog(self, "%s - %s\nAnagrafica non utilizzabile in questo documento" % (doc.pdc.codice, doc.pdc.descriz),
@@ -2008,7 +2035,7 @@ class MagazzPanel(aw.Panel,\
         if doc is None:
             doc = self.dbdoc
         self.BeforeDocSave()
-            
+
         if doc.config.caucon.id:
             try:
                 _ = doc.GetPdcIva()
@@ -2061,7 +2088,7 @@ class MagazzPanel(aw.Panel,\
             if (bt.TIPO_CONTAB == "O" and len(doc._info.totiva) == 0) or (bt.TIPO_CONTAB == "S" and len(doc._info.totpdc) == 0):
                 MsgDialog(self, """Nessun totale IVA presente, impossibile confermare il documento.""")
                 return False
-            
+
         #controllo eventuali vincoli aggiuntivi che impediscono la memorizzazione
         #del documento
         if not self.ExtraCheck():
@@ -3064,7 +3091,7 @@ class MagazzPanel(aw.Panel,\
                       lib.dtoc(acq.doc.datdoc))
                 mov.numriga = riga
                 riga += 1
-                
+
             daq = dbm.DocMag()
             daq.Get(acqdocid)
             for acq in dlgacq.dbacq:
@@ -3129,7 +3156,7 @@ class MagazzPanel(aw.Panel,\
     def AcqBodyExtraFields(self, docAcq, mov, acq):
         pass
 
-    
+
     def BeforeMakeTotals(self):
         pass
 # ------------------------------------------------------------------------------

@@ -29,6 +29,9 @@ import mx.DateTime as dt
 
 history = (
     ('1.5.37', dt.Date(2017, 06, 28), (
+         ("BET1223",
+         """Introdotto controllo del documento utilizzato in funzione di quanto previsto sull'anagrafica del cliente.
+         Implica di settare ooportuinamente le causali di magazzino e le anagrafiche dei clienti"""),
          ("BET1222",
          """Introdotto metodo AcqBodyExtraFields in FtDif al fine di consentire agganci esterni."""),
          ("BET1221",
