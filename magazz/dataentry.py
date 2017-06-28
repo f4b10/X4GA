@@ -2000,9 +2000,15 @@ class MagazzPanel(aw.Panel,\
                         out=False
         return out
 
+    def BeforeDocSave(self):
+        pass
+
+
     def DocSave(self, doc=None):
         if doc is None:
             doc = self.dbdoc
+        self.BeforeDocSave()
+            
         if doc.config.caucon.id:
             try:
                 _ = doc.GetPdcIva()
@@ -2055,6 +2061,11 @@ class MagazzPanel(aw.Panel,\
             if (bt.TIPO_CONTAB == "O" and len(doc._info.totiva) == 0) or (bt.TIPO_CONTAB == "S" and len(doc._info.totpdc) == 0):
                 MsgDialog(self, """Nessun totale IVA presente, impossibile confermare il documento.""")
                 return False
+            
+        #controllo eventuali vincoli aggiuntivi che impediscono la memorizzazione
+        #del documento
+        if not self.ExtraCheck():
+            return False
 
         if (doc.totimporto == 0 or doc.mov.RowsCount() == 0) and doc.cfgdoc.totzero:
             err = "nullo"
@@ -2073,6 +2084,7 @@ class MagazzPanel(aw.Panel,\
                 style = wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT
                 if MsgDialog(self, msg, style=style) != wx.ID_YES:
                     return False
+
 
         #controllo fidi
         if not self.CheckFidoCliente():
@@ -2145,6 +2157,9 @@ class MagazzPanel(aw.Panel,\
             MsgDialog(self, err)
 
         return saved
+
+    def ExtraCheck(self):
+        return True
 
     def OnDocQuit( self, event ):
         if self.TestQuit():
@@ -3049,6 +3064,9 @@ class MagazzPanel(aw.Panel,\
                       lib.dtoc(acq.doc.datdoc))
                 mov.numriga = riga
                 riga += 1
+                
+            daq = dbm.DocMag()
+            daq.Get(acqdocid)
             for acq in dlgacq.dbacq:
                 if acq.acquis:
                     if doc.cfgdoc.tipmov.Locate(lambda x:\
@@ -3074,6 +3092,7 @@ class MagazzPanel(aw.Panel,\
 
                         mov.id_ddtacq = acq.doc.tipdoc.id
 
+                        self.AcqBodyExtraFields(daq, mov, acq)
                         riga += 1
                     else:
                         pass
@@ -3107,6 +3126,10 @@ class MagazzPanel(aw.Panel,\
         self.BeforeMakeTotals()
         self.MakeTotals()
 
+    def AcqBodyExtraFields(self, docAcq, mov, acq):
+        pass
+
+    
     def BeforeMakeTotals(self):
         pass
 # ------------------------------------------------------------------------------

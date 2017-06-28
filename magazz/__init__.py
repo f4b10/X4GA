@@ -6,17 +6,17 @@
 # Copyright:    (C) 2011 Astra S.r.l. C.so Cavallotti, 122 18038 Sanremo (IM)
 # ------------------------------------------------------------------------------
 # This file is part of X4GA
-# 
+#
 # X4GA is free software: you can redistribute it and/or modify
 # it under the terms of the Affero GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # X4GA is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
@@ -79,8 +79,8 @@ RSMOV_F_ANN   =  24; a('f_ann')
 RSMOV_PDCCG_ID = 25; a('id_pdccg')
 RSMOV_COSTOU =   26; a('costou')
 RSMOV_COSTOT =   27; a('costot')
-RSMOV_lastcol =\
 RSMOV_TIPLIST =  28; a('id_tiplist')
+RSMOV_lastcol =\
 RSMOV_ID_DDTACQ= 29; a('id_ddtacq')
 
 # i seguenti valori sono determinati in fase di caricamento tabelle
@@ -146,9 +146,9 @@ stru = bt.tabelle[bt.TABSETUP_TABLE_MOVMAG_H][2]
 docfields = [ s[0] for s in stru ]
 
 def GetDefaultMagazz():
-    dbm = Env.adb.DbTable(Env.Azienda.BaseTab.TABNAME_CFGSETUP, 'cfg', 
+    dbm = Env.adb.DbTable(Env.Azienda.BaseTab.TABNAME_CFGSETUP, 'cfg',
                           writable=False)
-    if dbm.Retrieve('cfg.chiave=%s', 'magazz_default:site %s' 
+    if dbm.Retrieve('cfg.chiave=%s', 'magazz_default:site %s'
                     % Env.Azienda.config.Site_name) and dbm.RowsCount() == 1:
         out = dbm.importo
     else:

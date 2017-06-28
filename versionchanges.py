@@ -28,6 +28,13 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
+    ('1.5.37', dt.Date(2017, 06, 28), (
+         ("BET1222",
+         """Introdotto metodo AcqBodyExtraFields in FtDif al fine di consentire agganci esterni."""),
+         ("BET1221",
+         """Introdotti metodi AcqBodyExtraField, ExtraCheck in MagazzPanel al fine di consentire agganci esterni."""),
+        ),),
+
     ('1.5.36', dt.Date(2017, 06, 15), (
          ("BET1220",
          """Ottimizzazione in esecuzione documenti di magazzino."""),

@@ -561,6 +561,7 @@ class FtDif(adb.DbTable):
                     mg.__setattr__(field, value)
 
                 mg.id_ddtacq = dr.tipdoc.id
+                self.AcqBodyExtraFields(dr, m, mg)
                 #id testate generate = -numero documento generato
                 mg.id_doc = -num
                 
@@ -572,6 +573,10 @@ class FtDif(adb.DbTable):
             
             self.BodyCopied(dg, dr)
         self.AllBodyCopied(dg, dr)
+    
+    def AcqBodyExtraFields(self, docSource,  movSource, movGen):
+        pass
+
     
     def HeadCreated(self, *args, **kwargs):
         pass
