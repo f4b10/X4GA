@@ -166,6 +166,7 @@ def AnagToolbarFunc( parent, call_fit = True, set_sizer = True ):
 
     item23 = wx.StaticText( parent, ID_RECORDSTATUS, "INS", wx.DefaultPosition, [40,-1], wx.ST_NO_AUTORESIZE|wx.ALIGN_CENTRE )
     item23.SetFont( wx.Font( 10, wx.SWISS, wx.NORMAL, wx.BOLD ) )
+    item23.SetName( "visuaStatus" )
     item12.Add( item23, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
     item24 = wx.BitmapButton(parent, ID_BTN_RECUNDO, images.getUndo20Bitmap()); item24.SetToolTipString("Annulla le modifiche effettuate sulla voce")
