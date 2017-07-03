@@ -521,6 +521,10 @@ class MagazzPanel(aw.Panel,\
         self.Bind(wx.EVT_BUTTON, self.OnFootChanged, cn("initraspnow"))
 
         self.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnWorkZoneChanged, cn('workzone'))
+        #cn('workzone').Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnWorkZoneChanged)
+
+
+
 
         for cid, func in ((wdr.ID_BTNBODYNEW,  self.GridBodyOnCreate),
                           (wdr.ID_BTNBODYDEL,  self.GridBodyOnDelete),
@@ -687,6 +691,7 @@ class MagazzPanel(aw.Panel,\
         nb=self.FindWindowByName('workzone')
         newPage = self.GetNextPage(nb)
         nb.SetSelection(newPage)
+        self.SetNewWorkZone(newPage)
         evt.Skip()
 
         #=======================================================================
@@ -713,6 +718,7 @@ class MagazzPanel(aw.Panel,\
         nb=self.FindWindowByName('workzone')
         newPage = self.GetPreviousPage(nb)
         nb.SetSelection(newPage)
+        self.SetNewWorkZone(newPage)
         evt.Skip()
 
 
@@ -809,10 +815,12 @@ class MagazzPanel(aw.Panel,\
         #pass
 
     def OnWorkZoneChanged(self, event):
-        ci = self.FindWindowById
-        wz = self.FindWindowByName('workzone')
-        ntab = wz.GetSelection()
+        o = event.GetEventObject()
+        ntab = o.newpage
+        self.SetNewWorkZone(ntab)
+        event.Skip()
 
+    def SetNewWorkZone(self, ntab):
         if ntab == 1:
             self.SetFirstTipMov()
         elif ntab == 2:
@@ -823,16 +831,15 @@ class MagazzPanel(aw.Panel,\
             #piede - dati accompagnatori
             self.UpdatePanelDAcc()
             self.EnableFootControls()
-        self.TestWorkZoneFirstFocus()
-        event.Skip()
+        self.TestWorkZoneFirstFocus(ntab)
 
-    def TestWorkZoneFirstFocus(self):
+    def TestWorkZoneFirstFocus(self, ntab):
         ci = self.FindWindowById
         wz = self.FindWindowByName('workzone')
         if self.status == STATUS_DISPLAY:
             wz.SetFocus()
         else:
-            ntab = wz.GetSelection()
+            #ntab = wz.GetSelection()
             if ntab == 0:
                 #testata
                 if self.status == STATUS_EDITING:
@@ -1272,26 +1279,26 @@ class MagazzPanel(aw.Panel,\
         except:
             pass
         return warning
-        
-        
+
+
 
     def OnAnagChanged(self, event):
-        
-        
-        
+
+
+
         DbgMsg('OnAnagChanged, control=%s' %event.GetEventObject().GetName())
         self.ResetFidoView()
         self.UpdateHeadAnag(initAll=True)
         doc = self.dbdoc
         cn = self.FindWindowByName
-        
+
         if self.CheckDocumento():
             aw.awu.MsgDialog(self, "%s - %s\nAttenzione!\nL'anagrafica ha associato un'altro tipo di documento." % (doc.pdc.codice, doc.pdc.descriz),
                              caption="Documento inconsueto",
                              style=wx.ICON_WARNING)
-        
-        
-        
+
+
+
         try:
             if getattr(self.dbanag.status, 'nomov_%s' % doc.cfgdoc.clasdoc) == 1:
                 aw.awu.MsgDialog(self, "%s - %s\nAnagrafica non utilizzabile in questo documento" % (doc.pdc.codice, doc.pdc.descriz),
@@ -2445,7 +2452,13 @@ class MagazzPanel(aw.Panel,\
 #            def SetFocus():
 #                self.controls['id_pdc'].SetFocus()
 #            wx.CallAfter(SetFocus)
-        wx.CallAfter(self.TestWorkZoneFirstFocus)
+
+        ntab=0
+        nb = self.FindWindowByName('workzone')
+        if nb:
+            ntab=nb.GetSelection()
+
+        wx.CallAfter(self.TestWorkZoneFirstFocus, ntab)
         return oldstatus
 
     def SetDataChanged(self, changed=True):
@@ -2816,6 +2829,7 @@ class MagazzPanel(aw.Panel,\
                      'trapor'):
             enab = cfgdoc.askdatiacc == 'X' and getattr(cfgdoc, 'ask'+name) == 'X'
             if name == 'travet':
+                #TODO: enab = enab and bool(doc.cfgdoc.asktravet) and not self.FindWindowByName('enable_nocodevet').IsChecked()
                 enab = enab and bool(doc.tracur.askvet) and not self.FindWindowByName('enable_nocodevet').IsChecked()
             ctrls['id_'+name].Enable(self.status == STATUS_EDITING and enab)
         enab = cfgdoc.askdatiacc == 'X' and cfgdoc.asktracon == 'X' and doc.modpag.contrass == 1
@@ -2835,6 +2849,7 @@ class MagazzPanel(aw.Panel,\
             ctrl.Enable(e)
         #abilitazione campi vettore non codificato
         e = (bt.MAGNOCODEVET and self.status == STATUS_EDITING and enab and cfgdoc.askdatiacc == 'X' and cfgdoc.asktravet == 'X' and doc.id_travet is None)
+        #TODO: e = (bt.MAGNOCODEVET and self.status == STATUS_EDITING and enab and cfgdoc.askdatiacc == 'X' and cfgdoc.asktravet == 'X')
         self.FindWindowByName('enable_nocodevet').Enable(e)
         e = e and cn('enable_nocodevet').IsChecked()
         for ctrl in aw.awu.GetAllChildrens(self, lambda x: x.GetName().startswith('nocodevet')):
