@@ -498,15 +498,22 @@ ID_AUTISTA = 16032
 def ExtraVetFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
-    item2 = wx.StaticBox( parent, -1, "Dati Extra" )
-    item1 = wx.StaticBoxSizer( item2, wx.VERTICAL )
+    item1 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    
+    item2 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
     item3 = wx.StaticText( parent, ID_TEXT, "Dichiarazione del vettore:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item1.Add( item3, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+    item2.Add( item3, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 
-    item4 = TextCtrl_LC( parent, ID_DICHIAR, "", wx.DefaultPosition, [-1,40], wx.TE_MULTILINE )
+    item4 = TextCtrl_LC( parent, ID_DICHIAR, "", wx.DefaultPosition, [-1,80], wx.TE_MULTILINE )
     item4.SetName( "dichiar" )
-    item1.Add( item4, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+    item2.Add( item4, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+
+    item2.AddGrowableCol( 0 )
+
+    item2.AddGrowableRow( 1 )
+
+    item1.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item5 = wx.FlexGridSizer( 0, 2, 0, 0 )
     
@@ -528,9 +535,15 @@ def ExtraVetFunc( parent, call_fit = True, set_sizer = True ):
 
     item1.Add( item5, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
+    item1.AddGrowableCol( 0 )
+
+    item1.AddGrowableRow( 0 )
+
     item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item0.AddGrowableCol( 0 )
+
+    item0.AddGrowableRow( 0 )
 
     if set_sizer == True:
         parent.SetSizer( item0 )
