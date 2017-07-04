@@ -182,6 +182,12 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
     def SetNotSpecifCols(self, nsc):
         self.GetTable().SetNotSpecifCols(nsc)
 
+    def Test(self):
+        r = self._edrow
+        c = self._edcol
+        print self.GetCellEditor(r, c)
+        pass
+
     def OnChar(self, event):
         do = False
         if event.GetKeyCode() == wx.WXK_TAB:
@@ -202,6 +208,13 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
             #if event.GetKeyCode() == wx.WXK_RETURN and event.ControlDown():
             if event.GetKeyCode() == wx.WXK_RETURN and event.ShiftDown():
                 self.SetGridCursorNewRowCol()
+            #===================================================================
+            # elif event.GetKeyCode()==wx.WXK_F2:
+            #     print 'OnChar di dbgrid: %s' % event.GetKeyCode()
+            #     oGrid=event.GetEventObject()
+            #     wx.CallAfter(self.Test)
+            #     event.Skip()
+            #===================================================================
             else:
                 event.Skip()
 
@@ -372,7 +385,7 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
                 else:
                     lCanReorder=True
                     self._canReorder=lCanReorder
-                    self.SetLabelTextColour(wx.BLUE)                    
+                    self.SetLabelTextColour(wx.BLUE)
                     if _DEBUG:
                         print '%s %s' % (objRs, objDb)
             except:
