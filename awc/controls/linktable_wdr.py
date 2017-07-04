@@ -29,6 +29,18 @@ class CodiceDescrizTextCtrl(TextCtrl):
             size[0] = w
         TextCtrl.__init__(self, parent, id, value, pos, size, style, **kwargs)
     
+    def _OnKeyDown(self, event):
+        #print '_OnKeyDown: %s' % event.GetKeyCode()
+        if event.GetKeyCode()==wx.WXK_F2:
+            if self.GetName()=='__codice':
+                self.Parent.FindWindowByName('__descriz').SetFocus()
+            else:
+                self.Parent.FindWindowByName('__codice').SetFocus()
+        else:
+            event.Skip()
+        
+
+
     def _OnText(self, event):
         l = len(self.GetValue() or '')
         changed = TextCtrl._OnText(self, event)
