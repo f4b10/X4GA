@@ -28,6 +28,12 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
+    ('1.5.39', dt.Date(2017, 07, 11), (
+         ("BET1224",
+         """Aggiunto su righe dei documenti acquisiti o raggruppati il riferimento a id del documento acquisito o raggruppato."""),
+        ),),
+
+
     ('1.5.37', dt.Date(2017, 06, 28), (
          ("BET1223",
          """Introdotto controllo del documento utilizzato in funzione di quanto previsto sull'anagrafica del cliente.

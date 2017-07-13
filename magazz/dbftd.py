@@ -6,17 +6,17 @@
 # Copyright:    (C) 2011 Astra S.r.l. C.so Cavallotti, 122 18038 Sanremo (IM)
 # ------------------------------------------------------------------------------
 # This file is part of X4GA
-# 
+#
 # X4GA is free software: you can redistribute it and/or modify
 # it under the terms of the Affero GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # X4GA is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
@@ -31,7 +31,7 @@ bt = Env.Azienda.BaseTab
 
 
 class DocAll(dbm.DocAll):
-    
+
     def __init__(self, *args, **kwargs):
         dbm.DocAll.__init__(self, *args, **kwargs)
         pdc = self['pdc']
@@ -45,14 +45,14 @@ class DocAll(dbm.DocAll):
 
 
 class MovAll(adb.DbTable):
-    
+
     def __init__(self, table=bt.TABNAME_MOVMAG_B, alias='mov', **kwargs):
-        
+
         adb.DbTable.__init__(self, table, alias, **kwargs)
-        
+
         tipmov = self.AddJoin(\
             bt.TABNAME_CFGMAGMOV, "tipmov")
-        
+
         prod = self.AddJoin(\
             bt.TABNAME_PROD,      "prod",    join=adb.JOIN_LEFT)
         prod.AddJoin(\
@@ -61,13 +61,13 @@ class MovAll(adb.DbTable):
             bt.TABNAME_CATART,    "catart",  join=adb.JOIN_LEFT)
         prod.AddJoin(\
             bt.TABNAME_GRUART,    "gruart",  join=adb.JOIN_LEFT)
-        
+
         iva = self.AddJoin(\
             bt.TABNAME_ALIQIVA,   "iva",     join=adb.JOIN_LEFT)
-        
+
         self.AddOrder("%s.id_doc" % alias)
         self.AddOrder("%s.numriga" % alias)
-        
+
         self.Get(-1)
 
 
@@ -78,38 +78,38 @@ class FtDif(adb.DbTable):
     """
     Fatturazione differita
     """
-    
+
     def __init__(self):
-        
+
         adb.DbTable.__init__(self,
             bt.TABNAME_CFGFTDIF,  'ftdcfg', writable=False)
-        
+
         dgs = self.AddJoin(
             bt.TABNAME_CFGMAGDOC, 'tipdoc', idLeft='id_docgen')
         dgc = dgs.AddJoin(
             bt.TABNAME_CFGCONTAB, 'caucon', idLeft='id_caucg',
             join=adb.JOIN_LEFT)
-        
+
         mgs = dgs.AddMultiJoin(
             bt.TABNAME_CFGMAGMOV, 'tipmov')
-        
+
         ddr = self.AddMultiJoin(
             bt.TABNAME_CFGFTDDR,  'ddr', idRight='id_ftd')
         ddr.AddFilter("ddr.f_attivo=1")
-        
+
         drs = ddr.AddJoin(
             bt.TABNAME_CFGMAGDOC, 'tipdoc', idLeft='id_docrag')
-        
+
         mrs = drs.AddMultiJoin(
             bt.TABNAME_CFGMAGMOV, 'tipmov')
-        
+
         docgen = DocAll(alias='docgen', writable=True)
-        
+
         docgen.AddField('docgen.original_id_doc', 'original_id_doc')
         docgen.Get(-1)
 
         movgen = MovAll(alias='movgen', writable=True)
-        
+
         docgen._lastdat = None
         docgen._lastnum = None
         docgen._firstdat = None
@@ -123,14 +123,14 @@ class FtDif(adb.DbTable):
         movgen.AddField('movgen.id', 'docset')
         movgen.AddField('movgen.original_id', 'original_id')
         movgen.AddField('movgen.original_id_doc', 'original_id_doc')
-        
+
         movgen.Get(-1)
         self.docgen = docgen
         self.movgen = movgen
-        
+
         docrag = DocAll(alias='docrag', writable=True)
         docrag.tot.AddTotalOf("IF(tipmov.askvalori IN ('T', 'V') AND (tot.importo IS NULL OR tot.importo=0), 1, 0)", "prezzizero")
-        
+
         movrag = MovAll(alias='movrag', writable=False)
         #aggiungo colonna dummy su documenti estratti per gestione flag di
         #raggruppamento, default=True su tutti i documenti estratti
@@ -162,12 +162,12 @@ class FtDif(adb.DbTable):
 #        docrag.AddOrder('docrag.datreg')
 #        docrag.AddOrder('docrag.datdoc')
 #        docrag.AddOrder('docrag.numdoc')
-        
+
         self.docrag = docrag
         self.movrag = movrag
         self.docwrite = dbm.DocMag()
         self.docacq = {}
-        
+
         self.Get(-1)
 
 
@@ -176,15 +176,15 @@ class FtDif(adb.DbTable):
 
 
     def SetRaggr(self, fdid):
-        
+
         if not self.Get(fdid):
             raise Exception, self.GetError()
-        
+
         #controllo congruenza movimenti
         #per ogni documento da raggruppare viene testata la congruenza
         #del codice e del tipo di valori richiesti per ogni suo movimento
         #rispetto al documento da generare
-        
+
         self.docrag._movmap = {}
         self.docrag._movdes = {}
         movsgen = self.tipdoc.tipmov
@@ -213,11 +213,11 @@ class FtDif(adb.DbTable):
             self.docrag.pdc.anag = self.docrag.pdc.anacli
         else:
             self.docrag.pdc.anag = self.docrag.pdc.anafor
-    
+
     def SetYear(self, year):
         self.docgen._year = year
         self.ReadLast()
-    
+
     def ReadLast(self):
         if self.tipdoc.colcg == 'X' and self.tipdoc.numdoc == '3' and self.tipdoc.id_caucg is not None:
             reg = adb.DbTable(bt.TABNAME_CONTAB_H, 'reg', writable=False)
@@ -243,12 +243,12 @@ class FtDif(adb.DbTable):
             if doc.Retrieve():
                 self.docgen._lastdat = doc.max_datdoc
                 self.docgen._lastnum = doc.max_numdoc
-    
+
     def Estrai(self):
-        
+
         dr = self.docrag
         dg = self.docgen
-        
+
         dr.ClearOrders()
         dr.AddOrder('pdc.descriz')
         if dg._sepmp:
@@ -258,7 +258,7 @@ class FtDif(adb.DbTable):
         dr.AddOrder('docrag.datreg')
         dr.AddOrder('docrag.datdoc')
         dr.AddOrder('docrag.numdoc')
-                
+
         dr.ClearFilters()
         dr.AddFilter('docrag.id_tipdoc IN (%s)'\
                      % ','.join([str(x) for x in dr._tipidoc]))
@@ -276,7 +276,7 @@ class FtDif(adb.DbTable):
                     ctf += ' OR '
                 ctf += ctf1
         dr.AddFilter(ctf)
-        
+
         #selezioni sui documenti
         for field, op, name, default in (
             ('datdoc',    '>=', '_datmin',    None),
@@ -289,36 +289,36 @@ class FtDif(adb.DbTable):
             ('id_zona',   '=',  '_solozona',  None),
             ('id_modpag', '=',  '_solomp',    None),
             ('f_printed', '=',  '_solosta',  self.docrag._solosta),
-            ):                     
+            ):
             value = self.docrag.__getattr__(name) or default
             if value:
                 dr.AddFilter('docrag.%s%s%%s' % (field, op), value)
-        
+
         #selezioni sui clienti (o fornitori: improbabile, ma possibile)
         #determino l'alias della tabella anagrafica clienti o fornitori
         anag = dr.pdc.anag.GetTableAlias()
         for field, op, name, default in (
             ('id_categ',  '=', '_solocateg', None),
-            ):                     
+            ):
             value = self.docrag.__getattr__(name) or default
             if value:
                 dr.AddFilter('%s.%s%s%%s' % (anag, field, op), value)
-        
+
         for field, value in (('f_acq', self.docrag._esclacq),
                              ('f_ann', self.docrag._esclann)):
             if value:
                 dr.AddFilter('docrag.%s<>1' % field)
-        
+
         if not dr.Retrieve():
             raise Exception, repr(dr.GetError())
-    
+
     def Raggruppa(self, cbf=None):
-        
+
         dr = self.docrag
         mr = self.movrag
         dg = self.docgen
         mg = self.movgen
-        
+
         pdcanags = { "A": dba.Casse(),
                      "B": dba.Banche(),
                      "D": dba.Effetti(),
@@ -326,7 +326,7 @@ class FtDif(adb.DbTable):
                      "F": dba.Fornit() }
         for pdc in pdcanags:
             pdcanags[pdc].Get(-1)
-        
+
         err = None
         if dr.RowsCount() == 0:
             err = "Nessun documento estratto"
@@ -336,11 +336,11 @@ class FtDif(adb.DbTable):
             err = "Numero di generazione documento indefinito"
         if err:
             raise Exception, err
-        
+
         sepall = dg._sepall# or self.f_sepall == 1)
         sepmp = dg._sepmp# or self.f_sepmp == 1)
         sepdest = dg._sepdest# or self.f_sepdest == 1)
-        
+
         dat = dg._firstdat
         num = dg._firstnum-1
         niv = None
@@ -360,9 +360,9 @@ class FtDif(adb.DbTable):
                           "Errore in determinazione numero protocollo iva: %s"\
                           % repr(cg.GetError())
                 del cg
-        
+
         cfg = self.tipdoc
-        
+
         headfields = {'datreg':    dat,
                       'datdoc':    dat,
                       'numdoc':    num,
@@ -381,89 +381,89 @@ class FtDif(adb.DbTable):
                       'f_emailed': 0,
                       'impcontr':  0,
                       'notevet':   0 }
-        
-        bodyfields = {'id_doc': None, 
+
+        bodyfields = {'id_doc': None,
                       'f_ann':  0}
-        
+
         lastmag = None
         lastpdc = None
         lastmp = None
         lastdest = None
         lastrig = None
         docset = 1
-        
+
         dg.Reset()
         mg.Reset()
         dr.MoveFirst()
-        
+
         bancf = adb.DbTable(bt.TABNAME_BANCF, 'bancf', writable=False)
-        
+
         #ciclo su documenti estratti
         self.docacq = {}
         for n, d in enumerate(dr):
-            
+
             if not d.raggruppa:
                 continue
-            
+
             #caricamento dettaglio documento estratto
             if not mr.Retrieve('movrag.id_doc=%s', d.id):
                 raise Exception,\
                       "Errore in caricamento dettaglio documento: %s"\
                       % repr(mr.GetError())
-            
+
             if mr.IsEmpty():
                 continue
-            
+
             if self.f_chgmag and self.id_chgmag:
                 idmag = self.id_chgmag
             else:
                 idmag = d.id_magazz
-            
+
             #test necessità di nuovo documento
             if idmag != lastmag or d.id_pdc != lastpdc or sepall or\
                (sepmp and d.id_modpag != lastmp) or \
                (sepdest and d.id_dest != lastdest):
-                
+
                 #creazione testata
-                
+
                 num += 1
                 if niv is not None:
                     niv += 1
-                
+
                 headfields['numdoc'] = num
                 headfields['numiva'] = niv
                 headfields['datrif'] = dr.datdoc
                 headfields['numrif'] = dr.numdoc
                 headfields['desrif'] = dr.tipdoc.descriz
-                
+
                 dg.CreateNewRow()
-                
+
                 dg.original_id_doc=dr.id
-                
-                
-                
-                
-                
+
+
+
+
+
                 #copia campi da documento origine
                 for field in dr.GetFieldNames():
                     if field != 'id' and not field in headfields:
                         dg.__setattr__(field, dr.__getattr__(field))
-                
+
                 #cambio magazzino se necessario, da configurazione ftdif
                 if self.f_chgmag and self.id_chgmag:
                     dg.id_magazz = self.id_chgmag
-                
+
                 if self.f_setgen:
                     dg.f_genrag = 1
-                
+
                 #id testate generate = -numero documento generato
                 self.docacq[-num] = d.id
                 dg.id = -num
-                
+
                 #campi propri del documento generato
                 for field, value in headfields.iteritems():
                     dg.__setattr__(field, value)
-                
+
                 #campi necessari da setup documento generato
                 #se mancanti, vengono presi dalla scheda anagrafica
                 pdc = None
@@ -480,9 +480,9 @@ class FtDif(adb.DbTable):
                         if pdc is not None:
                             if field in pdc.anag.GetFieldNames():
                                 if pdc.id == d.id_pdc or pdc.Get(dg.id_pdc):
-                                    dg.__setattr__(field, 
+                                    dg.__setattr__(field,
                                                    pdc.anag.__getattr__(field))
-                
+
                 #banca e spese di incasso
                 banid = speid = None
                 if sepmp:
@@ -501,46 +501,46 @@ class FtDif(adb.DbTable):
                 if banid:
                     dg.id_bancf = banid
                     dg.id_speinc = speid
-                
+
                 #note per stampa
                 nd = getattr(pdc.anag, 'notedoc', None)
                 if nd:
                     setattr(dg, 'notedoc', nd)
-                
+
                 dg.tot.total_imponib = 0
-                
+
                 self.HeadCreated(dg)
-                
+
                 docset = 0
                 lastrig = 0
-                
+
                 lastmag =  dg.id_magazz
                 lastpdc =  dr.id_pdc
                 lastmp =   dr.id_modpag
                 lastdest = dr.id_dest
-                
+
                 if cbf is not None:
                     cbf(n)
-            
+
             if not num in self.docacq:
                 self.docacq[num] = []
             self.docacq[num].append(d.id)
-            
+
             docset += 1
             bodyfields['docset'] = docset
-            
+
             #nota: l'id di ogni movimento viene attribuito dal db in fase di
             #scittura (conferma); per manenere il legame tra documento generato
             #e relative righe di dettaglio, nell'id del movimento viene messo
             #temporaneamente il numero di documento invertito di segno
-            
+
             #nota: il campo id_moveva, sulla riga di riferimento al documento
             #raggruppato, contiene l'id del documento originale con il segno -
-            
+
             #creazione riga descrittiva rif.to doc. raggruppato
             if d.id_tipdoc in dr._movdes and not self.f_nodesrif:
                 lastrig = self.GeneraDesRif(num, lastrig, d, bodyfields)
-            
+
             #copia dettaglio documento raggruppato
             for m in mr:
                 mg.CreateNewRow()
@@ -548,45 +548,49 @@ class FtDif(adb.DbTable):
                 for field in mr.GetFieldNames():
                     if field != 'id' and not field in bodyfields:
                         mg.__setattr__(field, mr.__getattr__(field))
-                
-                
+
+
                 mg.original_id=mr.id
                 mg.original_id_doc=mr.id_doc
-                
+
                 bodyfields['id_tipmov'] = dr._movmap[m.id_tipmov]
                 bodyfields['id_moveva'] = mr.id
                 bodyfields['numriga'] = lastrig
-                
+
                 for field, value in bodyfields.iteritems():
                     mg.__setattr__(field, value)
 
                 mg.id_ddtacq = dr.tipdoc.id
+                mg.id_docsource = dr.id
+
+
+
                 self.AcqBodyExtraFields(dr, m, mg)
                 #id testate generate = -numero documento generato
                 mg.id_doc = -num
-                
+
                 if not m.tipmov.tipologia in 'EO':
                     impriga = m.importo or 0
                     if m.tipmov.tipologia == 'I':
                         impriga *= -1
                     dg.tot.total_imponib += impriga
-            
+
             self.BodyCopied(dg, dr)
         self.AllBodyCopied(dg, dr)
-    
+
     def AcqBodyExtraFields(self, docSource,  movSource, movGen):
         pass
 
-    
+
     def HeadCreated(self, *args, **kwargs):
         pass
-    
+
     def AllBodyCopied(self, *args, **kwargs):
         pass
 
     def BodyCopied(self, *args, **kwargs):
         pass
-    
+
     def GeneraDesRif(self, num, lastrig, doc, bodyfields):
         dr = self.docrag
         mg = self.movgen
@@ -596,7 +600,7 @@ class FtDif(adb.DbTable):
         bodyfields['id_tipmov'] = dr._movmap[dr._movdes[doc.id_tipdoc]]
         #bodyfields['id_moveva'] = -d.id
         bodyfields['numriga'] = lastrig
-        
+
         for field, value in bodyfields.iteritems():
             mg.__setattr__(field, value)
         mg.__setattr__('descriz', "Rif.to %s n. %s del %s"\
@@ -604,20 +608,20 @@ class FtDif(adb.DbTable):
 
         mg.original_id_doc=dr.id
         return lastrig
-    
+
     def Genera(self, func=None):
-        
+
         new = self.docwrite
         tdocgenid = self.docgen.tipdoc.id
         doc = self.docgen
         mov = self.movgen
         headfields = doc.GetFieldNames()
         bodyfields = mov.GetFieldNames()
-        
+
         for doc in doc:
             num = doc.id
             if mov.Locate(lambda m: m.id_doc == num):
-                
+
                 new.Reset()
                 new.cfgdoc.Get(tdocgenid)
                 new.CreateNewRow()
@@ -625,7 +629,7 @@ class FtDif(adb.DbTable):
                     setattr(new, field, getattr(doc, field))
                 new.id = None
                 new.id_docacq = doc.id
-                
+
                 while mov.id_doc == num:
                     new.mov.CreateNewRow()
                     for field in bodyfields:
@@ -638,13 +642,13 @@ class FtDif(adb.DbTable):
                     #============================================================
                     if not mov.MoveNext():
                         break
-                
+
                 if self.f_setacq == 1:
                     new._info.acqdocacq = self.docacq[-doc.id]
-                
+
                 if self.f_setann == 1:
                     new._info.acqdocann = self.docacq[-doc.id]
-                
+
                 if new.config.colcg and new.config.caucon:
                     if new.config.caucon.pcf == '1':
                         new.MakeTotals()
@@ -654,15 +658,15 @@ class FtDif(adb.DbTable):
                         new.CollegaCont()
                     except Exception, e:
                         raise Exception, repr(e.args)
-                
+
                 if new.Save():
                     self.DocGenerato(new)
                 else:
                     raise Exception, new.GetError()
-                
+
                 if func is not None:
                     func(new)
-    
+
     def DocGenerato(self, *args, **kwargs):
         pass
 
@@ -674,21 +678,21 @@ class FtDifHistory(adb.DbTable):
     """
     Elaborazioni avvenute (storia doc.raggr.->doc.generati)
     """
-    
+
     def __init__(self, **kwargs):
-        
+
         adb.DbTable.__init__(self, bt.TABNAME_MOVMAG_H, 'docrag', **kwargs)
         self.AddJoin(bt.TABNAME_CFGMAGDOC, 'cfgrag', idLeft='id_tipdoc')
         dg = self.AddJoin(bt.TABNAME_MOVMAG_H, 'docgen', idLeft='id_docacq')
         dg.AddJoin(bt.TABNAME_CFGMAGDOC, 'cfggen', idLeft='id_tipdoc')
         self.SetOrderRag()
         self.Get(-1)
-    
+
     def SetOrderRag(self):
         self.ClearOrders()
         self.AddOrder('docrag.datdoc')
         self.AddOrder('docrag.numdoc')
-    
+
     def SetOrderGen(self):
         self.ClearOrders()
         self.AddOrder('docgen.datdoc')

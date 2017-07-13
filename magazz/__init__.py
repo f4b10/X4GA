@@ -80,8 +80,12 @@ RSMOV_PDCCG_ID = 25; a('id_pdccg')
 RSMOV_COSTOU =   26; a('costou')
 RSMOV_COSTOT =   27; a('costot')
 RSMOV_TIPLIST =  28; a('id_tiplist')
-RSMOV_lastcol =\
 RSMOV_ID_DDTACQ= 29; a('id_ddtacq')
+RSMOV_lastcol =\
+RSMOV_ID_DOCSOURCE= 30; a('id_docsource')
+
+
+
 
 # i seguenti valori sono determinati in fase di caricamento tabelle
 RSMOV_codmov  = -1

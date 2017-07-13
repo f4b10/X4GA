@@ -3038,7 +3038,8 @@ class Azienda(object):
                 [ "id_pdccg",   "INT",     idw, None, "ID Pdc collegamento contabile specifico", None],
                 [ "agggrip",    "TINYINT",   1, None, "Flag aggiornamento griglia prezzi", None ],
                 [ "id_tiplist", "INT",     idw, None, "ID Tipo listino", None ],
-                [ "id_ddtacq",  "INT",     idw, None, "id ddt acquisito", None ],
+                [ "id_ddtacq",  "INT",     idw, None, "id tipo ddt acquisito", None ],
+                [ "id_docsource","INT",    idw, None, "id documento acquisito", None ],
             ]
 
             cls.set_constraints(cls.TABNAME_MOVMAG_B,

@@ -3133,6 +3133,7 @@ class MagazzPanel(aw.Panel,\
                         mov.f_ann = 0
 
                         mov.id_ddtacq = acq.doc.tipdoc.id
+                        mov.id_docsource = acq.doc.id
 
                         self.AcqBodyExtraFields(daq, mov, acq)
                         riga += 1
