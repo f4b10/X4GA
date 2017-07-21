@@ -817,10 +817,14 @@ class MagazzPanel(aw.Panel,\
     def OnWorkZoneChanged(self, event):
         o = event.GetEventObject()
         ntab = o.newpage
+        # per uniformare comportamento di Ctyrl+Tab e F10
+        ntab = o.GetSelection()
+
         self.SetNewWorkZone(ntab)
         event.Skip()
 
     def SetNewWorkZone(self, ntab):
+        #print 'SetNewWorkZone %s' % ntab
         if ntab == 1:
             self.SetFirstTipMov()
         elif ntab == 2:

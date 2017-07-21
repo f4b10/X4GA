@@ -28,6 +28,12 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
+    ('1.5.40', dt.Date(2017, 07, 21), (
+         ("BET1225",
+         """Uniformato comportamento tasti funzione Ctrl+tab su corpo documenti magazzini."""),
+        ),),
+
+
     ('1.5.39', dt.Date(2017, 07, 11), (
          ("BET1224",
          """Aggiunto su righe dei documenti acquisiti o raggruppati il riferimento a id del documento acquisito o raggruppato."""),

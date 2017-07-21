@@ -207,7 +207,10 @@ class InfoSsd():
             self.Dbtr_Nm = None
 
         try:
-            self.MndtId= '%s-%s' % (self.dbeff.pdc.codice, self.dbeff.bap.dtini_rid.strftime('%Y-%m-%d'))
+            if Env.Azienda.codice=='cme':
+                self.MndtId= '%s%s' % ('C3543',self.dbeff.pdc.codice)
+            else:
+                self.MndtId= '%s-%s' % (self.dbeff.pdc.codice, self.dbeff.bap.dtini_rid.strftime('%Y-%m-%d'))
         except:
             self.MndtId   = None
         try:
@@ -509,8 +512,8 @@ class EmiEffettiPanel(wx.Panel):
         choice=None
         s = adb.DbTable(Env.Azienda.BaseTab.TABNAME_CFGSETUP, 'setup')
         if s.Retrieve("setup.chiave='effetti_idconto'" ) and s.OneRow():
-            choice = s.importo        
-        return choice        
+            choice = s.importo
+        return choice
 
 
     def SetLastContoChoice(self, value):
@@ -695,7 +698,7 @@ class EmiEffettiPanel(wx.Panel):
             self.UpdateTot()
             self.grideff.Refresh()
         finally:
-            wx.EndBusyCursor()        
+            wx.EndBusyCursor()
 
     def UpdateTot(self):
         eff = self.dbeff
