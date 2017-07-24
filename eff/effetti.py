@@ -203,11 +203,21 @@ class InfoSsd():
         self.Dbtr_Nm=self.dbeff.pdc.descriz[:35]
         self.Dbtr_Nm=self.Dbtr_Nm.replace('<', '.')
         self.Dbtr_Nm=self.Dbtr_Nm.replace('>', '.')
+        self.Dbtr_Nm=self.Dbtr_Nm.replace('&', ' E ')
+        #=======================================================================
+        # self.Dbtr_Nm=self.Dbtr_Nm.replace('À', "A'")
+        # self.Dbtr_Nm=self.Dbtr_Nm.replace('È', "E'")
+        # self.Dbtr_Nm=self.Dbtr_Nm.replace('É', "E'")
+        # self.Dbtr_Nm=self.Dbtr_Nm.replace('Ì', "I'")
+        # self.Dbtr_Nm=self.Dbtr_Nm.replace('Ò', "O'")
+        # self.Dbtr_Nm=self.Dbtr_Nm.replace('Ù', "U'")
+        #=======================================================================
         if len(self.Dbtr_Nm)==0:
             self.Dbtr_Nm = None
 
         try:
             if Env.Azienda.codice=='cme':
+                #TOTO: RENDERE GENERALIZZATA ATTRIBUZIONE IDENTIFICATIVO CLIENTE DATO DA COD.SIA+COD.CLI
                 self.MndtId= '%s%s' % ('C3543',self.dbeff.pdc.codice)
             else:
                 self.MndtId= '%s-%s' % (self.dbeff.pdc.codice, self.dbeff.bap.dtini_rid.strftime('%Y-%m-%d'))

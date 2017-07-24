@@ -29,6 +29,8 @@ import mx.DateTime as dt
 
 history = (
     ('1.5.40', dt.Date(2017, 07, 21), (
+         ("BET1226",
+         """Sostituito carattere & con E nella ragione sociale debitore in generazione SDD."""),
          ("BET1225",
          """Uniformato comportamento tasti funzione Ctrl+tab su corpo documenti magazzini."""),
         ),),
