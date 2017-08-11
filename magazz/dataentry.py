@@ -93,7 +93,7 @@ from awc.controls.attachbutton import AttachTableList
 
 
 _GIORNI=180
-_DEBUG =False
+_DEBUG = False
 today = Env.Azienda.Esercizio.dataElab
 datregsrc1 = today-today.day+1
 datregsrc2 = today
@@ -303,6 +303,8 @@ class MagazzPanel(aw.Panel,\
     """
     Panel Documenti magazzino.
     """
+    _isDefaultPdc = None
+    defaultPdc    = None
     onedoconly_id = None
     _testload = True
     gridbodyclass = GridBody
@@ -1098,6 +1100,16 @@ class MagazzPanel(aw.Panel,\
                             if self.TestPcf():
                                 doc = self.dbdoc
                                 c = self.controls["id_pdc"]
+                                #===============================================
+                                # #TODO: SETTO DEFAULT PDC
+                                # if doc.cfgdoc.default_id_pdc:
+                                #     print 'setta cliente'
+                                #     doc.id_pdc = doc.cfgdoc.default_id_pdc
+                                #     def InitAnag(*args):
+                                #         c.SetValue(doc.cfgdoc.default_id_pdc)
+                                #     wx.CallAfter(InitAnag)
+                                #===============================================
+
                                 if doc.cfgdoc.pdcdamag:
 #                                    doc.id_pdc = doc.magazz.id_pdc
                                     def InitAnag(*args):
@@ -2317,7 +2329,15 @@ class MagazzPanel(aw.Panel,\
         self.caudes = ctrcau.GetValueDes()
         cfg.Get(self.cauid)
         self.GridBody_Init(ci(wdr.ID_PANGRIDBODY))
+        self._isDefaultPdc = False
+        self.defaultPdc = None
         if self.cauid:
+         #===================================================================
+         # #TODO: SETTO PDC DI DEFAULT
+         #    if cfg.default_id_pdc:
+         #        self._isDefaultPdc = True
+         #        self.defaultPdc = cfg.default_id_pdc
+         #===================================================================
             self.SetDefaultItem(self.FindWindowByName('butnew'))
             wx.CallAfter(ctrcau.SetFocus)
         for c in (self.boxanag, ci(wdr.ID_LABELANAGHEAD)):
