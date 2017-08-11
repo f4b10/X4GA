@@ -28,6 +28,12 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
+    ('1.5.42', dt.Date(2017, 07, 27), (
+         ("BET1228",
+         """Introdotta gestione campi  per Comunicazione Periodica fatture."""),
+        ),),
+
+           
     ('1.5.41', dt.Date(2017, 07, 27), (
          ("BET1227",
          """Ottimizzato il passaggio da una scheda all'altra nel corpo documento di magazzino."""),
