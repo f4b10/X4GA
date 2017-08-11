@@ -71,12 +71,16 @@ def CauContabCardFunc( parent, call_fit = True, set_sizer = True ):
     item3.AddPage( item4, "Setup causale" )
 
     item5 = wx.Panel( item3, -1 )
-    Setup2Func(item5, False)
-    item3.AddPage( item5, "Scadenzario e Sottoconti preferiti" )
+    Setup4Func(item5, False)
+    item3.AddPage( item5, "Comunicazioni Dati Fatture" )
 
     item6 = wx.Panel( item3, -1 )
-    Setup3Func(item6, False)
-    item3.AddPage( item6, "Eventi" )
+    Setup2Func(item6, False)
+    item3.AddPage( item6, "Scadenzario e Sottoconti preferiti" )
+
+    item7 = wx.Panel( item3, -1 )
+    Setup3Func(item7, False)
+    item3.AddPage( item7, "Eventi" )
 
     item0.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
@@ -682,6 +686,41 @@ def Setup3Func( parent, call_fit = True, set_sizer = True ):
     item0.AddGrowableCol( 0 )
 
     item0.AddGrowableRow( 2 )
+
+    if set_sizer == True:
+        parent.SetSizer( item0 )
+        if call_fit == True:
+            item0.SetSizeHints( parent )
+    
+    return item0
+
+ID_CHECKBOX = 16047
+
+def Setup4Func( parent, call_fit = True, set_sizer = True ):
+    item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    
+    item1 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    
+    item2 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    
+    item3 = CheckBox( parent, ID_CHECKBOX, "Abilita Tramissione", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item3.SetName( "trx_flag" )
+    item2.Add( item3, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item4 = RadioBox( parent, ID_RADIOBOX, "Tipo documento", wx.DefaultPosition, wx.DefaultSize, 
+        ["Non gestito","TD01 - Fattura","TD02 - Acconto/Anticipo su fattura","TD03 - Acconto/Anticipo su parcella","TD04 - Nota di Credito","TD05 - Nota di Debito","TD06 - Parcella","TD07 - Fattura Semplificata","TD08 - Nota di Credito Semplificata","TD09 - (non utilizzata)","TD10 - Fattura Acquisto Intracomunitario di Beni","TD11 - Fattura Acquisto Intracomunitario di Servizi"] , 1, wx.RA_SPECIFY_COLS )
+    item4.SetName( "trx_tdoc" )
+    item2.Add( item4, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item1.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item1.AddGrowableRow( 0 )
+
+    item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item0.AddGrowableCol( 0 )
+
+    item0.AddGrowableRow( 0 )
 
     if set_sizer == True:
         parent.SetSizer( item0 )
