@@ -6,17 +6,17 @@
 # Copyright:    (C) 2011 Astra S.r.l. C.so Cavallotti, 122 18038 Sanremo (IM)
 # ------------------------------------------------------------------------------
 # This file is part of X4GA
-# 
+#
 # X4GA is free software: you can redistribute it and/or modify
 # it under the terms of the Affero GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # X4GA is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
@@ -37,7 +37,7 @@ FRAME_TITLE = "Aliquote IVA"
 
 
 class AliqIvaSearchResultsGrid(ga.SearchResultsGrid):
-    
+
     def GetDbColumns(self):
         _NUM = gl.GRID_VALUE_NUMBER
         _STR = gl.GRID_VALUE_STRING
@@ -46,16 +46,17 @@ class AliqIvaSearchResultsGrid(ga.SearchResultsGrid):
         _CHK = gl.GRID_VALUE_CHOICE+":1,0"
         cn = lambda x: self.db._GetFieldIndex(x)
         tab = self.tabalias
-        return (( 35, (cn('aliqiva_codice'),  "Cod.",     _STR, True)),
-                (240, (cn('aliqiva_descriz'), "Aliquota", _STR, True)),
-                ( 50, (cn('aliqiva_perciva'), "%IVA",     _PRC, True)),
-                ( 50, (cn('aliqiva_percind'), "%Ind",     _PRC, True)),
-                ( 50, (cn('aliqiva_tipo'),    "Tipo",     _STR, True)),
-                ( 50, (cn('aliqiva_modo'),    "Modo",     _STR, True)),
-                ( 50, (cn('aliqiva_sm11_no'), "No Sp.",   _CHK, True)),
-                (  1, (cn('aliqiva_id'),      "#aliq",    _STR, True)),
+        return (( 35, (cn('aliqiva_codice'),      "Cod.",     _STR, True)),
+                (240, (cn('aliqiva_descriz'),     "Aliquota", _STR, True)),
+                ( 50, (cn('aliqiva_perciva'),     "%IVA",     _PRC, True)),
+                ( 50, (cn('aliqiva_percind'),     "%Ind",     _PRC, True)),
+                ( 50, (cn('aliqiva_tipo'),        "Tipo",     _STR, True)),
+                ( 50, (cn('aliqiva_modo'),        "Modo",     _STR, True)),
+                ( 50, (cn('aliqiva_ftel_natura'), "Natura",   _STR, True)),
+                ( 50, (cn('aliqiva_sm11_no'),     "No Sp.",   _CHK, True)),
+                (  1, (cn('aliqiva_id'),          "#aliq",    _STR, True)),
             )
-    
+
     def SetColumn2Fit(self):
         self.SetFitColumn(1)
 
@@ -82,15 +83,17 @@ class AliqIvaPanel(ga.AnagPanel):
             for c in range(4):
                 name = 'pral%sc%d' % (cf, c+1)
                 cn(name).SetDataLink(name, (0,1,2))
+        cn('ftel_natura').SetDataLink('ftel_natura', ('','N1','N2','N3','N4','N5','N6','N7'))
+
         return p
-    
+
     def SetInsertMode(self):
         out = ga.AnagPanel.SetInsertMode(self)
         self.FindWindowById(wdr.ID_DATIALLEG).SetSelection(0)
         return out
-    
+
     def GetSearchResultsGrid(self, parent):
-        grid = AliqIvaSearchResultsGrid(parent, ga.ID_SEARCHGRID, 
+        grid = AliqIvaSearchResultsGrid(parent, ga.ID_SEARCHGRID,
                                         self.db_tabname, self.GetSqlColumns())
         return grid
 

@@ -13,6 +13,8 @@ import wx.animate
 # Custom source
 from awc.controls.radiobox import RadioBox
 from awc.controls.numctrl import NumCtrl
+from awc.controls.textctrl import TextCtrl, TextCtrl_LC
+
 
 from anag.basetab import AnagCardPanel, WorkZoneNotebook, UnoZeroCheckBox
 
@@ -47,6 +49,10 @@ def AliqIvaCardFunc( parent, call_fit = True, set_sizer = True ):
     item5 = wx.Panel( item3, -1 )
     AliqIvaCardAllegFunc(item5, False)
     item3.AddPage( item5, "Allegati" )
+
+    item6 = wx.Panel( item3, -1 )
+    AliqIvaCardNaturaFunc(item6, False)
+    item3.AddPage( item6, "Natura" )
 
     item0.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
@@ -193,6 +199,41 @@ def AliqIvaCardAllegFunc( parent, call_fit = True, set_sizer = True ):
     item2.AddGrowableCol( 4 )
 
     item0.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+
+    if set_sizer == True:
+        parent.SetSizer( item0 )
+        if call_fit == True:
+            item0.SetSizeHints( parent )
+    
+    return item0
+
+ID_TEXTCTRL = 16009
+
+def AliqIvaCardNaturaFunc( parent, call_fit = True, set_sizer = True ):
+    item0 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    
+    item1 = RadioBox( parent, ID_RADIOBOX, "Natura", wx.DefaultPosition, wx.DefaultSize, 
+        ["-","N1 - Escluso ex Art.15","N2 - Non soggetto","N3 - Non imponibile","N4 - Esente","N5 - Regime del margine","N6 - Inversione contabile (reverse chanrge)","N7 - IVA assolta in altro stato UE"] , 1, wx.RA_SPECIFY_COLS )
+    item1.SetName( "ftel_natura" )
+    item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item2 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    
+    item3 = wx.StaticText( parent, ID_TEXT, "Riferimento normativo", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item3.SetForegroundColour( wx.BLUE )
+    item2.Add( item3, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP, 5 )
+
+    item4 = TextCtrl_LC( parent, ID_TEXTCTRL, "", wx.DefaultPosition, [400,40], wx.TE_MULTILINE )
+    item4.SetName( "ftel_rifnorm" )
+    item2.Add( item4, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item2.AddGrowableCol( 0 )
+
+    item2.AddGrowableRow( 1 )
+
+    item0.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item0.AddGrowableCol( 1 )
 
     if set_sizer == True:
         parent.SetSizer( item0 )
