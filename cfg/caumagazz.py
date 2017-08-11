@@ -175,7 +175,7 @@ class PermUteGrid(dbglib.DbGridColoriAlternati):
                 self.rsper[row][i] = 1-(self.rsper[row][i] or 0)
             elif col == 3:
                 self.rsper[row][PERM_GIORNI]=1 + (self.rsper[row][PERM_GIORNI] or 0)
-            self.SetDataChanged()                
+            self.SetDataChanged()
             self.Refresh()
         event.Skip()
 
@@ -185,7 +185,7 @@ class PermUteGrid(dbglib.DbGridColoriAlternati):
             col = event.GetCol()
             if  col == 3:
                 self.rsper[row][PERM_GIORNI]= max(0, (self.rsper[row][PERM_GIORNI] or 0) - 1)
-            self.SetDataChanged()                
+            self.SetDataChanged()
             self.Refresh()
         event.Skip()
 
@@ -327,6 +327,9 @@ class CauMagazzPanel(ga.AnagPanel):
         ci = self.FindWindowById
         p = wx.Panel( parent, -1)
         wdr.CauMagazzCardFunc( p, True )
+        self.IdPdcTipo = self.FindWindowByName('id_pdctip') 
+        self.DefaultIdPdc = self.FindWindowByName('default_id_pdc')
+        self.IdPdcTipo .Bind(ga.linktable.EVT_LINKTABCHANGED, self.OnChangeTipo)
         self._grid_mov = DefMovGrid(self.FindWindowById(wdr.ID_PANGRIDMOV), self.dbmov)
         self._grid_mov.Bind(gl.EVT_GRID_SELECT_CELL, self.OnGridMovCellSelected)
         self._grid_mov.Bind(gl.EVT_GRID_CELL_CHANGE, self.OnGridMovCellChanged)
@@ -494,6 +497,12 @@ class CauMagazzPanel(ga.AnagPanel):
                 ctr = self.FindWindowByName(field)
                 if ctr:
                     ctr.SetValue(getattr(dbmov, field))
+
+    def OnChangeTipo(self, evt):
+        oPdcTipo = self.FindWindowByName('id_pdctip')
+        self.DefaultIdPdc.Enable(not self.IdPdcTipo.GetValue()==None)
+        if not self.IdPdcTipo.GetValue()==None:
+            self.DefaultIdPdc.SetFilterValue(self.IdPdcTipo.GetValue(),0)
 
     def OnGridMovCellChanged(self, event):
         row = event.GetRow()
