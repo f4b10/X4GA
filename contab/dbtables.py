@@ -2198,6 +2198,8 @@ LIQIVA_ALIQ_TIPO =  5
 LIQIVA_TOTIMPONIB = 6
 LIQIVA_TOTIMPOSTA = 7
 LIQIVA_TOTINDEDUC = 8
+LIQIVA_TOTOPATT = 9
+LIQIVA_TOTOPPAS = 10
 
 class ValoriErrati_Exception(Exception):
     pass
@@ -2312,7 +2314,13 @@ class LiqIva(adb.DbTable):
                     'ciciniz',  #disponibile all'inizio della liquidaz.
                     'ciculiq',  #utilizzato nella liquidazione
                     'cicuf24',  #utilizzato con l'F24
-                    'cicfine'): #disponibile alla fine della liquidaz.
+                    'cicfine',  #disponibile alla fine della liquidaz.
+#                    'cicfine'): #disponibile alla fine della liquidaz.
+
+                   #Totali operazioni attive/passive prospetto
+                    'topeatt',  #totale operazioni attive.
+                    'topepas'): #totale operazioni passive.
+ 
             self._totali[key] = 0
         
         p = self._progr
@@ -2405,7 +2413,11 @@ class LiqIva(adb.DbTable):
                                     aliq.iva.tipo,    #LIQIVA_ALIQ_TIPO
                                     0,                #LIQIVA_TOTIMPONIB
                                     0,                #LIQIVA_TOTIMPOSTA
-                                    0])               #LIQIVA_TOTINDEDUC
+                                    0,                #LIQIVA_TOTINDEDUC
+                                    0,                #LIQIVA_TOTOPATT
+                                    0])               #LIQIVA_TOTOPPAS
+#                                    0])               #LIQIVA_TOTINDEDUC
+
                         n = len(tot)-1
                     imponib = aliq.total_imponib or 0
                     imposta = aliq.total_imposta or 0
@@ -2427,6 +2439,22 @@ class LiqIva(adb.DbTable):
                         elif aliq.iva.tipo == "S":
                             #iva sosp.
                             mt['vensos'+col] += imposta
+                            
+                    if key.startswith('ven'):
+                        try:
+                            if aliq.iva.liqu_att==1:
+                                mt['topeatt'] += imponib
+                                tot[n][LIQIVA_TOTOPATT] += imponib
+                        except:
+                            pass
+                    else:
+                        try:
+                            if aliq.iva.liqu_pass==1:
+                                mt['topepas'] += imponib
+                                tot[n][LIQIVA_TOTOPPAS] += imponib
+                        except:
+                            pass
+
             if cbf is not None:
                 cbf(r)
         

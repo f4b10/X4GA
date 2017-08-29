@@ -150,6 +150,15 @@ class GridRiepAliq(dbglib.DbGrid):
         _FLT = bt.GetValIntMaskInfo()
         _STR = gl.GRID_VALUE_STRING
         _DAT = gl.GRID_VALUE_DATETIME
+#        _LGT = gl.GRID_VALUE_CHOICE
+#        _LGT = ":True,False"
+
+#        @classmethod
+#        def GetPerGenMaskInfo(cls, numint=None, numdec=None):
+#            return gl.GRID_VALUE_FLOAT+":%d,%d" % (numint, numdec)
+#        def TypeValCheck(cls, value_check=1, value_uncheck=0):
+#            return '%s:%s,%s' % (cls._TYPE_CHECK, value_check, value_uncheck)
+#        _LGT = "%s:,1,0"
         
         cols = (\
             ( 40, (dbc.LIQIVA_ALIQ_COD,    "Cod.",         _STR, True )),\
@@ -160,7 +169,9 @@ class GridRiepAliq(dbglib.DbGrid):
             (110, (dbc.LIQIVA_TOTIMPONIB,  "Imponibile",   _FLT, True )),\
             (110, (dbc.LIQIVA_TOTIMPOSTA,  "Imposta",      _FLT, True )),\
             (110, (dbc.LIQIVA_TOTINDEDUC,  "Indeducibile", _FLT, True )),\
-            )
+            (110, (dbc.LIQIVA_TOTOPATT,    "(*A)", _FLT, True )),\
+            (110, (dbc.LIQIVA_TOTOPPAS,    "(*P)", _FLT, True )),\
+            ) 
         
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
