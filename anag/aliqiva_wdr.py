@@ -71,6 +71,7 @@ ID_PERCIND = 16004
 ID_TIPO = 16005
 ID_MODO = 16006
 ID_SM11_NO = 16007
+ID_CHECKBOX = 16008
 
 def AliqIvaCardDatiFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.BoxSizer( wx.VERTICAL )
@@ -119,6 +120,23 @@ def AliqIvaCardDatiFunc( parent, call_fit = True, set_sizer = True ):
 
     item10.Add( item12, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
+    item16 = wx.StaticBox( parent, -1, "Totalizza comunicazioine Liquidazioni Iva" )
+    item15 = wx.StaticBoxSizer( item16, wx.VERTICAL )
+    
+    item17 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    
+    item18 = UnoZeroCheckBox( parent, ID_CHECKBOX, "Operazioni Attive", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item18.SetName( "liqu_att" )
+    item17.Add( item18, 0, wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item19 = UnoZeroCheckBox( parent, ID_CHECKBOX, "Operazioni Passive", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item19.SetName( "liqu_pass" )
+    item17.Add( item19, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item15.Add( item17, 0, wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item10.Add( item15, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
     item10.AddGrowableCol( 0 )
 
     item8.Add( item10, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
@@ -136,7 +154,7 @@ def AliqIvaCardDatiFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_RADIOBOX = 16008
+ID_RADIOBOX = 16009
 
 def AliqIvaCardAllegFunc( parent, call_fit = True, set_sizer = True ):
     item1 = wx.StaticBox( parent, -1, "Progressivi allegati clienti/fornitori" )
@@ -207,7 +225,7 @@ def AliqIvaCardAllegFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_TEXTCTRL = 16009
+ID_TEXTCTRL = 16010
 
 def AliqIvaCardNaturaFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 2, 0, 0 )

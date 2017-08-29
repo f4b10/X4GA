@@ -1791,6 +1791,8 @@ class Azienda(object):
                 [ "pralfc3",      "TINYINT",  1, None, "Flag allegati fornitori col.3", None ],
                 [ "pralfc4",      "TINYINT",  1, None, "Flag allegati fornitori col.4", None ],
                 [ "sm11_no",      "TINYINT",  1, None, "Flag esclusione da spesometro 2011", None ],
+                [ "liqu_att",     "TINYINT",  1, None, "Flag totalizzatore per Liquidazione operazioni attive", None ],
+                [ "liqu_pass",    "TINYINT",  1, None, "Flag totalizzatore per Liquidazione operazioni passive", None ],
                 [ "ftel_natura",  "CHAR",     2, None, "Natura aliquota", None ],
                 [ "ftel_rifnorm", "VARCHAR",255, None, "Riferimento normativo", None ],]
 
