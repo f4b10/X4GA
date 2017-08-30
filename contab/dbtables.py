@@ -2439,19 +2439,21 @@ class LiqIva(adb.DbTable):
                         elif aliq.iva.tipo == "S":
                             #iva sosp.
                             mt['vensos'+col] += imposta
-                            
-                    if key.startswith('ven'):
+
+                    if tipo == "A":
                         try:
-                            if aliq.iva.liqu_att==1:
-                                mt['topeatt'] += imponib
+                            if not aliq.iva.notot_liqupas==1:
                                 tot[n][LIQIVA_TOTOPATT] += imponib
+                                if t==0:
+                                    mt['topepas'] += imponib
                         except:
                             pass
                     else:
                         try:
-                            if aliq.iva.liqu_pass==1:
-                                mt['topepas'] += imponib
+                            if not aliq.iva.notot_liquatt==1:
                                 tot[n][LIQIVA_TOTOPPAS] += imponib
+                                if t==0: 
+                                    mt['topeatt'] += imponib
                         except:
                             pass
 

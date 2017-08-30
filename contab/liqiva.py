@@ -150,7 +150,7 @@ class GridRiepAliq(dbglib.DbGrid):
         _FLT = bt.GetValIntMaskInfo()
         _STR = gl.GRID_VALUE_STRING
         _DAT = gl.GRID_VALUE_DATETIME
-#        _LGT = gl.GRID_VALUE_CHOICE
+        _LGT = gl.GRID_VALUE_CHOICE+":1,0"
 #        _LGT = ":True,False"
 
 #        @classmethod
@@ -169,8 +169,8 @@ class GridRiepAliq(dbglib.DbGrid):
             (110, (dbc.LIQIVA_TOTIMPONIB,  "Imponibile",   _FLT, True )),\
             (110, (dbc.LIQIVA_TOTIMPOSTA,  "Imposta",      _FLT, True )),\
             (110, (dbc.LIQIVA_TOTINDEDUC,  "Indeducibile", _FLT, True )),\
-            (110, (dbc.LIQIVA_TOTOPATT,    "(*A)", _FLT, True )),\
-            (110, (dbc.LIQIVA_TOTOPPAS,    "(*P)", _FLT, True )),\
+            (110, (dbc.LIQIVA_TOTOPATT,    "(*Att.)", _FLT, True )),\
+            (110, (dbc.LIQIVA_TOTOPPAS,    "(*Pass.)", _FLT, True )),\
             ) 
         
         colmap  = [c[1] for c in cols]
@@ -198,7 +198,9 @@ class GridRiepAliq(dbglib.DbGrid):
              lambda rs, row: rs[row][dbc.LIQIVA_ALIQ_TIPO] == "S")):
             self.AddTotalsRow(1, label, (dbc.LIQIVA_TOTIMPONIB,
                                          dbc.LIQIVA_TOTIMPOSTA,
-                                         dbc.LIQIVA_TOTINDEDUC), cbfilt)
+                                         dbc.LIQIVA_TOTINDEDUC,
+                                         dbc.LIQIVA_TOTOPATT,
+                                         dbc.LIQIVA_TOTOPPAS), cbfilt)
         
         map(lambda c:\
             self.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
@@ -218,7 +220,10 @@ class GridRiepAliq(dbglib.DbGrid):
             else:
                 fgcol = 'blueviolet'
         else:
-            fgcol = stdcolor.NORMAL_FOREGROUND
+            if col<8:
+                fgcol = stdcolor.NORMAL_FOREGROUND
+            else:
+                fgcol = 'grey'
         attr.SetTextColour(fgcol)
         return attr
 
