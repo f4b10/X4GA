@@ -1792,7 +1792,9 @@ class Azienda(object):
                 [ "pralfc4",    "TINYINT",  1, None, "Flag allegati fornitori col.4", None ],
                 [ "sm11_no",    "TINYINT",  1, None, "Flag esclusione da spesometro 2011", None ],
                 [ "liqu_pass",  "TINYINT",  1, None, "Flag totalizzatori passivita'", None ],
-                [ "liqu_att",   "TINYINT",  1, None, "Flag totalizzatori attivita'", None ], ]
+                [ "liqu_att",   "TINYINT",  1, None, "Flag totalizzatori attivita'", None ], 
+                [ "ftel_natura",  "CHAR",     2, None, "Natura aliquota", None ],
+                [ "ftel_rifnorm", "VARCHAR",255, None, "Riferimento normativo", None ],]
 
             cls.aliqiva_indexes = cls.std_indexes
 
@@ -1978,6 +1980,8 @@ class Azienda(object):
                 [ "id_tipevent", "INT",     idw, None, "ID Tipo evento", None ],
                 [ "event_msg",   "VARCHAR",1024, None, "Messaggio evento", None ],
                 [ "rptname",     "VARCHAR",  64, None, "Nome report da proporre a fine registrazione", None ],
+                [ "trx_flag",    "TINYINT",   1, None, "Flag x Comunicazione Dati Fatture", None ],
+                [ "trx_tdoc",    "VARCHAR",   4, None, "Tipo documento ai fini della comunicazione", None ],
             ]
 
             cls.set_constraints(cls.TABNAME_CFGCONTAB,
@@ -2721,6 +2725,7 @@ class Azienda(object):
                 [ "ctrnum",     "CHAR",     1, None, "Flag controllo numero documento", None ],
                 [ "aggnum",     "CHAR",     1, None, "Flag aggiornamento numero documento", None ],
                 [ "pienum",     "CHAR",     1, None, "Flag numrazione a piede documento", None ],
+                [ "default_id_pdc", "INT",    idw, None, "id cliente di default", None ],
                 [ "id_acqdoc1", "INT",    idw, None, "ID Documento da acquisire #1", None ],
                 [ "id_acqdoc2", "INT",    idw, None, "ID Documento da acquisire #2", None ],
                 [ "id_acqdoc3", "INT",    idw, None, "ID Documento da acquisire #3", None ],
