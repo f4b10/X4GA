@@ -1775,26 +1775,26 @@ class Azienda(object):
 
 
             cls.aliqiva =\
-              [ [ "id",         "INT",    idw, None, "ID Aliquota", "AUTO_INCREMENT" ],
-                [ "codice",     "CHAR",    10, None, "Codice", None ],
-                [ "descriz",    "VARCHAR", 60, None, "Descrizione", None ],
-                [ "tipo",       "CHAR",     1, None, "Tipo aliquota", None ],
-                [ "modo",       "CHAR",     1, None, "Modo applicazione iva (imponibile, non imponibile, esente, fuori campo)", None ],
-                [ "perciva",    "DECIMAL",  5,    2, "Perc.IVA", None ],
-                [ "percind",    "DECIMAL",  5,    2, "Perc.Indeducibilità", None ],
-                [ "pralcc1",    "TINYINT",  1, None, "Flag allegati clienti col.1", None ],
-                [ "pralcc2",    "TINYINT",  1, None, "Flag allegati clienti col.2", None ],
-                [ "pralcc3",    "TINYINT",  1, None, "Flag allegati clienti col.3", None ],
-                [ "pralcc4",    "TINYINT",  1, None, "Flag allegati clienti col.4", None ],
-                [ "pralfc1",    "TINYINT",  1, None, "Flag allegati fornitori col.1", None ],
-                [ "pralfc2",    "TINYINT",  1, None, "Flag allegati fornitori col.2", None ],
-                [ "pralfc3",    "TINYINT",  1, None, "Flag allegati fornitori col.3", None ],
-                [ "pralfc4",    "TINYINT",  1, None, "Flag allegati fornitori col.4", None ],
-                [ "sm11_no",    "TINYINT",  1, None, "Flag esclusione da spesometro 2011", None ],
-                [ "liqu_pass",  "TINYINT",  1, None, "Flag totalizzatori passivita'", None ],
-                [ "liqu_att",   "TINYINT",  1, None, "Flag totalizzatori attivita'", None ], 
-                [ "ftel_natura",  "CHAR",     2, None, "Natura aliquota", None ],
-                [ "ftel_rifnorm", "VARCHAR",255, None, "Riferimento normativo", None ],]
+              [ [ "id",            "INT",    idw, None, "ID Aliquota", "AUTO_INCREMENT" ],
+                [ "codice",        "CHAR",    10, None, "Codice", None ],
+                [ "descriz",       "VARCHAR", 60, None, "Descrizione", None ],
+                [ "tipo",          "CHAR",     1, None, "Tipo aliquota", None ],
+                [ "modo",          "CHAR",     1, None, "Modo applicazione iva (imponibile, non imponibile, esente, fuori campo)", None ],
+                [ "perciva",       "DECIMAL",  5,    2, "Perc.IVA", None ],
+                [ "percind",       "DECIMAL",  5,    2, "Perc.Indeducibilità", None ],
+                [ "pralcc1",       "TINYINT",  1, None, "Flag allegati clienti col.1", None ],
+                [ "pralcc2",       "TINYINT",  1, None, "Flag allegati clienti col.2", None ],
+                [ "pralcc3",       "TINYINT",  1, None, "Flag allegati clienti col.3", None ],
+                [ "pralcc4",       "TINYINT",  1, None, "Flag allegati clienti col.4", None ],
+                [ "pralfc1",       "TINYINT",  1, None, "Flag allegati fornitori col.1", None ],
+                [ "pralfc2",       "TINYINT",  1, None, "Flag allegati fornitori col.2", None ],
+                [ "pralfc3",       "TINYINT",  1, None, "Flag allegati fornitori col.3", None ],
+                [ "pralfc4",       "TINYINT",  1, None, "Flag allegati fornitori col.4", None ],
+                [ "sm11_no",       "TINYINT",  1, None, "Flag esclusione da spesometro 2011", None ],
+                [ "notot_liqupas", "TINYINT",  1, None, "Flag esclusione da totalizzatori passivita'", None ],
+                [ "notot_liquatt", "TINYINT",  1, None, "Flag esclusione da totalizzatori attivita'", None ],
+                [ "ftel_natura",   "CHAR",     2, None, "Natura aliquota", None ],
+                [ "ftel_rifnorm",  "VARCHAR",255, None, "Riferimento normativo", None ],]
 
             cls.aliqiva_indexes = cls.std_indexes
 
