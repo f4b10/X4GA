@@ -1790,7 +1790,9 @@ class Azienda(object):
                 [ "pralfc2",    "TINYINT",  1, None, "Flag allegati fornitori col.2", None ],
                 [ "pralfc3",    "TINYINT",  1, None, "Flag allegati fornitori col.3", None ],
                 [ "pralfc4",    "TINYINT",  1, None, "Flag allegati fornitori col.4", None ],
-                [ "sm11_no",    "TINYINT",  1, None, "Flag esclusione da spesometro 2011", None ], ]
+                [ "sm11_no",    "TINYINT",  1, None, "Flag esclusione da spesometro 2011", None ],
+                [ "liqu_pass",  "TINYINT",  1, None, "Flag totalizzatori passivita'", None ],
+                [ "liqu_att",   "TINYINT",  1, None, "Flag totalizzatori attivita'", None ], ]
 
             cls.aliqiva_indexes = cls.std_indexes
 
