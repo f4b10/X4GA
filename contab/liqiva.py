@@ -673,7 +673,7 @@ class LiqIvaPanel(aw.Panel):
                     #per compatilibità alias tabelle con riep.iva fatto x lista mov.
                     db.reg.regiva = db.reg.rei
                     db.aliqiva = db.iva
-                    for aid,acod,ades,aprc,apin,atip,aimp,aiva,aind in tot[reg.id]:
+                    for aid,acod,ades,aprc,apin,atip,aimp,aiva,aind, _, _ in tot[reg.id]:
                         db.CreateNewRow()
                         db.reg.id_regiva = reg.id
                         db.id_aliqiva = aid
