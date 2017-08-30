@@ -120,17 +120,17 @@ def AliqIvaCardDatiFunc( parent, call_fit = True, set_sizer = True ):
 
     item10.Add( item12, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item16 = wx.StaticBox( parent, -1, "Totalizza comunicazioine Liquidazioni Iva" )
+    item16 = wx.StaticBox( parent, -1, "Totalizzatori per Comunicazioni Liquidazioni Iva" )
     item15 = wx.StaticBoxSizer( item16, wx.VERTICAL )
     
     item17 = wx.FlexGridSizer( 0, 2, 0, 0 )
     
-    item18 = UnoZeroCheckBox( parent, ID_CHECKBOX, "Operazioni Attive", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item18.SetName( "liqu_att" )
+    item18 = UnoZeroCheckBox( parent, ID_CHECKBOX, "Escludi da Operazioni Attive", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item18.SetName( "notot_liquatt" )
     item17.Add( item18, 0, wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item19 = UnoZeroCheckBox( parent, ID_CHECKBOX, "Operazioni Passive", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item19.SetName( "liqu_pass" )
+    item19 = UnoZeroCheckBox( parent, ID_CHECKBOX, "Escludi da Operazioni Passive", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item19.SetName( "notot_liqupas" )
     item17.Add( item19, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item15.Add( item17, 0, wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
