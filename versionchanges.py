@@ -29,6 +29,11 @@ import mx.DateTime as dt
 
 history = (
 
+    ('1.5.44', dt.Date(2017, 8, 29), (
+         ("BET1230",
+         """Implementati totali operazioni Attive/Passive su Liquidazione Iva."""),
+        ),),
+
     ('1.5.43', dt.Date(2017, 8, 29), (
          ("BET1229",
          """Introdotta flag totalizzatori su aliquote Iva."""),

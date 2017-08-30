@@ -924,9 +924,9 @@
 					<reportElement
 						mode="Transparent"
 						x="115"
-						y="24"
+						y="25"
 						width="317"
-						height="32"
+						height="30"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						key="rectangle-3"/>
