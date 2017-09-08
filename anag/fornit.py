@@ -6,17 +6,17 @@
 # Copyright:    (C) 2011 Astra S.r.l. C.so Cavallotti, 122 18038 Sanremo (IM)
 # ------------------------------------------------------------------------------
 # This file is part of X4GA
-# 
+#
 # X4GA is free software: you can redistribute it and/or modify
 # it under the terms of the Affero GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # X4GA is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
@@ -45,15 +45,15 @@ class FornitPanel(pdcrel._CliForPanel):
     Gestione della tabella Fornitori.
     """
     def __init__(self, *args, **kwargs):
-        
+
         self.pdctipo = "F"
         self.tabanag = Azienda.BaseTab.TABNAME_FORNIT
         pdcrel._CliForPanel.__init__(self, *args, **kwargs)
-        
+
         self.anag_db_columns = [ c for c in Azienda.BaseTab.tabelle\
                                  [bt.TABSETUP_TABLE_FORNIT]\
                                  [bt.TABSETUP_TABLESTRUCTURE] ]
-        
+
         self._sqlrelfrm +=\
             " LEFT JOIN %s AS zona     ON anag.id_zona=zona.id"\
             " LEFT JOIN %s AS stato    ON anag.id_stato=stato.id"\
@@ -74,9 +74,9 @@ class FornitPanel(pdcrel._CliForPanel):
                bt.TABNAME_ALIQIVA,
                bt.TABNAME_PDC,
            )
-        
+
         self._sqlrelcol += ', status.hidesearch'
-        
+
         self._valfilters['zona'] =     ['zona.codice',      None, None]
         self._valfilters['stato'] =    ['stato.codice',     None, None]
         self._valfilters['categ'] =    ['categ.codice',     None, None]
@@ -92,7 +92,7 @@ class FornitPanel(pdcrel._CliForPanel):
         self._cntfilters.append('citta')
         self._cntfilters.append('note')
         self._hasfilters = True
-        
+
         self._Auto_AddKeys( { "pdctip_fornit": True,
                               "bilmas_fornit": True,
                               "bilcon_fornit": True,
@@ -103,9 +103,9 @@ class FornitPanel(pdcrel._CliForPanel):
         self._auto_bilmas = getattr(self, "_auto_bilmas_fornit", None)
         self._auto_bilcon = getattr(self, "_auto_bilcon_fornit", None)
         self._auto_bilcee = getattr(self, "_auto_bilcee_fornit", None)
-        
+
         self.db_report = "Lista Fornitori"
-    
+
     def InitAnagCard(self, parent):
         p = wx.Panel( parent, -1)
         wdr.LinkTableClienteFornitore = wdr.LinkTableFornit
@@ -119,20 +119,21 @@ class FornitPanel(pdcrel._CliForPanel):
         self.Bind(EVT_LINKTABCHANGED, self.OnPdcGrpChanged, cn('id_pdcgrp'))
         self.Bind(EVT_LINKTABCHANGED, self.OnStatoChanged, cn('id_stato'))
         return p
-    
+
     def OnStatoChanged(self, event):
         cn = self.FindWindowByName
-        cn('nazione').SetValue(cn('id_stato').GetVatPrefix())
+        if cn('nazione').GetValue()==None or len(cn('nazione').GetValue().strip())==0:
+            cn('nazione').SetValue(cn('id_stato').GetVatPrefix())
         sbl = cn('id_stato').IsBlacklisted()
         cn('is_blacklisted').Enable(sbl)
         if not sbl:
             cn('is_blacklisted').SetValue(0)
         event.Skip()
-    
+
     def OnPdcGrpChanged(self, event):
         self.LoadGriglia()
         event.Skip()
-    
+
     def GetLinkTableClass(self):
         import anag.lib as alib
         return alib.LinkTableFornit
@@ -141,12 +142,12 @@ class FornitPanel(pdcrel._CliForPanel):
         p = wx.Panel(parent, -1)
         wdr.FornitSpecSearchFunc(p)
         return p
-    
+
     def SetInsertMode(self, *args, **kwargs):
         pdcrel._CliForPanel.SetInsertMode(self, *args, **kwargs)
         if not self.valuesearch:
             self.FindWindowById(wdr.ID_ALLEGCF).SetValue(1)
-    
+
     def UpdateButtonsState(self):
         pdcrel._CliForPanel.UpdateButtonsState(self)
         self._pdcpref.UpdateMoveButtonsState()
@@ -161,10 +162,10 @@ class FornitPanel(pdcrel._CliForPanel):
         if out:
             out = self._pdcpref.TransferDataFromWindow(self.db_recid)
         return out
-    
+
     def GetOrdStampaDialog(self):
         return OrdStampaDialog(self, -1, 'Lista fornitori')
-    
+
     def GetOrdStampaRaggr(self, db, rag):
         r = {#nessun raggruppamento
              "N": (None,
@@ -173,25 +174,25 @@ class FornitPanel(pdcrel._CliForPanel):
              #zona
              "Z": ('zona.codice',
                    lambda: db.anag.id_zona,
-                   lambda: 'Zona: %s %s' % (db.anag.zona.codice, 
+                   lambda: 'Zona: %s %s' % (db.anag.zona.codice,
                                             db.anag.zona.descriz)),
              #categoria
-             "C": ('catana.codice', 
+             "C": ('catana.codice',
                    lambda: db.anag.id_categ,
-                   lambda: 'Categoria: %s %s' % (db.anag.catana.codice, 
+                   lambda: 'Categoria: %s %s' % (db.anag.catana.codice,
                                                  db.anag.catana.descriz)),
              #status
-             "S": ('status.codice', 
+             "S": ('status.codice',
                    lambda: db.anag.id_status,
-                   lambda: 'Status: %s %s' % (db.anag.status.codice, 
+                   lambda: 'Status: %s %s' % (db.anag.status.codice,
                                               db.anag.status.descriz)),
              #mod.pagamento
-             "P": ('modpag.codice', 
+             "P": ('modpag.codice',
                    lambda: db.anag.id_modpag,
-                   lambda: 'Mod.Pagamento: %s %s' % (db.anag.modpag.codice, 
+                   lambda: 'Mod.Pagamento: %s %s' % (db.anag.modpag.codice,
                                                      db.anag.modpag.descriz)),
              #città
-             "c": ('anag.citta', 
+             "c": ('anag.citta',
                    lambda: db.anag.citta,
                    lambda: 'Città: %s' % db.anag.citta),
          }
@@ -220,11 +221,11 @@ class OrdStampaDialog(aw.Dialog):
         self.AddSizedPanel(OrdStampaPanel(self, -1))
         self.CenterOnScreen()
         self.Bind(wx.EVT_BUTTON, self.OnSelect, id=wdr.ID_SELECT)
-    
+
     def OnSelect(self, event):
         self.EndModal(wx.ID_OK)
         event.Skip()
-    
+
     def GetRaggr(self):
         rag = self.FindWindowById(wdr.ID_RAGGR).GetValue()
         if rag == "N":
