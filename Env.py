@@ -62,6 +62,9 @@ logfile = 'c:/x4.log'
 if os.path.exists(logfile):
     os.remove(logfile)
 
+def IsDebug():
+    return not hasattr(sys, 'frozen')
+
 def log(x):
     f=open(logfile, 'a')
     f.write(x+'\n')
