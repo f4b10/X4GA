@@ -29,6 +29,13 @@ import mx.DateTime as dt
 
 history = (
 
+    ('1.5.45', dt.Date(2017, 9, 8), (
+         ("BET1232",
+         """Aggiunta alla stampa differita la possibilità di selezionare i documenti\nin funzione dell'aliquota iva utilizzata."""),
+         ("BET1231",
+         """Reso editabile il prefizzo partita iva in schede clienti/fornitori."""),
+        ),),
+
     ('1.5.44', dt.Date(2017, 8, 29), (
          ("BET1230",
          """Implementati totali operazioni Attive/Passive su Liquidazione Iva."""),
