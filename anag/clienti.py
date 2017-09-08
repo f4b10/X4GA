@@ -359,7 +359,8 @@ class ClientiPanel(pdcrel._CliForPanel):
 
     def OnStatoChanged(self, event):
         cn = self.FindWindowByName
-        cn('nazione').SetValue(cn('id_stato').GetVatPrefix())
+        if not cn('nazione').GetValue() or len(cn('nazione').GetValue().strip())==0:
+            cn('nazione').SetValue(cn('id_stato').GetVatPrefix())
         sbl = cn('id_stato').IsBlacklisted()
         cn('is_blacklisted').Enable(sbl)
         if not sbl:

@@ -3534,7 +3534,7 @@ def CliForAnagFunc( parent, call_fit = True, set_sizer = True ):
 
     item24 = wx.FlexGridSizer( 0, 2, 0, 0 )
     
-    item25 = NotEditableTextCtrl( parent, ID_TXT_NAZIONE, "", wx.DefaultPosition, [40,-1], 0 )
+    item25 = TextCtrl( parent, ID_TXT_NAZIONE, "", wx.DefaultPosition, [40,-1], 0 )
     item25.SetName( "nazione" )
     item24.Add( item25, 0, wx.GROW, 5 )
 
