@@ -26,6 +26,7 @@ import wx.grid as gl
 import awc.controls.dbgrid as dbglib
 import awc.controls.windows as aw
 
+
 import magazz.dbftd as ftd
 dbm = ftd.dbm
 Env = dbm.Env
@@ -220,6 +221,14 @@ class StaDifPanel(aw.Panel):
         nd1, nd2 = [ci(x).GetValue() for x in (wdr.ID_NUMDOC1, wdr.ID_NUMDOC2)]
         if nd1: docs.AddFilter('doc.numdoc>=%s', nd1)
         if nd2: docs.AddFilter('doc.numdoc<=%s', nd2)
+
+        # selezione per aliquota iva
+        iv = cn('aliqiva').GetValue()
+        if iv:
+            fltIva=self.GetFilterByIva(td, iv, nd1, nd2, ci(wdr.ID_YEAR).GetValue())
+            docs.AddFilter(fltIva)
+
+
         wx.BeginBusyCursor()
         wx.Yield()
         try:
@@ -249,6 +258,36 @@ class StaDifPanel(aw.Panel):
                 aw.awu.MsgDialog(self, message=repr(docs.GetError()))
         finally:
             wx.EndBusyCursor()
+
+    def GetFilterByIva(self, idDoc,  iv, nd1, nd2, nAnno):
+        lSelected=self.GetDocWithIva(idDoc,  iv, nd1, nd2, nAnno)
+        flt=''
+        if len(lSelected)>0:
+            flt='doc.id in ('
+            for id in lSelected:
+                flt = '%s%s, ' % (flt, id)
+            flt = '%s)' % flt
+            flt = flt.replace(', )', ')')
+        else:
+            flt = 'False'
+        return flt
+
+    def GetDocWithIva(self, idDoc,  iv, nd1, nd2, nAnno):
+        lSelected=[]
+        ivaMov=ftd.MovXCodIva()
+        ivaMov.ClearBaseFilters()
+        ivaMov.AddFilter('doc.id_tipdoc=%s' % idDoc)
+        ivaMov.AddFilter('mov.id_aliqiva=%s' % iv)
+        ivaMov.AddFilter('year(doc.datdoc)=%s' % nAnno)
+        if nd1:
+            ivaMov.AddFilter('doc.numdoc>=%s' % nd1)
+        if nd2:
+            ivaMov.AddFilter('doc.numdoc<=%s' % nd2)
+        ivaMov.Retrieve()
+        for r in ivaMov:
+            lSelected.append(r.id_doc)
+        return lSelected
+
 
     def OnStampa(self, event):
         self.StampaDoc()

@@ -28,7 +28,16 @@ dba = dbm.dba #anag.dbtables
 import Env
 bt = Env.Azienda.BaseTab
 
-
+class MovXCodIva(adb.DbTable):
+    """
+    """
+    def __init__(self, writable=False, **kwargs):
+        kwargs['writable'] = writable
+        adb.DbTable.__init__(self, bt.TABNAME_MOVMAG_B,  "mov", **kwargs)
+        dbdoc = self.AddJoin( bt.TABNAME_MOVMAG_H, "doc",  idLeft="id_doc")
+        self.Synthetize()
+        self.AddGroupOn('id_doc')
+        self.Reset()
 
 class DocAll(dbm.DocAll):
 
