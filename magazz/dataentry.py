@@ -670,11 +670,14 @@ class MagazzPanel(aw.Panel,\
         newPage = attPage
         if self.dbdoc.cfgdoc.id:
             nbPage= self.GetActiveNotebookPage(nb)
-            idx=nbPage.index(attPage)
-            if idx < len(nbPage)-1:
-                newPage=nbPage[idx+1]
-            else:
-                newPage=nbPage[0]
+            try:
+                idx=nbPage.index(attPage)
+                if idx < len(nbPage)-1:
+                    newPage=nbPage[idx+1]
+                else:
+                    newPage=nbPage[0]
+            except:
+                pass
         return newPage
 
     def GetPreviousPage(self, nb):
