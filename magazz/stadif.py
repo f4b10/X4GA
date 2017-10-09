@@ -340,7 +340,8 @@ class StaDifPanel(aw.Panel):
                 dpflag.append(doc.id)
 
         docs._info.titleprint = rpttitle
-        r = rpt.Report(self, docs, rptname, rowFunc=SetAnagAndRegCon,
+        r = rpt.Report(self, self.SetDbTable2Print(docs), 
+                       rptname, rowFunc=SetAnagAndRegCon,
                        changefilename=docs.GetPrintFileName(),
                        otherquestions_filler=PrintOtherQuestionsFiller,
                        otherquestions_reactor=PrintOtherQuestionsReactor,)
@@ -354,6 +355,9 @@ class StaDifPanel(aw.Panel):
                         cmd += "id IN (%s)" % ','.join(map(str, dpflag))
                     docs._info.db.Execute(cmd)
 
+    def SetDbTable2Print(self, docs):
+        return docs
+    
     def OnEmail(self, event):
         self.SendMail(self.dbdocs.config.toolprint)
         event.Skip()

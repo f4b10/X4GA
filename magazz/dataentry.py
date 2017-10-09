@@ -1456,7 +1456,8 @@ class MagazzPanel(aw.Panel,\
         pathname = doc.GetPrintPathName()
         filename = doc.GetPrintFileName()
 
-        r = rpt.Report(self, doc, tool, noMove=True, startFunc=MoveFirst,
+        r = rpt.Report(self, self.SetDbTable2Print(doc), 
+                       tool, noMove=True, startFunc=MoveFirst,
                        printer=cfg.printer, copies=copies,
                        changepathname=pathname, changefilename=filename,
                        otherquestions_filler=PrintOtherQuestionsFiller,
@@ -1483,6 +1484,10 @@ class MagazzPanel(aw.Panel,\
                 progr.Destroy()
 
         return out
+
+
+    def SetDbTable2Print(self, doc):
+        return doc
 
     def UpdateHeadAnag(self, initAll=False):
         DbgMsg('UpdateHeadAnag')
