@@ -224,53 +224,9 @@ class DocMag(adb.DbTable):
             bt.TABNAME_TRAVET,    "travet",\
             join=adb.JOIN_LEFT)
 
-        dbmov = self.AddMultiJoin(\
-            bt.TABNAME_MOVMAG_B,  "mov",     idRight="id_doc",\
-            fields=magazz.movfields, writable=writable)
 
-        dbtmov = dbmov.AddJoin(\
-            bt.TABNAME_CFGMAGMOV, "config",  idLeft="id_tipmov",\
-            join=adb.JOIN_LEFT)
-
-        dbpdc = dbtmov.AddJoin(\
-            bt.TABNAME_PDC,       "movpdc",\
-            join=adb.JOIN_LEFT)
-
-        dbpdc.AddJoin(\
-            bt.TABNAME_BILMAS,    "bilmas",\
-            join=adb.JOIN_LEFT)
-
-        dbpdc.AddJoin(\
-            bt.TABNAME_BILCON,    "bilcon",\
-            join=adb.JOIN_LEFT)
-
-        dbpdc.AddJoin(\
-            bt.TABNAME_BILCON,    "tipana", idLeft="id_tipo",\
-            join=adb.JOIN_LEFT)
-
-        dbprod = dbmov.AddJoin(\
-            bt.TABNAME_PROD,      "prod",\
-            join=adb.JOIN_LEFT)
-
-        dbaliq = dbmov.AddJoin(\
-            bt.TABNAME_ALIQIVA,   "iva",     idLeft="id_aliqiva",\
-            join=adb.JOIN_LEFT)
-
-        dbcat = dbprod.AddJoin(\
-            bt.TABNAME_CATART,    "catart",\
-            join=adb.JOIN_LEFT)
-
-        dbgpr = dbprod.AddJoin(\
-            bt.TABNAME_GRUPREZ,   "gruprez",\
-            join=adb.JOIN_LEFT)
-
-        dbpdccg = dbmov.AddJoin(\
-            bt.TABNAME_PDC,       "pdccg",   idLeft="id_pdccg",\
-            join=adb.JOIN_LEFT)
-
-        dbtlis = dbmov.AddJoin(\
-            bt.TABNAME_TIPLIST,   "tiplist", idLeft="id_tiplist",\
-            join=adb.JOIN_LEFT)
+        self.SetBodyMultiJoin(writable=writable)
+        
 
         self.cfgdoc = CfgDocMov()
         self.regcon = dbc.DbRegCon()
@@ -402,6 +358,57 @@ class DocMag(adb.DbTable):
         self.AddOrder('doc.numdoc')
 
         self.Get(-1)
+
+
+    def SetBodyMultiJoin(self, writable=None):
+        dbmov = self.AddMultiJoin(\
+            bt.TABNAME_MOVMAG_B,  "mov",     idRight="id_doc",\
+            fields=magazz.movfields, writable=writable)
+
+        dbtmov = dbmov.AddJoin(\
+            bt.TABNAME_CFGMAGMOV, "config",  idLeft="id_tipmov",\
+            join=adb.JOIN_LEFT)
+
+        dbpdc = dbtmov.AddJoin(\
+            bt.TABNAME_PDC,       "movpdc",\
+            join=adb.JOIN_LEFT)
+
+        dbpdc.AddJoin(\
+            bt.TABNAME_BILMAS,    "bilmas",\
+            join=adb.JOIN_LEFT)
+
+        dbpdc.AddJoin(\
+            bt.TABNAME_BILCON,    "bilcon",\
+            join=adb.JOIN_LEFT)
+
+        dbpdc.AddJoin(\
+            bt.TABNAME_BILCON,    "tipana", idLeft="id_tipo",\
+            join=adb.JOIN_LEFT)
+
+        dbprod = dbmov.AddJoin(\
+            bt.TABNAME_PROD,      "prod",\
+            join=adb.JOIN_LEFT)
+
+        dbaliq = dbmov.AddJoin(\
+            bt.TABNAME_ALIQIVA,   "iva",     idLeft="id_aliqiva",\
+            join=adb.JOIN_LEFT)
+
+        dbcat = dbprod.AddJoin(\
+            bt.TABNAME_CATART,    "catart",\
+            join=adb.JOIN_LEFT)
+
+        dbgpr = dbprod.AddJoin(\
+            bt.TABNAME_GRUPREZ,   "gruprez",\
+            join=adb.JOIN_LEFT)
+
+        dbpdccg = dbmov.AddJoin(\
+            bt.TABNAME_PDC,       "pdccg",   idLeft="id_pdccg",\
+            join=adb.JOIN_LEFT)
+
+        dbtlis = dbmov.AddJoin(\
+            bt.TABNAME_TIPLIST,   "tiplist", idLeft="id_tiplist",\
+            join=adb.JOIN_LEFT)
+
 
     def get_numdoc_print(self):
         if self.regcon.id:
