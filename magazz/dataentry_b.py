@@ -1650,6 +1650,8 @@ class GridBody(object):
             qt   = self.dbdoc.mov.qta or 0
             pv   = self.dbdoc.mov.prezzo or 0
             im   = self.dbdoc.mov.importo or 0
+            sc   = self.dbdoc.cfgdoc.scorpiva
+            iv   = self.dbdoc.mov.iva.perciva
             if im>0 and qt>0:
                 try:
                     pv = round(im/qt, 2)
@@ -1657,6 +1659,11 @@ class GridBody(object):
                     pv = 0
             if pv>0 and cstu>0:
                 try:
+                    if sc == 1 or sc=='1':
+                        cstu = cstu + (cstu * iv /100)
+
+
+
                     bprc = round((pv/cstu)*100, 2) - 100
                 except ZeroDivisionError:
                     bprc = 0
@@ -1713,7 +1720,7 @@ class GridBody(object):
                 if cond:
                     cn(name).SetValue(val)
 #            #--------------------------------------------- Ricalcola ricarica
-#            self.UpdateProdZonePRic()
+            self.UpdateProdZonePRic()
 #            #--------------------------------------------- Ricalcola ricarica
         if cfg.vislistini:
             #aggiorno listini del prodotto

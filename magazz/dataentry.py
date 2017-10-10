@@ -1289,8 +1289,8 @@ class MagazzPanel(aw.Panel,\
     def CheckDocumento(self):
         warning = False
         try:
-            print self.dbdoc.cfgdoc.chkdoccli
-            print self.dbanag.id_tipdocpre
+            #print self.dbdoc.cfgdoc.chkdoccli
+            #print self.dbanag.id_tipdocpre
             if self.dbdoc.cfgdoc.chkdoccli==True:
                 if not self.dbanag.id_tipdocpre==None:
                     if  not self.dbdoc.cfgdoc.id == self.dbanag.id_tipdocpre:
@@ -3714,9 +3714,9 @@ class ListDestDialog(aw.Dialog):
                 return 0
         idx=self.listDest.GetFirstSelected()
         id_dest=num(self.listDest.GetItem(idx, 0).GetText())
-        print id_dest
+        #print id_dest
         if id_dest==0:
-            print 'nocodedes'
+            #print 'nocodedes'
             des=item=self.listDest.GetItem(idx, 1).GetText()
             ind=item=self.listDest.GetItem(idx, 2).GetText()
             cap=item=self.listDest.GetItem(idx, 3).GetText()
@@ -3724,6 +3724,6 @@ class ListDestDialog(aw.Dialog):
             prov=item=self.listDest.GetItem(idx, 5).GetText()
             self.mainPanel.SetDestNonCodificato(des, ind, cap, citta, prov)
         else:
-            print 'codificato'
+            #print 'codificato'
             self.mainPanel.SetDestCodificato(id_dest)
         self.EndModal(wx.ID_OK)
