@@ -29,11 +29,18 @@ import mx.DateTime as dt
 
 history = (
 
+    ('1.5.46', dt.Date(2017, 10, 10), (
+         ("BUG1162",
+         """Corretta visualizzazione ricarica in caso di prezzi ivati."""),
+         ("BET1233",
+         """Assegnazione del tipo anagrafico a valle delle personalizzazioni per consentire insermineto di anagrafica congruenti con la tipologia."""),
+        ),),
+
     ('1.5.45', dt.Date(2017, 9, 8), (
          ("BET1232",
          """Aggiunta alla stampa differita la possibilità di selezionare i documenti\nin funzione dell'aliquota iva utilizzata."""),
          ("BET1231",
-         """Reso editabile il prefizzo partita iva in schede clienti/fornitori."""),
+         """Reso editabile il prefisso partita iva in schede clienti/fornitori."""),
         ),),
 
     ('1.5.44', dt.Date(2017, 8, 29), (

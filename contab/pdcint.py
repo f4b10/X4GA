@@ -1525,6 +1525,9 @@ class ClientiInterrDialog(ga._AnagDialog, _PdcInterrFrameMixin):
         
         idTipana=self.GetTipoAnagrafico()
         self.LoadAnagPanel(ClientiInterrPanel(self, -1, idTipana=idTipana))
+        if idTipana:
+            self.FindWindowByName('id_tipo').SetValue(idTipana)
+            
         TestInitialFrameSize(self)
 
 
