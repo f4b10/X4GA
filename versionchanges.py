@@ -30,6 +30,8 @@ import mx.DateTime as dt
 history = (
 
     ('1.5.46', dt.Date(2017, 10, 10), (
+         ("BET1234",
+         """Introdotta funzione per generare nuovo codice EAN8."""),
          ("BUG1162",
          """Corretta visualizzazione ricarica in caso di prezzi ivati."""),
          ("BET1233",
