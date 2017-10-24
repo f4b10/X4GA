@@ -2589,6 +2589,33 @@ class DbTable(object):
         new += eanbc.Ean13BarcodeWidget._checkdigit(new)
         return new
 
+    def GetNewEAN8code(self, field, prefix=''):
+        table = self._info.tableName
+        cmd = "SELECT MAX(%s) FROM %s" % (field, table)
+        if prefix:
+            cmd += " WHERE %s LIKE '%s_______'" % (field, prefix)
+        cur = self._info.db._dbCon.cursor()
+        cur.execute(cmd)
+        rs = cur.fetchone()
+        cur.close()
+        if rs:
+            last = rs[0] or ''
+        else:
+            last = ''
+        if last.startswith(prefix):
+            last = last[len(prefix):]
+        if len(last)>1:
+            last = last[:-1]
+        try:
+            last = int(last)
+        except ValueError:
+            last = 0
+        new = prefix+str(last+1).zfill(8-len(prefix)-1)
+        import reportlab.graphics.barcode.eanbc as eanbc
+        new += eanbc.Ean8BarcodeWidget._checkdigit(new)
+        return new
+
+
     def ExportCSV(self, filename, progrfunc=None, expidcol=False, headings=True,
                   delimiter=None, quotechar=None,
                   doublequote=None, quoting=None):
