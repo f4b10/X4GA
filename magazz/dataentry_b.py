@@ -1097,9 +1097,15 @@ class GridBody(object):
             #dbpdt.Delete()
             #dbpdt.Save()
             doc._info.pdtreadann.append(dbpdt.id)
+            for i, r in enumerate(doc.mov):
+                if r.id_prod==None:
+                    r.Delete()
+                else:
+                    print i, r.id_tipmov, r.id_prod, r.descriz
             self.gridbody.ResetView()
             self.MakeTotals()
         dlg.Destroy()
+        
 
     def GridBodyReset(self):
         #self.gridbody.ResetView()
