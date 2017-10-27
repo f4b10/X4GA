@@ -3505,6 +3505,8 @@ class Azienda(object):
             cls.pdt_h =\
                [ [ "id",            "INT",       idw, None, "ID", "AUTO_INCREMENT" ],
                  [ "uid",           "CHAR",       32, None, "Identificativo sessione di lavoro", None ],
+                 [ "codapp",        "VARCHAR",     3, None, "Codice Applicazione Web", None ],
+                 [ "tipo",          "VARCHAR",     1, None, "Codice Applicazione Web", None ],
                  [ "descriz",       "VARCHAR",    64, None, "Descrizione riferimento cliente", None ],
                  [ "pdtnum",        "INT",         3, None, "Numero terminalino pdt", None ],
                  [ "datins",        "DATETIME", None, None, "Data ora inserimento letture", None ],
