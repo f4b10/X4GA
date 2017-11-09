@@ -6,17 +6,17 @@
 # Copyright:    (C) 2011 Astra S.r.l. C.so Cavallotti, 122 18038 Sanremo (IM)
 # ------------------------------------------------------------------------------
 # This file is part of X4GA
-# 
+#
 # X4GA is free software: you can redistribute it and/or modify
 # it under the terms of the Affero GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # X4GA is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
@@ -50,7 +50,7 @@ img.append(('../images.py', (
     "-a -u -n X4Logo             imgsource/x4_logo.png",
     "-a -u -n X4LogoBackup       imgsource/x4_logo_backup.png",
     "-a -u -n Icon               imgsource/x4_icon.png",
-    
+
     #toolbar - spheric
     "-a -u -n TB_Spheric_EmiDoc  imgsource/tb_spheric_emidoc.png",
     "-a -u -n TB_Spheric_IntArt  imgsource/tb_spheric_intart.png",
@@ -59,7 +59,7 @@ img.append(('../images.py', (
     "-a -u -n TB_Spheric_IntFor  imgsource/tb_spheric_intfor.png",
     "-a -u -n TB_Spheric_IntPdc  imgsource/tb_spheric_intpdc.png",
     "-a -u -n TB_Spheric_ScadCF  imgsource/tb_vista_scadcf.png",
-    
+
     #toolbar - vista
     "-a -u -n TB_Vista_EmiDoc    imgsource/tb_vista_emidoc.png",
     "-a -u -n TB_Vista_IntArt    imgsource/tb_vista_intart.png",
@@ -68,7 +68,7 @@ img.append(('../images.py', (
     "-a -u -n TB_Vista_IntFor    imgsource/tb_vista_intfor.png",
     "-a -u -n TB_Vista_IntPdc    imgsource/tb_vista_intpdc.png",
     "-a -u -n TB_Vista_ScadCF    imgsource/tb_vista_scadcf.png",
-    
+
     #toolbar - pastel
     "-a -u -n TB_Pastel_EmiDoc   imgsource/tb_pastel_emidoc.png",
     "-a -u -n TB_Pastel_IntArt   imgsource/tb_pastel_intart.png",
@@ -77,7 +77,7 @@ img.append(('../images.py', (
     "-a -u -n TB_Pastel_IntFor   imgsource/tb_pastel_intfor.png",
     "-a -u -n TB_Pastel_IntPdc   imgsource/tb_pastel_intpdc.png",
     "-a -u -n TB_Pastel_ScadCF   imgsource/tb_vista_scadcf.png",
-    
+
     "-a -u -n Info32             imgsource/info32.png",
     "-a -u -n Lock               imgsource/lock.png",
     "-a -u -n AstraLittle        imgsource/astra_little.png",
@@ -118,6 +118,9 @@ img.append(('../awc/controls/images.py', (
     "-a -u -n Folder20     imgsource/awc/folder20.png",
     "-a -u -n Error        imgsource/awc/error.png",
     "-a -u -n Earth20      imgsource/awc/earth20.png",
+    "-a -u -n StarSi       imgsource/awc/starok.png",
+    "-a -u -n StarNo       imgsource/awc/starko.png",
+    "-a -u -n StarNi       imgsource/awc/starni.png",
     )))
 
 img.append(('../awc/layout/images.py', (
@@ -135,25 +138,25 @@ img.append(('../awc/layout/images.py', (
     "-a -u -n SearchAt16           imgsource/awc/searchat16.png",
     "-a -u -n Search20             imgsource/awc/search20.png",
     "-a -u -n Pdf32                imgsource/awc/pdf32.png",
-    
+
     #internal browser - spheric
     "-a -u -n Web_Spheric_Previous imgsource/awc/web_spheric_previous.png",
     "-a -u -n Web_Spheric_Next     imgsource/awc/web_spheric_next.png",
     "-a -u -n Web_Spheric_Home     imgsource/awc/web_spheric_home.png",
     "-a -u -n Web_Spheric_World    imgsource/awc/web_spheric_world.png",
-    
+
     #internal browser - vista
     "-a -u -n Web_Vista_Previous imgsource/awc/web_vista_previous.png",
     "-a -u -n Web_Vista_Next     imgsource/awc/web_vista_next.png",
     "-a -u -n Web_Vista_Home     imgsource/awc/web_vista_home.png",
     "-a -u -n Web_Vista_World    imgsource/awc/web_vista_world.png",
-    
+
     #internal browser - pastel
     "-a -u -n Web_Pastel_Previous imgsource/awc/web_pastel_previous.png",
     "-a -u -n Web_Pastel_Next     imgsource/awc/web_pastel_next.png",
     "-a -u -n Web_Pastel_Home     imgsource/awc/web_pastel_home.png",
     "-a -u -n Web_Pastel_World    imgsource/awc/web_pastel_world.png",
-    
+
     )))
 
 
