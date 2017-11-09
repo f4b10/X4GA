@@ -1,0 +1,3340 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+<!-- Created with iReport - A designer for JasperReports -->
+<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport
+		 name="Listino interno pluriprezzo"
+		 columnCount="1"
+		 printOrder="Vertical"
+		 orientation="Landscape"
+		 pageWidth="841"
+		 pageHeight="595"
+		 columnWidth="781"
+		 columnSpacing="0"
+		 leftMargin="30"
+		 rightMargin="30"
+		 topMargin="20"
+		 bottomMargin="20"
+		 whenNoDataType="NoPages"
+		 isTitleNewPage="false"
+		 isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="0" />
+	<property name="ireport.encoding" value="UTF-8" />
+	<import value="java.util.*" />
+	<import value="net.sf.jasperreports.engine.*" />
+	<import value="net.sf.jasperreports.engine.data.*" />
+
+	<queryString><![CDATA[select * from agenti order by citta]]></queryString>
+
+	<field name="id" class="java.lang.Integer"/>
+	<field name="codice" class="java.lang.String"/>
+	<field name="descriz" class="java.lang.String"/>
+	<field name="indirizzo" class="java.lang.String"/>
+	<field name="cap" class="java.lang.String"/>
+	<field name="citta" class="java.lang.String"/>
+	<field name="prov" class="java.lang.String"/>
+	<field name="id_zona" class="java.lang.Integer"/>
+
+	<variable name="riga" class="java.lang.Integer" resetType="None" incrementType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$V{riga}+1]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="totImponibile" class="java.lang.String" resetType="Group" incrementType="Column" resetGroup="main" calculation="Sum">
+		<variableExpression><![CDATA[$V{totImponibile} + float(RS.Imponibile)]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="totImposta" class="java.lang.String" resetType="Group" incrementType="Column" resetGroup="main" calculation="Sum">
+		<variableExpression><![CDATA[$V{totImposta} + float(RS.Imposta)]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+
+		<group  name="main" >
+			<groupExpression><![CDATA[1==2]]></groupExpression>
+			<groupHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+			</groupHeader>
+			<groupFooter>
+			<band height="417"  isSplitAllowed="false" >
+				<staticText>
+					<reportElement
+						x="4"
+						y="8"
+						width="772"
+						height="16"
+						key="staticText-9"/>
+					<box></box>
+					<textElement textAlignment="Center">
+						<font size="12"/>
+					</textElement>
+				<text><![CDATA[Riepilogo comunicazione]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="2"
+						y="81"
+						width="30"
+						height="15"
+						key="staticText-10"/>
+					<box></box>
+					<textElement>
+						<font pdfFontName="Helvetica-Bold" size="12" isBold="true"/>
+					</textElement>
+				<text><![CDATA[TD01]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="85"
+						y="81"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-64"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD01'][''],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="160"
+						y="81"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-65"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD01']['N1'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="235"
+						y="81"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-66"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD01']['N2'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="310"
+						y="81"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-67"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD01']['N3'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="385"
+						y="81"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-68"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD01']['N4'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="460"
+						y="81"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-69"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD01']['N5'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="535"
+						y="81"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-70"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD01']['N6'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="43"
+						y="82"
+						width="32"
+						height="10"
+						key="staticText-12"/>
+					<box></box>
+					<textElement textAlignment="Right" verticalAlignment="Bottom">
+						<font pdfFontName="Helvetica" size="7" isItalic="false"/>
+					</textElement>
+				<text><![CDATA[IMPONIB.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="43"
+						y="96"
+						width="32"
+						height="10"
+						key="staticText-13"/>
+					<box></box>
+					<textElement textAlignment="Right" verticalAlignment="Bottom">
+						<font pdfFontName="Helvetica" size="7" isItalic="false"/>
+					</textElement>
+				<text><![CDATA[IMPOSTA]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="610"
+						y="81"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-71"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD01']['N7'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="178"
+						y="62"
+						width="52"
+						height="15"
+						key="staticText-14"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="12" isBold="true"/>
+					</textElement>
+				<text><![CDATA[N1]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="253"
+						y="62"
+						width="52"
+						height="15"
+						key="staticText-15"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="12" isBold="true"/>
+					</textElement>
+				<text><![CDATA[N2]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="328"
+						y="62"
+						width="52"
+						height="15"
+						key="staticText-16"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="12" isBold="true"/>
+					</textElement>
+				<text><![CDATA[N3]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="403"
+						y="62"
+						width="52"
+						height="15"
+						key="staticText-17"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="12" isBold="true"/>
+					</textElement>
+				<text><![CDATA[N4]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="478"
+						y="62"
+						width="52"
+						height="15"
+						key="staticText-18"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="12" isBold="true"/>
+					</textElement>
+				<text><![CDATA[N5]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="553"
+						y="62"
+						width="52"
+						height="15"
+						key="staticText-19"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="12" isBold="true"/>
+					</textElement>
+				<text><![CDATA[N6]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="628"
+						y="62"
+						width="52"
+						height="15"
+						key="staticText-20"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="12" isBold="true"/>
+					</textElement>
+				<text><![CDATA[N7]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="85"
+						y="96"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-72"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD01'][''],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="160"
+						y="96"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-73"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD01']['N1'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="235"
+						y="96"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-74"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD01']['N2'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="310"
+						y="96"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-75"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD01']['N3'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="385"
+						y="96"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-76"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD01']['N4'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="460"
+						y="96"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-77"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD01']['N5'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="535"
+						y="96"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-78"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD01']['N6'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="610"
+						y="96"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-79"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD01']['N7'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="3"
+						y="119"
+						width="30"
+						height="15"
+						key="staticText-21"/>
+					<box></box>
+					<textElement>
+						<font pdfFontName="Helvetica-Bold" size="12" isBold="true"/>
+					</textElement>
+				<text><![CDATA[TD04]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="85"
+						y="119"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-80"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD04'][''],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="160"
+						y="119"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-81"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD04']['N1'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="235"
+						y="119"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-82"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD04']['N2'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="310"
+						y="119"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-83"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD04']['N3'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="385"
+						y="119"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-84"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD04']['N4'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="460"
+						y="119"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-85"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD04']['N5'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="535"
+						y="119"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-86"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD04']['N6'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="44"
+						y="119"
+						width="32"
+						height="10"
+						key="staticText-22"/>
+					<box></box>
+					<textElement textAlignment="Right" verticalAlignment="Bottom">
+						<font pdfFontName="Helvetica" size="7" isItalic="false"/>
+					</textElement>
+				<text><![CDATA[IMPONIB.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="44"
+						y="134"
+						width="32"
+						height="10"
+						key="staticText-23"/>
+					<box></box>
+					<textElement textAlignment="Right" verticalAlignment="Bottom">
+						<font pdfFontName="Helvetica" size="7" isItalic="false"/>
+					</textElement>
+				<text><![CDATA[IMPOSTA]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="610"
+						y="119"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-87"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD04']['N7'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="85"
+						y="134"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-88"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD04'][''],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="160"
+						y="134"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-89"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD04']['N1'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="235"
+						y="134"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-90"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD04']['N2'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="310"
+						y="134"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-91"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD04']['N3'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="385"
+						y="134"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-92"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD04']['N4'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="460"
+						y="134"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-93"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD04']['N5'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="535"
+						y="134"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-94"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD04']['N6'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="610"
+						y="134"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-95"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD04']['N7'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="2"
+						y="157"
+						width="30"
+						height="15"
+						key="staticText-24"/>
+					<box></box>
+					<textElement>
+						<font pdfFontName="Helvetica-Bold" size="12" isBold="true"/>
+					</textElement>
+				<text><![CDATA[TD05]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="85"
+						y="157"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-96"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD05'][''],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="160"
+						y="157"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-97"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD05']['N1'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="235"
+						y="157"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-98"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD05']['N2'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="310"
+						y="157"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-99"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD05']['N3'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="385"
+						y="157"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-100"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD05']['N4'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="460"
+						y="157"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-101"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD05']['N5'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="535"
+						y="157"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-102"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD05']['N6'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="43"
+						y="157"
+						width="32"
+						height="10"
+						key="staticText-25"/>
+					<box></box>
+					<textElement textAlignment="Right" verticalAlignment="Bottom">
+						<font pdfFontName="Helvetica" size="7" isItalic="false"/>
+					</textElement>
+				<text><![CDATA[IMPONIB.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="43"
+						y="172"
+						width="32"
+						height="10"
+						key="staticText-26"/>
+					<box></box>
+					<textElement textAlignment="Right" verticalAlignment="Bottom">
+						<font pdfFontName="Helvetica" size="7" isItalic="false"/>
+					</textElement>
+				<text><![CDATA[IMPOSTA]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="610"
+						y="157"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-103"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD05']['N7'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="85"
+						y="172"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-104"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD05'][''],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="160"
+						y="172"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-105"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD05']['N1'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="235"
+						y="172"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-106"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD05']['N2'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="310"
+						y="172"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-107"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD05']['N3'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="385"
+						y="172"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-108"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD05']['N4'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="460"
+						y="172"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-109"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD05']['N5'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="535"
+						y="172"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-110"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD05']['N6'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="610"
+						y="172"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-111"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD05']['N7'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="2"
+						y="195"
+						width="30"
+						height="15"
+						key="staticText-27"/>
+					<box></box>
+					<textElement>
+						<font pdfFontName="Helvetica-Bold" size="12" isBold="true"/>
+					</textElement>
+				<text><![CDATA[TD07]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="85"
+						y="195"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-112"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD07'][''],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="160"
+						y="195"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-113"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD07']['N1'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="235"
+						y="195"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-114"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD07']['N2'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="310"
+						y="195"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-115"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD07']['N3'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="385"
+						y="195"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-116"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD07']['N4'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="460"
+						y="195"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-117"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD07']['N5'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="535"
+						y="195"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-118"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD07']['N6'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="43"
+						y="195"
+						width="32"
+						height="10"
+						key="staticText-28"/>
+					<box></box>
+					<textElement textAlignment="Right" verticalAlignment="Bottom">
+						<font pdfFontName="Helvetica" size="7" isItalic="false"/>
+					</textElement>
+				<text><![CDATA[IMPONIB.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="43"
+						y="210"
+						width="32"
+						height="10"
+						key="staticText-29"/>
+					<box></box>
+					<textElement textAlignment="Right" verticalAlignment="Bottom">
+						<font pdfFontName="Helvetica" size="7" isItalic="false"/>
+					</textElement>
+				<text><![CDATA[IMPOSTA]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="610"
+						y="195"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-119"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD07']['N7'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="85"
+						y="210"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-120"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD07'][''],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="160"
+						y="210"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-121"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD07']['N1'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="235"
+						y="210"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-122"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD07']['N2'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="310"
+						y="210"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-123"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD07']['N3'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="385"
+						y="210"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-124"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD07']['N4'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="460"
+						y="210"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-125"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD07']['N5'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="535"
+						y="210"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-126"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD07']['N6'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="610"
+						y="210"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-127"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD07']['N7'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="2"
+						y="233"
+						width="30"
+						height="15"
+						key="staticText-30"/>
+					<box></box>
+					<textElement>
+						<font pdfFontName="Helvetica-Bold" size="12" isBold="true"/>
+					</textElement>
+				<text><![CDATA[TD08]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="85"
+						y="233"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-128"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD08'][''],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="160"
+						y="233"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-129"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD08']['N1'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="235"
+						y="233"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-130"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD08']['N2'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="310"
+						y="233"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-131"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD08']['N3'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="385"
+						y="233"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-132"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD08']['N4'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="460"
+						y="233"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-133"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD08']['N5'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="535"
+						y="233"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-134"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD08']['N6'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="43"
+						y="233"
+						width="32"
+						height="10"
+						key="staticText-31"/>
+					<box></box>
+					<textElement textAlignment="Right" verticalAlignment="Bottom">
+						<font pdfFontName="Helvetica" size="7" isItalic="false"/>
+					</textElement>
+				<text><![CDATA[IMPONIB.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="43"
+						y="248"
+						width="32"
+						height="10"
+						key="staticText-32"/>
+					<box></box>
+					<textElement textAlignment="Right" verticalAlignment="Bottom">
+						<font pdfFontName="Helvetica" size="7" isItalic="false"/>
+					</textElement>
+				<text><![CDATA[IMPOSTA]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="610"
+						y="233"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-135"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD08']['N7'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="85"
+						y="248"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-136"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD08'][''],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="160"
+						y="248"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-137"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD08']['N1'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="235"
+						y="248"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-138"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD08']['N2'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="310"
+						y="248"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-139"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD08']['N3'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="385"
+						y="248"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-140"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD08']['N4'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="460"
+						y="248"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-141"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD08']['N5'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="535"
+						y="248"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-142"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD08']['N6'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="610"
+						y="248"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-143"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD08']['N7'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="2"
+						y="271"
+						width="30"
+						height="15"
+						key="staticText-33"/>
+					<box></box>
+					<textElement>
+						<font pdfFontName="Helvetica-Bold" size="12" isBold="true"/>
+					</textElement>
+				<text><![CDATA[TD10]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="85"
+						y="271"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-144"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD10'][''],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="160"
+						y="271"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-145"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD10']['N1'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="235"
+						y="271"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-146"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD10']['N2'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="310"
+						y="271"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-147"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD10']['N3'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="385"
+						y="271"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-148"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD10']['N4'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="460"
+						y="271"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-149"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD10']['N5'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="535"
+						y="271"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-150"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD10']['N6'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="43"
+						y="271"
+						width="32"
+						height="10"
+						key="staticText-34"/>
+					<box></box>
+					<textElement textAlignment="Right" verticalAlignment="Bottom">
+						<font pdfFontName="Helvetica" size="7" isItalic="false"/>
+					</textElement>
+				<text><![CDATA[IMPONIB.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="43"
+						y="286"
+						width="32"
+						height="10"
+						key="staticText-35"/>
+					<box></box>
+					<textElement textAlignment="Right" verticalAlignment="Bottom">
+						<font pdfFontName="Helvetica" size="7" isItalic="false"/>
+					</textElement>
+				<text><![CDATA[IMPOSTA]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="610"
+						y="271"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-151"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD10']['N7'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="85"
+						y="286"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-152"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD10'][''],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="160"
+						y="286"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-153"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD10']['N1'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="235"
+						y="286"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-154"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD10']['N2'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="310"
+						y="286"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-155"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD10']['N3'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="385"
+						y="286"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-156"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD10']['N4'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="460"
+						y="286"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-157"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD10']['N5'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="535"
+						y="286"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-158"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD10']['N6'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="610"
+						y="286"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-159"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD10']['N7'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="2"
+						y="309"
+						width="30"
+						height="15"
+						key="staticText-36"/>
+					<box></box>
+					<textElement>
+						<font pdfFontName="Helvetica-Bold" size="12" isBold="true"/>
+					</textElement>
+				<text><![CDATA[TD11]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="85"
+						y="309"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-160"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD11'][''],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="160"
+						y="309"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-161"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD11']['N1'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="235"
+						y="309"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-162"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD11']['N2'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="310"
+						y="309"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-163"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD11']['N3'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="385"
+						y="309"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-164"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD11']['N4'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="460"
+						y="309"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-165"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD11']['N5'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="535"
+						y="309"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-166"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD11']['N6'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="43"
+						y="309"
+						width="32"
+						height="10"
+						key="staticText-37"/>
+					<box></box>
+					<textElement textAlignment="Right" verticalAlignment="Bottom">
+						<font pdfFontName="Helvetica" size="7" isItalic="false"/>
+					</textElement>
+				<text><![CDATA[IMPONIB.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="43"
+						y="324"
+						width="32"
+						height="10"
+						key="staticText-38"/>
+					<box></box>
+					<textElement textAlignment="Right" verticalAlignment="Bottom">
+						<font pdfFontName="Helvetica" size="7" isItalic="false"/>
+					</textElement>
+				<text><![CDATA[IMPOSTA]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="610"
+						y="309"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-167"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD11']['N7'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="85"
+						y="324"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-168"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD11'][''],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="160"
+						y="324"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-169"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD11']['N1'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="235"
+						y="324"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-170"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD11']['N2'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="310"
+						y="324"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-171"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD11']['N3'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="385"
+						y="324"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-172"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD11']['N4'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="460"
+						y="324"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-173"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD11']['N5'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="535"
+						y="324"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-174"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD11']['N6'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="610"
+						y="324"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-175"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD11']['N7'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="85"
+						y="347"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-177"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD01']['']-RS.riepImponib['TD04']['']+RS.riepImponib['TD05']['']+RS.riepImponib['TD07']['']-RS.riepImponib['TD08']['']+RS.riepImponib['TD10']['']+RS.riepImponib['TD11'][''],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="160"
+						y="347"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-178"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD01']['N1']-RS.riepImponib['TD04']['N1']+RS.riepImponib['TD05']['N1']+RS.riepImponib['TD07']['N1']-RS.riepImponib['TD08']['N1']+RS.riepImponib['TD10']['N1']+RS.riepImponib['TD11']['N1'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="235"
+						y="347"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-179"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD01']['N2']-RS.riepImponib['TD04']['N2']+RS.riepImponib['TD05']['N2']+RS.riepImponib['TD07']['N2']-RS.riepImponib['TD08']['N2']+RS.riepImponib['TD10']['N2']+RS.riepImponib['TD11']['N2'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="310"
+						y="347"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-180"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD01']['N3']-RS.riepImponib['TD04']['N3']+RS.riepImponib['TD05']['N3']+RS.riepImponib['TD07']['N3']-RS.riepImponib['TD08']['N3']+RS.riepImponib['TD10']['N3']+RS.riepImponib['TD11']['N3'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="385"
+						y="347"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-181"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD01']['N4']-RS.riepImponib['TD04']['N4']+RS.riepImponib['TD05']['N4']+RS.riepImponib['TD07']['N4']-RS.riepImponib['TD08']['N4']+RS.riepImponib['TD10']['N4']+RS.riepImponib['TD11']['N4'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="460"
+						y="347"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-182"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD01']['N5']-RS.riepImponib['TD04']['N5']+RS.riepImponib['TD05']['N5']+RS.riepImponib['TD07']['N5']-RS.riepImponib['TD08']['N5']+RS.riepImponib['TD10']['N5']+RS.riepImponib['TD11']['N5'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="535"
+						y="347"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-183"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD01']['N6']-RS.riepImponib['TD04']['N6']+RS.riepImponib['TD05']['N6']+RS.riepImponib['TD07']['N6']-RS.riepImponib['TD08']['N6']+RS.riepImponib['TD10']['N6']+RS.riepImponib['TD11']['N6'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="610"
+						y="347"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-184"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImponib['TD01']['N7']-RS.riepImponib['TD04']['N7']+RS.riepImponib['TD05']['N7']+RS.riepImponib['TD07']['N7']-RS.riepImponib['TD08']['N7']+RS.riepImponib['TD10']['N7']+RS.riepImponib['TD11']['N7'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="85"
+						y="362"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-185"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD01']['']-RS.riepImposta['TD04']['']+RS.riepImposta['TD05']['']+RS.riepImposta['TD07']['']-RS.riepImposta['TD08']['']+RS.riepImposta['TD10']['']+RS.riepImposta['TD11'][''],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="160"
+						y="362"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-186"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD01']['N1']-RS.riepImposta['TD04']['N1']+RS.riepImposta['TD05']['N1']+RS.riepImposta['TD07']['N1']-RS.riepImposta['TD08']['N1']+RS.riepImposta['TD10']['N1']+RS.riepImposta['TD11']['N1'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="235"
+						y="362"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-187"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD01']['N2']-RS.riepImposta['TD04']['N2']+RS.riepImposta['TD05']['N2']+RS.riepImposta['TD07']['N2']-RS.riepImposta['TD08']['N2']+RS.riepImposta['TD10']['N2']+RS.riepImposta['TD11']['N2'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="310"
+						y="362"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-188"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD01']['N3']-RS.riepImposta['TD04']['N3']+RS.riepImposta['TD05']['N3']+RS.riepImposta['TD07']['N3']-RS.riepImposta['TD08']['N3']+RS.riepImposta['TD10']['N3']+RS.riepImposta['TD11']['N3'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="385"
+						y="362"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-189"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD01']['N4']-RS.riepImposta['TD04']['N4']+RS.riepImposta['TD05']['N4']+RS.riepImposta['TD07']['N4']-RS.riepImposta['TD08']['N4']+RS.riepImposta['TD10']['N4']+RS.riepImposta['TD11']['N4'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="460"
+						y="362"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-190"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD01']['N5']-RS.riepImposta['TD04']['N5']+RS.riepImposta['TD05']['N5']+RS.riepImposta['TD07']['N5']-RS.riepImposta['TD08']['N5']+RS.riepImposta['TD10']['N5']+RS.riepImposta['TD11']['N5'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="535"
+						y="362"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-191"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD01']['N6']-RS.riepImposta['TD04']['N6']+RS.riepImposta['TD05']['N6']+RS.riepImposta['TD07']['N6']-RS.riepImposta['TD08']['N6']+RS.riepImposta['TD10']['N6']+RS.riepImposta['TD11']['N6'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="610"
+						y="362"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-192"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(RS.riepImposta['TD01']['N7']-RS.riepImposta['TD04']['N7']+RS.riepImposta['TD05']['N7']+RS.riepImposta['TD07']['N7']-RS.riepImposta['TD08']['N7']+RS.riepImposta['TD10']['N7']+RS.riepImposta['TD11']['N7'],2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="43"
+						y="347"
+						width="32"
+						height="10"
+						key="staticText-39"/>
+					<box></box>
+					<textElement textAlignment="Right" verticalAlignment="Bottom">
+						<font pdfFontName="Helvetica" size="7" isItalic="false"/>
+					</textElement>
+				<text><![CDATA[IMPONIB.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="43"
+						y="362"
+						width="32"
+						height="10"
+						key="staticText-40"/>
+					<box></box>
+					<textElement textAlignment="Right" verticalAlignment="Bottom">
+						<font pdfFontName="Helvetica" size="7" isItalic="false"/>
+					</textElement>
+				<text><![CDATA[IMPOSTA]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="3"
+						y="347"
+						width="30"
+						height="15"
+						key="staticText-41"/>
+					<box></box>
+					<textElement>
+						<font pdfFontName="Helvetica-Bold" size="12" isBold="true"/>
+					</textElement>
+				<text><![CDATA[TOT.]]></text>
+				</staticText>
+				<line direction="TopDown">
+					<reportElement
+						x="4"
+						y="343"
+						width="759"
+						height="0"
+						key="line-22"/>
+					<graphicElement stretchType="NoStretch">
+					<pen lineWidth="0.25" lineStyle="Solid"/>
+</graphicElement>
+				</line>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="3"
+						y="27"
+						width="773"
+						height="19"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField-193"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Bottom" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+					</textElement>
+				<textFieldExpression   class="java.lang.Integer"><![CDATA["Comunicazione Fatture " + ["Ricevute(DTR)", "Emesse (DTE)"][RS.Tipo=="DTE"]+' relative al periodo '+RS.GetMinMese()+' - '+RS.GetMaxMese()]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="3"
+						y="401"
+						width="223"
+						height="15"
+						key="textField-194"/>
+					<box></box>
+					<textElement>
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA['Num.Anagrafiche Comunicate: %s' % RS.numAnag]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="3"
+						y="43"
+						width="773"
+						height="10"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField-196"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+					</textElement>
+				<textFieldExpression   class="java.lang.Integer"><![CDATA['('+RS.FileName+')']]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="515"
+						y="401"
+						width="246"
+						height="15"
+						key="textField-197"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA['Num.Documenti Comunicati: %s' % RS.numDoc]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="47"
+						y="380"
+						width="495"
+						height="11"
+						key="staticText-42"/>
+					<box></box>
+					<textElement>
+						<font pdfFontName="Helvetica-Oblique" size="6" isItalic="true"/>
+					</textElement>
+				<text><![CDATA[NB: I totali di colonna sono dati dalla formula TD01-TD04+TD05+TD07-TD08+TD10+TD11.]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="693"
+						y="81"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-198"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(
+RS.riepImponib['TD01']['']+
+RS.riepImponib['TD01']['N1']+
+RS.riepImponib['TD01']['N2']+
+RS.riepImponib['TD01']['N3']+
+RS.riepImponib['TD01']['N4']+
+RS.riepImponib['TD01']['N5']+
+RS.riepImponib['TD01']['N6']+
+RS.riepImponib['TD01']['N7']
+,2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="711"
+						y="63"
+						width="52"
+						height="15"
+						key="staticText-43"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="12" isBold="true"/>
+					</textElement>
+				<text><![CDATA[TOTALI]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="693"
+						y="96"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-199"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(
+RS.riepImposta['TD01']['']+
+RS.riepImposta['TD01']['N1']+
+RS.riepImposta['TD01']['N2']+
+RS.riepImposta['TD01']['N3']+
+RS.riepImposta['TD01']['N4']+
+RS.riepImposta['TD01']['N5']+
+RS.riepImposta['TD01']['N6']+
+RS.riepImposta['TD01']['N7']
+,2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="693"
+						y="119"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-200"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(
+RS.riepImponib['TD04']['']+
+RS.riepImponib['TD04']['N1']+
+RS.riepImponib['TD04']['N2']+
+RS.riepImponib['TD04']['N3']+
+RS.riepImponib['TD04']['N4']+
+RS.riepImponib['TD04']['N5']+
+RS.riepImponib['TD04']['N6']+
+RS.riepImponib['TD04']['N7']
+,2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="693"
+						y="134"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-201"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(
+RS.riepImposta['TD04']['']+
+RS.riepImposta['TD04']['N1']+
+RS.riepImposta['TD04']['N2']+
+RS.riepImposta['TD04']['N3']+
+RS.riepImposta['TD04']['N4']+
+RS.riepImposta['TD04']['N5']+
+RS.riepImposta['TD04']['N6']+
+RS.riepImposta['TD04']['N7']
+,2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="693"
+						y="157"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-202"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(
+RS.riepImponib['TD05']['']+
+RS.riepImponib['TD05']['N1']+
+RS.riepImponib['TD05']['N2']+
+RS.riepImponib['TD05']['N3']+
+RS.riepImponib['TD05']['N4']+
+RS.riepImponib['TD05']['N5']+
+RS.riepImponib['TD05']['N6']+
+RS.riepImponib['TD05']['N7']
+,2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="693"
+						y="172"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-203"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(
+RS.riepImposta['TD05']['']+
+RS.riepImposta['TD05']['N1']+
+RS.riepImposta['TD05']['N2']+
+RS.riepImposta['TD05']['N3']+
+RS.riepImposta['TD05']['N4']+
+RS.riepImposta['TD05']['N5']+
+RS.riepImposta['TD05']['N6']+
+RS.riepImposta['TD05']['N7']
+,2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="693"
+						y="195"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-204"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(
+RS.riepImponib['TD07']['']+
+RS.riepImponib['TD07']['N1']+
+RS.riepImponib['TD07']['N2']+
+RS.riepImponib['TD07']['N3']+
+RS.riepImponib['TD07']['N4']+
+RS.riepImponib['TD07']['N5']+
+RS.riepImponib['TD07']['N6']+
+RS.riepImponib['TD07']['N7']
+,2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="693"
+						y="210"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-205"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(
+RS.riepImposta['TD07']['']+
+RS.riepImposta['TD07']['N1']+
+RS.riepImposta['TD07']['N2']+
+RS.riepImposta['TD07']['N3']+
+RS.riepImposta['TD07']['N4']+
+RS.riepImposta['TD07']['N5']+
+RS.riepImposta['TD07']['N6']+
+RS.riepImposta['TD07']['N7']
+,2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="693"
+						y="233"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-206"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(
+RS.riepImponib['TD08']['']+
+RS.riepImponib['TD08']['N1']+
+RS.riepImponib['TD08']['N2']+
+RS.riepImponib['TD08']['N3']+
+RS.riepImponib['TD08']['N4']+
+RS.riepImponib['TD08']['N5']+
+RS.riepImponib['TD08']['N6']+
+RS.riepImponib['TD08']['N7']
+,2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="693"
+						y="248"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-207"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(
+RS.riepImposta['TD08']['']+
+RS.riepImposta['TD08']['N1']+
+RS.riepImposta['TD08']['N2']+
+RS.riepImposta['TD08']['N3']+
+RS.riepImposta['TD08']['N4']+
+RS.riepImposta['TD08']['N5']+
+RS.riepImposta['TD08']['N6']+
+RS.riepImposta['TD08']['N7']
+,2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="693"
+						y="271"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-208"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(
+RS.riepImponib['TD10']['']+
+RS.riepImponib['TD10']['N1']+
+RS.riepImponib['TD10']['N2']+
+RS.riepImponib['TD10']['N3']+
+RS.riepImponib['TD10']['N4']+
+RS.riepImponib['TD10']['N5']+
+RS.riepImponib['TD10']['N6']+
+RS.riepImponib['TD10']['N7']
+,2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="693"
+						y="286"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-209"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(
+RS.riepImposta['TD10']['']+
+RS.riepImposta['TD10']['N1']+
+RS.riepImposta['TD10']['N2']+
+RS.riepImposta['TD10']['N3']+
+RS.riepImposta['TD10']['N4']+
+RS.riepImposta['TD10']['N5']+
+RS.riepImposta['TD10']['N6']+
+RS.riepImposta['TD10']['N7']
+,2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="693"
+						y="309"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-210"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(
+RS.riepImponib['TD11']['']+
+RS.riepImponib['TD11']['N1']+
+RS.riepImponib['TD11']['N2']+
+RS.riepImponib['TD11']['N3']+
+RS.riepImponib['TD11']['N4']+
+RS.riepImponib['TD11']['N5']+
+RS.riepImponib['TD11']['N6']+
+RS.riepImponib['TD11']['N7']
+,2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="693"
+						y="324"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-211"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(
+RS.riepImposta['TD11']['']+
+RS.riepImposta['TD11']['N1']+
+RS.riepImposta['TD11']['N2']+
+RS.riepImposta['TD11']['N3']+
+RS.riepImposta['TD11']['N4']+
+RS.riepImposta['TD11']['N5']+
+RS.riepImposta['TD11']['N6']+
+RS.riepImposta['TD11']['N7']
+,2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="693"
+						y="347"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-212"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(
+RS.GetDocTotalImponibile('TD01')
+-RS.GetDocTotalImponibile('TD04')
++RS.GetDocTotalImponibile('TD05')
++RS.GetDocTotalImponibile('TD07')
+-RS.GetDocTotalImponibile('TD08')
++RS.GetDocTotalImponibile('TD10')
++RS.GetDocTotalImponibile('TD11')
+, 2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="693"
+						y="362"
+						width="70"
+						height="15"
+						forecolor="#000000"
+						backcolor="#EAEAEA"
+						key="textField-213"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS.sepn(
+RS.GetDocTotalImposta('TD01')
+-RS.GetDocTotalImposta('TD04')
++RS.GetDocTotalImposta('TD05')
++RS.GetDocTotalImposta('TD07')
+-RS.GetDocTotalImposta('TD08')
++RS.GetDocTotalImposta('TD10')
++RS.GetDocTotalImposta('TD11')
+, 2, zeroblank=True)]]></textFieldExpression>
+				</textField>
+				<line direction="TopDown">
+					<reportElement
+						x="687"
+						y="61"
+						width="0"
+						height="314"
+						key="line-23"/>
+					<graphicElement stretchType="NoStretch">
+					<pen lineWidth="0.256" lineStyle="Solid"/>
+</graphicElement>
+				</line>
+			</band>
+			</groupFooter>
+		</group>
+		<group  name="anagrafica" >
+			<groupExpression><![CDATA[RS.ProgrAnag]]></groupExpression>
+			<groupHeader>
+			<band height="0"  isSplitAllowed="true" >
+				<printWhenExpression><![CDATA[1=2]]></printWhenExpression>
+			</band>
+			</groupHeader>
+			<groupFooter>
+			<band height="0"  isSplitAllowed="true" >
+				<printWhenExpression><![CDATA[1=2]]></printWhenExpression>
+			</band>
+			</groupFooter>
+		</group>
+		<group  name="documento" minHeightToStartNewPage="70" >
+			<groupExpression><![CDATA[RS.ProgrDoc]]></groupExpression>
+			<groupHeader>
+			<band height="0"  isSplitAllowed="false" >
+				<printWhenExpression><![CDATA[1=2]]></printWhenExpression>
+			</band>
+			</groupHeader>
+			<groupFooter>
+			<band height="1"  isSplitAllowed="false" >
+				<printWhenExpression><![CDATA[1=2]]></printWhenExpression>
+			</band>
+			</groupFooter>
+		</group>
+		<background>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</background>
+		<title>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</title>
+		<pageHeader>
+			<band height="82"  isSplitAllowed="true" >
+				<rectangle radius="5" >
+					<reportElement
+						mode="Opaque"
+						x="0"
+						y="0"
+						width="782"
+						height="32"
+						forecolor="#FFFFFF"
+						backcolor="#EEEEEE"
+						key="rectangle-1"/>
+					<graphicElement stretchType="NoStretch" fill="Solid" >
+					<pen lineWidth="0.25" lineStyle="Solid"/>
+</graphicElement>
+				</rectangle>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="4"
+						y="2"
+						width="266"
+						height="12"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField-4"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Left" verticalAlignment="Bottom" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[[RS.Dic_Denominazione, RS.Dic_Nome+' '+RS.Dic_Cognome][len(RS.Dic_Denominazione)==0]]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="706"
+						y="3"
+						width="70"
+						height="12"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField-5"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Bottom" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["Pag. %d" % $V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="4"
+						y="14"
+						width="70"
+						height="9"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField-26"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Left" verticalAlignment="Bottom" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Oblique" size="6" isBold="false" isItalic="true" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS._info.GetEnv().Azienda.codice]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="4"
+						y="20"
+						width="70"
+						height="9"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField-27"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Left" verticalAlignment="Bottom" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Oblique" size="6" isBold="false" isItalic="true" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS._info.GetEnv().Azienda.Login.username]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="706"
+						y="14"
+						width="70"
+						height="9"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField-28"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Bottom" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica" size="6" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS._info.GetEnv().DateTime.now().Format().split()[0]]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="706"
+						y="20"
+						width="70"
+						height="9"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField-29"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Bottom" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica" size="6" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[RS._info.GetEnv().DateTime.now().Format().split()[1][:5]]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="62"
+						y="34"
+						width="50"
+						height="10"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="element-108"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+						<font fontName="Times New Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[Nome file xml:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="114"
+						y="34"
+						width="173"
+						height="10"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField-48"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+					</textElement>
+				<textFieldExpression   class="java.lang.Integer"><![CDATA[RS.FileName]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="58"
+						y="11"
+						width="648"
+						height="19"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField-49"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="12" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+					</textElement>
+				<textFieldExpression   class="java.lang.Integer"><![CDATA["DATI FATTURE " + ["RICEVUTE (DTR)", "EMESSE (DTE)"][RS.Tipo=="DTE"]]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="14"
+						y="46"
+						width="98"
+						height="16"
+						key="staticText-1"/>
+					<box></box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+				<text><![CDATA[Cessionario / Committente:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="114"
+						y="46"
+						width="379"
+						height="14"
+						key="textField-50"/>
+					<box></box>
+					<textElement>
+						<font pdfFontName="Helvetica-Bold" size="11" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[[RS.Dic_Denominazione, RS.Dic_Nome+' '+RS.Dic_Cognome][len(RS.Dic_Denominazione)==0]+ "  p.iva:" +$F{RS.Dic_Piva}+" ("+$F{RS.Dic_IdPaese}+")"]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="114"
+						y="62"
+						width="379"
+						height="14"
+						key="textField-51"/>
+					<box></box>
+					<textElement>
+						<font pdfFontName="Helvetica-Oblique" size="9" isItalic="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{'Sede: '+RS.Dic_Sede_Indirizzo+' '+RS.Dic_Sede_NumeroCivico+' - '+RS.Dic_Sede_CAP+' '+RS.Dic_Sede_Comune+' ('+RS.Dic_Sede_Provincia+') - '+RS.Dic_Sede_Nazione}]]></textFieldExpression>
+				</textField>
+				<line direction="TopDown">
+					<reportElement
+						x="0"
+						y="78"
+						width="776"
+						height="0"
+						key="line-2">
+							<printWhenExpression><![CDATA[1==2]]></printWhenExpression>
+						</reportElement>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+			</band>
+		</pageHeader>
+		<columnHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnHeader>
+		<detail>
+			<band height="0"  isSplitAllowed="true" >
+				<printWhenExpression><![CDATA[1=2]]></printWhenExpression>
+			</band>
+		</detail>
+		<columnFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnFooter>
+		<pageFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageFooter>
+		<summary>
+			<band height="6"  isSplitAllowed="true" >
+			</band>
+		</summary>
+</jasperReport>
