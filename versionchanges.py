@@ -29,6 +29,12 @@ import mx.DateTime as dt
 
 history = (
 
+    ('1.5.47', dt.Date(2017, 11, 9), (
+         ("BET1235",
+         """Introdotta il nuovo controllo in awc per gestire valutazioni in stile Amazon (max.5 star)."""),
+        ),),
+
+
     ('1.5.46', dt.Date(2017, 10, 10), (
          ("BET1234",
          """Introdotta funzione per generare nuovo codice EAN8."""),
