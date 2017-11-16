@@ -30,6 +30,10 @@ import mx.DateTime as dt
 history = (
 
     ('1.5.47', dt.Date(2017, 11, 9), (
+         ("BET1236",
+         """Rimosso bug in data entry di magazzino che non consentiva il richiamo e
+l'assegnazione automatica della quantità 1 agli articoli richiamati
+tramite il codice a barre del produttore."""),
          ("BET1235",
          """Introdotta il nuovo controllo in awc per gestire valutazioni in stile Amazon (max.5 star)."""),
         ),),
