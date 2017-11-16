@@ -383,7 +383,10 @@ class LinkTableProd(LinkTable, LinkTableHideSearchMixin):
     def SetValue(self, id, txt=None, **kw):
         LinkTable.SetValue(self, id, txt, **kw)
         if txt and self._rs:
-            self.barcode_readed = (txt == str(self._rs[4]).upper())
+            try:
+                self.barcode_readed = (txt == str(self._rs[4]).upper() or txt == str(self._rs[7]).upper() )
+            except:
+                self.barcode_readed = (txt == str(self._rs[4]).upper() )
         else:
             self.barcode_readed = False
 
