@@ -20,6 +20,7 @@ from awc.controls.numctrl import NumCtrl
 from awc.controls.notebook import Notebook
 from awc.controls.checkbox import CheckBox, RCheckBox
 from awc.controls.attachbutton import AttachmentButton, AutoNotes
+import awc.controls.valutazione
 
 import awc.controls.windows as aw
 
