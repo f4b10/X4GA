@@ -3431,7 +3431,9 @@ class InventarioDaMovim(_InventarioMixin):
             bt.TABNAME_MOVMAG_H,  "doc", idLeft='id_doc', idRight='id', join=adb.JOIN_LEFT, fields='id_magazz')
 
         if self._info.g_datalastchi:
-            mov.AddBaseFilter("doc.datreg>%s", self._info.g_datalastchi)
+            # MARCELLO - correzione mia 
+            mov.AddBaseFilter("doc.datreg>%s or doc.datreg is null", self._info.g_datalastchi)
+            #mov.AddBaseFilter("doc.datreg>%s", self._info.g_datalastchi)
 
         mov.AddBaseFilter('doc.f_ann IS NULL OR doc.f_ann<>1')
 
@@ -3485,9 +3487,13 @@ class InventarioDaMovim(_InventarioMixin):
         elif type(m) in (list, tuple):
             tab.AddFilter("doc.id_magazz IN (%s)" % ','.join(map(lambda x: "'%s'" % str(x), m)))
         if self._info.g_datalastchi is not None:
-            tab.AddFilter("doc.datreg>%s", self._info.g_datalastchi)
+            # MARCELLO - correzione mia 
+            tab.AddFilter("doc.datreg>%s or doc.datreg is null", self._info.g_datalastchi)
+            #tab.AddFilter("doc.datreg>%s", self._info.g_datalastchi)
         if self._info.g_data is not None:
-            tab.AddFilter("doc.datreg<=%s", self._info.g_data)
+            # MARCELLO - correzione mia 
+            tab.AddFilter("(doc.datreg<=%s or doc.datreg is null)", self._info.g_data)
+            #tab.AddFilter("(doc.datreg<=%s", self._info.g_data)
 
     def _UpdateTableVars(self, *args, **kwargs):
 
@@ -3555,7 +3561,9 @@ class InventarioPresunto(adb.DbTable):
         self.AddBaseFilter('doc.f_ann IS NULL OR doc.f_ann<>1')
         self.AddBaseFilter('mov.f_ann IS NULL OR mov.f_ann<>1')
         if self._info.g_datalastchi:
-            self.AddBaseFilter('doc.datreg>%s', self._info.g_datalastchi)
+            # MARCELLO - correzione mia 
+            self.AddBaseFilter('doc.datreg>%s or doc.datreg is null', self._info.g_datalastchi)
+            #self.AddBaseFilter('doc.datreg>%s', self._info.g_datalastchi)
 
         self.AddGroupOn('prod.id')
 

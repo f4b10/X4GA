@@ -32,6 +32,8 @@ history = (
     ('1.5.48', dt.Date(2017, 11, 23), (
          ("BET1237",
          """Introdotta possibilità di includere o meno nell'inventario i prodotti non utilizzati."""),
+         ("BUG1164",
+         """Corretto inventario alla data che non considerava prodotti non movimentati nel periodo esaminato."""),
         ),),
 
     ('1.5.47', dt.Date(2017, 11, 9), (
