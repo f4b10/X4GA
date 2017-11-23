@@ -29,6 +29,11 @@ import mx.DateTime as dt
 
 history = (
 
+    ('1.5.48', dt.Date(2017, 11, 23), (
+         ("BET1237",
+         """Introdotta possibilità di includere o meno nell'inventario i prodotti non utilizzati."""),
+        ),),
+
     ('1.5.47', dt.Date(2017, 11, 9), (
          ("BET1236",
          """Rimosso bug in data entry di magazzino che non consentiva il richiamo e
