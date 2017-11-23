@@ -186,7 +186,11 @@ class GridInv(object):
             qta = i.total_giac or 0
             val = qta*vu
             do = True
-            if   i.total_giac < 0  and not parms['incgianeg']:
+            #print 'prodotto nascosto:%s  includi nascosti:%s' % (i.status.hidesearch, parms['inchidden'])
+            if i.status.hidesearch and not parms['inchidden']:
+                do = False
+            #if   i.total_giac < 0  and not parms['incgianeg']:
+            elif   i.total_giac < 0  and not parms['incgianeg']:
                 do = False
             elif i.total_giac == 0 and not parms['incgianul']:
                 do = False
@@ -480,6 +484,9 @@ class InventPanel(aw.Panel):
     
     def UpdateInv(self):
         
+        wx.BeginBusyCursor()
+        
+        
         i = self.dbinv
         i.ClearFilters()
         
@@ -534,6 +541,7 @@ class InventPanel(aw.Panel):
         parms = {}
         for name in ("incgianeg", "incgianul", "incgiapos", "incvalnul",
                      "tipoval", "id_tiplist",
+                     "inchidden",
                      "qtainf", "qtasup", "valinf", "valsup", ):
             c = cn(name)
             if c is None:
@@ -544,6 +552,7 @@ class InventPanel(aw.Panel):
         c = cn('calciva')
         if c is not None:
             self.dbinv.SetCalcIva(cn('calciva').GetSelection() == 1)
+        wx.EndBusyCursor()        
         
         self.gridinv.Update(self, self.dbinv, parms)
         

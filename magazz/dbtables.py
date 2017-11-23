@@ -3260,10 +3260,9 @@ class _InventarioMixin(adb.DbTable):
         gru = self.AddJoin(bt.TABNAME_GRUART,  'gruart',  join=adb.JOIN_LEFT)
         mar = self.AddJoin(bt.TABNAME_MARART,  'marart',  join=adb.JOIN_LEFT)
         iva = self.AddJoin(bt.TABNAME_ALIQIVA, 'aliqiva', join=adb.JOIN_LEFT)
-        pdc = self.AddJoin(bt.TABNAME_PDC,     'pdcforn', join=adb.JOIN_LEFT,
-                           idLeft='id_fornit', idRight='id')
-        frn = pdc.AddJoin(bt.TABNAME_FORNIT,   'fornit',  join=adb.JOIN_LEFT,
-                          idLeft='id', idRight='id')
+        sta = self.AddJoin(bt.TABNAME_STATART, 'status',  join=adb.JOIN_LEFT)
+        pdc = self.AddJoin(bt.TABNAME_PDC,     'pdcforn', join=adb.JOIN_LEFT, idLeft='id_fornit', idRight='id')
+        frn = pdc.AddJoin(bt.TABNAME_FORNIT,   'fornit',  join=adb.JOIN_LEFT, idLeft='id', idRight='id')
 
         self.total_giac =  0
 

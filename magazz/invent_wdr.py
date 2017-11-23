@@ -1061,6 +1061,7 @@ def ProdRiCosFunc( parent, call_fit = True, set_sizer = True ):
     return item0
 
 ID_INVDATA = 14077
+ID_CHECKBOX = 14078
 
 def InventFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -1252,54 +1253,68 @@ def InventFunc( parent, call_fit = True, set_sizer = True ):
 
     item39.Add( item40, 0, wx.GROW|wx.RIGHT|wx.TOP, 5 )
 
-    item53 = wx.StaticBox( parent, -1, "Includi prodotti con valore:" )
+    item53 = wx.StaticBox( parent, -1, "Includi Prodotti in base a Stato:" )
     item52 = wx.StaticBoxSizer( item53, wx.VERTICAL )
     
-    item54 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    item54 = wx.FlexGridSizer( 0, 2, 0, 0 )
     
-    item55 = wx.CheckBox( parent, ID_INCVALNUL, "Nullo", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item55 = wx.CheckBox( parent, ID_CHECKBOX, "Includi esclusi dalle ricerche (non utilizzati, obsoleti, ecc)", wx.DefaultPosition, wx.DefaultSize, 0 )
     item55.SetValue( True )
-    item55.SetName( "incvalnul" )
-    item54.Add( item55, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.BOTTOM, 5 )
-
-    item56 = wx.FlexGridSizer( 0, 2, 0, 0 )
-    
-    item57 = wx.StaticText( parent, ID_LABVALINF, "Compreso tra:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item56.Add( item57, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
-
-    item58 = wx.StaticText( parent, ID_LABVALSUP, "e:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item56.Add( item58, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
-
-    item59 = NumCtrl(parent, integerWidth=11, fractionWidth=bt.VALINT_DECIMALS); item59.SetName("valinf")
-    item56.Add( item59, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT, 5 )
-
-    item60 = NumCtrl(parent, integerWidth=11, fractionWidth=bt.VALINT_DECIMALS); item60.SetName("valsup")
-    item56.Add( item60, 0, wx.ALIGN_CENTER, 5 )
-
-    item54.Add( item56, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
-
-    item54.AddGrowableCol( 1 )
+    item55.SetName( "inchidden" )
+    item54.Add( item55, 0, wx.ALIGN_CENTER, 5 )
 
     item52.Add( item54, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item39.Add( item52, 0, wx.GROW|wx.RIGHT, 5 )
+    item39.Add( item52, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item62 = wx.StaticBox( parent, -1, "Listino di vendita" )
-    item61 = wx.StaticBoxSizer( item62, wx.VERTICAL )
+    item57 = wx.StaticBox( parent, -1, "Includi prodotti con valore:" )
+    item56 = wx.StaticBoxSizer( item57, wx.VERTICAL )
     
-    item63 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    item58 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
-    item64 = wx.StaticText( parent, ID_LABTIP, "Listino:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item63.Add( item64, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+    item59 = wx.CheckBox( parent, ID_INCVALNUL, "Nullo", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item59.SetValue( True )
+    item59.SetName( "incvalnul" )
+    item58.Add( item59, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.BOTTOM, 5 )
 
-    item65 = LinkTable(parent, ID_TIPLIST); item65.SetDataLink(bt.TABNAME_TIPLIST, "id_tiplist", TipListDialog)
-    item63.Add( item65, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+    item60 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    
+    item61 = wx.StaticText( parent, ID_LABVALINF, "Compreso tra:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item60.Add( item61, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
-    item63.AddGrowableCol( 1 )
+    item62 = wx.StaticText( parent, ID_LABVALSUP, "e:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item60.Add( item62, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item61.Add( item63, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item63 = NumCtrl(parent, integerWidth=11, fractionWidth=bt.VALINT_DECIMALS); item63.SetName("valinf")
+    item60.Add( item63, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT, 5 )
 
-    item39.Add( item61, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+    item64 = NumCtrl(parent, integerWidth=11, fractionWidth=bt.VALINT_DECIMALS); item64.SetName("valsup")
+    item60.Add( item64, 0, wx.ALIGN_CENTER, 5 )
+
+    item58.Add( item60, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item58.AddGrowableCol( 1 )
+
+    item56.Add( item58, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item39.Add( item56, 0, wx.GROW|wx.RIGHT, 5 )
+
+    item66 = wx.StaticBox( parent, -1, "Listino di vendita" )
+    item65 = wx.StaticBoxSizer( item66, wx.VERTICAL )
+    
+    item67 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    
+    item68 = wx.StaticText( parent, ID_LABTIP, "Listino:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item67.Add( item68, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item69 = LinkTable(parent, ID_TIPLIST); item69.SetDataLink(bt.TABNAME_TIPLIST, "id_tiplist", TipListDialog)
+    item67.Add( item69, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+
+    item67.AddGrowableCol( 1 )
+
+    item65.Add( item67, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item39.Add( item65, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 
     item39.AddGrowableCol( 0 )
 
@@ -1311,22 +1326,22 @@ def InventFunc( parent, call_fit = True, set_sizer = True ):
 
     item34.Add( item35, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item66 = wx.BoxSizer( wx.HORIZONTAL )
+    item70 = wx.BoxSizer( wx.HORIZONTAL )
     
-    item67 = wx.Button( parent, ID_UPDATE, "Applica", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item67.SetDefault()
-    item67.SetName( "update" )
-    item66.Add( item67, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+    item71 = wx.Button( parent, ID_UPDATE, "Applica", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item71.SetDefault()
+    item71.SetName( "update" )
+    item70.Add( item71, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
-    item68 = wx.Button( parent, ID_PRINT, "&Lista", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item68.SetName( "print" )
-    item66.Add( item68, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+    item72 = wx.Button( parent, ID_PRINT, "&Lista", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item72.SetName( "print" )
+    item70.Add( item72, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 
-    item69 = wx.Button( parent, ID_LABELS, "&Etichette", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item69.SetName( "labels" )
-    item66.Add( item69, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+    item73 = wx.Button( parent, ID_LABELS, "&Etichette", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item73.SetName( "labels" )
+    item70.Add( item73, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 
-    item34.Add( item66, 0, wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM|wx.TOP, 5 )
+    item34.Add( item70, 0, wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM|wx.TOP, 5 )
 
     item34.AddGrowableRow( 1 )
 
@@ -1336,119 +1351,119 @@ def InventFunc( parent, call_fit = True, set_sizer = True ):
 
     item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item70 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    item74 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
-    item71 = wx.FlexGridSizer( 1, 0, 0, 0 )
-    
-    item72 = wx.StaticText( parent, ID_LABGRIDINV, "Giacenze e progressivi merce", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item72.SetForegroundColour( wx.BLUE )
-    item71.Add( item72, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
-
-    item73 = wx.CheckBox( parent, ID_CHGVIEW, "Cambia vista", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item73.SetName( "chgview" )
-    item73.Enable(False)
-    item71.Add( item73, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT, 5 )
-
-    item71.AddGrowableCol( 0 )
-
-    item70.Add( item71, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
-
-    item74 = wx.Panel( parent, ID_PANGRIDINV, wx.DefaultPosition, [-1,240], wx.SUNKEN_BORDER )
-    item70.Add( item74, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
-
     item75 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
-    item77 = wx.StaticBox( parent, -1, "Tot. Giacenza iniziale" )
-    item76 = wx.StaticBoxSizer( item77, wx.VERTICAL )
+    item76 = wx.StaticText( parent, ID_LABGRIDINV, "Giacenze e progressivi merce", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item76.SetForegroundColour( wx.BLUE )
+    item75.Add( item76, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+
+    item77 = wx.CheckBox( parent, ID_CHGVIEW, "Cambia vista", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item77.SetName( "chgview" )
+    item77.Enable(False)
+    item75.Add( item77, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT, 5 )
+
+    item75.AddGrowableCol( 0 )
+
+    item74.Add( item75, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item78 = wx.Panel( parent, ID_PANGRIDINV, wx.DefaultPosition, [-1,240], wx.SUNKEN_BORDER )
+    item74.Add( item78, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item79 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
-    item78 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    item81 = wx.StaticBox( parent, -1, "Tot. Giacenza iniziale" )
+    item80 = wx.StaticBoxSizer( item81, wx.VERTICAL )
     
-    item79 = wx.StaticText( parent, ID_LABTOTINI, "Quantità:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item78.Add( item79, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
-
-    item80 = masked.NumCtrl(parent, integerWidth=QI, fractionWidth=QD); item80.SetName("totini"); item80.SetEditable(False)
-    item78.Add( item80, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
-
-    item81 = wx.StaticText( parent, ID_LABTOTVAL, "Valore:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item78.Add( item81, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
-
-    item82 = masked.NumCtrl(parent, integerWidth=VI, fractionWidth=VD); item82.SetName("totiniv"); item82.SetEditable(False)
-    item78.Add( item82, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
-
-    item76.Add( item78, 0, wx.ALIGN_CENTER, 5 )
-
-    item75.Add( item76, 0, wx.ALIGN_CENTER|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item84 = wx.StaticBox( parent, -1, "Tot. Carichi" )
-    item83 = wx.StaticBoxSizer( item84, wx.VERTICAL )
+    item82 = wx.FlexGridSizer( 0, 2, 0, 0 )
     
-    item85 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    item83 = wx.StaticText( parent, ID_LABTOTINI, "Quantità:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item82.Add( item83, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+
+    item84 = masked.NumCtrl(parent, integerWidth=QI, fractionWidth=QD); item84.SetName("totini"); item84.SetEditable(False)
+    item82.Add( item84, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+
+    item85 = wx.StaticText( parent, ID_LABTOTVAL, "Valore:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item82.Add( item85, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item86 = masked.NumCtrl(parent, integerWidth=VI, fractionWidth=VD); item86.SetName("totiniv"); item86.SetEditable(False)
+    item82.Add( item86, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item80.Add( item82, 0, wx.ALIGN_CENTER, 5 )
+
+    item79.Add( item80, 0, wx.ALIGN_CENTER|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item88 = wx.StaticBox( parent, -1, "Tot. Carichi" )
+    item87 = wx.StaticBoxSizer( item88, wx.VERTICAL )
     
-    item86 = wx.StaticText( parent, ID_LABTOTINI, "Quantità:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item85.Add( item86, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
-
-    item87 = masked.NumCtrl(parent, integerWidth=QI, fractionWidth=QD); item87.SetName("totcar"); item87.SetEditable(False)
-    item85.Add( item87, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
-
-    item88 = wx.StaticText( parent, ID_LABTOTVAL, "Valore:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item85.Add( item88, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
-
-    item89 = masked.NumCtrl(parent, integerWidth=VI, fractionWidth=VD); item89.SetName("totcarv"); item89.SetEditable(False)
-    item85.Add( item89, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
-
-    item83.Add( item85, 0, wx.ALIGN_CENTER, 5 )
-
-    item75.Add( item83, 0, wx.ALIGN_CENTER|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item91 = wx.StaticBox( parent, -1, "Tot. Scarichi" )
-    item90 = wx.StaticBoxSizer( item91, wx.VERTICAL )
+    item89 = wx.FlexGridSizer( 0, 2, 0, 0 )
     
-    item92 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    item90 = wx.StaticText( parent, ID_LABTOTINI, "Quantità:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item89.Add( item90, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+
+    item91 = masked.NumCtrl(parent, integerWidth=QI, fractionWidth=QD); item91.SetName("totcar"); item91.SetEditable(False)
+    item89.Add( item91, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+
+    item92 = wx.StaticText( parent, ID_LABTOTVAL, "Valore:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item89.Add( item92, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item93 = masked.NumCtrl(parent, integerWidth=VI, fractionWidth=VD); item93.SetName("totcarv"); item93.SetEditable(False)
+    item89.Add( item93, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item87.Add( item89, 0, wx.ALIGN_CENTER, 5 )
+
+    item79.Add( item87, 0, wx.ALIGN_CENTER|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item95 = wx.StaticBox( parent, -1, "Tot. Scarichi" )
+    item94 = wx.StaticBoxSizer( item95, wx.VERTICAL )
     
-    item93 = wx.StaticText( parent, ID_LABTOTINI, "Quantità:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item92.Add( item93, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
-
-    item94 = masked.NumCtrl(parent, integerWidth=QI, fractionWidth=QD); item94.SetName("totsca"); item94.SetEditable(False)
-    item92.Add( item94, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
-
-    item95 = wx.StaticText( parent, ID_LABTOTVAL, "Valore:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item92.Add( item95, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
-
-    item96 = masked.NumCtrl(parent, integerWidth=VI, fractionWidth=VD); item96.SetName("totscav"); item96.SetEditable(False)
-    item92.Add( item96, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
-
-    item90.Add( item92, 0, wx.ALIGN_CENTER, 5 )
-
-    item75.Add( item90, 0, wx.ALIGN_CENTER|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item98 = wx.StaticBox( parent, -1, "Tot. Giacenza" )
-    item97 = wx.StaticBoxSizer( item98, wx.VERTICAL )
+    item96 = wx.FlexGridSizer( 0, 2, 0, 0 )
     
-    item99 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    item97 = wx.StaticText( parent, ID_LABTOTINI, "Quantità:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item96.Add( item97, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+
+    item98 = masked.NumCtrl(parent, integerWidth=QI, fractionWidth=QD); item98.SetName("totsca"); item98.SetEditable(False)
+    item96.Add( item98, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+
+    item99 = wx.StaticText( parent, ID_LABTOTVAL, "Valore:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item96.Add( item99, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item100 = masked.NumCtrl(parent, integerWidth=VI, fractionWidth=VD); item100.SetName("totscav"); item100.SetEditable(False)
+    item96.Add( item100, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item94.Add( item96, 0, wx.ALIGN_CENTER, 5 )
+
+    item79.Add( item94, 0, wx.ALIGN_CENTER|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item102 = wx.StaticBox( parent, -1, "Tot. Giacenza" )
+    item101 = wx.StaticBoxSizer( item102, wx.VERTICAL )
     
-    item100 = wx.StaticText( parent, ID_LABTOTINI, "Quantità:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item99.Add( item100, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+    item103 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    
+    item104 = wx.StaticText( parent, ID_LABTOTINI, "Quantità:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item103.Add( item104, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
 
-    item101 = masked.NumCtrl(parent, integerWidth=QI, fractionWidth=QD); item101.SetName("totgiac"); item101.SetEditable(False)
-    item99.Add( item101, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item105 = masked.NumCtrl(parent, integerWidth=QI, fractionWidth=QD); item105.SetName("totgiac"); item105.SetEditable(False)
+    item103.Add( item105, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item102 = wx.StaticText( parent, ID_LABTOTVAL, "Valore:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item99.Add( item102, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+    item106 = wx.StaticText( parent, ID_LABTOTVAL, "Valore:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item103.Add( item106, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
 
-    item103 = masked.NumCtrl(parent, integerWidth=VI, fractionWidth=VD); item103.SetName("totgiacv"); item103.SetEditable(False)
-    item99.Add( item103, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+    item107 = masked.NumCtrl(parent, integerWidth=VI, fractionWidth=VD); item107.SetName("totgiacv"); item107.SetEditable(False)
+    item103.Add( item107, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
 
-    item97.Add( item99, 0, wx.ALIGN_CENTER, 5 )
+    item101.Add( item103, 0, wx.ALIGN_CENTER, 5 )
 
-    item75.Add( item97, 0, wx.ALIGN_CENTER|wx.RIGHT|wx.BOTTOM, 5 )
+    item79.Add( item101, 0, wx.ALIGN_CENTER|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item70.Add( item75, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item74.Add( item79, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item70.AddGrowableCol( 0 )
+    item74.AddGrowableCol( 0 )
 
-    item70.AddGrowableRow( 1 )
+    item74.AddGrowableRow( 1 )
 
-    item0.Add( item70, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item0.Add( item74, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item0.AddGrowableCol( 0 )
 
