@@ -299,6 +299,24 @@ class DocMag(adb.DbTable):
             'cvfsca': {'tr': 0, 'tw': 0, 'dec': DQ, 'exp': q}, #scarichi c/v fornitori
         }
 
+
+        i.prodgia = {}     #aggiornamento giacenze consolidate  scheda prodotto
+        i.pgkeys = {       #chiavi aggiornamento x storno
+            'mag': None,   #magazzino da stornare
+            'drg': None,   #data registrazione documento prima della memorizz.
+            'ann': False,  #flag documento annullato prima della memorizz.
+        }
+
+        i.pgcol = {        #struttura aggiornamento GIACENZE CONSOLIDATE:
+            #          valore   valore   numero     espr. da
+            #          storno   agg.     decimali   valutare
+            
+            'giacon':   {'tr': 0, 'tw': 0, 'dec': DQ, 'exp': q}, #giacenza contabile
+            'giafis':   {'tr': 0, 'tw': 0, 'dec': DQ, 'exp': q}, #giacenza rilevata
+        }
+            
+            
+
         #progressivi generali
         i.progr = adb.DbTable(bt.TABNAME_CFGPROGR, "progr", writable=True)
 
@@ -307,6 +325,9 @@ class DocMag(adb.DbTable):
 
         #progressivi car/scar
         i.dbppr = adb.DbTable(bt.TABNAME_PRODPRO,  "ppr")
+
+        #giacenze consolidate
+        i.dbpgi = adb.DbTable(bt.TABNAME_PROGIA,  "gia")
 
         #promozioni
         i.dbpromo = dba.ProdPromo()
@@ -781,6 +802,7 @@ class DocMag(adb.DbTable):
         del self._info.pdtreadann[:]
         del self._info.righep0[:]
         self.ProdProReset()
+        self.ProdGiaReset()
         self._info.deleting = False
 
     def DeleteRow(self):
@@ -878,6 +900,7 @@ class DocMag(adb.DbTable):
         else:
             wait = None
         pp = self._info.prodpro
+        pg = self._info.prodgia
         if not deldoc:
             pup = {}
             tm = self.mov.config
@@ -894,6 +917,21 @@ class DocMag(adb.DbTable):
                     agg = getattr(tm, 'agg%s' % col) or 0
                     p = pr[col]
                     p['tw'] += round(((eval(p['exp']) or 0)*agg),p['dec'])
+                
+                
+                
+                pgkey = '%d/%d' % (mov.id, mov.id_prod)
+                if not pgkey in pg:
+                    pg[pgkey] = copy.deepcopy(self._info.pgcol)
+                gi = pg[pgkey]
+                for col in gi.keys():
+                    agg = getattr(tm, 'agg%s' % col) or 0
+                    p = gi[col]
+                    p['tw'] += round(((eval(p['exp']) or 0)*agg),p['dec'])
+                
+                
+                    
+                    
                 cols = {}
                 if (tm.aggcosto or ' ') in '12':
                     cols['costo'] = {'val':  None,
@@ -968,6 +1006,18 @@ class DocMag(adb.DbTable):
                 newmag = self.id_magazz
                 newdrg = self.datreg
                 self.ProdProWrite(ppkey, newmag, newdrg, 'tw', '+')
+                
+        oldmag = self._info.pgkeys['mag']
+        olddrg = self._info.pgkeys['drg']
+
+        for pgkey in pg:
+            self.ProdGiacWrite(pgkey, oldmag, olddrg, 'tr', '-')
+            if not deldoc:
+                newmag = self.id_magazz
+                newdrg = self.datreg
+                self.ProdGiacWrite(pgkey, newmag, newdrg, 'tw', '+')
+                
+        
         if not deldoc:
             self.UpdateProdotti(pup)
         if wait:
@@ -988,6 +1038,65 @@ class DocMag(adb.DbTable):
     def CliForProWrite(self, segno='+'):
         pass
 
+    def ProdGiacWrite(self, pgkey, magid, dreg, tcol, segno):
+        _, proid = map(int, pgkey.split('/'))
+        do = True
+        if self._info.lastchiusura is not None:
+            do = dreg > self._info.lastchiusura
+        if not do:
+            return
+        pg = self._info.prodgia
+        gi = pg[pgkey]
+        cmdins = []
+        cmdupd = []
+        for col in gi.keys():
+            p = gi[col]
+            if p[tcol]:
+                v = p[tcol]
+                if segno == '-':
+                    try:
+                        v *= -1
+                    except:
+                        v = 0
+                cmdins.append((col, v))
+                cmdupd.append(("%s=%s%s%%s" % (col, col, segno), p[tcol]))
+        if cmdins or cmdupd:
+            tab = self._info.dbpgi._info.tableName
+            db = adb.db.__database__
+            assert isinstance(db, adb.DB)
+            db.Retrieve('SELECT 1 FROM progia WHERE id_prod=%s AND id_magazz=%s AND anno=%s',
+                        (proid, magid, dreg.year))
+            new = (len(db.rs) == 0)
+            cmd = ''
+            par = []
+            if new:
+                ph = ''
+                for c in cmdins:
+                    if cmd: cmd += ', '
+                    cmd += c[0]
+                    par.append(c[1])
+                    if ph: ph += ', '
+                    ph += r'%s'
+                cmd += ', anno, id_prod, id_magazz'
+                ph += r', %s, %s, %s'
+                cmd = "INSERT INTO %s (%s) VALUES (%s)" % (bt.TABNAME_PROGIA,
+                                                        cmd, ph)
+                par.append(dreg.year)
+            else:
+                for c in cmdupd:
+                    if cmd: cmd += ', '
+                    cmd += c[0]
+                    par += list(c[1:])
+                cmd = "UPDATE %s SET " % tab + cmd
+                cmd += r" WHERE id_prod=%s AND id_magazz=%s "
+                cmd += r" AND anno = %s" % dreg.year
+            par.append(proid)
+            par.append(magid)
+            if not db.Execute(cmd, par):
+                raise Exception, db.dbError.description
+            
+        return True
+        
     def ProdProWrite(self, ppkey, magid, dreg, tcol, segno):
         _, proid = map(int, ppkey.split('/'))
         do = True
@@ -1280,10 +1389,13 @@ class DocMag(adb.DbTable):
                 out = self.RowsCount() == 1
             self.ResumeFilters()
         self.ProdProReset()
+        self.ProdGiaReset()
         if out:
             self.ProdProRead()
+            self.ProdGiaRead()
             self.CliForProRead()
             self.regcon.Get(self.id_reg)
+            
         return out
 
     def CheckNum(self):
@@ -1341,6 +1453,7 @@ class DocMag(adb.DbTable):
         out = adb.DbTable.Get(self, *args, **kwargs)
         self.cfgdoc.Get(self.id_tipdoc)
         self.ProdProRead()
+        self.ProdGiaRead()
         self.CliForProRead()
         if self.cfgdoc.colcg:
             self.regcon.Get(self.id_reg)
@@ -1356,12 +1469,55 @@ class DocMag(adb.DbTable):
             self.MakeTotals(scad=False)
         return out
 
+
+
+
     def ProdProReset(self):
         self._info.prodpro.clear()
         self._info.ppkeys['mag'] = None
         self._info.ppkeys['drg'] = None
         self._info.ppkeys['ann'] = False
 
+    def ProdGiaReset(self):
+        self._info.prodgia.clear()
+        self._info.pgkeys['mag'] = None
+        self._info.pgkeys['drg'] = None
+        self._info.pgkeys['ann'] = False
+    
+
+    def ProdGiaRead(self):
+        self.ProdGiaReset()
+        do = True
+        if self.datreg is not None and self._info.lastchiusura is not None:
+            do = self.datreg > self._info.lastchiusura
+        if not do:
+            return
+        self._info.pgkeys['mag'] = self.id_magazz
+        self._info.pgkeys['drg'] = self.datreg
+        if self.datreg is None:
+            year = None
+        else:
+            year = self.datreg.year
+        self._info.pgkeys['ann'] = (self.f_ann == 1)
+        if (self.f_ann == 1):
+            return
+        pp = self._info.prodgia
+        for mov in self.mov:
+            if mov.id_prod and mov.f_ann != 1:
+                pgkey = '%d/%d' % (mov.id, mov.id_prod)
+                if not pgkey in pp:
+                    pp[pgkey] = copy.deepcopy(self._info.pgcol)
+                pr = pp[pgkey]
+                for col in pr.keys():
+                    agg = getattr(self.mov.config, 'agg%s' % col)
+                    p = pr[col]
+                    try:
+                        p['tr'] += round(((eval(p['exp']) or 0)*agg),p['dec'])
+                    except:
+                        pass
+            #self.UpdateMovExternalRead()
+    
+    
     def ProdProRead(self):
         self.ProdProReset()
         do = True
