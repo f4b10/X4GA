@@ -1570,11 +1570,13 @@ ID_STATFTCLI = 16145
 ID_STATCSCLI = 16146
 ID_MANCOSTO = 16147
 ID_STATFTFOR = 16148
+ID_AGGGIAC = 16149
+ID_AGGGIAR = 16150
 
 def Mov2Func( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
-    item1 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    item1 = wx.FlexGridSizer( 0, 3, 0, 0 )
     
     item2 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
@@ -1750,6 +1752,35 @@ def Mov2Func( parent, call_fit = True, set_sizer = True ):
 
     item1.Add( item25, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
 
+    item32 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    
+    item33 = wx.StaticText( parent, ID_TEXT, "Giacenza Consolidata", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item33.SetBackgroundColour( wx.LIGHT_GREY )
+    item33.SetFont( wx.Font( 10, wx.SWISS, wx.NORMAL, wx.BOLD ) )
+    item32.Add( item33, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP, 5 )
+
+    item34 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    
+    item35 = RadioBox( parent, ID_AGGGIAC, "Giacenza Contabile", wx.DefaultPosition, wx.DefaultSize, 
+        ["x","+","-"] , 1, wx.RA_SPECIFY_ROWS )
+    item35.SetName( "agggiacon" )
+    item34.Add( item35, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+
+    item36 = RadioBox( parent, ID_AGGGIAR, "Giacenza Rilevata", wx.DefaultPosition, wx.DefaultSize, 
+        ["x","+","-"] , 1, wx.RA_SPECIFY_ROWS )
+    item36.SetName( "agggiafis" )
+    item34.Add( item36, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+
+    item34.AddGrowableCol( 1 )
+
+    item34.AddGrowableCol( 2 )
+
+    item32.Add( item34, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item32.AddGrowableCol( 0 )
+
+    item1.Add( item32, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+
     item1.AddGrowableCol( 0 )
 
     item1.AddGrowableCol( 1 )
@@ -1765,7 +1796,7 @@ def Mov2Func( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_LTAB = 16149
+ID_LTAB = 16151
 
 def Doc4Func( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 2, 0, 0 )

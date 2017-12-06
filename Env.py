@@ -2863,6 +2863,8 @@ class Azienda(object):
                 [ "aggcvcsca",    "TINYINT",  1, None, "Flag +/- aggiornamento scarichi c/vendita clienti", None ],
                 [ "aggcvfcar",    "TINYINT",  1, None, "Flag +/- aggiornamento carichi c/vendita fornitori", None ],
                 [ "aggcvfsca",    "TINYINT",  1, None, "Flag +/- aggiornamento scarichi c/vendita fornitori", None ],
+                [ "agggiacon",    "TINYINT",  1, None, "Flag +/- aggiornamento giacenza contabile", None ],
+                [ "agggiafis",    "TINYINT",  1, None, "Flag +/- aggiornamento giacenza rilevata", None ],
                 [ "statftcli",    "TINYINT",  1, None, "Flag +/- statistica fatturato clienti (vendita)", None ],
                 [ "statcscli",    "TINYINT",  1, None, "Flag +/- statistica fatturato clienti (costo)", None ],
                 [ "statftfor",    "TINYINT",  1, None, "Flag +/- statistica fatturato fornitori", None ],

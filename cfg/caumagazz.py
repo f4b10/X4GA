@@ -82,28 +82,31 @@ fldap('aggordcli');    defap(0);    RSMOV_AGGORDCLI =    22
 fldap('aggordfor');    defap(0);    RSMOV_AGGORDFOR =    23
 fldap('statftcli');    defap(0);    RSMOV_STATFTCLI =    24
 fldap('statftfor');    defap(0);    RSMOV_STATFTFOR =    25
-fldap('id_pdc');       defap(None); RSMOV_ID_PDC    =    26
-fldap('tipologia');    defap('M');  RSMOV_TIPOLOGIA =    27
-fldap('aggcvccar');    defap(None); RSMOV_AGGCVCCAR =    28
-fldap('aggcvcsca');    defap(None); RSMOV_AGGCVCSCA =    29
-fldap('aggcvfcar');    defap(None); RSMOV_AGGCVFCAR =    30
-fldap('aggcvfsca');    defap(None); RSMOV_AGGCVFSCA =    31
-fldap('f_acqpdt');     defap(None); RSMOV_ACQPDT    =    32
-fldap('proobb');       defap(None); RSMOV_PROOBB    =    33
-fldap('tqtaxpeso');    defap(None); RSMOV_TQTAXPESO =    34
-fldap('tqtaxcolli');   defap(None); RSMOV_TQTAXCOLLI =   35
-fldap('lendescriz');   defap(60);   RSMOV_LENDESCRIZ =   36
-fldap('mancosto');     defap("N");  RSMOV_MANCOSTO =     37
-fldap('noprovvig');    defap(0);    RSMOV_NOPROVVIG =    38
-fldap('statcscli');    defap(0);    RSMOV_STATCSCLI =    39
-fldap('prtdestot');    defap("");   RSMOV_PRTDESTOT =    40
-fldap('is_acconto');   defap(0);    RSMOV_ISACCONTO =    41
-fldap('is_accstor');   defap(0);    RSMOV_ISACCSTOR =    42
-fldap('acc_sepiva');   defap(0);    RSMOV_ACCSEPIVA =    43
-fldap('canprezzo0');   defap(0);    RSMOV_CANPREZZO0 =   44
-fldap('modimpricalc'); defap(0);    RSMOV_MODIMPRICALC = 45
-fldap('nomastroprod'); defap(0);    RSMOV_NOPRODMASTRO = 46
-fldap('is_default');   defap(0);    RSMOV_ISDEFAULT =    47
+
+fldap('agggiacon');      defap(0);  RSMOV_AGGGIACON =    26
+fldap('agggiafis');      defap(0);  RSMOV_AGGGIAFIS =    27
+fldap('id_pdc');       defap(None); RSMOV_ID_PDC    =    28
+fldap('tipologia');    defap('M');  RSMOV_TIPOLOGIA =    29
+fldap('aggcvccar');    defap(None); RSMOV_AGGCVCCAR =    30
+fldap('aggcvcsca');    defap(None); RSMOV_AGGCVCSCA =    31
+fldap('aggcvfcar');    defap(None); RSMOV_AGGCVFCAR =    32
+fldap('aggcvfsca');    defap(None); RSMOV_AGGCVFSCA =    33
+fldap('f_acqpdt');     defap(None); RSMOV_ACQPDT    =    34
+fldap('proobb');       defap(None); RSMOV_PROOBB    =    35
+fldap('tqtaxpeso');    defap(None); RSMOV_TQTAXPESO =    36
+fldap('tqtaxcolli');   defap(None); RSMOV_TQTAXCOLLI =   37
+fldap('lendescriz');   defap(60);   RSMOV_LENDESCRIZ =   38
+fldap('mancosto');     defap("N");  RSMOV_MANCOSTO =     39
+fldap('noprovvig');    defap(0);    RSMOV_NOPROVVIG =    40
+fldap('statcscli');    defap(0);    RSMOV_STATCSCLI =    41
+fldap('prtdestot');    defap("");   RSMOV_PRTDESTOT =    42
+fldap('is_acconto');   defap(0);    RSMOV_ISACCONTO =    43
+fldap('is_accstor');   defap(0);    RSMOV_ISACCSTOR =    44
+fldap('acc_sepiva');   defap(0);    RSMOV_ACCSEPIVA =    45
+fldap('canprezzo0');   defap(0);    RSMOV_CANPREZZO0 =   46
+fldap('modimpricalc'); defap(0);    RSMOV_MODIMPRICALC = 47
+fldap('nomastroprod'); defap(0);    RSMOV_NOPRODMASTRO = 48
+fldap('is_default');   defap(0);    RSMOV_ISDEFAULT =    49
 
 
 
@@ -327,7 +330,7 @@ class CauMagazzPanel(ga.AnagPanel):
         ci = self.FindWindowById
         p = wx.Panel( parent, -1)
         wdr.CauMagazzCardFunc( p, True )
-        self.IdPdcTipo = self.FindWindowByName('id_pdctip') 
+        self.IdPdcTipo = self.FindWindowByName('id_pdctip')
         self.DefaultIdPdc = self.FindWindowByName('default_id_pdc')
         self.IdPdcTipo .Bind(ga.linktable.EVT_LINKTABCHANGED, self.OnChangeTipo)
         self._grid_mov = DefMovGrid(self.FindWindowById(wdr.ID_PANGRIDMOV), self.dbmov)
@@ -354,6 +357,8 @@ class CauMagazzPanel(ga.AnagPanel):
                            ("statftcli",  (0,1,-1)),\
                            ("statcscli",  (0,1,-1)),\
                            ("statftfor",  (0,1,-1)),\
+                           ("agggiacon",  (0,1,-1)),\
+                           ("agggiafis",  (0,1,-1)),\
                            ("aggcvccar",  (0,1,-1)),\
                            ("aggcvcsca",  (0,1,-1)),\
                            ("aggcvfcar",  (0,1,-1)),\
