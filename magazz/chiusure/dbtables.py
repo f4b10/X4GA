@@ -163,6 +163,9 @@ class EditGiacenzeTable(adb.DbTable):
         cos = self.AddJoin(bt.TABNAME_PROCOS, 'procos', idLeft='id', idRight='id_prod', join=adb.JOIN_LEFT)
         gia = self.AddJoin(bt.TABNAME_PROGIA, 'progia', idLeft='id', idRight='id_prod', join=adb.JOIN_LEFT)
         mag = gia.AddJoin(bt.TABNAME_MAGAZZ,  'magazz', join=adb.JOIN_LEFT)
+        
+        cat = self.AddJoin(bt.TABNAME_CATART, 'catart', idLeft='id_catart', idRight='id', join=adb.JOIN_LEFT)
+        
         self.Reset()
         self.AddOrder('prod.codice')
     

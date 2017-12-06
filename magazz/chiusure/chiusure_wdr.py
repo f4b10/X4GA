@@ -21,6 +21,8 @@ from awc.controls.numctrl import NumCtrl
 from awc.controls.checkbox import CheckBox, RCheckBox
 from awc.controls.radiobox import RadioBox
 
+from anag.catart import CatArtDialog
+
 from anag.basetab import WorkZoneNotebook
 
 from anag.lib import LinkTableMagazz, LinkTableDocMagazz, LinkTableMovMagazz
@@ -258,17 +260,21 @@ def ConsolidaCostiEliminaFunc( parent, call_fit = True, set_sizer = True ):
     return item0
 
 ID_MAGAZZ = 14010
-ID_TOTQTACON = 14011
-ID_TOTVALCON = 14012
-ID_TOTQTAFIS = 14013
-ID_TOTVALFIS = 14014
-ID_TIPORD = 14015
-ID_TIPVAL = 14016
-ID_TIPGIACON = 14017
-ID_TIPGIAFIS = 14018
-ID_BTNESTRAI = 14019
-ID_PANGRID = 14020
-ID_BTNLIST = 14021
+ID_CATART1 = 14011
+ID_CATART2 = 14012
+ID_CODICE1 = 14013
+ID_CODICE2 = 14014
+ID_TOTQTACON = 14015
+ID_TOTVALCON = 14016
+ID_TOTQTAFIS = 14017
+ID_TOTVALFIS = 14018
+ID_TIPORD = 14019
+ID_TIPVAL = 14020
+ID_TIPGIACON = 14021
+ID_TIPGIAFIS = 14022
+ID_BTNESTRAI = 14023
+ID_PANGRID = 14024
+ID_BTNLIST = 14025
 
 def EditGiacenzeFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -302,92 +308,128 @@ def EditGiacenzeFunc( parent, call_fit = True, set_sizer = True ):
 
     item2.Add( item3, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
 
-    item11 = wx.StaticBox( parent, -1, "Totali" )
-    item10 = wx.StaticBoxSizer( item11, wx.VERTICAL )
+    item10 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
-    item12 = wx.FlexGridSizer( 0, 3, 0, 0 )
-    
-    item13 = wx.StaticText( parent, ID_TEXT, "", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item12.Add( item13, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+    item11 = wx.StaticText( parent, ID_TEXT, "Categoria", wx.DefaultPosition, [50,-1], 0 )
+    item10.Add( item11, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
 
-    item14 = wx.StaticText( parent, ID_TEXT, "Quantità:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item12.Add( item14, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+    item12 = LinkTable(parent, ID_CATART1 ); item12.SetDataLink( bt.TABNAME_CATART, "catart1", CatArtDialog)
+    item10.Add( item12, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
 
-    item15 = wx.StaticText( parent, ID_TEXT, "Valore:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item12.Add( item15, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+    item13 = LinkTable(parent, ID_CATART2 ); item13.SetDataLink( bt.TABNAME_CATART, "catart2", CatArtDialog)
+    item10.Add( item13, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP, 5 )
 
-    item16 = wx.StaticText( parent, ID_TEXT, "G.Contabili:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item12.Add( item16, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+    item10.AddGrowableCol( 1 )
 
-    item17 = NumCtrl(parent, ID_TOTQTACON, integerWidth=12, fractionWidth=bt.MAGQTA_DECIMALS, groupDigits=True, allowNegative=False); item17.SetEditable(False); item17.SetName("totqtacon")
-    item12.Add( item17, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
-
-    item18 = NumCtrl(parent, ID_TOTVALCON, integerWidth=12, fractionWidth=bt.VALINT_DECIMALS, groupDigits=True, allowNegative=False); item18.SetEditable(False); item18.SetName("totvalcon")
-    item12.Add( item18, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
-
-    item19 = wx.StaticText( parent, ID_TEXT, "G.Fisiche:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item12.Add( item19, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
-
-    item20 = NumCtrl(parent, ID_TOTQTAFIS, integerWidth=12, fractionWidth=bt.MAGQTA_DECIMALS, groupDigits=True, allowNegative=False); item20.SetEditable(False); item20.SetName("totqtafis")
-    item12.Add( item20, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item21 = NumCtrl(parent, ID_TOTVALFIS, integerWidth=12, fractionWidth=bt.VALINT_DECIMALS, groupDigits=True, allowNegative=False); item21.SetEditable(False); item21.SetName("totvalfis")
-    item12.Add( item21, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item10.Add( item12, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item10.AddGrowableCol( 2 )
 
     item2.Add( item10, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item14 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    
+    item15 = wx.StaticText( parent, ID_TEXT, "Articolo", wx.DefaultPosition, [50,-1], 0 )
+    item14.Add( item15, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+
+    item16 = TextCtrl( parent, ID_CODICE1, "", wx.DefaultPosition, [100,-1], 0 )
+    item16.SetName( "codice1" )
+    item14.Add( item16, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+
+    item17 = TextCtrl( parent, ID_CODICE2, "", wx.DefaultPosition, [100,-1], 0 )
+    item17.SetName( "codice2" )
+    item14.Add( item17, 0, wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP, 5 )
+
+    item14.AddGrowableCol( 1 )
+
+    item14.AddGrowableCol( 2 )
+
+    item2.Add( item14, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item19 = wx.StaticBox( parent, -1, "Totali" )
+    item18 = wx.StaticBoxSizer( item19, wx.VERTICAL )
+    
+    item20 = wx.FlexGridSizer( 0, 3, 0, 0 )
+    
+    item21 = wx.StaticText( parent, ID_TEXT, "", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item20.Add( item21, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item22 = wx.StaticText( parent, ID_TEXT, "Quantità:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item20.Add( item22, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item23 = wx.StaticText( parent, ID_TEXT, "Valore:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item20.Add( item23, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+
+    item24 = wx.StaticText( parent, ID_TEXT, "G.Contabili:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item20.Add( item24, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+
+    item25 = NumCtrl(parent, ID_TOTQTACON, integerWidth=12, fractionWidth=bt.MAGQTA_DECIMALS, groupDigits=True, allowNegative=False); item25.SetEditable(False); item25.SetName("totqtacon")
+    item20.Add( item25, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+
+    item26 = NumCtrl(parent, ID_TOTVALCON, integerWidth=12, fractionWidth=bt.VALINT_DECIMALS, groupDigits=True, allowNegative=False); item26.SetEditable(False); item26.SetName("totvalcon")
+    item20.Add( item26, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+
+    item27 = wx.StaticText( parent, ID_TEXT, "G.Fisiche:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item20.Add( item27, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+
+    item28 = NumCtrl(parent, ID_TOTQTAFIS, integerWidth=12, fractionWidth=bt.MAGQTA_DECIMALS, groupDigits=True, allowNegative=False); item28.SetEditable(False); item28.SetName("totqtafis")
+    item20.Add( item28, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item29 = NumCtrl(parent, ID_TOTVALFIS, integerWidth=12, fractionWidth=bt.VALINT_DECIMALS, groupDigits=True, allowNegative=False); item29.SetEditable(False); item29.SetName("totvalfis")
+    item20.Add( item29, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item18.Add( item20, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item2.Add( item18, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
     item2.AddGrowableCol( 0 )
 
     item1.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item22 = TipOrdRadioBox( parent, ID_TIPORD, "Ordinamento", wx.DefaultPosition, wx.DefaultSize, 
+    item30 = TipOrdRadioBox( parent, ID_TIPORD, "Ordinamento", wx.DefaultPosition, wx.DefaultSize, 
         ["Codice","Descrizione"] , 1, wx.RA_SPECIFY_COLS )
-    item22.SetName( "tipord" )
-    item1.Add( item22, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
+    item30.SetName( "tipord" )
+    item1.Add( item30, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
 
-    item23 = TipiValoreRadioBox( parent, ID_TIPVAL, "Valorizzazione", wx.DefaultPosition, wx.DefaultSize, 
+    item31 = TipiValoreRadioBox( parent, ID_TIPVAL, "Valorizzazione", wx.DefaultPosition, wx.DefaultSize, 
         ["Costo ultimo","Costo medio"] , 1, wx.RA_SPECIFY_COLS )
-    item23.SetName( "tipval" )
-    item1.Add( item23, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
+    item31.SetName( "tipval" )
+    item1.Add( item31, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
 
-    item24 = TipoGiacenzaRadioBox( parent, ID_TIPGIACON, "G.Contab:", wx.DefaultPosition, wx.DefaultSize, 
+    item32 = TipoGiacenzaRadioBox( parent, ID_TIPGIACON, "G.Contab:", wx.DefaultPosition, wx.DefaultSize, 
         ["Tutto","Zero","Posit.","Negat."] , 1, wx.RA_SPECIFY_COLS )
-    item24.SetName( "tipgiacon" )
-    item1.Add( item24, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
+    item32.SetName( "tipgiacon" )
+    item1.Add( item32, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
 
-    item25 = TipoGiacenzaRadioBox( parent, ID_TIPGIAFIS, "G.Rilev:", wx.DefaultPosition, wx.DefaultSize, 
+    item33 = TipoGiacenzaRadioBox( parent, ID_TIPGIAFIS, "G.Rilev:", wx.DefaultPosition, wx.DefaultSize, 
         ["Tutto","Zero","Posit.","Negat."] , 1, wx.RA_SPECIFY_COLS )
-    item25.SetName( "tipgiafis" )
-    item1.Add( item25, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
+    item33.SetName( "tipgiafis" )
+    item1.Add( item33, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
 
-    item26 = wx.Button( parent, ID_BTNESTRAI, "Estrai giacenze", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item26.SetName( "btnestrai" )
-    item1.Add( item26, 0, wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
+    item34 = wx.Button( parent, ID_BTNESTRAI, "Estrai giacenze", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item34.SetName( "btnestrai" )
+    item1.Add( item34, 0, wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
 
     item1.AddGrowableCol( 4 )
 
     item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item27 = wx.StaticLine( parent, ID_LINE, wx.DefaultPosition, [20,-1], wx.LI_HORIZONTAL )
-    item0.Add( item27, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+    item35 = wx.StaticLine( parent, ID_LINE, wx.DefaultPosition, [20,-1], wx.LI_HORIZONTAL )
+    item0.Add( item35, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
-    item28 = wx.StaticText( parent, ID_TEXT, "Giacenze prodotti", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item28.SetForegroundColour( wx.BLUE )
-    item0.Add( item28, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+    item36 = wx.StaticText( parent, ID_TEXT, "Giacenze prodotti", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item36.SetForegroundColour( wx.BLUE )
+    item0.Add( item36, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
 
-    item29 = wx.Panel( parent, ID_PANGRID, wx.DefaultPosition, [800,500], 0 )
-    item29.SetName( "pangrid" )
-    item0.Add( item29, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item37 = wx.Panel( parent, ID_PANGRID, wx.DefaultPosition, [800,400], 0 )
+    item37.SetName( "pangrid" )
+    item0.Add( item37, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item30 = wx.BoxSizer( wx.HORIZONTAL )
+    item38 = wx.BoxSizer( wx.HORIZONTAL )
     
-    item31 = wx.Button( parent, ID_BTNLIST, "Lista giacenze rilevate", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item31.SetName( "btnlist" )
-    item30.Add( item31, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+    item39 = wx.Button( parent, ID_BTNLIST, "Lista giacenze rilevate", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item39.SetName( "btnlist" )
+    item38.Add( item39, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
-    item0.Add( item30, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item0.Add( item38, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item0.AddGrowableCol( 0 )
 
@@ -400,10 +442,10 @@ def EditGiacenzeFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_TIPOPROD = 14022
-ID_TIPOVAL = 14023
-ID_STAGCON = 14024
-ID_BTNPRINT = 14025
+ID_TIPOPROD = 14026
+ID_TIPOVAL = 14027
+ID_STAGCON = 14028
+ID_BTNPRINT = 14029
 
 def ListGiacenzeFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -440,12 +482,12 @@ def ListGiacenzeFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_PANGRIDRIEP = 14026
-ID_TIPDOC = 14027
-ID_TIPMOV = 14028
-ID_DATDOC = 14029
-ID_NUMDOC = 14030
-ID_BTNGENMOV = 14031
+ID_PANGRIDRIEP = 14030
+ID_TIPDOC = 14031
+ID_TIPMOV = 14032
+ID_DATDOC = 14033
+ID_NUMDOC = 14034
+ID_BTNGENMOV = 14035
 
 def GeneraMovimentiFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )

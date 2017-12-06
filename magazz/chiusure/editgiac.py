@@ -166,6 +166,7 @@ class EditGiacenzeGrid(dbglib.DbGridColoriAlternati):
         
         self.COL_procod = b(( 80, (cc(pro, "codice"),  "Codice",         _STR, True)))
         self.COL_prodes = b((200, (cc(pro, "descriz"), "Prodotto",       _STR, True)))
+        self.COL_proum  = b((20,  (cc(pro, "um"),      "Um",             _STR, True)))
         self.COL_GIACON = a((110, (cc(gia, "giacon"),  "Giac.Contabile", _QTA, True)))
         
         self.rscqtafis = cc(gia, "giafis")
@@ -474,6 +475,36 @@ class EditGiacenzePanel(wx.Panel):
                     pro.AddFilter('progia.giafis>0')
                 elif tg == 'N':
                     pro.AddFilter('progia.giafis<0')
+                    
+#----------------------------------------------------------------------------------------------- gio
+            v1 = cn('codice1').GetValue()
+            v2 = cn('codice2').GetValue()
+            if v1 or v2:
+                if v1 == v2 or (v1 and v2 == ""):
+                    pro.AddFilter(r"prod.codice=%s", v1)
+                else:
+                    if v1: pro.AddFilter(r"prod.codice>=%s", v1)
+                    if v2: pro.AddFilter(r"prod.codice<=%s", v2.rstrip()+'Z')
+
+#            for name in 'tipart,catart,gruart,pdcforn'.split(','):
+            for name in 'catart'.split(','):
+                c1 = cn(name+'1')
+                c2 = cn(name+'2')
+                if hasattr(c1, 'GetValueCod'):
+                    v1 = cn(name+'1').GetValueCod()
+                    v2 = cn(name+'2').GetValueCod()
+                else:
+                    v1 = cn(name+'1').GetValue()
+                    v2 = cn(name+'2').GetValue()
+                if v1 or v2:
+                    if v1 == v2 or (v1 and v2 == ""):
+                        pro.AddFilter("%s.codice=%%s" % name, v1)
+                    else:
+                        if v1:
+                            pro.AddFilter("%s.codice>=%%s" % name, v1)
+                        if v2:
+                            pro.AddFilter("%s.codice<=%%s" % name, v2.rstrip()+'Z')
+#----------------------------------------------------------------------------------------------- gio
             pro.ClearOrders()
             to = cn('tipord').GetValue()
             if to == "C":
