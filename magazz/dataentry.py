@@ -1229,6 +1229,10 @@ class MagazzPanel(aw.Panel,\
                     event.Skip()
                 else:
                     self.SetRegStatus(STATUS_SELCAUS)
+        else:
+            self.dbdoc.ProdProRead()
+            self.dbdoc.ProdGiaRead()
+            
 
     def OnButPrint1(self, event):
         if self.PrintDoc(doc=None, skip_prompt=self.dbdoc.cfgdoc.noprompt=='X'):
@@ -1237,6 +1241,10 @@ class MagazzPanel(aw.Panel,\
                     event.Skip()
                 else:
                     self.SetRegStatus(STATUS_SELCAUS)
+        else:
+            self.dbdoc.ProdProRead()
+            self.dbdoc.ProdGiaRead()
+            
 
     def OnButModify(self, event):
         if self.status == STATUS_DISPLAY and self.canedit:
@@ -1456,7 +1464,7 @@ class MagazzPanel(aw.Panel,\
         pathname = doc.GetPrintPathName()
         filename = doc.GetPrintFileName()
 
-        r = rpt.Report(self, self.SetDbTable2Print(doc), 
+        r = rpt.Report(self, self.SetDbTable2Print(doc),
                        tool, noMove=True, startFunc=MoveFirst,
                        printer=cfg.printer, copies=copies,
                        changepathname=pathname, changefilename=filename,
