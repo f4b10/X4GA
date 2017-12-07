@@ -1397,6 +1397,12 @@ class MagazzPanel(aw.Panel,\
         if doc is None:
             doc = self.dbdoc
 
+        try:
+            doc.ProdProRead()
+            doc.ProdGiaRead()
+        except:
+            pass
+
         cfg = doc.cfgdoc
         tool = cfg.toolprint
         if not tool:
