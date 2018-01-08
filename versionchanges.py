@@ -28,13 +28,12 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
-    ('1.5.44', dt.Date(2017, 11, 5), (
-         ("BET1239",
-         """Adeguato il dataentry di magazzino per rispettare quanto previsto dal nuovo flag per l'aggiornamento della tabella progia."""),
-         ("BET1238",
-         """Introdotta nuovo flag in definizione movimenti di magazzino per pilotare aggiornamento della tabella progia."""),
+    ('1.5.50', dt.Date(2018, 1, 8), (
+         ("BUG1166",
+         """Ampliato spazio per visualizzazione ricarica."""),
+         ("BUG1165",
+         """Dataentry magazzino. Rimosso bug su ricalcolo progressivi e giacenze prodotto."""),
         ),),
-
 
     ('1.5.48', dt.Date(2017, 11, 23), (
          ("BET1237",
