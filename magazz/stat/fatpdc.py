@@ -46,6 +46,9 @@ import report as rpt
 FRAME_TITLE_FATT = "Fatturato clienti"
 FRAME_TITLE_FATTCC = "Fatturato clienti/categoria prodotto"
 
+FRAME_TITLE_FATTFOR = "Fatturato fornitori"
+FRAME_TITLE_FATTFORCC = "Fatturato fornitori/categoria prodotto"
+
 
 class _FatturatoVenditeGrid(dbglib.DbGridColoriAlternati):
     
@@ -184,6 +187,7 @@ class _FatturatoVenditePanel(aw.Panel):
         if fatmax:
             f.AddHaving('total_statvalfat<=%s', fatmax)
         self.SetOrder()
+        f.SetDebug()
         f.Retrieve()
         grid.ResetView()
     
@@ -343,3 +347,76 @@ class FatturatoCliCatArtFrame(aw.Frame):
         aw.Frame.__init__(self, *args, **kwargs)
         self.AddSizedPanel(FatturatoCliCatArtPanel(self))
         self.CenterOnScreen()
+
+
+
+
+class FatturatoFornitoriFrame(aw.Frame):
+    
+    def __init__(self, *args, **kwargs):
+        kwargs['title'] = FRAME_TITLE_FATTFOR
+        aw.Frame.__init__(self, *args, **kwargs)
+        self.AddSizedPanel(FatturatoFornitoriPanel(self))
+        self.CenterOnScreen()
+
+class FatturatoFornitoriPanel(_FatturatoVenditePanel):
+    
+    rptname = "Fatturato Fornitori"
+    
+    def InitControls(self):
+        wdr.SetFornit()
+        wdr.FatturatoPdcFunc(self)
+        self.FindWindowByName('pdc1').GetParent().SeleAnag.StaticBox.SetLabel('Selezione su fornitori')
+    
+    def InitTableFatt(self):
+        self.dbfat = dbs.FatturatoFornitori()
+        self.dbfat.ShowDialog(self)
+    
+    def InitGrid(self):
+        self.gridfat = FatturatoClientiGrid(self.FindWindowByName('pangridfat'), 
+                                            self.dbfat)
+    
+    def OnUpdate(self, event):
+        self.UpdateData(self.dbfat, self.gridfat)
+        event.Skip()
+
+        
+class FatturatoForCatArtFrame(aw.Frame):
+    
+    def __init__(self, *args, **kwargs):
+        kwargs['title'] = FRAME_TITLE_FATTFORCC
+        aw.Frame.__init__(self, *args, **kwargs)
+        self.AddSizedPanel(FatturatoForCatArtPanel(self))
+        self.CenterOnScreen()
+        
+
+class FatturatoForCatArtPanel(_FatturatoVenditePanel):
+    
+    rptname = "Fatturato Fornitori per Categoria prodotto"
+    
+    def InitControls(self):
+        wdr.SetFornit()
+        wdr.FatturatoPdcFunc(self)
+        self.FindWindowByName('pdc1').GetParent().SeleAnag.StaticBox.SetLabel('Selezione su fornitori')
+    
+    def InitTableFatt(self):
+        self.dbfat = dbs.FatturatoForCatArt()
+        self.dbfat.ShowDialog(self)
+    
+    def InitGrid(self):
+        self.gridfat = FatturatoCliCatArtGrid(self.FindWindowByName('pangridfat'), 
+                                              self.dbfat)
+    
+    def OnUpdate(self, event):
+        self.UpdateData(self.dbfat, self.gridfat)
+        event.Skip()
+    
+    def OnPrint(self, event):
+        db = self.dbfat
+        tipord = self.FindWindowByName('tipord').GetSelection()
+        rptname = self.rptname
+        if tipord != 0:
+            rptname += ' - flat'
+        rpt.Report(self, db, rptname)
+
+        

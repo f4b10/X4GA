@@ -617,6 +617,9 @@ class XFrame(aw.Frame):
             (self.OnPdcFtProd,                 ID_PDCSINTART),
             (self.OnStatFatCli,                ID_STATFATCLI),
             (self.OnStatFatCliCatArt,          ID_STATFATCLICAT),
+            (self.OnStatFatFor,                ID_STATFATFOR),
+            (self.OnStatFatForCatArt,          ID_STATFATFORCAT),
+            
             (self.OnStatFatPro,                ID_STATFATPRO),
             (self.OnStatFatProCli,             ID_STATFATPROCLI),
             (self.OnStatFatAge,                ID_STATFATAGE),
@@ -1690,6 +1693,16 @@ class XFrame(aw.Frame):
     def OnStatFatCliCatArt(self, event):
         from magazz.stat.fatpdc import FatturatoCliCatArtFrame
         self.LaunchFrame(FatturatoCliCatArtFrame)
+
+    def OnStatFatFor(self, event):
+        from magazz.stat.fatpdc import FatturatoFornitoriFrame
+        self.LaunchFrame(FatturatoFornitoriFrame)
+    
+    def OnStatFatForCatArt(self, event):
+        from magazz.stat.fatpdc import FatturatoForCatArtFrame
+        self.LaunchFrame(FatturatoForCatArtFrame)
+
+
     
     def OnStatFatPro(self, event):
         from magazz.stat.fatpro import FatturatoProdottiFrame

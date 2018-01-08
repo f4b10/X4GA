@@ -6,17 +6,17 @@
 # Copyright:    (C) 2011 Astra S.r.l. C.so Cavallotti, 122 18038 Sanremo (IM)
 # ------------------------------------------------------------------------------
 # This file is part of X4GA
-# 
+#
 # X4GA is free software: you can redistribute it and/or modify
 # it under the terms of the Affero GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # X4GA is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
@@ -31,14 +31,14 @@ bt = Env.Azienda.BaseTab
 
 
 class SintesiProVenCli(adb.DbMem):
-    
+
     def __init__(self):
-        adb.DbMem.__init__(self, 
+        adb.DbMem.__init__(self,
                        'pdc_id,pdc_codice,pdc_descriz,prod_id,prod_codice,prod_descriz,totqta,lastdat,lastqta,lastprz,lastsco,lastscmq,lastscmp')
         self.pdc = dba.Clienti()
         self.pdc.Get(-1)
         self.anag = self.pdc.anag
-    
+
     def Retrieve(self, filtanag=None, filtprod=None, filtmov=None, order="P"):
         filtanag = filtanag or '1'
         filtprod = filtprod or '1'
@@ -70,9 +70,9 @@ SELECT pdc.id         'pdc_id',
        prod.id        'prod_id',
        prod.codice    'prod_codice',
        prod.descriz   'prod_descriz',
-       pdcprod.totqta 'totqta', 
+       pdcprod.totqta 'totqta',
        pdcprod.maxdat 'lastdat', (
-       
+
           SELECT mov.qta
             FROM movmag_h doc
             JOIN movmag_b mov ON mov.id_doc=doc.id
@@ -111,11 +111,11 @@ SELECT pdc.id         'pdc_id',
 
   FROM (
 
-   SELECT doc.id_pdc 'pdc_id', mov.id_prod 'prod_id', 
+   SELECT doc.id_pdc 'pdc_id', mov.id_prod 'prod_id',
           SUM(mov.qta) 'totqta', MAX(doc.datdoc) 'maxdat'
-        
+
      FROM movmag_b mov
-      
+
     INNER JOIN movmag_h doc ON mov.id_doc=doc.id
     INNER JOIN prod ON mov.id_prod=prod.id
      LEFT JOIN tipart ON prod.id_tipart=tipart.id
@@ -123,9 +123,9 @@ SELECT pdc.id         'pdc_id',
      LEFT JOIN gruart ON prod.id_gruart=gruart.id
      LEFT JOIN marart ON prod.id_marart=marart.id
      LEFT JOIN pdc fornit ON prod.id_fornit=fornit.id
-    
+
     WHERE mov.id_tipmov IN (%(movids)s) AND (%(filtmov)s) AND (%(filtprod)s)
-    
+
     GROUP BY doc.id_pdc, mov.id_prod
 
 ) AS pdcprod
@@ -162,29 +162,29 @@ ORDER BY pdc.descriz, %(order)s
 
 
 class _FatturatoVendite(adb.DbTable):
-    
+
     _pdctab = bt.TABNAME_CLIENTI
     _pdcalias = None
     _statcol = 'statftcli'
-    
+
     def __init__(self, *args, **kwargs):
-        
+
         adb.DbTable.__init__(self, bt.TABNAME_MOVMAG_B, 'mov', fields='id_tipmov')
-        
+
         tpm = self.AddJoin(bt.TABNAME_CFGMAGMOV,  'tipmov')
-        
+
         doc = self.AddJoin(bt.TABNAME_MOVMAG_H,   'doc', idLeft='id_doc',
                            idRight='id', fields='id_tipdoc,id_pdc,id_agente')
         tpd = doc.AddJoin(bt.TABNAME_CFGMAGDOC,    'tipdoc')
-        
+
         pdc = doc.AddJoin(bt.TABNAME_PDC,         'pdc')
         ana = pdc.AddJoin(self._pdctab,           'anag',   join=adb.JOIN_LEFT,
                           idLeft='id', idRight='id')
         cta = ana.AddJoin(bt.TABNAME_CATCLI,      'catana', join=adb.JOIN_LEFT,
                           idLeft='id_categ', idRight='id')
-        
+
         age = doc.AddJoin(bt.TABNAME_AGENTI,      'agente', join=adb.JOIN_LEFT)
-        
+
         pro = self.AddJoin(bt.TABNAME_PROD,       'prod',   join=adb.JOIN_LEFT)
         tip = pro.AddJoin(bt.TABNAME_TIPART,      'tipart', join=adb.JOIN_LEFT)
         cat = pro.AddJoin(bt.TABNAME_CATART,      'catart', join=adb.JOIN_LEFT)
@@ -192,17 +192,17 @@ class _FatturatoVendite(adb.DbTable):
         gru = pro.AddJoin(bt.TABNAME_MARART,      'marart', join=adb.JOIN_LEFT)
         stt = pro.AddJoin(bt.TABNAME_STATART,     'statart',join=adb.JOIN_LEFT,
                           idLeft='id_status', idRight='id')
-        
+
         self.AddGroups()
-        
+
         self.AddTotalOf('mov.qta*tipmov.%s' % self._statcol, 'statqtafat')
         self.AddTotalOf('mov.importo*tipmov.%s' % self._statcol, 'statvalfat')
         self.AddTotalOf('(mov.qta*mov.prezzo)*tipmov.%s' % self._statcol, 'statlrdfat')
-        
+
         self.ClearBaseFilters()
-        
+
         self.Reset()
-    
+
     def ClearBaseFilters(self):
         adb.DbTable.ClearBaseFilters(self)
         self.AddBaseFilter('tipmov.%s IN (1,-1)' % self._statcol)
@@ -213,7 +213,7 @@ class _FatturatoVendite(adb.DbTable):
 
 
 class FatturatoClienti(_FatturatoVendite):
-    
+
     def AddGroups(self):
         self.AddGroupOn('pdc.id')
 
@@ -222,7 +222,7 @@ class FatturatoClienti(_FatturatoVendite):
 
 
 class FatturatoCliPro(_FatturatoVendite):
-    
+
     def AddGroups(self):
         self.AddGroupOn('pdc.id')
         self.AddGroupOn('prod.id')
@@ -232,7 +232,7 @@ class FatturatoCliPro(_FatturatoVendite):
 
 
 class FatturatoCliCatArt(_FatturatoVendite):
-    
+
     def AddGroups(self):
         self.AddGroupOn('pdc.id')
         self.AddGroupOn('catart.id')
@@ -242,7 +242,7 @@ class FatturatoCliCatArt(_FatturatoVendite):
 
 
 class FatturatoCatArt(_FatturatoVendite):
-    
+
     def AddGroups(self):
         self.AddGroupOn('catart.id')
 
@@ -289,9 +289,9 @@ class FatturatoProCatCli(_FatturatoVendite):
 
 
 class ValutaPrezziVendita(adb.DbTable):
-    
+
     statftcol = 'statftcli'
-    
+
     def __init__(self):
         adb.DbTable.__init__(self, bt.TABNAME_MOVMAG_B, 'mov', fields=None)
         pro = self.AddJoin(bt.TABNAME_PROD,      'prod',   fields=None)
@@ -333,7 +333,7 @@ class ValutaCostiAcquisto(ValutaPrezziVendita):
 
 
 class MovimentiPrezzi(dbm.Movim):
-    
+
     def __init__(self, *args, **kwargs):
         dbm.Movim.__init__(self, *args, **kwargs)
         self.AddField('mov.importo/IF(mov.qta IS NULL or mov.qta=0,1,mov.qta)', 'presco')
@@ -344,7 +344,71 @@ class MovimentiPrezzi(dbm.Movim):
 
 
 class ReddVend(adb.DbTable):
-    
+
     def __init__(self):
         adb.DbTable.__init__(self, 'stat_reddvend', 'rv', primaryKey='doc_id')
         self.Reset()
+
+
+
+
+class _FatturatoAcquisti(adb.DbTable):
+
+    _pdctab = bt.TABNAME_FORNIT
+    _pdcalias = None
+    _statcol = 'statftfor'
+
+    def __init__(self, *args, **kwargs):
+
+        adb.DbTable.__init__(self, bt.TABNAME_MOVMAG_B, 'mov', fields='id_tipmov')
+
+        tpm = self.AddJoin(bt.TABNAME_CFGMAGMOV,  'tipmov')
+
+        doc = self.AddJoin(bt.TABNAME_MOVMAG_H,   'doc', idLeft='id_doc',
+                           idRight='id', fields='id_tipdoc,id_pdc,id_agente')
+        tpd = doc.AddJoin(bt.TABNAME_CFGMAGDOC,    'tipdoc')
+
+        pdc = doc.AddJoin(bt.TABNAME_PDC,         'pdc')
+        ana = pdc.AddJoin(self._pdctab,           'anag',   join=adb.JOIN_LEFT,
+                          idLeft='id', idRight='id')
+        cta = ana.AddJoin(bt.TABNAME_CATCLI,      'catana', join=adb.JOIN_LEFT,
+                          idLeft='id_categ', idRight='id')
+
+        age = doc.AddJoin(bt.TABNAME_AGENTI,      'agente', join=adb.JOIN_LEFT)
+
+        pro = self.AddJoin(bt.TABNAME_PROD,       'prod',   join=adb.JOIN_LEFT)
+        tip = pro.AddJoin(bt.TABNAME_TIPART,      'tipart', join=adb.JOIN_LEFT)
+        cat = pro.AddJoin(bt.TABNAME_CATART,      'catart', join=adb.JOIN_LEFT)
+        gru = pro.AddJoin(bt.TABNAME_GRUART,      'gruart', join=adb.JOIN_LEFT)
+        gru = pro.AddJoin(bt.TABNAME_MARART,      'marart', join=adb.JOIN_LEFT)
+        stt = pro.AddJoin(bt.TABNAME_STATART,     'statart',join=adb.JOIN_LEFT,
+                          idLeft='id_status', idRight='id')
+
+        self.AddGroups()
+
+        self.AddTotalOf('mov.qta*tipmov.%s' % self._statcol, 'statqtafat')
+        self.AddTotalOf('mov.importo*tipmov.%s' % self._statcol, 'statvalfat')
+        self.AddTotalOf('(mov.qta*mov.prezzo)*tipmov.%s' % self._statcol, 'statlrdfat')
+
+        self.ClearBaseFilters()
+
+        self.Reset()
+
+    def ClearBaseFilters(self):
+        adb.DbTable.ClearBaseFilters(self)
+        self.AddBaseFilter('tipmov.%s IN (1,-1)' % self._statcol)
+        self.AddBaseFilter('(doc.f_ann IS NULL OR doc.f_ann<>1) AND (doc.f_acq IS NULL OR doc.f_acq<>1) AND (mov.f_ann IS NULL OR mov.f_ann<>1)')
+
+class FatturatoFornitori(_FatturatoAcquisti):
+
+    def AddGroups(self):
+        self.AddGroupOn('pdc.id')
+
+
+
+class FatturatoForCatArt(_FatturatoAcquisti):
+
+    def AddGroups(self):
+        self.AddGroupOn('pdc.id')
+        self.AddGroupOn('catart.id')
+

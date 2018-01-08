@@ -101,6 +101,7 @@ def FatturatoPdcFunc( parent, call_fit = True, set_sizer = True ):
     
     item3 = wx.StaticBox( parent, -1, "Selezioni sui clienti" )
     item2 = wx.StaticBoxSizer( item3, wx.VERTICAL )
+    parent.SeleAnag = item2
     
     item4 = wx.FlexGridSizer( 0, 3, 0, 0 )
     
