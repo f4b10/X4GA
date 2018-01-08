@@ -1232,7 +1232,7 @@ class MagazzPanel(aw.Panel,\
         else:
             self.dbdoc.ProdProRead()
             self.dbdoc.ProdGiaRead()
-            
+
 
     def OnButPrint1(self, event):
         if self.PrintDoc(doc=None, skip_prompt=self.dbdoc.cfgdoc.noprompt=='X'):
@@ -1244,7 +1244,7 @@ class MagazzPanel(aw.Panel,\
         else:
             self.dbdoc.ProdProRead()
             self.dbdoc.ProdGiaRead()
-            
+
 
     def OnButModify(self, event):
         if self.status == STATUS_DISPLAY and self.canedit:
@@ -2600,8 +2600,9 @@ class MagazzPanel(aw.Panel,\
     def Validate(self):
         for c in aw.awu.GetAllChildrens(self, lambda x: hasattr(x, 'IsTooBig')):
             if c.IsTooBig():
+                if not c.GetName()=='bodypric':
 #                aw.awu.MsgDialog(self, "Valore numerico troppo elevato\n(%s)" % c.GetName(), style=wx.ICON_ERROR)
-                return False
+                    return False
         return True
 
     def DocReset(self):
