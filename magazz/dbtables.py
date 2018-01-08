@@ -1538,7 +1538,7 @@ class DocMag(adb.DbTable):
             return
         pp = self._info.prodpro
         for mov in self.mov:
-            if mov.id_prod and mov.f_ann != 1:
+            if mov.id_prod and mov.id and mov.f_ann != 1:
                 ppkey = '%d/%d' % (mov.id, mov.id_prod)
                 if not ppkey in pp:
                     pp[ppkey] = copy.deepcopy(self._info.ppcol)
