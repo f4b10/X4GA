@@ -187,7 +187,6 @@ class _FatturatoVenditePanel(aw.Panel):
         if fatmax:
             f.AddHaving('total_statvalfat<=%s', fatmax)
         self.SetOrder()
-        f.SetDebug()
         f.Retrieve()
         grid.ResetView()
     
