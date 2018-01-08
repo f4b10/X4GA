@@ -28,7 +28,7 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
-    ('1.5.50', dt.Date(2018, 1, 8), (
+    ('1.5.51', dt.Date(2018, 1, 8), (
          ("BUG1166",
          """Ampliato spazio per visualizzazione ricarica."""),
          ("BUG1165",
