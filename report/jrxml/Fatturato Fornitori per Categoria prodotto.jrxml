@@ -179,9 +179,9 @@
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="224"
+						x="212"
 						y="5"
-						width="59"
+						width="71"
 						height="10"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -194,7 +194,7 @@
 					<textElement textAlignment="Right" verticalAlignment="Bottom" rotation="None" lineSpacing="Single">
 						<font fontName="Times New Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[Totale cliente:]]></text>
+				<text><![CDATA[Totale fornitore:]]></text>
 				</staticText>
 				<line direction="TopDown">
 					<reportElement
