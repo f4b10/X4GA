@@ -2446,7 +2446,7 @@ def BodyStatFunc( parent, call_fit = True, set_sizer = True ):
     item13 = wx.StaticText( parent, ID_TEXT, "%R.", wx.DefaultPosition, wx.DefaultSize, 0 )
     item6.Add( item13, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.TOP, 5 )
 
-    item14 = NumCtrl(parent, ID_BODYPRIC, name='bodypric', integerWidth=4, fractionWidth=1, allowNegative=True, groupDigits=False); item14.SetReadOnly()
+    item14 = NumCtrl(parent, ID_BODYPRIC, name='bodypric', integerWidth=6, fractionWidth=1, allowNegative=True, groupDigits=False); item14.SetReadOnly()
     item6.Add( item14, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.TOP, 5 )
 
     item6.AddGrowableCol( 1 )
