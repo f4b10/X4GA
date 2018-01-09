@@ -226,7 +226,7 @@ class DocMag(adb.DbTable):
 
 
         self.SetBodyMultiJoin(writable=writable)
-        
+
 
         self.cfgdoc = CfgDocMov()
         self.regcon = dbc.DbRegCon()
@@ -310,12 +310,12 @@ class DocMag(adb.DbTable):
         i.pgcol = {        #struttura aggiornamento GIACENZE CONSOLIDATE:
             #          valore   valore   numero     espr. da
             #          storno   agg.     decimali   valutare
-            
+
             'giacon':   {'tr': 0, 'tw': 0, 'dec': DQ, 'exp': q}, #giacenza contabile
             'giafis':   {'tr': 0, 'tw': 0, 'dec': DQ, 'exp': q}, #giacenza rilevata
         }
-            
-            
+
+
 
         #progressivi generali
         i.progr = adb.DbTable(bt.TABNAME_CFGPROGR, "progr", writable=True)
@@ -917,9 +917,9 @@ class DocMag(adb.DbTable):
                     agg = getattr(tm, 'agg%s' % col) or 0
                     p = pr[col]
                     p['tw'] += round(((eval(p['exp']) or 0)*agg),p['dec'])
-                
-                
-                
+
+
+
                 pgkey = '%d/%d' % (mov.id, mov.id_prod)
                 if not pgkey in pg:
                     pg[pgkey] = copy.deepcopy(self._info.pgcol)
@@ -928,10 +928,10 @@ class DocMag(adb.DbTable):
                     agg = getattr(tm, 'agg%s' % col) or 0
                     p = gi[col]
                     p['tw'] += round(((eval(p['exp']) or 0)*agg),p['dec'])
-                
-                
-                    
-                    
+
+
+
+
                 cols = {}
                 if (tm.aggcosto or ' ') in '12':
                     cols['costo'] = {'val':  None,
@@ -1006,7 +1006,7 @@ class DocMag(adb.DbTable):
                 newmag = self.id_magazz
                 newdrg = self.datreg
                 self.ProdProWrite(ppkey, newmag, newdrg, 'tw', '+')
-                
+
         oldmag = self._info.pgkeys['mag']
         olddrg = self._info.pgkeys['drg']
 
@@ -1016,8 +1016,8 @@ class DocMag(adb.DbTable):
                 newmag = self.id_magazz
                 newdrg = self.datreg
                 self.ProdGiacWrite(pgkey, newmag, newdrg, 'tw', '+')
-                
-        
+
+
         if not deldoc:
             self.UpdateProdotti(pup)
         if wait:
@@ -1095,9 +1095,9 @@ class DocMag(adb.DbTable):
             par.append(magid)
             if not db.Execute(cmd, par):
                 raise Exception, db.dbError.description
-            
+
         return True
-        
+
     def ProdProWrite(self, ppkey, magid, dreg, tcol, segno):
         _, proid = map(int, ppkey.split('/'))
         do = True
@@ -1485,7 +1485,7 @@ class DocMag(adb.DbTable):
         self._info.pgkeys['mag'] = None
         self._info.pgkeys['drg'] = None
         self._info.pgkeys['ann'] = False
-    
+
 
     def ProdGiaRead(self):
         self.ProdGiaReset()
@@ -1506,20 +1506,23 @@ class DocMag(adb.DbTable):
         pp = self._info.prodgia
         for mov in self.mov:
             if mov.id_prod and mov.id and mov.f_ann != 1:
-                pgkey = '%d/%d' % (mov.id, mov.id_prod)
-                if not pgkey in pp:
-                    pp[pgkey] = copy.deepcopy(self._info.pgcol)
-                pr = pp[pgkey]
-                for col in pr.keys():
-                    agg = getattr(self.mov.config, 'agg%s' % col)
-                    p = pr[col]
-                    try:
-                        p['tr'] += round(((eval(p['exp']) or 0)*agg),p['dec'])
-                    except:
-                        pass
+                try:
+                    pgkey = '%d/%d' % (mov.id, mov.id_prod)
+                    if not pgkey in pp:
+                        pp[pgkey] = copy.deepcopy(self._info.pgcol)
+                    pr = pp[pgkey]
+                    for col in pr.keys():
+                        agg = getattr(self.mov.config, 'agg%s' % col)
+                        p = pr[col]
+                        try:
+                            p['tr'] += round(((eval(p['exp']) or 0)*agg),p['dec'])
+                        except:
+                            pass
+                except:
+                    pass
             #self.UpdateMovExternalRead()
-    
-    
+
+
     def ProdProRead(self):
         self.ProdProReset()
         do = True
@@ -1539,17 +1542,20 @@ class DocMag(adb.DbTable):
         pp = self._info.prodpro
         for mov in self.mov:
             if mov.id_prod and mov.id and mov.f_ann != 1:
-                ppkey = '%d/%d' % (mov.id, mov.id_prod)
-                if not ppkey in pp:
-                    pp[ppkey] = copy.deepcopy(self._info.ppcol)
-                pr = pp[ppkey]
-                for col in pr.keys():
-                    agg = getattr(self.mov.config, 'agg%s' % col)
-                    p = pr[col]
-                    try:
-                        p['tr'] += round(((eval(p['exp']) or 0)*agg),p['dec'])
-                    except:
-                        pass
+                try:
+                    ppkey = '%d/%d' % (mov.id, mov.id_prod)
+                    if not ppkey in pp:
+                        pp[ppkey] = copy.deepcopy(self._info.ppcol)
+                    pr = pp[ppkey]
+                    for col in pr.keys():
+                        agg = getattr(self.mov.config, 'agg%s' % col)
+                        p = pr[col]
+                        try:
+                            p['tr'] += round(((eval(p['exp']) or 0)*agg),p['dec'])
+                        except:
+                            pass
+                except:
+                    pass
             self.UpdateMovExternalRead()
 
     def _InitTotalizzaRighe(self):
@@ -3589,7 +3595,7 @@ class InventarioDaMovim(_InventarioMixin):
             bt.TABNAME_MOVMAG_H,  "doc", idLeft='id_doc', idRight='id', join=adb.JOIN_LEFT, fields='id_magazz')
 
         if self._info.g_datalastchi:
-            # MARCELLO - correzione mia 
+            # MARCELLO - correzione mia
             mov.AddBaseFilter("doc.datreg>%s or doc.datreg is null", self._info.g_datalastchi)
             #mov.AddBaseFilter("doc.datreg>%s", self._info.g_datalastchi)
 
@@ -3645,11 +3651,11 @@ class InventarioDaMovim(_InventarioMixin):
         elif type(m) in (list, tuple):
             tab.AddFilter("doc.id_magazz IN (%s)" % ','.join(map(lambda x: "'%s'" % str(x), m)))
         if self._info.g_datalastchi is not None:
-            # MARCELLO - correzione mia 
+            # MARCELLO - correzione mia
             tab.AddFilter("doc.datreg>%s or doc.datreg is null", self._info.g_datalastchi)
             #tab.AddFilter("doc.datreg>%s", self._info.g_datalastchi)
         if self._info.g_data is not None:
-            # MARCELLO - correzione mia 
+            # MARCELLO - correzione mia
             tab.AddFilter("(doc.datreg<=%s or doc.datreg is null)", self._info.g_data)
             #tab.AddFilter("(doc.datreg<=%s", self._info.g_data)
 
@@ -3719,7 +3725,7 @@ class InventarioPresunto(adb.DbTable):
         self.AddBaseFilter('doc.f_ann IS NULL OR doc.f_ann<>1')
         self.AddBaseFilter('mov.f_ann IS NULL OR mov.f_ann<>1')
         if self._info.g_datalastchi:
-            # MARCELLO - correzione mia 
+            # MARCELLO - correzione mia
             self.AddBaseFilter('doc.datreg>%s or doc.datreg is null', self._info.g_datalastchi)
             #self.AddBaseFilter('doc.datreg>%s', self._info.g_datalastchi)
 
