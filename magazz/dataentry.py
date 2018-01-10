@@ -1113,7 +1113,12 @@ class MagazzPanel(aw.Panel,\
                                 #     wx.CallAfter(InitAnag)
                                 #===============================================
 
-                                if doc.cfgdoc.pdcdamag:
+                                if doc.cfgdoc.default_id_pdc:
+                                    def InitAnag(*args):
+                                        c.SetValue(doc.cfgdoc.default_id_pdc)
+                                    wx.CallAfter(InitAnag)
+
+                                elif doc.cfgdoc.pdcdamag:
 #                                    doc.id_pdc = doc.magazz.id_pdc
                                     def InitAnag(*args):
                                         c.SetValue(doc.magazz.id_pdc)

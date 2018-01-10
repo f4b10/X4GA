@@ -29,6 +29,8 @@ import mx.DateTime as dt
 
 history = (
     ('1.5.51', dt.Date(2018, 1, 8), (
+         ("BET1239",
+         """Aggiunta la possibilità di definire anagrafica di default per documento di magazzino."""),
          ("BET1238",
          """Aggiunta statistica su fatturato fornitori e fatturato fornitori per categoria prodotto."""),
          ("BUG1166",
