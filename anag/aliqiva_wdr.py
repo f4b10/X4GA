@@ -100,7 +100,7 @@ def AliqIvaCardDatiFunc( parent, call_fit = True, set_sizer = True ):
     item8 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
     item9 = RadioBox( parent, ID_TIPO, "Tipologia", wx.DefaultPosition, wx.DefaultSize, 
-        ["Acquisti/Vendite","Acquisti CEE","Vendite in split payment"] , 1, wx.RA_SPECIFY_COLS )
+        ["Acquisti/Vendite","Acquisti CEE","Vendite in split payment","Deducibilità differita"] , 1, wx.RA_SPECIFY_COLS )
     item9.SetName( "tipo" )
     item8.Add( item9, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 

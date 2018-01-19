@@ -711,6 +711,10 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
         self._auto_pdcsos_id = None
         self._auto_pdcsos_cod = None
         self._auto_pdcsos_des = None
+        #pdc iva differita.
+        self._auto_pdcdif_id = None
+        self._auto_pdcdif_cod = None
+        self._auto_pdcdif_des = None
         
         self.totimpon = 0
         self.totimpst = 0
@@ -966,6 +970,22 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
             id2 =  None
             cod2 = None
             des2 = None
+
+        elif tipo == "D":
+            #aliquota sospensione
+            print 'forzo conto per differita a quello per split payment'
+            #-----------------------------------------------------------
+            self._auto_pdcdif_id  = self._auto_pdcsos_id  
+            self._auto_pdcdif_cod = self._auto_pdcsos_cod 
+            self._auto_pdcdif_des = self._auto_pdcsos_des 
+            #-----------------------------------------------------------
+            id1 =  self._auto_pdcdif_id
+            cod1 = self._auto_pdcdif_cod
+            des1 = self._auto_pdcdif_des
+            id2 =  None
+            cod2 = None
+            des2 = None
+
         
         return id1, cod1, des1, id2, cod2, des2
     
@@ -1039,18 +1059,21 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
                 self._auto_pdcind_id = self._auto_ivaind
                 self._auto_pdccee_id = self._auto_ivaacqcee
                 self._auto_pdcsos_id = self._auto_ivaacqsos
+                self._auto_pdcdif_id = self._auto_ivaacqdif
                 
             elif self._cfg_regiva_tipo == "V":
                 self._auto_pdciva_id = self._auto_ivaven
                 self._auto_pdcind_id = self._auto_ivaind
                 self._auto_pdccee_id = self._auto_ivaacqcee
                 self._auto_pdcsos_id = self._auto_ivavensos
+                self._auto_pdcdif_id = self._auto_ivavendif
                 
             elif self._cfg_regiva_tipo == "C":
                 self._auto_pdciva_id = self._auto_ivacor
                 self._auto_pdcind_id = None
                 self._auto_pdccee_id = None
                 self._auto_pdcsos_id = None
+                self._auto_pdcdif_id = None
             
             self._auto_pdciva_cod, self._auto_pdciva_des =\
                 GetRecordInfo(self.db_curs, bt.TABNAME_PDC,\
@@ -1067,6 +1090,10 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
             self._auto_pdcsos_cod, self._auto_pdcsos_des =\
                 GetRecordInfo(self.db_curs, bt.TABNAME_PDC,\
                               self._auto_pdcsos_id, ("codice","descriz"))
+            
+            self._auto_pdcdif_cod, self._auto_pdcdif_des =\
+                GetRecordInfo(self.db_curs, bt.TABNAME_PDC,\
+                              self._auto_pdcdif_id, ("codice","descriz"))
             
             #if self._cfg_regiva_id is not None:
                 #self._Progr_AddKeysContabTipo_I(ctb.YEAR,\

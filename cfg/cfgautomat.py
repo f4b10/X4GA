@@ -6,17 +6,17 @@
 # Copyright:    (C) 2011 Astra S.r.l. C.so Cavallotti, 122 18038 Sanremo (IM)
 # ------------------------------------------------------------------------------
 # This file is part of X4GA
-# 
+#
 # X4GA is free software: you can redistribute it and/or modify
 # it under the terms of the Affero GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # X4GA is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
@@ -66,33 +66,33 @@ class CfgAutomat(object):
         originando anche, per ogni automatismo (obbligatorio o meno),
         una variabile di istanza, denominata C{_auto_xxx}, dove C{xxx} è
         il nome della chiave.::
-            
+
             self._Auto_AddKeys({"test": False}) => self._auto_test
-            
+
         Il contenuto di tale variabile è prelevato dalla tabella degli
         automatismi::
-        
+
             self._Auto_AddKeys({"test": True}) => self._auto_test
         solo se esiste nella tabella automatismi la voce "test"
         """
-        
+
         totautomat = 0
-        
+
         cmd =\
 """SELECT codice, descriz, aut_id """\
 """FROM %s ORDER BY codice ASC;""" % bt.TABNAME_CFGAUTOM
-        
+
         try:
             self.db_curs.execute(cmd)
             rs = self.db_curs.fetchall()
-            
+
         except MySQLdb.Error, e:
             MsgDialogDbError(None, e)
-            
+
         else:
-            
+
             missedKeys = []
-            
+
             for loadKey, needed in self._autoKeys.iteritems():
                 missing = False
                 if needed:
@@ -106,19 +106,22 @@ class CfgAutomat(object):
                             missing = True
                     if missing:
                         missedKeys.append(loadKey)
-            
+
             if len(missedKeys)>0:
                 raise AutomatException, \
                       """Impossibile proseguire per la mancanza dei """\
                       """seguenti automatismi:\n\n%s""" % ", ".join(missedKeys)
-            
+
             for au_key, au_desc, au_id in rs:
+                if au_key == 'ivavendif':
+                    pass
                 au_key = au_key.strip().lower()
                 if self._autoKeys.has_key(au_key):
+                    print "_auto_%s" % au_key, au_id
                     self.__setattr__("_auto_%s" % au_key,  au_id)
                     del self._autoKeys[au_key]
                     totautomat += 1
-        
+
         return totautomat
 
     def _Auto_AddKeys(self, params):
@@ -153,12 +156,12 @@ class CfgAutomat(object):
         Automatismi obbligatori::
             - ivaacq - id pdc sottoconto iva acquisti
             - ivaven - id pdc sottoconto iva vendite
-            
+
         Automatismi facoltativi, caricati solo se presenti::
             - ivaind    - id pdc sottoconto iva indeducibile
             - ivacor    - id pdc sottoconto iva corrispettivi
             - ivaacqcee - id pdc sottoconto iva acquisti cee
-            - ivaacqsos - id pdc sottoconto iva acquisti in sospensione
+            - ivaacqsos - id pdc sottoconto iva acquisti in split payment
             - omaggi    - id pdc sottoconto omaggi
         """
         self._autoKeys["ivaacq"] = True
@@ -168,6 +171,8 @@ class CfgAutomat(object):
         self._autoKeys["ivaacqcee"] = False
         self._autoKeys["ivaacqsos"] = False
         self._autoKeys["ivavensos"] = False
+        self._autoKeys["ivaacqdif"] = False
+        self._autoKeys["ivavendif"] = False
         self._autoKeys["omaggi"] = False
         if read:
             self.ReadAutomat()
@@ -215,7 +220,7 @@ if __name__ == "__main__":
     app = wx.PySimpleApp()
     app.MainLoop()
     Azienda.DB.testdb()
-    
+
     test = CfgAutomat(Azienda.DB.connection.cursor())
     print "%d automatismi caricati: " % test._Auto_AddKeysMagazz()
     for key, val in test.__dict__.iteritems():

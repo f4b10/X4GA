@@ -6,17 +6,17 @@
 # Copyright:    (C) 2011 Astra S.r.l. C.so Cavallotti, 122 18038 Sanremo (IM)
 # ------------------------------------------------------------------------------
 # This file is part of X4GA
-# 
+#
 # X4GA is free software: you can redistribute it and/or modify
 # it under the terms of the Affero GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # X4GA is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
@@ -82,37 +82,37 @@ class GridReg(dbglib.DbGridColoriAlternati):
         parent griglia  (wx.Panel)
         dbtable registro iva (derivati da contab.dbtables.RegIva)
         """
-        
-        dbglib.DbGridColoriAlternati.__init__(self, parent, -1, 
+
+        dbglib.DbGridColoriAlternati.__init__(self, parent, -1,
                                               size=parent.GetClientSizeTuple())
-        
+
         self.dbreg = dbreg
         reg = self.dbreg
         cau = reg.cau
         pdc = reg.pdc
-        
+
         def cn(db, col):
             return db._GetFieldIndex(col, inline=True)
-        
+
         _NUM = gl.GRID_VALUE_NUMBER+":6"
         _STR = gl.GRID_VALUE_STRING
         _DAT = gl.GRID_VALUE_DATETIME
         _IMP = bt.GetValIntMaskInfo()
-        
+
         #colcodart = pro._GetFieldIndex("codice", inline=True)
-        
+
         global colprot, coldata, colrimp, colriva
         colprot = cn(reg, 'numiva')
         coldata = cn(reg, 'datreg')
         colrimp = cn(reg, 'total_imponib')
         colriva = cn(reg, 'total_imposta')
         colrind = cn(reg, 'total_indeduc')
-        
+
         if reg.tipana == "C":
             desanag = "Cliente"
         else:
             desanag = "Fornitore"
-        
+
         cols = (\
             ( 60, (cn(reg, 'numiva'),  "Prot.",     _NUM, True )),\
             ( 80, (cn(reg, 'datreg'),  "Data reg.", _DAT, True )),\
@@ -125,22 +125,22 @@ class GridReg(dbglib.DbGridColoriAlternati):
             (120, (           colriva, "Imposta",   _IMP, True )),\
             (120, (           colrind, "Indeduc.",  _IMP, True )),\
             )
-        
+
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
         canedit = False
         canins = False
-        
+
         links = None
-        
+
         afteredit = None
         self.SetData( self.dbreg._info.rs, colmap, canedit, canins,\
                       links, afteredit)
         #self.SetCellDynAttr(self.GetAttr)
-        
+
         map(lambda c:\
             self.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
-        
+
         self.SetFitColumn(6)
         self.AutoSizeColumns()
         sz = wx.FlexGridSizer(1,0,0,0)
@@ -149,9 +149,9 @@ class GridReg(dbglib.DbGridColoriAlternati):
         sz.Add(self, 0, wx.GROW|wx.ALL, 0)
         parent.SetSizer(sz)
         sz.SetSizeHints(parent)
-        
+
         self.Bind(gl.EVT_GRID_SELECT_CELL, self.OnSelected)
-    
+
     def GetAttr(self, row, col, rscol, attr=gl.GridCellAttr):
         attr = dbglib.DbGridColoriAlternati.GetAttr(self, row, col, rscol, attr)
         readonly = True
@@ -203,25 +203,25 @@ class GridAliq(dbglib.DbGridColoriAlternati):
         parent griglia  (wx.Panel)
         dbtable registro iva (derivati da contab.dbtables.RegIva)
         """
-        
+
         size = parent.GetClientSizeTuple()
-        
+
         self.dbreg = dbreg
         reg = self.dbreg
         mov = reg.mov
         iva = mov.iva
-        
+
         cn = lambda db, col: db._GetFieldIndex(col, inline=True)
-        
+
         global colaimp, colaiva
         colaimp = cn(mov, 'total_imponib')
         colaiva = cn(mov, 'total_imposta')
-        
+
         _STR = gl.GRID_VALUE_STRING
         _DAT = gl.GRID_VALUE_DATETIME
         _PRC = bt.GetPerGenMaskInfo()
         _IMP = bt.GetValIntMaskInfo()
-        
+
         cols = [
             ( 40, (cn(iva, 'codice'),  "Cod.",      _STR, True )),
             (130, (cn(iva, 'descriz'), "Aliquota",  _STR, True )),
@@ -234,16 +234,16 @@ class GridAliq(dbglib.DbGridColoriAlternati):
         cols += [
             (130, (           colaimp, "Imponib.",  _IMP, True )),
             (130, (           colaiva, "Imposta",   _IMP, True )),]
-        
+
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
         canedit = False
         canins = False
-        
+
         dbglib.DbGridColoriAlternati.__init__(self, parent, -1, size=size, style=0)
-        
+
         links = None
-        
+
         afteredit = None
         self.SetData( self.dbreg.mov._info.rs, colmap, canedit, canins,\
                       links, afteredit)
@@ -251,10 +251,10 @@ class GridAliq(dbglib.DbGridColoriAlternati):
         #self.SetRowLabelAlignment(wx.ALIGN_RIGHT, wx.ALIGN_BOTTOM)
         #self.SetRowDynLabel(self.GetRowLabel)
         #self.SetCellDynAttr(self.GetAttr)
-        
+
         map(lambda c:\
             self.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
-        
+
         self.SetFitColumn(1)
         self.AutoSizeColumns()
         sz = wx.FlexGridSizer(1,0,0,0)
@@ -292,24 +292,24 @@ class GridTotAliq(dbglib.DbGridColoriAlternati):
         parent griglia  (wx.Panel)
         dbtable totali aliquote (DbMem)
         """
-        
+
         size = parent.GetClientSizeTuple()
-        
+
         self.dbriep = dbreg._riepaliq
         mov = self.dbriep
         iva = mov.iva
-        
+
         cn = lambda db, col: db._GetFieldIndex(col, inline=True)
-        
+
         global colaimp, colaiva
         colaimp = cn(mov, 'total_imponib')
         colaiva = cn(mov, 'total_imposta')
         colaind = cn(mov, 'total_indeduc')
-        
+
         _STR = gl.GRID_VALUE_STRING
         _PRC = bt.GetPerGenMaskInfo()
         _IMP = bt.GetValIntMaskInfo()
-        
+
         cols = (\
             ( 50, (cn(iva, 'codice'),  "Cod.",      _STR, True )),\
             (180, (cn(iva, 'descriz'), "Aliquota",  _STR, True )),\
@@ -320,34 +320,45 @@ class GridTotAliq(dbglib.DbGridColoriAlternati):
             (130, (           colaiva, "Imposta",   _IMP, True )),\
             (130, (           colaind, "Indeduc.",  _IMP, True )),\
             )
-        
+
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
         canedit = False
         canins = False
-        
+
         dbglib.DbGridColoriAlternati.__init__(self, parent, -1, size=size, style=0)
-        
+
         links = None
-        
+
         afteredit = None
         self.SetData( self.dbriep.GetRecordset(), colmap, canedit, canins,\
                       links, afteredit)
         #self.SetCellDynAttr(self.GetAttr)
-        
+
         coltipo = cn(iva, 'tipo')
+
+        if self.dbriep.reg.rei.tipo=='A':
+            tipoRegistro='Acquisti'
+        else:
+            tipoRegistro='Vendite'
+
+
+
+
         for label, cbfilt in (\
             ("Totali:",
              lambda rs, row: not rs[row][coltipo]),
-            ("Acquisti CEE:",
+            ("%s CEE:" % tipoRegistro,
              lambda rs, row: rs[row][coltipo] == "C"),
-            ("Vendite in split payment:",
-             lambda rs, row: rs[row][coltipo] == "S")):
+            ("%s in split payment:" % tipoRegistro,
+             lambda rs, row: rs[row][coltipo] == "S"),
+            ("%s a deducibilità differita:" % tipoRegistro,
+             lambda rs, row: rs[row][coltipo] == "D") ):
             self.AddTotalsRow(1, label, (colaimp, colaiva, colaind), cbfilt)
-        
+
         map(lambda c:\
             self.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
-        
+
         self.SetFitColumn(1)
         self.AutoSizeColumns()
         sz = wx.FlexGridSizer(1,0,0,0)
@@ -356,7 +367,7 @@ class GridTotAliq(dbglib.DbGridColoriAlternati):
         sz.Add(self, 0, wx.GROW|wx.ALL, 0)
         parent.SetSizer(sz)
         sz.SetSizeHints(parent)
-        
+
         self.ResetView()
 
     def GetAttr(self, row, col, rscol, attr=gl.GridCellAttr):
@@ -381,21 +392,21 @@ class GridTotAliq(dbglib.DbGridColoriAlternati):
 
 
 class RegIvaPanel(aw.Panel):
-    
+
     gridreg = None
     gridaliq = None
     gridriep = None
-    
+
     def __init__(self, *args, **kwargs):
-        
+
         aw.Panel.__init__(self, *args, **kwargs)
-        
+
         self.dbreg = None
-        
+
         wdr.RegIvaFunc(self)
-        
+
         ci = self.FindWindowById
-        
+
         tipi = {'P': ("Stampa Provvisoria",\
                       """Vengono estratte solo le registrazioni IVA non """
                       """ancora stampate in modo definitivo.\nLa stampa può """
@@ -409,15 +420,15 @@ class RegIvaPanel(aw.Panel):
                       """Vengono estratte solo le registrazioni IVA già """
                       """stampate in modo definitivo""")}
         self.tipista = tipi
-        
+
         ci(wdr.ID_TIPOSTA).SetDataLink('tiposta', 'PDR')
         self.SetTipoSta('P')
-        
+
         ci(wdr.ID_SPLITREG).SetSashPosition(ci(wdr.ID_SPLITREG).GetSize()[1]-100)
         ci(wdr.ID_SPLITREG).SetSashGravity(1)
-        
+
         self.EnableIntestaz()
-        
+
         NPC = wx.EVT_NOTEBOOK_PAGE_CHANGED
         for evt, func, cid in (\
             (wx.EVT_RADIOBOX,    self.OnTipoStaChanged, wdr.ID_TIPOSTA),
@@ -428,47 +439,47 @@ class RegIvaPanel(aw.Panel):
             (EVT_DATECHANGED,    self.OnDateChanged,    wdr.ID_DATMIN),
             (wx.EVT_CHECKBOX,    self.OnIntestaz,       wdr.ID_INTATT)):
             self.Bind(evt, func, id=cid)
-        
+
         cn = self.FindWindowByName
         cn('regiva').SetFocus()
-        
+
         self.Bind(wx.EVT_RADIOBOX, self.OnEnableButtonUpdate, cn('tiposta'))
         self.Bind(EVT_LINKTABCHANGED, self.OnEnableButtonUpdate, cn('regiva'))
         for name in 'datmin datmax radate'.split():
             self.Bind(EVT_DATECHANGED, self.OnEnableButtonUpdate, cn(name))
         self.Bind(EVT_REGSEL, self.OnUpdateGridAliq)
-    
+
     def OnEnableButtonUpdate(self, event):
         self.EnableButtonUpdate()
         event.Skip()
-    
+
     def OnIntestaz(self, event):
         self.EnableIntestaz(setfocus=True)
         event.Skip()
-    
+
     def CreateGrids(self):
-        
+
         cn = self.FindWindowById
-        
+
         if self.gridreg:
 #            self.gridreg.Destroy()
             wx.CallAfter(self.gridreg.Destroy)
         self.gridreg = GridReg(cn(wdr.ID_PANGRIDREG), self.dbreg)
-        
+
         if self.gridaliq:
 #            self.gridaliq.Destroy()
             wx.CallAfter(self.gridaliq.Destroy)
         self.gridaliq = GridAliq(cn(wdr.ID_PANGRIDALIQ), self.dbreg)
 
     def CreateGridTotAliq(self):
-        
+
         cn = lambda x: self.FindWindowById(x)
-        
+
         if self.gridriep:
 #            self.gridriep.Destroy()
             wx.CallAfter(self.gridriep.Destroy)
         self.gridriep = GridTotAliq(cn(wdr.ID_PANGRIDRIEP), self.dbreg)
-    
+
     def OnTipoStaChanged(self, event):
         self.SetTipoSta(event.GetEventObject().GetValue())
         cn = self.FindWindowByName
@@ -476,7 +487,7 @@ class RegIvaPanel(aw.Panel):
             cn('regiva').SetFocus()
         wx.CallAfter(setfocus)
         event.Skip()
-    
+
     def SetTipoSta(self, tiposta):
         """
         Imposta tipo stampa:
@@ -491,11 +502,11 @@ class RegIvaPanel(aw.Panel):
         cn(wdr.ID_TIPOTIT).SetLabel(self.tipista[self.tiposta][0])
         cn(wdr.ID_TIPODES).SetLabel(self.tipista[self.tiposta][1])
         self.UpdateLastDatNum()
-    
+
     def OnStampa(self, event):
         self.Stampa()
         event.Skip()
-    
+
     def Stampa(self):
         reg = self.dbreg
         r = reg._riepaliq
@@ -540,7 +551,7 @@ class RegIvaPanel(aw.Panel):
                 if e:
                     awu.MsgDialog(self, "Aggiornamento correttamente effettuato")
                     self.GetParent().Close()
-    
+
     def OnRegIvaChanged(self, event):
         rivid = event.GetEventObject().GetValue()
         if rivid is not None:
@@ -555,7 +566,7 @@ class RegIvaPanel(aw.Panel):
                           #"""della stampa cartacea del registro""",
                           #style=wx.ICON_WARNING)
         event.Skip()
-    
+
     def UpdateIntestaz(self):
         def cn(x):
             return self.FindWindowByName(x)
@@ -565,7 +576,7 @@ class RegIvaPanel(aw.Panel):
         cn('intanno').SetValue(r._intanno)
         cn('intpag').SetValue((r._intpag or 0)+1)
         self.EnableIntestaz()
-    
+
     def EnableIntestaz(self, setfocus=False):
         def cn(x):
             return self.FindWindowByName(x)
@@ -574,7 +585,7 @@ class RegIvaPanel(aw.Panel):
             cn(name).Enable(e)
         if e and setfocus:
             cn('intdes').SetFocus()
-    
+
     def OnDateChanged(self, event):
         if self.dbreg is not None:
             self.UpdateLastDatNum()
@@ -595,7 +606,7 @@ class RegIvaPanel(aw.Panel):
             b.SetLabel("&Stampa riepilogo")
             b.Fit()
         event.Skip()
-    
+
     def UpdateLastDatNum(self):
         cn = self.FindWindowByName
         if self.dbreg is not None:
@@ -616,16 +627,16 @@ class RegIvaPanel(aw.Panel):
             if d is not None:
                 d += 1
             cn('datmin').SetValue(d)
-    
+
     def EnableButtonUpdate(self):
         cn = self.FindWindowByName
-        ts, ri, d1, d2, dr = map(lambda x: cn(x).GetValue(), 
+        ts, ri, d1, d2, dr = map(lambda x: cn(x).GetValue(),
                                  'tiposta regiva datmin datmax radate'.split())
         e = ri is not None and d1 is not None and d2 is not None and d2>=d1
         if e and ts == "R":
             e = dr is not None
         cn('butupd').Enable(e)
-    
+
     def OnUpdateGridReg(self, event):
         self.UpdateGridReg()
         event.Skip()
@@ -655,7 +666,7 @@ class RegIvaPanel(aw.Panel):
                                   style=wx.ICON_WARNING)
         else:
             awu.MsgDialog(self, repr(reg.GetError()))
-    
+
     def OnUpdateGridAliq(self, event):
         self.gridaliq.GetTable().data = self.dbreg.mov.GetRecordset()
         self.gridaliq.ResetView()
@@ -698,7 +709,7 @@ class RegIvaDialog(aw.Dialog):
 
 
 if __name__ == "__main__":
-    
+
     class _testApp(wx.App):
         def OnInit(self):
             wx.InitAllImageHandlers()
@@ -706,7 +717,7 @@ if __name__ == "__main__":
             db = adb.DB()
             db.Connect()
             return True
-    
+
     app = _testApp(True)
     app.MainLoop()
     Env.InitSettings()

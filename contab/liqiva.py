@@ -6,17 +6,17 @@
 # Copyright:    (C) 2011 Astra S.r.l. C.so Cavallotti, 122 18038 Sanremo (IM)
 # ------------------------------------------------------------------------------
 # This file is part of X4GA
-# 
+#
 # X4GA is free software: you can redistribute it and/or modify
 # it under the terms of the Affero GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # X4GA is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
@@ -70,20 +70,20 @@ class GridRegStatus(dbglib.DbGrid):
         parent griglia  (wx.Panel)
         dbtable registro iva (derivati da contab.dbtables.RegIva)
         """
-        
+
         self.dbstatus = dbstatus
-        
+
         size = parent.GetClientSizeTuple()
-        
+
         reg = self.dbstatus
         ust = reg.stareg
-        
+
         cn = lambda db, col: db._GetFieldIndex(col, inline=True)
-        
+
         _NUM = gl.GRID_VALUE_NUMBER
         _STR = gl.GRID_VALUE_STRING
         _DAT = gl.GRID_VALUE_DATETIME
-        
+
         cols = (
             ( 60, (cn(reg, 'codice'),     "Cod.",        _STR, True)),
             (360, (cn(reg, 'descriz'),    "Registro",    _STR, True)),
@@ -91,16 +91,16 @@ class GridRegStatus(dbglib.DbGrid):
             ( -1, (cn(reg, 'lastprtdat'), "Data Stampa", _DAT, True)),
             ( 60, (cn(reg, 'lastprtnum'), "Protocollo",  _NUM, True)),
         )
-        
+
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
         canedit = False
         canins = False
-        
+
         dbglib.DbGrid.__init__(self, parent, -1, size=size, style=0)
-        
+
         links = None
-        
+
         afteredit = None
         self.SetData( self.dbstatus._info.rs, colmap, canedit, canins,\
                       links, afteredit)
@@ -108,10 +108,10 @@ class GridRegStatus(dbglib.DbGrid):
         #self.SetRowLabelAlignment(wx.ALIGN_RIGHT, wx.ALIGN_BOTTOM)
         #self.SetRowDynLabel(self.GetRowLabel)
         self.SetCellDynAttr(self.GetAttr)
-        
+
         map(lambda c:\
             self.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
-        
+
         self.AutoSizeColumns()
         sz = wx.FlexGridSizer(1,0,0,0)
         sz.AddGrowableCol( 0 )
@@ -119,7 +119,7 @@ class GridRegStatus(dbglib.DbGrid):
         sz.Add(self, 0, wx.GROW|wx.ALL, 0)
         parent.SetSizer(sz)
         sz.SetSizeHints(parent)
-    
+
     def GetAttr(self, row, col, rscol, attr=gl.GridCellAttr):
         return attr
 
@@ -133,18 +133,18 @@ class GridRiepAliq(dbglib.DbGrid):
     E' usato sia per il riepilogo delle aliquote per tipo di registro che per
     il riepilogo aliquote di ogni singolo registro.
     """
-    
+
     def __init__(self, parent):
         """
         Parametri:
         parent griglia  (wx.Panel)
         dbtable registro iva (derivati da contab.dbtables.RegIva)
         """
-        
+
         size = parent.GetClientSizeTuple()
-        
+
         cn = lambda db, col: db._GetFieldIndex(col, inline=True)
-        
+
         _NUM = gl.GRID_VALUE_NUMBER
         _PRC = bt.GetPerGenMaskInfo()
         _FLT = bt.GetValIntMaskInfo()
@@ -159,7 +159,7 @@ class GridRiepAliq(dbglib.DbGrid):
 #        def TypeValCheck(cls, value_check=1, value_uncheck=0):
 #            return '%s:%s,%s' % (cls._TYPE_CHECK, value_check, value_uncheck)
 #        _LGT = "%s:,1,0"
-        
+
         cols = (\
             ( 40, (dbc.LIQIVA_ALIQ_COD,    "Cod.",         _STR, True )),\
             (150, (dbc.LIQIVA_ALIQ_DESC,   "Aliquota",     _STR, True )),\
@@ -171,40 +171,42 @@ class GridRiepAliq(dbglib.DbGrid):
             (110, (dbc.LIQIVA_TOTINDEDUC,  "Indeducibile", _FLT, True )),\
             (110, (dbc.LIQIVA_TOTOPATT,    "(*Att.)", _FLT, True )),\
             (110, (dbc.LIQIVA_TOTOPPAS,    "(*Pass.)", _FLT, True )),\
-            ) 
-        
+            )
+
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
         canedit = False
         canins = False
-        
+
         dbglib.DbGrid.__init__(self, parent, -1, size=size, style=0)
-        
+
         links = None
-        
+
         afteredit = None
         self.SetData((), colmap, canedit, canins, links, afteredit)
         #self.SetRowLabelSize(100)
         #self.SetRowLabelAlignment(wx.ALIGN_RIGHT, wx.ALIGN_BOTTOM)
         #self.SetRowDynLabel(self.GetRowLabel)
         self.SetCellDynAttr(self.GetAttr)
-        
+
         for label, cbfilt in (\
             ("Totali:",
              lambda rs, row: not rs[row][dbc.LIQIVA_ALIQ_TIPO]),
             ("Acquisti CEE:",
              lambda rs, row: rs[row][dbc.LIQIVA_ALIQ_TIPO] == "C"),
-            ("Vendite in split payment:",
-             lambda rs, row: rs[row][dbc.LIQIVA_ALIQ_TIPO] == "S")):
+            ("Acquisti in split payment:",
+             lambda rs, row: rs[row][dbc.LIQIVA_ALIQ_TIPO] == "S"),
+            ("Acquisti a deducibilità differita:",
+             lambda rs, row: rs[row][dbc.LIQIVA_ALIQ_TIPO] == "D") ):
             self.AddTotalsRow(1, label, (dbc.LIQIVA_TOTIMPONIB,
                                          dbc.LIQIVA_TOTIMPOSTA,
                                          dbc.LIQIVA_TOTINDEDUC,
                                          dbc.LIQIVA_TOTOPATT,
                                          dbc.LIQIVA_TOTOPPAS), cbfilt)
-        
+
         map(lambda c:\
             self.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
-        
+
         self.AutoSizeColumns()
         sz = wx.FlexGridSizer(1,0,0,0)
         sz.AddGrowableCol( 0 )
@@ -212,7 +214,7 @@ class GridRiepAliq(dbglib.DbGrid):
         sz.Add(self, 0, wx.GROW|wx.ALL, 0)
         parent.SetSizer(sz)
         sz.SetSizeHints(parent)
-        
+
     def GetAttr(self, row, col, rscol, attr=gl.GridCellAttr):
         if self.IsOnTotalRow(row):
             if self.CurrentTotalRow(row) == 0:
@@ -241,19 +243,19 @@ class GridUtiCIC(dbglib.DbGrid):
         parent griglia  (wx.Panel)
         dbtable utilizzi precedenti
         """
-        
+
         self.dbliqeff = dbliqeff
-        
+
         size = parent.GetClientSizeTuple()
-        
+
         le = self.dbliqeff
-        
+
         cn = lambda db, col: db._GetFieldIndex(col, inline=True)
-        
+
         _STR = gl.GRID_VALUE_STRING
         _DAT = gl.GRID_VALUE_DATETIME
         _FLT = bt.GetValIntMaskInfo()
-        
+
         cols = (\
             ( -1, (cn(le, 'datliq'),  "Data liq.",    _DAT, True )),\
             ( -1, (cn(le, 'datmin'),  "Da data",      _DAT, True )),\
@@ -264,24 +266,24 @@ class GridUtiCIC(dbglib.DbGrid):
             (110, (cn(le, 'cicuf24'), "Util.F24",     _FLT, True )),\
             (110, (cn(le, 'cicfine'), "Disp.Fine",    _FLT, True )),\
             )
-        
+
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
         canedit = False
         canins = False
-        
+
         dbglib.DbGrid.__init__(self, parent, -1, size=size, style=0)
-        
+
         links = None
-        
+
         afteredit = None
         self.SetData(le._info.rs, colmap, canedit, canins,\
                      links, afteredit)
         self.SetCellDynAttr(self.GetAttr)
-        
+
         map(lambda c:\
             self.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
-        
+
         self.AutoSizeColumns()
         sz = wx.FlexGridSizer(1,0,0,0)
         sz.AddGrowableCol( 0 )
@@ -289,7 +291,7 @@ class GridUtiCIC(dbglib.DbGrid):
         sz.Add(self, 0, wx.GROW|wx.ALL, 0)
         parent.SetSizer(sz)
         sz.SetSizeHints(parent)
-    
+
     def GetAttr(self, row, col, rscol, attr=gl.GridCellAttr):
         return attr
 
@@ -301,23 +303,25 @@ class LiqIvaPanel(aw.Panel):
     """
     Pannello per liquidazione iva.
     """
-    
+
     regivasta = None
-    
+
     def __init__(self, *args, **kwargs):
-        
+
         aw.Panel.__init__(self, *args, **kwargs)
-        
+
         wdr.LiqIvaFunc(self)
         cn = self.FindWindowByName
-        
-        for c in aw.awu.GetAllChildrens(self):
-            if hasattr(c, 'SetLabel'):
-                l = c.GetLabel()
-                if l.startswith('IVA a deducib') and l.endswith('differita:'):
-                    c.SetLabel('IVA in split payment:')
-                    break
-        
+
+        #=======================================================================
+        # for c in aw.awu.GetAllChildrens(self):
+        #     if hasattr(c, 'SetLabel'):
+        #         l = c.GetLabel()
+        #         if l.startswith('IVA a deducib') and l.endswith('differita:'):
+        #             c.SetLabel('IVA in split payment:')
+        #             break
+        #=======================================================================
+
         tipi = {'P': ("Stampa Provvisoria",\
                       """Vengono estratte solo le registrazioni IVA non """
                       """ancora stampate in modo definitivo.\nL'elaborazione"""
@@ -329,10 +333,10 @@ class LiqIvaPanel(aw.Panel):
         self.tipoliq = 'P'
         self.tipiliq = tipi
         self.totaliq = {}
-        
+
         self.dbstatus = dbc.RegIvaStatus()
         self.dbliq = dbc.LiqIva()
-        
+
         anno = Env.Azienda.Esercizio.dataElab.year
         mese = Env.Azienda.Esercizio.dataElab.month
         if self.dbliq._tipoper == "M":
@@ -350,24 +354,24 @@ class LiqIvaPanel(aw.Panel):
             cn('trim').SetSelection(trim)
         cn('anno').SetValue(anno)
         cn('tipoper').SetSelection(0)
-        
+
         lastnum = lastdat = None
         p = self.dbliq._progr
         p.Retrieve('progr.codice=%s', 'iva_liqreg')
         self.regivasta = p.progrimp1
-        
+
         cn('regivasta').SetValue(self.regivasta)
         cn('intdes').SetValue(p.progrdesc)
         self.UpdateLastPag()
         self.UpdateLastLiq()
-        
+
 #        if not lastnum or not lastdat:
 #            aw.awu.MsgDialog(self, "Progressivi liquidazione mancanti.",
 #                             style=wx.ICON_ERROR)
 #            cn('butupd').Disable()
         self.lastnum = lastnum
         self.lastdat = lastdat
-        
+
         if self.dbliq._tipoper == "M":
             cn('trim').Show(False)
         else:
@@ -375,32 +379,32 @@ class LiqIvaPanel(aw.Panel):
         for name in 'percint inttri1'.split():
             cn(name).Enable(self.dbliq._tipoper == "T")
         self.SetSize((0,0)) #impedito dal sizer, ridimensiona la sez. nascosta
-        
+
         cn('tipoliq').SetDataLink('tipoliq', 'PD')
         self.SetTipoLiq('P')
-        
+
         r = self.dbstatus
         r.SetYear(anno)
         r.Retrieve()
-        
+
         g = GridRegStatus(cn('panel_regstatus'), self.dbstatus)
         g.ChangeData(r.GetRecordset())
         self.gridstatus = g
-        
+
         g = GridRegStatus(cn('panel_registri'), self.dbstatus)
         g.ChangeData(r.GetRecordset())
         g.Bind(gl.EVT_GRID_SELECT_CELL, self.OnRegChanged)
         self.gridriepreg = g
-        
+
         g = GridRiepAliq(cn('panel_riepaliqxtipreg'))
         self.gridaliqxtip = g
-        
+
         g = GridRiepAliq(cn('panel_riepaliqxreg'))
         self.gridaliqxreg = g
-        
+
         cn('splitriep').SetSashPosition(180)
         cn('splitriep').SetSashGravity(.5)
-        
+
         for evt, func, cid in (\
             (wx.EVT_RADIOBOX,    self.OnTipoLiqChanged,  wdr.ID_TIPOLIQ),\
             (wx.EVT_CHECKBOX,    self.OnIntesta,         wdr.ID_ATTRIST),\
@@ -414,38 +418,39 @@ class LiqIvaPanel(aw.Panel):
             (wx.EVT_RADIOBOX,    self.OnTrimChanged,     wdr.ID_TRIM),
             (wx.EVT_RADIOBOX,    self.OnTipRegChanged,   wdr.ID_TIPREG)):
             self.Bind(evt, func, id=cid)
-        
+
         for func, cid in ((self.OnWorkZoneChanged, wdr.ID_WORKZONE),
                           (self.OnRiepZoneChanged, wdr.ID_RIEPZONE)):
             self.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, func, id=cid)
-        
+
         self.calcdigit = ('vennor1', 'vennor2', 'vencor1', 'vencor2',
                           'venven1', 'venven2', 'acqnor1', 'acqnor2',
-                          'vensos1', 'vensos2', 'ivaind1', 'ivaind2')
-        
+                          'vensos1', 'vensos2', 'ivaind1', 'ivaind2',
+                          'vendif1', 'vendif2')
+
         self.calccalc = ('tivper1', 'tivper2', 'docper1', 'docper2')
-        
+
         self.prospdigit = ('varpre1', 'varpre2', 'invpre1', 'invpre2',
-                           'docpre1', 'docpre2', 'cricom2', 
+                           'docpre1', 'docpre2', 'cricom2',
                            'crsdet2', 'inttri1', 'acciva2', 'cicuf24')
-        
-        self.prospcalc = ('ivadcp1', 'ivadcp2', 'ivaesi1', 'ivadet2', 
-                          'ivadov1', 'ivadov2', 'docfin1', 'docfin2', 
+
+        self.prospcalc = ('ivadcp1', 'ivadcp2', 'ivaesi1', 'ivadet2',
+                          'ivadov1', 'ivadov2', 'docfin1', 'docfin2',
                           'vertra1', 'ciculiq', 'cicfine')
-        
+
         self.calcola = True
-        
+
         for key in self.calcdigit+self.prospdigit:
             cn(key).Bind(wx.EVT_TEXT, self.OnCalcola)
-        
+
         self.Bind(wx.EVT_TEXT, self.OnCalcInteressi, cn('percint'))
-        
+
         cn('cricom2').Bind(wx.EVT_SET_FOCUS, self.OnCriComHelp)
-        
+
         self.TestIntest()
-        
+
         self.CalcolaDate()
-    
+
     def UpdateLastPag(self):
         r = self.regivasta
         if r is not None:
@@ -454,7 +459,7 @@ class LiqIvaPanel(aw.Panel):
             cn = self.FindWindowByName
             cn('intanno').SetValue(ri.intanno)
             cn('intpag').SetValue((ri.intpag or 0)+1)
-    
+
     def UpdateLastLiq(self):
         cn = self.FindWindowByName
         lastnum = lastdat = None
@@ -467,20 +472,20 @@ class LiqIvaPanel(aw.Panel):
             lastdat = p.progrdate
         cn('lastliq_periodo').SetValue(lastnum)
         cn('lastliq_data').SetValue(lastdat)
-    
+
     def OnIntesta(self, event):
         self.TestIntest(setfocus=True)
         event.Skip()
-    
+
     def TestIntest(self, setfocus=False):
-        
+
         def cn(x):
             return self.FindWindowByName(x)
-        
+
         i = cn('intatt').GetValue()
         for name in 'intdes,intanno,intpag'.split(','):
             cn(name).Enable(i)
-        
+
         if i:
             c = cn('intanno')
             if not c.GetValue():
@@ -490,15 +495,15 @@ class LiqIvaPanel(aw.Panel):
                 c.SetValue(1)
             if setfocus:
                 cn('intdes').SetFocus()
-    
+
     def OnWorkZoneChanged(self, event):
         self.UpdateButtonPrint()
         event.Skip()
-    
+
     def OnRiepZoneChanged(self, event):
         self.UpdateButtonPrint()
         event.Skip()
-    
+
     def UpdateButtonPrint(self):
         def ci(x):
             return self.FindWindowById(x)
@@ -523,11 +528,11 @@ class LiqIvaPanel(aw.Panel):
             ci(wdr.ID_VARPRE1).SetFocus()
         b.Enable(wz>=1)
         b.SetLabel('Stampa %s' % l)
-    
+
     def OnCalcInteressi(self, event):
         self.CalcolaInteressi()
         event.Skip()
-    
+
     def CalcolaInteressi(self):
         if not hasattr(self, '_calcolando_'):
             self._calcolando_ = True
@@ -537,13 +542,13 @@ class LiqIvaPanel(aw.Panel):
             if sl > 0:
                 cn('inttri1').SetValue(sl/100*perc)
             del self._calcolando_
-    
+
     def OnCalcola(self, event):
         if self.calcola:
             self.Calcola()
         self.CalcolaInteressi()
         event.Skip()
-    
+
     def Calcola(self):
         liq = self.dbliq
         mt = liq._totali
@@ -555,7 +560,7 @@ class LiqIvaPanel(aw.Panel):
             awu.MsgDialog(self, e.args[0])
         for key in self.calccalc+self.prospcalc:
             self.FindWindowByName(key).SetValue(mt[key])
-    
+
     def OnPeriodicChanged(self, event):
         cn = lambda x: self.FindWindowById(x)
         datenab = cn(wdr.ID_TIPOPER).GetSelection() == 1
@@ -579,7 +584,7 @@ class LiqIvaPanel(aw.Panel):
                 f = t
         wx.CallAfter(lambda: f.SetFocus())
         event.Skip()
-    
+
     def OnAnnoChanged(self, event):
         cn = lambda x: self.FindWindowById(x)
         if cn(wdr.ID_TIPOPER).GetSelection() == 0:
@@ -587,7 +592,7 @@ class LiqIvaPanel(aw.Panel):
             self.SetYear(cn(wdr.ID_ANNO).GetValue())
             self.UpdateLastLiq()
         event.Skip()
-    
+
     def SetYear(self, year):
         r = self.dbstatus
         r.SetYear(year)
@@ -595,19 +600,19 @@ class LiqIvaPanel(aw.Panel):
         for grid in (self.gridstatus, self.gridriepreg):
             grid.ChangeData(r.GetRecordset())
         self.dbliq.SetYear(year)
-    
+
     def OnMeseChanged(self, event):
         cn = lambda x: self.FindWindowById(x)
         if cn(wdr.ID_TIPOPER).GetSelection() == 0:
             self.CalcolaDate()
         event.Skip()
-    
+
     def OnTrimChanged(self, event):
         cn = lambda x: self.FindWindowById(x)
         if cn(wdr.ID_TIPOPER).GetSelection() == 0:
             self.CalcolaDate()
         event.Skip()
-    
+
     def CalcolaDate(self):
         cn = lambda x: self.FindWindowById(x)
         anno = cn(wdr.ID_ANNO).GetValue()
@@ -631,19 +636,19 @@ class LiqIvaPanel(aw.Panel):
         cn(wdr.ID_DATMIN).SetValue(d1)
         cn(wdr.ID_DATMAX).SetValue(d2)
         cn(wdr.ID_BUTUPD).Enable(d1 is not None)
-    
+
     def OnDateChanged(self, event):
         cn = lambda x: self.FindWindowById(x)
         date = event.GetValue()
         if cn(wdr.ID_TIPOPER).GetSelection() == 0 and date is not None:
             self.SetYear(date.year)
-    
+
     def OnTipoLiqChanged(self, event):
         self.SetTipoLiq(event.GetEventObject().GetValue())
         self.UpdateLastPag()
         awu.MsgDialog(self, "Controllare il numero di pagina iniziale sul cartaceo.")
         event.Skip()
-    
+
     def OnStampa(self, event):
         def ci(x):
             return self.FindWindowById(x)
@@ -735,12 +740,12 @@ class LiqIvaPanel(aw.Panel):
                 r = s.usedReport.oCanvas.userVariableList['intpag']
                 cn('intpag').SetValue(r.valore+1)
             event.Skip()
-    
+
     def OnUpdateLiq(self, event):
         if self.IsValidDates():
             self.UpdateLiq()
         event.Skip()
-    
+
     def OnSaveLiq(self, event):
         liq = self.dbliq
         if liq.TestValori():
@@ -782,11 +787,11 @@ class LiqIvaPanel(aw.Panel):
                                   """Problemi nel salvataggio della """
                                   """liquidazione\n%s""" % repr(liq.GetError()))
         event.Skip()
-    
+
     def OnCriComHelp(self, event):
         self.CriComHelp()
         event.Skip()
-    
+
     def SetTipoLiq(self, tipoliq):
         """
         Imposta tipo liquidazione:
@@ -800,7 +805,7 @@ class LiqIvaPanel(aw.Panel):
         cn(wdr.ID_TIPOTIT).SetLabel(self.tipiliq[self.tipoliq][0])
         cn(wdr.ID_TIPODES).SetLabel(self.tipiliq[self.tipoliq][1])
         cn(wdr.ID_SAVELIQ).Enable(tipoliq == "D")
-    
+
     def GetPeriodo(self):
         cn = lambda x: self.FindWindowById(x)
         per = self.dbliq._tipoper
@@ -812,57 +817,57 @@ class LiqIvaPanel(aw.Panel):
             else:
                 out = cn(wdr.ID_TRIM).GetSelection()+1
         return out
-    
+
     def UpdateLiq(self):
         """
         Aggiornamento dati.
         """
-        
+
         cn = self.FindWindowByName
-        
+
         if cn('tipoliq').GetValue() == 'D':
-            
-            lastdat, datmin = map(lambda x: cn(x).GetValue(), 
+
+            lastdat, datmin = map(lambda x: cn(x).GetValue(),
                                   'lastliq_data datmin'.split())
-            
+
             if datmin <= lastdat:
                 msg =\
                     """La data di inizio del periodo da liquidare non è congruente\n"""\
                     """con la data dell'ultima liquidazione effettuata."""
                 aw.awu.MsgDialog(self, msg, style=wx.ICON_ERROR)
                 return
-        
+
         wait = awc.util.WaitDialog(self, message=\
                                    """Estrazione dati dai registri """
                                    """iva in corso...""",\
                                    maximum=0)
-        
+
         r = self.dbliq
         r.SetPeriodo(self.GetPeriodo(),
                      cn('datmin').GetValue(),
                      cn('datmax').GetValue())
         r.Retrieve()
-        
+
         wait.progress.SetRange(r.RowsCount())
         def UpdateBar(reg):
             wait.SetValue(reg.RowNumber())
-        
+
         r.Totalizza(UpdateBar)
-        
+
         self.UpdateAll()
-        
+
         wait.Close()
         wait.Destroy()
-        
+
         cn('workzone').SetSelection(1)
         cn('riepzone').SetSelection(0)
         cn('tipreg').SetSelection(0)
-    
+
     def UpdateAll(self):
         self.UpdateGridAliqxReg()
         self.UpdateGridAliqxTip()
         self.UpdateProspetto()
-    
+
     def UpdateProspetto(self):
         self.calcola = False
         for key, val in self.dbliq._totali.iteritems():
@@ -872,30 +877,51 @@ class LiqIvaPanel(aw.Panel):
         def EnableCalc(*x):
             self.calcola = True
         wx.CallAfter(EnableCalc)
-    
+
     def OnRegChanged(self, event):
         self.UpdateGridAliqxReg(event.GetRow())
         event.Skip()
-    
+
     def UpdateGridAliqxReg(self, row=0):
         g = self.gridaliqxreg
         reg = self.dbstatus
         reg.MoveRow(row)
         liq = self.dbliq
+
+        for i, r in enumerate(g.GetTotalsRows()):
+            #print g.GetTable().totals[i]
+            if reg.tipo=='A':
+                newDes=r[1].replace('Vendite', 'Acquisti')
+            else:
+                newDes=r[1].replace('Acquisti', 'Vendite')
+            g.GetTable().totals[i] = (r[0], newDes, r[2], r[3], r[4])
+
         if reg.id in liq._totxreg:
             g.ChangeData(liq._totxreg[reg.id])
             g.SetGridCursor(0,0)
-    
+
     def OnTipRegChanged(self, event):
         self.UpdateGridAliqxTip(event.GetSelection())
         event.Skip()
-    
+
     def UpdateGridAliqxTip(self, sel=0):
         g = self.gridaliqxtip
         liq = self.dbliq
+
+        #TODO: adegua descrizione totalizzatori
+        for i, r in enumerate(g.GetTotalsRows()):
+            #print g.GetTable().totals[i]
+            if sel==0:
+                newDes=r[1].replace('Vendite', 'Acquisti')
+            else:
+                newDes=r[1].replace('Acquisti', 'Vendite')
+            g.GetTable().totals[i] = (r[0], newDes, r[2], r[3], r[4])
+
+
+
         g.ChangeData(liq._totxtip["AVC"[sel]])
         g.SetGridCursor(0,0)
-    
+
     def IsValidDates(self):
         out = True
         cn = lambda name: self.FindWindowByName(name)
@@ -919,7 +945,7 @@ class LiqIvaPanel(aw.Panel):
         if not out:
             awu.MsgDialog(self, "Date errate", style=wx.ICON_ERROR)
         return out
-    
+
     def OnZoneChanged(self, event):
         b = self.FindWindowById(wdr.ID_BUTSTA)
         t = event.GetSelection()
@@ -934,35 +960,35 @@ class LiqIvaPanel(aw.Panel):
             b.SetLabel("&Stampa riepilogo")
             b.Fit()
         event.Skip()
-    
+
     def CriComHelp(self):
-        
+
         liq = self.dbliq
         mt = liq._totali
         cc = liq._cricom
-        
+
         class CriComHelp(wx.PopupTransientWindow):
             """
             Frame aiuto credito iva compensabile
             Viene evidenziato il credito ad inizio anno e quello residuo
             """
             def __init__(self, parent):
-                
+
                 wx.PopupTransientWindow.__init__(self, parent,\
                                                  style=wx.SIMPLE_BORDER)
                 wdr.LiqIvaCriComHelpFunc(self)
-                
+
                 cn = lambda x: self.FindWindowById(x)
-                
+
                 cn(wdr.ID_STORIACIC).Enable(liq._liqeff.RowsCount()>0)
                 cn(wdr.ID_USACIC).Enable(\
                     cc['cricomdisp'] > 0 and mt['docfin1'] > 0)
-                
+
                 def UsaCIC(*args):
                     c = parent.FindWindowById(wdr.ID_CRICOM2)
                     c.SetValue(min(cc['cricomdisp'], mt['docfin1']))
                 self.Bind(wx.EVT_BUTTON, UsaCIC, id=wdr.ID_USACIC)
-                
+
                 def StoriaCIC(*args):
                     scc = wx.Dialog(parent,
                                     title="Utilizzo credito iva compensabile",
@@ -975,7 +1001,7 @@ class LiqIvaPanel(aw.Panel):
                     scc.Show()
                     scc.SetFocus()
                 self.Bind(wx.EVT_BUTTON, StoriaCIC, id=wdr.ID_STORIACIC)
-        
+
         year = self.dbliq._year
         t = self.FindWindowById(wdr.ID_CRICOM2)
         p = t.ClientToScreen((0,0))
@@ -1008,7 +1034,7 @@ class LiqIvaFrame(aw.Frame):
         p = LiqIvaPanel(self, -1)
         self.AddSizedPanel(p)
         self.Bind(EVT_LIQEND, self.OnEnd)
-    
+
     def OnEnd(self, event):
         self.Close()
 
@@ -1029,7 +1055,7 @@ class LiqIvaDialog(aw.Dialog):
         p = LiqIvaPanel(self, -1)
         self.AddSizedPanel(p)
         self.Bind(EVT_LIQEND, self.OnEnd)
-    
+
     def OnEnd(self, event):
         if self.IsModal():
             self.EndModal(1)
@@ -1041,7 +1067,7 @@ class LiqIvaDialog(aw.Dialog):
 
 
 if __name__ == "__main__":
-    
+
     class _testApp(wx.App):
         def OnInit(self):
             wx.InitAllImageHandlers()
@@ -1049,7 +1075,7 @@ if __name__ == "__main__":
             db = adb.DB()
             db.Connect()
             return True
-    
+
     app = _testApp(True)
     app.MainLoop()
     Env.InitSettings()

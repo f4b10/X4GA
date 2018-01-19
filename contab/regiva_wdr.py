@@ -812,7 +812,7 @@ def LiqIvaTot1Func( parent, call_fit = True, set_sizer = True ):
 
     item2.Add( [ 20, 20 ] , 0, wx.ALIGN_CENTER, 5 )
 
-    item28 = wx.StaticText( parent, ID_TEXT, "IVA a deducibilitÃ  differita:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item28 = wx.StaticText( parent, ID_TEXT, "IVA in split payment:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item2.Add( item28, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item29 = NumCtrl(parent, ID_VENSOS1, integerWidth=12, fractionWidth=bt.VALINT_DECIMALS, validBackgroundColour=NOEDIT_BGCOL); item29.SetName("vensos1")
@@ -821,29 +821,38 @@ def LiqIvaTot1Func( parent, call_fit = True, set_sizer = True ):
     item30 = NumCtrl(parent, ID_VENSOS2, integerWidth=12, fractionWidth=bt.VALINT_DECIMALS, validBackgroundColour=NOEDIT_BGCOL); item30.SetName("vensos2")
     item2.Add( item30, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item31 = wx.StaticText( parent, ID_TEXT, "IVA non detraibile del periodo:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item31 = wx.StaticText( parent, ID_TEXT, "IVA a deducibilità  differita:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item2.Add( item31, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item32 = NumCtrl(parent, ID_IVAIND1, integerWidth=12, fractionWidth=bt.VALINT_DECIMALS, validBackgroundColour=NOEDIT_BGCOL); item32.SetName("ivaind1")
+    item32 = NumCtrl(parent, ID_VENSOS1, integerWidth=12, fractionWidth=bt.VALINT_DECIMALS, validBackgroundColour=NOEDIT_BGCOL); item32.SetName("vendif1")
     item2.Add( item32, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item33 = NumCtrl(parent, ID_IVAIND2, integerWidth=12, fractionWidth=bt.VALINT_DECIMALS, validBackgroundColour=NOEDIT_BGCOL); item33.SetName("ivaind2")
+    item33 = NumCtrl(parent, ID_VENSOS2, integerWidth=12, fractionWidth=bt.VALINT_DECIMALS, validBackgroundColour=NOEDIT_BGCOL); item33.SetName("vendif2")
     item2.Add( item33, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item2.Add( [ 20, 20 ] , 0, wx.ALIGN_CENTER, 5 )
-
-    item2.Add( [ 20, 20 ] , 0, wx.ALIGN_CENTER, 5 )
-
-    item2.Add( [ 20, 20 ] , 0, wx.ALIGN_CENTER, 5 )
-
-    item34 = wx.StaticText( parent, ID_TEXT, "Debito/Credito IVA del periodo:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item34 = wx.StaticText( parent, ID_TEXT, "IVA non detraibile del periodo:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item2.Add( item34, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item35 = NumCtrl(parent, ID_DOCPER1, integerWidth=12, fractionWidth=bt.VALINT_DECIMALS, validBackgroundColour=NOEDIT_BGCOL); item35.SetName("docper1"); item35.SetEditable(False)
+    item35 = NumCtrl(parent, ID_IVAIND1, integerWidth=12, fractionWidth=bt.VALINT_DECIMALS, validBackgroundColour=NOEDIT_BGCOL); item35.SetName("ivaind1")
     item2.Add( item35, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item36 = NumCtrl(parent, ID_DOCPER2, integerWidth=12, fractionWidth=bt.VALINT_DECIMALS, validBackgroundColour=NOEDIT_BGCOL); item36.SetName("docper2"); item36.SetEditable(False)
+    item36 = NumCtrl(parent, ID_IVAIND2, integerWidth=12, fractionWidth=bt.VALINT_DECIMALS, validBackgroundColour=NOEDIT_BGCOL); item36.SetName("ivaind2")
     item2.Add( item36, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item2.Add( [ 20, 20 ] , 0, wx.ALIGN_CENTER, 5 )
+
+    item2.Add( [ 20, 20 ] , 0, wx.ALIGN_CENTER, 5 )
+
+    item2.Add( [ 20, 20 ] , 0, wx.ALIGN_CENTER, 5 )
+
+    item37 = wx.StaticText( parent, ID_TEXT, "Debito/Credito IVA del periodo:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item2.Add( item37, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item38 = NumCtrl(parent, ID_DOCPER1, integerWidth=12, fractionWidth=bt.VALINT_DECIMALS, validBackgroundColour=NOEDIT_BGCOL); item38.SetName("docper1"); item38.SetEditable(False)
+    item2.Add( item38, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item39 = NumCtrl(parent, ID_DOCPER2, integerWidth=12, fractionWidth=bt.VALINT_DECIMALS, validBackgroundColour=NOEDIT_BGCOL); item39.SetName("docper2"); item39.SetEditable(False)
+    item2.Add( item39, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item0.Add( item2, 0, 0, 5 )
 

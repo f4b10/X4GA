@@ -2183,7 +2183,7 @@ class DocMag(adb.DbTable):
 
     def is_split_payment(self):
         for ti in self._info.totiva:
-            if ti[magazz.RSIVA_tipoalq] == "S":
+            if ti[magazz.RSIVA_tipoalq] == 'S':
                 return True
         return False
 
@@ -2545,6 +2545,7 @@ class DocMag(adb.DbTable):
             regiva = reg.regiva
         regivatip = regiva.tipo
         for mov in self.mov:
+            #print mov.iva.descriz, mov.iva.codice, mov.iva.tipo
             if mov.id_aliqiva is not None:
                 if mov.iva.tipo == 'C':
                     if regivatip != "A":
@@ -2555,6 +2556,12 @@ class DocMag(adb.DbTable):
                     if regivatip != "V":
                         raise Exception, "Impossibile usare l'aliquota %s, riservata alle vendite in split payment, se il registro non e' di tipo Vendite" % mov.iva.codice
                     cod = "ivavensos"
+                    break
+                elif mov.iva.tipo == 'D':
+                    if regivatip in ['V', 'C']:
+                        cod = "ivavendif"
+                    else:
+                        cod = "ivaacqdif"
                     break
         if cod is None:
             if (regivatip or ' ') in "AVC":

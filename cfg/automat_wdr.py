@@ -1096,48 +1096,60 @@ def AutomatContabSottocontiIVAFunc( parent, call_fit = True, set_sizer = True ):
     item13 = LinkTable(parent, ID_IVAACQCEE ); item13.SetDataLink( bt.TABNAME_PDC, None, PdcDialog ); item13.SetName('ivaacqcee')
     item3.Add( item13, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item14 = wx.StaticText( parent, ID_TEXT, "Iva in sospensione:", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
+    item14 = wx.StaticText( parent, ID_TEXT, "Iva in split paymen:", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
     item3.Add( item14, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 5 )
 
     item15 = LinkTable(parent, ID_IVAACQSOS ); item15.SetDataLink( bt.TABNAME_PDC, None, PdcDialog ); item15.SetName('ivaacqsos')
     item3.Add( item15, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item16 = wx.StaticText( parent, ID_TEXT, "Operazioni di Vendita", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
-    item16.SetForegroundColour( wx.BLUE )
-    item3.Add( item16, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 15 )
+    item16 = wx.StaticText( parent, ID_TEXT, "Iva a deducibilità differita:", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
+    item3.Add( item16, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 5 )
 
-    item17 = wx.StaticText( parent, ID_TEXT, "Sottoconto IVA", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
-    item3.Add( item17, 0, wx.ALIGN_BOTTOM|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+    item17 = LinkTable(parent, ID_IVAACQSOS ); item17.SetDataLink( bt.TABNAME_PDC, None, PdcDialog ); item17.SetName('ivaacqdif')
+    item3.Add( item17, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item18 = wx.StaticLine( parent, ID_LINE, wx.DefaultPosition, wx.DefaultSize, wx.LI_HORIZONTAL )
-    item3.Add( item18, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 5 )
+    item18 = wx.StaticText( parent, ID_TEXT, "Operazioni di Vendita", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
+    item18.SetForegroundColour( wx.BLUE )
+    item3.Add( item18, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 15 )
 
-    item19 = wx.StaticLine( parent, ID_LINE, wx.DefaultPosition, wx.DefaultSize, wx.LI_HORIZONTAL )
-    item3.Add( item19, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+    item19 = wx.StaticText( parent, ID_TEXT, "Sottoconto IVA", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
+    item3.Add( item19, 0, wx.ALIGN_BOTTOM|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
 
-    item20 = wx.StaticText( parent, ID_TEXT, "Normale:", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
-    item3.Add( item20, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 5 )
+    item20 = wx.StaticLine( parent, ID_LINE, wx.DefaultPosition, wx.DefaultSize, wx.LI_HORIZONTAL )
+    item3.Add( item20, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 5 )
 
-    item21 = LinkTable(parent, ID_IVAVEN ); item21.SetDataLink( bt.TABNAME_PDC, None, PdcDialog ); item21.SetName('ivaven')
-    item3.Add( item21, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item21 = wx.StaticLine( parent, ID_LINE, wx.DefaultPosition, wx.DefaultSize, wx.LI_HORIZONTAL )
+    item3.Add( item21, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
 
-    item22 = wx.StaticText( parent, ID_TEXT, "Corrispettivi:", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
+    item22 = wx.StaticText( parent, ID_TEXT, "Normale:", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
     item3.Add( item22, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 5 )
 
-    item23 = LinkTable(parent, ID_IVACOR ); item23.SetDataLink( bt.TABNAME_PDC, None, PdcDialog ); item23.SetName('ivacor')
+    item23 = LinkTable(parent, ID_IVAVEN ); item23.SetDataLink( bt.TABNAME_PDC, None, PdcDialog ); item23.SetName('ivaven')
     item3.Add( item23, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item24 = wx.StaticText( parent, ID_TEXT, "Iva in sospensione:", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
+    item24 = wx.StaticText( parent, ID_TEXT, "Corrispettivi:", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
     item3.Add( item24, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 5 )
 
-    item25 = LinkTable(parent, ID_IVAVENSOS ); item25.SetDataLink( bt.TABNAME_PDC, None, PdcDialog ); item25.SetName('ivavensos')
+    item25 = LinkTable(parent, ID_IVACOR ); item25.SetDataLink( bt.TABNAME_PDC, None, PdcDialog ); item25.SetName('ivacor')
     item3.Add( item25, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item26 = wx.StaticText( parent, ID_TEXT, "Fatture Proforma:", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
+    item26 = wx.StaticText( parent, ID_TEXT, "Iva in split paymen:", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
     item3.Add( item26, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 5 )
 
-    item27 = LinkTable(parent, ID_IVAPRO ); item27.SetDataLink( bt.TABNAME_PDC, None, PdcDialog ); item27.SetName('ivapro')
+    item27 = LinkTable(parent, ID_IVAVENSOS ); item27.SetDataLink( bt.TABNAME_PDC, None, PdcDialog ); item27.SetName('ivavensos')
     item3.Add( item27, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+
+    item28 = wx.StaticText( parent, ID_TEXT, "Iva a deducibilità differita:", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
+    item3.Add( item28, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 5 )
+
+    item29 = LinkTable(parent, ID_IVAVENSOS ); item29.SetDataLink( bt.TABNAME_PDC, None, PdcDialog ); item29.SetName('ivavendif')
+    item3.Add( item29, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+
+    item30 = wx.StaticText( parent, ID_TEXT, "Fatture Proforma:", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
+    item3.Add( item30, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 5 )
+
+    item31 = LinkTable(parent, ID_IVAPRO ); item31.SetDataLink( bt.TABNAME_PDC, None, PdcDialog ); item31.SetName('ivapro')
+    item3.Add( item31, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
     item3.AddGrowableCol( 1 )
 

@@ -1946,6 +1946,7 @@ class Azienda(object):
                 [ "stacosric",  "TINYINT",  1, None, "Flag stampa costi/ricavi in semplificata", None ],
                 [ "numdocsez",  "CHAR",     4, None, "Sezione per stampa sezione su numero documento", None ],
                 [ "numdocann",  "TINYINT",  1, None, "Flag per stampa anno su numero documento", None ],
+                [ "extra",      "TINYINT",  1, None, "Flag registro extra contabile", None ],
             ]
 
             cls.regiva_indexes = cls.std_indexes
@@ -3185,8 +3186,10 @@ class Azienda(object):
                 [ 'acqcee2',    "DECIMAL",  IVI, DVI, "IVA acquisti cee credito", None ],
                 [ 'tivper1',    "DECIMAL",  IVI, DVI, "IVA totale periodo debito", None ],
                 [ 'tivper2',    "DECIMAL",  IVI, DVI, "IVA totale periodo credito", None ],
-                [ 'vensos1',    "DECIMAL",  IVI, DVI, "IVA vendite sosp. debito", None ],
-                [ 'vensos2',    "DECIMAL",  IVI, DVI, "IVA vendite sosp. credito", None ],
+                [ 'vensos1',    "DECIMAL",  IVI, DVI, "IVA vendite split payment debito", None ],
+                [ 'vensos2',    "DECIMAL",  IVI, DVI, "IVA vendite split payment credito", None ],
+                [ 'vendif1',    "DECIMAL",  IVI, DVI, "IVA vendite esigibilità differita debito", None ],
+                [ 'vendif2',    "DECIMAL",  IVI, DVI, "IVA vendite esigibilità differita credito", None ],
                 [ 'ivaind1',    "DECIMAL",  IVI, DVI, "IVA indeducibile debito", None ],
                 [ 'ivaind2',    "DECIMAL",  IVI, DVI, "IVA indeducibile credito", None ],
                 [ 'docper1',    "DECIMAL",  IVI, DVI, "IVA periodo debito", None ],

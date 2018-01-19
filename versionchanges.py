@@ -28,6 +28,11 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
+    ('1.5.52', dt.Date(2018, 1, 19), (
+         ("BET1240",
+         """Aggiunta gestione iva in sospensione."""),
+        ),),
+
     ('1.5.51', dt.Date(2018, 1, 8), (
          ("BET1239",
          """Aggiunta la possibilità di definire anagrafica di default per documento di magazzino."""),

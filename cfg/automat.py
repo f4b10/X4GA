@@ -6,17 +6,17 @@
 # Copyright:    (C) 2011 Astra S.r.l. C.so Cavallotti, 122 18038 Sanremo (IM)
 # ------------------------------------------------------------------------------
 # This file is part of X4GA
-# 
+#
 # X4GA is free software: you can redistribute it and/or modify
 # it under the terms of the Affero GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # X4GA is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
@@ -50,7 +50,7 @@ class _automatmixin(object):
             - puntatore del controllo
             - descrizione dell'automatismo
     """
-    
+
     def __init__(self):
         """
         Costruttore.
@@ -73,7 +73,7 @@ class _automatmixin(object):
                     pass
         except MySQLdb.Error, e:
             awu.MsgDialogDbError(self, e)
-    
+
     def LoadAutomat(self, codice):
         """
         Carica gli automatismi dalla tabella.
@@ -95,6 +95,13 @@ class _automatmixin(object):
         """
         dberr = None
         for key, (ctr, des) in self.auto.iteritems():
+            #===================================================================
+            # if key in ['ivaacqdif', 'ivavendif']:
+            #     print 'forzo conti sospensione iva uguali a split'
+            #     ctr=self.FindWindowByName(key.replace('dif', 'sos'))
+            # 
+            # 
+            #===================================================================
             try:
                 id = ctr.GetValue()
             except:
@@ -117,7 +124,7 @@ class _automatmixin(object):
                 awu.MsgDialog(self, repr(dberr))
                 break
         return (dberr is None)
-    
+
     def UpdateDataRecord(self):
         out = False
         ctrls = [cn(self, key) for key in self.auto.keys()]
@@ -134,19 +141,19 @@ class AutomatContabPanel(aw.Panel, _automatmixin):
     """
     Impostazione degli automatismi contabili.
     """
-    
+
     def __init__(self, *args, **kwargs):
-        
+
         aw.Panel.__init__(self, *args, **kwargs)
         _automatmixin.__init__(self)
-        
+
         wdr.AutomatContabFunc(self, True)
-        
+
         for c in aw.awu.GetAllChildrens(self):
             if hasattr(c, 'SetLabel'):
                 if c.GetLabel() == 'Iva in sospensione:':
                     c.SetLabel('Iva in split playment:')
-        
+
         for aut, des in (("pdctip", "Tipo sottoconto"),
                          ("bilmas", "Mastro di bilancio"),
                          ("bilcon", "Conto di bilancio"),
@@ -155,12 +162,12 @@ class AutomatContabPanel(aw.Panel, _automatmixin):
                 key = "%s_%s" % (aut, tipo)
                 self.auto[key] =\
                     [None, "%s default per tabella %s" % (des, tipo)]
-        
+
         for tipo in 'costi ricavi'.split():
             key = "pdctip_%s" % tipo
             self.auto[key] =\
                 [None, "Tipo sottoconto default per %s" % tipo]
-        
+
         for aut, des in (\
             ('abbatt',    'Sottoconto abbuoni attivi'),\
             ('abbpas',    'Sottoconto abbuoni passivi'),\
@@ -180,20 +187,28 @@ class AutomatContabPanel(aw.Panel, _automatmixin):
             ('ivaven',    'Sottoconto IVA su vendite'),\
             ('ivacor',    'Sottoconto IVA su vendite da corrispettivi'),\
             ('ivapro',    'Sottoconto IVA per vendite con fattura proforma'),\
-            ('ivaacqsos', 'Sottoconto IVA per acquisti in sospensione di IVA'),\
-            ('ivavensos', 'Sottoconto IVA per vendite in sospensione di IVA'),):
+            ('ivaacqsos', 'Sottoconto IVA per acquisti in split payment '),\
+            ('ivavensos', 'Sottoconto IVA per vendite in split payment '),
+            ('ivaacqdif', 'Sottoconto IVA per acquisti a detraibilità differita '),\
+            ('ivavendif', 'Sottoconto IVA per vendite a detraibilità differita '),
+            ):
             self.auto[aut] = [None, des]
-        
+
         for key in self.auto:
+            #===================================================================
+            # if key in ['ivaacqdif', 'ivavendif']:
+            #     key = key.replace('dif', 'sos')
+            #===================================================================
+            
             ctr = cn(self, key)
             self.auto[key][0] = ctr
             if ctr.GetName().startswith('bilmas'):
                 self.Bind(lt.EVT_LINKTABCHANGED, self.OnMastroChanged, ctr)
-        
+
         self.LoadValues()
-        
+
         self.Bind(wx.EVT_BUTTON, self.OnConfirm, id=wdr.ID_BTNOK)
-    
+
     def OnMastroChanged( self, event ):
         ctrmas = event.GetEventObject()
         ctrcon = None
@@ -212,7 +227,7 @@ class AutomatContabPanel(aw.Panel, _automatmixin):
     def OnConfirm( self, event ):
         if self.UpdateDataRecord():
             event.Skip()
-    
+
     def ValidateData(self):
         return True
 
@@ -275,14 +290,14 @@ class AutomatMagazzPanel(aw.Panel, _automatmixin):
     """
     Impostazione degli Automatismi di magazzino.
     """
-    
+
     def __init__(self, *args, **kwargs):
-        
+
         aw.Panel.__init__(self, *args, **kwargs)
         _automatmixin.__init__(self)
-        
+
         wdr.AutomatMagazzFunc(self, True)
-        
+
         for aut, des in (('magomaggi', 'Sottoconto Omaggi'),\
                          ('magomareg', 'Omaggi in registrazione'),\
                          ('magivascm', 'Aliquota Iva per sconto merce'),\
@@ -300,26 +315,26 @@ class AutomatMagazzPanel(aw.Panel, _automatmixin):
                          ('magfilmar', 'Filtro ricerca articoli per marca'),
                          ):
             self.auto[aut] = [None, des]
-        
+
         for key in self.auto:
             self.auto[key][0] = cn(self, key)
-        
+
         tf = {True: 1, False: 0}
-        
+
         cn(self, 'magordinv').SetDataLink('magordinv', tf)
         for name, values in (('magordfta', (0,1)),
                              ('magintcli', (0,1,2))):
             cn(self, name).SetDataLink(name, values)
-        
+
         for name in 'tip,cat,for,mar'.split(','):
             name = 'magfil%s' % name
             cn(self, name).SetDataLink(name, tf)
         cn(self, 'magomareg').SetDataLink(name, tf)
-        
+
         self.LoadValues()
         self.Bind(lt.EVT_LINKTABCHANGED, self.OnTipDocChanged, cn(self, 'maginidoc'))
         self.Bind(wx.EVT_BUTTON, self.OnConfirm, id=wdr.ID_BTNOK)
-    
+
     def OnTipDocChanged(self, event):
         v = event.GetEventObject().GetValue()
         if v is None:
@@ -328,11 +343,11 @@ class AutomatMagazzPanel(aw.Panel, _automatmixin):
             flt = "id_tipdoc=%d" % v
         self.FindWindowByName('maginimov').SetFilter(flt)
         event.Skip()
-    
+
     def OnConfirm( self, event ):
         if self.UpdateDataRecord():
             event.Skip()
-    
+
     def ValidateData(self):
         return True
 

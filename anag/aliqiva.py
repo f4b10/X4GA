@@ -32,6 +32,8 @@ bt = Azienda.BaseTab
 import wx.grid as gl
 import awc.controls.dbgrid as dbglib
 
+import awc.controls.windows as aw
+import stormdb as adb
 
 FRAME_TITLE = "Aliquote IVA"
 
@@ -78,7 +80,7 @@ class AliqIvaPanel(ga.AnagPanel):
         wdr.AliqIvaCardFunc( p, True )
         ci = lambda x: self.FindWindowById(x)
         cn = lambda x: self.FindWindowByName(x)
-        ci(wdr.ID_TIPO).SetDataLink("tipo", " CS")
+        ci(wdr.ID_TIPO).SetDataLink("tipo", " CSD")
         for cf in 'cf':
             for c in range(4):
                 name = 'pral%sc%d' % (cf, c+1)
@@ -97,6 +99,42 @@ class AliqIvaPanel(ga.AnagPanel):
                                         self.db_tabname, self.GetSqlColumns())
         return grid
 
+
+
+    def OnRecordSave( self, event ):
+        if self.ExistAutomatismo():
+            ga.AnagPanel.OnRecordSave(self, event)
+        else:
+            aw.awu.MsgDialog(self, "Provvedere a definire automatismo contabile", style=wx.ICON_QUESTION)
+        
+    def ExistAutomatismo(self):
+        esito = True
+        tipo=self.FindWindowByName('tipo').GetValue()
+        if tipo=='D':
+            dbAuto = adb.DbTable(bt.TABNAME_CFGAUTOM, 'auto')
+            
+            for codice, descriz in [
+                                    ['ivaacqdif', 'Sottoconto IVA per acquisti a detraibilità differita'],
+                                    ['ivavendif', 'Sottoconto IVA per vendite a detraibilità differita'],
+                                    ]:
+                dbAuto.Retrieve('codice="%s"' % codice)
+                if dbAuto.RowsCount()==0:
+                    dbAuto.CreateNewRow()
+                    dbAuto.codice=codice
+                    dbAuto.descriz=descriz
+                    esito = dbAuto.Save()
+                    if not esito:
+                        break
+        return esito
+        
+        #=======================================================================
+        # if self.UpdateDataRecord():
+        #     if not self.complete:
+        #         f = awc.util.GetParentFrame(self)
+        #         if issubclass(f.__class__, wx.Dialog) and f.IsModal():
+        #             f.EndModal(self.db_recid)
+        # event.Skip()
+        #=======================================================================
 
 # ------------------------------------------------------------------------------
 
