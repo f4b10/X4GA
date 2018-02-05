@@ -6,17 +6,17 @@
 # Copyright:    (C) 2011 Astra S.r.l. C.so Cavallotti, 122 18038 Sanremo (IM)
 # ------------------------------------------------------------------------------
 # This file is part of X4GA
-# 
+#
 # X4GA is free software: you can redistribute it and/or modify
 # it under the terms of the Affero GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # X4GA is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
@@ -76,7 +76,7 @@ NDEC = 2
 
 
 class GeneraPartiteMixin(scad.Scadenze):
-    
+
     def __init__(self, *args, **kwargs):
         scad.Scadenze.__init__(self, *args, **kwargs)
         self.reg_modpag_id = None
@@ -90,13 +90,13 @@ class GeneraPartiteMixin(scad.Scadenze):
 #            except:
 #                x.Disable()
         self.pdcpa_ctrls = pdcpa_ctrls
-    
+
     def OnNumDocChanged(self, event):
         ndoc = self.controls['numdoc'].GetValue()
         self.reg_numdoc = ndoc
         self.UpdateButtons()
         event.Skip()
-    
+
     def UpdateScadButtons(self, enable=True):
         if self.controls["button_end"].IsEnabled():
             tip = ''
@@ -119,7 +119,7 @@ class GeneraPartiteMixin(scad.Scadenze):
                 self.controls["button_end"].Enable(enable)
             if tip:
                 self.controls["button_end"].SetToolTipString(tip)
-    
+
     def ScadReset(self):
         #reset recordset scadenze
         del self.regrss[:]
@@ -127,13 +127,13 @@ class GeneraPartiteMixin(scad.Scadenze):
         for ctrl in self.pdcpa_ctrls:
             name = ctrl.GetName()[7:]
             ctrl.SetValue(None)
-    
+
     def InitPanelScad( self ):
         """
         Inizializzazione del pannello delle scadenze.
         In questa classe il metodo non ha effetto, in quanto il data entry
         del dettaglio Dare/Avere dipende dal tipo di registrazione.
-        
+
         @see: sottoclassi di ContabDialog::
             ContabPanelTipo_I  - reg.iva
             ContabPanelTipo_E  - reg. sola iva
@@ -151,7 +151,7 @@ class GeneraPartiteMixin(scad.Scadenze):
         self.Bind(wx.EVT_BUTTON, self.OnScadNew, id=wdr.ID_SCADNEW)
         self.Bind(wx.EVT_BUTTON, self.OnScadDel, id=wdr.ID_SCADDEL)
         self.Bind(wx.EVT_BUTTON, self.OnScadSud, id=wdr.ID_SCADSUD)
-    
+
     def OnModPagChanged(self, event):
         newmp = self.controls["modpag"].GetValue()
         if self.reg_modpag_id != newmp:
@@ -161,7 +161,7 @@ class GeneraPartiteMixin(scad.Scadenze):
             self.UpdatePanelBody()
             self.UpdateButtons()
         event.Skip()
-    
+
     def UpdateModPag(self, totimposta=0):
         """
         Aggiorna la modalità di pagamento in base al sottoconto della riga 1
@@ -173,10 +173,10 @@ class GeneraPartiteMixin(scad.Scadenze):
         self.ScadCalc(totimposta)
         self.UpdatePanelScad()
         self.UpdatePanelBody()
-    
+
     def GetSelRowPaClass(self):
         return SelRowPa
-    
+
     def OnAnagDisplay(self, event):
         tipo = GetRecordInfo(self.db_curs, bt.TABNAME_PDC, self.id_pdcpa, ('id_tipo',))[0]
         dc = autil.GetPdcDialogClass(tipo)
@@ -261,7 +261,7 @@ class GeneraPartiteMixin(scad.Scadenze):
         self.UpdatePanelScad()
         self.UpdateButtons()
         event.Skip()
-    
+
     def OnScadDel(self, event):
         """
         Elimina scadenza selezionata
@@ -273,7 +273,7 @@ class GeneraPartiteMixin(scad.Scadenze):
             self.UpdatePanelScad()
             self.UpdateButtons()
         event.Skip()
-    
+
     def OnScadSud(self, event):
         """
         Suddivide equamente gli importi delle scadenze
@@ -292,14 +292,14 @@ class GeneraPartiteMixin(scad.Scadenze):
         self.UpdatePanelScad()
         self.UpdateButtons()
         event.Skip()
-    
+
     def EnableScadControls(self, enable = True):
         enable = enable and self.status == ctb.STATUS_EDITING
         aw.awu.EnableControls(self.FindWindowById(wdr.ID_PANSCADSCAD),
                               enable and self._cfg_pcf == '1')
         for cid in (wdr.ID_ANAGDIALOG, wdr.ID_ANAGCHANGE):
             self.FindWindowById(cid).Enable(enable)
-    
+
     def UpdatePanelScad(self):
         """
         Aggiorna i controlli mod.pag. e partite in base al corrente recordset
@@ -313,7 +313,7 @@ class GeneraPartiteMixin(scad.Scadenze):
     def UpdateTotSca(self):
         totimp = sum( [x[RSSCA_IMPORTO] for x in self.regrss] )
         self.controls["totscad"].SetValue(totimp)
-    
+
     def ScadCalc(self, totimposta=0):
         if self._cfg_pcf != '1':
             return
@@ -329,7 +329,7 @@ class GeneraPartiteMixin(scad.Scadenze):
         if len(note) == len(self.regrss):
             for s in range(len(note)):
                 self.regrss[s][RSSCA_NOTE] = note[s]
-    
+
     def TestPagImm(self):
         if self.mp_id_pdcpi is not None:
             #pagamento immediato, genero righe di giroconto cli-for/cassa
@@ -417,7 +417,7 @@ class GeneraPartiteMixin(scad.Scadenze):
                 elif self._cfg_pcfsgn == '-':
                     imppar = -imp
             par1.append((imptot, imppar, scad[RSSCA_PCF_ID]))
-            
+
         try:
             x = self.db_curs.executemany(cmd1, par1)
             z = self.db_curs.execute(cmd2, par2)
@@ -425,9 +425,9 @@ class GeneraPartiteMixin(scad.Scadenze):
             MsgDialogDbError(self, e)
         else:
             out = True
-        
+
         return True
-    
+
     def ScadWrite(self):
         out = True
         try:
@@ -485,19 +485,19 @@ class GeneraPartiteMixin(scad.Scadenze):
                             imptot,\
                             imppar,\
                             pcf ]
-                
+
                 self.db_curs.execute(cmd, par)
                 if pcf is None:
                     self.db_curs.execute("SELECT LAST_INSERT_ID();")
                     rs = self.db_curs.fetchone()
                     pcf = int(rs[0])
                     self.regrss[nsca][RSSCA_PCF_ID] = pcf
-                
+
                 last_datscad = scad[RSSCA_DATA]
                 last_pcf_id = pcf
-                
+
                 nsca += 1
-            
+
             #scrittura riferimenti
             cmd =\
 """INSERT INTO %s (id_reg, id_pcf, datscad, importo, note) """\
@@ -508,7 +508,7 @@ class GeneraPartiteMixin(scad.Scadenze):
                      scad[RSSCA_IMPORTO],\
                      scad[RSSCA_NOTE] ] for scad in self.regrss ]
             self.db_curs.executemany(cmd, par)
-            
+
             #elimino le partite che dopo lo storno sono andate a zero
             cmd =\
 """DELETE FROM %s WHERE id=%%s and imptot=0 and imppar=0""" % bt.TABNAME_PCF
@@ -517,11 +517,11 @@ class GeneraPartiteMixin(scad.Scadenze):
                 pcf = scad[RSSCA_PCF_ID]
                 par.append((pcf,))
             self.db_curs.executemany(cmd, par)
-            
+
         except MySQLdb.Error, e:
             MsgDialogDbError(self, e)
             out = False
-        
+
         return out
 
     def ScadRead(self, idreg):
@@ -549,25 +549,25 @@ class GeneraPartiteMixin(scad.Scadenze):
         return out
 
     def _GridEdit_Sca__Init__(self):
-        
+
         if hasattr(self, '_grid_sca'):
             if self._grid_sca:
 #                self._grid_sca.Destroy()
                 wx.CallAfter(self._grid_sca.Destroy)
-        
+
         parent = self.FindWindowById(wdr.ID_PANGRID_SCA)
 #        parent.SetSize((0,0))
         size = parent.GetClientSizeTuple()
         grid = dbglib.DbGrid(parent, -1, size=size, style=0)
-        
-        afteredit = ( (dbglib.CELLEDIT_AFTER_UPDATE, 1, 
+
+        afteredit = ( (dbglib.CELLEDIT_AFTER_UPDATE, 1,
                        self._GridEdit_Sca_TestValues), )
-        
+
         _DAT = gl.GRID_VALUE_DATETIME
         _IMP = bt.GetValIntMaskInfo()
         _CHK = gl.GRID_VALUE_BOOL+":1,0"
         _STR = gl.GRID_VALUE_STRING
-        
+
         grid.SetData( self.regrss, (\
             ( RSSCA_DATA,    "Scadenza", _DAT, False),
             ( RSSCA_IMPORTO, "Importo",  _IMP, False),
@@ -575,7 +575,7 @@ class GeneraPartiteMixin(scad.Scadenze):
             ( RSSCA_NOTE,    "Note",     _STR, False),),
             afterEdit=afteredit,\
             canEdit=True, canIns=False)
-        
+
         grid.SetFitColumn(-1)
         grid.AutoSizeColumns()
         sz = wx.FlexGridSizer(1,0,0,0)
@@ -585,12 +585,12 @@ class GeneraPartiteMixin(scad.Scadenze):
         parent.SetSizer(sz)
         sz.SetSizeHints(parent)
         self._grid_sca = grid
-    
+
     def _GridEdit_Sca_TestValues(self, row, gridcol, col, value):
         self.UpdateTotSca()
         self.UpdateButtons()
         return True
-    
+
     def UpdatePanelCliFor(self):
         def cn(x):
             return self.FindWindowByName(x)
@@ -607,7 +607,7 @@ class GeneraPartiteMixin(scad.Scadenze):
             for n, c in enumerate(('codice', 'descriz',)):
                 cn('_pdcpa_%s' % c).SetValue(rs[n])
             cmd = """
-            SELECT pdctip.tipo 
+            SELECT pdctip.tipo
               FROM %s pdc JOIN %s pdctip ON pdc.id_tipo=pdctip.id
              WHERE pdc.id=%%s""" % (bt.TABNAME_PDC, bt.TABNAME_PDCTIP)
             try:
@@ -645,7 +645,7 @@ class GeneraPartiteMixin(scad.Scadenze):
                                 if dbiva.Get(rs[n]) and dbiva.OneRow():
                                     self.SetAliqIvaDefault(dbiva)
                 SetWarningPag(self.FindWindowByName('butattach'), self.id_pdcpa)
-    
+
     def InfoCliFor(self, col):
         """
         Recupera informazioni dalla tabella del cliente o fornitore
@@ -656,12 +656,12 @@ class GeneraPartiteMixin(scad.Scadenze):
 """FROM %s AS pdc """\
 """LEFT JOIN %s AS cli ON cli.id=pdc.id """\
 """LEFT JOIN %s AS frn ON frn.id=pdc.id """\
-"""WHERE pdc.id=%%s;""" % ( col, 
-                            col, 
+"""WHERE pdc.id=%%s;""" % ( col,
+                            col,
                             bt.TABNAME_PDC,
                             bt.TABNAME_CLIENTI,
                             bt.TABNAME_FORNIT )
-        
+
         try:
             self.db_curs.execute(cmd, self.id_pdcpa)
             rs = self.db_curs.fetchone()
@@ -690,7 +690,7 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
         ContabPanelTipo_I_S x contab.semplificata
         ContabPanelTipo_E   x registrazioni di sola iva.
     """
-    
+
     def __init__(self, *args, **kwargs):
         """
         Costruttore standard.
@@ -715,39 +715,39 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
         self._auto_pdcdif_id = None
         self._auto_pdcdif_cod = None
         self._auto_pdcdif_des = None
-        
+
         self.totimpon = 0
         self.totimpst = 0
         self.totivato = 0
         self.totinded = 0
-        
+
         self.aliqdef_id = None  #aliquota predefinita del fornitore
         self.aliqdef_cod = None
         self.aliqdef_des = None
-        
+
         self.totdoc = 0
         self.regrss = []       #recordset scadenze
         self.regrss_old = []   #recordset scadenze originale x storno modif.
         self._grid_sca = None
-        
+
         ctb.ContabPanel.__init__(self, *args, **kwargs)
-        
+
         self._Auto_AddKeysContabTipo_I()
         self.ReadAutomat()
-        
+
         ivalib.IVA.__init__(self, self.db_curs)
         GeneraPartiteMixin.__init__(self, self.db_curs)
-        
+
         self._progr_iva_ultins_num = 0
-        
+
         self.dbrei = adb.DbTable(bt.TABNAME_REGIVA, 'rei')
         self.dbsrc = adb.DbTable(bt.TABNAME_CONTAB_H, 'reg')
         self.dbsrc.AddJoin(bt.TABNAME_CFGCONTAB, 'caus', idLeft='id_caus', idRight='id')
         body = self.dbsrc.AddJoin(bt.TABNAME_CONTAB_B, 'body', idLeft='id', idRight='id_reg')
         body.AddJoin(bt.TABNAME_PDC, 'pdcpa', idLeft='id_pdcpa', join=adb.JOIN_LEFT, fields='id,codice,descriz')
-        
+
         self.Bind(lt.EVT_LINKTABCHANGED, self.OnRegIvaChanged, id=wdr.ID_REGIVA)
-    
+
     def OnRegIvaChanged(self, event):
         if self.reg_id is None:
             if self.status == ctb.STATUS_EDITING:
@@ -760,7 +760,7 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
         self.SetRegIvaParam()
         self.UpdateButtons()
         event.Skip()
-    
+
     def DefNumIva(self):
         cri = self.FindWindowById(wdr.ID_REGIVA)
         self.reg_regiva_id = cri.GetValue()
@@ -776,7 +776,7 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
         self.DefaultValues()
         self.controls["numiva"].SetValue(self.reg_numiva)
         self.controls["numdoc"].SetValue(self.reg_numdoc)
-    
+
     def InitCausale(self):
         """
         Inizializza il tipo di causale (C{"I"})
@@ -784,15 +784,15 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
         self.cautipo = "I"
         self.caufilt = "tipo='%s'" % self.cautipo
         return ctb.ContabPanel.InitCausale(self)
-    
+
     def InitPanelBody(self):
         ctb.ContabPanel.InitPanelBody(self)
         self.InitPdcControls()
-    
+
     def Validate(self):
-        
+
         out = ctb.ContabPanel.Validate(self)
-        
+
         if out:
             #test registro iva
             if self.reg_regiva_id is None:
@@ -808,11 +808,11 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
             if msg:
                 awu.MsgDialog(self, msg, style=wx.ICON_ERROR)
                 out = False
-        
+
         if out:
             self.reg_numiva = self.controls["numiva"].GetValue()
             self.reg_modpag_id = self.controls["modpag"].GetValue()
-        
+
         return out
 
     def RegSearchClass( self ):
@@ -821,7 +821,7 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
         registrazioni.
         """
         return Reg_I_SearchDialog
-    
+
     def RegSearch( self ):
         out = False
         if self.cauid is not None:
@@ -841,7 +841,7 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
                         else:
                             self.SetRegStatus(ctb.STATUS_DISPLAY)
         return out
-    
+
     def RegNew(self):
         if self.canins:
             dlgPa = self.GetSelRowPaClass()(self, -1)
@@ -910,7 +910,7 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
                 self.reg_nocalciva = 0
                 if self._cfg_tipo == "E":
                     self.reg_nocalciva = 1
-                
+
                 import anag.dbtables as dba
                 for cls in (dba.Clienti, dba.Fornit):
                     t = cls()
@@ -919,31 +919,31 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
                             self.SetAliqIvaDefault(t.anag.aliqiva)
                             if len(self.regrsb)>1:
                                 self.InitPdcIndeduc(1)
-                
+
                 self.SetRegStatus(ctb.STATUS_EDITING)
-                
+
             else:
-                
+
                 self.SetRegStatus(ctb.STATUS_SELCAUS)
-            
+
             dlgPa.Destroy()
-    
+
     def AddDefaultRow(self, row):
         self.regrsb.append(row)
-    
+
     def SetAliqIvaDefault(self, *args, **kwargs):
         pass
-    
+
     def InitPdcIndeduc(self, *args, **kwargs):
         pass
-    
+
     def GetSottocontiIva(self, tipaliq):
-        
+
         #id1,cod1,des1 x sottoconto iva
         #id2,cod2,des2 x sottoconto indeducibile
-        
+
         tipo = tipaliq
-        
+
         if not tipo:
             #aliquota normale
             id1 =  self._auto_pdciva_id
@@ -952,7 +952,7 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
             id2 =  self._auto_pdcind_id
             cod2 = self._auto_pdcind_cod
             des2 = self._auto_pdcind_des
-            
+
         elif tipo == "C":
             #aliquota cee
             id1 =  self._auto_pdccee_id
@@ -961,7 +961,7 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
             id2 =  None
             cod2 = None
             des2 = None
-            
+
         elif tipo == "S":
             #aliquota sospensione
             id1 =  self._auto_pdcsos_id
@@ -975,9 +975,9 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
             #aliquota sospensione
             print 'forzo conto per differita a quello per split payment'
             #-----------------------------------------------------------
-            self._auto_pdcdif_id  = self._auto_pdcsos_id  
-            self._auto_pdcdif_cod = self._auto_pdcsos_cod 
-            self._auto_pdcdif_des = self._auto_pdcsos_des 
+            self._auto_pdcdif_id  = self._auto_pdcsos_id
+            self._auto_pdcdif_cod = self._auto_pdcsos_cod
+            self._auto_pdcdif_des = self._auto_pdcsos_des
             #-----------------------------------------------------------
             id1 =  self._auto_pdcdif_id
             cod1 = self._auto_pdcdif_cod
@@ -986,9 +986,9 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
             cod2 = None
             des2 = None
 
-        
+
         return id1, cod1, des1, id2, cod2, des2
-    
+
     def RegReset(self):
         ctb.ContabPanel.RegReset(self)
         self.reg_numiva = None
@@ -1020,7 +1020,7 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
                 if self._cfg_numdoc == '1':
                     self.reg_numdoc = "%s" % numiva
         self.ScadCalc()
-    
+
     def OnCauChanged( self, event ):
         """
         Callback per causale selezionata.
@@ -1047,9 +1047,9 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
             cri = self.FindWindowById(wdr.ID_REGIVA)
             cri.SetFilter(filter)
             cri.SetValue(self._cfg_regiva_id)
-        
+
         return cauchanged
-    
+
     def SetRegIvaParam(self):
         if self._cfg_regiva_tipo is None:
             return
@@ -1060,45 +1060,45 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
                 self._auto_pdccee_id = self._auto_ivaacqcee
                 self._auto_pdcsos_id = self._auto_ivaacqsos
                 self._auto_pdcdif_id = self._auto_ivaacqdif
-                
+
             elif self._cfg_regiva_tipo == "V":
                 self._auto_pdciva_id = self._auto_ivaven
                 self._auto_pdcind_id = self._auto_ivaind
                 self._auto_pdccee_id = self._auto_ivaacqcee
                 self._auto_pdcsos_id = self._auto_ivavensos
                 self._auto_pdcdif_id = self._auto_ivavendif
-                
+
             elif self._cfg_regiva_tipo == "C":
                 self._auto_pdciva_id = self._auto_ivacor
                 self._auto_pdcind_id = None
                 self._auto_pdccee_id = None
                 self._auto_pdcsos_id = None
                 self._auto_pdcdif_id = None
-            
+
             self._auto_pdciva_cod, self._auto_pdciva_des =\
                 GetRecordInfo(self.db_curs, bt.TABNAME_PDC,\
                               self._auto_pdciva_id, ("codice","descriz"))
-            
+
             self._auto_pdcind_cod, self._auto_pdcind_des =\
                 GetRecordInfo(self.db_curs, bt.TABNAME_PDC,\
                               self._auto_pdcind_id, ("codice","descriz"))
-            
+
             self._auto_pdccee_cod, self._auto_pdccee_des =\
                 GetRecordInfo(self.db_curs, bt.TABNAME_PDC,\
                               self._auto_pdccee_id, ("codice","descriz"))
-            
+
             self._auto_pdcsos_cod, self._auto_pdcsos_des =\
                 GetRecordInfo(self.db_curs, bt.TABNAME_PDC,\
                               self._auto_pdcsos_id, ("codice","descriz"))
-            
+
             self._auto_pdcdif_cod, self._auto_pdcdif_des =\
                 GetRecordInfo(self.db_curs, bt.TABNAME_PDC,\
                               self._auto_pdcdif_id, ("codice","descriz"))
-            
+
             #if self._cfg_regiva_id is not None:
                 #self._Progr_AddKeysContabTipo_I(ctb.YEAR,\
                                                 #self._cfg_regiva_id)
-    
+
     def OnDatRegChanged(self, event):
         if self.reg_id is None:
             if self.status == ctb.STATUS_EDITING:
@@ -1112,11 +1112,11 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
                     self.RicalcolaScadenzeDaDataDocumento(forcericalc=True)
                 self.UpdateButtons()
         event.Skip()
-    
+
     def OnDatDocChanged(self, event):
         self.RicalcolaScadenzeDaDataDocumento()
         event.Skip()
-    
+
     def RicalcolaScadenzeDaDataDocumento(self, forcericalc=False):
         newdd = self.controls["datdoc"].GetValue()
         if self.reg_datdoc != newdd or forcericalc:
@@ -1125,7 +1125,7 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
             self.UpdatePanelScad()
             self.UpdatePanelBody()
         self.UpdateButtons()
-    
+
     def OnNumIvaChanged(self, event):
         niva = self.controls['numiva'].GetValue()
         self.reg_numiva = niva
@@ -1133,7 +1133,7 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
             if self._cfg_numdoc == '1':
                 self.controls['numdoc'].SetValue(str(niva))
         event.Skip()
-    
+
     def UpdateAllControls(self):
         ctb.ContabPanel.UpdateAllControls(self)
         self.controls["modpag"].SetValue(self.reg_modpag_id)
@@ -1148,10 +1148,10 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
                     c.Enable(False)
                     c.SetToolTipString("Manca il registro IVA")
         self.UpdateScadButtons(enable)
-    
+
     def IsIvaOK(self):
         return True
-    
+
     def InitPanelHead(self):
         ctb.ContabPanel.InitPanelHead(self)
         for cid, func in ((wdr.ID_TXT_DATREG, self.OnDatRegChanged),
@@ -1188,13 +1188,13 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
         if out:
             self.ReportFineReg()
         return out
-    
+
     def RegDelete(self):
         out = self.ScadStorno()
         if out:
             out = ctb.ContabPanel.RegDelete(self)
         return out
-    
+
     def RegRead(self, idreg):
         out = ctb.ContabPanel.RegRead(self, idreg)
         self.SetRegIvaParam()
@@ -1224,7 +1224,7 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
             - numero iva <= successivo - 1  se esistente
             - data >= data precedente       se esistente
             - data <= data successiva       se esistente
-            
+
             Esito positivo ma con messaggio di warning per numeri mancanti:
             - numero iva != precedente + 1  o primo numero dell'anno
             - numero iva != successivo - 1  se esistente
@@ -1308,14 +1308,14 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
                                self.reg_regiva_id)
                     cmd = """SELECT %s(reg.numiva) """\
                         """FROM %s AS reg """\
-                        """WHERE %s%s%s""" % (cmdtype[0], 
-                                              bt.TABNAME_CONTAB_H, 
-                                              filt, 
-                                              cmdtype[1], 
+                        """WHERE %s%s%s""" % (cmdtype[0],
+                                              bt.TABNAME_CONTAB_H,
+                                              filt,
+                                              cmdtype[1],
                                               numiva)
                     cmd = """SELECT datreg, numiva """\
                         """FROM %s AS reg """\
-                        """WHERE %s=(%s)""" % (bt.TABNAME_CONTAB_H, 
+                        """WHERE %s=(%s)""" % (bt.TABNAME_CONTAB_H,
                                                filt,
                                                cmd)
                     self.db_curs.execute(cmd)
@@ -1350,7 +1350,7 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
                         err +=\
 """mancano i protocolli dal n.%d al n.%d""" % (nprec+1, numiva-1)
                     forcereq = canForce
-                
+
                 if dprec and datreg < dprec:
                     if err:
                         err += """   Inoltre, la """
@@ -1360,7 +1360,7 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
 """data di registrazione non può essere inferiore al %s, data di """\
 """registrazione del precedente protocollo n.%d""" % ( dprec.Format()[:10],\
                                                        nprec )
-                
+
                 if dnext and datreg > dnext:
                     if err:
                         err += """   Inoltre, la """
@@ -1370,7 +1370,7 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
 """data di registrazione non può essere superiore al %s, data di """\
 """registrazione del successivo protocollo n.%d""" % ( dnext.Format()[:10],\
                                                        nnext )
-                
+
             if err:
                 out = False
                 if forcereq:
@@ -1382,13 +1382,13 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
                         out = True
                 else:
                     MsgDialog(self, err, style=wx.ICON_ERROR)
-        
+
         return out
-    
+
     def CheckDocumento(self):
         """
         Controllo che non ci sia già una registrazione dello stesso tipo,
-        facente capo allo stesso cliente/fornitore e con lo stesso numero di 
+        facente capo allo stesso cliente/fornitore e con lo stesso numero di
         documento nell'anno della data documento.
         Se lo trovo, segnalo e chiedo conferma.
         """
@@ -1418,10 +1418,10 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
         msg += """Confermi comunque la scrittura di questa registrazione?"""
         stl = wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT
         return awu.MsgDialog(self, msg, style=stl) == wx.ID_YES
-    
+
     def UpdateModPag(self, totimposta=0):
         GeneraPartiteMixin.UpdateModPag(self, totimposta=self.totimpst)
-    
+
     def UpdateRegIva(self):
         out = True
         #filt = r"codice=%s and keydiff=%s and key_id=%s"
@@ -1447,7 +1447,7 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
         #except MySQLdb.Error, e:
             #MsgDialogDbError(self, e)
             #out = True
-        
+
         return out
 
     def RegWriteHead(self):
@@ -1458,11 +1458,11 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
                 if written:
                     self.UpdateRegIva()
         return written
-    
+
     def RegWriteBody(self, *args):
         self.TestPagImm()
         return ctb.ContabPanel.RegWriteBody(self, *args)
-    
+
 
 # ------------------------------------------------------------------------------
 
@@ -1476,25 +1476,25 @@ class SelRowPa(wx.Dialog):
     def __init__(self, parent, id=-1, title="Ricerca sottoconto",\
                  pos=wx.DefaultPosition, size=(400,300),\
                  style=wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER):
-        
+
         wx.Dialog.__init__(self, parent, id, title, pos, size)
-        
+
         self.id_cau = parent.cauid
         self.id = None
         self.cod = None
         self.des = None
         self.doc = 0
-        
+
         self.db_curs = parent.db_curs
         self.rspref = []
         self._grid_pref = None
-        
+
         self.FillContent()
         wx.CallAfter(self.SetFirstFocus)
-        
+
         self.controls = DictNamedChildrens(self)
         self.controls["labeltipo"].SetLabel(parent._cfg_pdctippa_des)
-        
+
         pdcpa = self.controls["pdcpa"]
         #pdcpa.SetFilterLinks((("Tipo sottoconto",\
                                 #bt.TABNAME_PDCTIP,\
@@ -1503,42 +1503,42 @@ class SelRowPa(wx.Dialog):
                                 #None,\
                                 #parent._cfg_pdctippa_id),))
         pdcpa.SetFilterValue(parent._cfg_pdctippa_id)
-        
+
         #imposto la classe del dialog x ins/mod mediante funzione che
         #la cerca in base al tipo anagrafico selezionato
-        
+
         def GetPdcPaTipo():
             return autil.GetPdcDialogClass(pdcpa.GetFilterValue())
         pdcpa.SetDynCard(GetPdcPaTipo)
-        
+
         if 'totdoc' in self.controls:
             self.controls["totdoc"].SetValue(0)
-        
+
         lt = ctb.linktab
         self.Bind(lt.EVT_LINKTABCHANGED,\
                   self.OnPdcPaChanged, self.controls["pdcpa"])
-        
+
         self.Bind( wx.EVT_CLOSE, self.OnClose )
         self.Bind( wx.EVT_BUTTON, self.OnOk, id = wdr.ID_BTNOK )
-        
+
         self.InitGridPref()
         self.UpdateGridPref()
-    
+
     def FillContent(self):
         wdr.SelRowPaFunc(self)
-    
+
     def SetFirstFocus(self):
         self.FindWindowByName('pdcpa').SetFocus()
-    
+
     def InitGridPref(self):
-        
+
         parent = self.FindWindowById(wdr.ID_PANGRID_PDCPREF)
         size = parent.GetClientSizeTuple()
-        
+
         colmap = ((0, "Sel.",       gl.GRID_VALUE_BOOL+":1,0", False),
                   (2, "Cod.",       gl.GRID_VALUE_STRING,      False),
                   (3, "Sottoconto", gl.GRID_VALUE_STRING,      False))
-        
+
         grid = dbglib.DbGridColoriAlternati(parent, -1, size=size, style=0)
         grid.SetData(self.rspref, colmap, canEdit=False)
         grid.SetDefaultColSize(1,70)
@@ -1551,27 +1551,27 @@ class SelRowPa(wx.Dialog):
         parent.SetSizer(sz)
         sz.SetSizeHints(parent)
         self._grid_pref = grid
-        
+
         self.Bind(gl.EVT_GRID_CELL_LEFT_CLICK, self.OnGridClicked, grid)
         grid.Bind(wx.EVT_KEY_UP, self.OnKeyUp)
-    
+
     def OnKeyUp(self, event):
         if event.GetKeyCode() == wx.WXK_SPACE:
             row = self._grid_pref.GetSelectedRows()[0]
             self.InvertiFlag(row)
         event.Skip()
-    
+
     def OnGridClicked(self, event):
         row = event.GetRow()
         if event.GetCol() == 0 and 0 <= row < len(self.rspref):
             self.InvertiFlag(row)
         event.Skip()
-    
+
     def InvertiFlag(self, row):
         r = self.rspref[row]
         r[0] = 1-r[0]
         self._grid_pref.ResetView()
-    
+
     def OnClose(self, event):
         self.EndModal(0)
 
@@ -1622,9 +1622,9 @@ class SelRowPa(wx.Dialog):
                 else:      amb, key = 2, self.id
                 if key:
                     cmd = """
-                    SELECT 0, pref.id_pdc, pdc.codice, pdc.descriz, pref.segno 
-                    FROM %s AS pref 
-                    JOIN %s AS pdc ON pref.id_pdc=pdc.id 
+                    SELECT 0, pref.id_pdc, pdc.codice, pdc.descriz, pref.segno
+                    FROM %s AS pref
+                    JOIN %s AS pdc ON pref.id_pdc=pdc.id
                     WHERE pref.ambito=%%s and pref.key_id=%%s
                     ORDER BY pdcord""" % (bt.TABNAME_CFGPDCP, bt.TABNAME_PDC)
                     try:
@@ -1635,7 +1635,7 @@ class SelRowPa(wx.Dialog):
                     else:
                         for rec in rs:
                             self.rspref.append(list(rec))
-            
+
             self._grid_pref.ResetView()
             self._grid_pref.AutoSizeColumns()
 
@@ -1644,7 +1644,7 @@ class SelRowPa(wx.Dialog):
 
 
 class Reg_I_SearchGrid(ctb.RegSearchGrid):
-    
+
     def DefColumns(self):
         _DAT = gl.GRID_VALUE_DATETIME
         _NUM = gl.GRID_VALUE_NUMBER
@@ -1659,7 +1659,7 @@ class Reg_I_SearchGrid(ctb.RegSearchGrid):
                 (110, ( 7, "Dare",       _IMP, True )),
                 (110, ( 8, "Avere",      _IMP, True )),
                 (  1, ( 0, "#reg",       _STR, False)))
-    
+
     def GetColumn2Fit(self):
         return 3
 
@@ -1668,14 +1668,14 @@ class Reg_I_SearchGrid(ctb.RegSearchGrid):
 
 
 class Reg_I_SearchPanel(ctb.RegSearchPanel):
-    
+
     wdrFiller = wdr.RegSearchFuncTipo_I
     GridClass = Reg_I_SearchGrid
     id_regiva = None
-    
+
     def SetRegIva(self, ri):
         self.id_regiva = ri
-    
+
     def UpdateSearch(self):
         dmin = self.datmin.GetValue()
         ctb.DATSEARCH1 = dmin
@@ -1708,7 +1708,7 @@ class Reg_I_SearchPanel(ctb.RegSearchPanel):
                 rs = db_curs.fetchall()
                 db_curs.close()
                 self.gridsrc.ChangeData(rs)
-                
+
             except MySQLdb.Error, e:
                 MsgDialogDbError(self, e)
         finally:
@@ -1723,8 +1723,8 @@ class Reg_I_SearchDialog(ctb.RegSearchDialog):
     Ricerca registrazioni.
     Dialog per la ricerca di registrazioni della causale selezionata.
     """
-    
+
     panelClass = Reg_I_SearchPanel
-    
+
     def SetRegIva(self, *args, **kwargs):
         self.panel.SetRegIva(*args, **kwargs)

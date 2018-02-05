@@ -6,17 +6,17 @@
 # Copyright:    (C) 2011 Astra S.r.l. C.so Cavallotti, 122 18038 Sanremo (IM)
 # ------------------------------------------------------------------------------
 # This file is part of X4GA
-# 
+#
 # X4GA is free software: you can redistribute it and/or modify
 # it under the terms of the Affero GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # X4GA is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
@@ -94,17 +94,19 @@ class ContabPanel(aw.Panel,\
     """
     Data entry di contabilità.
     """
-    
-    wrkDatReg       =None
-    consensoEspresso=None
 
-    
+    wrkDatReg        =None
+    consensoEspresso =None
+    isIvaAlreadyPrint=None
+
+
     def __init__(self, *args, **kwargs):
-        
+
         aw.Panel.__init__(self, *args, **kwargs)
-        
+
         self.caudisp = [ ("codice",  "Cod."),\
                          ("descriz", "Causale") ]
+        self.isIvaAlreadyPrint=False
         self.caurs = []
         self.cauid = None
         self.caudes = None
@@ -119,7 +121,7 @@ class ContabPanel(aw.Panel,\
         self.id_pdcpa = None
         self.modified = False
         self.newreg = False
-        
+
         self.reg_id = None
         self.reg_esercizio = None
         self.reg_cau_id = None
@@ -135,79 +137,79 @@ class ContabPanel(aw.Panel,\
         self.reg_st_regiva = None
         self.reg_st_giobol = None
         self.reg_nocalciva = None
-        
+
         self._grid_dav = None  #grid dare-avere
-        
+
         self.dbprog = ProgrStampaGiornale()
         self.dbprom = ProgrStampaMastri()
-        
+
         self.db_conn = Env.Azienda.DB.connection
         try:
             self.db_curs = self.db_conn.cursor()
-            
+
         except MySQLdb.Error, e:
             MsgDialogDbError(self, e)
-            
+
         else:
             #auto.CfgAutomatContab.__init__(self, self.db_curs)
             self._auto_cod_tippdc_pdciva = "I" #DA AUTOMATIZZARE!!!
             self._auto_cod_tippdc_pdcric = "R" #DA AUTOMATIZZARE!!!
             self._auto_cod_tippdc_pdcspe = "S" #DA AUTOMATIZZARE!!!
-            
+
             cfg.CfgCausale.__init__(self, self.db_curs)
             auto.CfgAutomat.__init__(self, self.db_curs)
             progr.CfgProgr.__init__(self, self.db_curs)
-            
+
             self._Auto_AddKeysContab()
             self._Progr_AddKeysContab(Env.Azienda.Esercizio.year)
-            
+
             #self.cfgctb = cfg.CfgContab()
             self.dbese = ProgrEsercizio()
-            
+
             self.regrsb = []       # recordset dettaglio
-            
+
             self.status = None
-            
+
             self.cautipo = None
             self.caufilt = None
-            
+
             self.pancaus = None
             self.panhead = None
             self.panbody = None
-            
+
             self.InitPanelCaus()
             self.InitPanelHead()
             self.InitPanelBody()
-            
+
             wdr.DialogFunc( self, True )
-            
+
             self.controls = awc.util.DictNamedChildrens(self)
-            
+
             c = self.controls["butattach"]
             c.SetScope("contab_h")
             c.SetAutoText(self.controls['autonotes'])
             c.SetSpyPanel(self.FindWindowByName('attachspy'))
-            
+
             butnew = self.controls["button_new"]
             butsrc = self.controls["button_search"]
             butend = self.controls["button_end"]
             butmod = self.controls["button_modify"]
             butquit = self.controls["button_quit"]
             butdel = self.controls["button_delete"]
-            
+
             self.InitCausale()
-            
+
             self.__postInit()
-            
+
             self.Bind(wx.EVT_BUTTON, self.OnRegNew,    butnew)
             self.Bind(wx.EVT_BUTTON, self.OnRegSearch, butsrc)
             self.Bind(wx.EVT_BUTTON, self.OnRegEnd,    butend)
             self.Bind(wx.EVT_BUTTON, self.OnRegModify, butmod)
             self.Bind(wx.EVT_BUTTON, self.OnRegQuit,   butquit)
             self.Bind(wx.EVT_BUTTON, self.OnRegDelete, butdel)
-            
+
             self.Bind(wx.EVT_SIZE,   self.OnResize)
-    
+
     def OptimizeSize(self, min_width=1000, min_height=640):
         mw, mh = min_width, min_height
         pw, ph = self.GetSize()
@@ -218,28 +220,28 @@ class ContabPanel(aw.Panel,\
             ph = mh
         self.SetSize((pw, ph))
         self.SetMinSize((pw, ph))
-    
+
     def GetSegnoInvertito(self, segno):
         if segno == "D":
             return "A"
         elif segno == "A":
             return "D"
         return None
-    
+
     def __postInit(self):
-        
+
         self.OptimizeSize()
-        
+
         self.SetAcceleratorKey('I', wdr.ID_BTN_NEW,    'Inserisci',           'Inserisce una nuova registrazione')
         self.SetAcceleratorKey('C', wdr.ID_BTN_SEARCH, 'Cerca',               'Cerca registrazioni con la stessa causale')
         self.SetAcceleratorKey('S', wdr.ID_BTN_END,    'Salva e Chiudi',      'Salva e chiude la presente registrazione')
         self.SetAcceleratorKey('M', wdr.ID_BTN_MODIFY, 'Modifica',            'Modifica la presente registrazione')
         self.SetAcceleratorKey('X', wdr.ID_BTN_DELETE, 'Elimina',             'Elimina la presente registrazione')
         self.SetAcceleratorKey('Q', wdr.ID_BTN_QUIT,   'Abbandona modifiche', 'Abbandona la registrazione senza salvare')
-        
+
         self.UpdatePanelHead()
         self.UpdatePanelBody()
-        
+
         self.SetRegStatus(STATUS_SELCAUS)
 
     def OnParity(self, event):
@@ -251,7 +253,7 @@ class ContabPanel(aw.Panel,\
         sq = round(td-ta, 6)
         if len(self.regrsb) <= 1 or self.regrsb[row][RSDET_TIPRIGA] == 'A'\
            or self.regrsb[row][RSDET_IMPDARE] or self.regrsb[row][RSDET_IMPAVERE]:
-            aw.awu.MsgDialog(self, 
+            aw.awu.MsgDialog(self,
                              """E' possibile pareggiare solo una riga sprovvista di importo.""",
                              style=wx.ICON_INFORMATION)
             return
@@ -264,14 +266,14 @@ class ContabPanel(aw.Panel,\
         self._grid_dav.ResetView()
         self.UpdateTotDav()
         event.Skip()
-    
+
     def OnRegNew( self, event ):
         if self.status == STATUS_SELCAUS:
             if self.controls['causale'].GetValue() is None:
                 aw.awu.MsgDialog(self, "Seleziona la causale", style=wx.ICON_ERROR)
             else:
                 self.RegNew()
-    
+
     def OnRegSearch( self, event ):
         if self.status == STATUS_SELCAUS:
             self.RegSearch()
@@ -293,11 +295,20 @@ class ContabPanel(aw.Panel,\
             MsgDialog(self,\
 """Non è possibile confermare la registrazione in quanto risulta """\
 """squadrata.  Eliminare la squadratura e riprovare.""")
-    
+
     def OnRegModify(self, event):
         self.SetRegStatus(STATUS_EDITING)
+        if self._cfg_tipo=='I' and self.isIvaAlreadyPrint:
+            #print 'disabilita elimina, data registrazione, Num.Protocollo, Data Documento, Numero Bocumento'
+            self.FindWindowById(wdr.ID_ANAGCHANGE).Enable(False)                
+            self.controls["button_delete"].Enable(False)
+            #self.controls["enableseziva"].Enable(False)
+            self.EnableHeadControls(False)
+            self.oldRegIva=[]
+            for rIva in self.regrsi:
+                self.oldRegIva.append(rIva)
         event.Skip()
-    
+
     def OnRegQuit( self, event ):
         quit = True
         if self.editing:
@@ -350,7 +361,7 @@ class ContabPanel(aw.Panel,\
                         else:
                             self.SetRegStatus(STATUS_DISPLAY)
         return out
-    
+
     def SetOneRegOnly(self, idreg):
         self.oneregonly_id = idreg
         if self.RegRead(idreg):
@@ -373,7 +384,7 @@ class ContabPanel(aw.Panel,\
         self.controls["statusdes"].SetLabel(lbl)
         self.UpdatePanelHead()
         self.UpdatePanelBody()
-    
+
     def UpdateCausale(self):
         #aggiorna combo causale in base a self.cauid
         caus = self.controls['causale']
@@ -387,11 +398,11 @@ class ContabPanel(aw.Panel,\
 
     def RegSearchClass( self ):
         return RegSearchDialog
-    
+
     def InitCausale( self ):
         """
         Inizializza il combobox della selezione causale.
-        
+
         @return: Vero o falso a seconda che sia riuscito a caricare
         le causali.
         @rtype: bool
@@ -410,7 +421,7 @@ class ContabPanel(aw.Panel,\
             #cmd =\
 #"""SELECT id, codice, descriz """\
 #"""FROM %s AS cau """\
-#"""WHERE %s ;""" % ( bt.TABNAME_CFGCONTAB, 
+#"""WHERE %s ;""" % ( bt.TABNAME_CFGCONTAB,
                      #self.caufilt )
             #self.db_curs.execute( cmd )
             #self.caurs = self.db_curs.fetchall()
@@ -422,7 +433,7 @@ class ContabPanel(aw.Panel,\
                 #ctrcau.Append( rec[2], ( int(rec[0]), rec[1] ) )
             #out = True
         return out
-    
+
     def OnCauChanged( self, event ):
         """
         Callback per causale selezionata
@@ -447,7 +458,7 @@ class ContabPanel(aw.Panel,\
             self.SetDefaultItem(self.controls['button_new'])
             cauchanged = (self.cauid != oldcau)
         return cauchanged
-    
+
     def InitPanelCaus( self ):
         """
         Inizializza il pannello della selezione causale.
@@ -462,7 +473,7 @@ class ContabPanel(aw.Panel,\
         Inizializzazione del pannello di testata.
         In questa classe il metodo non ha effetto, in quanto il data entry
         del dettaglio Dare/Avere dipende dal tipo di registrazione.
-        
+
         @see: sottoclassi di ContabPanel::
             ContabPanelTipo_I  - reg.iva
             ContabPanelTipo_E  - reg. sola iva
@@ -478,7 +489,7 @@ class ContabPanel(aw.Panel,\
         n = aw.awu.ListSearch(h, lambda x: x[0] == 'numdoc')
         self.FindWindowByName('numdoc').SetMaxLength(h[n][2])
         return self
-    
+
     def InitPanelBody( self ):
         """
         Inizializzazione del pannello del corpo.
@@ -487,7 +498,7 @@ class ContabPanel(aw.Panel,\
         """
         self.panbody = wx.Panel(self, wdr.ID_PANEL_BODY)
         return self
-    
+
     def SetRegStatus( self, status = None):
         """
         Imposta lo status della registrazione::
@@ -515,7 +526,7 @@ class ContabPanel(aw.Panel,\
         else:
             btnatt.SetPermissions(False, False)
         return oldstatus
-    
+
     def EnableAllControls(self, enable = True):
         self.UpdateButtons(enable)
         self.controls["causale"].Enable(enable and\
@@ -530,11 +541,11 @@ class ContabPanel(aw.Panel,\
                                            self.canins and\
                                            self.cauid is not None and\
                                            status == STATUS_SELCAUS)
-        
+
         self.controls["button_search"].Enable(enable and\
                                               self.cauid is not None and\
                                               status == STATUS_SELCAUS)
-        
+
         c = self.controls["button_end"]
         ena = True
         if enable and status == STATUS_EDITING:
@@ -555,25 +566,37 @@ class ContabPanel(aw.Panel,\
             ena = False
         c.Enable(ena)
         c.SetToolTipString(tip)
-        
+
         canreg = getattr(Env.Azienda.Login.userdata, 'can_contabins', None) == 1
-        
-        self.controls["button_modify"].Enable(enable and\
-                                              self.canedit and\
-                                              canreg and\
-                                              not(self.reg_st_regiva) and\
-                                              not(self.reg_st_giobol) and\
-                                              status == STATUS_DISPLAY)
-        
+
+
+        self.isIvaAlreadyPrint=False
+        self.controls["button_modify"].SetLabel('Modifica')
+        if self.reg_st_regiva and not self.reg_st_giobol and self.reg_cau_tipo=='I':
+            self.isIvaAlreadyPrint=True
+            if self._cfg_regiva_tipo == "A":
+                label = "Costo"
+            else:
+                label = "Ricavo"
+            self.controls["button_modify"].SetLabel('Modifica %s' % label)
+
+        #print 'id:?? iva:%s giornale:%s causale tipo:%s isIvaAlreadyPrint:%s' % (self.reg_st_regiva, self.reg_st_giobol, self.reg_cau_tipo, self.isIvaAlreadyPrint)
+        abilitaModifica = (enable and self.canedit and canreg and not(self.reg_st_regiva) and not(self.reg_st_giobol) and status == STATUS_DISPLAY) or \
+                          (enable and self.canedit and canreg and self.isIvaAlreadyPrint and status == STATUS_DISPLAY)
+
+
+        self.controls["button_modify"].Enable(abilitaModifica)
+
+
         self.controls["button_quit"].Enable(enable and\
                                             status in (STATUS_DISPLAY,
                                                        STATUS_EDITING))
-        
+
         self.controls["button_delete"].Enable(enable and\
                                               self.candelete and\
                                               status == STATUS_EDITING and\
                                               not self.newreg)
-        
+
         self.controls["butattach"].Enable(enable and status in (STATUS_DISPLAY,
                                                                 STATUS_EDITING))
 
@@ -587,7 +610,7 @@ class ContabPanel(aw.Panel,\
                 self.id_pdcpa = self.regrsb[0][RSDET_PDCPA_ID]
         self.controls['butattach'].SetKey(idreg)
         return out
-    
+
     def RegReadHead(self, idreg):
         """
         Caricamento dati testata registrazione.
@@ -608,7 +631,7 @@ class ContabPanel(aw.Panel,\
                                             bt.TABNAME_REGIVA )
             self.db_curs.execute(cmd, idreg)
             rsh = self.db_curs.fetchone()
-            
+
         except MySQLdb.Error, e:
             MsgDialogDbError(self, e)
         else:
@@ -639,12 +662,35 @@ class ContabPanel(aw.Panel,\
                           % idreg)
         return out
 
+    def CheckRegIva(self):
+        canSave=True
+        if self.isIvaAlreadyPrint:
+            #print 'verifico che le modifiche apportate non coinvolgano i registri Iva'
+            newIva = sorted(self.regrsi, key=lambda x: x[0])
+            oldIva = sorted(self.oldRegIva, key=lambda x: x[0])
+            if not len(newIva)==len(oldIva):
+                canSave=False
+            else:
+                for i in range(len(newIva)):
+                    if not [newIva[i][0], newIva[i][3], newIva[i][4], newIva[i][5] ] == [oldIva[i][0], oldIva[i][3], oldIva[i][4], oldIva[i][5] ]:
+                        canSave=False
+                        break
+        if not canSave:
+            msg="La registrazione risulta essere già stata stampata sui registri Iva\npertanto sono ammesse soltanto  modifiche che non coinvolgano la parte Iva."
+            MsgDialog(self, caption='Variazione non Consentita',  message=msg, style=wx.ICON_ERROR)
+        return canSave
+
+
     def RegSave(self):
         """
         Scrittura registrazione su db.
         """
         out = False
-        if self.Validate():
+
+
+
+
+        if self.CheckRegIva() and self.Validate():
             newreg = (self.reg_id is None)
             headw = self.RegWriteHead()
             if headw:
@@ -652,7 +698,7 @@ class ContabPanel(aw.Panel,\
                     if not self.wrkDatReg==self.reg_datreg:
                         self.consensoEspresso=False
                     self.wrkDatReg=self.reg_datreg
-                
+
                 bodyw = self.RegWriteBody()
                 if bodyw:
                     if self._cfg_id_tipevent and self._cfg_event_msg:
@@ -662,7 +708,7 @@ class ContabPanel(aw.Panel,\
                 else:
                     self.RegDelete()
         return out
-    
+
     def ReportFineReg(self):
         cfgreg = DbTable(bt.TABNAME_CFGCONTAB, 'caucon')
         if cfgreg.Get(self.reg_cau_id) and cfgreg.OneRow():
@@ -679,39 +725,39 @@ class ContabPanel(aw.Panel,\
                     pdc.AddJoin("fornit", "anag", idLeft="id", idRight="id", join=JOIN_LEFT)
                 if reg.Get(self.reg_id) and reg.OneRow():
                     rpt.Report(self, reg, cfgreg.rptname)
-    
+
     def GeneraEvento(self, newreg):
         from contab.dbtables import DbRegCon
         r = DbRegCon()
         if r.Get(self.reg_id) and r.OneRow():
             r.GeneraEvento(self, newreg)
-    
+
     def Validate(self):
-        
+
         COLOR_ERROR = Env.Azienda.Colours.VALERR_BACKGROUND
         gvalid = True
         msg = None
         stl = wx.ICON_ERROR
-        
+
         cc = self.controls['causale'].GetValue()
         if not cc:
             #test causale
             msg = "La causale è obbligatoria"
             gvalid = False
-        
+
         dr = self.controls['datreg'].GetValue()
         if not dr:
             #test data registrazione
             msg = "La data di registrazione è obbligatoria"
             gvalid = False
-        
+
         if gvalid:
             #test data chiusura
             if self._progr_ccg_aggcon_date:
                 if dr<=self._progr_ccg_aggcon_date:
                     msg = "La data di registrazione è antecendente l'ultima chiusura contabile"
                     gvalid = False
-        
+
         if gvalid:
             #test esercizio
             ec = self.dbese.GetEsercizioInCorso()
@@ -736,7 +782,7 @@ class ContabPanel(aw.Panel,\
                     if self._cfg_esercizio == '1':
                         e -= 1
                     self.reg_esercizio = e
-        
+
         if gvalid:
             #test data registrazione in confronto al giornale
             dg = self.dbprog.GetDataGiornale()
@@ -748,7 +794,7 @@ class ContabPanel(aw.Panel,\
                 msg = "La data di registrazione è antecedente l'ultima stampa definitiva dei mastri"
             if msg:
                 gvalid = False
-        
+
         if gvalid:
             #test data documento in confronto alla data registrazione
             if self._cfg_datdoc in ('0', '1'):
@@ -763,7 +809,7 @@ class ContabPanel(aw.Panel,\
                     stl = wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT
                 if msg:
                     gvalid = False
-        
+
         if gvalid:
             #test validità recordset dare/avere
             td = ta = 0
@@ -793,7 +839,7 @@ class ContabPanel(aw.Panel,\
                     msg = "Squadratura tra Dare e Avere"
             if msg:
                 gvalid = False
-        
+
         if gvalid and rs:
             #test validità segno contabile su riga partita
             if (self._cfg_pasegno or ' ') in 'DA':
@@ -802,7 +848,7 @@ class ContabPanel(aw.Panel,\
                     msg =\
                         """La causale è impostata con segno %s sulla riga della partita,\n"""\
                         """mentre l'importo di %s è stato inserito dalla parte opposta.\n"""\
-                        % (["DARE","AVERE"]["DA".index(s)], 
+                        % (["DARE","AVERE"]["DA".index(s)],
                            self.dbese.sepnvi(rs[0][RSDET_IMPDARE] or rs[0][RSDET_IMPAVERE]))
                     if self._cfg_camsegr1:
                         msg += """Confermi l'esattezza della registrazione?"""
@@ -815,7 +861,7 @@ class ContabPanel(aw.Panel,\
                         msg += """Impossibile memorizzare la registrazione"""
                         gvalid = False
                         stl = wx.ICON_ERROR
-        
+
         if gvalid:
             #test validità sui singoli controlli
             for name, ctr in self.controls.iteritems():
@@ -828,18 +874,18 @@ class ContabPanel(aw.Panel,\
                             """evidenziate per continuare.\n"""\
                             """La registrazione non è stata salvata."""
                         gvalid = False
-        
+
         if not gvalid and msg is not None:
             if MsgDialog(self, msg, style=stl) == wx.ID_YES:
                 gvalid = True
-        
+
         if gvalid:
             self.reg_datreg = self.controls["datreg"].GetValue()
             self.reg_datdoc = self.controls["datdoc"].GetValue()
             self.reg_numdoc = self.controls["numdoc"].GetValue()
-        
+
         return gvalid
-    
+
     def RegWriteHead(self):
         """
         Scrive la testata e i record di dettaglio della registrazione.
@@ -864,7 +910,7 @@ class ContabPanel(aw.Panel,\
 """id_regiva, numiva, id_modpag, nocalciva) """\
 """VALUES (%%s, %%s, %%s, %%s, %%s, %%s, %%s, %%s, %%s, %%s)"""\
 % bt.TABNAME_CONTAB_H
-            
+
         else:
             #modifica testata registrazione esistente
             cmd =\
@@ -874,17 +920,17 @@ class ContabPanel(aw.Panel,\
 """WHERE id=%%s"""\
 % bt.TABNAME_CONTAB_H
             par.append(self.reg_id)
-        
+
         try:
             self.db_curs.execute(cmd, par)
             if self.newreg:
                 self.db_curs.execute( "SELECT LAST_INSERT_ID();" )
                 self.SetNewRegId( self.db_curs.fetchone()[0] )
             out = True
-            
+
         except MySQLdb.Error, e:
             print e.args[0], e.args[1]
-        
+
         return out
 
     def SetNewRegId(self, newid):
@@ -938,7 +984,7 @@ class ContabPanel(aw.Panel,\
                     #pdc della prima riga
                     pdccpid = rsb[0][RSDET_PDCPA_ID]
                 aliqivaid = rsb[n][RSDET_ALIQ_ID]
-            if pdccpid is None: 
+            if pdccpid is None:
                 pdccpid = self.id_pdcpa
             rows.append((regid,     #id_reg
                          numriga,   #numriga
@@ -959,7 +1005,7 @@ class ContabPanel(aw.Panel,\
                          note))     #note
             #rmax += 1
             rmax = max(rmax, rsb[n][RSDET_NUMRIGA])
-        
+
         if addRows is not None:
             #se dalle sottoclassi arriva la chiamata con righe aggiuntive da
             #memorizzare, esse vengono aggiunte in coda alle righe contabili
@@ -969,7 +1015,7 @@ class ContabPanel(aw.Panel,\
                 addRows[n][0] = self.reg_id
                 addRows[n][1] = rmax
                 rows.append(addRows[n])
-        
+
         try:
             cmd =\
 """DELETE FROM %s WHERE id_reg=%%s""" % bt.TABNAME_CONTAB_B
@@ -985,28 +1031,28 @@ class ContabPanel(aw.Panel,\
         except MySQLdb.Error, e:
             MsgDialogDbError(self, e)
         return out
-    
+
     def RegReadBody(self, idreg):
         out = True
         rsb = []
         try:
             cmd = """
-   SELECT row.numriga, 
-          row.tipriga, 
-          row.id_pdcpa, 
-          pdc.codice, 
-          pdc.descriz, 
-          if(row.segno="D", row.importo, NULL), 
-          if(row.segno="A", row.importo, NULL), 
+   SELECT row.numriga,
+          row.tipriga,
+          row.id_pdcpa,
+          pdc.codice,
+          pdc.descriz,
+          if(row.segno="D", row.importo, NULL),
+          if(row.segno="A", row.importo, NULL),
           row.id_aliqiva,
           iva.codice,
           iva.descriz,
           row.solocont,
-          row.note, 
-          row.ivaman, 
-          row.davscorp 
-     FROM %s AS row 
-     JOIN %s AS pdc ON row.id_pdcpa=pdc.id 
+          row.note,
+          row.ivaman,
+          row.davscorp
+     FROM %s AS row
+     JOIN %s AS pdc ON row.id_pdcpa=pdc.id
 LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
  WHERE row.id_reg=%%s""" % (bt.TABNAME_CONTAB_B,
                             bt.TABNAME_PDC,
@@ -1025,7 +1071,7 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
                 self.regrsb.append(list(b))
         self.totdare, self.totavere = self.GetTotaliDA()
         return out
-    
+
     def RegReset(self):
         #reset valori testata
         self.reg_id = None
@@ -1061,16 +1107,16 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
                 self.DefaultValues()
                 self.SetRegStatus(STATUS_EDITING)
                 self.controls["datreg"].SetFocus()
-    
+
     def DefaultValues(self):
-        
+
         if self.reg_datreg is None:
             if self.wrkDatReg is None:
                 self.reg_datreg = Esercizio.dataElab
                 self.consensoEspresso=False
             else:
                 if not self.consensoEspresso and not self.wrkDatReg==Esercizio.dataElab:
-                    if aw.awu.MsgDialog(self, 
+                    if aw.awu.MsgDialog(self,
                                           'Attenzione!\nSi desidera continuare a registrare in data %s.' % self.wrkDatReg.strftime('%d-%m-%Y'),
                                           style = wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT) == wx.ID_NO:
                         self.reg_datreg = Esercizio.dataElab
@@ -1079,14 +1125,14 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
                         self.consensoEspresso=True
                 else:
                     self.reg_datreg = self.wrkDatReg
-                    
+
 
         self.ReadProgr()
-        
+
         self.reg_esercizio = Esercizio.year #automatizzare
         self.reg_cau_id = self.cauid
         self.reg_cau_tipo = self.cautipo
-        
+
         if self._cfg_datdoc == '1':
             self.reg_datdoc = self.reg_datreg
 
@@ -1104,7 +1150,7 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
         except MySQLdb.Error, e:
             MsgDialogDbError(self, e)
         return out
-    
+
     def UpdatePanelHead(self):
         """
         Aggiorna i controlli della testata.
@@ -1113,7 +1159,7 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
         datreg = self.controls["datreg"]
         datdoc = self.controls["datdoc"]
         numdoc = self.controls["numdoc"]
-        
+
         if self.status == STATUS_SELCAUS:
             reg_id.SetValue(None)
             datreg.SetValue(None)
@@ -1134,14 +1180,14 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
         In questa classe il metodo non ha effetto.
         """
         self.UpdatePanelDav()
-    
+
     def UpdatePanelDav(self, sizeDavCols=True):
         if self._grid_dav is not None:
             self._grid_dav.ResetView()
             if sizeDavCols:
                 self._grid_dav.AutoSizeColumns()
         self.UpdateTotDav()
-    
+
     def GetTotaliDA(self):
         totd = tota = 0
         if self.regrsb:
@@ -1152,11 +1198,11 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
                 a = rig[RSDET_IMPAVERE]
                 if a: tota += a
         return totd, tota
-    
+
     def UpdateTotDav(self):
-        
+
         totd, tota = self.GetTotaliDA()
-        
+
         self.controls["totdare"].SetValue(totd)
         self.controls["totavere"].SetValue(tota)
         q = self.controls["totquadr"]
@@ -1190,27 +1236,27 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
         configurazione della causale.
         """
         enable = enable and self.status == STATUS_EDITING
-        
+
         self.controls["datreg"].Enable(enable)
-        
+
         self.controls["reg_id"].Enable(False)
-        
+
         self.controls["datdoc"].Enable(enable and\
                                        self._cfg_datdoc in ('0', '1'))
-        
+
         self.controls["numdoc"].Enable(enable and\
                                        self._cfg_numdoc in ('0', '1'))
-        
+
         #self.controls["rivdes"].Enable(enable and\
             #self._cfg_regiva_id is not None)
-        
+
         #self.controls["numiva"].Enable(enable and\
             #self._cfg_regiva_id is not None)
-        
+
         #il reg.iva può essere variabile come da cfg.causale
         self.controls["id_regiva"].Enable(enable and self._cfg_tipo in 'IE' and\
                                           (self._cfg_regiva_dyn == 1 or self.reg_regiva_id is None))
-        
+
         self.controls["numiva"].Enable(enable and\
                                        self._cfg_tipo in 'IE' and\
                                        bool(self._cfg_numiva))
@@ -1224,7 +1270,7 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
 
 
 class _ContabMixin(object):
-    
+
     dataentrypanel = None #viene inizializzato nelle classi derivate
     def __init__(self):
         object.__init__(self)
@@ -1235,14 +1281,14 @@ class _ContabMixin(object):
     def OnClose(self, event):
         self.FixTimerProblem()
         event.Skip()
-    
+
     def FixTimerProblem(self):
         #fix Timer su wx.2.8.11: se non lo stoppo, l'applicaizone va in crash :-(
         #TODO: verificare quando è stato risolto il problema nella libreria wx
         c = self.FindWindowByName('autonotes')
         if c:
             c.Stop()
-    
+
     def CanClose(self):
         #richiamata da XFrame in fase di chiusura applicazione
         self.FixTimerProblem()
@@ -1253,7 +1299,7 @@ class _ContabMixin(object):
 
 
 class ContabFrame(aw.Frame, _ContabMixin):
-    
+
     def __init__(self, *args, **kwargs):
         aw.Frame.__init__(self, *args, **kwargs)
         _ContabMixin.__init__(self)
@@ -1263,16 +1309,16 @@ class ContabFrame(aw.Frame, _ContabMixin):
 
 
 class ContabDialog(aw.Dialog, _ContabMixin):
-    
+
     def __init__(self, *args, **kwargs):
         aw.Dialog.__init__(self, *args, **kwargs)
         _ContabMixin.__init__(self)
         self.Bind(wx.EVT_BUTTON, self.OnTestDelete)
-    
+
     def EndModal(self, value):
         self.FixTimerProblem()
         aw.Dialog.EndModal(self, value)
-    
+
     def OnTestDelete(self, event):
         if event.GetEventObject().GetName() == 'button_delete':
             if self.dataentrypanel.oneregonly_id:
@@ -1286,7 +1332,7 @@ class ContabDialog(aw.Dialog, _ContabMixin):
 
 
 class RegSearchGrid(dbglib.DbGridColoriAlternati):
-    
+
     def __init__(self, parent):
         dbglib.DbGridColoriAlternati.__init__(self, parent,
                                               size=parent.GetClientSizeTuple())
@@ -1298,17 +1344,17 @@ class RegSearchGrid(dbglib.DbGridColoriAlternati):
             self.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
         self.SetFitColumn(self.GetColumn2Fit())
         self.AutoSizeColumns()
-        
+
         sz = wx.FlexGridSizer(1,0,0,0)
         sz.AddGrowableCol( 0 )
         sz.AddGrowableRow( 0 )
         sz.Add(self, 0, wx.GROW|wx.ALL, 0)
         parent.SetSizer(sz)
         sz.SetSizeHints(parent)
-    
+
     def DefColumns(self):
         raise Exception, "Classe non istanziabile"
-    
+
     def GetColumn2Fit(self):
         raise Exception, "Classe non istanziabile"
 
@@ -1320,54 +1366,54 @@ DATSEARCH1 = None
 DATSEARCH2 = None
 
 class RegSearchPanel(aw.Panel):
-    
+
     wdrFiller = None
     GridClass = RegSearchGrid
-    
+
     def __init__(self, *args, **kwargs):
-        
+
         aw.Panel.__init__(self, *args, **kwargs)
         self.wdrFiller(self)
         cn = self.FindWindowByName
         self.gridsrc = self.GridClass(cn('pangridsearch'))
-        
+
         self.cauid = None
         self.caudes = None
-        
+
         self.datmin = cn('srcdatmin')
         self.datmax = cn('srcdatmax')
-        
+
         d2 = DATSEARCH2
         if not d2:
             d2 = Env.Azienda.Login.dataElab
         d1 = DATSEARCH1
         if not d1:
             d1 = Env.DateTime.Date(d2.year, d2.month, 1)
-        
+
         self.datmin.SetValue(d1)
         self.datmax.SetValue(d2)
-        
+
         for c in aw.awu.GetAllChildrens(self):
             if isinstance(c, (wx.TextCtrl, DateCtrl, LinkTable)):
                 c.Bind(wx.EVT_SET_FOCUS, self.OnFocusGainedBySearchControls)
         self.gridsrc.Bind(wx.EVT_SET_FOCUS, self.OnFocusGainedByGrid)
-        
+
         self.Bind(wx.EVT_BUTTON, self.OnSearch, cn('btnsearch'))
-        
+
         wx.CallAfter(lambda: self.datmin.SetFocus())
-    
+
     def OnFocusGainedBySearchControls(self, event):
         self.FindWindowByName('btnsearch').SetDefault()
         event.Skip()
-    
+
     def OnFocusGainedByGrid(self, event):
         self.FindWindowByName('btnselect').SetDefault()
         event.Skip()
-    
+
     def SetCausale( self, id, des):
         self.cauid = id
         self.caudes = des
-    
+
     def OnSearch( self, event ):
         self.UpdateSearch()
         if self.gridsrc.GetTable().data:
@@ -1378,7 +1424,7 @@ class RegSearchPanel(aw.Panel):
             f.SetFocus()
         wx.CallAfter(SetFocus)
         event.Skip()
-    
+
     def UpdateSearch(self):
         dmin = self.datmin.GetValue()
         global DATSEARCH1
@@ -1411,7 +1457,7 @@ class RegSearchPanel(aw.Panel):
                 rs = db_curs.fetchall()
                 db_curs.close()
                 self.gridsrc.ChangeData(rs)
-                
+
             except MySQLdb.Error, e:
                 MsgDialogDbError(self, e)
         finally:
@@ -1428,48 +1474,52 @@ class RegSearchDialog(aw.Dialog):
     Ricerca registrazioni.
     Dialog per la ricerca di registrazioni della causale selezionata.
     """
-    
+
     panelClass = RegSearchPanel
-    
+
     def __init__(self, parent, id = -1, title = "Ricerca registrazione",
                  pos=wx.DefaultPosition, size=wx.DefaultSize):
-        
+
         aw.Dialog.__init__(self, parent, id, title, pos, size,
                            style = wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER )
         self.panel = self.panelClass(self)
         cn= self.FindWindowByName
         self.AddSizedPanel(self.panel)
-        
+
         self.Bind(gl.EVT_GRID_CELL_LEFT_DCLICK, self.OnGridRowSelected, self.panel.gridsrc)
         self.Bind(wx.EVT_BUTTON, self.OnSelected, cn('btnselect'))
-    
+
         self.panel.gridsrc.Bind(wx.EVT_KEY_DOWN, self.OnGridKeyDown)
-        
+
         self.CenterOnScreen()
-    
+
     def OnGridKeyDown(self, event):
         if event.GetKeyCode() == wx.WXK_RETURN:
             row = self.panel.gridsrc.GetSelectedRows()[0]
             regid = self.panel.gridsrc.GetTable().data[row][0]
             self.EndModal(regid)
         event.Skip()
-    
+
     def OnSelected(self, event):
         row = self.panel.gridsrc.GetSelectedRows()[0]
         regid = self.panel.gridsrc.GetTable().data[row][0]
         self.EndModal(regid)
-    
+
     def OnGridRowSelected(self, event):
         regid = self.panel.gridsrc.GetTable().data[event.GetRow()][0]
         self.EndModal(regid)
-        
+
     def SetCausale( self, id, des):
         self.panel.SetCausale(id, des)
         self.SetTitle("Ricerca registrazioni di tipo: %s" % self.panel.caudes)
-    
+
     def UpdateSearch(self, *args, **kwargs):
         return self.panel.UpdateSearch(*args, **kwargs)
-    
+
     def OnClose( self, event ):
         self.EndModal(-1)
         self.Destroy()
+
+
+
+
