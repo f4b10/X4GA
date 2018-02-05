@@ -28,6 +28,11 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
+    ('1.5.53', dt.Date(2018, 2, 5), (
+         ("BET1240",
+         """Consentita la modifica parziale delle registrazioni contabili già stampate su Registro Iva ma non sul Giornale Generale."""),
+        ),),
+
     ('1.5.52', dt.Date(2018, 1, 19), (
          ("BET1240",
          """Aggiunta gestione iva in sospensione."""),
