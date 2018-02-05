@@ -794,20 +794,21 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
         out = ctb.ContabPanel.Validate(self)
 
         if out:
-            #test registro iva
-            if self.reg_regiva_id is None:
-                msg = "Manca l'attribuzione ad un registro IVA"
-            else:
-                rei = self.dbrei
-                rei.Get(self.reg_regiva_id)
-                msg = None
-                if rei.lastprtdat is not None and self.reg_datreg<rei.lastprtdat:
-                    msg = "La data di registrazione è antecedente l'ultima stampa definitiva del registro Iva"
-                elif (rei.lastprtnum or 0)>0 and rei.lastprtdat.year == self.reg_datreg.year and self.reg_numiva<rei.lastprtnum:
-                    msg = "Il numero di protocollo Iva è inferiore all'ultimo protocollo stampato in definitivo sul registro."
-            if msg:
-                awu.MsgDialog(self, msg, style=wx.ICON_ERROR)
-                out = False
+            if not self.isIvaAlreadyPrint:
+                #test registro iva
+                if self.reg_regiva_id is None:
+                    msg = "Manca l'attribuzione ad un registro IVA"
+                else:
+                    rei = self.dbrei
+                    rei.Get(self.reg_regiva_id)
+                    msg = None
+                    if rei.lastprtdat is not None and self.reg_datreg<rei.lastprtdat:
+                        msg = "La data di registrazione è antecedente l'ultima stampa definitiva del registro Iva"
+                    elif (rei.lastprtnum or 0)>0 and rei.lastprtdat.year == self.reg_datreg.year and self.reg_numiva<rei.lastprtnum:
+                        msg = "Il numero di protocollo Iva è inferiore all'ultimo protocollo stampato in definitivo sul registro."
+                if msg:
+                    awu.MsgDialog(self, msg, style=wx.ICON_ERROR)
+                    out = False
 
         if out:
             self.reg_numiva = self.controls["numiva"].GetValue()
