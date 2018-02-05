@@ -300,7 +300,7 @@ class ContabPanel(aw.Panel,\
         self.SetRegStatus(STATUS_EDITING)
         if self._cfg_tipo=='I' and self.isIvaAlreadyPrint:
             #print 'disabilita elimina, data registrazione, Num.Protocollo, Data Documento, Numero Bocumento'
-            self.FindWindowById(wdr.ID_ANAGCHANGE).Enable(False)                
+            self.FindWindowById(wdr.ID_ANAGCHANGE).Enable(False)
             self.controls["button_delete"].Enable(False)
             #self.controls["enableseziva"].Enable(False)
             self.EnableHeadControls(False)
@@ -672,11 +672,11 @@ class ContabPanel(aw.Panel,\
                 canSave=False
             else:
                 for i in range(len(newIva)):
-                    if not [newIva[i][0], newIva[i][3], newIva[i][4], newIva[i][5] ] == [oldIva[i][0], oldIva[i][3], oldIva[i][4], oldIva[i][5] ]:
+                    if not [newIva[i][0], '%10.2f' % newIva[i][3], '%10.2f' % newIva[i][4], '%10.2f' % newIva[i][5] ] == [oldIva[i][0], '%10.2f' % oldIva[i][3], '%10.2f' % oldIva[i][4], '%10.2f' % oldIva[i][5] ]:
                         canSave=False
                         break
         if not canSave:
-            msg="La registrazione risulta essere già stata stampata sui registri Iva\npertanto sono ammesse soltanto  modifiche che non coinvolgano la parte Iva."
+            msg="La registrazione risulta essere già stata stampata sui registri Iva pertanto sono ammesse soltanto modifiche che non coinvolgano la parte Iva."
             MsgDialog(self, caption='Variazione non Consentita',  message=msg, style=wx.ICON_ERROR)
         return canSave
 
