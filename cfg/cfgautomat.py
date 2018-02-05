@@ -75,6 +75,8 @@ class CfgAutomat(object):
             self._Auto_AddKeys({"test": True}) => self._auto_test
         solo se esiste nella tabella automatismi la voce "test"
         """
+        self._auto_ivaacqdif = None
+        self._auto_ivavendif = None
 
         totautomat = 0
 
@@ -94,6 +96,8 @@ class CfgAutomat(object):
             missedKeys = []
 
             for loadKey, needed in self._autoKeys.iteritems():
+                if loadKey=='ivaacqdif':
+                    pass
                 missing = False
                 if needed:
                     try:
@@ -113,11 +117,8 @@ class CfgAutomat(object):
                       """seguenti automatismi:\n\n%s""" % ", ".join(missedKeys)
 
             for au_key, au_desc, au_id in rs:
-                if au_key == 'ivavendif':
-                    pass
                 au_key = au_key.strip().lower()
                 if self._autoKeys.has_key(au_key):
-                    print "_auto_%s" % au_key, au_id
                     self.__setattr__("_auto_%s" % au_key,  au_id)
                     del self._autoKeys[au_key]
                     totautomat += 1
