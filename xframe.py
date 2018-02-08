@@ -506,6 +506,7 @@ class XFrame(aw.Frame):
             (self.OnGestMarArt,                ID_GESPROD_MARART),
             (self.OnGestTipList,               ID_GESPROD_TIPLIST),
             (self.OnGestGruPrez,               ID_GESPROD_GRUPREZ),
+            (self.OnGestTesti,                 ID_GESTESTI),
             (self.OnGestPdc,                   ID_GESBILPDC),
             (self.OnGestPdcCee,                ID_GESPDCCEE),
             (self.OnGestStatPdc,               ID_GESSTATPDC),
@@ -1208,6 +1209,11 @@ class XFrame(aw.Frame):
     def OnGestGruPrez(self, event):
         from anag.gruprez import GruPrezFrame
         self.LaunchFrame(GruPrezFrame)
+
+    def OnGestTesti(self, event):
+        from anag.testi import TestiFrame
+        self.LaunchFrame(TestiFrame)
+
     
     def OnGestCasse(self, event):
         from anag.casse import CasseFrame

@@ -991,6 +991,7 @@ class Azienda(object):
             TABNAME_MOVMAG_H  movmag_h   Documenti magazzino                   TABSETUP_TABLE_MOVMAG_H
             TABNAME_MOVMAG_B  movmag_b   Movimenti magazzino                   TABSETUP_TABLE_MOVMAG_B
             TABNAME_ALLEGATI  allegati   Allegati esterni a tabelle X4         TABSETUP_TABLE_ALLEGATI
+            TABNAME_TESTI     testi      Testi richiamabili                    TABSETUP_TABLE_TESTI
 
         """
 
@@ -1686,6 +1687,14 @@ class Azienda(object):
         TABSETUP_CONSTR_VARLIST = []
         TABVOICE_VARLIST = {1: ['listino variabile', ['il', 'un', 'del', 'dal']],
                             2: ['listini variabili', ['i', 'dai', 'dai']]}
+
+
+        TABNAME_TESTI = "testi"
+        TABDESC_TESTI = "Testi richiamabili"
+        TABSETUP_TABLE_TESTI = numtab.next()
+        TABSETUP_CONSTR_TESTI = []
+        TABVOICE_TESTI = {1: ['testo richiamabile', ['il', 'un', 'del', 'dal']],
+                            2: ['Testi richiamabili', ['i', 'dai', 'dai']]}
 
         tabelle = None
 
@@ -2817,6 +2826,10 @@ class Azienda(object):
                 [ "noivaprof",  "TINYINT",  1, None, "Flag accorpamento iva su c/partita se causale non iva in reg. contabile", None ],
                 [ "rptcolli",   "TINYINT",  1, None, "Flag stampa segnacolli", None ],
                 [ "aanotedoc",  "TINYINT",  1, None, "Flag inibizione note documento da anagrafica", None ],
+                [ "multilinee", "TINYINT",  1, None, "Flag abilitazione digitazione multilinee", None ],
+                [ "font",       "VARCHAR", 30, None, "Nome Font utilizzato in stampa descrizione", None ],
+                [ "fontsize",   "INT",      2, None, "Dimensione Font utilizzato in stampa descrizione", None ],
+                [ "dessize",    "INT",      4, None, "Dimensione spazio destinato in stampa alla descrizione", None ],
             ]
 
             cls.set_constraints(cls.TABNAME_CFGMAGDOC,
@@ -3736,6 +3749,15 @@ class Azienda(object):
             cls.varlist_indexes = [ ["PRIMARY KEY", "id"],
                                     ["KEY",         "id_cliente"], ]
 
+            cls.testi =\
+               [ [ "id",             "INT",     idw, None, "ID Testo", "AUTO_INCREMENT" ],
+                 [ "codice",         "CHAR",      3, None, "Codice", None      ],
+                 [ "descriz",        "VARCHAR",  30, None, "Descrizione", None ],
+                 [ "testo",          "TEXT",   4096, None, "Corpo Testo", None ],
+             ]
+            cls.testi_indexes = [ ["PRIMARY KEY", "id"],
+                                  ["KEY",         "codice"], ]
+
 
             cls.tabelle = [
                 (cls.TABNAME_BILMAS,    cls.TABDESC_BILMAS,    cls.bilmas,    cls.bilmas_indexes,    cls.TABSETUP_CONSTR_BILMAS,    cls.TABVOICE_BILMAS    ),
@@ -3817,6 +3839,8 @@ class Azienda(object):
                 (cls.TABNAME_EVENTI,    cls.TABDESC_EVENTI,    cls.eventi,    cls.eventi_indexes,    cls.TABSETUP_CONSTR_EVENTI,    cls.TABVOICE_EVENTI    ),
                 (cls.TABNAME_DOCSEMAIL, cls.TABDESC_DOCSEMAIL, cls.docsemail, cls.docsemail_indexes, cls.TABSETUP_CONSTR_DOCSEMAIL, cls.TABVOICE_DOCSEMAIL ),
                 (cls.TABNAME_VARLIST,   cls.TABDESC_VARLIST,   cls.varlist,   cls.varlist_indexes,   cls.TABSETUP_CONSTR_VARLIST,   cls.TABVOICE_VARLIST   ),
+                (cls.TABNAME_TESTI,     cls.TABDESC_TESTI,     cls.testi,     cls.testi_indexes,     cls.TABSETUP_CONSTR_TESTI,     cls.TABVOICE_TESTI     ),
+            
             ]
 
             #alterazioni strutture tabelle da applicazione personalizzata
