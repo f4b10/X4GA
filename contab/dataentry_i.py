@@ -560,6 +560,8 @@ class GeneraPartiteMixin(scad.Scadenze):
         size = parent.GetClientSizeTuple()
         grid = dbglib.DbGrid(parent, -1, size=size, style=0)
 
+        grid.Bind(gl.EVT_GRID_CELL_RIGHT_CLICK,   self.OnRightClick),
+
         afteredit = ( (dbglib.CELLEDIT_AFTER_UPDATE, 1,
                        self._GridEdit_Sca_TestValues), )
 
@@ -585,6 +587,77 @@ class GeneraPartiteMixin(scad.Scadenze):
         parent.SetSizer(sz)
         sz.SetSizeHints(parent)
         self._grid_sca = grid
+
+
+    def MenuPopup(self, event):
+            
+        row, col = event.GetRow(), event.GetCol()
+        xo, yo = event.GetPosition()
+        self._grid_sca.SetGridCursor(row, col)
+        self._grid_sca.SelectRow(row)
+        voci = []
+        voci.append(("Lega la scadenza ad un'altra partita dell'anagrafica", self.GridScadOnPdcLink, True))
+        
+        if self._grid_sca.GetTable().data[row][3]:
+            voci.append(("Sgancia scadenza da partita esistente", self.GridScadOnPdcUnlink, True))
+        menu = wx.Menu()
+        for text, func, enab in voci:
+            id = wx.NewId()
+            menu.Append(id, text)
+            menu.Enable(id, enab)
+            self.Bind(wx.EVT_MENU, func, id=id)
+        self._grid_sca.PopupMenu(menu, (xo, yo))
+        menu.Destroy()
+        event.Skip()
+
+    def GridScadOnPdcLink(self, evt):
+        
+        from  contab.scadedit import ScadLinkDialog        
+        
+        dlg = ScadLinkDialog(self, pdcid=self.id_pdcpa)
+        if dlg.ShowModal() == wx.ID_OK:
+            rows = self._grid_sca.GetSelectedRows()
+            if rows:
+                row = rows[0]
+                rs =self.regrss
+                pcfdata = dlg.GetPcfData()
+                rs[row][3] = pcfdata[0]    #id_pcf
+                rs[row][0] = pcfdata[1]    # dat
+                rs[row][4] = pcfdata[2]    # riba
+                #===============================================================
+                # if self.dbdoc.regcon.scad:
+                #     self.dbdoc.regcon._info.id_effbap = pcfdata[3]
+                #===============================================================
+        dlg.Destroy()
+        self._grid_sca.Refresh()        
+
+    def GridScadOnPdcUnlink(self, evt):
+        rows = self._grid_sca.GetSelectedRows()
+        if rows:
+            row = rows[0]
+            rs =self.regrss
+            rs[row][3] = None
+        self._grid_sca.Refresh()        
+
+    def OnRightClick(self, evt):
+        row = evt.GetRow()
+        #if 0 <= row < mov.RowsCount():
+        if True:
+            self.MenuPopup(evt)
+            evt.Skip()        
+        
+        #=======================================================================
+        # row = event.GetRow()
+        # if row >= 0 and self.status == ctb.STATUS_EDITING:
+        #     MenuPopup(row, event)
+        #=======================================================================
+
+    #===========================================================================
+    # def OnLabelRightClick(self, evt):
+    #     print evt
+    #     evt.Skip()
+    #===========================================================================
+
 
     def _GridEdit_Sca_TestValues(self, row, gridcol, col, value):
         self.UpdateTotSca()

@@ -6,17 +6,17 @@
 # Copyright:    (C) 2011 Astra S.r.l. C.so Cavallotti, 122 18038 Sanremo (IM)
 # ------------------------------------------------------------------------------
 # This file is part of X4GA
-# 
+#
 # X4GA is free software: you can redistribute it and/or modify
 # it under the terms of the Affero GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # X4GA is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
@@ -87,27 +87,27 @@ class ContabPanelTipo_I_O(ctbi.ContabPanelTipo_I):
     """
     Panel Dataentry registrazioni iva per contabilità ordinaria.
     """
-    
+
     def __init__(self, *args, **kwargs):
-        
+
         self.regrsi = []     # recordset iva
         self._grid_iva = None
-        
+
         ctbi.ContabPanelTipo_I.__init__(self, *args, **kwargs)
-        
+
         cn = self.FindWindowByName
-        
+
         c = cn('enableseziva')
         if c:
             c.Show()
             self.Bind(wx.EVT_BUTTON, self.OnEnableSezIva, c)
-        
+
         if self.__class__ == ContabPanelTipo_I_O:
             self.Bind(wx.EVT_BUTTON, self.OnParity, cn('butparity'))
-        
+
         self.SetName('regconiva_o_panel')
         self.HelpBuilder_SetDir('contab.dataentry.RegConIva_O')
-    
+
     def OnEnableSezIva(self, event):
         if self.reg_nocalciva:
             msg =\
@@ -133,7 +133,7 @@ class ContabPanelTipo_I_O(ctbi.ContabPanelTipo_I):
                 g.ResetView()
             self.EnableBodyControls()
             event.Skip()
-    
+
     def EnableBodyControls(self, enable=True):
         ctb.ContabPanel.EnableBodyControls(self, enable)
         b = self.FindWindowByName('enableseziva')
@@ -145,7 +145,7 @@ class ContabPanelTipo_I_O(ctbi.ContabPanelTipo_I):
             b.SetLabel('%s sez.IVA' % l)
         if self._grid_iva:
             self._grid_iva.EnableEditing(enable and bool(self.reg_nocalciva))
-        
+
     def OnCauChanged(self, event):
         ctbi.ContabPanelTipo_I.OnCauChanged(self, event)
         if self._cfg_davscorp == 1:
@@ -156,13 +156,13 @@ class ContabPanelTipo_I_O(ctbi.ContabPanelTipo_I):
         g.SetColSize(7, s) #colonna importo da scorp.
         g.SetColumnDefaultSize(7, s) #colonna importo da scorp.
         g.ResetView()
-    
+
     def OnParity(self, event):
         ctbi.ContabPanelTipo_I.OnParity(self, event)
         row = len(self.regrsb)-1
         if self.regrsb[row][ctb.RSDET_ALIQ_ID]:
             self.UpdateIvaFromDav()
-    
+
     def InitPanelBody( self ):
         ctbi.ContabPanelTipo_I.InitPanelBody(self)
         ctbw.BodyFuncTipo_I_O(self.panbody, True)
@@ -195,10 +195,10 @@ class ContabPanelTipo_I_O(ctbi.ContabPanelTipo_I):
             for colimp, ivaid, ivacod, ivades, forcerow in (\
                 (RSIVA_IMPOSTA, RSIVA_ID_PDCIVA, RSIVA_pdciva_cod, RSIVA_pdciva_des, True),
                 (RSIVA_INDEDUC, RSIVA_pdcind_id, RSIVA_pdcind_cod, RSIVA_pdcind_des, False)):
-                
+
                 #if reciva[colimp]:# or forcerow:
                 if not self.dbese.samefloat(reciva[colimp], 0):# or forcerow:
-                    
+
                     try:
                         n = ListSearch(rigiva,\
                                lambda x: x[ctb.RSDET_PDCPA_ID] == reciva[ivaid])
@@ -215,16 +215,16 @@ class ContabPanelTipo_I_O(ctbi.ContabPanelTipo_I):
                                        None,           #RSDET_ALIQ_des
                                        None,           #RSDET_ALIQ_TOT
                                        "",             #RSDET_NOTE
-                                       0,              #RSDET_RIGAPI    
+                                       0,              #RSDET_RIGAPI
                                        0])             #RSDET_SOLOCONT
-                        n = len(rigiva)-1             
-                    
+                        n = len(rigiva)-1
+
                     if self._cfg_pasegno == "D":
                         rigiva[n][ctb.RSDET_IMPAVERE] += reciva[colimp]
-                        
+
                     elif self._cfg_pasegno == "A":
                         rigiva[n][ctb.RSDET_IMPDARE] += reciva[colimp]
-        
+
         #controllo segno imposta, se negativo inverto segno contabile
         for r in rigiva:
             if r[ctb.RSDET_IMPDARE]<0:
@@ -233,13 +233,13 @@ class ContabPanelTipo_I_O(ctbi.ContabPanelTipo_I):
             elif r[ctb.RSDET_IMPAVERE]<0:
                 r[ctb.RSDET_IMPDARE] = -r[ctb.RSDET_IMPAVERE]
                 r[ctb.RSDET_IMPAVERE] = 0
-        
+
         #ricostruzione lista dettaglio
         rs1 = []
         rs2 = []
         for rec in self.regrsb:
             rs1.append(rec)
-        
+
         s = self._cfg_pasegno
         if self.totdoc<0:
             s = "DA"["AD".index(s)]
@@ -256,20 +256,20 @@ class ContabPanelTipo_I_O(ctbi.ContabPanelTipo_I):
                         rs2[len(rs2)-1][ctb.RSDET_IMPAVERE] = td
                     for rig in rigiva: #aggiunta righe iva
                         rs2.append(rig)
-        
+
         for nrig in range(len(rs2)): #rinumerazione
             rs2[nrig][0] = nrig+1
-        
+
         del self.regrsb[:]
         for rec in rs2:
             self.regrsb.append(rec)
-        
-        
+
+
         #self._grid_dav.SetGridCursorNewRowCol()
 
     def IsIvaOK(self):
         return len(self.regrsi)>0
-    
+
     def UpdateTotIva(self):
         self.totimpon = 0
         self.totimpst = 0
@@ -289,7 +289,7 @@ class ContabPanelTipo_I_O(ctbi.ContabPanelTipo_I):
     def UpdateTotDav(self):
         self.CheckQuadraturaIVA_DA()
         return ctbi.ContabPanelTipo_I.UpdateTotDav(self)
-    
+
     def CheckTotaliIVA(self):
         for n, r in enumerate(self.regrsi):
             t1 = r[RSIVA_TTIVATO]
@@ -300,7 +300,7 @@ class ContabPanelTipo_I_O(ctbi.ContabPanelTipo_I):
             if not self.dbese.samefloat(t1, t2):
                 return n
         return -1
-    
+
     def CheckQuadraturaIVA_DA(self):
         out = True
         msg = ''
@@ -326,35 +326,37 @@ class ContabPanelTipo_I_O(ctbi.ContabPanelTipo_I):
                 out = False
         self.FindWindowByName('ivaquad').SetLabel(msg)
         return out
-    
+
     def RegReadBody(self, idreg):
         out = True
         try:
             #recordset righe contabili
+            #TODO: Aggiunto ordinamento per numriga     --------------- WARNING
             cmd = """
-   SELECT row.numriga, 
-          row.tipriga, 
-          row.id_pdcpa, 
-          pdc.codice, 
-          pdc.descriz, 
+   SELECT row.numriga,
+          row.tipriga,
+          row.id_pdcpa,
+          pdc.codice,
+          pdc.descriz,
           if(row.segno="D", row.importo, NULL),
-          if(row.segno="A", row.importo, NULL), 
+          if(row.segno="A", row.importo, NULL),
           row.id_aliqiva,
           iva.codice,
           iva.descriz,
           row.davscorp,
-          row.note, 
-          row.ivaman, 
-          row.solocont 
+          row.note,
+          row.ivaman,
+          row.solocont
      FROM %s AS row
      JOIN %s AS pdc ON row.id_pdcpa=pdc.id
 LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
-    WHERE row.id_reg=%%s and row.tipriga IN ('S','C','A')""" % (bt.TABNAME_CONTAB_B,
-                                                                bt.TABNAME_PDC,
-                                                                bt.TABNAME_ALIQIVA,)
+    WHERE row.id_reg=%%s and row.tipriga IN ('S','C','A')
+    ORDER BY row.numriga""" %  (bt.TABNAME_CONTAB_B,
+                                bt.TABNAME_PDC,
+                                bt.TABNAME_ALIQIVA,)
             self.db_curs.execute(cmd, idreg)
             rsb = self.db_curs.fetchall()
-            
+
             #recordset righe iva
             cmd =\
 """SELECT row.id_aliqiva, iva.codice, iva.descriz, """\
@@ -372,11 +374,11 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
                                                              bt.TABNAME_PDC )
             self.db_curs.execute(cmd, idreg)
             rsi = self.db_curs.fetchall()
-            
+
         except MySQLdb.Error, e:
             MsgDialogDbError(self, e)
             out = False
-            
+
         else:
             del self.regrsb[:]
             for b in rsb:
@@ -398,15 +400,15 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
                     self.totdoc = r[ctb.RSDET_IMPAVERE]
                     if self.totdoc is None:
                         self.totdoc = -(r[ctb.RSDET_IMPDARE] or 0)
-            
+
             del self.regrsi[:]
             for i in rsi:
                 self.regrsi.append(list(i))
-            
+
             self._grid_iva.SetGridCursorNewRowCol()
             if hasattr(self, '_griddav'):
                 self._grid_dav.SetGridCursorNewRowCol()
-        
+
         return out
 
     def RegWriteBody(self):
@@ -440,7 +442,7 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
                           rsi[n][RSIVA_pdcind_id],      #id_pdcind
                           rsi[n][RSIVA_NOTE] ])         #note
         return ctbi.ContabPanelTipo_I.RegWriteBody(self, rows)
-    
+
     def RegReset(self):
         ctbi.ContabPanelTipo_I.RegReset(self)
         del self.regrsi[:]
@@ -449,11 +451,11 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
         parent = self.FindWindowById(ctbw.ID_PANGRID_IVA)
         parent.SetSize((0,0))
         size = parent.GetClientSizeTuple()
-        
+
         _STR = gl.GRID_VALUE_STRING
         _FLT = bt.GetValIntMaskInfo()
         _CHK = gl.GRID_VALUE_CHOICE+":1,0"
-        
+
         cols = (
             ( 35, (RSIVA_iva_cod,    "Cod.",                     _STR, False)),
             (100, (RSIVA_iva_des,    "Aliquota IVA",             _STR, False)),
@@ -468,13 +470,13 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
             (200, (RSIVA_pdcind_des, "S.conto IVA indeducibile", _STR, False)),
             (160, (RSIVA_NOTE,       "Note",                     _STR, False)),
         )
-        
+
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
-        
+
         canedit = self.canedit
         canins = self.canins
-        
+
         links = []
         lta = lib.LinkTabAliqIvaAttr( bt.TABNAME_ALIQIVA, #table
                                       0,                  #grid col
@@ -484,7 +486,7 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
                                       AliqIvaDialog,      #card class
                                       refresh = True)     #refresh flag
         links.append(lta)
-        
+
         def SetPdcTipIva(lt, *args):
             lt.SetPdcTipCods(self._auto_cod_tippdc_pdciva)
         lta = lib.LinkTabPdcAttr(bt.TABNAME_PDC,
@@ -492,11 +494,11 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
                                  RSIVA_ID_PDCIVA,
                                  RSIVA_pdciva_cod,
                                  RSIVA_pdciva_des,
-                                 PdcDialog, 
+                                 PdcDialog,
                                  refresh=True,
                                  oncreate=SetPdcTipIva)
         links.append(lta)
-        
+
         def SetPdcTipIvaInd(lt, *args):
             lt.SetPdcTipCods(self._auto_cod_tippdc_pdciva+\
                              self._cfg_pdctipcp_cod)
@@ -505,19 +507,19 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
                                  RSIVA_pdcind_id,
                                  RSIVA_pdcind_cod,
                                  RSIVA_pdcind_des,
-                                 PdcDialog, 
+                                 PdcDialog,
                                  refresh=True,
                                  oncreate=SetPdcTipIvaInd)
         links.append(lta)
-        
+
         TestValues = self._GridEdit_Iva_TestValues
         NewRow = self._GridEdit_Iva_NewRow
         afteredit = ( (dbglib.CELLEDIT_AFTER_UPDATE,  -1, TestValues), )
-        
+
         grid = dbglib.DbGrid(parent, -1, size=size, style=wx.SUNKEN_BORDER)
         grid.SetData( self.regrsi, colmap, canedit, canins,\
                       links, afteredit, NewRow )
-        
+
         grid.SetRowLabelSize(80)
         grid.SetRowLabelAlignment(wx.ALIGN_RIGHT, wx.ALIGN_BOTTOM)
         grid.SetRowDynLabel(self._GridEdit_Iva_GetRowLabel)
@@ -526,32 +528,32 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
             grid.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
 #        grid.SetAnchorColumns(4, 1)
         grid.AutoSizeColumns()
-        
+
         def MoveColumnAfterEdit(grid, row, col):
             if col == 0:
                 col = 2
             return row, col
         grid.SetColumnsFunc(MoveColumnAfterEdit)
-        
+
         sz = wx.FlexGridSizer(1,0,0,0)
         sz.AddGrowableCol( 0 )
         sz.AddGrowableRow( 0 )
         sz.Add(grid, 0, wx.GROW|wx.ALL, 0)
         parent.SetSizer(sz)
         sz.SetSizeHints(parent)
-        
+
         def MenuPopup(row, event):
             if self.reg_nocalciva and row < len(self.regrsi):
                 def _NoCalcIva(*args):#_self=self, row=None):
                     self.regrsi[row][RSIVA_NOCALC] = \
                         1 - (self.regrsi[row][RSIVA_NOCALC] or 0)
                     self._grid_iva.ResetView()
-                
+
                 def _DeleteRow(*args):
                     self._grid_iva.DeleteRows(row)
                     self.UpdateDavFromIVA()
                     self.UpdatePanelDav()
-                
+
                 self._grid_iva.SelectRow(row)
                 if self.regrsi[row][RSIVA_NOCALC]:
                     nocalcDes = "Abilita"
@@ -570,22 +572,22 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
                 self._grid_iva.PopupMenu(menu, (xo, yo))
                 menu.Destroy()
             event.Skip()
-        
+
         def _OnRightClick(event, self=self):
             row = event.GetRow()
             if row >= 0 and self.status == ctb.STATUS_EDITING:
                 MenuPopup(row, event)
-        
+
         grid.Bind(gl.EVT_GRID_CELL_RIGHT_CLICK, _OnRightClick)
         grid.Bind(gl.EVT_GRID_CELL_LEFT_CLICK, self._GridEdit_Iva_OnLeftClick)
-        
+
         self._grid_iva = grid
-        
+
         self._db_pdc = DbTable('pdc')
         self._db_pdc.AddJoin('bilmas', idLeft='id_bilmas')
         self._db_pdc.AddJoin('bilcon', idLeft='id_bilcon')
         self._db_pdc.Reset()
-    
+
     def _GridEdit_Iva_OnLeftClick(self, event):
         if self.status != ctb.STATUS_EDITING or not self.reg_nocalciva:
             return
@@ -604,7 +606,7 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
             self.CheckQuadraturaIVA_DA()
             self.UpdateButtons()
         event.Skip()
-    
+
     def _GridEdit_Iva_NewRow(self):
         newrow = [ None,                   #RSIVA_ID_ALIQIVA
                    None,                   #RSIVA_iva_cod
@@ -637,25 +639,25 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
             ttivato = self.regrsi[row][RSIVA_TTIVATO]
             indeduc = self.regrsi[row][RSIVA_INDEDUC]
             isomagg = self.regrsi[row][RSIVA_ISOMAGG] or 0
-            
+
             rsi = self.regrsi[row]
-            
+
             def R(n):
                 return round(n, bt.VALINT_DECIMALS)
-            
+
             if col == RSIVA_iva_cod:
-                
+
                 import awc.tables.util as awtu
                 perc, pind, tipo =\
                     awtu.GetRecordInfo(self.db_curs, bt.TABNAME_ALIQIVA, value,\
                                        ('perciva', 'percind', 'tipo',))
                 id1,cod1,des1,id2,cod2,des2 = self.GetSottocontiIva(tipo)
-                
+
                 #sottoconto iva
                 rsi[RSIVA_ID_PDCIVA] = id1
                 rsi[RSIVA_pdciva_cod] = cod1
                 rsi[RSIVA_pdciva_des] = des1
-                
+
                 #sottoconto iva indeducibile, se presente
                 if id2 is None:
                     for n, rsb in enumerate(self.regrsb):
@@ -671,7 +673,7 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
                 rsi[RSIVA_pdcind_id] = id2
                 rsi[RSIVA_pdcind_cod] = cod2
                 rsi[RSIVA_pdcind_des] = des2
-                
+
                 if nocalc:
                     ttivato = R(imponib+imposta)
                 else:
@@ -679,7 +681,7 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
                            self.CalcolaIva_DaImponibile(id_aliq,
                                                         rsi[RSIVA_IMPONIB],
                                                         indeduc)
-                
+
             elif col == RSIVA_IMPONIB:
                 #digitato imponibile
                 if nocalc:
@@ -689,7 +691,7 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
                            self.CalcolaIva_DaImponibile(id_aliq,
                                                         value,
                                                         indeduc)
-                
+
             elif col == RSIVA_IMPOSTA:
                 #digitata imposta
                 if nocalc:
@@ -702,11 +704,11 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
                         #aw.awu.MsgDialog(self, "Il calcolo della parte imponibile porta a zero, l'imposta digitata non è accettata")
                         imponib = imposta = indeduc = ttivato = digiva = 0
                     value = digiva
-                
+
             elif col == RSIVA_INDEDUC:
                 #digitato parte indeducibile dell'imposta
                 ttivato = R(imponib+imposta+indeduc)
-                
+
             elif col == RSIVA_TTIVATO:
                 #digitato tot.ivato
                 if nocalc:
@@ -714,7 +716,7 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
                 else:
                     imponib, imposta, ttivato, indeduc =\
                       self.CalcolaIva_DaIvato(id_aliq, value, indeduc)
-                
+
             elif col == RSIVA_iva_cod:
                 #modificata aliquota iva, ricalcolo tutto dall'imponibile
                 #se il calcolo è disattivato lo riattivo
@@ -725,41 +727,41 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
                                   ivato = ttivato,\
                                   indeduc = indeduc)
                 rsi[RSIVA_NOCALC] = 0
-            
+
             if isomagg:
                 ttivato -= imponib
-            
+
             rsi[RSIVA_IMPONIB] = imponib
             rsi[RSIVA_IMPOSTA] = imposta
             rsi[RSIVA_TTIVATO] = ttivato
             rsi[RSIVA_INDEDUC] = indeduc
-            
+
             self._grid_iva.ForceResetView()
-            
+
             oldtot = self.totdoc
             self.UpdateTotIva()
             if self.totdoc != oldtot:
                 self.ScadCalc()
                 self.UpdatePanelScad()
-            
+
             self.UpdateDavFromIVA()
             self.UpdatePanelDav()
-        
+
         return True
-    
+
     def SetAliqIvaDefault(self, dbaliq):
-        
+
         a = dbaliq
-        
+
         aliq_id = a.id
         aliq_cod = a.codice
         aliq_des = a.descriz
-        
+
         #aliquota iva predefinita
         self.aliqdef_id = aliq_id
         self.aliqdef_cod = aliq_cod
         self.aliqdef_des = aliq_des
-        
+
 #        if self.aliqdef_id:
 #            #metto l'aliquota di default sulle eventuali righe di costo già presenti
 #            #(eventualmente inserite dalla prescelta dei conti di costo all'atto
@@ -769,9 +771,9 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
 #                    rb[ctb.RSDET_ALIQ_ID] = self.aliqdef_id
 #                    rb[ctb.RSDET_ALIQ_cod] = self.aliqdef_cod
 #                    rb[ctb.RSDET_ALIQ_des] = self.aliqdef_des
-#        
+#
 #        id1, cod1, des1, id2, cod2, des2 = self.GetSottocontiIva(dbaliq.tipo)
-#        
+#
 #        self.regrsi.append([ aliq_id,  #RSIVA_ID_ALIQIVA
 #                             aliq_cod, #RSIVA_iva_cod
 #                             aliq_des, #RSIVA_iva_des
@@ -788,7 +790,7 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
 #                             des2,     #RSIVA_pdcind_des
 #                             None,     #RSIVA_NOTE
 #                             0 ])      #RSIVA_ISOMAGG
-    
+
     def _GridEdit_Iva_GetAttr(self, row, col, rscol, attr=gl.GridCellAttr):
         try:
             nocalc = self.regrsi[row][RSIVA_NOCALC]
@@ -829,7 +831,7 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
         else:
             label = ""
         return label
-    
+
     def UpdateButtons(self, enable=True):
         ctbi.ContabPanelTipo_I.UpdateButtons(self, enable)
         c = self.controls["button_end"]
@@ -845,11 +847,11 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
             if tip:
                 c.Enable(False)
                 c.SetToolTipString(tip)
-    
+
     def Validate(self):
-        
+
         out = ctbi.ContabPanelTipo_I.Validate(self)
-        
+
         if out:
             #test quadratura iva/dare-avere
             if not self.CheckQuadraturaIVA_DA():
@@ -862,19 +864,19 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
                     aw.awu.MsgDialog(self, msg+'Impossibile confermare la registrazione',
                                      style=wx.ICON_ERROR)
                     out = False
-        
+
         return out
-    
+
     def _GridEdit_Dav__Init__(self):
-        
+
         parent = self.FindWindowById(ctbw.ID_PANGRID_DAV)
         parent.SetSize((0,0))
-        
+
         _STR = gl.GRID_VALUE_STRING
         _NUM = gl.GRID_VALUE_NUMBER+":4"
         _FLT = bt.GetValIntMaskInfo()
         _CHK = gl.GRID_VALUE_CHOICE+":1,0"
-        
+
         cols = (\
                 ( 35, (ctb.RSDET_NUMRIGA,   "Riga",         _NUM, False)),
                 ( 50, (ctb.RSDET_PDCPA_cod, "Cod.",         _STR, False)),
@@ -888,15 +890,15 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
                 (150, (ctb.RSDET_NOTE,      "Note",         _STR, False)),)
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
-        
+
         grid = dbglib.DbGrid(parent, -1, size=parent.GetClientSizeTuple())
         grid.SetColMaxChar(ctb.RSDET_NOTE, bt.getStdNoteWidth())
-        
+
         canedit = self.canedit
         canins = self.canins
-        
+
         links = []
-        
+
         #linktable per il sottoconto
         from anag.lib import LinkTabPdcAttr
         lta = LinkTabPdcAttr(bt.TABNAME_PDC,
@@ -906,7 +908,7 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
                              ctb.RSDET_PDCPA_des,
                              PdcDialog, refresh=True)
         links.append(lta)
-        
+
         #linktable per l'aliquota iva
         from anag.lib import LinkTabAliqIvaAttr
         lti = LinkTabAliqIvaAttr(bt.TABNAME_ALIQIVA,
@@ -916,11 +918,11 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
                                  ctb.RSDET_ALIQ_des,
                                  AliqIvaDialog, refresh=True)
         links.append(lti)
-        
+
         TestValues = self._GridEdit_Dav_TestValues
         NewRow = self._GridEdit_Dav_NewRow
         afteredit = ( (dbglib.CELLEDIT_AFTER_UPDATE,  -1, TestValues), )
-        
+
         grid.SetData( self.regrsb, colmap, canedit, canins,\
                       links, afteredit, NewRow )
         grid.SetRowLabelSize(80)
@@ -932,9 +934,9 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
 #        grid.SetAnchorColumns(5, 2)
         grid.SetFitColumn(9)
         grid.AutoSizeColumns()
-        
+
         grid.SetColDefault(1)
-        
+
         def MoveColumnAfterEdit(grid, row, col):
             if col == 1:
                 s = self._cfg_pasegno
@@ -951,18 +953,18 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
                     #col = 6 #descrizione aliquota
             return row, col
         grid.SetColumnsFunc(MoveColumnAfterEdit)
-        
+
         sz = wx.FlexGridSizer(1,0,0,0)
         sz.AddGrowableCol( 0 )
         sz.AddGrowableRow( 0 )
         sz.Add(grid, 0, wx.GROW|wx.ALL, 0)
         parent.SetSizer(sz)
         sz.SetSizeHints(parent)
-        
+
         def MenuPopup(row, event):
             if row > 0 and row < len(self.regrsb)\
                        and self.regrsb[row][ctb.RSDET_TIPRIGA] != "A":
-                    
+
                 def _DeleteRow(*args):
                     riciva = self.regrsb[row][ctb.RSDET_ALIQ_ID] is not None
                     self._grid_dav.DeleteRows(row)
@@ -970,7 +972,7 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
                         self.UpdateIvaFromDav()
                     self.UpdateTotDav()
                     self.UpdatePanelDav()
-                
+
                 self._grid_dav.SelectRow(row)
                 deleteId = wx.NewId()
                 menu = wx.Menu()
@@ -979,9 +981,9 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
                 xo, yo = event.GetPosition()
                 self._grid_dav.PopupMenu(menu, (xo, yo))
                 menu.Destroy()
-                
+
             event.Skip()
-        
+
         def _OnLeftClick(event, self=self):
             if self.status == ctb.STATUS_EDITING:
                 row = event.GetRow()
@@ -1002,27 +1004,27 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
                             self.CheckQuadraturaIVA_DA()
                             self.UpdateButtons()
             event.Skip()
-        
+
         def _OnRightClick(event, self=self):
             row = event.GetRow()
             if row >= 0 and self.status == ctb.STATUS_EDITING:
                 MenuPopup(row, event)
-        
+
         for event, func in (
             (gl.EVT_GRID_CELL_LEFT_CLICK,    _OnLeftClick),
             (gl.EVT_GRID_CELL_RIGHT_CLICK,   _OnRightClick),
             (gl.EVT_GRID_CMD_EDITOR_CREATED, self._GridEdit_Dav_OnEditorShown),
             (gl.EVT_GRID_CMD_EDITOR_SHOWN,   self._GridEdit_Dav_OnEditorShown)):
             grid.Bind(event, func)
-        
+
         self._grid_dav = grid
 
     def _GridEdit_Dav_GetAttr(self, row, col, rscol, attr=gl.GridCellAttr):
-        
+
         #impostazione colori
         fgcol = stdcolor.NORMAL_FOREGROUND
         bgcol = stdcolor.NORMAL_BACKGROUND
-        
+
         if row >= len(self.regrsb):
             #nuova riga, permesso ins. solo sottoconto (col.codice)
             readonly = (rscol != ctb.RSDET_PDCPA_cod)
@@ -1036,7 +1038,7 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
                 readonly = rscol in (#ctb.RSDET_ALIQ_cod,
                                      ctb.RSDET_ALIQ_des,
                                      ctb.RSDET_ALIQ_TOT)
-            readonly = readonly or rscol in (ctb.RSDET_NUMRIGA, 
+            readonly = readonly or rscol in (ctb.RSDET_NUMRIGA,
                                              ctb.RSDET_PDCPA_des,
                                              ctb.RSDET_ALIQ_des)
             if not readonly and rscol in (ctb.RSDET_ALIQ_cod,
@@ -1045,7 +1047,7 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
             if rscol == ctb.RSDET_SOLOCONT:
                 readonly = True
         attr.SetReadOnly(readonly)
-        
+
         rs = self.regrsb
         if col in (3,4) and row<len(rs):
             if not rs[row][ctb.RSDET_IMPDARE] and not rs[row][ctb.RSDET_IMPAVERE]:
@@ -1071,10 +1073,10 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
                     bgcol = stdcolor.VALMISS_BACKGROUND
         elif rscol == ctb.RSDET_ALIQ_TOT and row<len(rs) and row>0 and rs[row][ctb.RSDET_TIPRIGA] == 'C':
             bgcol = stdcolor.GetColour('darkseagreen1')
-        
+
         attr.SetTextColour(fgcol)
         attr.SetBackgroundColour(bgcol)
-        
+
         return attr
 
     def _GridEdit_Dav_OnEditorShown(self, event):
@@ -1091,7 +1093,7 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
                     idtip = self._cfg_pdctipcp_id
                 editor._tc.SetFilterValue(idtip)
         event.Skip()
-    
+
     def _GridEdit_Dav_GetRowLabel(self, row):
         label = ""
         if row < len(self.regrsb):
@@ -1111,7 +1113,7 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
             except IndexError:
                 pass
         return label
-    
+
     def _GridEdit_Dav_NewRow(self):
         nrig = len(self.regrsb)+1
         self.regrsb.append([nrig,             #RSDET_NUMRIGA
@@ -1128,29 +1130,29 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
                             None,             #RSDET_NOTE
                             0,                #RSDET_RIGAPI
                             0])               #RSDET_SOLOCONT
-        return True               
+        return True
 
     def _GridEdit_Dav_TestValues(self, row, gridcol, col, value):
-        
+
         r = self.regrsb[row]
-        
+
         if col == ctb.RSDET_IMPDARE:    #digitato dare, lo aggiorno e ann.avere
             r[ctb.RSDET_IMPDARE] = value
             r[ctb.RSDET_IMPAVERE] = None
             r[ctb.RSDET_ALIQ_TOT] = None
-            
+
         elif col == ctb.RSDET_IMPAVERE: #digitato avere, lo aggiorno e ann.dare
             r[ctb.RSDET_IMPDARE] = None
             r[ctb.RSDET_IMPAVERE] = value
             r[ctb.RSDET_ALIQ_TOT] = None
-            
+
         elif col == ctb.RSDET_NOTE:
             note = self.regrsb[row][col]
             if note[0:1] == "*":
                 note = note[1:]
                 for r in range(len(self.regrsb)):
                     self.regrsb[r][col] = note
-            
+
         elif col == ctb.RSDET_PDCPA_cod:
             if row == 0:
                 self.UpdateModPag()
@@ -1158,18 +1160,18 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
                 u = self.InitPdcIndeduc(row)
                 if u:
                     self.UpdateDavFromIVA()
-            
+
         elif col == ctb.RSDET_ALIQ_cod:
             r[ctb.RSDET_SOLOCONT] = 0
             self.CheckQuadraturaIVA_DA()
             self.UpdateButtons()
-        
+
         if (col in (ctb.RSDET_PDCPA_cod,
-                    ctb.RSDET_ALIQ_cod, 
+                    ctb.RSDET_ALIQ_cod,
                     ctb.RSDET_ALIQ_TOT,
                     ctb.RSDET_IMPDARE,
                     ctb.RSDET_IMPAVERE,) and r[ctb.RSDET_ALIQ_ID]) or col == ctb.RSDET_ALIQ_cod:
-            
+
             if col == ctb.RSDET_ALIQ_TOT:
                 #digitato importo totale, scorporo prima di aggiornare sez.iva
                 imponib, _, _, _ =\
@@ -1189,7 +1191,7 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
                 elif s == 'A':
                     r[ctb.RSDET_IMPAVERE] = imponib
                     r[ctb.RSDET_IMPDARE] = None
-            
+
             rownum = len(self.regrsb)-row
             ppaid = r[ctb.RSDET_PDCPA_ID]
             self.UpdateIvaFromDav()
@@ -1224,12 +1226,12 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
                         wx.CallAfter(SetFocus)
                     wx.CallAfter(Posiz2, row, col)
                 wx.CallAfter(Posiz, row, gridcol)
-        
+
         self._grid_dav.ForceResetView()
         self.UpdateTotDav()
-        
+
         return True
-    
+
     def UpdateIvaFromDav(self):
         if self.reg_nocalciva:
             return
@@ -1243,12 +1245,12 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
         for row, rb in enumerate(rsb):
             aliqid = rb[ctb.RSDET_ALIQ_ID]
             if aliqid:
-                
+
                 perc, pind, tipo =\
                     awtu.GetRecordInfo(self.db_curs, bt.TABNAME_ALIQIVA, aliqid,\
                                        ('perciva', 'percind', 'tipo',))
                 pivaid,pivacod,pivades,pindid,pindcod,pinddes = self.GetSottocontiIva(tipo)
-                
+
                 pindid = pindcod = pinddes = None
                 i1, i2, i3, i4 = self.CalcolaIva_DaImponibile(aliqid, 100)
                 if i4:
@@ -1317,7 +1319,7 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
         self.UpdateDavFromIVA()
         self._grid_dav.ResetView()
         self.UpdatePanelIva()
-    
+
     def InitPdcIndeduc(self, row):
         u = False
         r = self.regrsb[row]
