@@ -1047,7 +1047,7 @@ class DocMag(adb.DbTable):
             return
         pg = self._info.prodgia
         gi = pg[pgkey]
-        print 'ProdGiacWrite: %s%s %s' % (segno, gi['giafis'][tcol], ['aggiungo', 'detraggo'][segno=='-'])
+        #print 'ProdGiacWrite: %s%s %s' % (segno, gi['giafis'][tcol], ['aggiungo', 'detraggo'][segno=='-'])
         cmdins = []
         cmdupd = []
         for col in gi.keys():
@@ -1107,7 +1107,7 @@ class DocMag(adb.DbTable):
             return
         pp = self._info.prodpro
         pr = pp[ppkey]
-        print ' ProdProWrite: %s%s %s' % (segno, pr['car'][tcol], ['aggiungo', 'detraggo'][segno=='-'])
+        #print ' ProdProWrite: %s%s %s' % (segno, pr['car'][tcol], ['aggiungo', 'detraggo'][segno=='-'])
         cmdins = []
         cmdupd = []
         for col in pr.keys():
@@ -5212,6 +5212,15 @@ class SegnaColli(adb.DbMem):
         adb.DbMem.__init__(self, 'id_doc,collonum,totcolli')
         self.Reset()
 
+# ------------------------------------------------------------------------------
+
+
+class Testi(adb.DbTable):
+
+    def __init__(self, *args, **kwargs):
+        adb.DbTable.__init__(self,\
+                             bt.TABNAME_TESTI,  "test",\
+                             **kwargs)
 
 # ------------------------------------------------------------------------------
 
