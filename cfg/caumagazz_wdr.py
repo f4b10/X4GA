@@ -248,6 +248,7 @@ ID_ASKSTAPRE = 16047
 ID_STANOC = 16048
 ID_DOCEMAIL = 16049
 ID_AANOTEDOC = 16050
+ID_MULTILINE = 16051
 
 def Doc1Func( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -618,7 +619,7 @@ def Doc1Func( parent, call_fit = True, set_sizer = True ):
     item89.Add( item96, 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
 
     item97 = NumCtrl(parent, ID_COPIES, integerWidth=3, allowNegative=False, groupDigits=False); item97.SetName("copies")
-    item89.Add( item97, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item89.Add( item97, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 0 )
 
     item89.AddGrowableCol( 5 )
 
@@ -660,9 +661,43 @@ def Doc1Func( parent, call_fit = True, set_sizer = True ):
 
     item107 = CheckBox( parent, ID_AANOTEDOC, "Non copiare note anag.", wx.DefaultPosition, wx.DefaultSize, 0 )
     item107.SetName( "aanotedoc" )
-    item98.Add( item107, 0, wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 5 )
+    item98.Add( item107, 0, wx.ALIGN_CENTER_VERTICAL|wx.TOP, 5 )
 
     item87.Add( item98, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item108 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    
+    item109 = CheckBox( parent, ID_MULTILINE, "MultiLinee", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item109.SetName( "multilinee" )
+    item108.Add( item109, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item110 = wx.FlexGridSizer( 0, 6, 0, 0 )
+    
+    item111 = wx.StaticText( parent, ID_TEXT, "Font:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item110.Add( item111, 0, wx.ALIGN_CENTER|wx.LEFT, 5 )
+
+    item112 = wx.ComboBox( parent, ID_COMBO, "", wx.DefaultPosition, wx.DefaultSize, 
+        ["","Helvetica","Helvetica-Oblique","Helvetica-Bold","Helvetica-BoldOblique","Courier","Courier-Oblique","Courier-Bold","Courier-BoldOblique","Times-Italic","Times-BoldItalic","Times-Roman","Times-Bold","Symbol"] , wx.CB_DROPDOWN )
+    item112.SetName( "font" )
+    item110.Add( item112, 0, wx.ALIGN_CENTER|wx.RIGHT, 5 )
+
+    item113 = wx.StaticText( parent, ID_TEXT, "Dim.Carattere:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item110.Add( item113, 0, wx.ALIGN_CENTER|wx.LEFT, 5 )
+
+    item114 = NumCtrl(parent, ID_COPIES, integerWidth=2, allowNegative=False, groupDigits=False); item114.SetName("fontsize")
+    item110.Add( item114, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 0 )
+
+    item115 = wx.StaticText( parent, ID_TEXT, "Spazio in stampa (pixel) :", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item110.Add( item115, 0, wx.ALIGN_CENTER|wx.LEFT, 5 )
+
+    item116 = NumCtrl(parent, ID_COPIES, integerWidth=4, allowNegative=False, groupDigits=False); item116.SetName("dessize")
+    item110.Add( item116, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 0 )
+
+    item108.Add( item110, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item108.AddGrowableCol( 1 )
+
+    item87.Add( item108, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item70.Add( item87, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
@@ -679,59 +714,59 @@ def Doc1Func( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_COLCG = 16051
-ID_NOIVAPROF = 16052
-ID_CTRCAUCON = 16053
-ID_SCORPIVA = 16054
-ID_SOGRITACC = 16055
-ID_CTRPDCRITACC = 16056
-ID_ASKPROTIVA = 16057
-ID_AUTOQTAONBC = 16058
-ID_RPTCOLLI = 16059
-ID_CTRACQDOC1 = 16060
-ID_TIPACQ1 = 16061
-ID_COPYDOC1 = 16062
-ID_EVADOC1 = 16063
-ID_ACQDOC1 = 16064
-ID_ANNACQ1 = 16065
-ID_CHECKACQ1 = 16066
-ID_CTRACQDOC2 = 16067
-ID_TIPACQ2 = 16068
-ID_COPYDOC2 = 16069
-ID_EVADOC2 = 16070
-ID_ACQDOC2 = 16071
-ID_ANNACQ2 = 16072
-ID_CHECKACQ2 = 16073
-ID_CTRACQDOC3 = 16074
-ID_TIPACQ3 = 16075
-ID_COPYDOC3 = 16076
-ID_EVADOC3 = 16077
-ID_ACQDOC3 = 16078
-ID_ANNACQ3 = 16079
-ID_CHECKACQ3 = 16080
-ID_CTRACQDOC4 = 16081
-ID_TIPACQ4 = 16082
-ID_COPYDOC4 = 16083
-ID_EVADOC4 = 16084
-ID_ACQDOC4 = 16085
-ID_ANNACQ4 = 16086
-ID_CHECKACQ4 = 16087
-ID_CHECKFIDO = 16088
-ID_VISLISTINI = 16089
-ID_VISCOSTO = 16090
-ID_VISGIAC = 16091
-ID_VISULTMOV = 16092
-ID_ULTMOVBEF = 16093
-ID_VISMARGINE = 16094
-ID_CHKDOCCLIi = 16095
-ID_ASKDATIACC = 16096
-ID_TRAKGC = 16097
-ID_TRACAU = 16098
-ID_TRAASP = 16099
-ID_TRACUR = 16100
-ID_TRAPOR = 16101
-ID_TRAVET = 16102
-ID_TRACON = 16103
+ID_COLCG = 16052
+ID_NOIVAPROF = 16053
+ID_CTRCAUCON = 16054
+ID_SCORPIVA = 16055
+ID_SOGRITACC = 16056
+ID_CTRPDCRITACC = 16057
+ID_ASKPROTIVA = 16058
+ID_AUTOQTAONBC = 16059
+ID_RPTCOLLI = 16060
+ID_CTRACQDOC1 = 16061
+ID_TIPACQ1 = 16062
+ID_COPYDOC1 = 16063
+ID_EVADOC1 = 16064
+ID_ACQDOC1 = 16065
+ID_ANNACQ1 = 16066
+ID_CHECKACQ1 = 16067
+ID_CTRACQDOC2 = 16068
+ID_TIPACQ2 = 16069
+ID_COPYDOC2 = 16070
+ID_EVADOC2 = 16071
+ID_ACQDOC2 = 16072
+ID_ANNACQ2 = 16073
+ID_CHECKACQ2 = 16074
+ID_CTRACQDOC3 = 16075
+ID_TIPACQ3 = 16076
+ID_COPYDOC3 = 16077
+ID_EVADOC3 = 16078
+ID_ACQDOC3 = 16079
+ID_ANNACQ3 = 16080
+ID_CHECKACQ3 = 16081
+ID_CTRACQDOC4 = 16082
+ID_TIPACQ4 = 16083
+ID_COPYDOC4 = 16084
+ID_EVADOC4 = 16085
+ID_ACQDOC4 = 16086
+ID_ANNACQ4 = 16087
+ID_CHECKACQ4 = 16088
+ID_CHECKFIDO = 16089
+ID_VISLISTINI = 16090
+ID_VISCOSTO = 16091
+ID_VISGIAC = 16092
+ID_VISULTMOV = 16093
+ID_ULTMOVBEF = 16094
+ID_VISMARGINE = 16095
+ID_CHKDOCCLIi = 16096
+ID_ASKDATIACC = 16097
+ID_TRAKGC = 16098
+ID_TRACAU = 16099
+ID_TRAASP = 16100
+ID_TRACUR = 16101
+ID_TRAPOR = 16102
+ID_TRAVET = 16103
+ID_TRACON = 16104
 
 def Doc2Func( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -1149,10 +1184,10 @@ def Doc2Func( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_PANGRIDMOV = 16104
-ID_BUTNEWMOV = 16105
-ID_BUTDELMOV = 16106
-ID_MOVBOOK = 16107
+ID_PANGRIDMOV = 16105
+ID_BUTNEWMOV = 16106
+ID_BUTDELMOV = 16107
+ID_MOVBOOK = 16108
 
 def MovFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 1, 0, 0, 0 )
@@ -1202,30 +1237,30 @@ def MovFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_TIPOLOGIA = 16108
-ID_LENDESCRIZ = 16109
-ID_ISDEFAULT = 16110
-ID_ASKVALORI = 16111
-ID_CANPREZZO0 = 16112
-ID_TIPVALUNI = 16113
-ID_TIPSCONTI = 16114
-ID_AGGCOSTO = 16115
-ID_AGGPREZZO = 16116
-ID_MODIMPRICALC = 16117
-ID_AGGGRP = 16118
-ID_RICCOSTO = 16119
-ID_CHECKBOX = 16120
-ID_AGGFORNIT = 16121
-ID_ACQPDT = 16122
-ID_NOMASTROPROD = 16123
-ID_PROOBB = 16124
-ID_NOPROVVIG = 16125
-ID_LABELPDC = 16126
-ID_CTRPDC = 16127
-ID_ISACCONTO = 16128
-ID_ISACCSTOR = 16129
-ID_ACC_SEPIVA = 16130
-ID_PRTDESTOT = 16131
+ID_TIPOLOGIA = 16109
+ID_LENDESCRIZ = 16110
+ID_ISDEFAULT = 16111
+ID_ASKVALORI = 16112
+ID_CANPREZZO0 = 16113
+ID_TIPVALUNI = 16114
+ID_TIPSCONTI = 16115
+ID_AGGCOSTO = 16116
+ID_AGGPREZZO = 16117
+ID_MODIMPRICALC = 16118
+ID_AGGGRP = 16119
+ID_RICCOSTO = 16120
+ID_CHECKBOX = 16121
+ID_AGGFORNIT = 16122
+ID_ACQPDT = 16123
+ID_NOMASTROPROD = 16124
+ID_PROOBB = 16125
+ID_NOPROVVIG = 16126
+ID_LABELPDC = 16127
+ID_CTRPDC = 16128
+ID_ISACCONTO = 16129
+ID_ISACCSTOR = 16130
+ID_ACC_SEPIVA = 16131
+ID_PRTDESTOT = 16132
 
 def Mov1Func( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -1530,7 +1565,7 @@ def Mov1Func( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_TXTEMAIL = 16132
+ID_TXTEMAIL = 16133
 
 def Doc3Func( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -1554,24 +1589,24 @@ def Doc3Func( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_AGGINI = 16133
-ID_AGGINIV = 16134
-ID_AGGCAR = 16135
-ID_AGGCARV = 16136
-ID_AGGSCA = 16137
-ID_AGGSCAV = 16138
-ID_AGGORDFOR = 16139
-ID_AGGORDCLI = 16140
-ID_AGGCVCCAR = 16141
-ID_AGGCVCSCA = 16142
-ID_AGGCVFCAR = 16143
-ID_AGGCVFSCA = 16144
-ID_STATFTCLI = 16145
-ID_STATCSCLI = 16146
-ID_MANCOSTO = 16147
-ID_STATFTFOR = 16148
-ID_AGGGIAC = 16149
-ID_AGGGIAR = 16150
+ID_AGGINI = 16134
+ID_AGGINIV = 16135
+ID_AGGCAR = 16136
+ID_AGGCARV = 16137
+ID_AGGSCA = 16138
+ID_AGGSCAV = 16139
+ID_AGGORDFOR = 16140
+ID_AGGORDCLI = 16141
+ID_AGGCVCCAR = 16142
+ID_AGGCVCSCA = 16143
+ID_AGGCVFCAR = 16144
+ID_AGGCVFSCA = 16145
+ID_STATFTCLI = 16146
+ID_STATCSCLI = 16147
+ID_MANCOSTO = 16148
+ID_STATFTFOR = 16149
+ID_AGGGIAC = 16150
+ID_AGGGIAR = 16151
 
 def Mov2Func( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -1796,7 +1831,7 @@ def Mov2Func( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_LTAB = 16151
+ID_LTAB = 16152
 
 def Doc4Func( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 2, 0, 0 )

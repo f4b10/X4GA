@@ -446,6 +446,7 @@ class CauMagazzPanel(ga.AnagPanel):
                            ("rptcolli",   { True: 1,   False: 0  } ),
                            ("aanotedoc",  { True: 1,   False: 0  } ),
                            ("is_default", { True: 1,   False: 0  } ),
+                           ("multilinee", { True: 1,   False: 0  } ),
                            ):
             ctr = cn(name)
             ctr.SetDataLink(name, val)
@@ -537,6 +538,8 @@ class CauMagazzPanel(ga.AnagPanel):
             self.UpdateFromControls(row)
         if event.GetEventObject().GetName() == 'askdatiacc':
             self.EnableDatiAcc()
+        elif event.GetEventObject().GetName() == 'multilinee':
+            self.EnableMultiLinee()
         elif event.GetEventObject().GetName() == 'is_default':
             o=event.GetEventObject()
             if o.IsChecked():
@@ -557,6 +560,14 @@ class CauMagazzPanel(ga.AnagPanel):
                 ctr = self.FindWindowByName(field)
                 if ctr:
                     setattr(dbmov, field, ctr.GetValue())
+
+
+
+    def EnableMultiLinee(self):
+        e = self.FindWindowByName('multilinee').GetValue() == True
+        map(lambda x: self.FindWindowByName(x).Enable(e), [x for x in ['font', 'fontsize', 'dessize']])
+
+
 
     def EnableDatiAcc(self):
         e = self.FindWindowByName('askdatiacc').GetValue() == 'X'
