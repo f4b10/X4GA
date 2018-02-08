@@ -27,6 +27,11 @@ import glob
 import cStringIO
 
 from report.output import print_Report as PrintRpt
+#===============================================================================
+# from report.read import iReportDef
+# from pyPdf import PdfFileWriter, PdfFileReader
+# from reportlab.pdfgen import canvas
+#===============================================================================
 
 import stormdb as adb
 
@@ -272,6 +277,7 @@ class MultiReportStandardDialog(wx.Dialog):
             searchReportDef += "/*"
         searchReportDef += ".jrxml"
         files = glob.glob(searchReportDef)
+        files = [elem for elem in files if not os.path.splitext(elem)[0].endswith('(retro)')]
         files.sort()
         for n, r in enumerate(files):
             r = r.replace('\\', '/')
@@ -380,7 +386,7 @@ class Report:
                     if skip_prompt and len(test)>0 and copies>0:
                         rptdef=test+'.jrxml'
                         def_output='PRINT'
-                    else:    
+                    else:
                         rptdef, printer, def_output, copies = self.GetMultiReport(parent, test, rptdef, printer, copies, emailbutton, multi_default=multi_default, otherquestions_filler=otherquestions_filler, can_preview=can_preview, can_print=can_print)
                 else:
                     if os.path.isfile(test+'.jrxml'):
@@ -486,6 +492,7 @@ class Report:
         SetPrinterName(printer)
 
     def StartReport(self, rptout=None):
+        isFronteRetro = False
         p = self.parameters
         rptdef = p['rptdef']
         if rptout is None:
@@ -519,25 +526,164 @@ class Report:
         multicopia_reactor = p['multicopia_reactor']
         commandprint = p['commandprint']
         oa = p['otherargs']
-        return PrintRpt(rptdef, rptout, output, dbTable=dbt,
-                        parentWindow=parentWindow,
-                        waitMessage=waitMessage,
-                        pageCount=None,
-                        noMove=noMove,
-                        exitOnGroup=exitOnGroup,
-                        rowFunc=rowFunc,
-                        rowFilter=rowFilter,
-                        messages=messages,
-                        usedde=dde,
-                        cmdprint=cmdprint,
-                        printer=printer,
-                        labeler=labeler,
-                        copies=copies,
-                        pdfcmd=pdfcmd,
-                        multicopia_init=multicopia_init,
-                        multicopia_reactor=multicopia_reactor,
-                        commandprint = commandprint,
-                        **oa)
+
+        name, ext = os.path.splitext(rptdef)
+        retroFileName = '%s%s%s' % (name, '(retro)', ext)
+
+        lReportFileName = []
+
+
+        if os.path.exists(retroFileName):
+            isFronteRetro = True
+            rptBaseOut = rptout
+
+            old_output   = output
+            old_cmdprint = cmdprint
+            old_dde      = dde
+            old_printer  = printer
+            old_copies   = copies
+
+            name, ext = os.path.splitext(rptout)
+            lReportFileName.append([rptdef,        '%s_Fronte%s'%(name, ext)])
+            lReportFileName.append([retroFileName, '%s_Retro%s'% (name, ext)])
+            output = 'STORE'
+        else:
+            lReportFileName.append([rptdef, rptout])
+
+
+        lEsito=[]
+        esitoReturn=None
+        for rptdef, rptout in lReportFileName:
+            esito = PrintRpt(rptdef, rptout, output, dbTable=dbt,
+                            parentWindow=parentWindow,
+                            waitMessage=waitMessage,
+                            pageCount=None,
+                            noMove=noMove,
+                            exitOnGroup=exitOnGroup,
+                            rowFunc=rowFunc,
+                            rowFilter=rowFilter,
+                            messages=messages,
+                            usedde=dde,
+                            cmdprint=cmdprint,
+                            printer=printer,
+                            labeler=labeler,
+                            copies=copies,
+                            pdfcmd=pdfcmd,
+                            multicopia_init=multicopia_init,
+                            multicopia_reactor=multicopia_reactor,
+                            commandprint = commandprint,
+                            isFronteRetro = isFronteRetro,
+                            **oa)
+            if esitoReturn == None:
+                esitoReturn = esito
+
+            
+
+        if isFronteRetro:
+            fronteReport  =lReportFileName[0][0]
+            fronteFilename=lReportFileName[0][1]
+
+            retroReport   =lReportFileName[1][0]
+            retroFilename =lReportFileName[1][1]
+            self.MergeFronteRetro(fronteReport, fronteFilename, retroReport, retroFilename , rptBaseOut)
+
+            from report import pdfprint
+
+
+
+
+            if old_output   =='VIEW':
+                pdfprint.PdfView(rptBaseOut)
+            elif old_output =='PRINT':
+                pdfprint.PdfPrint(rptBaseOut, old_printer, copies = old_copies, usedde=old_dde, cmdprint=old_cmdprint)
+
+        return esitoReturn
+
+    def MergeFronteRetro(self, fronteReport, fronteFile, retroReport, retroFile, outputFile):
+        #=======================================================================
+        # print '-'*80
+        # print 'unisci %s' % fronteFile
+        # print '     e %s  ==> %s' % (retroFile, outputFile)
+        #=======================================================================
+
+
+        from report.read import iReportDef
+        from pyPdf import PdfFileWriter, PdfFileReader
+        from reportlab.pdfgen import canvas
+
+        fronteDef=iReportDef(fronteReport, None)
+        frontePageDimension = [fronteDef.get_PageSetup()['pageHeight'], fronteDef.get_PageSetup()['pageWidth']]
+
+        retroDef=iReportDef(retroReport, None)
+        retroPageDimension = [retroDef.get_PageSetup()['pageHeight'], retroDef.get_PageSetup()['pageWidth']]
+
+
+
+        fronte = PdfFileReader(file(fronteFile, "rb"))
+        fronteNumPage = fronte.getNumPages()
+        retro  = PdfFileReader(file(retroFile, "rb"))
+        retroNumPage = retro.getNumPages()
+        
+        blankPage=None
+
+        if not fronteNumPage == retroNumPage:
+            blankPage = self.CreateBlankPage()
+        self.MergePdf(fronte, retro, outputFile, blankPage)
+
+    def CreateBlankPage(self):
+        c = canvas.Canvas("blankPage.pdf")
+        def hello(c):
+            c.drawString(0,0,"")
+        hello(c)
+        c.save()
+        return PdfFileReader(file("blankPage.pdf", "rb"))
+
+    def CreateMergeDict(self, fronte, retro):
+        # Produce un dizionario che per ogni foglio da produrre indica il
+        # numero di pagina del fronte e del retro da considerare.
+        # Ogni elemento del dizionario è costituito da una lista di 2 elementi
+        # il primo indica il numero della pagina del report fronte e il secondo di
+        # quello del retro. Se come numero di pagina è indicato 0 si intende che
+        # dovra essere inclusa la pagina bianca (blankPage)
+        dStampa={}
+        for i in range(max(fronte.getNumPages(), fronte.getNumPages() )):
+            l=[]
+            if i+1<=fronte.getNumPages():
+                l.append(i+1)
+            else:
+                l.append(0)
+                
+            if i+1<=retro.getNumPages():
+                l.append(i+1)
+            else:
+                l.append(0)
+            dStampa[i+1]=l
+        return dStampa
+    
+    def MergePdf(self, fronte, retro, outputFile, blankPage):
+        dStampa = self.CreateMergeDict(fronte, retro)
+                    
+        output = PdfFileWriter()
+        maxPage=max(fronte.getNumPages(), fronte.getNumPages() )
+        
+        for key in dStampa.keys():
+            nFronte = dStampa[key][0]-1
+            if nFronte>=0:
+                output.addPage(fronte.getPage(nFronte))
+            else:
+                output.addPage(blankPage.getPage(0))
+            
+            nRetro = dStampa[key][1]-1
+            if nRetro>=0:
+                output.addPage(retro.getPage(nRetro))
+            else:
+                if not key==maxPage:
+                    # aggiungo pagina bianca del retro solo se non è l'ultima pagina
+                    # per evitare di aggiungere una pagina bianca in coda.
+                    output.addPage(blankPage.getPage(0))
+            
+        outputStream = file(outputFile, "wb")
+        output.write(outputStream)
 
     def GetMultiReport(self, parent, path, name, printer, copies, emailbutton, multi_default=None, otherquestions_filler=None, can_preview=True, can_print=True):
         rptdef = None

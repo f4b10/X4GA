@@ -312,7 +312,8 @@ class print_Report:
                  multicopia_init=None,
                  multicopia_reactor=None,
                  commandprint=None,
-                 filterScreen=None):
+                 filterScreen=None,
+                 isFronteRetro=False):
         
         self.printed = False
         output=upper(output)
@@ -505,7 +506,8 @@ class print_Report:
                 else:
                     return
         
-        doprogress = progressBar is None and progressBar.__class__.__name__ != 'NullProgress' and output != "STORE"
+        doprogress = progressBar is None and progressBar.__class__.__name__ != 'NullProgress' and (output != "STORE" or isFronteRetro==True)
+        #doprogress = progressBar is None and progressBar.__class__.__name__ != 'NullProgress' 
         
         for mc in multicopia:
             
