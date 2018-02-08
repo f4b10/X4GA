@@ -40,6 +40,8 @@ from awc.controls.linktable import EVT_LINKTABCHANGED
 import magazz.dbtables as dbm
 import magazz.barcodes as bcode
 
+from reportlab.pdfbase.pdfmetrics import stringWidth
+
 import copy
 
 
@@ -451,6 +453,7 @@ class GridBody(object):
     """
     Gestione griglia dataentry dettaglio magazzino
     """
+    pangridbody = None
     def __init__(self):
         object.__init__(self)
 
@@ -745,7 +748,44 @@ class GridBody(object):
                                        refresh=True)       #refresh flag
             links.append(ltlis)
 
+
+        if self.pangridbody == None:
+            self.pangridbody = self.FindWindowById(wdr.ID_PANGRIDBODY)
+            self.pangridbody.Bind(wx.EVT_KEY_DOWN, self.OnTestGridChar)
+
+
         return links
+
+    def OnTestGridChar(self, event):
+        key = event.GetKeyCode()
+        if (key==78 or key==wx.WXK_F5) and self.dbdoc.cfgdoc.multilinee==1:
+            self.ShowMultiLineDialog()
+        event.Skip()
+
+    def ShowMultiLineDialog(self):
+        dlg=MultiLineDialog(self, cfgdoc=self.dbdoc.cfgdoc)
+        x= (475.0/259.0) * int(self.dbdoc.cfgdoc.dessize) + 5442.0/259.0
+        x = x * (7.0 / float(self.dbdoc.cfgdoc.fontsize))
+        x = x+15
+        dlg.SetSize((x,300))
+        dlg.SetMinSize(dlg.GetSize())
+        dlg.CenterOnScreen()
+        dlg.ShowModal()
+        ret=dlg.ReturnValue
+        if ret['esito']:
+            idTipMov=ret['idTipMov']
+            lRow=ret['testo']
+
+            mov = self.dbdoc.mov
+            for row in lRow:
+                self.GridBodyAddNewRow()
+                mov.MoveLast()
+                mov.id_tipmov = idTipMov
+                mov.descriz = row.encode().decode()
+            self.gridbody.ResetView()
+            self.MakeTotals()
+        dlg.Destroy()
+        
 
     def GridBodyDefEditors(self):
 
@@ -1105,7 +1145,7 @@ class GridBody(object):
             self.gridbody.ResetView()
             self.MakeTotals()
         dlg.Destroy()
-        
+
 
     def GridBodyReset(self):
         #self.gridbody.ResetView()
@@ -1836,9 +1876,170 @@ class GridBody(object):
                 self.UpdateBodyButtons()
         event.Skip()
 
+
+    def GridBodyOnMulti(self, event):
+        if self.dbdoc.cfgdoc.multilinee==1:
+            self.ShowMultiLineDialog()        
+        event.Skip()
+
+
     def UpdatePanelBody(self):
         #if self.gridbody is not None:
             #self.gridbody.ResetView()
             #self.gridbody.AutoSizeColumns()
         ##self.UpdateTotDav()
         pass
+
+
+
+
+class MultiLineDialog(aw.Dialog):
+    ReturnValue = None
+
+    def __init__(self, *args, **kwargs):
+
+        cfgdoc = self.dbpdt = kwargs.pop('cfgdoc')
+        if not kwargs.has_key('title') and len(args) < 3:
+            kwargs['title'] = "Multilinea"
+        aw.Dialog.__init__(self, *args, **kwargs)
+
+        self.panel = MultiLinePanel(self, cfgdoc=cfgdoc)
+        self.AddSizedPanel(self.panel)
+        self.Fit()
+        self.SetMinSize(self.GetSize())
+        self.CenterOnScreen()
+
+
+        cn = self.FindWindowByName
+        self.btnAbort     = cn('btnAbort')
+        self.btnAbort.Bind(wx.EVT_BUTTON, self.OnClose)
+        self.Bind(wx.EVT_CLOSE, self.OnQuit, id=self.Id)
+
+        self.InitReturnValue()
+
+
+
+    def InitReturnValue(self):
+        self.ReturnValue = {}
+        self.ReturnValue['esito']= False
+        self.ReturnValue['testo']= []
+        self.ReturnValue['idTipMov'] = 0
+
+
+
+    def OnQuit(self, event):
+        event.Skip()
+
+    def OnClose(self, event):
+        self.InitReturnValue()
+        self.Close()
+        event.Skip()
+
+class MultiLinePanel(aw.Panel):
+    elab=None
+    cfgdoc = None
+    def __init__(self, *args, **kwargs):
+        self.cfgdoc = self.dbpdt = kwargs.pop('cfgdoc')
+        aw.Panel.__init__(self, *args, **kwargs)
+        wdr.MultiLineFunc(self)
+        cn = self.FindWindowByName
+        self.selectedTesto= cn('selectedTesto')
+        self.testo        = cn('testo')
+
+        self.dbTesti= dbm.Testi()
+        self.LoadTesti()
+        msg = u''
+        self.testo.SetValue(msg)
+        self.btnConfirm   = cn('btnConfirm')
+        self.btnConfirm.Bind(wx.EVT_BUTTON, self.OnConfirm)
+        self.selectedTesto.Bind(wx.EVT_COMBOBOX, self.OnSelectTesto)
+        
+    def LoadTesti(self):
+        self.selectedTesto.Clear()
+        self.dbTesti.Retrieve()
+        for r in self.dbTesti:
+            self.selectedTesto.Append(r.descriz)
+
+    def OnSelectTesto(self, evt):
+        item = self.selectedTesto.GetValue()
+        self.dbTesti.Retrieve('descriz="%s"' % item)
+        if self.dbTesti.OneRow():
+            self.testo.SetValue(self.dbTesti.testo)
+        evt.Skip()
+
+    def OnConfirm(self, evt):
+        outTxt = self.TestoInRighe()
+        #=======================================================================
+        # for r in outTxt:
+        #     print r
+        #=======================================================================
+        self.Parent.ReturnValue['esito']= True
+        self.Parent.ReturnValue['testo']= outTxt
+        idMov = self.GetIdTipMov()
+        if not idMov==0:
+            self.Parent.ReturnValue['idTipMov'] = idMov
+            self.Parent.Close()
+        else:
+            aw.awu.MsgDialog(self, 'Impossibile procedere\nDefinire il tipo movimento descrittivo per il documento %s' % self.cfgdoc.descriz , style=wx.ICON_ERROR)
+        evt.Skip()
+
+    def GetIdTipMov(self):
+        idFound=0
+        for r in self.cfgdoc.tipmov:
+            if r.tipologia=='D':
+                idFound=r.id
+                break
+        return idFound
+
+    def Validate(self, fontName, fontSize, fieldLen):
+        lSuccess=True
+        if len(fontName)==0:
+            lSuccess=False
+        elif fontSize <= 0:
+            lSuccess=False
+        elif fieldLen <= 0:
+            lSuccess=False
+        return lSuccess
+
+    def TestoInRighe(self):
+        outTxt=[]
+        def GetLineLen(fontName, fontSize, fieldLen):
+            testString='i'*fieldLen
+            lContinue = True
+            while (lContinue):
+                if int(stringWidth(testString,fontName,fontSize)+0.99) > fieldLen:
+                    testString = testString[:-1]
+                else:
+                    lContinue=False
+            return len(testString)
+        
+        def SplitParagraph(p, fontName, fontSize, fieldLen):
+            lRow=[]
+            lWord = p.split(' ')
+            newRow=''
+            for j, word in enumerate(lWord):
+                oldRow = newRow
+                if len(newRow)==0: 
+                    newRow = word
+                else:
+                    newRow = '%s %s' % (newRow, word)
+                if int(stringWidth(newRow,fontName,fontSize)+0.99) > fieldLen:
+                    lRow.append(oldRow)
+                    newRow=word
+            lRow.append(newRow)
+            return lRow
+        
+        txt = self.testo.GetValue()
+        fontName=self.cfgdoc.font     
+        fontSize=self.cfgdoc.fontsize 
+        fieldLen=self.cfgdoc.dessize
+        
+        if self.Validate(fontName, fontSize, fieldLen):
+            lineLen=GetLineLen(fontName, fontSize, fieldLen)
+            txt = txt.replace(chr(9), '   ')
+            lParagraph = txt.split('\n')
+            for i, p in enumerate(lParagraph):
+                for r in SplitParagraph(p, fontName, fontSize, fieldLen):
+                    outTxt.append(r)
+            return outTxt
+            

@@ -531,6 +531,7 @@ class MagazzPanel(aw.Panel,\
         for cid, func in ((wdr.ID_BTNBODYNEW,  self.GridBodyOnCreate),
                           (wdr.ID_BTNBODYDEL,  self.GridBodyOnDelete),
                           (wdr.ID_BTNBODYADD,  self.GridBodyOnAdd),
+                          (wdr.ID_BTNBODYMULTI,self.GridBodyOnMulti),
                           (wdr.ID_BTNBODYPDT,  self.GridBodyOnAcqPDT),
                           (wdr.ID_BTNBODYETIC, self.GridBodyOnLabels)):
             self.Bind(wx.EVT_BUTTON, func, id=cid)
@@ -2209,6 +2210,8 @@ class MagazzPanel(aw.Panel,\
             aw.awu.MsgDialog(self, 'Il documento non è stato salvato', style=wx.ICON_WARNING|wx.OK)
             return False
 
+
+
         dispnum = False
         if doc.cfgdoc.colcg and doc.cfgdoc.caucon:
             try:
@@ -2222,6 +2225,7 @@ class MagazzPanel(aw.Panel,\
 
         saved = doc.Save()
         if saved:
+            print 'AGGIORNARE LA REGISTRAZIONE CONTABILE CON ID DEL DOCUMENTO DI MAGAZZINO id Reg.Cont.:%s  id Doc.Mag.:%s' % (doc.id_reg, doc.id)
             self.controls['butattach'].SetKey(doc.id, save=True)
             if dispnum:
                 msg = "Il documento è stato salvato con il numero %d" % doc.numdoc
@@ -2343,6 +2347,13 @@ class MagazzPanel(aw.Panel,\
             configurazione
         """
         self.SetCausale()
+
+        if self.dbdoc.cfgdoc.multilinee==1:
+            self.FindWindowByName('butmultilinea').Show()
+        else:
+            self.FindWindowByName('butmultilinea').Hide()
+
+
         wx.CallAfter(self.SetProdZoneSize)
         event.Skip()
 
