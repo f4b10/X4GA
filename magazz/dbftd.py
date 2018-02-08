@@ -669,6 +669,7 @@ class FtDif(adb.DbTable):
                         raise Exception, repr(e.args)
 
                 if new.Save():
+                    print 'AGGIORNARE LA REGISTRAZIONE CONTABILE CON ID DEL DOCUMENTO DI MAGAZZINO id Reg.Cont.:%s  id Doc.Mag.:%s' % (new.id_reg, new.id)
                     self.DocGenerato(new)
                 else:
                     raise Exception, new.GetError()
