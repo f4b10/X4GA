@@ -27,6 +27,16 @@ import glob
 import cStringIO
 
 from report.output import print_Report as PrintRpt
+
+from report.read import iReportDef
+from reportlab.pdfgen import canvas
+try:
+    from pyPdf import PdfFileWriter, PdfFileReader
+except:
+    print 'impossibile gestire fronte/retro'
+    pass
+
+
 #===============================================================================
 # from report.read import iReportDef
 # from pyPdf import PdfFileWriter, PdfFileReader
@@ -607,9 +617,7 @@ class Report:
         #=======================================================================
 
 
-        from report.read import iReportDef
-        from pyPdf import PdfFileWriter, PdfFileReader
-        from reportlab.pdfgen import canvas
+
 
         fronteDef=iReportDef(fronteReport, None)
         frontePageDimension = [fronteDef.get_PageSetup()['pageHeight'], fronteDef.get_PageSetup()['pageWidth']]
