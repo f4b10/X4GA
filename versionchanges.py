@@ -28,6 +28,20 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
+    ('1.5.54', dt.Date(2018, 2,14), (
+         ("BET1246",
+         """Consentita in sede di registrazioni contabili la possibilità di agganciare le scadenze generate a partite esistenti."""),
+         ("BET1245",
+         """Aggiunta report scadenzario sintetico totali."""),
+         ("BET1244",
+         """Aggiunta la possibilità di produrre stampe fronte retro per i documenti di magazzino."""),
+         ("BET1243",
+         """Introdotta gestione dei testi fissi richiamabili."""),
+         ("BET1242",
+         """Agginta specifiche per testi multilinea a configurazione documenti di magazzino."""),
+         ("BET1241",
+         """Agginta ai documenti di magazzino la possibilità in inserire testi multilinea."""),
+        ),),
     ('1.5.53', dt.Date(2018, 2, 5), (
          ("BET1240",
          """Consentita la modifica parziale delle registrazioni contabili già stampate su Registro Iva ma non sul Giornale Generale."""),
