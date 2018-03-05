@@ -2414,7 +2414,7 @@ ID_PANGRIDLIST = 20195
 def BodyStatFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
-    item2 = Notebook( parent, ID_BODYSTATZONE, wx.DefaultPosition, [200,160], 0 )
+    item2 = Notebook( parent, ID_BODYSTATZONE, wx.DefaultPosition, [300,160], 0 )
     item1 = item2
     
     item3 = wx.Panel( item2, -1 )

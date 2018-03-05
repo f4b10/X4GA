@@ -758,7 +758,7 @@ class GridBody(object):
 
     def OnTestGridChar(self, event):
         key = event.GetKeyCode()
-        if (key==78 or key==wx.WXK_F5) and self.dbdoc.cfgdoc.multilinee==1:
+        if key==wx.WXK_F5 and self.dbdoc.cfgdoc.multilinee==1 and self.FindWindowByName('butmultilinea').IsEnabled():
             self.ShowMultiLineDialog()
         event.Skip()
 
