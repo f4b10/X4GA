@@ -28,6 +28,17 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
+    ('1.5.55', dt.Date(2018, 2,14), (
+         ("BET1250",
+         """Aggiunta alle gestione delle tabelle anagrafiche la modalità autocode che provvede alla proposizione automatica del codice."""),
+         ("BET1249",
+         """Aggiunta alla definizione delle modalità di pagamento le informazioni necessarie alla fatturazione elettronica. La scheda aggiuntiva sarà visualizzata solo in pre4senza del plugin fatturepa."""),
+         ("BET1248",
+         """Corretto bug che inibiva la corretta esportazione in cvs dei valori numerici presenti nelle colonne calcolate delle griglie."""),
+         ("BET1247",
+         """Aggiunto a TextCtrl il metodo per rilevare la lunghezza massima attribuito al testo."""),
+        ),),
+
     ('1.5.54', dt.Date(2018, 2,14), (
          ("BET1246",
          """Consentita in sede di registrazioni contabili la possibilità di agganciare le scadenze generate a partite esistenti."""),
