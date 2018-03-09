@@ -29,7 +29,8 @@ import awc.controls.windows as aw
 class TextCtrl(wx.TextCtrl, cmix.TextCtrlMixin):
     changing = False
     lowercaseok = False
-    
+    maxLength = None    
+        
     def __init__(self, parent, id=-1, value='', pos=wx.DefaultPosition, 
                  size=wx.DefaultSize, style=0, validator=wx.DefaultValidator,
                  name=wx.TextCtrlNameStr):
@@ -55,6 +56,13 @@ class TextCtrl(wx.TextCtrl, cmix.TextCtrlMixin):
         else:
             self.PaintDisabled(self.GetValue())
         event.Skip()
+
+    def SetMaxLength(self, n):
+        self.maxLength = n
+        wx.TextCtrl.SetMaxLength(self, n)
+        
+    def GetMaxLength(self):
+        return self.maxLength
     
     def ForceUpperCase(self, fuc=True):
         self.lowercaseok = not fuc
