@@ -20,7 +20,8 @@
 # You should have received a copy of the GNU General Public License
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
-import datetime
+from datetime import datetime, date
+
 from wx.grid import GRID_VALUE_NUMBER, GRID_VALUE_FLOAT, GRID_VALUE_DATETIME,\
     GRID_VALUE_STRING, GRID_VALUE_CHOICE, GRID_VALUE_CHOICEINT
 
@@ -1733,11 +1734,13 @@ class DbGridTable(gridlib.PyGridTableBase):
                     #dal formato espresso nella griglia
                     def strdate(x):
                         if x is None: return ''
-                        if not isinstance(x, datetime.date): return ''
+                        if isinstance(x, str): x=datetime.strptime(x, '%d-%m-%Y')
+                        if not isinstance(x, date)and not isinstance(x, datetime): return ''
                         return x.Format().split(' ')[0]
                     def strdatetime(x):
                         if x is None: return ''
-                        if not isinstance(x, datetime.date): return ''
+                        if not isinstance(x, date)and not isinstance(x, datetime): return ''
+                        if not isinstance(x, date): return ''
                         return x.Format()
                     def strnum(x):
                         if x is None: return ''
@@ -1779,6 +1782,9 @@ class DbGridTable(gridlib.PyGridTableBase):
                     #d.quotechar = CSVFORMAT_QUOTECHAR
                     #d.quoting = int(CSVFORMAT_QUOTING)
 
+
+                    wait = aw.awu.WaitDialog(self.grid, message='0 /%s Esportazione dati in corso...' % len(self.data) , maximum=len(self.data))
+
                     for row in range(len(self.data)):
                         rs = []
                         for col in range(self.grid.GetNumberCols()):
@@ -1794,8 +1800,12 @@ class DbGridTable(gridlib.PyGridTableBase):
                                 rs.append(colmap[types[col]](val))
                             except:
                                 rs.append('')
+                        if row%100==0:
+                            wait.SetValue(row)
+                            wait.SetMessage('%s /%s - Esportazione dati in corso...' % (row, len(self.data)))
+                            
                         csvrs.append(rs)
-
+                    wait.Destroy()
                 writer.writerows(csvrs)
                 tmpfile.close()
 
