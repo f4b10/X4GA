@@ -28,7 +28,7 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
-    ('1.5.55', dt.Date(2018, 2,14), (
+    ('1.5.55', dt.Date(2018, 3, 8), (
          ("BET1250",
          """Aggiunta alle gestione delle tabelle anagrafiche la modalità autocode che provvede alla proposizione automatica del codice."""),
          ("BET1249",
