@@ -20,6 +20,7 @@
 # You should have received a copy of the GNU General Public License
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
+import datetime
 from wx.grid import GRID_VALUE_NUMBER, GRID_VALUE_FLOAT, GRID_VALUE_DATETIME,\
     GRID_VALUE_STRING, GRID_VALUE_CHOICE, GRID_VALUE_CHOICEINT
 
@@ -1732,14 +1733,19 @@ class DbGridTable(gridlib.PyGridTableBase):
                     #dal formato espresso nella griglia
                     def strdate(x):
                         if x is None: return ''
+                        if not isinstance(x, datetime.date): return ''
                         return x.Format().split(' ')[0]
                     def strdatetime(x):
                         if x is None: return ''
+                        if not isinstance(x, datetime.date): return ''
                         return x.Format()
                     def strnum(x):
                         if x is None: return ''
                         if isinstance(x, str):
-                            x = float(x)
+                            try:
+                                x = float(x)
+                            except:
+                                x = float(0)
                         return locale.format('%.6f', x)
                     def strbool(x):
                         if x is None: return ''
@@ -1784,7 +1790,10 @@ class DbGridTable(gridlib.PyGridTableBase):
                             if val==None:
                                 val=  self.GetValue(row, col)  
                                 
-                            rs.append(colmap[types[col]](val))
+                            try:
+                                rs.append(colmap[types[col]](val))
+                            except:
+                                rs.append('')
                         csvrs.append(rs)
 
                 writer.writerows(csvrs)
