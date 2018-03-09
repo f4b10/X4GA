@@ -321,6 +321,7 @@ class AnagPanel(aw.Panel):
     Da subclassare.
     """
     needSync = None
+    autoCode = None
 
     def __init__(self, parent, id=None, pos = wx.DefaultPosition,\
                  size = wx.DefaultSize):
@@ -384,6 +385,7 @@ class AnagPanel(aw.Panel):
 
             self.firstfocus = 'codice'
 
+            self.autoCode = False
             self.complete = True
             self.onecodeonly = None
             self.valuesearch = False
@@ -416,6 +418,10 @@ class AnagPanel(aw.Panel):
                 self.SyncManager.RemoveOldUpdate()
 
 
+    def SetAutoCode(self, autocode=False):
+        if autocode:
+            self.firstfocus = 'descriz'
+        self.autoCode = autocode
 
     def BeforeDeleteRecord(self):
         pass
@@ -1646,6 +1652,14 @@ class AnagPanel(aw.Panel):
         if self.complete:
             e = not self.valuesearch
             nn = (self.db_recno != NEW_RECORD)
+            if not nn:
+                if self.autoCode:
+                    if self.FindWindowByName("codice").GetValue()=='':
+                        obj = self.FindWindowByName("codice")
+                        #print 'componi codice di lunghezza %s per la tabella %s' % (obj.GetMaxLength(), self.db_tabname)
+                        newCode = self.GetNewCode(lenght=obj.GetMaxLength())           
+                        self.FindWindowByName("codice").SetValue(newCode)
+            
             for cid, enab in (
                 (ID_BTN_RECNEW,      e and nn),
                 (ID_BTN_COPYFROM,    e and self.db_recno == -1),
@@ -1672,6 +1686,54 @@ class AnagPanel(aw.Panel):
                                 self._accelerators[key].description = tt
                                 self.BuildAcceleratorTable()
                                 break
+
+    def GetMaxCodice(self):
+        sql = "select max(codice) FROM %s%s WHERE codice REGEXP '^[0-9]+$';" % ( self.db_schema, self.db_tabname )
+        self.db_curs.execute( sql)
+        rs = self.db_curs.fetchone()
+        if rs[0]==None:
+            ret = 0
+        else:
+            ret = int(rs[0])
+        return ret
+        
+    def GetNewCode(self, lenght=10):
+        newCode = ''
+        try:
+            newValue = self.GetMaxCodice()
+            sLen = '%03d' % lenght
+            mask = '%%%sd' % sLen            
+            newCode = mask%(newValue+1)
+            if len(newCode)>lenght:
+                newValue = self.GetFreeCode()
+                newCode = mask%(newValue) 
+        except:
+            pass           
+        
+        return newCode[-lenght:]     
+
+    def GetFreeCode(self):
+        sql = """SELECT codice, CAST(codice AS DECIMAL) + 1 available_codice 
+  FROM %s%s t
+ WHERE NOT EXISTS
+(
+  SELECT *
+    FROM %s%s
+   WHERE CAST(codice AS DECIMAL) = CAST(t.codice AS DECIMAL) + 1
+
+)
+ ORDER BY codice
+LIMIT 1"""   % (self.db_schema, self.db_tabname,self.db_schema, self.db_tabname)  
+        self.db_curs.execute( sql)
+        rs = self.db_curs.fetchone()
+        try:
+            if rs[0]==None:
+                ret = 0
+            else:
+                ret = int(rs[1])
+        except:
+            ret = 0
+        return ret
 
     def SetSearchFilter(self, sf):
         self.db_searchfilter = sf
