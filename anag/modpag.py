@@ -48,13 +48,25 @@ class ModPagSearchResultsGrid(ga.SearchResultsGrid):
         _STR = gl.GRID_VALUE_STRING
         cn = lambda x: self.db._GetFieldIndex(x)
         tab = self.tabalias
-        return (( 35, (cn('modpag_codice'),  "Cod.",           _STR, True)),
-                (240, (cn('modpag_descriz'), "Descrizione",    _STR, True)),
-                ( 50, (cn('modpag_numscad'), "#sc.",           _NUM, True)),
-                ( 50, (cn('pdcpi_codice'),   "Cod.",           _STR, True)),
-                (200, (cn('pdcpi_descriz'),  "Cassa pag.imm.", _STR, True)),
-                (  1, (cn('modpag_id'),      "#mpa",           _STR, True)),
-            )
+        col = []
+        col.append(( 35, (cn('modpag_codice'),  "Cod.",           _STR, True)))
+        col.append((240, (cn('modpag_descriz'), "Descrizione",    _STR, True)))
+        col.append(( 30, (cn('modpag_numscad'), "#sc.",           _NUM, True)))
+        col.append(( 50, (cn('pdcpi_codice'),   "Cod.",           _STR, True)))
+        col.append((200, (cn('pdcpi_descriz'),  "Cassa pag.imm.", _STR, True)))
+        
+        
+        try:
+            import fatturapa_plugin
+            col.append((30, (cn('modpag_ftel_tippag'),  "Tipo", _STR, True)))
+            col.append((30, (cn('modpag_ftel_modpag'),  "Mod.", _STR, True)))
+        except:
+            pass
+                    
+        
+        col.append((  1, (cn('modpag_id'),      "#mpa",           _STR, True)))
+        
+        return col
 
     def SetColumn2Fit(self):
         self.SetFitColumn(1)
@@ -98,6 +110,13 @@ class ModPagPanel(ga.AnagPanel):
                           (wdr.ID_ASKSPESE, 'askspese')):
             ctr = self.FindWindowById(cid)
             ctr.SetDataLink(name, { True: 1, False: 0 })
+
+        try:
+            import fatturapa_plugin
+        except:
+            nb = self.FindWindowById(wdr.ID_NOTEBOOK)
+            if nb.GetPageCount()==2:
+                nb.DeletePage(1)
 
         return p
 
