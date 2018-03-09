@@ -1738,6 +1738,8 @@ class DbGridTable(gridlib.PyGridTableBase):
                         return x.Format()
                     def strnum(x):
                         if x is None: return ''
+                        if isinstance(x, str):
+                            x = float(x)
                         return locale.format('%.6f', x)
                     def strbool(x):
                         if x is None: return ''
@@ -1778,6 +1780,10 @@ class DbGridTable(gridlib.PyGridTableBase):
                                 val = self.GetDataValue(row, col)
                             except:
                                 val = self.GetValue(row, col)
+                                
+                            if val==None:
+                                val=  self.GetValue(row, col)  
+                                
                             rs.append(colmap[types[col]](val))
                         csvrs.append(rs)
 
