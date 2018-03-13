@@ -1235,12 +1235,16 @@ class staticText(elemento_Testuale):
 
 
     def set_attributiTesto(self):
+        try:
+            val=unicode(self.testo)
+        except:
+            val=self.testo
         if self.isBold:
-            self.testo='<b>' + unicode(self.testo) + '</b>'
+            self.testo='<b>' + val + '</b>'
         if self.isItalic:
-            self.testo='<i>' + unicode(self.testo) + '</i>'
+            self.testo='<i>' + val + '</i>'
         if self.isUnderline:
-            self.testo='<u>' + unicode(self.testo) + '</u>'
+            self.testo='<u>' + val + '</u>'
         
     def format(self, oCanvas):
         if self.isStretchWithOverflow:
