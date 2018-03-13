@@ -286,7 +286,7 @@ class VendAziPrivPanel(aw.Panel):
             aw.awu.MsgDialog(self, "Nessun registro selezionato")
             return
         ven.AddFilter('reg.id_regiva IN (%s)' % ', '.join(map(str, ri)))
-        ven.SetDebug()
+        #ven.SetDebug()
         ven.AddFilter('reg.datreg>=%s', d1)
         ven.AddFilter('reg.datreg<=%s', d2)
         if not ven.Retrieve():
