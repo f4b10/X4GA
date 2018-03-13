@@ -3233,6 +3233,9 @@ class Azienda(object):
                 [ 'cicfine',    "DECIMAL",  IVI, DVI, "Cred.Compens. disponib. a fine liq.", None ],
                 [ 'topeatt',    "DECIMAL",  IVI, DVI, "Totale operazioni attive", None ],
                 [ 'topepas',    "DECIMAL",  IVI, DVI, "Totale operazioni passive", None ],
+                [ 'extra',      "VARCHAR",   48,None, "IVA Descrizione extra", None ],
+                [ 'extra1',     "DECIMAL",  IVI, DVI, "IVA extra1", None ],
+                [ 'extra2',     "DECIMAL",  IVI, DVI, "IVA extra1", None ],
                 ]
 
             cls.liqiva_indexes = [ ["PRIMARY KEY", "id"],
