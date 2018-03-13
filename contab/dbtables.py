@@ -2289,6 +2289,7 @@ class LiqIva(adb.DbTable):
                     'vencor1', 'vencor2', #corrispettivi
                     'venven1', 'venven2', #ventilazione
                     'acqnor1', 'acqnor2', #acquisti
+                    'extra1',  'extra2',  #extra
                     'acqcee1', 'acqcee2', #acquisti cee
                     'tivper1', 'tivper2', #totale iva periodo
                     'vensos1', 'vensos2', #vendite split payment
@@ -2488,7 +2489,7 @@ class LiqIva(adb.DbTable):
         mt = self._totali
         #calcolo del debito/credito
         mt['tivper1'] = mt['tivper2'] = 0
-        for key in ('vennor', 'vencor', 'venven', 'acqnor', 'acqcee'):
+        for key in ('vennor', 'vencor', 'venven', 'acqnor', 'acqcee', 'extra'):
             for col in '12':
                 mt['tivper'+col] += mt[key+col]
         sl = mt['tivper1']-mt['tivper2']

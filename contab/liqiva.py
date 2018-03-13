@@ -354,6 +354,7 @@ class LiqIvaPanel(aw.Panel):
             cn('trim').SetSelection(trim)
         cn('anno').SetValue(anno)
         cn('tipoper').SetSelection(0)
+        cn('extra').SetMaxLength(48)
 
         lastnum = lastdat = None
         p = self.dbliq._progr
@@ -414,6 +415,7 @@ class LiqIvaPanel(aw.Panel):
             (EVT_DATECHANGED,    self.OnDateChanged,     wdr.ID_DATMIN),\
             (wx.EVT_RADIOBOX,    self.OnPeriodicChanged, wdr.ID_TIPOPER),
             (wx.EVT_TEXT,        self.OnAnnoChanged,     wdr.ID_ANNO),
+            (wx.EVT_TEXT,        self.OnExtraChanged,     wdr.ID_EXTRA),
             (wx.EVT_RADIOBOX,    self.OnMeseChanged,     wdr.ID_MESE),
             (wx.EVT_RADIOBOX,    self.OnTrimChanged,     wdr.ID_TRIM),
             (wx.EVT_RADIOBOX,    self.OnTipRegChanged,   wdr.ID_TIPREG)):
@@ -426,7 +428,8 @@ class LiqIvaPanel(aw.Panel):
         self.calcdigit = ('vennor1', 'vennor2', 'vencor1', 'vencor2',
                           'venven1', 'venven2', 'acqnor1', 'acqnor2',
                           'vensos1', 'vensos2', 'ivaind1', 'ivaind2',
-                          'vendif1', 'vendif2')
+                          'vendif1', 'vendif2', 'acqcee1', 'acqcee2',
+                          'extra1',  'extra2')
 
         self.calccalc = ('tivper1', 'tivper2', 'docper1', 'docper2')
 
@@ -593,6 +596,26 @@ class LiqIvaPanel(aw.Panel):
             self.UpdateLastLiq()
         event.Skip()
 
+    def OnExtraChanged(self, event):
+        cn = self.FindWindowByName
+        obj = event.GetEventObject()
+        txt = obj.GetValue()
+        enable = len(txt)>0
+        #=======================================================================
+        # if len(txt)>0:
+        #     print txt, 'abilita'
+        # else:
+        #     print txt, 'disabilita'
+        #=======================================================================
+        for n in ['extra1', 'extra2' ]:
+            if not enable:
+                cn(n).SetValue(0)
+            cn(n).Enable(enable)
+        event.Skip()
+
+
+
+
     def SetYear(self, year):
         r = self.dbstatus
         r.SetYear(year)
@@ -720,7 +743,11 @@ class LiqIvaPanel(aw.Panel):
                     setattr(db, col, tot[col])
             if wz == 2:
                 #calcolo debito/credito
-                rn = 'Liquidazione IVA - Calcolo del Debito-Credito'
+                if tot['extra1']==0 and tot['extra2']==0: 
+                    rn = 'Liquidazione IVA - Calcolo del Debito-Credito'
+                else:
+                    rn = 'Liquidazione IVA - Calcolo del Debito-Credito con extra'
+                    setattr(db, 'extra', self.FindWindowByName('extra').GetValue())
             else:
                 #prospetto di liquidazione
                 rn = 'Liquidazione IVA - Prospetto di Liquidazione'
