@@ -51,19 +51,16 @@ class ModPagSearchResultsGrid(ga.SearchResultsGrid):
         col = []
         col.append(( 35, (cn('modpag_codice'),  "Cod.",           _STR, True)))
         col.append((240, (cn('modpag_descriz'), "Descrizione",    _STR, True)))
-        col.append(( 30, (cn('modpag_numscad'), "#sc.",           _NUM, True)))
+        col.append(( 30, (cn('modpag_numscad'), "n.scad.",           _NUM, True)))
         col.append(( 50, (cn('pdcpi_codice'),   "Cod.",           _STR, True)))
         col.append((200, (cn('pdcpi_descriz'),  "Cassa pag.imm.", _STR, True)))
-        
-        
         try:
-            import fatturapa_plugin
-            col.append((30, (cn('modpag_ftel_tippag'),  "Tipo", _STR, True)))
-            col.append((30, (cn('modpag_ftel_modpag'),  "Mod.", _STR, True)))
+            from fatturapa_ver import VERSION_STRING
+            if VERSION_STRING >= '1.1.17':
+                col.append((30, (cn('modpag_ftel_tippag'),  "Tipo", _STR, True)))
+                col.append((30, (cn('modpag_ftel_modpag'),  "Mod.", _STR, True)))                
         except:
-            pass
-                    
-        
+            pass        
         col.append((  1, (cn('modpag_id'),      "#mpa",           _STR, True)))
         
         return col
@@ -111,13 +108,18 @@ class ModPagPanel(ga.AnagPanel):
             ctr = self.FindWindowById(cid)
             ctr.SetDataLink(name, { True: 1, False: 0 })
 
+        viewFtel = False
         try:
-            import fatturapa_plugin
+            from fatturapa_ver import VERSION_STRING
+            if VERSION_STRING >= '1.1.17':
+                    viewFtel = True
         except:
+            pass   
+
+        if not viewFtel:
             nb = self.FindWindowById(wdr.ID_NOTEBOOK)
             if nb.GetPageCount()==2:
                 nb.DeletePage(1)
-
         return p
 
     def UpdateCalcs(self):
