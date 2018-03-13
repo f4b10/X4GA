@@ -1104,7 +1104,7 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
                         if not db.IsEmpty():
                             if err:
                                 err += '\n'
-                            err = '%s è già presente su:\n' % des
+                            err = "%s e' gia' presente su:\n" % des
                             err += '\n'.join(['%s %s' % (db.pdc.codice,
                                                          db.pdc.descriz)])
             if err:
