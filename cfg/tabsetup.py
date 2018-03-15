@@ -1325,6 +1325,34 @@ UPDATE `cfgsetup`
                                     ADD COLUMN `authtls` TINYINT(1) AFTER `authpswd`""")
 
 #            if oldver<'1.4.52' and ok:
+
+            if oldver>'1.5.55'  and ok:
+                moveDatiFtel= False
+                try:
+                    from fatturapa_ver import VERSION_STRING
+                    if VERSION_STRING >= '1.1.17':
+                        moveDatiFtel = True
+                except:
+                    pass
+                if moveDatiFtel:
+                    c = db._dbCon.cursor()
+                    c.execute(r"""SELECT count(ftel_codice) FROM clienti c where  not length(ftel_codice)=0""")
+                    n = c.fetchone()[0]
+                    if n==0:
+                        dbPdc = adb.DbTable(bt.TABNAME_PDC)
+                        dbCli = adb.DbTable(bt.TABNAME_CLIENTI)
+                        dbPdc.AddFilter('ftel_codice is not null')
+                        dbPdc.Retrieve()
+                        for i, r in enumerate(dbPdc):
+                            if len(r.ftel_codice)>0:
+                                dbCli.Retrieve('id=%s' % r.id)
+                                if dbCli.OneRow():
+                                    dbCli.ftel_flag = 1
+                                    dbCli.ftel_tipo = 'E'
+                                    dbCli.ftel_codice = r.ftel_codice
+                                    dbCli.Save()
+
+
             if ok:
 
                 #crea vista per analisi utile, ricarica e marginalità su vendite

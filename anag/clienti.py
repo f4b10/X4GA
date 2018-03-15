@@ -348,6 +348,30 @@ class ClientiPanel(pdcrel._CliForPanel):
         wdr.ClientiCardFunc( p, True )
         def cn(x):
             return self.FindWindowByName(x)
+        
+        viewFtel = False
+        try:
+            from fatturapa_ver import VERSION_STRING
+            if VERSION_STRING >= '1.1.17':
+                viewFtel = True
+        except:
+            pass
+        
+        if not viewFtel:
+            # nascondo dati per fattura elettronica se non è presente plugin fatturepa
+            ftelTipo= cn('ftel_tipo')
+            szmain = ftelTipo.GetParent().rightPanel        
+            sz = ftelTipo.Parent.ftel
+            szmain.Hide(sz, True)        
+        
+        for k in ['flag', 'tipo', 'codice', 'codsdi', 'pec']:
+            setattr(self, 'ftel_%s' % k, cn('ftel_%s' % k))
+            
+        # inizializzo label per poterle disabilitare o abilitare
+        for k in ['codice', 'codsdi', 'pec']:
+            setattr(self, 'l_ftel_%s' % k, cn('l_ftel_%s' % k))
+                    
+        
         cn('allegcf').SetDataLink('allegcf', {True:  1, False: 0})
         cn('piva').SetStateControl(cn('nazione'))
         self.InitGrigliaPrezzi()
@@ -355,7 +379,35 @@ class ClientiPanel(pdcrel._CliForPanel):
         self.Bind(EVT_LINKTABCHANGED, self.OnPdcGrpChanged, cn('id_pdcgrp'))
         self.Bind(EVT_LINKTABCHANGED, self.OnStatoChanged, cn('id_stato'))
 
+        self.ftel_flag.Bind(wx.EVT_CHECKBOX, self.OnFatturaElettronica)
+        self.ftel_tipo.Bind(wx.EVT_RADIOBOX, self.OnTipoFatturaElettronica)
+        
         return p
+
+
+    def OnFatturaElettronica(self, evt):
+        enable = evt.GetEventObject().IsChecked()
+        self.AbilitaFatturaElettronica(enable)
+        evt.Skip()
+       
+    def AbilitaFatturaElettronica(self, enable):
+        for k in ['tipo', 'codice', 'codsdi', 'pec']:
+            getattr(self, 'ftel_%s' % k).Enable(enable)
+        tipo = self.ftel_tipo.GetValue()
+        self.ftel_codice.Enable(tipo=='E' and enable)
+        self.l_ftel_codice.Enable(tipo=='E' and enable)
+        self.ftel_codsdi.Enable(tipo=='P' and enable)
+        self.l_ftel_codsdi.Enable(tipo=='P' and enable)
+        self.ftel_pec.Enable(tipo=='P' and enable)
+        self.l_ftel_pec.Enable(tipo=='P' and enable)
+        
+    def OnTipoFatturaElettronica(self, evt):
+        self.AbilitaFatturaElettronica(True)
+        evt.Skip()
+        
+        
+        
+        
 
     def OnStatoChanged(self, event):
         cn = self.FindWindowByName
@@ -439,6 +491,8 @@ class ClientiPanel(pdcrel._CliForPanel):
 
     def UpdateDataControls( self, recno ):
         pdcrel._CliForPanel.UpdateDataControls( self, recno )
+        
+        self.AbilitaFatturaElettronica(self.ftel_flag.IsChecked())
         if self.loadrelated:
             if bt.MAGSCOCAT:
                 self.LoadScontiCC()

@@ -222,6 +222,12 @@ class AziPerRadioBox(RadioBox):
         RadioBox.__init__(self, *args, **kwargs)
         self.SetDataLink(values=("A", "P"))
 
+class AziPaRadioBox(RadioBox):
+
+    def __init__(self, *args, **kwargs):
+        RadioBox.__init__(self, *args, **kwargs)
+        self.SetDataLink(values=("P", "E"))
+
 
 class CliComNotebook(wx.Notebook):
     def __init__(self, *args, **kwargs):
@@ -3799,7 +3805,8 @@ def CliForContattiFunc( parent, call_fit = True, set_sizer = True ):
     return item0
 
 ID_CTRTIPDOCPRE = 14185
-ID_COMMZONE = 14186
+ID_CHECKBOX = 14186
+ID_COMMZONE = 14187
 
 def ClientiCommFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 2, 0, 0 )
@@ -3866,7 +3873,7 @@ def ClientiCommFunc( parent, call_fit = True, set_sizer = True ):
 
     item13.Add( item15, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item1.Add( item13, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item1.Add( item13, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
     item21 = wx.StaticBox( parent, -1, "Documento di vendita predefinito" )
     item20 = wx.StaticBoxSizer( item21, wx.VERTICAL )
@@ -3942,6 +3949,7 @@ def ClientiCommFunc( parent, call_fit = True, set_sizer = True ):
     item0.Add( item1, 0, wx.GROW, 5 )
 
     item40 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    parent.rightPanel = item40
     
     item42 = wx.StaticBox( parent, -1, "Dati per le vendite" )
     item41 = wx.StaticBoxSizer( item42, wx.VERTICAL )
@@ -4007,18 +4015,75 @@ def ClientiCommFunc( parent, call_fit = True, set_sizer = True ):
 
     item40.Add( item41, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
 
-    item60 = CliComNotebook( parent, ID_COMMZONE, wx.DefaultPosition, wx.DefaultSize, 0 )
-    item59 = item60
+    item60 = wx.StaticBox( parent, -1, "Fatturazione Elettronica" )
+    item59 = wx.StaticBoxSizer( item60, wx.VERTICAL )
+    parent.ftel = item59
     
-    item61 = wx.Panel( item60, -1 )
-    ScontiFidiPanelFunc(item61, False)
-    item60.AddPage( item61, "Sconti e fido" )
+    item61 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    
+    item62 = CheckBox( parent, ID_CHECKBOX, "Invia Fattura Elettronica", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item62.SetName( "ftel_flag" )
+    item61.Add( item62, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
 
-    item40.Add( item59, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
+    item63 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    
+    item64 = AziPaRadioBox( parent, ID_RADIOBOX, "Tipo Cliente", wx.DefaultPosition, wx.DefaultSize, 
+        ["Privato B2B","Ente Pubblico"] , 1, wx.RA_SPECIFY_COLS )
+    item64.SetName( "ftel_tipo" )
+    item63.Add( item64, 0, wx.ALIGN_CENTER|wx.LEFT, 5 )
+
+    item65 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    
+    item66 = wx.StaticText( parent, ID_TEXT, "Cod.Ufficio:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item66.SetName( "l_ftel_codice" )
+    item65.Add( item66, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item67 = TextCtrl( parent, ID_TEXTCTRL, "", wx.DefaultPosition, [60,-1], 0 )
+    item67.SetName( "ftel_codice" )
+    item65.Add( item67, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item68 = wx.StaticText( parent, ID_TEXT, "Cod. SdI:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item68.SetName( "l_ftel_codsdi" )
+    item65.Add( item68, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item69 = TextCtrl( parent, ID_TEXTCTRL, "", wx.DefaultPosition, [70,-1], 0 )
+    item69.SetName( "ftel_codsdi" )
+    item65.Add( item69, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item70 = wx.StaticText( parent, ID_TEXT, "Mail.pec:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item70.SetName( "l_ftel_pec" )
+    item65.Add( item70, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item71 = MailEntryCtrl( parent, ID_TEXTCTRL, "", wx.DefaultPosition, [80,-1], 0 )
+    item71.SetName( "ftel_pec" )
+    item65.Add( item71, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item65.AddGrowableCol( 1 )
+
+    item63.Add( item65, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item63.AddGrowableCol( 1 )
+
+    item61.Add( item63, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item61.AddGrowableCol( 0 )
+
+    item59.Add( item61, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item40.Add( item59, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item73 = CliComNotebook( parent, ID_COMMZONE, wx.DefaultPosition, wx.DefaultSize, 0 )
+    item72 = item73
+    
+    item74 = wx.Panel( item73, -1 )
+    ScontiFidiPanelFunc(item74, False)
+    item73.AddPage( item74, "Sconti e fido" )
+
+    item40.Add( item72, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
 
     item40.AddGrowableCol( 0 )
 
-    item40.AddGrowableRow( 1 )
+    item40.AddGrowableRow( 2 )
 
     item0.Add( item40, 0, wx.GROW, 5 )
 
@@ -4167,15 +4232,15 @@ def CliForSpedIndFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_SM11_COGNOME = 14187
-ID_SM11_NOME = 14188
-ID_SM11_NASCDAT = 14189
-ID_SM11_NASCCOM = 14190
-ID_SM11_NASCPRV = 14191
-ID_SM11_SEDEIND = 14192
-ID_SM11_SEDECIT = 14193
-ID_SM11_SEDESTT = 14194
-ID_SM1_ASSOCIA = 14195
+ID_SM11_COGNOME = 14188
+ID_SM11_NOME = 14189
+ID_SM11_NASCDAT = 14190
+ID_SM11_NASCCOM = 14191
+ID_SM11_NASCPRV = 14192
+ID_SM11_SEDEIND = 14193
+ID_SM11_SEDECIT = 14194
+ID_SM11_SEDESTT = 14195
+ID_SM1_ASSOCIA = 14196
 
 def Spesometro2011Func( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -4266,8 +4331,8 @@ def Spesometro2011Func( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_PANGRIDPDC = 14196
-ID_BUTSAVE = 14197
+ID_PANGRIDPDC = 14197
+ID_BUTSAVE = 14198
 
 def CliFor_DatiFiscaliFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
