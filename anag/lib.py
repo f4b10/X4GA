@@ -99,6 +99,7 @@ class LinkTableProd(LinkTable, LinkTableHideSearchMixin):
     tabsearch_oncode = True
 
     def __init__(self, parent, id, name=None, **kwargs):
+        #print kwargs
         LinkTable.__init__(self, parent, id, **kwargs)
         self.digitsearch_oncode = Env.Azienda.BaseTab.MAGDIGSEARCH
         self.tabsearch_oncode = not self.digitsearch_ondescriz

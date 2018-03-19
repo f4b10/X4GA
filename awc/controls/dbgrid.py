@@ -140,6 +140,10 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
         self.FONT_SIZE  = f.GetPointSize()
 
         self.rowheight = wxinit.GetGridRowHeight()
+        #=======================================================================
+        # self.FONT_SIZE = 20
+        # self.rowheight = self.FONT_SIZE + 14
+        #=======================================================================
 
         self.SetScrollLineX(1)
 
@@ -207,8 +211,13 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
                     d = wx.NavigationKeyEvent.IsBackward
                 self.Navigate(d)
         if not do:
-            #if event.GetKeyCode() == wx.WXK_RETURN and event.ControlDown():
-            if event.GetKeyCode() == wx.WXK_RETURN and event.ShiftDown():
+            key, ctrl = (event.GetKeyCode(), event.CmdDown())
+            if ctrl and key==388:
+                self.ModifyFontSize(action=+1)
+            elif ctrl and key==390:
+                self.ModifyFontSize(action=-1)
+                self.Refresh()
+            elif event.GetKeyCode() == wx.WXK_RETURN and event.ShiftDown():
                 self.SetGridCursorNewRowCol()
             #===================================================================
             # elif event.GetKeyCode()==wx.WXK_F2:
@@ -219,6 +228,44 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
             #===================================================================
             else:
                 event.Skip()
+
+    def SetFontSize(self, size):
+        delta = size - self.FONT_SIZE
+        #=======================================================================
+        # for i in range(delta):
+        #     self.ModifyFontSize(1)
+        #=======================================================================
+        self.ModifyFontSize(delta)
+
+    def ModifyFontSize(self, action=0):
+        table = self.GetTable()
+        self.OLDFONT_SIZE = self.FONT_SIZE
+        oldFontSize = self.FONT_SIZE
+        if self.FONT_SIZE + action >4:
+            self.FONT_SIZE = max(3, self.FONT_SIZE + action)
+            # assegno altezza alle roghe del grid
+            self.rowheight = max(int((18.0/8.0*self.FONT_SIZE)+0.99),5)
+            
+            # assegno font size alle colonne
+            for i,a in enumerate(self.colAttr):
+                font = a.GetFont()
+                font.SetPointSize(self.FONT_SIZE)
+                a.SetFont(font)
+                self.colAttr[i]= a            
+            
+            # assegno ampiezza alle colonne di tipo testo
+            tab=self.GetTable()
+            for col, size in self._csize.iteritems():
+                if size>1:
+                    spec = tab.dataTypes[col].split(':')
+                    col_type = spec[0]
+                    if col_type == gridlib.GRID_VALUE_STRING:
+                        self._csize[col]=int((float(self._csize[col]) / float(oldFontSize) * float(self.FONT_SIZE))+0.99)
+            
+            
+            self.AutoSizeColumns()
+            self.SetDefaultRowSize(self.rowheight)            
+            self.ResetView()
 
     def SetGridCursorNewRowCol(self):
         if not self.canIns:
@@ -691,7 +738,7 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
             dummy = None
 
         for col, size in self._csize.iteritems():
-
+            #print 'col:%s size:%s' % (col, size)
             spec = tab.dataTypes[col].split(':')
             col_type = spec[0]
             col_char = None
@@ -742,13 +789,14 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
                     sizing_text += 'M'
                 if wx.Platform == "__WXMAC__":   # give it even a little more...
                     sizing_text += 'M'
+                    
+                coeff = float(self.FONT_SIZE) / 8.0
                 w, h = dummy.GetTextExtent(sizing_text)
                 size = w
-                size += 8
+                size += self.FONT_SIZE * coeff
                 if wx.Platform == '__WXMSW__':
-                    size += 4
+                    size += float(self.FONT_SIZE) /4.0 *coeff
                 self._csize[col] = size
-
             self.SetColMinimalWidth(col, 15)
             self.SetColSize(col, size)
 
@@ -923,7 +971,13 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
             if _type.split(":")[0] in (gridlib.GRID_VALUE_NUMBER,\
                                        gridlib.GRID_VALUE_FLOAT,\
                                        gridlib.GRID_VALUE_DATETIME):
-                attr_font = wx.Font(self.FONT_SIZE, wx.MODERN, wx.NORMAL, wx.NORMAL)
+                #===============================================================
+                # attr_font = wx.Font(self.FONT_SIZE, wx.MODERN, wx.NORMAL, wx.NORMAL)
+                #===============================================================
+                attr_font = self.DEFAULT_FONT
+                attr_font.SetPointSize(self.FONT_SIZE)
+
+
 
                 if True:#_type.split(":")[0] not in (gridlib.GRID_VALUE_DATETIME,\
                     #gridlib.GRID_VALUE_BOOL):
@@ -931,6 +985,8 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
 
             else:
                 attr_font = self.DEFAULT_FONT
+                attr_font.SetPointSize(self.FONT_SIZE)
+
 
 #            elif _type.split(":")[0] == gridlib.GRID_VALUE_DATETIME:
 #                attr_font = wx.Font(9, wx.MODERN, wx.NORMAL, wx.NORMAL)

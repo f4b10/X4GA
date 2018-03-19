@@ -45,7 +45,9 @@ except:
 
 import stormdb as adb
 
+import awc.controls.windows as aw
 import awc.util as awu
+
 
 import report_wdr as wdr
 
@@ -598,10 +600,6 @@ class Report:
             self.MergeFronteRetro(fronteReport, fronteFilename, retroReport, retroFilename , rptBaseOut)
 
             from report import pdfprint
-
-
-
-
             if old_output   =='VIEW':
                 pdfprint.PdfView(rptBaseOut)
             elif old_output =='PRINT':
@@ -610,22 +608,11 @@ class Report:
         return esitoReturn
 
     def MergeFronteRetro(self, fronteReport, fronteFile, retroReport, retroFile, outputFile):
-        #=======================================================================
-        # print '-'*80
-        # print 'unisci %s' % fronteFile
-        # print '     e %s  ==> %s' % (retroFile, outputFile)
-        #=======================================================================
-
-
-
-
         fronteDef=iReportDef(fronteReport, None)
         frontePageDimension = [fronteDef.get_PageSetup()['pageHeight'], fronteDef.get_PageSetup()['pageWidth']]
 
         retroDef=iReportDef(retroReport, None)
         retroPageDimension = [retroDef.get_PageSetup()['pageHeight'], retroDef.get_PageSetup()['pageWidth']]
-
-
 
         fronte = PdfFileReader(file(fronteFile, "rb"))
         fronteNumPage = fronte.getNumPages()
@@ -689,9 +676,29 @@ class Report:
                     # aggiungo pagina bianca del retro solo se non è l'ultima pagina
                     # per evitare di aggiungere una pagina bianca in coda.
                     output.addPage(blankPage.getPage(0))
-            
-        outputStream = file(outputFile, "wb")
-        output.write(outputStream)
+                    
+        lContinue = True
+        while lContinue:
+            try:
+                outputStream = file(outputFile, "wb")
+                output.write(outputStream)
+                lContinue=False                
+            except:
+                msg =\
+                    u"""Il documento risulta non sovrascrivibile, """\
+                    u"""probabilmente è aperto da un'altra applicazione.\n"""
+                msg += u"""Vuoi riprovare a ricoprirlo nuovamente?"""
+                n = aw.awu.MsgDialog(None, message=msg,
+                                     style=wx.ICON_QUESTION|wx.YES_NO|wx.YES_DEFAULT)
+                if n == wx.ID_NO:
+                    aw.awu.MsgDialog(None, message=u"Il documento pdf non è stato generato.")
+                    lContinue=False
+
+
+
+
+
+
 
     def GetMultiReport(self, parent, path, name, printer, copies, emailbutton, multi_default=None, otherquestions_filler=None, can_preview=True, can_print=True):
         rptdef = None

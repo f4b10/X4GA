@@ -163,6 +163,7 @@ class LinkTable(wx.Control,\
     """
     db_name = ''
     db_alias = ''
+    fontSize = None
 
     digitsearch_oncode = True
     @classmethod
@@ -227,11 +228,12 @@ class LinkTable(wx.Control,\
     _codewidth = wxinit.GetCodiceStandardWidth()#40
     _descwidth = None
 
-    def __init__(self, parent, id, pos=wx.DefaultPosition, size=wx.DefaultSize, style=wx.NO_BORDER, **lt_kwargs):
+    def __init__(self, parent, id, pos=wx.DefaultPosition, size=wx.DefaultSize, style=wx.NO_BORDER, fontSize=8, **lt_kwargs):
 
         wx.Control.__init__(self, parent, id, pos, size, style)
         cmix.ControlsMixin.__init__(self)
 
+        self.fontSize = fontSize
         self.obligatory = False
         self.currentid = None
         self.iderror = False
@@ -290,7 +292,11 @@ class LinkTable(wx.Control,\
 
 #        self._panel = wx.Panel(self, -1, style=wx.NO_BORDER)
         LinkTableGridFunc(self)#self._panel)
-
+        self.SetFontSize(self.fontSize)
+        
+        
+        
+        self.FindWindowById( ID_TXT_CODICE )
         s = wx.FlexGridSizer( 0, 1, 0, 0 )
         s.AddGrowableCol( 0 )
 #        s.Add( self._panel, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 0 )
@@ -388,6 +394,28 @@ class LinkTable(wx.Control,\
 
     def GetGridMaxDescWidth(self):
         return self._grid_maxdesc
+
+    def SetFontSize(self, size):
+        self.fontSize=size
+        w,h = self.GetSize()
+        #print self.GetSize()
+        self.SetSize((w, h/8.0*size))
+        #print self.GetSize()
+        for id in (ID_TXT_CODICE, ID_TXT_DESCRIZ):
+            c = self.FindWindowById(id)
+            f=c.GetFont()
+            f.SetPointSize(size)
+            c.SetFont(f)
+            w, h = c.GetSize()
+            if ID_TXT_CODICE:
+                w = self.GetCodeWidth()
+                w = (w/8.0)*size
+                self.SetCodeWidth(w)
+            else:
+                w = self.GetDescriptionWidth()
+                w = (w/8.0)*size
+                self.SetDescriptionWidth(w)
+            
 
     def SetFont(self, *args, **kwargs):
         for c in (self._ctrcod, self._ctrdes):
@@ -593,12 +621,18 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
            not self._ctrdes.GetValue():
             self.ResetValue()
 
+    def GetCodeWidth(self):
+        return self._codewidth
+
     def SetCodeWidth(self, cw):
         self._codewidth = cw
         def Dim():
             self._ctrcod.SetSize((cw, self._ctrcod.GetSize()[1]))
             self._setDim()
         wx.CallAfter(Dim)
+
+    def GetDescriptionWidth(self):
+        return self._descwidth
 
     def SetDescriptionWidth(self, dw):
         self._descwidth = dw
@@ -1107,7 +1141,8 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
                               valsrc=self._btncrd.IsShown(),
                               fixsrc=self.fixvaluesearch,
                               resetvs=len(self.valuesearch)>0, owner=self,
-                              shownew=btnw.IsShown() and btnw.IsEnabled())
+                              shownew=btnw.IsShown() and btnw.IsEnabled(),
+                              fontSize=self.fontSize)
         val = dlg.ShowModal()
         if val >= 0:
             self.SetValue(val)
@@ -1686,7 +1721,7 @@ class LinkTableDialog(wx.Dialog):
     def __init__(self, parent, id, title="", pos = wx.DefaultPosition,
                  size=wx.DefaultSize, style=wx.THICK_FRAME, linktab=None,
                  rs=None, colsizes=(-1, -1), valsrc=False, fixsrc=False,
-                 resetvs=False, owner=None, column2fit=1, shownew=False):
+                 resetvs=False, owner=None, column2fit=1, shownew=False, fontSize=None):
 
         wx.Dialog.__init__(self, parent, id, title, pos, size, style)
 
@@ -1710,7 +1745,9 @@ class LinkTableDialog(wx.Dialog):
         sz.AddGrowableCol(0)
         sz.AddGrowableRow(0)
 #        self.grid = dbglib.DbGridColoriAlternati(p, -1, (0,0), size)
-        self.grid = linktab.GetGridClass()(p, -1, (0,0), size)
+        cls=linktab.GetGridClass()
+        self.grid = cls(p, -1, (0,0), size)
+        #self.grid = linktab.GetGridClass()(p, -1, (0,0), size)
         self.grid.SetSearchColors()
         c3 = COLORS_LABEL
         self.grid.SetLabelTextColour(c3[0])
@@ -1722,6 +1759,10 @@ class LinkTableDialog(wx.Dialog):
             #self.grid.SetColSize(col, colsize)
             self.grid.SetColumnDefaultSize(col, colsize)
         linktab.SetDataGrid(self.grid, rs)
+        #=======================================================================
+        # print self.GetFont().GetPointSize()        
+        self.grid.SetFontSize(fontSize)
+        #=======================================================================
         self.grid.SetFitColumn(column2fit)
 #        self.grid.AutoSizeColumns()
         sz.Add(self.grid, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL)
