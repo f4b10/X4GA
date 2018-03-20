@@ -1326,7 +1326,7 @@ UPDATE `cfgsetup`
 
 #            if oldver<'1.4.52' and ok:
 
-            if oldver>'1.5.55'  and ok:
+            if oldver<'1.5.55'  and ok:
                 moveDatiFtel= False
                 try:
                     from fatturapa_ver import VERSION_STRING
