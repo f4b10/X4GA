@@ -32,7 +32,7 @@ history = (
          ("BET1252",
          """Aggiunto possibilità di specificare fontSize nel richiamo delle LinkTable"""),
          ("BET1251",
-         """Aggiunto Zoom in e Zoom out su griglie richiamati tramite tasti Ctrl++ e Ctrl+-."""),
+         """Aggiunta compatibilita con plugin per Zoom in e Zoom out su griglie richiamati tramite tasti Ctrl++ e Ctrl+-."""),
          ("BET1250",
          """Aggiunta alle gestione delle tabelle anagrafiche la modalità autocode che provvede alla proposizione automatica del codice."""),
          ("BET1249",
