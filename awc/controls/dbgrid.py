@@ -212,9 +212,16 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
                 self.Navigate(d)
         if not do:
             key, ctrl = (event.GetKeyCode(), event.CmdDown())
-            if ctrl and key==388:
+            if (ctrl and key==388) or (ctrl and key==390):
+                try:
+                    from grid_ver import VERSION_STRING
+                    if VERSION_STRING >= '1.0.01':
+                        abilita = True
+                except:
+                    abilita=False
+            if ctrl and key==388 and abilita:
                 self.ModifyFontSize(action=+1)
-            elif ctrl and key==390:
+            elif ctrl and key==390 and abilita:
                 self.ModifyFontSize(action=-1)
                 self.Refresh()
             elif event.GetKeyCode() == wx.WXK_RETURN and event.ShiftDown():
@@ -231,50 +238,37 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
 
     def SetFontSize(self, size):
         delta = size - self.FONT_SIZE
-        #=======================================================================
-        # for i in range(delta):
-        #     self.ModifyFontSize(1)
-        #=======================================================================
         self.ModifyFontSize(delta)
 
     def ModifyFontSize(self, action=0):
-        try:
-            from grid_ver import VERSION_STRING
-            if VERSION_STRING >= '1.0.01':
-                abilita = True
-        except:
-            abilita=0
-            pass        
-        
-        if abilita:
-            table = self.GetTable()
-            self.OLDFONT_SIZE = self.FONT_SIZE
-            oldFontSize = self.FONT_SIZE
-            if self.FONT_SIZE + action >4:
-                self.FONT_SIZE = max(3, self.FONT_SIZE + action)
-                # assegno altezza alle roghe del grid
-                self.rowheight = max(int((18.0/8.0*self.FONT_SIZE)+0.99),5)
-                
-                # assegno font size alle colonne
-                for i,a in enumerate(self.colAttr):
-                    font = a.GetFont()
-                    font.SetPointSize(self.FONT_SIZE)
-                    a.SetFont(font)
-                    self.colAttr[i]= a            
-                
-                # assegno ampiezza alle colonne di tipo testo
-                tab=self.GetTable()
-                for col, size in self._csize.iteritems():
-                    if size>1:
-                        spec = tab.dataTypes[col].split(':')
-                        col_type = spec[0]
-                        if col_type == gridlib.GRID_VALUE_STRING:
-                            self._csize[col]=int((float(self._csize[col]) / float(oldFontSize) * float(self.FONT_SIZE))+0.99)
-                
-                
-                self.AutoSizeColumns()
-                self.SetDefaultRowSize(self.rowheight)            
-                self.ResetView()
+        table = self.GetTable()
+        self.OLDFONT_SIZE = self.FONT_SIZE
+        oldFontSize = self.FONT_SIZE
+        if self.FONT_SIZE + action >4:
+            self.FONT_SIZE = max(3, self.FONT_SIZE + action)
+            # assegno altezza alle roghe del grid
+            self.rowheight = max(int((18.0/8.0*self.FONT_SIZE)+0.99),5)
+            
+            # assegno font size alle colonne
+            for i,a in enumerate(self.colAttr):
+                font = a.GetFont()
+                font.SetPointSize(self.FONT_SIZE)
+                a.SetFont(font)
+                self.colAttr[i]= a            
+            
+            # assegno ampiezza alle colonne di tipo testo
+            tab=self.GetTable()
+            for col, size in self._csize.iteritems():
+                if size>1:
+                    spec = tab.dataTypes[col].split(':')
+                    col_type = spec[0]
+                    if col_type == gridlib.GRID_VALUE_STRING:
+                        self._csize[col]=int((float(self._csize[col]) / float(oldFontSize) * float(self.FONT_SIZE))+0.99)
+            
+            
+            self.AutoSizeColumns()
+            self.SetDefaultRowSize(self.rowheight)            
+            self.ResetView()
 
     def SetGridCursorNewRowCol(self):
         if not self.canIns:
