@@ -510,6 +510,8 @@ class SelAziendaPanel(aw.Panel):
                 Env.Azienda.config.setReportSub()
                 aw.SetTitleAppend('(%s) %s' % (codice, nomeazi))
                 self.GetParent().EndModal(1)
+                Env.Azienda.IsZoomGridAbilitato()
+                
 
     def CheckLogin(self, nomeazi, nomedb, codice, data):
         """

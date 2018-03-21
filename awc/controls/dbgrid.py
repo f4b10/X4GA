@@ -40,6 +40,7 @@ CSVFORMAT_EXCELZERO = False
 
 YEAR4 = True
 
+import Env
 import os, tempfile
 import subprocess
 
@@ -78,6 +79,26 @@ import awc.wxinit as wxinit
 
 ASC  = 'ASC'
 DESC = 'DESC'
+
+
+
+class TestGridTerminato(wx.PopupTransientWindow):
+    """Adds a bit of text and mouse movement to the wx.PopupWindow"""
+    def __init__(self, parent, style):
+        wx.PopupTransientWindow.__init__(self, parent, style)
+        self.SetBackgroundColour("#9FFF99")
+        st = wx.StaticText(self, -1,
+                          "Zoom In e Out su griglie.\n\nPeriodo di prova terminato.\n", 
+                          pos=(10,10))
+        sz = st.GetBestSize()
+        self.SetSize( (sz.width+20, sz.height+20) )
+
+    def ProcessLeftDown(self, evt):
+        return False
+
+    def OnDismiss(self):
+        pass
+
 
 
 class DbGrid(gridlib.Grid, cmix.HelpedControl):
@@ -170,6 +191,8 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
         if self._canReorder:
             self.SetLabelTextColour(wx.BLUE)
 
+        self.isZoomOn = Env.Azienda.ZOOMGRID
+
     def GetDbColumns(self):
         #TODO: DA CONTROLLARE SE NECESSARIO
         return self._cols
@@ -212,16 +235,16 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
                 self.Navigate(d)
         if not do:
             key, ctrl = (event.GetKeyCode(), event.CmdDown())
+            
+            
             if (ctrl and key==388) or (ctrl and key==390):
-                try:
-                    from grid_ver import VERSION_STRING
-                    if VERSION_STRING >= '1.0.01':
-                        abilita = True
-                except:
-                    abilita=False
-            if ctrl and key==388 and abilita:
+                if not self.isZoomOn:
+                    self.ShowPeriodoProvaTerminato()
+                    
+            
+            if ctrl and key==388 and self.isZoomOn:
                 self.ModifyFontSize(action=+1)
-            elif ctrl and key==390 and abilita:
+            elif ctrl and key==390 and self.isZoomOn:
                 self.ModifyFontSize(action=-1)
                 self.Refresh()
             elif event.GetKeyCode() == wx.WXK_RETURN and event.ShiftDown():
@@ -235,6 +258,15 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
             #===================================================================
             else:
                 event.Skip()
+
+    def ShowPeriodoProvaTerminato(self):
+        win = TestGridTerminato(self, wx.SIMPLE_BORDER)
+        x0, y0 = self.GetScreenPosition()                    
+        w, h = self.GetSize()
+        pos = (x0+w/2, y0-40+h/2)
+        win.Position(pos, (0, 20))
+        win.Popup()                    
+        
 
     def SetFontSize(self, size):
         delta = size - self.FONT_SIZE

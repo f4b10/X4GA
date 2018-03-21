@@ -88,6 +88,40 @@ def GetAncestorByName(obj, objName):
         pass
     return foundObj
 
+
+
+#===============================================================================
+# def IsZoomGridAbilitato():
+#     ZOOMGRID=False
+#     try:
+#         from grid_ver import VERSION_STRING
+#         if VERSION_STRING >= '1.0.01':
+#             ZOOMGRID = True
+#     except:
+#         pass
+#     
+#     try:
+#         if not ZOOMGRID:
+#             curs = Azienda.DB.connection.cursor()
+#             curs.execute('select data from cfgsetup where chiave="testgrid"')
+#             rec = curs.fetchone()
+#             if rec==None:
+#                 curs.execute('INSERT INTO cfgsetup set chiave="testgrid", data="%s"' % Azienda.Login.dataElab)
+#                 ZOOMGRID= True
+#             else:
+#                 if (Azienda.Login.dataElab - rec[0]).days > 30:
+#                     ZOOMGRID = False
+#                 else:
+#                     ZOOMGRID = True
+#     except:
+#         pass
+#                 
+#     return ZOOMGRID
+#===============================================================================
+
+
+
+
 config_base_path = '.'
 plugin_base_path = './plugin'
 custom_base_path = './cust'
@@ -133,6 +167,7 @@ LICENSE_TEXT = ""
 
 
 dbservers = []
+
 
 class Setup(ConfigParser.RawConfigParser):
     types = None
@@ -678,6 +713,35 @@ class Azienda(object):
     titprivacy = ""
     infatti = ""
     codateco = ""
+    ZOOMGRID = False
+
+
+    @classmethod
+    def IsZoomGridAbilitato(cls):
+        cls.ZOOMGRID=False
+        try:
+            from grid_ver import VERSION_STRING
+            if VERSION_STRING >= '1.0.01':
+                cls.ZOOMGRID = True
+        except:
+            pass
+        
+        try:
+            if not cls.ZOOMGRID:
+                curs = Azienda.DB.connection.cursor()
+                curs.execute('select data from cfgsetup where chiave="testgrid"')
+                rec = curs.fetchone()
+                if rec==None:
+                    curs.execute('INSERT INTO cfgsetup set chiave="testgrid", data="%s"' % Azienda.Login.dataElab)
+                    cls.ZOOMGRID= True
+                else:
+                    if (Azienda.Login.dataElab - rec[0]).days > 30:
+                        cls.ZOOMGRID = False
+                    else:
+                        cls.ZOOMGRID = True
+        except:
+            pass
+        return cls.ZOOMGRID
 
     @classmethod
     def read_dati_azienda(cls, db=None):
