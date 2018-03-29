@@ -2487,7 +2487,7 @@
 		<group  name="anagrafica" >
 			<groupExpression><![CDATA[RS.ProgrAnag]]></groupExpression>
 			<groupHeader>
-			<band height="35"  isSplitAllowed="true" >
+			<band height="38"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="68"
@@ -2506,7 +2506,7 @@
 						x="68"
 						y="16"
 						width="457"
-						height="14"
+						height="10"
 						key="textField-53"/>
 					<box></box>
 					<textElement>
@@ -2553,6 +2553,66 @@
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA['Sede']]></textFieldExpression>
 				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="18"
+						y="29"
+						width="47"
+						height="1"
+						key="textField-201">
+							<printWhenExpression><![CDATA[len(RS.SedeSO_Indirizzo)>0]]></printWhenExpression>
+						</reportElement>
+					<box></box>
+					<textElement textAlignment="Right" verticalAlignment="Bottom">
+						<font size="5"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA['Stab.Organizzazione']]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="68"
+						y="26"
+						width="457"
+						height="1"
+						key="textField-202">
+							<printWhenExpression><![CDATA[len(RS.SedeSO_Indirizzo)>0]]></printWhenExpression>
+						</reportElement>
+					<box></box>
+					<textElement>
+						<font pdfFontName="Helvetica-Oblique" size="9" isItalic="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{RS.SedeSO_Indirizzo+' '+RS.SedeSO_CAP+' '+RS.SedeSO_Comune+' ('+RS.SedeSO_Provincia+') - '+RS.SedeSO_Nazione}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="18"
+						y="31"
+						width="47"
+						height="1"
+						key="textField-203">
+							<printWhenExpression><![CDATA[len(RS.RF_Piva)>0]]></printWhenExpression>
+						</reportElement>
+					<box></box>
+					<textElement textAlignment="Right" verticalAlignment="Bottom">
+						<font size="5"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA['Rappr.Fiscale']]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="68"
+						y="28"
+						width="457"
+						height="1"
+						key="textField-204">
+							<printWhenExpression><![CDATA[len(RS.RF_Piva)>0]]></printWhenExpression>
+						</reportElement>
+					<box></box>
+					<textElement>
+						<font pdfFontName="Helvetica-Oblique" size="9" isItalic="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[[RS.RF_Cognome+' / '+RS.RF_Nome, RS.RF_Denominazione][len(RS.RF_Denominazione)>0]+' - '+'P.IVA: '+RS.RF_Piva+' ('+RS.RF_IdPaese+')']]></textFieldExpression>
+				</textField>
 			</band>
 			</groupHeader>
 			<groupFooter>
@@ -2572,12 +2632,12 @@
 		<group  name="documento" minHeightToStartNewPage="70" >
 			<groupExpression><![CDATA[RS.ProgrDoc]]></groupExpression>
 			<groupHeader>
-			<band height="31"  isSplitAllowed="false" >
+			<band height="30"  isSplitAllowed="false" >
 				<staticText>
 					<reportElement
 						mode="Opaque"
 						x="168"
-						y="13"
+						y="12"
 						width="66"
 						height="15"
 						backcolor="#F0F0F0"
@@ -2592,7 +2652,7 @@
 					<reportElement
 						mode="Opaque"
 						x="95"
-						y="13"
+						y="12"
 						width="66"
 						height="15"
 						backcolor="#F0F0F0"
@@ -2607,7 +2667,7 @@
 					<reportElement
 						mode="Opaque"
 						x="22"
-						y="13"
+						y="12"
 						width="66"
 						height="15"
 						backcolor="#F0F0F0"
@@ -2623,7 +2683,7 @@
 						x="24"
 						y="0"
 						width="475"
-						height="12"
+						height="11"
 						key="textField-54"/>
 					<box></box>
 					<textElement>
@@ -2635,7 +2695,7 @@
 					<reportElement
 						mode="Opaque"
 						x="241"
-						y="13"
+						y="12"
 						width="75"
 						height="15"
 						backcolor="#F0F0F0"
@@ -2650,7 +2710,7 @@
 					<reportElement
 						mode="Opaque"
 						x="321"
-						y="13"
+						y="12"
 						width="66"
 						height="15"
 						backcolor="#F0F0F0"
@@ -2665,7 +2725,7 @@
 					<reportElement
 						mode="Opaque"
 						x="391"
-						y="13"
+						y="12"
 						width="66"
 						height="15"
 						backcolor="#F0F0F0"
@@ -2680,7 +2740,7 @@
 					<reportElement
 						mode="Opaque"
 						x="460"
-						y="13"
+						y="12"
 						width="66"
 						height="15"
 						backcolor="#F0F0F0"
@@ -3100,7 +3160,7 @@
 					<reportElement
 						mode="Opaque"
 						x="460"
-						y="0"
+						y="1"
 						width="66"
 						height="12"
 						backcolor="#EFEDED"
@@ -3115,7 +3175,7 @@
 					<reportElement
 						mode="Opaque"
 						x="391"
-						y="0"
+						y="1"
 						width="66"
 						height="12"
 						backcolor="#EFEDED"
@@ -3130,7 +3190,7 @@
 					<reportElement
 						mode="Opaque"
 						x="321"
-						y="0"
+						y="1"
 						width="66"
 						height="12"
 						backcolor="#EFEDED"
@@ -3145,7 +3205,7 @@
 					<reportElement
 						mode="Opaque"
 						x="241"
-						y="0"
+						y="1"
 						width="75"
 						height="12"
 						backcolor="#EFEDED"
@@ -3160,13 +3220,13 @@
 					<reportElement
 						mode="Opaque"
 						x="168"
-						y="0"
+						y="1"
 						width="66"
 						height="12"
 						backcolor="#EFEDED"
 						key="textField-57"/>
 					<box></box>
-					<textElement textAlignment="Right">
+					<textElement textAlignment="Right" verticalAlignment="Top">
 						<font/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[RS.Aliquota]]></textFieldExpression>
@@ -3175,13 +3235,13 @@
 					<reportElement
 						mode="Opaque"
 						x="95"
-						y="0"
+						y="1"
 						width="66"
 						height="12"
 						backcolor="#EFEDED"
 						key="textField-58"/>
 					<box></box>
-					<textElement textAlignment="Right">
+					<textElement textAlignment="Right" verticalAlignment="Top">
 						<font/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[RS.Imposta]]></textFieldExpression>
@@ -3190,13 +3250,13 @@
 					<reportElement
 						mode="Opaque"
 						x="22"
-						y="0"
+						y="1"
 						width="66"
 						height="12"
 						backcolor="#EFEDED"
 						key="textField-55"/>
 					<box></box>
-					<textElement textAlignment="Right">
+					<textElement textAlignment="Right" verticalAlignment="Top">
 						<font/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[RS.Imponibile]]></textFieldExpression>
@@ -3213,9 +3273,9 @@
 				<line direction="TopDown">
 					<reportElement
 						x="22"
-						y="-4"
+						y="-3"
 						width="0"
-						height="16"
+						height="15"
 						key="line-12"/>
 					<graphicElement stretchType="NoStretch">
 					<pen lineWidth="1.0" lineStyle="Solid"/>
@@ -3224,7 +3284,7 @@
 				<line direction="TopDown">
 					<reportElement
 						x="91"
-						y="-4"
+						y="-3"
 						width="0"
 						height="15"
 						key="line-13"/>
@@ -3235,7 +3295,7 @@
 				<line direction="TopDown">
 					<reportElement
 						x="164"
-						y="-4"
+						y="-3"
 						width="0"
 						height="15"
 						key="line-14"/>
@@ -3246,7 +3306,7 @@
 				<line direction="TopDown">
 					<reportElement
 						x="237"
-						y="-4"
+						y="-3"
 						width="0"
 						height="15"
 						key="line-15"/>
@@ -3257,7 +3317,7 @@
 				<line direction="TopDown">
 					<reportElement
 						x="318"
-						y="-4"
+						y="-3"
 						width="0"
 						height="15"
 						key="line-16"/>
@@ -3268,7 +3328,7 @@
 				<line direction="TopDown">
 					<reportElement
 						x="389"
-						y="-4"
+						y="-3"
 						width="0"
 						height="15"
 						key="line-17"/>
@@ -3279,7 +3339,7 @@
 				<line direction="TopDown">
 					<reportElement
 						x="458"
-						y="-4"
+						y="-3"
 						width="0"
 						height="15"
 						key="line-18"/>
@@ -3290,9 +3350,9 @@
 				<line direction="TopDown">
 					<reportElement
 						x="527"
-						y="-4"
+						y="-3"
 						width="0"
-						height="16"
+						height="15"
 						key="line-19"/>
 					<graphicElement stretchType="NoStretch">
 					<pen lineWidth="1.0" lineStyle="Solid"/>
