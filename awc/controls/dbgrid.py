@@ -942,14 +942,17 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
     def AutoSizeColumns(self, *args, **kwargs):
 
         if self.userSize:
-            self._fitColumn = None
+            for col, size in self.userSize.iteritems():
+                try:
+                    self.SetColSize(col, size)
+                except:
+                    pass
+        elif self._csize:
+            for col in self._csize:
+                if self._csize[col]>-1:
+                    self.SetColSize(col, self._csize[col])
         else:
-            if self._csize:
-                for col in self._csize:
-                    if self._csize[col]>-1:
-                        self.SetColSize(col, self._csize[col])
-            else:
-                gridlib.Grid.AutoSizeColumns(self, *args, **kwargs)
+            gridlib.Grid.AutoSizeColumns(self, *args, **kwargs)
 
         tab = self.GetTable()
 
