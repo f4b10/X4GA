@@ -50,7 +50,8 @@ class GiornaleGrid(dbglib.DbGridColoriAlternati):
         
         size = parent.GetClientSizeTuple()
         
-        dbglib.DbGridColoriAlternati.__init__(self, parent, -1, size=size)
+        dbglib.DbGridColoriAlternati.__init__(self, parent, -1, size=size,
+                                              idGrid='giornale')
         
         self.dbmov = dbmov
         self.dbmov.ShowDialog(self)

@@ -56,7 +56,7 @@ class GridDocRag(dbglib.DbGridColoriAlternati):
     """
     Griglia documenti estratti
     """
-    def __init__(self, parent, dbdoc):
+    def __init__(self, parent, dbdoc, idGrid=None):
         """
         Parametri:
         parent griglia  (wx.Panel)
@@ -74,7 +74,7 @@ class GridDocRag(dbglib.DbGridColoriAlternati):
         canedit = False
         canins = False
 
-        dbglib.DbGridColoriAlternati.__init__(self, parent, -1, size=size, style=0)
+        dbglib.DbGridColoriAlternati.__init__(self, parent, -1, size=size, style=0, idGrid=idGrid)
 
         links = None
 
@@ -234,7 +234,7 @@ class GridDocGen(dbglib.DbGrid):
     """
     Griglia documenti generati
     """
-    def __init__(self, parent, dbdoc):
+    def __init__(self, parent, dbdoc, idGrid=None):
         """
         Parametri:
         parent griglia  (wx.Panel)
@@ -288,7 +288,7 @@ class GridDocGen(dbglib.DbGrid):
         canedit = False
         canins = False
 
-        dbglib.DbGrid.__init__(self, parent, -1, size=size, style=0)
+        dbglib.DbGrid.__init__(self, parent, -1, size=size, style=0, idGrid=idGrid)
 
         links = None
 
@@ -318,7 +318,7 @@ class GridMovRag(dbglib.DbGrid):
     """
     Griglia dettaglio movimenti
     """
-    def __init__(self, parent, dbmov, gridFather=None):
+    def __init__(self, parent, dbmov, gridFather=None, idGrid=None):
         """
         Parametri:
         parent griglia  (wx.Panel)
@@ -354,7 +354,7 @@ class GridMovRag(dbglib.DbGrid):
         afterEdit = ( (dbglib.CELLEDIT_BEFORE_UPDATE, -1, self.OnBeforeValueChanged),
                       (dbglib.CELLEDIT_AFTER_UPDATE, -1,  self.OnAfterValueChanged),)
 
-        dbglib.DbGrid.__init__(self, parent, -1, size=size, style=0)
+        dbglib.DbGrid.__init__(self, parent, -1, size=size, style=0, idGrid=idGrid)
 
         links = None
 
@@ -677,10 +677,10 @@ class FtDifPanel(aw.Panel):
 
 
         #griglie doc/mov estratti
-        self.gridocrag = GridDocRag(cn('pgedoc'), self.ftd.docrag)
+        self.gridocrag = GridDocRag(cn('pgedoc'), self.ftd.docrag, idGrid='ftd_docestratti')
         self.gridocrag.SetStatus = self.SetStatus
 
-        self.grimovrag = GridMovRag(cn('pgemov'), self.ftd.movrag, gridFather=self.gridocrag)
+        self.grimovrag = GridMovRag(cn('pgemov'), self.ftd.movrag, gridFather=self.gridocrag, idGrid='ftd_movestratti')
         self.grimovrag.SetStatus = self.SetStatus
 
         #def MenuPopup(self, event, row):
@@ -709,8 +709,8 @@ class FtDifPanel(aw.Panel):
         self.gridocrag.Bind(gl.EVT_GRID_SELECT_CELL, self.OnDocRagSelected)
 
         #griglie doc/mov generati
-        self.gridocgen = GridDocGen(cn('pggdoc'), self.ftd.docgen)
-        self.grimovgen = GridMovGen(cn('pggmov'), self.ftd.movgen)
+        self.gridocgen = GridDocGen(cn('pggdoc'), self.ftd.docgen, idGrid='ftd_docgen')
+        self.grimovgen = GridMovGen(cn('pggmov'), self.ftd.movgen, idGrid='ftd_movgen')
 
         self.grimovgen.SetStatus=self.SetStatus
 

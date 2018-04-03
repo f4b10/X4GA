@@ -113,7 +113,7 @@ class PdcProdHistoryGrid(dbglib.DbGrid):
 
     def __init__(self, parent):
 
-        dbglib.DbGrid.__init__(self, parent, -1, size=parent.GetSize(), style=0)
+        dbglib.DbGrid.__init__(self, parent, -1, size=parent.GetSize(), style=0, idGrid='bodymov')
 
         self.dbmas = dbm.ProdMastro()
         mov = self.dbmas.mov
@@ -3250,7 +3250,7 @@ class GridSearchDoc(dbglib.DbGridColoriAlternati):
         Passare il parent della griglia (tipicamente wx.Panel)
         """
 
-        dbglib.DbGridColoriAlternati.__init__(self, parent, -1, size=parent.GetClientSizeTuple())
+        dbglib.DbGridColoriAlternati.__init__(self, parent, -1, size=parent.GetClientSizeTuple(), idGrid='eledocmag')
 
         self.dbdocs = self.MakeDbDocs()
 

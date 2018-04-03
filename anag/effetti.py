@@ -167,7 +167,7 @@ class EffettiPanel(pdcrel._PdcRelPanel):
 
     def GetSearchResultsGrid(self, parent):
         grid = EffettiResultsGrid(parent, pdcrel.ga.ID_SEARCHGRID,
-                                  self.db_tabname, self.GetSqlColumns())
+                                  self.db_tabname, self.GetSqlColumns(), idGrid='eleeffetti')
         return grid
 
 

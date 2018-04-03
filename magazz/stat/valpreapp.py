@@ -325,8 +325,11 @@ class ValutaPrezziPanel(aw.Panel, aw.awu.LimitiFiltersMixin):
         cn = self.FindWindowByName
         
         self.dbvpv = self.ValutaCostiPrezziTable()
-        self.gridvpv = self.GridClass(cn('pangridvpv'), self.dbvpv)
         
+        
+        
+        self.gridvpv = self.GridClass(cn('pangridvpv'), self.dbvpv)
+        self.gridvpv.idGrid=self.dbvpv.statftcol
         self.DefALS()
         
         for name, func in (('update', self.OnUpdateData),

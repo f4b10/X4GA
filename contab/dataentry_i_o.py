@@ -516,7 +516,7 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
         NewRow = self._GridEdit_Iva_NewRow
         afteredit = ( (dbglib.CELLEDIT_AFTER_UPDATE,  -1, TestValues), )
 
-        grid = dbglib.DbGrid(parent, -1, size=size, style=wx.SUNKEN_BORDER)
+        grid = dbglib.DbGrid(parent, -1, size=size, style=wx.SUNKEN_BORDER, idGrid='regriepva')
         grid.SetData( self.regrsi, colmap, canedit, canins,\
                       links, afteredit, NewRow )
 
@@ -891,7 +891,7 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
 
-        grid = dbglib.DbGrid(parent, -1, size=parent.GetClientSizeTuple())
+        grid = dbglib.DbGrid(parent, -1, size=parent.GetClientSizeTuple(), idGrid='regmain')
         grid.SetColMaxChar(ctb.RSDET_NOTE, bt.getStdNoteWidth())
 
         canedit = self.canedit

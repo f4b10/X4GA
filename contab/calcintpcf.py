@@ -32,13 +32,14 @@ import contab.dbtables as dbc
 
 class CalcIntPcfGrid(dbgrid.ADB_Grid):
     
-    def __init__(self, parent, dbpcf):
+    def __init__(self, parent, dbpcf, idGrid=None):
         
         self.dbpcf = pcf = dbpcf
         pdc = pcf.pdc
         cau = pcf.caus
         
-        dbgrid.ADB_Grid.__init__(self, parent, db_table=dbpcf, can_edit=False, on_menu_select='row')
+        dbgrid.ADB_Grid.__init__(self, parent, db_table=dbpcf, can_edit=False, on_menu_select='row',
+                                 idGrid=idGrid)
         
         AC = self.AddColumn
         self.COL_CAUSAL = AC(cau, 'descriz', label='Causale', col_width=120)
@@ -68,7 +69,7 @@ class CalcIntPcfPanel(aw.Panel):
         wdr.InteressiPartiteScaduteFunc(self)
         cn = self.FindWindowByName
         self.dbpcf = dbc.CalcIntPcf()
-        self.gridpcf = CalcIntPcfGrid(cn('pangridpcf'), self.dbpcf)
+        self.gridpcf = CalcIntPcfGrid(cn('pangridpcf'), self.dbpcf, idGrid='calc_interessi')
         self.UpdateData()
         self.Bind(wx.EVT_BUTTON, self.OnUpdateData, cn('butupdate'))
 #        self.Bind(wx.EVT_BUTTON, self.OnPrintData, cn('butprint'))

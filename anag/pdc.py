@@ -176,7 +176,7 @@ class PdcPanel(ga.AnagPanel, _PdcRangeCode):
     
     def GetSearchResultsGrid(self, parent):
         grid = PdcSearchResultsGrid(parent, ga.ID_SEARCHGRID, 
-                                    self.db_tabname, self.GetSqlColumns())
+                                    self.db_tabname, self.GetSqlColumns(), idGrid='elepdc')
         return grid
     
     def InitControls(self, *args, **kwargs):

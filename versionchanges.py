@@ -28,6 +28,11 @@ Riepilogo dei cambiamenti apportati alla versione
 import mx.DateTime as dt
 
 history = (
+    ('1.5.56', dt.Date(2018, 4, 4), (
+         ("BET1253",
+         """Compatibilità con X4GA-plugin.grid"""),
+        ),),
+           
     ('1.5.55', dt.Date(2018, 3, 8), (
          ("BET1252",
          """Aggiunto possibilità di specificare fontSize nel richiamo delle LinkTable"""),

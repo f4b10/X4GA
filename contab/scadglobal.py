@@ -59,9 +59,12 @@ class GridScadTot(dbglib.DbGrid):
     def __init__(self, dbscad, saldimpo, *args, **kwargs):
         
         parent = args[0]
+        idGrid=None
+        if 'idGrid' in kwargs.keys():
+            idGrid = kwargs['idGrid']
         size = parent.GetClientSizeTuple()
         
-        dbglib.DbGrid.__init__(self, parent, -1, size=size)
+        dbglib.DbGrid.__init__(self, parent, -1, size=size, idGrid=idGrid)
         
         self.dbscad = dbscad
         self.saldimpo = saldimpo
@@ -177,8 +180,12 @@ class GridPcf(dbglib.DbGrid):
         
         parent = args[0]
         size = parent.GetClientSizeTuple()
-        
-        dbglib.DbGrid.__init__(self, parent, -1, size=size)
+        idGrid=None
+        if 'idGrid' in kwargs.keys():
+            idGrid = kwargs['idGrid']
+                    
+        dbglib.DbGrid.__init__(self, parent, -1, size=size,
+                               idGrid=idGrid)
         
         self.dbpcf = dbpcf
         self.dbscad = dbscad
@@ -266,8 +273,13 @@ class GridMas(dbglib.DbGrid):
         
         parent = args[0]
         size = parent.GetClientSizeTuple()
-        
-        dbglib.DbGrid.__init__(self, parent, -1, size=size)
+
+        idGrid=None
+        if 'idGrid' in kwargs.keys():
+            idGrid = kwargs['idGrid']
+                    
+        dbglib.DbGrid.__init__(self, parent, -1, size=size,
+                               idGrid=idGrid)
         
         self.dbpcf = dbpcf
         
@@ -338,7 +350,9 @@ class ScadGlobalPanel(aw.Panel):
     title = 'Analisi Cash Flow'
     
     def __init__(self, *args, **kwargs):
-        
+
+
+        _prefixIdGrid = kwargs.pop('_prefixIdGrid')
         aw.Panel.__init__(self, *args, **kwargs)
         
         self.dbscad = dbc.PdcScadenzarioGlobale()
@@ -366,29 +380,32 @@ class ScadGlobalPanel(aw.Panel):
         self.gridpcf = None
         self.gridmas = None
         
-        self.CreateGrids()
+        self.CreateGrids(_prefixIdGrid)
         
         for cid, func in ((wdr.ID_BUTUPD,    self.OnUpdateFilters),
                           (wdr.ID_PRINTRIEP, self.OnPrintRiepilogo),
                           (wdr.ID_PRINTPCF,  self.OnPrintPartite)):
             self.Bind(wx.EVT_BUTTON, func, id=cid)
     
-    def CreateGrids(self):
+    def CreateGrids(self, _prefixIdGrid):
         
         cbi = self.FindWindowById
         cbn = self.FindWindowByName
         
         if self.gridtot is not None:
             self.gridtot.Destroy()
-        self.gridtot = GridScadTot(self.dbscad, cbn('saldimpo').GetValue(), cbi(wdr.ID_GRIDTOT))
+        self.gridtot = GridScadTot(self.dbscad, cbn('saldimpo').GetValue(), cbi(wdr.ID_GRIDTOT), 
+                                   idGrid='cf_%s_tot' % _prefixIdGrid)
         
         if self.gridpcf is not None:
             self.gridpcf.Destroy()
-        self.gridpcf = GridPcf(self.dbpcf, self.dbscad, cbi(wdr.ID_GRIDPCF))
+        self.gridpcf = GridPcf(self.dbpcf, self.dbscad, cbi(wdr.ID_GRIDPCF),
+                               idGrid='cf_%s_part' % _prefixIdGrid)
         
         if self.gridmas is not None:
             self.gridmas.Destroy()
-        self.gridmas = GridMas(self.dbpcf, cbi(wdr.ID_GRIDMAS))
+        self.gridmas = GridMas(self.dbpcf, cbi(wdr.ID_GRIDMAS),
+                               idGrid='cf_%s_mastro' % _prefixIdGrid)
         
         def OnGridTotSelected(event):
             cn = aw.awu.GetParentFrame(self).FindWindowByName
@@ -523,12 +540,14 @@ class ScadGlobalFrameBase(aw.Frame):
     _eff_yes = None
     _saldimpo = None
     _tiposaldo = None
+    _prefixIdGrid = None
+    
     
     def __init__(self, *args, **kwargs):
         if not kwargs.has_key('title') and len(args) < 3:
             kwargs['title'] = self._title
         aw.Frame.__init__(self, *args, **kwargs)
-        self.panel = ScadGlobalPanel(self, -1)
+        self.panel = ScadGlobalPanel(self, -1, _prefixIdGrid=self._prefixIdGrid )
         self.panel.title = self._title
         self.AddSizedPanel(self.panel)
         cn = self.FindWindowByName
@@ -559,7 +578,7 @@ class ScadGlobalFrame(ScadGlobalFrameBase):
     _eff_yes = True
     _saldimpo = 'S'
     _tiposaldo = 'Q'
-
+    _prefixIdGrid = 'scadenzario_globale'
 
 # ------------------------------------------------------------------------------
 
@@ -572,6 +591,7 @@ class ScadGlobalIncassiFrame(ScadGlobalFrameBase):
     _eff_yes = True
     _saldimpo = 'S'
     _tiposaldo = 'Q'
+    _prefixIdGrid = 'prev_incassi'
 
 
 # ------------------------------------------------------------------------------
@@ -585,6 +605,7 @@ class ScadGlobalPagamentiFrame(ScadGlobalFrameBase):
     _eff_yes = True
     _saldimpo = 'S'
     _tiposaldo = 'Q'
+    _prefixIdGrid = 'prev_pagamenti'
 
 
 # ------------------------------------------------------------------------------
@@ -598,6 +619,7 @@ class ScadGlobalEffettiDaEmettereFrame(ScadGlobalFrameBase):
     _eff_yes = True
     _saldimpo = 'S'
     _tiposaldo = 'S'
+    _prefixIdGrid = 'portaf_effetti'
 
 
 # ------------------------------------------------------------------------------
@@ -611,6 +633,7 @@ class ScadGlobalEffettiEmessiFrame(ScadGlobalFrameBase):
     _eff_yes = True
     _saldimpo = 'I'
     _tiposaldo = 'N'
+    _prefixIdGrid = 'scadenz_effetti'
 
 
 # ------------------------------------------------------------------------------
@@ -624,3 +647,4 @@ class ScadGlobalEffettiInsolutiApertiFrame(ScadGlobalFrameBase):
     _eff_yes = True
     _saldimpo = 'X'
     _tiposaldo = 'S'
+    _prefixIdGrid = 'scadenz_insoluti'

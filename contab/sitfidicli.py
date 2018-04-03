@@ -40,13 +40,14 @@ from magazz.dataentry import DisplayFidoDialog
 
 class SitFidiClientiGrid(dbgrid.ADB_Grid):
     
-    def __init__(self, parent, dbfid):
+    def __init__(self, parent, dbfid, idGrid=None):
         
         self.dbfid = fid = dbfid
         cli = fid.anag
         mpa = cli.modpag
         
-        dbgrid.ADB_Grid.__init__(self, parent, db_table=dbfid, can_edit=False, on_menu_select='row')
+        dbgrid.ADB_Grid.__init__(self, parent, db_table=dbfid, can_edit=False, on_menu_select='row',
+                                 idGrid=idGrid)
         
         AC = self.AddColumn
         I = self.TypeFloat(5, bt.VALINT_DECIMALS)
@@ -109,7 +110,7 @@ class SitFidiClientiPanel(aw.Panel):
         wdr.SitFidiClientiFunc(self)
         cn = self.FindWindowByName
         self.dbfid = dbm.SituazioneFidiClienti()
-        self.gridfid = SitFidiClientiGrid(cn('pangridfid'), self.dbfid)
+        self.gridfid = SitFidiClientiGrid(cn('pangridfid'), self.dbfid, idGrid='fidi_clienti')
 #        self.UpdateData()
         self.Bind(wx.EVT_BUTTON, self.OnUpdateData, cn('butupdate'))
         self.Bind(wx.EVT_BUTTON, self.OnPrintData, cn('butprint'))

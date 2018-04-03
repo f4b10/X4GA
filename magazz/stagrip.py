@@ -51,7 +51,8 @@ class GrigliaPrezziAttualiGrid(stalis.ListiniAttualiGrid):
     def __init__(self, parent, dblis, clifor):
         
         dbglib.DbGridColoriAlternati.__init__(self, parent, 
-                                              size=parent.GetSize())
+                                              size=parent.GetSize(),
+                                              idGrid='grigliaprezziattuali')
         
         self.dblis = lis = dblis
         self.clifor = clifor

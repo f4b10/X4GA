@@ -114,7 +114,7 @@ class SelDocGrid(dbglib.DbGrid):
                 return out
 
         dbglib.DbGrid.__init__(self, parent, -1, size=size,\
-                               tableClass=GridTable)
+                               tableClass=GridTable, idGrid='docmagacq')
 
         self.SetData([], colmap, canedit, canins)
 

@@ -91,7 +91,7 @@ class GridMastro(dbglib.DbGridColoriAlternati):
         parent = args[0]
         size = parent.GetClientSizeTuple()
 
-        dbglib.DbGridColoriAlternati.__init__(self, parent, -1, size=size)
+        dbglib.DbGridColoriAlternati.__init__(self, parent, -1, size=size, idGrid='mastropdc')
 
         self.dbmas = dbc.PdcMastro()
 
@@ -660,7 +660,8 @@ class CliForEmailsGrid(dbglib.DbGridColoriAlternati):
     def __init__(self, parent, dbema):
 
         dbglib.DbGridColoriAlternati.__init__(self, parent, -1,
-                                              size=parent.GetClientSizeTuple())
+                                              size=parent.GetClientSizeTuple(),
+                                              idGrid='cliformail')
 
         self.dbema = dbema
 

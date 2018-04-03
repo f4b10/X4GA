@@ -53,7 +53,8 @@ class MastriSottocontoPdcGrid(dbglib.DbGrid2Colori):
     def __init__(self, parent, dbpdc):
         
         dbglib.DbGrid2Colori.__init__(self, parent, -1, 
-                                      size=parent.GetClientSizeTuple())
+                                      size=parent.GetClientSizeTuple(),
+                                      idGrid='mastriconti')
         
         pdc = self.dbpdc = dbpdc
         mas = pdc.bilmas

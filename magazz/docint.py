@@ -77,10 +77,11 @@ class _DocIntGridMixin(object):
 
 class DocIntGrid(dbglib.DbGridColoriAlternati, _DocIntGridMixin):
 
-    def __init__(self, parent, dlg, dbdoc):
+    def __init__(self, parent, dlg, dbdoc, canedit=False, idGrid=None):
 
         dbglib.DbGridColoriAlternati.__init__(self, parent,
-                                              size=parent.GetSize())
+                                              size=parent.GetSize(),
+                                              idGrid=idGrid)
         _DocIntGridMixin.__init__(self)
         self.dbdoc = dbdoc
         self.dlg = dlg
@@ -105,7 +106,7 @@ class DocIntGrid(dbglib.DbGridColoriAlternati, _DocIntGridMixin):
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
 
-        canedit = False
+        #canedit = False
         canins = False
 
         rs = self.dbdoc.GetRecordset()
@@ -300,7 +301,7 @@ class DocIntPanel(aw.Panel):
         wdr.DocMagFunc(self)
         cn = self.FindWindowByName
         pp = self.FindWindowById(wdr.ID_PANGRIDDOC)
-        self.griddoc = DocIntGrid(pp, self, self.dbdoc)
+        self.griddoc = DocIntGrid(pp, self, self.dbdoc, idGrid='intdocmag')
         self.Bind(EVT_LINKTABCHANGED, self.OnDocChanged, cn('id_tipdoc'))
         for cid, func in ((wdr.ID_MASBUTUPD, self.griddoc.GridDocOnUpdateFilters),
                           (wdr.ID_MASBUTPRT, self.griddoc.GridDocOnPrint)):

@@ -91,7 +91,8 @@ class DocsGrid(dbglib.DbGrid):
         canedit = False
         canins = False
 
-        dbglib.DbGrid.__init__(self, parent, -1, size=size, style=0)
+        dbglib.DbGrid.__init__(self, parent, -1, size=size, style=0,
+                               idGrid='doc_differiti')
 
         links = None
 

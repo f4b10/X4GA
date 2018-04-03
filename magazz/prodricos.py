@@ -43,7 +43,8 @@ class ProdRiCosGridRiepilogo(dbglib.DbGridColoriAlternati):
     def __init__(self, parent, dbsin):
         
         dbglib.DbGridColoriAlternati.__init__(self, parent, -1, 
-                                              size=parent.GetClientSizeTuple())
+                                              size=parent.GetClientSizeTuple(),
+                                              idGrid='aggiorna_costi')
         
         self.dbsin = dbsin
         

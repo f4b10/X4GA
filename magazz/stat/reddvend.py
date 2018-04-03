@@ -53,7 +53,8 @@ class ReddVendGrid(dbgrid.ADB_Grid):
         
         self.dbtic = red = dbred
         
-        dbgrid.ADB_Grid.__init__(self, parent, db_table=dbred, can_edit=True, on_menu_select='row')
+        dbgrid.ADB_Grid.__init__(self, parent, db_table=dbred, can_edit=True, on_menu_select='row',
+                                 idGrid='redditivita')
         
         AC = self.AddColumn
         AC(dbred, 'causale', label='Causale', col_width=150)

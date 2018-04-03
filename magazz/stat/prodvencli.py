@@ -47,7 +47,8 @@ class ProdVenCliGrid(dbglib.DbGridColoriAlternati):
     def __init__(self, parent, dbfat, **kwargs):
         
         dbglib.DbGridColoriAlternati.__init__(self, parent, -1, 
-                                              size=parent.GetClientSizeTuple())
+                                              size=parent.GetClientSizeTuple(),
+                                              idGrid='sintesi_prodotti')
         
         cn = lambda db, col: db._GetFieldIndex(col, inline=True)
         

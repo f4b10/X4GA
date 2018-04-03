@@ -139,7 +139,7 @@ class DavGrid(dbglib.DbGrid):
         
         parent.SetSize((0,0))
         size = parent.GetClientSizeTuple()
-        dbglib.DbGrid.__init__(self, parent, -1, size=size)
+        dbglib.DbGrid.__init__(self, parent, -1, size=size, idGrid='regdettaglio')
         self.SetColMaxChar(ctb.RSDET_NOTE, bt.getStdNoteWidth())
         self.regrsb = regrsb
         self.owner = owner
@@ -505,7 +505,8 @@ class ScaGrid(dbglib.DbGrid):
                 return out
         
         dbglib.DbGrid.__init__(self, parent, -1, size=size, 
-                               tableClass=GridScaTable)
+                               tableClass=GridScaTable,
+                               idGrid='regsaldaconto')
         self.SetColMaxChar(RSSCA_TIPABB, 1)
         self.SetColMaxChar(RSSCA_NOTE, bt.getStdNoteWidth())
         

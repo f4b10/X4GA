@@ -50,7 +50,7 @@ class FatturatoAgentiGrid(fatpdc._FatturatoVenditeGrid):
         
         def cn(db, col):
             return db._GetFieldIndex(col, inline=True)
-        
+        self.idGrid='fatturato_agenti'
         _STR = gl.GRID_VALUE_STRING
         _VAL = bt.GetValIntMaskInfo()
         

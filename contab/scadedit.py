@@ -154,7 +154,7 @@ class GridScad(object):
         afteredit = ( (dbglib.CELLEDIT_AFTER_UPDATE,  -1,\
                        self.GridScadEditedValues), )
         
-        grid = dbglib.DbGrid(parent, -1, size=size, style=0)
+        grid = dbglib.DbGrid(parent, -1, size=size, style=0, idGrid='docmagscad')
         grid.SetData( self.dbreg.scad._info.rs, colmap,\
                       canedit, canins, links, afteredit,\
                       self.GridScadAddNewRow )

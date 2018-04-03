@@ -70,7 +70,7 @@ class PcfGrid(dbglib.DbGrid):
     Griglia partite del cliente/fornitore
     """
     
-    def __init__(self, parent):
+    def __init__(self, parent, idGrid=None):
         """
         Parametri:
         parent griglia  (wx.Panel)
@@ -91,7 +91,8 @@ class PcfGrid(dbglib.DbGrid):
                 return value
         
         dbglib.DbGrid.__init__(self, parent, -1, tableClass=Table, 
-                               size=parent.GetClientSizeTuple(), style=0)
+                               size=parent.GetClientSizeTuple(), style=0,
+                               idGrid=idGrid)
         self.data = []
         
         _STR = gl.GRID_VALUE_STRING
@@ -200,7 +201,7 @@ class AccorpaPanel(wx.Panel):
         wdr.AccorpaFunc(self)
         
         ci = lambda x: self.FindWindowById(x)
-        self.gridpcf = PcfGrid(ci(wdr.ID_PANGRIDPCF))
+        self.gridpcf = PcfGrid(ci(wdr.ID_PANGRIDPCF), idGrid='accorpa')
         t = self.gridpcf.GetTable()
         t.totacc = self.totacc
         t.totrac = self.totrac

@@ -124,6 +124,7 @@ class BanchePanel(GenericPersonalLinkedPage_Panel, DatiBancariMixin):
 class BancheGrid(GenericPersonalLinkedPage_InternalGrid):
 
     def __init__(self, *args, **kwargs):
+        kwargs['idGrid']='pagebanche'
         GenericPersonalLinkedPage_InternalGrid.__init__(self, *args, **kwargs)
 
 

@@ -44,7 +44,8 @@ class PdcPrefGrid(dbglib.DbGridColoriAlternati):
     def __init__(self, parent, dbpcp):
         
         dbglib.DbGridColoriAlternati.__init__(self, parent, -1,
-                                              size=parent.GetClientSizeTuple())
+                                              size=parent.GetClientSizeTuple(),
+                                              idGrid='pdc')
         
         self.dbpcp = dbpcp
         

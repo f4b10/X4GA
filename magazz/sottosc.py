@@ -91,7 +91,8 @@ class SottoscortaGrid(inv.GridInv):
         canins = False
         afteredit = None
         
-        grid = dbglib.DbGrid(self.parent, -1, size=size, style=0)
+        grid = dbglib.DbGrid(self.parent, -1, size=size, style=0,
+                             idGrid='inter_sottoscorta')
         grid.SetData(self.rsinv, colmap, canedit, canins)
         grid._cols=cols
         #def GridAttr(row, col, rscol, attr):

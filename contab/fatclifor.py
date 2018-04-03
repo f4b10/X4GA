@@ -59,7 +59,8 @@ class FatturatoContabileClientiFornitGrid(dbglib.DbGridColoriAlternati):
         """
         
         dbglib.DbGridColoriAlternati.__init__(self, parent, -1, 
-                                              size=parent.GetClientSizeTuple())
+                                              size=parent.GetClientSizeTuple(),
+                                              idGrid='confatclifor')
         
         self.dbfat = fat = dbfat
         

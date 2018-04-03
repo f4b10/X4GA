@@ -105,7 +105,8 @@ class _BilGrid(dbglib.DbGridColoriAlternati):
         
         dbglib.DbGridColoriAlternati.__init__(self, pp, -1, 
                                               size=pp.GetClientSizeTuple(), 
-                                              style=0, tableClass=tableClass)
+                                              style=0, tableClass=tableClass,
+                                              idGrid='bilancioverifica')
         
         self.SetDefaultRowSize(20)
         

@@ -455,7 +455,8 @@ class GrigliaPrezziGrid(dbglib.DbGridColoriAlternati):
 
         dbglib.DbGridColoriAlternati.__init__(self, parent, -1,
                                               size=parent.GetClientSizeTuple(),
-                                              style=0)
+                                              style=0,
+                                              idGrid='grigliaprezzi')
         self.dbgri = dbgri
 
         _NUM = gl.GRID_VALUE_NUMBER
@@ -1255,8 +1256,14 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
         return cmd, par
 
     def GetSearchResultsGrid(self, parent):
+        if self.pdctipo=='C':
+            idGrid = 'elecli'
+        elif self.pdctipo=='F':
+            idGrid = 'elefor'
+        else:
+            idGrid = 'elepdc'
         return CliForSearchResultsGrid(parent, ga.ID_SEARCHGRID,
-                                       self.db_tabname, self.GetSqlColumns())
+                                       self.db_tabname, self.GetSqlColumns(), idGrid=idGrid)
 
 
 # ------------------------------------------------------------------------------

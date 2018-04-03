@@ -52,7 +52,8 @@ class DestinazSearchGrid(dbglib.DbGridColoriAlternati):
     def __init__(self, parent, dbdes):
         
         dbglib.DbGridColoriAlternati.__init__(self, parent, -1, 
-                                              size=parent.GetSize())
+                                              size=parent.GetSize(),
+                                              idGrid='destinazioni_merce')
         
         self.dbdes = dbdes
         

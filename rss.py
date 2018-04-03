@@ -92,7 +92,8 @@ class RSSFeedGrid(dbglib.DbGridColoriAlternati):
     def __init__(self, parent, feed):
         
         dbglib.DbGridColoriAlternati.__init__(self, parent, -1, 
-                                              size=parent.GetClientSizeTuple())
+                                              size=parent.GetClientSizeTuple(),
+                                              idGrid='rssfeed')
         
         self.dbfeed = dbfeed = RSSFeedTable(feed)
         

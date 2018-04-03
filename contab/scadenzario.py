@@ -55,7 +55,7 @@ class GridScadTot(dbglib.DbGridColoriAlternati):
         
         size = parent.GetClientSizeTuple()
         
-        dbglib.DbGridColoriAlternati.__init__(self, parent, -1, size=size)
+        dbglib.DbGridColoriAlternati.__init__(self, parent, -1, size=size, idGrid='scadtot')
         
         self.mode = kwargs.pop('agente_mode', None)
         

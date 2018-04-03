@@ -319,6 +319,11 @@ class LinkTable(wx.Control,\
         self._btnflt.SetToolTipString('Visualizza filtro (F12)')
         self._btnflt.Show(False)
 
+        try:
+            self.SetFontSize(self.Parent.Parent.USER_FONTSIZE)
+        except:
+            pass
+
         self._ctrcod.SetName("_lt%d_codice" % self.GetId())
         self._ctrdes.SetName("_lt%d_descriz" % self.GetId())
         self._btncrd.SetName("_lt%d_button_card" % self.GetId())
@@ -729,9 +734,15 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
         self._btnflt.SetPosition((_x, 0))
         self.Refresh()
 
+
     def OnLeft_DClick(self, event):
         if not self._ctrcod.IsEditable(): return
         obj = event.GetEventObject()
+        try:
+            grid=obj.Parent.Parent.Parent
+            self.fontSize=grid.USER_FONTSIZE
+        except:
+            pass
         self.HelpChoice(obj, forceAll = True)
         #event.Skip()
 
@@ -912,7 +923,6 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
         return self._rs
 
     def HelpChoice(self, obj, showgrid=True, forceAll=False, exact=None, resetFields=True):
-
         out = False
         if self._helpInProgress:
             return out

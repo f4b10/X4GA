@@ -59,7 +59,8 @@ class VendAziPrivGrid(dbglib.DbGridColoriAlternati):
         """
         
         dbglib.DbGridColoriAlternati.__init__(self, parent, -1, 
-                                              size=parent.GetClientSizeTuple())
+                                              size=parent.GetClientSizeTuple(),
+                                              idGrid='venazipri')
         
         self.dbven = ven = dbven
         
@@ -345,7 +346,8 @@ class VenditeXAliqIVAGrid(dbglib.ADB_Grid):
         
         dbglib.ADB_Grid.__init__(self, parent, db_table=dbriep, 
                                  can_edit=False, can_insert=False, 
-                                 on_menu_select='row')
+                                 on_menu_select='row',
+                                 idGrid='venxaliqiva')
         riep = self.dbriep = dbriep
         
         NI, ND = 10, 2

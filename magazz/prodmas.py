@@ -116,7 +116,7 @@ class GridMov(maglib.GridMov):
         
         rsmas = self.dbmov.GetRecordset()
         
-        grid = dbglib.DbGrid(parent, -1, size=size, tableClass=maglib.GridTable)
+        grid = dbglib.DbGrid(parent, -1, size=size, tableClass=maglib.GridTable, idGrid='movprod')
         grid.SetData( rsmas, colmap, canedit, canins)
         grid.GetTable().dbmov = self.dbmov
         
@@ -329,7 +329,7 @@ class GridMovEva(maglib.GridMovEva):
         
         rsmas = self.dbmov.GetRecordset()
         
-        grid = dbglib.DbGrid(parent, -1, size=size, tableClass=maglib.GridTable)
+        grid = dbglib.DbGrid(parent, -1, size=size, tableClass=maglib.GridTable, idGrid='evasioni')
         grid.SetData( rsmas, colmap, canedit, canins)
         grid.GetTable().dbmov = self.dbmov
         

@@ -87,7 +87,8 @@ class SelAziendaGrid(dbglib.DbGridColoriAlternati):
     def __init__(self, parent, dbaz, *args, **kwargs):
 
         dbglib.DbGridColoriAlternati.__init__(self, parent,
-                                              size=parent.GetClientSizeTuple())
+                                              size=parent.GetClientSizeTuple(),
+                                              idGrid='seleazienda')
 
         self.dbaz = dbaz
 
@@ -511,7 +512,16 @@ class SelAziendaPanel(aw.Panel):
                 aw.SetTitleAppend('(%s) %s' % (codice, nomeazi))
                 self.GetParent().EndModal(1)
                 Env.Azienda.IsZoomGridAbilitato()
-                
+                import os
+                l=[]
+                l.append(Env.config_base_path)        
+                l.append('layout')
+                l.append('user_%s' % Env.Azienda.Login.usercode)      
+                try:
+                    newPath = os.path.join(*l) 
+                    Env.Azienda.Login.userLayout = os.listdir(newPath)
+                except:
+                    Env.Azienda.Login.userLayout = []
 
     def CheckLogin(self, nomeazi, nomedb, codice, data):
         """

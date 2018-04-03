@@ -136,7 +136,8 @@ class GridInv(object):
         canins = False
         afteredit = None
         
-        grid = dbglib.DbGrid(self.parent, -1, size=size, style=0)
+        grid = dbglib.DbGrid(self.parent, -1, size=size, style=0,
+                             idGrid='inter_inventario')
         grid.SetData(self.rsinv, colmap, canedit, canins)
         grid._cols=cols
         

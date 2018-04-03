@@ -339,7 +339,7 @@ class ContabPanelTipo_C(ctb.ContabPanel,
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
         
-        grid = dbglib.DbGrid(parent, -1, size=size, style=wx.SUNKEN_BORDER)
+        grid = dbglib.DbGrid(parent, -1, size=size, style=wx.SUNKEN_BORDER, idGrid='regaltrodett')
         grid.SetColMaxChar(ctb.RSDET_NOTE, bt.getStdNoteWidth())
         
         canedit = self.canedit

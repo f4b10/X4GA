@@ -54,7 +54,7 @@ class PdcIntMagDocGrid(dbglib.DbGridColoriAlternati, docint._DocIntGridMixin):
     def __init__(self, parent, dbdoc, **kwargs):
         
         dbglib.DbGridColoriAlternati.__init__(self, parent, -1, 
-                                              size=parent.GetClientSizeTuple())
+                                              size=parent.GetClientSizeTuple(), idGrid='interdoc')
         docint._DocIntGridMixin.__init__(self)
         
         def cn(db, col):
@@ -147,7 +147,8 @@ class PdcIntMagMovGrid(dbglib.DbGridColoriABlocchi):
     def __init__(self, parent, dbmov, **kwargs):
         
         dbglib.DbGridColoriABlocchi.__init__(self, parent, -1, 
-                                             size=parent.GetClientSizeTuple())
+                                             size=parent.GetClientSizeTuple(),
+                                             idGrid='intermov')
         
         cn = lambda db, col: db._GetFieldIndex(col, inline=True)
         self.SetColonnaDelta(cn(dbmov, 'id_doc'))
@@ -261,7 +262,8 @@ class PdcIntMagFtProdGrid(dbglib.DbGridColoriAlternati):
     def __init__(self, parent, dbfat, **kwargs):
         
         dbglib.DbGridColoriAlternati.__init__(self, parent, -1, 
-                                              size=parent.GetClientSizeTuple())
+                                              size=parent.GetClientSizeTuple(),
+                                              idGrid='ftprod')
         
         cn = lambda db, col: db._GetFieldIndex(col, inline=True)
         
@@ -314,7 +316,8 @@ class PdcIntMagFatCatArtGrid(dbglib.DbGridColoriAlternati):
     def __init__(self, parent, dbfat):
         
         dbglib.DbGridColoriAlternati.__init__(self, parent, -1, 
-                                              size=parent.GetClientSizeTuple())
+                                              size=parent.GetClientSizeTuple(),
+                                              idGrid='magfatcatart')
         
         def cn(db, col):
             return db._GetFieldIndex(col, inline=True)
@@ -367,7 +370,8 @@ class PdcIntMagFatProGrid(dbglib.DbGridColoriAlternati):
     def __init__(self, parent, dbfat):
         
         dbglib.DbGridColoriAlternati.__init__(self, parent, -1, 
-                                              size=parent.GetClientSizeTuple())
+                                              size=parent.GetClientSizeTuple(),
+                                              idGrid='intmagfatprod')
         
         def cn(db, col):
             return db._GetFieldIndex(col, inline=True)

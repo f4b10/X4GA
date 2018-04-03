@@ -54,7 +54,7 @@ class FatturatoProdottiGrid(fatpdc._FatturatoVenditeGrid):
         
         def cn(tab, col):
             return tab._GetFieldIndex(col, inline=True)
-        
+        self.idGrid='fatturatoprod'
         _STR = gl.GRID_VALUE_STRING
         _QTA = bt.GetMagQtaMaskInfo()
         _VAL = bt.GetValIntMaskInfo()
@@ -133,6 +133,7 @@ class FatturatoProCliGrid(FatturatoProdottiGrid):
         def cn(tab, col):
             return tab._GetFieldIndex(col, inline=True)
         
+        self.idGrid='fatturato_prodcli'
         _STR = gl.GRID_VALUE_STRING
         _QTA = bt.GetMagQtaMaskInfo()
         _VAL = bt.GetValIntMaskInfo()

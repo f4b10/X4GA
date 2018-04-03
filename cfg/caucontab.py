@@ -307,7 +307,8 @@ class CauContabPanel(ga.AnagPanel):
 
     def GetSearchResultsGrid(self, parent):
         grid = CauContabSearchResultsGrid(parent, ga.ID_SEARCHGRID,
-                                          self.db_tabname, self.GetSqlColumns())
+                                          self.db_tabname, self.GetSqlColumns(),
+                                          idGrid='setup_caucon')
         return grid
 
     def OnTrasmitChanged(self, event):

@@ -61,7 +61,9 @@ class ScontiCategoriaGrid(dbglib.ADB_Grid):
 
     def __init__(self, parent, dbscc):
 
-        dbglib.ADB_Grid.__init__(self, parent, db_table=dbscc, can_edit=True, can_insert=True, on_menu_select='row')
+        dbglib.ADB_Grid.__init__(self, parent, db_table=dbscc, can_edit=True, can_insert=True, 
+                                 on_menu_select='row',
+                                 idGrid='sconticategoria')
 
         self.dbscc = dbscc
         self.id_pdc = None

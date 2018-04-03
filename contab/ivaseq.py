@@ -51,7 +51,8 @@ class CtrIvaSeqRisGrid(dbglib.DbGridColoriAlternati):
     def __init__(self, parent, db):
         
         dbglib.DbGridColoriAlternati.__init__(self, parent, -1, 
-                                              size=parent.GetClientSizeTuple())
+                                              size=parent.GetClientSizeTuple(),
+                                              idGrid='checkseqprot')
         
         self.dbris = db
         

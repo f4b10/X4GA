@@ -636,7 +636,7 @@ class GridBody(object):
         editors = self.GridBodyDefEditors()
         afteredit = self.GridBodyDefAfterEdit()
 
-        grid = dbglib.DbGrid(parent, -1, size=size, tableClass=self.GridBodyGetTable())
+        grid = dbglib.DbGrid(parent, -1, size=size, tableClass=self.GridBodyGetTable(), idGrid='magbody')
 
         #imposto lungh. max. su campi char
         stru = bt.tabelle[bt.TABSETUP_TABLE_MOVMAG_B][bt.TABSETUP_TABLESTRUCTURE]

@@ -55,7 +55,7 @@ class _FatturatoVenditeGrid(dbglib.DbGridColoriAlternati):
     def __init__(self, parent, dbfat):
         
         self.dbfat = dbfat
-        
+        self.idGrid = None
         coldef = self.GetColDef()
         sizes =  [c[0] for c in coldef]
         colmap = [c[1] for c in coldef]
@@ -65,7 +65,8 @@ class _FatturatoVenditeGrid(dbglib.DbGridColoriAlternati):
         
         dbglib.DbGridColoriAlternati.__init__(self, 
                                               parent, 
-                                              size=parent.GetClientSizeTuple())
+                                              size=parent.GetClientSizeTuple(),
+                                              idGrid=self.idGrid)
         
         self.SetData(dbfat.GetRecordset(), colmap, canedit, canins)
         
@@ -215,7 +216,7 @@ class FatturatoClientiGrid(_FatturatoVenditeGrid):
         
         def cn(tab, col):
             return tab._GetFieldIndex(col, inline=True)
-        
+        self.idGrid = 'fatturatovenditecli'
         _STR = gl.GRID_VALUE_STRING
         _VAL = bt.GetValIntMaskInfo()
         
@@ -280,7 +281,7 @@ class FatturatoCliCatArtGrid(_FatturatoVenditeGrid):
         
         def cn(tab, col):
             return tab._GetFieldIndex(col, inline=True)
-        
+        self.idGrid = 'fatturatovenditeclicat'
         _STR = gl.GRID_VALUE_STRING
         _VAL = bt.GetValIntMaskInfo()
         
@@ -374,7 +375,10 @@ class FatturatoFornitoriPanel(_FatturatoVenditePanel):
     def InitGrid(self):
         self.gridfat = FatturatoClientiGrid(self.FindWindowByName('pangridfat'), 
                                             self.dbfat)
-    
+        self.gridfat.idGrid='fatturatoacquistifor'
+        
+        
+        
     def OnUpdate(self, event):
         self.UpdateData(self.dbfat, self.gridfat)
         event.Skip()
@@ -405,6 +409,7 @@ class FatturatoForCatArtPanel(_FatturatoVenditePanel):
     def InitGrid(self):
         self.gridfat = FatturatoCliCatArtGrid(self.FindWindowByName('pangridfat'), 
                                               self.dbfat)
+        self.gridfat.idGrid='fatturatoacquisticat'
     
     def OnUpdate(self, event):
         self.UpdateData(self.dbfat, self.gridfat)

@@ -45,7 +45,8 @@ class QuadRegGrid(dbglib.DbGridColoriAlternati):
     def __init__(self, parent, dbquad):
         
         dbglib.DbGridColoriAlternati.__init__(self, parent, -1, 
-                                              size=parent.GetClientSizeTuple())
+                                              size=parent.GetClientSizeTuple(),
+                                              idGrid='checkquadratura')
         
         self.dbquad = dbquad
         

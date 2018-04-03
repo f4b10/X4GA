@@ -54,7 +54,7 @@ class _MagazzPanel_O_Mixin(object):
         if bt.TIPO_CONTAB == "O":
             #ordinaria
             self.gridtotpdc = GridTotPdc_O(ci(wdr.ID_PANGRIDTOTPDC),\
-                                           self.dbdoc._info.totpdc)
+                                           self.dbdoc._info.totpdc, idGrid='totpdc')
             ci(wdr.ID_TOTSPLIT).SetSashPosition(400)
             ci(wdr.ID_TOTSPLIT).SetSashGravity(.6)
             self.gridtotiva = GridTotIva(ci(wdr.ID_PANGRIDTOTIVA),\
@@ -62,7 +62,7 @@ class _MagazzPanel_O_Mixin(object):
         else:
             #semplificata
             self.gridtotpdc = GridTotPdc_S(ci(wdr.ID_PANGRIDTOTPDC),\
-                                           self.dbdoc._info.totpdc)
+                                           self.dbdoc._info.totpdc, idGrid='totpdcs')
             self.gridtotiva = None
         self.GridScad_Init(ci(wdr.ID_SCADPANGRID))
         self.gridscad.SetColMaxChar(self.dbdoc.regcon.scad._GetFieldIndex('note', inline=True), 15)
@@ -225,7 +225,7 @@ class GridTotIva(dbglib.DbGridColoriAlternati):
     def __init__(self, parent, rs):
         #costruzione griglia totali x aliquota iva
         size = parent.GetClientSizeTuple()
-        dbglib.DbGridColoriAlternati.__init__(self, parent, -1, size=size, style=0)
+        dbglib.DbGridColoriAlternati.__init__(self, parent, -1, size=size, style=0, idGrid='docmagtotiva')
         
         _STR = gl.GRID_VALUE_STRING
         _FLT = bt.GetValIntMaskInfo()
@@ -262,10 +262,14 @@ class GridTotPdc_O(dbglib.DbGridColoriAlternati):
     Gestione griglia totali su sottoconti di costo/ricavo x dataentry 
     mag. su contab. ordinaria
     """
-    def __init__(self, parent, rs):
+    def __init__(self, parent, rs, **kwargs):
+        
+        idGrid=None
+        if 'idGrid' in kwargs:
+            idGrid=kwargs.pop('idGrid')          
         #costruzione griglia totali x sottoconto di costo/ricavo
         size = parent.GetClientSizeTuple()
-        dbglib.DbGridColoriAlternati.__init__(self, parent, -1, size=size, style=0)
+        dbglib.DbGridColoriAlternati.__init__(self, parent, -1, size=size, style=0, idGrid=idGrid)
         self.rs = rs
         self._hilitepdcerr = False
         

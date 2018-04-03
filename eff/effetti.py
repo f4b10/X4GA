@@ -239,7 +239,7 @@ class EffGrid(dbglib.DbGridColoriAlternati):
     """
     Griglia effetti
     """
-    def __init__(self, parent, dbeff):
+    def __init__(self, parent, dbeff, idGrid=None):
         """
         Parametri:
         parent griglia  (wx.Panel)
@@ -247,7 +247,8 @@ class EffGrid(dbglib.DbGridColoriAlternati):
         """
 
         dbglib.DbGridColoriAlternati.__init__(self, parent, -1,
-                                              size=parent.GetClientSizeTuple())
+                                              size=parent.GetClientSizeTuple(),
+                                              idGrid=idGrid)
 
         self.dbeff = dbeff
 
@@ -479,7 +480,7 @@ class EmiEffettiPanel(wx.Panel):
 
         cn(wdr.ID_DATDIST).SetValue(Env.Azienda.Esercizio.dataElab)
 
-        self.grideff = EffGrid(cn(wdr.ID_PANGRID), self.dbeff)
+        self.grideff = EffGrid(cn(wdr.ID_PANGRID), self.dbeff, idGrid='effetti')
         for cid, colorkey in ((wdr.ID_COLORSELEZ,  'selez'),
                               (wdr.ID_COLOREMESSO, 'saldato'),
                               (wdr.ID_COLORERROR,  'datierr'),

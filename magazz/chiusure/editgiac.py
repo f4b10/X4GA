@@ -129,7 +129,7 @@ class EditGiacenzeGrid(dbglib.DbGridColoriAlternati):
     id_magazz = None
     anno = None
     
-    def __init__(self, parent, dbpro, tipval):
+    def __init__(self, parent, dbpro, tipval, idGrid=None):
         
         self.dbpro = dbpro
         self.dbcos = adb.DbTable(bt.TABNAME_PROCOS, 'procos')
@@ -204,7 +204,7 @@ class EditGiacenzeGrid(dbglib.DbGridColoriAlternati):
         
         dbglib.DbGridColoriAlternati.__init__(self, parent, -1, 
                                               tableClass=GiacGridTable,
-                                              size=parent.GetClientSizeTuple())
+                                              size=parent.GetClientSizeTuple(), idGrid=idGrid)
         
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
@@ -383,7 +383,7 @@ class EditGiacenzePanel(wx.Panel):
         def cn(x):
             return self.FindWindowByName(x)
         self.dbpro = dbx.EditGiacenzeTable()
-        self.gridgiac = EditGiacenzeGrid(cn('pangrid'), self.dbpro, "U")
+        self.gridgiac = EditGiacenzeGrid(cn('pangrid'), self.dbpro, "U", idGrid='editgiacril')
         for name, func in (('btnestrai', self.OnEstrai),
                            ('btnlist', self.OnPrint)):
             self.Bind(wx.EVT_BUTTON, func, cn(name))

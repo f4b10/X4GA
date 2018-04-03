@@ -360,7 +360,7 @@ class SpesometroGrid(dbgrid.ADB_Grid):
     
     def __init__(self, parent, dbspe):
         
-        dbgrid.ADB_Grid.__init__(self, parent, db_table=dbspe, can_edit=True, on_menu_select='row')
+        dbgrid.ADB_Grid.__init__(self, parent, db_table=dbspe, can_edit=True, on_menu_select='row', idGrid='spesometro')
         
         self.current_pdc = None
         
@@ -730,7 +730,7 @@ class RegSpyGrid(dbgrid.ADB_Grid):
         det = dbdet
         pdc = det.pdc
         
-        dbgrid.ADB_Grid.__init__(self, parent, db_table=dbdet, on_menu_select='row')
+        dbgrid.ADB_Grid.__init__(self, parent, db_table=dbdet, on_menu_select='row', idGrid='spesometrospy')
         
         self.id_reg = None
         

@@ -94,7 +94,8 @@ class ProdProSchedaGrid(dbglib.DbGridColoriAlternati):
         """
         
         dbglib.DbGridColoriAlternati.__init__(self, parent, -1, 
-                                              size=parent.GetClientSizeTuple())
+                                              size=parent.GetClientSizeTuple(),
+                                              idGrid='prodprogr')
         
         self.dbpro = dbpro
         
@@ -206,7 +207,8 @@ class ProdProgrPanel(wx.Panel):
         rs = pro.GetRecordset()
         
         grid = dbglib.DbGrid(parent, -1, size=size, style=0,\
-                             tableClass=GridTableForGiac)
+                             tableClass=GridTableForGiac,
+                             idGrid='prodgiac')
         grid.SetData( rs, colmap, canedit, canins,\
                       None, afteredit)
         #grid.GetTable().dbmov = self.dbpromag.mov
@@ -339,7 +341,7 @@ class ProdProgrPanel(wx.Panel):
         rs = self.dbpromov.GetRecordset()
         
         grid = dbglib.DbGrid(parent, -1, size=size, style=0,\
-                             tableClass=GridTableForGiac)
+                             tableClass=GridTableForGiac, idGrid='movprod')
         grid.SetData( rs, colmap, canedit, canins,\
                       None, afteredit)
         #mov = self.dbpromov.mov

@@ -48,11 +48,11 @@ class GeneraMovimentiGrid(dbglib.DbGridColoriAlternati):
     
     esercizio = None
     
-    def __init__(self, parent, dbsal, **kwargs):
+    def __init__(self, parent, dbsal, idGrid=None,**kwargs):
         
         size = parent.GetClientSizeTuple()
         
-        dbglib.DbGridColoriAlternati.__init__(self, parent, -1, size=size)
+        dbglib.DbGridColoriAlternati.__init__(self, parent, -1, size=size, idGrid=idGrid)
         
         self.dbsal = dbsal
         self.dbsal.ShowDialog(self)
@@ -177,8 +177,8 @@ class GeneraMovimentiPanel(aw.Panel):
         for name in 'chi ape'.split():
             cn('pancal%s'%name).Hide()
         
-        self.gridslp = GeneraMovimentiGrid(cn('pangridsalpat'), self.dbslp)
-        self.gridsle = GeneraMovimentiGrid(cn('pangridsaleco'), self.dbsle)
+        self.gridslp = GeneraMovimentiGrid(cn('pangridsalpat'), self.dbslp, idGrid='genopchpat')
+        self.gridsle = GeneraMovimentiGrid(cn('pangridsaleco'), self.dbsle, idGrid='genopcheco')
         
         e = cn('esercizio')
         e.SetLabel(str(self.esercizio))

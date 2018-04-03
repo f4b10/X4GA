@@ -78,7 +78,8 @@ class IntRegConGrid(dbglib.DbGridColoriAlternati, _IntRegGridMixin):
     def __init__(self, parent, **kwargs):
         
         dbglib.DbGridColoriAlternati.__init__(self, parent, -1, 
-                                              size=parent.GetClientSizeTuple())
+                                              size=parent.GetClientSizeTuple(),
+                                              idGrid='eleregcon')
         _IntRegGridMixin.__init__(self)
         
         self.dbreg = dbc.RiepRegCon(writable=False)
@@ -432,7 +433,8 @@ class IntRegIvaGrid(dbglib.DbGridColoriAlternati, _IntRegGridMixin):
     def __init__(self, parent, **kwargs):
         
         dbglib.DbGridColoriAlternati.__init__(self, parent, -1,
-                                              size=parent.GetClientSizeTuple())
+                                              size=parent.GetClientSizeTuple(),
+                                              idGrid='eleregiva')
         _IntRegGridMixin.__init__(self)
         
         self.dbreg = dbc.RiepRegIva(writable=False)
@@ -669,7 +671,8 @@ class IntAliqIvaGrid(dbglib.DbGridColoriAlternati):
     def __init__(self, parent, dbmov):
         
         dbglib.DbGridColoriAlternati.__init__(self, parent, -1, 
-                                              size=parent.GetClientSizeTuple())
+                                              size=parent.GetClientSizeTuple(),
+                                              idGrid='riepaliqiva')
         
         self.dbmov = dbmov
         self.dbmov.ShowDialog(self)

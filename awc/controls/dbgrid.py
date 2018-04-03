@@ -57,6 +57,9 @@ from awc.controls import CELLEDIT_AFTER_UPDATE, CELLEDIT_BEFORE_UPDATE
 import awc.controls.mixin as cmix
 import awc.controls.windows as aw
 
+from xml.dom.minidom import Document
+
+
 CELLCOLOR_FOREGROUND = "black"
 CELLCOLOR_BACKGROUND = "white"
 
@@ -80,7 +83,22 @@ import awc.wxinit as wxinit
 ASC  = 'ASC'
 DESC = 'DESC'
 
+def opj(x,y):
+    return os.path.join(x,y).replace('/', '\\')
 
+def MakeDirIfNeed(filename):
+    p = ''
+    basePath= os.path.dirname(filename)
+    for x in basePath.split('\\'):
+        if x:
+            p = opj(p, x)
+            if p.endswith(':'):
+                p += '\\'
+        else:
+            p += '\\'
+        if p.replace('\\','') and not os.path.isdir(p):
+            if not (p.startswith('\\\\') and not '\\' in p[2:]):
+                os.mkdir(p)
 
 class TestGridTerminato(wx.PopupTransientWindow):
     """Adds a bit of text and mouse movement to the wx.PopupWindow"""
@@ -105,10 +123,19 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
     """
     Presentazione e/o editazione valori in formato griglia.
     """
-    _canReorder = None
-    _cols = None
-    Titoli = None
+    _canReorder       = None
+    _cols             = None
+    Titoli            = None
+    LayoutFilename    = None
+    USER_FONTSIZE     = None
+    userSize          = None
+    needApplyUserSize = False
+    idGrid            = None
+    
     def __init__(self, *args, **kwargs):
+
+        if 'idGrid' in kwargs:
+            self.idGrid=kwargs.pop('idGrid')
 
         self.tableClass = DbGridTable
         kwtest = "tableClass"
@@ -159,12 +186,9 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
 
         self.DEFAULT_FONT = f = wx.SystemSettings.GetFont(wx.SYS_DEFAULT_GUI_FONT)
         self.FONT_SIZE  = f.GetPointSize()
+        self.USER_FONTSIZE = self.FONT_SIZE
 
         self.rowheight = wxinit.GetGridRowHeight()
-        #=======================================================================
-        # self.FONT_SIZE = 20
-        # self.rowheight = self.FONT_SIZE + 14
-        #=======================================================================
 
         self.SetScrollLineX(1)
 
@@ -192,6 +216,40 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
             self.SetLabelTextColour(wx.BLUE)
 
         self.isZoomOn = Env.Azienda.ZOOMGRID
+        if self.isZoomOn and self.idGrid:
+            self.LayoutFilename = self.GetLayoutFilename()
+            #self.needApplyUserSize = (self.LayoutFilename and os.path.exists(self.LayoutFilename))
+            p,f = os.path.split(self.LayoutFilename)
+            #print f in Env.Azienda.Login.userLayout
+            self.needApplyUserSize = (self.LayoutFilename and (f in Env.Azienda.Login.userLayout))
+        
+    def ReadLayoutIfNeed(self):
+        self.userSize = None
+        if self.needApplyUserSize:
+            try:
+                from xml.dom.minidom import parse
+                dom = parse(self.LayoutFilename)
+                g = dom.getElementsByTagName('grid')[0]
+                self.USER_FONTSIZE=int(g.getAttribute('fontsize'))
+                try:
+                    w = int(g.getAttribute('width'))
+                    h = int(g.getAttribute('height'))
+                    self.SetMinSize((w,h))            
+                except:
+                    pass
+                self.userSize = {}
+                for x in dom.getElementsByTagName('colonna'):
+                    #print 'col:%s width>:%s' % (x.getAttribute('n'), x.getAttribute('width'))
+                    n = int(x.getAttribute('n'))
+                    w = int(x.getAttribute('width'))
+                    self.userSize[n]=w
+                self.SetFontSize(self.USER_FONTSIZE)
+            except:
+                pass
+        else:
+            if not self.USER_FONTSIZE==8:
+                self.SetFontSize(self.USER_FONTSIZE)
+        #self.needApplyUserSize = False        
 
     def GetDbColumns(self):
         #TODO: DA CONTROLLARE SE NECESSARIO
@@ -266,9 +324,9 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
         pos = (x0+w/2, y0-40+h/2)
         win.Position(pos, (0, 20))
         win.Popup()                    
-        
 
     def SetFontSize(self, size):
+        self.USER_FONTSIZE = size
         delta = size - self.FONT_SIZE
         self.ModifyFontSize(delta)
 
@@ -282,20 +340,31 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
             self.rowheight = max(int((18.0/8.0*self.FONT_SIZE)+0.99),5)
             
             # assegno font size alle colonne
-            for i,a in enumerate(self.colAttr):
-                font = a.GetFont()
-                font.SetPointSize(self.FONT_SIZE)
-                a.SetFont(font)
-                self.colAttr[i]= a            
+            try:
+                for i,a in enumerate(self.colAttr):
+                    font = a.GetFont()
+                    font.SetPointSize(self.FONT_SIZE)
+                    a.SetFont(font)
+                    self.colAttr[i]= a
+            except:
+                pass            
             
             # assegno ampiezza alle colonne di tipo testo
             tab=self.GetTable()
-            for col, size in self._csize.iteritems():
-                if size>1:
-                    spec = tab.dataTypes[col].split(':')
-                    col_type = spec[0]
-                    if col_type == gridlib.GRID_VALUE_STRING:
-                        self._csize[col]=int((float(self._csize[col]) / float(oldFontSize) * float(self.FONT_SIZE))+0.99)
+            if self.userSize:
+                for col, size in self.userSize.iteritems():
+                    if size>1:
+                        spec = tab.dataTypes[col].split(':')
+                        col_type = spec[0]
+                        self._csize[col]=self.userSize[col]
+            else:
+                for col, size in self._csize.iteritems():
+                    if size>1:
+                        spec = tab.dataTypes[col].split(':')
+                        col_type = spec[0]
+                        if col_type == gridlib.GRID_VALUE_STRING:
+                            self._csize[col]=int((float(self._csize[col]) / float(oldFontSize) * float(self.FONT_SIZE))+0.99)
+            
             
             
             self.AutoSizeColumns()
@@ -374,7 +443,7 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
 
     def OnLabelRightClick(self, event):
         x, y = list(event.GetPosition())
-        self._Grid_MenuPopup(x,y)
+        self._Grid_MenuPopup(x,y, selectedCol=event.GetCol())
         event.Skip()
 
     def ResetColLabels(self):
@@ -533,7 +602,18 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
         return (x,y)
 
 
-    def _Grid_MenuPopup(self, x, y):
+    def _Grid_MenuPopup(self, x, y, selectedCol=None):
+        def OnHideColumnLayout(event):
+            nCol = selectedCol
+            self.SetColSize(nCol, 0)
+            self.userSize[nCol] =0
+            self._csize[nCol]   =0
+            self.ResetView()        
+            event.Skip()        
+        
+        
+        
+        
         hascte = hasctc = False
         for col in range(self.GetNumberCols()):
             if self.GetColSize(col)<MINCOLEXPAND:
@@ -552,6 +632,16 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
         data = self.GetTable().data
         if data:
             voci.append(("Esporta file CSV (%d righe)" % len(data), self.OnExportCSV, True))
+            
+        if Env.Azienda.SAVEGRID and self.idGrid:
+            voci.append((None,None,None))
+            voci.append(("Nascondi colonna", OnHideColumnLayout, True))
+            voci.append((None,None,None))
+            voci.append(("Salva Layout colonne", self.OnSaveLayout, True))
+            voci.append(("Ripristina Layout Colonne", self.OnResetLayout, True))
+            voci.append((None,None,None))
+            voci.append(("idGrid=%s" % self.idGrid, None, True))
+            
         for text, func, enab in voci:
             if text is None:
                 menu.AppendSeparator()
@@ -566,6 +656,100 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
     def OnExportCSV(self, event):
         self.GetTable().ExportCSV()
         event.Skip()
+
+    def OnSaveLayout(self, event):
+        if self.LayoutFilename:
+            MakeDirIfNeed(self.LayoutFilename)
+            if os.path.exists(self.LayoutFilename):
+                os.remove(self.LayoutFilename)
+            self.SaveLayout(self.LayoutFilename)    
+        event.Skip()
+        
+    def OnResetLayout(self, event):
+        if self.LayoutFilename:
+            if os.path.exists(self.LayoutFilename):
+                os.remove(self.LayoutFilename)
+                self.Refresh()
+        p,f = os.path.split(self.LayoutFilename)
+        try:
+            Env.Azienda.Login.userLayout.remove(f)
+        except:
+            pass
+        event.Skip()
+        
+
+
+
+        
+
+    def SaveLayout(self, filename):
+        self.Xml=Document()
+        root = self.Xml.createElement("grid")
+        self.Xml.appendChild(root)
+        root.setAttribute( 'fontsize', '%s' % self.FONT_SIZE)
+        w, h = self.GetSize()
+        root.setAttribute( 'width', '%s' % w)
+        root.setAttribute( 'height', '%s' % h)
+        for k in self._csize.keys():
+            r = self.Xml.createElement("colonna")
+            r.setAttribute( 'n', '%s' % k)
+            r.setAttribute( 'width', '%s' % self.GetColSize(k))
+            root.appendChild(r)
+        self.Xml.normalize()
+        self.Xml.writexml( open(filename, 'w'),
+                      indent="  ",
+                      addindent="  ",
+                      newl='\n')
+        self.Xml.unlink()
+        p,f = os.path.split(filename)
+        Env.Azienda.Login.userLayout.append(f)
+        pass
+
+    def GetLayoutFilename(self):
+        l=[]
+        
+        l.append(Env.config_base_path)        
+        l.append('layout')
+        l.append('user_%s' % Env.Azienda.Login.usercode)  
+        l.append('%s.xml' % self.idGrid)
+        try:
+            newPath = os.path.join(*l) 
+        except:
+            newPath = ''
+        return  newPath          
+              
+        #=======================================================================
+        # p=self.GetParent()
+        # while p:
+        #     t = None
+        #     try:
+        #         if isinstance(p, wx.Notebook):
+        #             t = p.GetPageText(p.GetSelection())
+        #         else:
+        #             try:
+        #                 t = p.GetTitle().split('-')[0].strip()
+        #             except:
+        #                 if not p.GetName() in ['panel', 'sizedpanel', 'main#schedapanel']:
+        #                     t = '%s' % p.GetName()
+        #     except:
+        #         pass
+        #     if t:
+        #         t = t.replace('/',' ')
+        #         t = t.replace(':',' ')
+        #         l.append(t)
+        #     p=p.GetParent()
+        # l.append('user_%s' % Env.Azienda.Login.usercode)
+        # l.append('layout')
+        # l.append(Env.config_base_path)
+        # l.reverse()
+        # l.append('layout.xml')
+        # try:
+        #     newPath = os.path.join(*l) 
+        #     print newPath
+        # except:
+        #     newPath = ''
+        # return  newPath
+        #=======================================================================
 
     def OnExpandHiddenColumns(self, event):
         self.ExpandHiddenColumns()
@@ -757,12 +941,15 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
 
     def AutoSizeColumns(self, *args, **kwargs):
 
-        if self._csize:
-            for col in self._csize:
-                if self._csize[col]>-1:
-                    self.SetColSize(col, self._csize[col])
+        if self.userSize:
+            self._fitColumn = None
         else:
-            gridlib.Grid.AutoSizeColumns(self, *args, **kwargs)
+            if self._csize:
+                for col in self._csize:
+                    if self._csize[col]>-1:
+                        self.SetColSize(col, self._csize[col])
+            else:
+                gridlib.Grid.AutoSizeColumns(self, *args, **kwargs)
 
         tab = self.GetTable()
 
@@ -772,68 +959,74 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
         except:
             dummy = None
 
-        for col, size in self._csize.iteritems():
-            #print 'col:%s size:%s' % (col, size)
-            spec = tab.dataTypes[col].split(':')
-            col_type = spec[0]
-            col_char = None
-
-            if col_type in (gridlib.GRID_VALUE_NUMBER,
-                            gridlib.GRID_VALUE_LONG,):
+        if self.userSize:
+            for col, size in self.userSize.iteritems():
                 try:
+                    self.SetColSize(col, size)
+                except:
+                    pass
+        else:
+            for col, size in self._csize.iteritems():
+                #print 'col:%s size:%s' % (col, size)
+                spec = tab.dataTypes[col].split(':')
+                col_type = spec[0]
+                col_char = None
+    
+                if col_type in (gridlib.GRID_VALUE_NUMBER,
+                                gridlib.GRID_VALUE_LONG,):
+                    try:
+                        _len = int(spec[1].split(",")[0])
+                    except:
+                        _len = 10
+    
+                elif col_type == gridlib.GRID_VALUE_FLOAT:
                     _len = int(spec[1].split(",")[0])
-                except:
-                    _len = 10
-
-            elif col_type == gridlib.GRID_VALUE_FLOAT:
-                _len = int(spec[1].split(",")[0])
-                try:
-                    _dec = int(spec[1].split(",")[1])
-                except:
-                    _dec = 2
-                test = 10**_len-1
-                if _dec:
-                    test += 1/(10**_dec)
-                _len = len(locale.format("%%.%df" % _dec, test, True, monetary=True))
-
-            elif col_type == gridlib.GRID_VALUE_DATETIME:
-                try:
-                    #classe mx.DateTime
-                    if len(spec) == 1:
-                        if YEAR4:
-                            m = FORMAT_DATE
+                    try:
+                        _dec = int(spec[1].split(",")[1])
+                    except:
+                        _dec = 2
+                    test = 10**_len-1
+                    if _dec:
+                        test += 1/(10**_dec)
+                    _len = len(locale.format("%%.%df" % _dec, test, True, monetary=True))
+    
+                elif col_type == gridlib.GRID_VALUE_DATETIME:
+                    try:
+                        #classe mx.DateTime
+                        if len(spec) == 1:
+                            if YEAR4:
+                                m = FORMAT_DATE
+                            else:
+                                m = FORMAT_DATE_SH
+                            _len = len(dt.today().Format(m))
                         else:
-                            m = FORMAT_DATE_SH
-                        _len = len(dt.today().Format(m))
-                    else:
-                        if YEAR4:
-                            m = FORMAT_DATETIME
-                        else:
-                            m = FORMAT_DATETIME_SH
-                        _len = len(dt.today().Format(m))
-                except Exception:
-                    _len = 10
-
-            else:
-                _len = None
-
-            if _len and dummy is not None:
-                dummy.SetFont(self.colFont[col])
-                sizing_text = 'M' * _len
-                if wx.Platform != "__WXMSW__":   # give it a little extra space
-                    sizing_text += 'M'
-                if wx.Platform == "__WXMAC__":   # give it even a little more...
-                    sizing_text += 'M'
-                    
-                coeff = float(self.FONT_SIZE) / 8.0
-                w, h = dummy.GetTextExtent(sizing_text)
-                size = w
-                size += self.FONT_SIZE * coeff
-                if wx.Platform == '__WXMSW__':
-                    size += float(self.FONT_SIZE) /4.0 *coeff
-                self._csize[col] = size
-            self.SetColMinimalWidth(col, 15)
-            self.SetColSize(col, size)
+                            if YEAR4:
+                                m = FORMAT_DATETIME
+                            else:
+                                m = FORMAT_DATETIME_SH
+                            _len = len(dt.today().Format(m))
+                    except Exception:
+                        _len = 10
+    
+                else:
+                    _len = None
+    
+                if _len and dummy is not None:
+                    dummy.SetFont(self.colFont[col])
+                    sizing_text = 'M' * _len
+                    if wx.Platform != "__WXMSW__":   # give it a little extra space
+                        sizing_text += 'M'
+                    if wx.Platform == "__WXMAC__":   # give it even a little more...
+                        sizing_text += 'M'
+                        
+                    coeff = float(self.FONT_SIZE) / 8.0
+                    w, h = dummy.GetTextExtent(sizing_text)
+                    size = w
+                    size += self.FONT_SIZE * coeff
+                    if wx.Platform == '__WXMSW__':
+                        size += float(self.FONT_SIZE) /4.0 *coeff
+                    self._csize[col] = size
+                self.SetColMinimalWidth(col, 15)
 
         if dummy is not None:
             dummy.Destroy()
@@ -940,9 +1133,10 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
                 elif _type == gridlib.GRID_VALUE_FLOAT:
                     _len = int(spec[1].split(",")[0])
                     _dec = int(spec[1].split(",")[1])
+                    #TODO: IMPOSTO FONT COME ORIGINARIAMENTE
                     #std editor numero con decimail
-                    #attr_editor = gridlib.GridCellFloatEditor(_len, _dec)
-                    attr_editor = awg.NumericCellEditor(_len, _dec)
+                    attr_editor = gridlib.GridCellFloatEditor(_len, _dec)
+                    #attr_editor = awg.NumericCellEditor(_len, _dec)
 
                 elif _type == gridlib.GRID_VALUE_DATETIME:
                     #std editor data
@@ -1003,13 +1197,19 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
                 attr_editor = awg.TextCellEditor()
 
             #determinazione font ed allineamento
+            #===================================================================
+            # if _type.split(":")[0] in (gridlib.GRID_VALUE_NUMBER,\
+            #                            gridlib.GRID_VALUE_FLOAT,\
+            #                            gridlib.GRID_VALUE_DATETIME):
+            #===================================================================
+                
             if _type.split(":")[0] in (gridlib.GRID_VALUE_NUMBER,\
-                                       gridlib.GRID_VALUE_FLOAT,\
-                                       gridlib.GRID_VALUE_DATETIME):
-                #===============================================================
-                # attr_font = wx.Font(self.FONT_SIZE, wx.MODERN, wx.NORMAL, wx.NORMAL)
-                #===============================================================
-                attr_font = self.DEFAULT_FONT
+                                       gridlib.GRID_VALUE_FLOAT):
+                #TODO: IMPOSTO FONT COME ORIGINARIAMENTE eccetto che per le date
+                                
+                attr_font = wx.Font(self.FONT_SIZE, wx.MODERN, wx.NORMAL, wx.NORMAL)
+                
+                #attr_font = self.DEFAULT_FONT
                 attr_font.SetPointSize(self.FONT_SIZE)
 
 
@@ -1046,6 +1246,10 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
         self.AdjustRowsHeight()
 #        if self._fitColumn:
 #            self.FitColumn()
+
+
+        self.ReadLayoutIfNeed()
+
         wx.CallAfter(self.AutoSizeColumns)
 
     def SetSelectionMode(self, mode):
@@ -1205,7 +1409,7 @@ class LinkTabAttr(object):
     _cardclass = None
     _filter = None
     _oncreate = None
-
+    _grid = None
     def __init__(self, table, col, rsidcol, rscodcol, rsdescol=None,\
                  cardclass=None, filter=None, refresh=False, oncreate=None):
         """
@@ -1297,7 +1501,7 @@ essere sia l'id dell'elemento da impostare, sia il suo codice
                  self._cardclass,\
                  self._filterlinks,\
                  self.eventBindings,\
-                 self.editorclass,
+                 self.editorclass,\
                  self._oncreate]
 
 
@@ -2174,7 +2378,7 @@ class ADB_Grid(DbGridColoriAlternati):
     def TypeCheck(cls, value_check=1, value_uncheck=0):
         return '%s:%s,%s' % (cls._TYPE_CHECK, value_check, value_uncheck)
 
-    def __init__(self, parent, id=None, db_table=None, can_edit=False, can_insert=False, on_menu_select=None, **kwargs):
+    def __init__(self, parent, id=None, db_table=None, can_edit=False, can_insert=False, on_menu_select=None, fontSize=8, **kwargs):
 
         if id is None:
             id = wx.NewId()
@@ -2185,6 +2389,7 @@ class ADB_Grid(DbGridColoriAlternati):
         self.db_table = db_table
         self.is_editable = can_edit
         self.is_insertable = can_insert
+        self.USER_FONTSIZE = fontSize
 
         self._colmap_check = False
 
@@ -2380,6 +2585,39 @@ class ADB_Grid(DbGridColoriAlternati):
         parent = self.GetParent()
         parent.SetSizer(sizer)
         sizer.SetSizeHints(parent)
+        
+        self.ReadLayoutIfNeed()
+        
+
+
+    #===========================================================================
+    # def ReadLayoutIfNeed(self):
+    #     print self.LayoutFilename
+    #     self.userSize = None
+    #     if os.path.exists(self.LayoutFilename):
+    #         print 'leggo layout da file'
+    #         from xml.dom.minidom import parse
+    #         dom = parse(self.LayoutFilename)
+    #         g = dom.getElementsByTagName('grid')[0]
+    #         self.USER_FONTSIZE=int(g.getAttribute('fontsize'))
+    #         self.userSize = {}
+    #         for x in dom.getElementsByTagName('colonna'):
+    #             #print 'col:%s width>:%s' % (x.getAttribute('n'), x.getAttribute('width'))
+    #             n = int(x.getAttribute('n'))
+    #             w = int(x.getAttribute('width'))
+    #             self.userSize[n]=w
+    #         print 'csize: %s' % self._csize
+    #         print ' user: %s' % self.userSize
+    #         print '-'*60
+    #         self.SetFontSize(self.USER_FONTSIZE)
+    #     else:
+    #         if not self.USER_FONTSIZE==8:
+    #             self.SetFontSize(self.USER_FONTSIZE)
+    #             print 'layout modificato da programma'
+    #         else:
+    #             print 'layout standard'
+    #===========================================================================
+
 
     def GetGridTableClass(self):
 
@@ -2655,7 +2893,10 @@ class Titolo():
             self.orderVersus=ASC
             sign=UPCHAR
         #print self.parent.parent
-        self.parent.parent.SetColLabelValue(self.pos, '%s%s' % (sign, self.label))
+        try:
+            self.parent.parent.SetColLabelValue(self.pos, '%s%s' % (sign, self.label))
+        except:
+            pass
 
     def ResetOrder(self):
         self.parent.parent.SetColLabelValue(self.pos, '%s' % self.label)
@@ -2682,6 +2923,39 @@ class Titolo():
 
     def GetIndexDb(self):
         return self.idxDb
+
+
+#===============================================================================
+# class GridSpec(Document):
+# 
+#     def __init__(self, *args, **kwargs):
+# 
+#         Document.__init__(self, *args, **kwargs)
+# 
+#     def createRoot(self):
+# 
+#         root = self.appendElement(self, "Grid")
+#         return root
+# 
+#     def appendElement(self, parent, tagName):
+#         element = self.createElement(tagName)
+#         parent.appendChild(element)
+#         return element
+# 
+#     def appendItems(self, node, key_values):
+#         for name, val in key_values:
+#             if val==None:
+#                 val=''
+#             item = self.createElement(name)
+#             item_content = self.createTextNode(val)
+#             item.appendChild(item_content)
+#             node.appendChild(item)
+#         return node
+# 
+# 
+#===============================================================================
+
+
 
 
 if __name__ == '__main__':
@@ -2831,6 +3105,16 @@ if __name__ == '__main__':
 
         def CreateContextMenu(self):
             pass
+
+
+
+
+
+
+
+
+
+
 
     a = TestApp()
     a.MainLoop()

@@ -714,6 +714,7 @@ class Azienda(object):
     infatti = ""
     codateco = ""
     ZOOMGRID = False
+    SAVEGRID = True
 
 
     @classmethod
@@ -804,7 +805,9 @@ class Azienda(object):
         usercode = None
         userid = None
         userdata = None
+        userLayout = []
         dataElab = DateTime.today()
+        
 
         @classmethod
         def GetUserData(cls, col):

@@ -51,7 +51,8 @@ class InventarioPresuntoGrid(dbglib.DbGridColoriAlternati):
     def __init__(self, parent, dbinp):
         
         dbglib.DbGridColoriAlternati.__init__(self, parent, -1, 
-                                              size=parent.GetClientSizeTuple())
+                                              size=parent.GetClientSizeTuple(),
+                                              idGrid='inventario_presunto')
         
         self.dbinp = dbinp
         pro = dbinp

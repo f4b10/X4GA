@@ -84,7 +84,8 @@ class GridReg(dbglib.DbGridColoriAlternati):
         """
 
         dbglib.DbGridColoriAlternati.__init__(self, parent, -1,
-                                              size=parent.GetClientSizeTuple())
+                                              size=parent.GetClientSizeTuple(),
+                                              idGrid='registroiva')
 
         self.dbreg = dbreg
         reg = self.dbreg
@@ -240,7 +241,8 @@ class GridAliq(dbglib.DbGridColoriAlternati):
         canedit = False
         canins = False
 
-        dbglib.DbGridColoriAlternati.__init__(self, parent, -1, size=size, style=0)
+        dbglib.DbGridColoriAlternati.__init__(self, parent, -1, size=size, style=0,
+                                              idGrid='registro_aliqiva')
 
         links = None
 
@@ -326,7 +328,8 @@ class GridTotAliq(dbglib.DbGridColoriAlternati):
         canedit = False
         canins = False
 
-        dbglib.DbGridColoriAlternati.__init__(self, parent, -1, size=size, style=0)
+        dbglib.DbGridColoriAlternati.__init__(self, parent, -1, size=size, style=0,
+                                              idGrid='registroiva_totalialiqiva')
 
         links = None
 

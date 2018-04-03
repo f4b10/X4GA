@@ -121,7 +121,9 @@ class GridMov(maglib.GridMovEva):
         rs = self.dbmov.GetRecordset()
         
         grid = dbglib.DbGridColoriAlternati(parent, -1, size=size, style=0,\
-                                            tableClass=maglib.GridTable)
+                                            tableClass=maglib.GridTable,
+                                            idGrid='statoevasioni')
+
         grid.SetData( rs, colmap, canedit, canins)
         grid.GetTable().dbmov = self.dbmov
         
@@ -192,7 +194,8 @@ class VediEvasioniGrid(dbglib.DbGridColoriAlternati):
         
         size = parent.GetClientSizeTuple()
         dbglib.DbGridColoriAlternati.__init__(self, parent, -1,
-                                              size=parent.GetSize())
+                                              size=parent.GetSize(),
+                                              idGrid='vedievasioni')
         
         cn = lambda db, col: db._GetFieldIndex(col, inline=True)
         self.dbmov = dbmov

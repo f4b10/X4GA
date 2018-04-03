@@ -121,7 +121,8 @@ class GridMov(maglib.GridMov):
         rs = self.dbmov.GetRecordset()
         
         grid = dbglib.DbGridColoriAlternati(parent, -1, size=size, style=0,\
-                                            tableClass=maglib.GridTable)
+                                            tableClass=maglib.GridTable,
+                                            idGrid='inter_mov')
         grid.SetData( rs, colmap, canedit, canins)
         grid.GetTable().dbmov = self.dbmov
         

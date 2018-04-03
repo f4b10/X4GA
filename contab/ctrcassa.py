@@ -49,7 +49,7 @@ class GridPdc(dbglib.DbGrid):
         parent = args[0]
         size = parent.GetClientSizeTuple()
         
-        dbglib.DbGrid.__init__(self, parent, -1, size=size)
+        dbglib.DbGrid.__init__(self, parent, -1, size=size, idGrid='checkcassabanca')
         
         self.dbctr = dbctr
         pdc = self.dbctr
@@ -164,7 +164,8 @@ class GridSal(dbglib.DbGrid):
                 return out
         
         dbglib.DbGrid.__init__(self, parent, -1, size=size,
-                               tableClass=Registrazioni)
+                               tableClass=Registrazioni,
+                               idGrid='checksaldi')
         
         self.SetData([], colmap, canedit, canins)
         

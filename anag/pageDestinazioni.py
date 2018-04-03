@@ -31,7 +31,7 @@ class DestinPanel(GenericPersonalLinkedPage_Panel):
         GenericPersonalLinkedPage_Panel.__init__(self, *args, **kwargs)
         wdr.DestinFunc(self)
         panelGrid=self.GetPanelGrid()
-        self._grid=DestinGrid(panelGrid, -1, size=panelGrid.GetClientSizeTuple(), mainPanel=self.mainPanel, gridTableName=self.gridTableName)
+        self._grid=DestinGrid(panelGrid, -1, size=panelGrid.GetClientSizeTuple(), mainPanel=self.mainPanel, gridTableName=self.gridTableName, idGrid='pagedestinatari')
         self.BindControl()
 
 class DestinGrid(GenericPersonalLinkedPage_InternalGrid):

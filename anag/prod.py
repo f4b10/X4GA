@@ -98,7 +98,8 @@ class GiacMagGrid(dbglib.DbGridColoriAlternati):
         canins = False
         
         dbglib.DbGridColoriAlternati.__init__(self, parent, -1, 
-                                              size=size, style=0)
+                                              size=size, style=0,
+                                              idGrid='giacmag')
         
         links = None
         afteredit = None
@@ -176,7 +177,8 @@ class GrigliaPrezziCliForGrid(dbglib.DbGridColoriAlternati):
         
         dbglib.DbGridColoriAlternati.__init__(self, parent, -1, 
                                               size=parent.GetClientSizeTuple(), 
-                                              style=0)
+                                              style=0,
+                                              idGrid='grigliaprezziclifor')
         self.dbgri = dbgri
         
         _NUM = gl.GRID_VALUE_NUMBER
@@ -458,7 +460,7 @@ class ListAttGrid(dbglib.DbGridColoriAlternati):
         canins = False
         
         dbglib.DbGridColoriAlternati.__init__(self, parent, -1, 
-                                              size=size, style=0)
+                                              size=size, style=0, idGrid='prodlist')
         
         links = None
         afteredit = None
@@ -1080,7 +1082,7 @@ class ProdPanel(ga.AnagPanel):
     
     def GetSearchResultsGrid(self, parent):
         grid = ProdSearchResultsGrid(parent, ga.ID_SEARCHGRID, 
-                                     self.db_tabname, self.GetSqlColumns())
+                                     self.db_tabname, self.GetSqlColumns(), idGrid='eleprod')
         return grid
     
     def InitControls(self, *args, **kwargs):
@@ -1513,7 +1515,7 @@ class ProdPanel(ga.AnagPanel):
         links = None
         afteredit = ((dbglib.CELLEDIT_AFTER_UPDATE, -1, self.GridListTestValues),)
         
-        grid = dbglib.DbGrid(parent, -1, size=size, style=0)
+        grid = dbglib.DbGrid(parent, -1, size=size, style=0, idGrid='listiniprod')
         grid.SetData( self.dblis._info.rs, colmap, canedit, canins,\
                       links, afteredit, self.GridListAddNewRow )
         grid.SetCellDynAttr(self.GridListGetAttr)

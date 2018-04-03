@@ -99,11 +99,12 @@ class GridPcfRif(dbglib.DbGrid):
     """
     Griglia riferimenti partita
     """
-    def __init__(self, rsrif, parent):
+    def __init__(self, rsrif, parent, idGrid=None):
         
         dbglib.DbGrid.__init__(self, parent, -1, 
                                size=parent.GetClientSizeTuple(), 
-                               style=wx.SUNKEN_BORDER)
+                               style=wx.SUNKEN_BORDER,
+                               idGrid=idGrid)
         
         _STR = gl.GRID_VALUE_STRING
         _DAT = gl.GRID_VALUE_DATETIME
@@ -154,7 +155,8 @@ class PcfPanel(aw.Panel):
         wdr.PcfPanelFunc(self)
         
         self._gridrif = GridPcfRif(self.rsrif, 
-                                   self.FindWindowById(wdr.ID_PANELHIST))
+                                   self.FindWindowById(wdr.ID_PANELHIST),
+                                   idGrid='storia_partita')
         
         self.controls = DictNamedChildrens(self)
         c = self.controls

@@ -50,10 +50,11 @@ FRAME_TITLE = "Quadratura scadenzari-mastri"
 
 class PdcQuadPcfContGrid(dbglib.DbGrid):
     
-    def __init__(self, parent, dbdif):
+    def __init__(self, parent, dbdif, idGrid=None):
         
         dbglib.DbGrid.__init__(self, parent, -1, 
-                               size=parent.GetClientSizeTuple())
+                               size=parent.GetClientSizeTuple(),
+                               idGrid=idGrid)
         
         self.dbdif = dbdif
         
@@ -110,7 +111,7 @@ class PdcQuadPcfContPanel(aw.Panel):
         ci(wdr.ID_CTRQUADCF).SetDataLink('clifor', ('CF'))
         ci(wdr.ID_CTRQUADCF).SetValue('C')
         
-        self.gridif = PdcQuadPcfContGrid(ci(wdr.ID_CTRPANDIFF), self.dbdif)
+        self.gridif = PdcQuadPcfContGrid(ci(wdr.ID_CTRPANDIFF), self.dbdif, idGrid='check_mastro')
         
         self.tipicf = {'C': [],
                        'F': []}

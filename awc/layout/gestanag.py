@@ -102,10 +102,16 @@ class SearchResultsGrid(dbglib.DbGridColoriAlternati):
 
     def __init__(self, parent, id, table, fields, **kwargs):
 
+
+        idGrid=None
+        if 'idGrid' in kwargs:
+            idGrid=kwargs.pop('idGrid')            
+            
         dbglib.DbGridColoriAlternati.__init__(self, parent, id,
                                               size=parent.GetClientSizeTuple(),
                                               tableClass=self.tableClass,
-                                              style=0)
+                                              style=0,
+                                              idGrid=idGrid)
         self.tabalias = table
 
         cols = fields.split(',')
@@ -137,6 +143,10 @@ class SearchResultsGrid(dbglib.DbGridColoriAlternati):
             self.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
 
         self.SetColumn2Fit()
+        
+        
+        
+        
         self.AutoSizeColumns()
         sz = wx.FlexGridSizer(1,0,0,0)
         sz.AddGrowableCol( 0 )
@@ -753,7 +763,7 @@ class AnagPanel(aw.Panel):
 
     def GetSearchResultsGrid(self, parent):
         grid = SearchResultsGrid(parent, ID_SEARCHGRID,
-                                 self.db_tabname, self.GetSqlColumns())
+                                 self.db_tabname, self.GetSqlColumns(), idGrid='eletab_%s' % self.db_tabname)
         return grid
 
     def InitSearchGrid(self):

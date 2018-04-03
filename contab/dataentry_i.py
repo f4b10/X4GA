@@ -558,7 +558,7 @@ class GeneraPartiteMixin(scad.Scadenze):
         parent = self.FindWindowById(wdr.ID_PANGRID_SCA)
 #        parent.SetSize((0,0))
         size = parent.GetClientSizeTuple()
-        grid = dbglib.DbGrid(parent, -1, size=size, style=0)
+        grid = dbglib.DbGrid(parent, -1, size=size, style=0, idGrid='regscadenze')
 
         grid.Bind(gl.EVT_GRID_CELL_RIGHT_CLICK,   self.OnRightClick),
 
@@ -1613,7 +1613,7 @@ class SelRowPa(wx.Dialog):
                   (2, "Cod.",       gl.GRID_VALUE_STRING,      False),
                   (3, "Sottoconto", gl.GRID_VALUE_STRING,      False))
 
-        grid = dbglib.DbGridColoriAlternati(parent, -1, size=size, style=0)
+        grid = dbglib.DbGridColoriAlternati(parent, -1, size=size, style=0, idGrid='regconto')
         grid.SetData(self.rspref, colmap, canEdit=False)
         grid.SetDefaultColSize(1,70)
         grid.SetFitColumn(-1)
