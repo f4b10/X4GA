@@ -88,10 +88,11 @@ class GridMastro(dbglib.DbGridColoriAlternati):
 
     def __init__(self, *args, **kwargs):
 
+        idGrid=kwargs.pop('idGrid', None)
         parent = args[0]
         size = parent.GetClientSizeTuple()
 
-        dbglib.DbGridColoriAlternati.__init__(self, parent, -1, size=size, idGrid='mastropdc')
+        dbglib.DbGridColoriAlternati.__init__(self, parent, -1, size=size, idGrid=idGrid)
 
         self.dbmas = dbc.PdcMastro()
 
@@ -302,7 +303,7 @@ class PdcMastroPanel(aw.Panel):
         ci(wdr.ID_MASSEGNO).SetSelection(0)
 
         pp = ci(wdr.ID_MASPANGRID)
-        self.gridmas = GridMastro(pp)
+        self.gridmas = GridMastro(pp, idGrid='pdcmastro')
         self.viewmode = VIEW_MODE
         self.pdcid = None
         self.UpdateButtonView()
