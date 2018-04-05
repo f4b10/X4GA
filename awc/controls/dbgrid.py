@@ -604,15 +604,16 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
 
     def _Grid_MenuPopup(self, x, y, selectedCol=None):
         def OnHideColumnLayout(event):
+            if not self.userSize:
+                self.userSize={}
+                for k in self._csize.keys():
+                    self.userSize[k]=self._csize[k]
             nCol = selectedCol
             self.SetColSize(nCol, 0)
             self.userSize[nCol] =0
             self._csize[nCol]   =0
             self.ResetView()        
             event.Skip()        
-        
-        
-        
         
         hascte = hasctc = False
         for col in range(self.GetNumberCols()):
@@ -1136,10 +1137,9 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
                 elif _type == gridlib.GRID_VALUE_FLOAT:
                     _len = int(spec[1].split(",")[0])
                     _dec = int(spec[1].split(",")[1])
-                    #TODO: IMPOSTO FONT COME ORIGINARIAMENTE
                     #std editor numero con decimail
-                    attr_editor = gridlib.GridCellFloatEditor(_len, _dec)
-                    #attr_editor = awg.NumericCellEditor(_len, _dec)
+                    #attr_editor = gridlib.GridCellFloatEditor(_len, _dec)
+                    attr_editor = awg.NumericCellEditor(_len, _dec)
 
                 elif _type == gridlib.GRID_VALUE_DATETIME:
                     #std editor data
@@ -1200,27 +1200,17 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
                 attr_editor = awg.TextCellEditor()
 
             #determinazione font ed allineamento
-            #===================================================================
-            # if _type.split(":")[0] in (gridlib.GRID_VALUE_NUMBER,\
-            #                            gridlib.GRID_VALUE_FLOAT,\
-            #                            gridlib.GRID_VALUE_DATETIME):
-            #===================================================================
-                
             if _type.split(":")[0] in (gridlib.GRID_VALUE_NUMBER,\
-                                       gridlib.GRID_VALUE_FLOAT):
-                #TODO: IMPOSTO FONT COME ORIGINARIAMENTE eccetto che per le date
-                                
+                                       gridlib.GRID_VALUE_FLOAT,\
+                                       gridlib.GRID_VALUE_DATETIME):
+                #===============================================================
                 attr_font = wx.Font(self.FONT_SIZE, wx.MODERN, wx.NORMAL, wx.NORMAL)
-                
+                #===============================================================
                 #attr_font = self.DEFAULT_FONT
                 attr_font.SetPointSize(self.FONT_SIZE)
-
-
-
                 if True:#_type.split(":")[0] not in (gridlib.GRID_VALUE_DATETIME,\
                     #gridlib.GRID_VALUE_BOOL):
                     attr_align = wx.ALIGN_RIGHT
-
             else:
                 attr_font = self.DEFAULT_FONT
                 attr_font.SetPointSize(self.FONT_SIZE)
@@ -1412,7 +1402,7 @@ class LinkTabAttr(object):
     _cardclass = None
     _filter = None
     _oncreate = None
-    _grid = None
+
     def __init__(self, table, col, rsidcol, rscodcol, rsdescol=None,\
                  cardclass=None, filter=None, refresh=False, oncreate=None):
         """
@@ -3108,16 +3098,6 @@ if __name__ == '__main__':
 
         def CreateContextMenu(self):
             pass
-
-
-
-
-
-
-
-
-
-
 
     a = TestApp()
     a.MainLoop()
