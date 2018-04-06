@@ -232,17 +232,27 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
                 g = dom.getElementsByTagName('grid')[0]
                 self.USER_FONTSIZE=int(g.getAttribute('fontsize'))
                 try:
-                    w = int(g.getAttribute('width'))
-                    h = int(g.getAttribute('height'))
+                    w = int(g.getAttribute('Width'))
+                    h = int(g.getAttribute('Height'))
                     self.SetMinSize((w,h))            
                 except:
                     pass
                 self.userSize = {}
+                self._fitColumn=None
+                lAnchor_resize=[]
                 for x in dom.getElementsByTagName('colonna'):
                     #print 'col:%s width>:%s' % (x.getAttribute('n'), x.getAttribute('width'))
-                    n = int(x.getAttribute('n'))
-                    w = int(x.getAttribute('width'))
+                    n = int(x.getAttribute('N'))
+                    w = int(x.getAttribute('Width'))
                     self.userSize[n]=w
+                    if x.getAttribute('_anchor')=='YES':
+                        lAnchor_resize.append(n)
+                if len(lAnchor_resize)>0:
+                    self._anchor_resize=tuple(lAnchor_resize)
+                else:
+                    self._anchor_column=None
+                    self._anchor_resize=None
+                            
                 self.SetFontSize(self.USER_FONTSIZE)
             except:
                 pass
@@ -608,6 +618,16 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
                 self.userSize={}
                 for k in self._csize.keys():
                     self.userSize[k]=self._csize[k]
+            if self._anchor_resize and selectedCol in self._anchor_resize:
+                lTuple = list(self._anchor_resize) 
+                lTuple.remove(selectedCol)
+                if len(lTuple)>0:
+                    self._anchor_resize = tuple(lTuple)
+                else:
+                    self._anchor_column = None                        
+                    self._anchor_resize = None
+                    
+                    
             nCol = selectedCol
             self.SetColSize(nCol, 0)
             self.userSize[nCol] =0
@@ -691,10 +711,33 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
         w, h = self.GetSize()
         root.setAttribute( 'width', '%s' % w)
         root.setAttribute( 'height', '%s' % h)
+        
+        #=======================================================================
+        # if self._anchor_resize:
+        #     if len(self._anchor_resize)>0:
+        #         anchor=''
+        #         for k in self._anchor_resize:
+        #             anchor = '%s%s,' % (anchor, k)
+        #         anchor=anchor[:-1]
+        #         print anchor
+        #         root.setAttribute( 'anchor_column', '%s' % anchor)
+        #     else:
+        #         root.setAttribute( 'noanchor_column', 'YES')
+        # else:
+        #     root.setAttribute( 'noanchor_column', 'YES')
+        #=======================================================================
+        
+                
+
         for k in self._csize.keys():
             r = self.Xml.createElement("colonna")
-            r.setAttribute( 'n', '%s' % k)
-            r.setAttribute( 'width', '%s' % self.GetColSize(k))
+            if self._anchor_resize:
+                if k in self._anchor_resize:
+                    r.setAttribute( '_anchor', 'YES')
+            r.setAttribute( 'N', '%s' % k)
+            r.setAttribute( 'Width', '%s' % self.GetColSize(k))
+            
+            
             root.appendChild(r)
         self.Xml.normalize()
         self.Xml.writexml( open(filename, 'w'),
@@ -822,19 +865,15 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
         return self._defaultValueCB
 
     def SetFitColumn(self, colno):
-        self._fitColumn = colno
-#        if colno is not None:
-#            #for evt in (wx.EVT_SIZE, wx.EVT_MAXIMIZE):
-#            evt = wx.EVT_SIZE
-#            if True:
-#                #self.GetParent().Bind(evt, self.OnGridResized)
-#                self.Bind(evt, self.OnGridResized)
+        if not self.needApplyUserSize:        
+            self._fitColumn = colno
 
     def SetAnchorColumns(self, a_column, a_resize):
-        if not isinstance(a_resize, (list, tuple)):
-            a_resize = [a_resize]
-        self._anchor_column = a_column
-        self._anchor_resize = a_resize
+        if not self.needApplyUserSize:
+            if not isinstance(a_resize, (list, tuple)):
+                a_resize = [a_resize]
+            self._anchor_column = a_column
+            self._anchor_resize = a_resize
 
     def OnGridResized(self, event):
 #        if self._fitColumn is not None:
