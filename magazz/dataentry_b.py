@@ -1968,11 +1968,22 @@ class MultiLinePanel(aw.Panel):
         evt.Skip()
 
     def OnConfirm(self, evt):
-        outTxt = self.TestoInRighe()
         #=======================================================================
-        # for r in outTxt:
-        #     print r
+        # outTxt = self.TestoInRighe()
+        # for i, r in enumerate(outTxt):
+        #     print i,r
+        # 
+        # print '-'*60
         #=======================================================================
+        txt = self.testo.GetValue()
+        fontName=self.cfgdoc.font     
+        fontSize=self.cfgdoc.fontsize 
+        fieldLen=self.cfgdoc.dessize
+        ml = MultiLineDescriz(txt, fontName, fontSize, fieldLen)
+        outTxt=ml.GetLines()
+        for i, r in enumerate(outTxt):
+            print i,r
+        
         self.Parent.ReturnValue['esito']= True
         self.Parent.ReturnValue['testo']= outTxt
         idMov = self.GetIdTipMov()
@@ -2001,45 +2012,106 @@ class MultiLinePanel(aw.Panel):
             lSuccess=False
         return lSuccess
 
-    def TestoInRighe(self):
+    #===========================================================================
+    # def TestoInRighe(self):
+    #     outTxt=[]
+    #     def GetLineLen(fontName, fontSize, fieldLen):
+    #         testString='i'*fieldLen
+    #         lContinue = True
+    #         while (lContinue):
+    #             if int(stringWidth(testString,fontName,fontSize)+0.99) > fieldLen:
+    #                 testString = testString[:-1]
+    #             else:
+    #                 lContinue=False
+    #         return len(testString)
+    #     
+    #     def SplitParagraph(p, fontName, fontSize, fieldLen):
+    #         lRow=[]
+    #         lWord = p.split(' ')
+    #         newRow=''
+    #         for j, word in enumerate(lWord):
+    #             oldRow = newRow
+    #             if len(newRow)==0: 
+    #                 newRow = word
+    #             else:
+    #                 newRow = '%s %s' % (newRow, word)
+    #             if int(stringWidth(newRow,fontName,fontSize)+0.99) > fieldLen:
+    #                 lRow.append(oldRow)
+    #                 newRow=word
+    #         lRow.append(newRow)
+    #         return lRow
+    #     
+    #     txt = self.testo.GetValue()
+    #     fontName=self.cfgdoc.font     
+    #     fontSize=self.cfgdoc.fontsize 
+    #     fieldLen=self.cfgdoc.dessize
+    #     
+    #     if self.Validate(fontName, fontSize, fieldLen):
+    #         lineLen=GetLineLen(fontName, fontSize, fieldLen)
+    #         txt = txt.replace(chr(9), '   ')
+    #         lParagraph = txt.split('\n')
+    #         for i, p in enumerate(lParagraph):
+    #             for r in SplitParagraph(p, fontName, fontSize, fieldLen):
+    #                 outTxt.append(r)
+    #         return outTxt
+    #===========================================================================
+        
+class MultiLineDescriz():
+    txt      = None
+    fontName = None
+    fontSize = None
+    fieldLen = None
+    
+    def __init__(self, txt, fontName, fontSize, fieldLen):
+        self.txt      = txt     
+        self.fontName = fontName
+        self.fontSize = fontSize
+        self.fieldLen = fieldLen
+
+    def Validate(self):
+        lSuccess=True
+        if len(self.fontName)==0:
+            lSuccess=False
+        elif self.fontSize <= 0:
+            lSuccess=False
+        elif self.fieldLen <= 0:
+            lSuccess=False
+        return lSuccess
+
+    def GetLineLen(self):
+        testString='i'*self.fieldLen
+        lContinue = True
+        while (lContinue):
+            if int(stringWidth(testString,self.fontName,self.fontSize)+0.99) > self.fieldLen:
+                testString = testString[:-1]
+            else:
+                lContinue=False
+        return len(testString)
+    
+
+    def SplitParagraph(self, p):
+        lRow=[]
+        lWord = p.split(' ')
+        newRow=''
+        for j, word in enumerate(lWord):
+            oldRow = newRow
+            if len(newRow)==0: 
+                newRow = word
+            else:
+                newRow = '%s %s' % (newRow, word)
+            if int(stringWidth(newRow, self.fontName, self.fontSize)+0.99) > self.fieldLen:
+                lRow.append(oldRow)
+                newRow=word
+        lRow.append(newRow)
+        return lRow
+    
+    def GetLines(self):
         outTxt=[]
-        def GetLineLen(fontName, fontSize, fieldLen):
-            testString='i'*fieldLen
-            lContinue = True
-            while (lContinue):
-                if int(stringWidth(testString,fontName,fontSize)+0.99) > fieldLen:
-                    testString = testString[:-1]
-                else:
-                    lContinue=False
-            return len(testString)
-        
-        def SplitParagraph(p, fontName, fontSize, fieldLen):
-            lRow=[]
-            lWord = p.split(' ')
-            newRow=''
-            for j, word in enumerate(lWord):
-                oldRow = newRow
-                if len(newRow)==0: 
-                    newRow = word
-                else:
-                    newRow = '%s %s' % (newRow, word)
-                if int(stringWidth(newRow,fontName,fontSize)+0.99) > fieldLen:
-                    lRow.append(oldRow)
-                    newRow=word
-            lRow.append(newRow)
-            return lRow
-        
-        txt = self.testo.GetValue()
-        fontName=self.cfgdoc.font     
-        fontSize=self.cfgdoc.fontsize 
-        fieldLen=self.cfgdoc.dessize
-        
-        if self.Validate(fontName, fontSize, fieldLen):
-            lineLen=GetLineLen(fontName, fontSize, fieldLen)
+        txt = self.txt
+        if self.Validate():
             txt = txt.replace(chr(9), '   ')
             lParagraph = txt.split('\n')
             for i, p in enumerate(lParagraph):
-                for r in SplitParagraph(p, fontName, fontSize, fieldLen):
+                for r in self.SplitParagraph(p):
                     outTxt.append(r)
-            return outTxt
-            
+        return outTxt
