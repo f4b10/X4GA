@@ -1910,6 +1910,7 @@ def PiedeAccFunc( parent, call_fit = True, set_sizer = True ):
     item1.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
 
     item29 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    parent.dxGridFoot = item29
     
     item31 = wx.StaticBox( parent, -1, "Destinazione non codificata della spedizione" )
     item30 = wx.StaticBoxSizer( item31, wx.VERTICAL )
