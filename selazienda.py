@@ -1246,13 +1246,13 @@ class AziendaSetup(aw.Dialog):
         return mirAzi is not None
 
     def UpdateCreationLabel(self):
-        label1 = 'Confermando, verrà '
+        label1 = u'Confermando, verrà '
         label2 = ''
         if self._mirfrom:
-            label1 += 'acquisita l\'azienda %s di Mirage' % self._mircode
-            label2 = 'da '+self._mirpath
+            label1 += u'acquisita l\'azienda %s di Mirage' % self._mircode
+            label2 = u'da '+self._mirpath
         else:
-            label1 += 'creata una nuova azienda'
+            label1 += u'creata una nuova azienda'
         for cid, val in ((ID_CONFACTION1, label1),
                          (ID_CONFACTION2, label2)):
             self.FindWindowById(cid).SetLabel(val)
