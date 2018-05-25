@@ -2715,6 +2715,15 @@ class DbTable(object):
 
 
     # metodi di classe
+    @classmethod
+    def parentesi(self, str):
+        out = str
+        try:
+            if str is not None and len(str)>0: 
+                out = '(%s)' % str
+        except:
+            pass
+        return out
 
     @classmethod
     def dita(self, date):
