@@ -26,8 +26,16 @@ Riepilogo dei cambiamenti apportati alla versione
 """
 
 import mx.DateTime as dt
+import mx.Odt
 
 history = (
+    ('1.5.57', dt.Date(2018, 5, 25), (
+         ("BET1255",
+         """Aggiunto richiamo a Catalogo Plugin"""),
+         ("BET1254",
+         """Aggiunte funzioni interne a dbTable"""),
+        ),),
+           
     ('1.5.56', dt.Date(2018, 4, 4), (
          ("BET1253",
          """Compatibilità con X4GA-plugin.grid"""),
