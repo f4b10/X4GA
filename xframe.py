@@ -681,6 +681,7 @@ class XFrame(aw.Frame):
             (self.OnHelp,                      ID_HELP),
             (self.OnAbout,                     ID_ABOUT),
             (self.OnProgramUpdate,             ID_UPDATES),
+            (self.OnCatalogo,                  ID_CATALOGO),
             ):
             self.Bind(wx.EVT_MENU, func, id=cid)
         
@@ -1819,6 +1820,11 @@ class XFrame(aw.Frame):
         dialog = ProgramUpdateDialog(self)
         dialog.ShowModal()
         dialog.Destroy()
+
+    def OnCatalogo(self, event):
+        import webbrowser  
+        url = 'http://www.x4ga.com/catalogo/Catalogo.html'
+        webbrowser.open(url, new=0, autoraise=True)        
     
     def OnQuit(self, event):
         self.Close(True)

@@ -1387,6 +1387,7 @@ ID_UTILITY = 10264
 ID_MENUSTRUMENTI = 10265
 ID_ABOUT = 10266
 ID_UPDATES = 10267
+ID_CATALOGO = 10268
 
 def XMenuBarFunc():
     item0 = wx.MenuBar(wx.MB_DOCKABLE)
@@ -1806,12 +1807,14 @@ def XMenuBarFunc():
     item54 = wx.Menu()
     item54.Append( ID_ABOUT, "Informazioni sulla versione\tCtrl-?", "" )
     item54.Append( ID_UPDATES, "Verifica disponibilità aggiornamenti", "" )
+    item54.AppendSeparator()
+    item54.Append( ID_CATALOGO, "Catalogo Plugin", "" )
     item0.Append( item54, "?" )
     
     return item0
 
 ID_INTMAGSRCDES = 5013
-ID_HELP = 10268
+ID_HELP = 10269
 
 def XLiteMenuBar():
     item0 = wx.MenuBar()
