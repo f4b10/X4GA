@@ -344,12 +344,36 @@ class ClientiPanel(pdcrel._CliForPanel):
 
         self.db_report = "Lista Clienti"
 
+
+
+        
+
+
+
+
     def InitAnagCard(self, parent):
         wdr.LinkTableClienteFornitore = wdr.LinkTableCliente
         p = aw.Panel( parent, -1)
         wdr.ClientiCardFunc( p, True )
         def cn(x):
             return self.FindWindowByName(x)
+        
+        try:
+            from gdpr_ver import VERSION_STRING
+            viewGdpr = True
+        except:
+            viewGdpr = False
+        
+        if viewGdpr:
+            try:
+                wzGdpr = self.FindWindowById(wdr.ID_SPEDINDZONE)
+                pGdpr = wx.Panel(wzGdpr, -1)
+                wdr.GdprFunc(pGdpr, False)
+                wzGdpr.AddPage(pGdpr, "Gdpr")
+                btnGdpr = self.FindWindowByName('btnGdpr') 
+                btnGdpr.Bind(wx.EVT_BUTTON, self.OnGdpr)
+            except:
+                pass        
         
         viewFtel = False
         try:
@@ -385,6 +409,12 @@ class ClientiPanel(pdcrel._CliForPanel):
         self.ftel_tipo.Bind(wx.EVT_RADIOBOX, self.OnTipoFatturaElettronica)
         
         return p
+
+    def OnGdpr(self, evt):
+        import gdpr_word as gw
+        dbClienti = dba.Clienti()
+        dbClienti.Retrieve('pdc.id=%s' % self.db_recid)
+        Info = gw.Informativa(model=None, savingFolder=None, dbClienti=dbClienti)
 
 
     def OnFatturaElettronica(self, evt):

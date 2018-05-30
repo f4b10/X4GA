@@ -4356,6 +4356,57 @@ def CliFor_DatiFiscaliFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
+ID_BUTTON = 14199
+
+def GdprFunc( parent, call_fit = True, set_sizer = True ):
+    item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    
+    item1 = wx.FlexGridSizer( 0, 3, 0, 0 )
+    
+    item2 = wx.StaticText( parent, ID_TEXT, "Richiesta Consenso avanzato in data:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item1.Add( item2, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item3 = DateCtrl( parent, ID_TEXTCTRL, "", wx.DefaultPosition, [80,-1], 0 )
+    item3.SetName( "consensosend" )
+    item1.Add( item3, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item4 = wx.Button( parent, ID_BUTTON, "Stampa Informativa", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item4.SetName( "btnGdpr" )
+    item1.Add( item4, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+    item5 = wx.StaticText( parent, ID_TEXT, "Consenso ricevuto in data:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item1.Add( item5, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item6 = DateCtrl( parent, ID_TEXTCTRL, "", wx.DefaultPosition, [80,-1], 0 )
+    item6.SetName( "consensoric" )
+    item1.Add( item6, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item1.Add( [ 5, 5 ] , 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+    item7 = wx.StaticText( parent, ID_TEXT, "Consenso revocato in data:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item1.Add( item7, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item8 = DateCtrl( parent, ID_TEXTCTRL, "", wx.DefaultPosition, [80,-1], 0 )
+    item8.SetName( "consensorev" )
+    item1.Add( item8, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item1.Add( [ 5, 5 ] , 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+    item1.AddGrowableCol( 1 )
+
+    item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item0.AddGrowableCol( 0 )
+
+    item0.AddGrowableRow( 0 )
+
+    if set_sizer == True:
+        parent.SetSizer( item0 )
+        if call_fit == True:
+            item0.SetSizeHints( parent )
+    
+    return item0
+
 # Menubar functions
 
 # Toolbar functions
