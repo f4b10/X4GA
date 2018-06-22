@@ -3675,7 +3675,6 @@ class InventarioDaMovim(_InventarioMixin):
         self._MakeGroups()
 
         for name, expr in self._info.totdef:
-            print name, expr
             self.AddTotalOf(expr, name)
             self.__setattr__("total_%s" % name, 0)
 
