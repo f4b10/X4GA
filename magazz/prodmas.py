@@ -88,7 +88,11 @@ class GridMov(maglib.GridMov):
             a(( 45, (cn(mov, "sconto5"), "Sc.%5",    _SCO, True)))
         if bt.MAGNUMSCO >= 6:
             a(( 45, (cn(mov, "sconto6"), "Sc.%6",    _SCO, True)))
-        a((110, (cn(mov, "importo"), "Importo",      _IMP, True)))
+        #=======================================================================
+        # a((110, (cn(mov, "importo"), "Importo",      _IMP, True)))
+        #=======================================================================
+        #TODO:SCORPORO X BARBARA
+        a((110, (cn(mov, "imponibile"), "Imponibile",   _IMP, True)))
         a(( 35, (cn(iva, "codice"),  "Cod.",         _STR, True)))
         a(( 90, (cn(iva, "descriz"), "Aliquota IVA", _STR, True)))
         a(( 50, (cn(doc, "numdoc"),  "Num.",         _STR, True)))
@@ -133,7 +137,8 @@ class GridMov(maglib.GridMov):
             ('Tot. Ord. Clienti:',   lambda rsm, row: rsm[row][self._ncaggorc]),
             ('Tot. Ord. Fornitori:', lambda rsm, row: rsm[row][self._ncaggorf])):
             grid.AddTotalsRow(3, label, (cn(mov, "qta"),
-                                         cn(mov, "importo")), func)
+                                         cn(mov, "importo"),
+                                         cn(mov, "imponibile"),), func)
         grid.SetCellDynAttr(self.GetAttr)
         
         ci = lambda x: parent.GetGrandParent().FindWindowById(x)
@@ -293,8 +298,13 @@ class GridMovEva(maglib.GridMovEva):
         a(( 80, (cn(mov, "qta"),     "Qtà",          _QTA, True)))
         a(( 80, (-1,                 "Evaso",        _QTA, True)))
         a(( 80, (-2,                 "Residuo",      _QTA, True)))
-        a(( 80, (cn(mov, "prezzo"),  "Prezzo",       _PRE, True)))
-        a(( 85, (cn(mov, "importo"), "Importo",      _IMP, True)))
+        #=======================================================================
+        # a(( 80, (cn(mov, "prezzo"),  "Prezzo",       _PRE, True)))
+        # a(( 85, (cn(mov, "importo"), "Importo",      _IMP, True)))
+        #=======================================================================
+        #TODO:SCORPORO X BARBARA
+        a(( 80, (cn(mov, "prezzoimp"),  "Prezzo",       _PRE, True)))
+        a(( 85, (cn(mov, "imponibile"), "Imponibile",      _IMP, True)))
         a(( 50, (cn(pdc, "codice"),  "Cod.",         _STR, True)))
         a((260, (cn(pdc, "descriz"), "Sottoconto",   _STR, True)))
         a((110, (cn(tpm, "descriz"), "Movimento",    _STR, True)))
