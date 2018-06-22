@@ -233,6 +233,7 @@ class GridMov(object):
         tots = {}
         flds = []
         for field, cond in (("importo",  lambda tipo: True),
+                            ("imponibile",  lambda tipo: True),
                             ("impmerce", lambda tipo: tipo == "M"),
                             ("impspese", lambda tipo: tipo == "S"),
                             ("impservi", lambda tipo: tipo == "V"),
@@ -248,13 +249,21 @@ class GridMov(object):
         
         def Totalizza(r):
             tipo = r[cols['tipcol']]
+            print 'totalizza mastro movimenti non coincide con tatali grid %s' % tipo
             if tipo is not None:
                 for field in flds:
-                    if filt[field](tipo):
-                        imp = r[cols['importo']] or 0
-                        if field == 'importo' and tipo in 'IE':
-                            imp *= -1
-                        tots[field] += imp
+                    try:
+                        if filt[field](tipo):
+                            imp = r[cols['imponibile']] or 0
+                            if field == 'imponibile' and tipo in 'IE':
+                                imp *= -1
+                            tots[field] += imp
+                    except:
+                        if filt[field](tipo):
+                            imp = r[cols['importo']] or 0
+                            if field == 'importo' and tipo in 'IE':
+                                imp *= -1
+                            tots[field] += imp
         
         wx.BeginBusyCursor()
         map(Totalizza, mov.GetRecordset())
