@@ -827,7 +827,7 @@ def ProdProgr2Func( parent, call_fit = True, set_sizer = True ):
     item7 = wx.StaticText( parent, ID_PPRLABPROQTA, "Quantità", wx.DefaultPosition, wx.DefaultSize, 0 )
     item5.Add( item7, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
 
-    item8 = wx.StaticText( parent, ID_PPRLABPROIMP, "Importo", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item8 = wx.StaticText( parent, ID_PPRLABPROIMP, "Imponibile", wx.DefaultPosition, wx.DefaultSize, 0 )
     item5.Add( item8, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
 
     item9 = wx.StaticText( parent, ID_PPRLABPROMED, "Valore medio", wx.DefaultPosition, wx.DefaultSize, 0 )
@@ -1320,7 +1320,7 @@ def ProdMastro1Func( parent, call_fit = True, set_sizer = True ):
     item60 = wx.StaticText( parent, ID_LABMASTOTDOCQ, "Num.", wx.DefaultPosition, wx.DefaultSize, 0 )
     item58.Add( item60, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
 
-    item61 = wx.StaticText( parent, ID_LABMASTOTDOCQ, "Importo", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item61 = wx.StaticText( parent, ID_LABMASTOTDOCQ, "Imponibile", wx.DefaultPosition, wx.DefaultSize, 0 )
     item58.Add( item61, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.TOP, 5 )
 
     item62 = wx.StaticText( parent, ID_LABMASMOV, "Righe trovate:", wx.DefaultPosition, wx.DefaultSize, 0 )
@@ -2056,7 +2056,7 @@ def ProdMastroEvaFunc1( parent, call_fit = True, set_sizer = True ):
     item64 = wx.StaticText( parent, ID_LABMASTOTDOCQ, "Quantità", wx.DefaultPosition, wx.DefaultSize, 0 )
     item62.Add( item64, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
-    item65 = wx.StaticText( parent, ID_LABMASTOTDOCV, "Importo", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item65 = wx.StaticText( parent, ID_LABMASTOTDOCV, "Imponibile", wx.DefaultPosition, wx.DefaultSize, 0 )
     item62.Add( item65, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
 
     item66 = wx.StaticText( parent, ID_LABMASMOV, "Movimenti", wx.DefaultPosition, wx.DefaultSize, 0 )

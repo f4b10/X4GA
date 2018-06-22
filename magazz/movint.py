@@ -86,6 +86,8 @@ class GridMov(maglib.GridMov):
         a((205, (cn(mov, "descriz"),   "Descrizione",  _STR, True)))
         a(( 80, (cn(mov, "qta"),       "Qtà",          _QTA, True)))
         a(( 80, (cn(mov, "prezzo"),    "Prezzo",       _PRE, True)))
+        a(( 80, (cn(mov, "prezzoimp"),    "Prezzo",       _PRE, True)))
+        a(( 80, (cn(iva, "perciva"),    "Iva",       _PRE, True)))
         if bt.MAGNUMSCO >= 1:
             a(( 45, (cn(mov, "sconto1"),   "Sc.%"+'1'*int(bt.MAGNUMSCO>1), _SCO, True)))
         if bt.MAGNUMSCO >= 2:
@@ -99,6 +101,7 @@ class GridMov(maglib.GridMov):
         if bt.MAGNUMSCO >= 6:
             a(( 45, (cn(mov, "sconto6"),   "Sc.%6",    _SCO, True)))
         a(( 90, (cn(mov, "importo"),   "Importo",      _IMP, True)))
+        a(( 90, (cn(mov, "imponibile"),"Imponibile",   _IMP, True)))
         a((120, (cn(mov, "note"),      "Note",         _STR, True)))
         a(( 35, (cn(iva, "codice"),    "Cod.",         _STR, True)))
         a(( 90, (cn(iva, "descriz"),   "Aliquota IVA", _STR, True)))

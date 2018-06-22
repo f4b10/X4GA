@@ -276,7 +276,10 @@ class DocMag(adb.DbTable):
         i.stampadiff = False #flag stampa differita, se True GetAnagPrint non considera destinazioni
 
         DQ = bt.MAGQTA_DECIMALS; q = 'mov.qta'
+        #gestione scorporo
+        #originariamente era:
         DI = bt.VALINT_DECIMALS; v = 'mov.importo'
+        #DI = bt.VALINT_DECIMALS; v = 'mov.importo*IF(tipdoc.scorpiva=1,100/(100+iva.perciva),1)'
 
         i.prodpro = {}     #aggiornamento progressivi scheda prodotto
         i.ppkeys = {       #chiavi aggiornamento x storno
@@ -3187,13 +3190,27 @@ class ElencoMovim(Movim):
             kwargs['writable'] = False
         Movim.__init__(self, bt.TABNAME_MOVMAG_B, "mov", **kwargs)
 
-        self.AddField("mov.importo*(tipmov.tipologia='M')", "impmerce")
-        self.AddField("mov.importo*(tipmov.tipologia='S')", "impspese")
-        self.AddField("mov.importo*(tipmov.tipologia='V')", "impservi")
-        self.AddField("mov.importo*(tipmov.tipologia='T')", "imptrasp")
-        self.AddField("mov.importo*(tipmov.tipologia='I')", "impscrip")
-        self.AddField("mov.importo*(tipmov.tipologia='E')", "impscmce")
-        self.AddField("mov.importo*(tipmov.tipologia='O')", "impomagg")
+        #=======================================================================
+        # self.AddField("mov.importo*(tipmov.tipologia='M')", "impmerce")
+        # self.AddField("mov.importo*(tipmov.tipologia='S')", "impspese")
+        # self.AddField("mov.importo*(tipmov.tipologia='V')", "impservi")
+        # self.AddField("mov.importo*(tipmov.tipologia='T')", "imptrasp")
+        # self.AddField("mov.importo*(tipmov.tipologia='I')", "impscrip")
+        # self.AddField("mov.importo*(tipmov.tipologia='E')", "impscmce")
+        # self.AddField("mov.importo*(tipmov.tipologia='O')", "impomagg")
+        #=======================================================================
+
+        self.AddField("mov.importo*IF(tipdoc.scorpiva=1,(100/(100+iva.perciva)),1)", "imponibile")
+        self.AddField("mov.prezzo*IF(tipdoc.scorpiva=1,(100/(100+iva.perciva)),1)", "prezzoimp")
+        
+        self.AddField("mov.importo*IF(tipdoc.scorpiva=1,(100/(100+iva.perciva)),1)*(tipmov.tipologia='M')", "impmerce")
+        self.AddField("mov.importo*IF(tipdoc.scorpiva=1,100/(100+iva.perciva),1)*(tipmov.tipologia='S')", "impspese")
+        self.AddField("mov.importo*IF(tipdoc.scorpiva=1,100/(100+iva.perciva),1)*(tipmov.tipologia='V')", "impservi")
+        self.AddField("mov.importo*IF(tipdoc.scorpiva=1,100/(100+iva.perciva),1)*(tipmov.tipologia='T')", "imptrasp")
+        self.AddField("mov.importo*IF(tipdoc.scorpiva=1,100/(100+iva.perciva),1)*(tipmov.tipologia='I')", "impscrip")
+        self.AddField("mov.importo*IF(tipdoc.scorpiva=1,100/(100+iva.perciva),1)*(tipmov.tipologia='E')", "impscmce")
+        self.AddField("mov.importo*IF(tipdoc.scorpiva=1,100/(100+iva.perciva),1)*(tipmov.tipologia='O')", "impomagg")
+
 
         self.AddOrder("doc.datreg")
         self.AddOrder("tipdoc.codice")
@@ -3391,8 +3408,18 @@ class ProdMastroEva(ProdMastro):
             join=adb.JOIN_LEFT, fields=None)
 
         mov.AddGroupOn("mov.id")
+        
         mov.AddTotalOf("eva.qta",            "evas_qta")
-        mov.AddTotalOf("eva.importo",        "evas_importo")
+        mov.AddTotalOf("eva.importo*IF(tipdoc.scorpiva=1,(100/(100+iva.perciva)),1)",        "evas_importo")
+        # gestione scorporo
+        # originariamente era:        
+        #=======================================================================
+        # mov.AddTotalOf("eva.importo",        "evas_importo")
+        #=======================================================================
+        
+        
+        
+        
         mov.AddTotalOf("eva.qta*eva.prezzo", "evas_implord")
         mov.AddCountOf("eva.id",             "evas_movim")
 
@@ -3599,7 +3626,7 @@ class InventarioDaMovim(_InventarioMixin):
                              ("giac",   "(mov.qta*tipmov.aggini)+(mov.qta*tipmov.aggcar)-(mov.qta*tipmov.aggsca)"),
                              ("iniv",   "mov.importo*IF(tipdoc.scorpiva=1,100/(100+iva.perciva),1)*tipmov.agginiv"),
                              ("carv",   "mov.importo*IF(tipdoc.scorpiva=1,100/(100+iva.perciva),1)*tipmov.aggcarv"),
-                             ("scav",   "mov.importo*tipmov.aggscav"),
+                             ("scav",   "mov.importo*IF(tipdoc.scorpiva=1,100/(100+iva.perciva),1)*tipmov.aggscav"),
                              ("cvccar", "mov.qta*tipmov.aggcvccar"),
                              ("cvcsca", "mov.qta*tipmov.aggcvcsca"),
                              ("cvctot", "(mov.qta*tipmov.aggcvccar)-(mov.qta*tipmov.aggcvcsca)"),
@@ -3634,6 +3661,7 @@ class InventarioDaMovim(_InventarioMixin):
             mov = self.AddMultiJoin(bt.TABNAME_MOVMAG_B,  "mov", fields='id_aliqiva',
                                     dbTabClass=self.MovimClass)
 
+
         doc = mov.AddJoin(\
             bt.TABNAME_MOVMAG_H,  "doc", idLeft='id_doc', idRight='id', join=adb.JOIN_LEFT, fields='id_magazz')
 
@@ -3663,7 +3691,13 @@ class InventarioDaMovim(_InventarioMixin):
         tipmov = mov.AddJoin(\
             bt.TABNAME_CFGMAGMOV, "tipmov", join=adb.JOIN_LEFT, idLeft='id_tipmov', idRight='id', fields='id,codice,descriz')
 
+        
+        
+        self.AddField("mov.importo*IF(tipdoc.scorpiva=1,(100/(100+iva.perciva)),1)", "imponibile")
         self.dbmov = mov
+        
+        
+        
         #self.Retrieve('prod.id=5343')
         #=======================================================================
         # for r in self.dbmov:

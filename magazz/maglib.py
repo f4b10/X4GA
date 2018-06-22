@@ -365,7 +365,7 @@ class GridMovEva(object):
         
         cols = {}
         for field in\
-            ("qta", "prezzo", "importo",
+            ("qta", "prezzo", "importo", "imponibile",
              "total_evas_qta", "total_evas_importo", 
              "total_resid_qta", "total_resid_importo"):
             cols[field] = mov._GetFieldIndex(field, inline=True)
@@ -379,7 +379,7 @@ class GridMovEva(object):
         
         def Totalizza(r):
             docqta = r[cols['qta']] or 0
-            docimp = r[cols['importo']] or 0
+            docimp = r[cols['imponibile']] or 0
             evaqta = r[cols['total_evas_qta']] or 0
             evaimp = r[cols['total_evas_importo']] or 0
             name = "mastotdoc" #qta,importo su movimento
