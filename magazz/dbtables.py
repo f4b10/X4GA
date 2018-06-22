@@ -3350,14 +3350,16 @@ class ProdMastro(adb.DbTable):
             join=adb.JOIN_LEFT,\
             dbTabClass=Movim)
 
+        #TODO:SCORPORO X BARBARA
+        mov.AddField("mov.importo*IF(tipdoc.scorpiva=1,100/(100+iva.perciva),1)", "imponibile")
+        mov.AddField("mov.prezzo*IF(tipdoc.scorpiva=1,100/(100+iva.perciva),1)", "prezzoimp")
         mov.AddOrder("doc.datreg")
         mov.AddOrder("doc.datdoc")
         mov.AddOrder("doc.numdoc")
         mov.AddOrder("doc.id")
-
+        mov.SetDebug()
+        mov.Get(-1)
         self.Get(-1)
-
-
 # ------------------------------------------------------------------------------
 
 
@@ -3572,13 +3574,31 @@ class InventarioDaMovim(_InventarioMixin):
         _InventarioMixin.__init__(self, **kwargs)
 
         self._info.flatmag = flatmag
-
+        # gestione scorporo
+        # originariamente era:
+        #=======================================================================
+        # self._info.totdef = [("ini",    "mov.qta*tipmov.aggini"),
+        #                      ("car",    "mov.qta*tipmov.aggcar"),
+        #                      ("sca",    "mov.qta*tipmov.aggsca"),
+        #                      ("giac",   "(mov.qta*tipmov.aggini)+(mov.qta*tipmov.aggcar)-(mov.qta*tipmov.aggsca)"),
+        #                      ("iniv",   "mov.importo*tipmov.agginiv"),
+        #                      ("carv",   "mov.importo*tipmov.aggcarv"),
+        #                      ("scav",   "mov.importo*tipmov.aggscav"),
+        #                      ("cvccar", "mov.qta*tipmov.aggcvccar"),
+        #                      ("cvcsca", "mov.qta*tipmov.aggcvcsca"),
+        #                      ("cvctot", "(mov.qta*tipmov.aggcvccar)-(mov.qta*tipmov.aggcvcsca)"),
+        #                      ("cvfcar", "mov.qta*tipmov.aggcvfcar"),
+        #                      ("cvfsca", "mov.qta*tipmov.aggcvfsca"),
+        #                      ("cvftot", "(mov.qta*tipmov.aggcvfcar)-(mov.qta*tipmov.aggcvfsca)"),
+        #                  ]
+        #=======================================================================
+        
         self._info.totdef = [("ini",    "mov.qta*tipmov.aggini"),
                              ("car",    "mov.qta*tipmov.aggcar"),
                              ("sca",    "mov.qta*tipmov.aggsca"),
                              ("giac",   "(mov.qta*tipmov.aggini)+(mov.qta*tipmov.aggcar)-(mov.qta*tipmov.aggsca)"),
-                             ("iniv",   "mov.importo*tipmov.agginiv"),
-                             ("carv",   "mov.importo*tipmov.aggcarv"),
+                             ("iniv",   "mov.importo*IF(tipdoc.scorpiva=1,100/(100+iva.perciva),1)*tipmov.agginiv"),
+                             ("carv",   "mov.importo*IF(tipdoc.scorpiva=1,100/(100+iva.perciva),1)*tipmov.aggcarv"),
                              ("scav",   "mov.importo*tipmov.aggscav"),
                              ("cvccar", "mov.qta*tipmov.aggcvccar"),
                              ("cvcsca", "mov.qta*tipmov.aggcvcsca"),
@@ -3587,19 +3607,39 @@ class InventarioDaMovim(_InventarioMixin):
                              ("cvfsca", "mov.qta*tipmov.aggcvfsca"),
                              ("cvftot", "(mov.qta*tipmov.aggcvfcar)-(mov.qta*tipmov.aggcvfsca)"),
                          ]
+        
+
+
+
+
+
+
+        
+        #=======================================================================
+        # mov.doc.tipdoc.scorpiva
+        # 
+        # mov.importo*IF(tipdoc.scorpiva=1,100/(100+iva.perciva),1)", "imponibile")
+        # mov.importo*[1, 100/(100+mov.iva.perciva)][mov.doc.tipdoc.scorpiva==1]
+        # 
+        #=======================================================================
+        
         if ultraTot:
             self._info.totdef += ultraTot
 
         if True:#flatmag:
-            mov = self.AddJoin(bt.TABNAME_MOVMAG_B, 'mov', idLeft='id', idRight='id_prod', join=adb.JOIN_LEFT, fields=None)
+            mov = self.AddJoin(bt.TABNAME_MOVMAG_B, 'mov', idLeft='id', idRight='id_prod', join=adb.JOIN_LEFT, fields='id_aliqiva')
             mov.AddBaseFilter('mov.f_ann IS NULL OR mov.f_ann<>1')
             self.mov = mov
         else:
-            mov = self.AddMultiJoin(bt.TABNAME_MOVMAG_B,  "mov", fields=None,
+            mov = self.AddMultiJoin(bt.TABNAME_MOVMAG_B,  "mov", fields='id_aliqiva',
                                     dbTabClass=self.MovimClass)
 
         doc = mov.AddJoin(\
             bt.TABNAME_MOVMAG_H,  "doc", idLeft='id_doc', idRight='id', join=adb.JOIN_LEFT, fields='id_magazz')
+
+
+        
+        
 
         if self._info.g_datalastchi:
             # MARCELLO - correzione mia
@@ -3608,6 +3648,9 @@ class InventarioDaMovim(_InventarioMixin):
 
         mov.AddBaseFilter('doc.f_ann IS NULL OR doc.f_ann<>1')
 
+        iva = mov.AddJoin(\
+            bt.TABNAME_ALIQIVA, "iva", join=adb.JOIN_LEFT, idLeft='id_aliqiva', idRight='id', fields='id,codice,descriz,perciva')
+        
         mag = doc.AddJoin(\
             bt.TABNAME_MAGAZZ,    "mag", join=adb.JOIN_LEFT, fields='id,codice,descriz')
 
@@ -3615,16 +3658,24 @@ class InventarioDaMovim(_InventarioMixin):
             bt.TABNAME_PDC,       "pdc", join=adb.JOIN_LEFT, fields=None)
 
         tipdoc = doc.AddJoin(\
-            bt.TABNAME_CFGMAGDOC, "tipdoc", join=adb.JOIN_LEFT, idLeft='id_tipdoc', idRight='id', fields='id,codice,descriz')
+            bt.TABNAME_CFGMAGDOC, "tipdoc", join=adb.JOIN_LEFT, idLeft='id_tipdoc', idRight='id', fields='id,codice,descriz,scorpiva')
 
         tipmov = mov.AddJoin(\
             bt.TABNAME_CFGMAGMOV, "tipmov", join=adb.JOIN_LEFT, idLeft='id_tipmov', idRight='id', fields='id,codice,descriz')
 
         self.dbmov = mov
+        #self.Retrieve('prod.id=5343')
+        #=======================================================================
+        # for r in self.dbmov:
+        #     print 'Flag scorporo Iva:%s' % r.doc.tipdoc.scorpiva
+        #     print 'Id Aliquota Iva:%s' % r.id_aliqiva
+        #     print 'Perc.Iva:%s' % r.iva.descriz
+        #=======================================================================
 
         self._MakeGroups()
 
         for name, expr in self._info.totdef:
+            print name, expr
             self.AddTotalOf(expr, name)
             self.__setattr__("total_%s" % name, 0)
 
@@ -4012,10 +4063,24 @@ class ProdProgrDaScheda(adb.DbTable):
 
 class ProdProgrDaMovim(InventarioDaMovim):
     def __init__(self):
+        # gestione scorporo
+        # originariamente era:
+        #=======================================================================
+        # totdef = [("ordcli",  "mov.qta*tipmov.aggordcli"),
+        #           ("ordfor",  "mov.qta*tipmov.aggordfor"),
+        #           ("ordcliv", "mov.importo*tipmov.aggordcli"),
+        #           ("ordforv", "mov.importo*tipmov.aggordfor")]
+        #=======================================================================
+        
+        
         totdef = [("ordcli",  "mov.qta*tipmov.aggordcli"),
                   ("ordfor",  "mov.qta*tipmov.aggordfor"),
-                  ("ordcliv", "mov.importo*tipmov.aggordcli"),
-                  ("ordforv", "mov.importo*tipmov.aggordfor")]
+                  ("ordcliv", "mov.importo*IF(tipdoc.scorpiva=1,100/(100+iva.perciva),1)*tipmov.aggordcli"),
+                  ("ordforv", "mov.importo*IF(tipdoc.scorpiva=1,100/(100+iva.perciva),1)*tipmov.aggordfor")]
+        
+        
+        
+        
         InventarioDaMovim.__init__(self, ultraTot=totdef)
         mov = self.dbmov
         #mov.AddField("mov.qta*tipmov.aggordcli",     'total_ordcli')
@@ -4101,21 +4166,44 @@ class ProdProgrEvas(adb.DbTable):
             bt.TABNAME_CFGMAGDOC, "tpdbase", idLeft='id_tipdoc')
 
         self.AddGroupOn("mov.id_prod")
+        # gestione scorporo
+        # originariamente era:
+        #=======================================================================
+        # self.AddTotalOf("mov.qta*tmvbase.aggini",        "evasini")
+        # self.AddTotalOf("mov.qta*tmvbase.aggcar",        "evascar")
+        # self.AddTotalOf("mov.qta*tmvbase.aggsca",        "evassca")
+        # self.AddTotalOf("mov.importo*tmvbase.agginiv",   "evasiniv")
+        # self.AddTotalOf("mov.importo*tmvbase.aggcarv",   "evascarv")
+        # self.AddTotalOf("mov.importo*tmvbase.aggscav",   "evasscav")
+        # self.AddTotalOf("mov.qta*tmvbase.aggordcli",     "evasordcli")
+        # self.AddTotalOf("mov.qta*tmvbase.aggordfor",     "evasordfor")
+        # self.AddTotalOf("mov.importo*tmvbase.aggordcli", "evasordcliv")
+        # self.AddTotalOf("mov.importo*tmvbase.aggordfor", "evasordforv")
+        # #c/v
+        # self.AddTotalOf("mov.qta*tmvbase.aggcvccar",     "evascvccar")
+        # self.AddTotalOf("mov.qta*tmvbase.aggcvcsca",     "evascvcsca")
+        # self.AddTotalOf("mov.qta*tmvbase.aggcvfcar",     "evascvfcar")
+        # self.AddTotalOf("mov.qta*tmvbase.aggcvfsca",     "evascvfsca")
+        #=======================================================================
+
         self.AddTotalOf("mov.qta*tmvbase.aggini",        "evasini")
         self.AddTotalOf("mov.qta*tmvbase.aggcar",        "evascar")
         self.AddTotalOf("mov.qta*tmvbase.aggsca",        "evassca")
-        self.AddTotalOf("mov.importo*tmvbase.agginiv",   "evasiniv")
-        self.AddTotalOf("mov.importo*tmvbase.aggcarv",   "evascarv")
-        self.AddTotalOf("mov.importo*tmvbase.aggscav",   "evasscav")
+        self.AddTotalOf("mov.importo*IF(tipdoc.scorpiva=1,100/(100+iva.perciva),1)*tmvbase.agginiv",   "evasiniv")
+        self.AddTotalOf("mov.importo*IF(tipdoc.scorpiva=1,100/(100+iva.perciva),1)*tmvbase.aggcarv",   "evascarv")
+        self.AddTotalOf("mov.importo*IF(tipdoc.scorpiva=1,100/(100+iva.perciva),1)*tmvbase.aggscav",   "evasscav")
         self.AddTotalOf("mov.qta*tmvbase.aggordcli",     "evasordcli")
         self.AddTotalOf("mov.qta*tmvbase.aggordfor",     "evasordfor")
-        self.AddTotalOf("mov.importo*tmvbase.aggordcli", "evasordcliv")
-        self.AddTotalOf("mov.importo*tmvbase.aggordfor", "evasordforv")
+        self.AddTotalOf("mov.importo*IF(tipdoc.scorpiva=1,100/(100+iva.perciva),1)*tmvbase.aggordcli", "evasordcliv")
+        self.AddTotalOf("mov.importo*IF(tipdoc.scorpiva=1,100/(100+iva.perciva),1)*tmvbase.aggordfor", "evasordforv")
         #c/v
         self.AddTotalOf("mov.qta*tmvbase.aggcvccar",     "evascvccar")
         self.AddTotalOf("mov.qta*tmvbase.aggcvcsca",     "evascvcsca")
         self.AddTotalOf("mov.qta*tmvbase.aggcvfcar",     "evascvfcar")
         self.AddTotalOf("mov.qta*tmvbase.aggcvfsca",     "evascvfsca")
+
+
+
 
         #self.AddBaseFilter("movbase.f_ann IS NULL AND movbase.f_ann<>1")
         #self.AddBaseFilter("docbase.f_ann IS NULL AND docbase.f_ann<>1")
