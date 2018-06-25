@@ -3374,7 +3374,6 @@ class ProdMastro(adb.DbTable):
         mov.AddOrder("doc.datdoc")
         mov.AddOrder("doc.numdoc")
         mov.AddOrder("doc.id")
-        mov.SetDebug()
         mov.Get(-1)
         self.Get(-1)
 # ------------------------------------------------------------------------------
@@ -4646,6 +4645,10 @@ class MovAll(adb.DbTable):
 
         travet = doc.AddJoin(\
             bt.TABNAME_TRAVET,    "travet", join=adb.JOIN_LEFT)
+
+        self.AddField("mov.importo*IF(tipdoc.scorpiva=1,(100/(100+iva.perciva)),1)", "imponibile")
+        self.AddField("mov.prezzo*IF(tipdoc.scorpiva=1,(100/(100+iva.perciva)),1)", "prezzoimp")
+
 
         self.AddOrder("doc.datdoc")
         self.AddOrder("tipdoc.codice")

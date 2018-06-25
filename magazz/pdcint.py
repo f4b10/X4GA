@@ -181,7 +181,9 @@ class PdcIntMagMovGrid(dbglib.DbGridColoriABlocchi):
         a((100, (cn(pro, "codice"),  "Cod.",         _STR, True)))
         a((190, (cn(mov, "descriz"), "Descrizione.", _STR, True)))
         a(( 80, (cn(mov, "qta"),     "Quantità",     _QTA, True)))
-        a(( 90, (cn(mov, "prezzo"),  "Prezzo",       _PRZ, True)))
+        #a(( 90, (cn(mov, "prezzo"),  "Prezzo",       _PRZ, True)))
+        a(( 80, (cn(mov, "prezzoimp"),  "Prezzo",    _PRZ, True)))
+        
         if bt.MAGNUMSCO >= 1:
             a(( 60, (cn(mov, "sconto1"), "Sc.%"+'1'*int(bt.MAGNUMSCO>1), _SCO, True)))
         if bt.MAGNUMSCO >= 2:
@@ -194,7 +196,8 @@ class PdcIntMagMovGrid(dbglib.DbGridColoriABlocchi):
             a(( 60, (cn(mov, "sconto5"), "Sc.%5",    _SCO, True)))
         if bt.MAGNUMSCO >= 6:
             a(( 60, (cn(mov, "sconto6"), "Sc.%6",    _SCO, True)))
-        a((110, (cn(mov, "importo"), "Importo",      _IMP, True)))
+        a(( 90, (cn(mov, "imponibile"),"Imponibile", _IMP, True)))
+        #a((110, (cn(mov, "importo"), "Importo",      _IMP, True)))
         a((200, (cn(mov, "note"),    "Note",         _STR, True)))
         a((120, (cn(tpd, "descriz"), "Documento",    _STR, True)))
         a((120, (cn(tpm, "descriz"), "Movimento",    _STR, True)))

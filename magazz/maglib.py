@@ -249,7 +249,7 @@ class GridMov(object):
         
         def Totalizza(r):
             tipo = r[cols['tipcol']]
-            print 'totalizza mastro movimenti non coincide con tatali grid %s' % tipo
+            #print 'totalizza mastro movimenti non coincide con tatali grid %s' % tipo
             if tipo is not None:
                 for field in flds:
                     try:
