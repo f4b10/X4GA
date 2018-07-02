@@ -292,7 +292,7 @@ class DB(object):
     def GetConnection(self):
         return self._dbCon
 
-    def Retrieve(self, sql, par=[], asList=True):
+    def Retrieve(self, sql, par=[], asList=True, debug=False):
         """
         Data retrieving method. This causes to populate the internal
         recordset.
@@ -313,6 +313,17 @@ class DB(object):
                 else:
                     dbCursor.execute(sql, par)
                 logmsg('done')
+                if debug:
+                    print 'debug aggiunto'                
+                    print "="*60
+                    print "SQL Construct:\n%s" % sql
+                    if not len(par) == 0:
+                        print "   Parameters:\n%s" % par
+                    print "="*60
+                    
+                
+                
+                
                 #TODO: per compatibilità con MySql 5.7
                 #===============================================================
                 # if 'cfgeff' in sql:

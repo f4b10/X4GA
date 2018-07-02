@@ -33,6 +33,8 @@ logmsg = adb.db.logmsg
 import awc.controls.windows as aw
 import mx
 
+_DEBUG_DB = False
+
 ADEG_MISSINGTABLE =  0
 ADEG_MISSINGFIELD =  1
 ADEG_WRONGTYPE =     2
@@ -1160,19 +1162,20 @@ class DbTable(object):
 
             cmd, par = self._MakeSQL(filterExpr, *filterParams, **kwargs)
 
-            if self._info.debug:
+            if self._info.debug or _DEBUG_DB :
                 print "***RETRIEVE***"
 
             if self._info.waitDialog is not None:
                 wait = GetWaitDialogClass()(self._info.waitDialog, dataread=True)
 
             success = self._info.db.Retrieve(cmd, par,\
-                                             asList=self._info.writable)
+                                             asList=self._info.writable,
+                                             debug = self._info.waitDialog or _DEBUG_DB )
 
             if self._info.waitDialog is not None:
                 wait.Destroy()
 
-            if self._info.debug:
+            if self._info.debug or _DEBUG_DB :
                 if success:
                     print "Success=OK, %d rows extracted" % len(self._info.db.rs)
                 else:
@@ -1812,7 +1815,7 @@ class DbTable(object):
                       % (info.tableName, info.tableName, info.primaryKey)
             for recdel, pardel in enumerate(parDelete):
                 if self._DeleteMultiChildrens(pardel):
-                    if self._info.debug:
+                    if self._info.debug or _DEBUG_DB :
                         print "="*60
                         print "SQL Construct:\n%s" % cmdDelete
                         if parDelete:
@@ -1826,7 +1829,7 @@ class DbTable(object):
             cmdInsert = "INSERT INTO %s SET %s"\
                       % (info.tableName, setCol)
             for recins, parins in enumerate(parInsert):
-                if self._info.debug:
+                if self._info.debug or _DEBUG_DB :
                     print "="*60
                     print "SQL Construct:\n%s" % cmdInsert
                     if parins:
@@ -1860,7 +1863,7 @@ class DbTable(object):
             cmdUpdate = "UPDATE %s SET %s WHERE %s.%s=%%s"\
                       % (info.tableName, setCol, info.tableName,\
                          info.primaryKey)
-            if self._info.debug:
+            if self._info.debug or _DEBUG_DB :
                 print "="*60
                 print "SQL Construct:\n%s" % cmdUpdate
                 if parUpdate:
@@ -2549,7 +2552,7 @@ class DbTable(object):
 
     def RestorePosition(self, lRecno):
         for t in lRecno:
-            if self._info.debug:
+            if self._info.debug or _DEBUG_DB :
                 print "table:%s recno:%s" % (t[0], t[1])
             t[0]._ForceMoveRow(t[1])
         pass
@@ -3410,7 +3413,7 @@ class SubDbTable(DbTable):
         subTable.Get(-1)
 
         if fields is not None:
-            if self._info.debug:
+            if self._info.debug or _DEBUG_DB :
                 print "Reading structure of '%s'" % self._info.subAlias
             self._SetFields(fields)
             if self._info.db._dbType == "mysql":
@@ -3432,7 +3435,7 @@ class SubDbTable(DbTable):
                 self._GetFieldNames()
                 self.__setattr__(self._info.subTable._info.tableAlias, self._info.subTable)
             else:
-                if self._info.debug:
+                if self._info.debug or _DEBUG_DB :
                     print "Invalid SQL syntax:"
                     print cmd
                 self.GetError()
