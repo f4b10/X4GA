@@ -142,8 +142,14 @@ class GenericPersonalLinkedPage_InternalGrid(dbglib.DbGridColoriAlternati):
             if c:
                 try:
                     c.SetValue(None)
-                except:
-                    pass
+                except Exception, e:
+                    if str(e)=='String or Unicode type required':
+                        try:
+                            c.SetValue('')
+                        except:
+                            pass
+                    else:
+                        pass
 
     def TestWarning(self, row):
         def cn(name):
@@ -560,7 +566,7 @@ class GenericPersonalPage_Panel(wx.Panel):
                 if isinstance(ctr, getattr(awc.controls.entries, i )):
                     self.mainPanel.BindChangedEvent(ctr.GetChildren()[0])
             if isinstance(ctr, wx.TextCtrl):
-                self.mainPanel.BindChangedEvent(ctr)
+                    self.mainPanel.BindChangedEvent(ctr)
             elif isinstance(ctr, awc.controls.datectrl.DateCtrl):
                 self.mainPanel.BindChangedEvent(ctr)
             elif isinstance(ctr, wx.CheckBox):
