@@ -37,6 +37,7 @@ msgbox = lambda *args: MsgDialog(None, *args)
 
 import awc.controls.dbgrid as dbgrid
 import awc.controls.numctrl as numctrl
+import awc.controls.combobox
 
 import MySQLdb
 
