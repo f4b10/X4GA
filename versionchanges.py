@@ -29,6 +29,13 @@ import mx.DateTime as dt
 import mx.Odt
 
 history = (
+    ('1.5.57 Versione intermedia', dt.Date(2018, 7, 30), (
+         ("BET1257",
+         """Considerato correttamente scorporo iva in statistiche prodotti"""),
+         ("BET1256",
+         """Considerato correttamente scorporo iva in interrogazione prodotti"""),
+        ),),
+           
     ('1.5.57', dt.Date(2018, 5, 25), (
          ("BET1255",
          """Aggiunto richiamo a Catalogo Plugin"""),
