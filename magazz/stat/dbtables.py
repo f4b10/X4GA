@@ -171,6 +171,8 @@ class _FatturatoVendite(adb.DbTable):
 
         adb.DbTable.__init__(self, bt.TABNAME_MOVMAG_B, 'mov', fields='id_tipmov')
 
+        iva = self.AddJoin(bt.TABNAME_ALIQIVA,   "iva", idLeft='id_aliqiva', fields='perciva')
+
         tpm = self.AddJoin(bt.TABNAME_CFGMAGMOV,  'tipmov')
 
         doc = self.AddJoin(bt.TABNAME_MOVMAG_H,   'doc', idLeft='id_doc',
@@ -196,11 +198,13 @@ class _FatturatoVendite(adb.DbTable):
         self.AddGroups()
 
         self.AddTotalOf('mov.qta*tipmov.%s' % self._statcol, 'statqtafat')
-        self.AddTotalOf('mov.importo*tipmov.%s' % self._statcol, 'statvalfat')
-        self.AddTotalOf('(mov.qta*mov.prezzo)*tipmov.%s' % self._statcol, 'statlrdfat')
-
+        # MODIFICATA PER GESTIRE SCORPORO 
+        #self.AddTotalOf('mov.importo*tipmov.%s' % self._statcol, 'statvalfat')
+        #self.AddTotalOf('(mov.qta*mov.prezzo)*tipmov.%s' % self._statcol, 'statlrdfat')
+        #=======================================================================
+        self.AddTotalOf('mov.importo* IF(tipdoc.scorpiva=1,(100/(100+iva.perciva)),1) *tipmov.%s' % self._statcol, 'statvalfat')
+        self.AddTotalOf('(mov.qta*mov.prezzo* IF(tipdoc.scorpiva=1,(100/(100+iva.perciva)),1) )*tipmov.%s' % self._statcol, 'statlrdfat')
         self.ClearBaseFilters()
-
         self.Reset()
 
     def ClearBaseFilters(self):

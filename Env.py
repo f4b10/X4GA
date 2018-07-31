@@ -4053,7 +4053,11 @@ class Azienda(object):
             s = 'descriz'
 
             def _str(x):
-                return str(x)
+                try:
+                    ret = str(x)
+                except:
+                    ret = x.encode('ascii', 'ignore').decode('ascii')
+                return ret
             def _int(x):
                 return int(x or '0')
             def _flt(x):
