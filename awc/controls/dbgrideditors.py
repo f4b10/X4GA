@@ -1263,7 +1263,11 @@ class CheckBoxCellRenderer(gridlib.PyGridCellRenderer):
             bmp = self.bmp_yes
         else:
             bmp = self.bmp_no
-        dc.DrawBitmap(bmp, x, y)
+        try:
+            dc.DrawBitmap(bmp, x, y)
+        except:
+            print 'errore in dc.DrawBitmap(bmp, x, y) '
+            pass
 
     def GetBestSize(self, grid, attr, dc, row, col):
         #text = grid.GetCellValue(row, col)
