@@ -20,6 +20,7 @@
 # You should have received a copy of the GNU General Public License
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
+import os
 from datetime import datetime, timedelta
 
 import lib
@@ -521,7 +522,7 @@ class MagazzPanel(aw.Panel,\
             self.Bind(wx.EVT_TEXT, self.OnFootChanged, cn(name))
 
         self.Bind(EVT_DATECHANGED, self.OnFootChanged, cn("initrasp"))
-        self.Bind(wx.EVT_BUTTON, self.OnFootChanged, cn("initraspnow"))
+        self.Bind(wx.EVT_BUTTON, self.OnFootChanged, cn("butinitraspnow"))
 
         self.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnWorkZoneChanged, cn('workzone'))
         #cn('workzone').Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnWorkZoneChanged)
@@ -1949,8 +1950,10 @@ class MagazzPanel(aw.Panel,\
                 self.UpdateHeadDest(update_nocodedes=False)
             elif name == 'nocodevet_id_stato':
                 cn('nocodevet_nazione').SetValue(cn('nocodevet_id_stato').GetVatPrefix())
-            elif name == 'initrasp':
-                cn('butinitraspnow').Enable(not bool(value))
+            #===================================================================
+            # elif name == 'initrasp':
+            #     cn('butinitraspnow').Enable(not bool(value))
+            #===================================================================
 
         elif name == 'butinitraspnow':
             now = Env.DateTime.now()
@@ -2169,62 +2172,83 @@ class MagazzPanel(aw.Panel,\
         if not self.CheckFidoCliente():
             return False
 
-        #determinazione nuovo numero documento
-        if doc.id is None:# and not doc.numdoc:
-            if not doc.numdoc:
-                self.DefNumDoc()
-            if not doc.numiva:
-                self.DefNumIva()
 
-        save = True
+        ################################################################
 
-        if doc.cfgdoc.pienum and doc.id is None:
-            #dialog conferma numero
-            dlg = NumDocDialog(self, doc.cfgdoc.datdoc, doc.cfgdoc.numdoc, doc.cfgdoc.askprotiva)
-            dk = {}
-            for name, val in (('numdoc', doc.numdoc),
-                              ('numiva', doc.numiva),
-                              ('datreg', doc.datreg),
-                              ('datdoc', doc.datdoc),
-                              ('id_tipdoc', doc.id_tipdoc),
-                              ('id_magazz', doc.id_magazz),
-                              ('id_regiva', doc.GetRegIva()),):
-                dk[name] = dlg.FindWindowByName(name)
-                dk[name].SetValue(val)
-            if dlg.ShowModal() == wx.ID_OK:
-                if self.IsDocValid(docload=False, frame=dlg):
-                    for name in dk:
-                        if not name.startswith('id_'):
-                            setattr(doc, name, dk[name].GetValue())
+        retrySave = False
+        idRegCon  = None
+        while True:    
+            #determinazione nuovo numero documento
+            if doc.id is None or retrySave:# and not doc.numdoc:
+                if not doc.numdoc:
+                    self.DefNumDoc()
+                if not doc.numiva:
+                    self.DefNumIva()
+            print 'num.doc:%s num.iva:%s' % (doc.numdoc, doc.numiva)
+            save = True
+    
+            if doc.cfgdoc.pienum and (doc.id is None or retrySave):
+                #dialog conferma numero
+                
+                while not os.path.isfile('c:\go.x4'):
+                    print '.',
+    
+                
+                
+                dlg = NumDocDialog(self, doc.cfgdoc.datdoc, doc.cfgdoc.numdoc, doc.cfgdoc.askprotiva)
+                dk = {}
+                for name, val in (('numdoc', doc.numdoc),
+                                  ('numiva', doc.numiva),
+                                  ('datreg', doc.datreg),
+                                  ('datdoc', doc.datdoc),
+                                  ('id_tipdoc', doc.id_tipdoc),
+                                  ('id_magazz', doc.id_magazz),
+                                  ('id_regiva', doc.GetRegIva()),):
+                    dk[name] = dlg.FindWindowByName(name)
+                    dk[name].SetValue(val)
+                if dlg.ShowModal() == wx.ID_OK:
+                    if self.IsDocValid(docload=False, frame=dlg):
+                        for name in dk:
+                            if not name.startswith('id_'):
+                                setattr(doc, name, dk[name].GetValue())
+                    else:
+                        save = False
                 else:
                     save = False
-            else:
+                dlg.Destroy()
+    
+            chk_do, chk_des = doc.CheckNum()
+            if not chk_do:
+                aw.awu.MsgDialog(self, chk_des, style=wx.ICON_WARNING|wx.OK)
                 save = False
-            dlg.Destroy()
-
-        chk_do, chk_des = doc.CheckNum()
-        if not chk_do:
-            aw.awu.MsgDialog(self, chk_des, style=wx.ICON_WARNING|wx.OK)
-            save = False
-
-        if not save:
-            aw.awu.MsgDialog(self, 'Il documento non è stato salvato', style=wx.ICON_WARNING|wx.OK)
-            return False
-
-
-
-        dispnum = False
-        if doc.cfgdoc.colcg and doc.cfgdoc.caucon:
-            try:
-                doc.CollegaCont()
-            except Exception, e:
-                MsgDialog(self,\
-                          """Problema in contabilizzazione:\n%s\n\nCONTROLLARE MASTRO E SCADENZARIO."""\
-                          % repr(e.args))
-                if doc.regcon.id:
-                    doc.regcon.Erase()
-
-        saved = doc.Save()
+    
+            if not save:
+                aw.awu.MsgDialog(self, 'Il documento non è stato salvato', style=wx.ICON_WARNING|wx.OK)
+                return False
+    
+    
+    
+            dispnum = False
+            if doc.cfgdoc.colcg and doc.cfgdoc.caucon:
+                try:
+                    idRegCon = doc.CollegaCont(returnId=True)
+                except Exception, e:
+                    MsgDialog(self,\
+                              """Problema in contabilizzazione:\n%s\n\nCONTROLLARE MASTRO E SCADENZARIO."""\
+                              % repr(e.args))
+                    if doc.regcon.id:
+                        doc.regcon.Erase()
+    
+            saved = doc.Save()
+            
+            if doc.DocAlreadyExist(docId=doc.id, regId=idRegCon):
+                retrySave=True
+                print 'cambio numero documento'
+            else:
+                break
+        
+        ################################################################
+        
         if saved:
             print 'AGGIORNARE LA REGISTRAZIONE CONTABILE CON ID DEL DOCUMENTO DI MAGAZZINO id Reg.Cont.:%s  id Doc.Mag.:%s' % (doc.id_reg, doc.id)
             self.controls['butattach'].SetKey(doc.id, save=True)
@@ -2903,7 +2927,7 @@ class MagazzPanel(aw.Panel,\
         for name in 'notevet totpeso totcolli initrasp'.split():
             ctrls[name].Enable(self.status == STATUS_EDITING and enab)
         cn = self.FindWindowByName
-        cn('butinitraspnow').Enable(self.status == STATUS_EDITING and not bool(cn('initrasp').GetValue()))
+        cn('butinitraspnow').Enable(self.status == STATUS_EDITING) #and not bool(cn('initrasp').GetValue()))
         cn('butrptcolli').Show(cfgdoc.rptcolli == 1)
         #abilitazione campi destinatario non codificato
         e = (bt.MAGNOCODEDES and self.status == STATUS_EDITING and enab and cfgdoc.askdatiacc == 'X' and cfgdoc.askdestin == 'X' and doc.id_dest is None)

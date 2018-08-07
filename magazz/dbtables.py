@@ -1437,6 +1437,7 @@ class DocMag(adb.DbTable):
             yr = self.datreg.year
             ni = self.numiva
             r = adb.DbTable(bt.TABNAME_CONTAB_H, 'reg')
+
             _ = r.AddJoin(bt.TABNAME_CFGCONTAB, 'caus', idLeft='id_caus')
             m = r.AddJoin(bt.TABNAME_CONTAB_B, 'mov', join=adb.JOIN_LEFT, relexpr='mov.id_reg=reg.id AND mov.numriga=1')
             _ = m.AddJoin(bt.TABNAME_PDC, 'pdc', idLeft='id_pdcpa', join=adb.JOIN_LEFT)
@@ -1448,10 +1449,62 @@ class DocMag(adb.DbTable):
                     r.AddFilter('reg.id<>%s', self.regcon.id)
                 if r.Retrieve() and not r.IsEmpty():
                     out_flag = False
-                    out_desc = 'Protocollo IVA già impegnato:\n'\
+                    out_desc = "Protocollo IVA gia' impegnato:\n"\
                         +'%s n. %s del %s, prot. %s, anagr. %s - %s'\
                         % (r.caus.descriz, r.numdoc, r.dita(r.datdoc), r.numiva, r.mov.pdc.codice, r.mov.pdc.descriz)
         return (out_flag, out_desc)
+
+    def DocAlreadyExist(self, docId=None, regId=None):                        
+        alreadyExist = False
+        tn = self.config.numdoc or ' '
+        if tn in '01' and self.config.ctrnum == 'X':
+            d = adb.DbTable(bt.TABNAME_MOVMAG_H, 'doc', fields='id,numdoc')
+            d.AddJoin(bt.TABNAME_CFGMAGDOC, 'tipdoc', idLeft='id_tipdoc')
+            d.AddJoin(bt.TABNAME_PDC, 'pdc', idLeft='id_pdc')
+            d.AddFilter('YEAR(doc.datreg)=%s', self.datreg.year)
+            d.AddFilter('doc.id_magazz=%s', self.id_magazz)
+            p = []
+            if self.config.docfam:
+                f = 'tipdoc.docfam=%s'
+                p = self.config.docfam
+            else:
+                f = 'doc.id_tipdoc=%s'
+                p = self.id_tipdoc
+            d.AddFilter(f, p)
+            d.AddFilter('doc.numdoc=%s', self.numdoc)
+            if d.Retrieve() and not d.IsEmpty():
+                if not d.OneRow():
+                    minId = 99999999
+                    for rec in d:
+                        minId = min(minId, rec.id)
+                    if not minId==docId:
+                        alreadyExist = True
+                        
+        elif tn == '3' or (self.config.askprotiva or ' ') in '123':
+            if self.regcon.id is None:
+                ri = self.GetRegIva()
+            else:
+                ri = self.regcon.id_regiva
+            yr = self.datreg.year
+            ni = self.numiva
+            r = adb.DbTable(bt.TABNAME_CONTAB_H, 'reg')
+            _ = r.AddJoin(bt.TABNAME_CFGCONTAB, 'caus', idLeft='id_caus')
+            m = r.AddJoin(bt.TABNAME_CONTAB_B, 'mov', join=adb.JOIN_LEFT, relexpr='mov.id_reg=reg.id AND mov.numriga=1')
+            _ = m.AddJoin(bt.TABNAME_PDC, 'pdc', idLeft='id_pdcpa', join=adb.JOIN_LEFT)
+            if ri is not None:
+                r.AddFilter('reg.id_regiva=%s', ri)
+                r.AddFilter('YEAR(reg.datreg)=%s', yr)
+                r.AddFilter('reg.numiva=%s', ni)
+                if r.Retrieve() and not r.IsEmpty():
+                    if not r.OneRow():
+                        minId = 99999999
+                        for rec in r:
+                            minId = min(minId, rec.id)
+                        if not minId==regId:
+                            alreadyExist = True
+        return (alreadyExist)
+
+
 
     def Get(self, *args, **kwargs):
         self.ResetVars()
@@ -2490,7 +2543,7 @@ class DocMag(adb.DbTable):
 
         return out
 
-    def CollegaCont(self):
+    def CollegaCont(self, returnId=False):
         regcon = self.regcon
         scad = regcon.scad
         rssca = copy.deepcopy(scad.GetRecordset())
@@ -2527,7 +2580,10 @@ class DocMag(adb.DbTable):
                 self.MakeRegCon()
                 InitScadenze(regcon.scad)
                 raise err, msg
-            return True
+            if returnId:
+                return regcon.id
+            else:
+                return True
         else:
             raise Exception,\
                   """Sono presenti righe che non puntano ad alcun sottoconto """\
