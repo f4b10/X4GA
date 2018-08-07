@@ -1770,8 +1770,12 @@ class LinkTableDialog(wx.Dialog):
             self.grid.SetColumnDefaultSize(col, colsize)
         linktab.SetDataGrid(self.grid, rs)
         #=======================================================================
-        # print self.GetFont().GetPointSize()        
-        self.grid.SetFontSize(fontSize)
+        # print self.GetFont().GetPointSize() 
+        try:       
+            self.grid.SetFontSize(fontSize)
+        except:
+            print 'errore in self.grid.SetFontSize(fontSize)'
+            pass
         #=======================================================================
         self.grid.SetFitColumn(column2fit)
 #        self.grid.AutoSizeColumns()
