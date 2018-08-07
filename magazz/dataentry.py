@@ -2190,9 +2190,11 @@ class MagazzPanel(aw.Panel,\
             if doc.cfgdoc.pienum and (doc.id is None or retrySave):
                 #dialog conferma numero
                 
-                while not os.path.isfile('c:\go.x4'):
-                    print '.',
-    
+    #===========================================================================
+    #             while not os.path.isfile('c:\go.x4'):
+    #                 print '.',
+    # 
+    #===========================================================================
                 
                 
                 dlg = NumDocDialog(self, doc.cfgdoc.datdoc, doc.cfgdoc.numdoc, doc.cfgdoc.askprotiva)
