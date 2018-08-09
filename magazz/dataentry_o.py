@@ -359,6 +359,8 @@ class MagazzFrame_O(aw.Frame, _FrameDialogMixin):
     def OnClose(self, event):
         if self.panel.TestQuit():
             self.FixTimerProblem()
+            self.Destroy()
+            Env.FreeMemory()
             event.Skip()
 
 

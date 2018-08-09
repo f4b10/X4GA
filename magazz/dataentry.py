@@ -1504,7 +1504,7 @@ class MagazzPanel(aw.Panel,\
                                      style=wx.ICON_ERROR)
             finally:
                 progr.Destroy()
-
+        Env.FreeMemory()
         return out
 
 
@@ -2276,6 +2276,7 @@ class MagazzPanel(aw.Panel,\
             else:
                 self.SetRegStatus(STATUS_SELCAUS)
         self.ResetFidoView()
+        Env.FreeMemory()
 
     def OnDocDelete(self, event):
         action = MsgDialog(self,\
@@ -2289,6 +2290,7 @@ class MagazzPanel(aw.Panel,\
                     event.Skip()
                 else:
                     self.SetRegStatus(STATUS_SELCAUS)
+        Env.FreeMemory()
 
     def OnResize(self, event):
         if self.IsShown():

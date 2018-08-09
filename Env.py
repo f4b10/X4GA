@@ -49,7 +49,7 @@ import stormdb as adb
 
 import crypt, base64
 
-import sys, getopt
+import sys, getopt, gc
 
 _USER_MAX_SQL_COUNT = None
 def GetUserMaxSqlCount():
@@ -62,6 +62,21 @@ def SetUserMaxSqlCount(n):
 logfile = 'c:/x4.log'
 if os.path.exists(logfile):
     os.remove(logfile)
+_DEBUGMEMORY = os.path.exists('c:\memory_debug.x4')
+_MEMORYFREE  = os.path.exists('c:\memory.x4')
+
+def FreeMemory():
+    if _MEMORYFREE:
+        if _DEBUGMEMORY :
+            x = gc.get_count()
+            gc.collect()
+            y = gc.get_count()
+            print '%s=>%s' % ((x), (y))
+        else:
+            gc.collect()
+            
+        
+
 
 def IsDebug():
     return not hasattr(sys, 'frozen')

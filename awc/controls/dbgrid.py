@@ -59,7 +59,6 @@ import awc.controls.windows as aw
 
 from xml.dom.minidom import Document
 
-
 CELLCOLOR_FOREGROUND = "black"
 CELLCOLOR_BACKGROUND = "white"
 
@@ -82,6 +81,7 @@ import awc.wxinit as wxinit
 
 ASC  = 'ASC'
 DESC = 'DESC'
+
 
 def opj(x,y):
     return os.path.join(x,y).replace('/', '\\')
@@ -133,7 +133,9 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
     idGrid            = None
     
     def __init__(self, *args, **kwargs):
-
+        
+        Env.FreeMemory()
+        
         if 'idGrid' in kwargs:
             self.idGrid=kwargs.pop('idGrid')
 

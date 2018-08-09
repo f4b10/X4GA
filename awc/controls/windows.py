@@ -30,6 +30,7 @@ import re
 import wx
 from wx.lib.gestures import MouseGestures
 
+#import Env
 import awc.util as awu
 from awc.controls.mixin import ContainersMixin
 
@@ -530,8 +531,13 @@ class Dialog(wx.Dialog, mixin):
     def _OnQuit(self, event):
         if self.IsModal():
             self.EndModal(-1)
-        else:
+        try:
             self.Destroy()
+            import Env
+            Env.FreeMemory()
+        except:
+            pass
+        
     
 
 # ------------------------------------------------------------------------------

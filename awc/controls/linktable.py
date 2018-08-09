@@ -1771,7 +1771,8 @@ class LinkTableDialog(wx.Dialog):
         linktab.SetDataGrid(self.grid, rs)
         #=======================================================================
         # print self.GetFont().GetPointSize() 
-        try:       
+        try:
+            Env.FreeMemory()      
             self.grid.SetFontSize(fontSize)
         except:
             print 'errore in self.grid.SetFontSize(fontSize)'
