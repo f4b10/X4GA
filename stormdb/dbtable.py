@@ -421,54 +421,57 @@ class DbTable(object):
             self._info.getFilters = getFilters
         self._info.group = DbGroup()
         if fields is not None:
-            fieldslist = self._SetFields(fields)
-            readstru = True
-            logmsg('read <%s> structure' % tabName)
-            cache_key = '%s:%s' % (tabName, fields)
-            if USE_CACHE and cache_key in _cachetabs:
-                self._info.description = _cachetabs[cache_key]
-            #if USE_CACHE and tabName in _cachetabs:
-                ##read structure from cache
-                #if fields == '*':
-                    ##read all columns
-                    #self._info.description = _cachetabs[tabName]
-                #else:
-                    ##read specific columns: test if cached
-                    #self._info.description = []
-                    #ct = _cachetabs[tabName]
-                    #for f in fieldslist:
-                        #try:
-                            #n = awu.ListSearch(ct, lambda x: x[0] == f)
-                            #self._info.description.append(ct[n])
-                        #except:
-                            #pass
+            self.SetInternalStru(fields)
+            
+    def SetInternalStru(self, fields):            
+        fieldslist = self._SetFields(fields)
+        readstru = True
+        logmsg('read <%s> structure' % self._info.tableName)
+        cache_key = '%s:%s' % (self._info.tableName, fields)
+        if USE_CACHE and cache_key in _cachetabs:
+            self._info.description = _cachetabs[cache_key]
+        #if USE_CACHE and tabName in _cachetabs:
+            ##read structure from cache
+            #if fields == '*':
+                ##read all columns
+                #self._info.description = _cachetabs[tabName]
+            #else:
+                ##read specific columns: test if cached
+                #self._info.description = []
+                #ct = _cachetabs[tabName]
+                #for f in fieldslist:
+                    #try:
+                        #n = awu.ListSearch(ct, lambda x: x[0] == f)
+                        #self._info.description.append(ct[n])
+                    #except:
+                        #pass
+            self._GetFieldNames()
+            logmsg('using cached version')
+            readstru = False
+        if readstru:
+            if self._info.db._dbType == "mysql":
+                cmd = "SELECT %s FROM %s LIMIT 1"\
+                    % (", ".join(self._info.fields), self._info.tableName)
+            elif self._info.db._dbType == "adodb":
+                cmd = "SELECT TOP 1 %s FROM %s"\
+                    % (", ".join(self._info.fields), self._info.tableName)
+            elif self._info.db._dbType == "odbc":
+                cmd = "SELECT TOP 1 %s FROM %s"\
+                    % (", ".join(self._info.fields), self._info.tableName)
+            if self._info.db.Retrieve(cmd):
+                logmsg('structure loaded from database')
+                self._info.description = self._info.db.description
                 self._GetFieldNames()
-                logmsg('using cached version')
-                readstru = False
-            if readstru:
-                if self._info.db._dbType == "mysql":
-                    cmd = "SELECT %s FROM %s LIMIT 1"\
-                        % (", ".join(self._info.fields), tabName)
-                elif self._info.db._dbType == "adodb":
-                    cmd = "SELECT TOP 1 %s FROM %s"\
-                        % (", ".join(self._info.fields), tabName)
-                elif self._info.db._dbType == "odbc":
-                    cmd = "SELECT TOP 1 %s FROM %s"\
-                        % (", ".join(self._info.fields), tabName)
-                if self._info.db.Retrieve(cmd):
-                    logmsg('structure loaded from database')
-                    self._info.description = self._info.db.description
-                    self._GetFieldNames()
-                    #if fields == '*':
-                        #if USE_CACHE and not tabName in _cachetabs:
-                            #_cachetabs[tabName] = self._info.description
-                    _cachetabs[cache_key] = self._info.db.description
-                else:
-                    self.GetError()
-                    raise Exception,\
-                          """Error retrieving '%s' structure: %s, %s"""\
-                          % (tabName, db.dbError.code,\
-                             db.dbError.description)
+                #if fields == '*':
+                    #if USE_CACHE and not tabName in _cachetabs:
+                        #_cachetabs[tabName] = self._info.description
+                _cachetabs[cache_key] = self._info.db.description
+            else:
+                self.GetError()
+                raise Exception,\
+                      """Error retrieving '%s' structure: %s, %s"""\
+                      % (tabName, db.dbError.code,\
+                         db.dbError.description)
 
     def AddLimit(self, max=1):
         self._info.limit = max
@@ -826,6 +829,7 @@ class DbTable(object):
                 alias = group.split('.')[1]
             else:
                 alias = group
+        print 'AddGroupOn', group, alias
         addedGroup = self._info.group.AddGroup(group, alias)
         setattr(self, alias, None)
 
