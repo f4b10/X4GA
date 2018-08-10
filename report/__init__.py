@@ -269,13 +269,17 @@ class MultiReportStandardDialog(wx.Dialog):
         if n>=0:
             d = reports.GetClientData(n)
             self.reportname = d[0]
-            self.printername = printers.GetValue()
-            if d[3] is not None:
-                prt = d[3]
-                msg = "Il report selezionato è impostato per essere stampato su '%s'\nUso tale stampante?" % prt
-                if awu.MsgDialog(self, msg, style=wx.ICON_QUESTION|wx.YES_NO|wx.YES_DEFAULT) == wx.ID_YES:
-                    self.printername = prt
-                    SetUpdateLastPrinter(False)
+            if self._action=='PRINT':
+                self.printername = printers.GetValue()
+                if d[3] is not None and not self.printername==d[3]:
+                    
+                    availablePrinters = [item.split(',')[0] for item in printers.GetNames()]
+                    if d[3] in availablePrinters:
+                        prt = d[3]
+                        msg = "Il report selezionato è impostato per essere stampato su '%s'\nUso tale stampante?" % prt
+                        if awu.MsgDialog(self, msg, style=wx.ICON_QUESTION|wx.YES_NO|wx.YES_DEFAULT) == wx.ID_YES:
+                            self.printername = prt
+                            SetUpdateLastPrinter(False)
             self._copies = copies.GetValue()
             self.EndModal(wx.ID_OK)
 
@@ -313,8 +317,17 @@ class MultiReportStandardDialog(wx.Dialog):
             else:
                 note = ''
             fname = r[:-6]+'.prt'
+            
             if os.path.exists(fname):
-                prt = open(fname).read()
+                printers=self.FindWindowByName('printername')
+                availablePrinters = [item.split(',')[0] for item in printers.GetNames()]                
+                #linesPrt = tuple(open(fname, 'r'))
+                linesPrt = open(fname).read().splitlines()
+                prt = None
+                for l in linesPrt:
+                    if l in availablePrinters:
+                        prt = l
+                        break
             else:
                 prt = None
             reports.Append(epura(name), (r, bmp, note, prt))
