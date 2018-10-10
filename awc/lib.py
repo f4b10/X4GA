@@ -96,6 +96,14 @@ class ControllaPIVA(object):
         request._vatNumber = self.piva
         
         response = portType.checkVat(request)
+        #=======================================================================
+        # if response._valid:
+        #     print response.Name
+        #     print response.Address
+        #     pass
+        #=======================================================================
+        
+        
         
         return response._valid
 

@@ -423,7 +423,8 @@ class DbTable(object):
         if fields is not None:
             self.SetInternalStru(fields)
             
-    def SetInternalStru(self, fields):            
+    def SetInternalStru(self, fields):
+        tabName = self._info.tableName        
         fieldslist = self._SetFields(fields)
         readstru = True
         logmsg('read <%s> structure' % self._info.tableName)
@@ -470,8 +471,8 @@ class DbTable(object):
                 self.GetError()
                 raise Exception,\
                       """Error retrieving '%s' structure: %s, %s"""\
-                      % (tabName, db.dbError.code,\
-                         db.dbError.description)
+                      % (tabName, self._info.db.dbError.code,\
+                         self._info.db.dbError.description)
 
     def AddLimit(self, max=1):
         self._info.limit = max
@@ -829,7 +830,7 @@ class DbTable(object):
                 alias = group.split('.')[1]
             else:
                 alias = group
-        print 'AddGroupOn', group, alias
+        #print 'AddGroupOn', group, alias
         addedGroup = self._info.group.AddGroup(group, alias)
         setattr(self, alias, None)
 
