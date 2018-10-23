@@ -2251,6 +2251,13 @@ class LiqIva(adb.DbTable):
 
         self.regiva = None
 
+        #-----------------------------------------------------------------------------
+        # AGGIUNTO FILTRO PER ESWCLUDERE DALLA LIQUIDAZIONE I REGISTRI EXTRACONTABILI
+        #-----------------------------------------------------------------------------
+        self.ClearBaseFilters()
+        self.AddBaseFilter('(regs.extra is null or regs.extra=0)')
+        #-----------------------------------------------------------------------------
+
         if periodic is None:
             s = adb.DbTable(bt.TABNAME_CFGSETUP, 'setup')
             if s.Retrieve('setup.chiave=%s', 'liqiva_periodic') and s.OneRow():

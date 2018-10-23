@@ -29,7 +29,12 @@ import mx.DateTime as dt
 import mx.Odt
 
 history = (
-    ('1.5.57 Versione intermedia', dt.Date(2018, 7, 30), (
+    ('1.5.59 Versione intermedia', dt.Date(2018, 10, 23), (
+         ("BET1258",
+         """Attivata la gestione dei registri extracontabili in liquidazione IVA"""),
+        ),),
+           
+    ('1.5.58 Versione intermedia', dt.Date(2018, 7, 30), (
          ("BET1257",
          """Considerato correttamente scorporo iva in statistiche prodotti"""),
          ("BET1256",
