@@ -375,15 +375,15 @@ class ClientiPanel(pdcrel._CliForPanel):
             except:
                 pass        
         
-        viewFtel = False
+        self.viewFtel = False
         try:
             from fatturapa_ver import VERSION_STRING
             if VERSION_STRING >= '1.1.17':
-                viewFtel = True
+                self.viewFtel = True
         except:
             pass
         
-        if not viewFtel:
+        if not self.viewFtel:
             # nascondo dati per fattura elettronica se non è presente plugin fatturepa
             ftelTipo= cn('ftel_tipo')
             szmain = ftelTipo.GetParent().rightPanel        
@@ -521,9 +521,36 @@ class ClientiPanel(pdcrel._CliForPanel):
                 self.WriteVarList(); self.LoadVarList()
         return written
 
+    def OnRecordSave( self, event ):
+        lContinue = True
+        if self.viewFtel:
+            flag=self.FindWindowByName('ftel_flag').GetValue()
+            if flag:
+                tipo=self.FindWindowByName('ftel_tipo').GetValue()
+                if tipo=='P':
+                    pec= self.FindWindowByName('ftel_pec').GetValue()
+                    sdi= self.FindWindowByName('ftel_codsdi').GetValue()
+                    if len(sdi)>0 and len(pec)>0:
+                        titolo = 'Dati Recapito Fatt.Elettroniche incogruenti'
+                        msg = u"Il Cod.Sdi e l'indirizzo di posta elettronica a cui inviare le fatture elettroniche sono alternativi.\nSolo uno delle due informazioni può essere indicato"
+                        aw.awu.MsgDialog(self, message=msg, caption=titolo)                
+                        lContinue=False
+                else:
+                    sdi= self.FindWindowByName('ftel_codice').GetValue()
+                    if len(sdi)==0:
+                        titolo = 'Dati Recapito Fatt.Elettroniche incompleti'
+                        msg = u"Specificare Codice Ufficio Ente"
+                        aw.awu.MsgDialog(self, message=msg, caption=titolo)                
+                        lContinue=False
+                        
+                    
+                    
+                    
+        if lContinue:
+            pdcrel._CliForPanel.OnRecordSave(self, event)
+
     def UpdateDataControls( self, recno ):
         pdcrel._CliForPanel.UpdateDataControls( self, recno )
-        
         self.AbilitaFatturaElettronica(self.ftel_flag.IsChecked())
         if self.loadrelated:
             if bt.MAGSCOCAT:
