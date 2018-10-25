@@ -1083,7 +1083,7 @@ def BancheAnag1Func( parent, call_fit = True, set_sizer = True ):
     item2 = wx.StaticBox( parent, -1, "Coordinate C/C" )
     item1 = wx.StaticBoxSizer( item2, wx.VERTICAL )
     
-    item3 = wx.FlexGridSizer( 0, 5, 0, 0 )
+    item3 = wx.FlexGridSizer( 0, 6, 0, 0 )
     
     item4 = wx.StaticText( parent, ID_TEXT, "ABI:", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
     item3.Add( item4, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
@@ -1098,27 +1098,34 @@ def BancheAnag1Func( parent, call_fit = True, set_sizer = True ):
     item3.Add( item7, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
 
     item8 = wx.StaticText( parent, ID_TEXT, "IBAN:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item3.Add( item8, 0, wx.ALIGN_BOTTOM|wx.LEFT, 5 )
+    item3.Add( item8, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
 
-    item9 = TextCtrl( parent, ID_TXT_ABI, "", wx.DefaultPosition, [50,-1], 0 )
-    item9.SetName( "abi" )
-    item3.Add( item9, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item9 = wx.StaticText( parent, ID_TEXT, "BIC/SWIFT:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item3.Add( item9, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
 
-    item10 = TextCtrl( parent, ID_TXT_CAB, "", wx.DefaultPosition, [50,-1], 0 )
-    item10.SetName( "cab" )
+    item10 = TextCtrl( parent, ID_TXT_ABI, "", wx.DefaultPosition, [50,-1], 0 )
+    item10.SetName( "abi" )
     item3.Add( item10, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item11 = TextCtrl( parent, ID_TXT_NUMCC, "", wx.DefaultPosition, [160,-1], 0 )
-    item11.SetName( "numcc" )
+    item11 = TextCtrl( parent, ID_TXT_CAB, "", wx.DefaultPosition, [50,-1], 0 )
+    item11.SetName( "cab" )
     item3.Add( item11, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item12 = TextCtrl( parent, ID_CIN, "", wx.DefaultPosition, [30,-1], 0 )
-    item12.SetName( "cin" )
+    item12 = TextCtrl( parent, ID_TXT_NUMCC, "", wx.DefaultPosition, [160,-1], 0 )
+    item12.SetName( "numcc" )
     item3.Add( item12, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item13 = TextCtrl( parent, ID_TXT_IBAN, "", wx.DefaultPosition, [220,-1], 0 )
-    item13.SetName( "iban" )
-    item3.Add( item13, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item13 = TextCtrl( parent, ID_CIN, "", wx.DefaultPosition, [30,-1], 0 )
+    item13.SetName( "cin" )
+    item3.Add( item13, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+
+    item14 = TextCtrl( parent, ID_TXT_IBAN, "", wx.DefaultPosition, [220,-1], 0 )
+    item14.SetName( "iban" )
+    item3.Add( item14, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+
+    item15 = TextCtrl( parent, ID_TXT_CAB, "", wx.DefaultPosition, [105,-1], 0 )
+    item15.SetName( "bic" )
+    item3.Add( item15, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
     item1.Add( item3, 0, wx.GROW, 5 )
 

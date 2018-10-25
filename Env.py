@@ -2409,6 +2409,7 @@ class Azienda(object):
                 [ "iban",       "VARCHAR", 27, None, "Coord. IBAN", None ],
                 [ "sia",        "CHAR",     5, None, "Cod. SIA", None ],
                 [ "setif",      "CHAR",     5, None, "Cod. SETIF", None ],
+                [ "bic",        "CHAR",    15, None, "Cod. BIC/SWIFT", None ],
                 [ "desriba1",   "VARCHAR", 24, None, "Descriz. x disco riba r.1", None ],
                 [ "desriba2",   "VARCHAR", 24, None, "Descriz. x disco riba r.2", None ],
                 [ "desriba3",   "VARCHAR", 24, None, "Descriz. x disco riba r.3", None ],

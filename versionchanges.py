@@ -30,6 +30,8 @@ import mx.Odt
 
 history = (
     ('1.5.60 Versione intermedia', dt.Date(2018, 10, 25), (
+         ("BET1260",
+         """Aggiunto campo BIC/SWIFT a tabella banche"""),
          ("BET1259",
          """Perfezionati controlli su dati x invio f.e.A"""),
         ),),
