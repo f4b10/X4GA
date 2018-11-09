@@ -1491,6 +1491,30 @@ class MagazzPanel(aw.Panel,\
         ur = r.GetUsedReport()
         if ur is not None and ur.completed:
             out = True
+            self.viewFtel = False
+            try:
+                from fatturapa_ver import VERSION_STRING
+                if VERSION_STRING >= '1.1.17':
+                    self.viewFtel = True
+                    from fatturapa_magazz.dbtables import ReadFeSetup
+                    ReadFeSetup()
+                    
+                    
+                    
+            except:
+                pass
+            if self.viewFtel:
+                if doc.config.ftel_enabled:         # causale abilitata
+                    if doc.config.ftel_wprint:      # genera contestualmente alla stampa
+                        if (doc._info.anag.ftel_flag==1 and doc._info.anag.ftel_tipo=="E") or doc.datdoc>=Env.Azienda.config.FE_DATAB2B:  # anagrafica Ente abilitata o documento del 2019
+                            nTrasm= doc.ftel_numtrasm
+                            if nTrasm ==None or nTrasm==0:
+                                n = int(doc.GetLastTrasm())+1
+                                doc.SetLastTrasm(n, year=doc.datdoc.year) 
+                                doc.UpdateDocNumTrasm(numTrasm=n)
+                            lEsito, [path, _name], nTrasm, daRecuperare, daRecuperareRiga = doc.ftel_make_files(nTrasm, wait=None, mainPanel=self, prompt=False)
+                            if not lEsito:
+                                doc.ResetDocNumTrasm()
 
         if out and sendem:
             progr = aw.awu.WaitDialog(self, message="Invio email a: %s" % sei.sendto)

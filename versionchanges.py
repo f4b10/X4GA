@@ -29,6 +29,11 @@ import mx.DateTime as dt
 import mx.Odt
 
 history = (
+    ('1.5.61', dt.Date(2018, 11, 11), (
+         ("BET1261",
+         """Aggiunto generazione file xml per f.e. contestualmente alla stampa."""),
+        ),),
+           
     ('1.5.60 Versione intermedia', dt.Date(2018, 10, 25), (
          ("BET1260",
          """Aggiunto campo BIC/SWIFT a tabella banche"""),

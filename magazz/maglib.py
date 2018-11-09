@@ -379,7 +379,11 @@ class GridMovEva(object):
         
         def Totalizza(r):
             docqta = r[cols['qta']] or 0
-            docimp = r[cols['imponibile']] or 0
+            #docimp = r[cols['imponibile']] or 0
+            try:
+                docimp = r[cols['imponibile']] or 0
+            except:
+                docimp = 0
             evaqta = r[cols['total_evas_qta']] or 0
             evaimp = r[cols['total_evas_importo']] or 0
             name = "mastotdoc" #qta,importo su movimento
