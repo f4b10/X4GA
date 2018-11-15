@@ -29,9 +29,12 @@ import mx.DateTime as dt
 import mx.Odt
 
 history = (
-    ('1.5.61', dt.Date(2018, 11, 11), (
+           
+    ('1.5.62', dt.Date(2018, 11, 11), (
+         ("BET1262",
+         """Aggiunta la possibilità in presenza del plugin fatturepa di generare i file xml  contestualmente alla stampa."""),
          ("BET1261",
-         """Aggiunto generazione file xml per f.e. contestualmente alla stampa."""),
+         """Aggiunta possibilità di modificare per le customizzazioni l'indice delle tabelle."""),
         ),),
            
     ('1.5.60 Versione intermedia', dt.Date(2018, 10, 25), (

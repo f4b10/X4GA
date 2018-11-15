@@ -280,6 +280,10 @@ class TabSetupPanel(aw.Panel):
         #     self.ChangeEngine(engine)
         #=======================================================================
         for name, desc, stru, index, constr, voice in bt.tabelle:
+            try:
+                index = getattr(bt, '%s_indexes' % name)
+            except:
+                pass
             newIndex=[]
             for k in index:
                 newIndex.append(k)
@@ -1616,7 +1620,10 @@ class AdeguaPanel(aw.Panel):
 
             t = aw.awu.ListSearch(bt.tabelle, lambda x: x[0] == tab)
             stru = bt.tabelle[t][bt.TABSETUP_TABLESTRUCTURE]
-            indx = bt.tabelle[t][bt.TABSETUP_TABLEINDEXES]
+            try:
+                indx = getattr(bt, '%s_indexes' % bt.tabelle[t][0])
+            except:
+                indx = bt.tabelle[t][bt.TABSETUP_TABLEINDEXES]
 
             newIndex=list(indx)
             if Env.Azienda.BaseTab.OPTLINKINDEX:
