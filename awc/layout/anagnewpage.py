@@ -608,6 +608,10 @@ class GenericPersonalPage_Panel(wx.Panel):
                 self.mainPanel.BindChangedEvent(ctr)
             elif isinstance(ctr, wx.CheckBox):
                 self.mainPanel.BindChangedEvent(ctr)
+            elif isinstance(ctr, wx.RadioBox):
+                self.mainPanel.BindChangedEvent(ctr)
+            elif isinstance(ctr, wx.ComboBox):
+                self.mainPanel.BindChangedEvent(ctr)
             elif isinstance(ctr, awc.controls.linktable.LinkTable):
                 self.mainPanel.BindChangedEvent(ctr)
 

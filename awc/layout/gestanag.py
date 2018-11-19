@@ -893,9 +893,13 @@ class AnagPanel(aw.Panel):
             #self.Bind(wx.EVT_CHECKBOX, self.OnDataChanged, ctr)
             ctr.Bind(wx.EVT_CHECKBOX, self.OnDataChanged)
 
-        elif issubclass(cc, wx.CheckListBox):
+        elif issubclass(cc, wx.CheckBox):
+            #self.Bind(wx.EVT_CHECKBOX, self.OnDataChanged, ctr)
+            ctr.Bind(wx.EVT_CHECKBOX, self.OnDataChanged)
+
+        elif issubclass(cc, wx.ComboBox):
             #self.Bind(wx.EVT_CHECKLISTBOX, self.OnDataChanged, ctr)
-            ctr.Bind(wx.EVT_CHECKLISTBOX, self.OnDataChanged)
+            ctr.Bind(wx.EVT_COMBOBOX, self.OnDataChanged)
 
         elif issubclass(cc, (datectrl.DateCtrl, datectrl.DateTimeCtrl)):
             #self.Bind(datectrl.EVT_DATECHANGED, self.OnDataChanged, ctr)
