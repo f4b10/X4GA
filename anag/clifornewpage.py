@@ -571,6 +571,8 @@ class GenericPersonalPage_Panel(wx.Panel):
                 self.mainPanel.BindChangedEvent(ctr)
             elif isinstance(ctr, wx.CheckBox):
                 self.mainPanel.BindChangedEvent(ctr)
+            elif isinstance(ctr, wx.ComboBox):
+                self.mainPanel.BindChangedEvent(ctr)
             elif isinstance(ctr, awc.controls.linktable.LinkTable):
                 self.mainPanel.BindChangedEvent(ctr)
 
@@ -647,6 +649,8 @@ class GenericPersonalLinkedPage_Panel(ClientiInterrPanel):
             self.Bind(EVT_DATECHANGED, self._grid.OnGridChanged, c)
         elif isinstance(c, wx.CheckBox):
             self.Bind(wx.EVT_CHECKBOX, self._grid.OnGridChanged, c)
+        elif isinstance(c, wx.ComboBox):
+            self.Bind(wx.EVT_COMBOBOX, self._grid.OnGridChanged, c)
         elif isinstance(c, awc.controls.linktable.LinkTable):
             self.Bind(EVT_LINKTABCHANGED, self._grid.OnGridChanged, c)
 
