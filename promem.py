@@ -219,7 +219,11 @@ class PromemPanel(wx.Panel):
                 if dlg.ShowModal() == 1:
                     self.populate()
                 dlg.Destroy()
-        event.Skip()
+        try:
+            pass
+            #event.Skip()
+        except:
+            pass
     
     def _SetSize(self):
         self.tree.SetSize(self.GetSize())
