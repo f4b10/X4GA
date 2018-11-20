@@ -29,6 +29,30 @@ import mx.DateTime as dt
 import mx.Odt
 
 history = (
+
+    ('1.5.64', dt.Date(2018, 11, 20), (
+         ("BET1267",
+         """Integrazione visualizzazione elenco clienti con plugin fatturapa. 
+Aggiunta visualizzazione pec e cod.univoco"""
+        ),
+         ("BET1266",
+         """Integrazione dataentry magazzino con plugin fatturapa. 
+Aggiunta generazione di promemoria all'atto della richiesta dati per F.E."""
+        ),
+         ("BET1265",
+         """Integrazione dataentry magazzino con plugin fatturapa. 
+Aggiunta possibilità di attivare warning all'emissione di documenti che coinvolgano clienti privi di pec o cod univoco"""
+        ),
+        ),),
+           
+           
+    ('1.5.63', dt.Date(2018, 11, 11), (
+         ("BET1264",
+         """Ripristinata la possibilità di differenziare il raggruppamento ddt per Enti o meno."""),
+         ("BET1263",
+         """In sede di data entry di magazzino, aggiunto avviso per anagrafiche prive di pec o codice sdi."""),
+        ),),
+           
            
     ('1.5.62', dt.Date(2018, 11, 11), (
          ("BET1262",
