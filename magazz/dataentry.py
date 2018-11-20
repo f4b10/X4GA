@@ -1315,10 +1315,106 @@ class MagazzPanel(aw.Panel,\
             pass
         return warning
 
+    def GetAdminUser(self):
+        lCodAdmin = []
+        db_conn = Env.Azienda.DB.connection
+        try:
+            curs = db_conn.cursor()
+            cmd = "select codice from x4.utenti where amministratore='X'"
+            curs.execute(cmd)
+            result = curs.fetchall()
+            curs.close()
+            for u in result:
+                lCodAdmin.append(u[0])
+        except MySQLdb.Error, e:
+            pass
+        return lCodAdmin        
+        
 
+    def CheckSend2SDI(self):
+        print 'check su destinazione f.e.'
+        lContinue = False
+        if (self.dbdoc.datiAnag[1].ftel_codsdi and len(self.dbdoc.datiAnag[1].ftel_codsdi)>0) or \
+            (self.dbdoc.datiAnag[1].ftel_pec and len(self.dbdoc.datiAnag[1].ftel_pec)>0) or \
+            (self.dbdoc.datiAnag[1].ftel_codice and len(self.dbdoc.datiAnag[1].ftel_codice)>0):
+            lContinue = True
+        return lContinue
+
+    def CreateMemo(self, codCli=None, desCli=None, pec='', codSdi=''):
+        lCodAdmin = self.GetAdminUser()
+        datIns = Env.Azienda.Login.dataElab
+        uteIns = Env.Azienda.Login.usercode
+        from datetime import timedelta
+        datSca = datIns + timedelta(days=15)
+        globale = 0
+        if len(pec)>0 or len(codSdi)>0:
+            if len(pec)>0:
+                oggetto = 'Assegnata pec a %s(%s)' % (desCli, codCli)
+                corpo   = 'Assegnata pec: %s' % pec
+            else:
+                oggetto = 'Assegnato cod. Univoco a %s(%s)' % (desCli, codCli)
+                corpo   = 'Assegnato cod.Univoco: %s' % codSdi
+        else:
+            oggetto = 'Consegnata richiesta dati x F.E. a %s(%s)' % (desCli, codCli)
+            corpo   = 'Richiesta dati'
+            
+        db_conn = Env.Azienda.DB.connection
+        curs = db_conn.cursor()
+        cmd = "insert promem set datains='%s', uteins='%s', datasca='%s', globale=0, oggetto='%s', descriz='%s', status=0, avvisa=1" % (datIns, uteIns, datSca, oggetto, corpo)
+        curs.execute(cmd)
+        lastId = curs.lastrowid
+        for u in lCodAdmin:
+            cmd = "insert promemu set id_promem=%s, utente='%s'" % (lastId, u)
+            curs.execute(cmd)
+        curs.close()
+        
+    def PrintRichiestaDati(self):
+        rpt.Report(self, self.dbdoc, 'DatiSdi')
+        self.CreateMemo(codCli=self.dbdoc.pdc.codice,
+                        desCli=self.dbdoc.pdc.descriz)
+
+    def AggiornaDatiFtel(self, pec, codsdi):
+        if len(pec)>0:
+            cmd = "UPDATE clienti SET ftel_tipo='P', ftel_flag=1, ftel_pec='%s' WHERE id=%s" % (pec, self.dbdoc.id_pdc)
+        else:                                      
+            cmd = "UPDATE clienti SET ftel_tipo='P', ftel_flag=1, ftel_codsdi='%s' WHERE id=%s" % (codsdi, self.dbdoc.id_pdc)
+        try:
+            db_conn = Env.Azienda.DB.connection
+            curs = db_conn.cursor()
+            curs.execute(cmd) 
+            curs.close()                                   
+            self.CreateMemo(codCli=self.dbdoc.pdc.codice,
+                            desCli=self.dbdoc.pdc.descriz,
+                            pec=pec,
+                            codSdi=codsdi)
+        except:
+            print 'errore'
 
     def OnAnagChanged(self, event):
-
+        try:
+            if self.dbdoc.pdc.id:
+                naz  = self.dbdoc.datiAnag[1].nazione
+                piva = self.dbdoc.datiAnag[1].piva
+                
+                if (naz==None or len(naz.strip())==0 or naz=='IT') and len(piva)>0:
+                    from fatturapa_ver import VERSION_STRING
+                    if VERSION_STRING >= '1.1.17':
+                        self.viewFtel = True
+                        from fatturapa_magazz.dbtables import ReadFeSetup
+                        ReadFeSetup()
+                        if self.dbdoc.cfgdoc.ftel_check and Env.Azienda.Login.dataElab>=Env.Azienda.config.FE_DATAB2B:
+                            if not self.CheckSend2SDI():
+                                from fatturapa_magazz.fatturapa import RichiestaDialog
+                                dlg = RichiestaDialog(self, style=wx.CLOSE_BOX)
+                                dlg.ShowModal()
+                                if dlg.NeedPrint():
+                                    self.PrintRichiestaDati()
+                                else:
+                                    pec, codsdi = dlg.GetValoriSdi() 
+                                    self.AggiornaDatiFtel(pec, codsdi)
+                                dlg.Destroy()
+        except:
+            pass
 
 
         DbgMsg('OnAnagChanged, control=%s' %event.GetEventObject().GetName())
@@ -1380,6 +1476,12 @@ class MagazzPanel(aw.Panel,\
                 del ds
         wx.CallAfter(self.TestModPagStatusAnag)
         event.Skip()
+
+
+        
+
+             
+        
 
     def TestModPagStatusAnag(self):
         try:
