@@ -944,7 +944,14 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
         self._sqlrelcol += ", anag.indirizzo, anag.cap, anag.citta, anag.prov"
         self._sqlrelcol += ", anag.piva, anag.codfisc"
         self._sqlrelcol += ", anag.numtel, anag.numfax, anag.email, tipana.tipo"
-
+        
+        try:
+            from fatturapa_ver import VERSION_STRING
+            if VERSION_STRING >= '1.1.17':
+                if self.pdctipo == 'C':
+                    self._sqlrelcol += ", anag.ftel_pec, anag.ftel_codsdi"
+        except:
+            pass
         self.rsban = []
         self.rsbanmod = []
         self.rsbannew = []
@@ -1275,7 +1282,11 @@ class CliForSearchResultsGrid(ga.SearchResultsGrid):
         _STR = gl.GRID_VALUE_STRING
         cn = lambda x: self.db._GetFieldIndex(x)
         tab = self.tabalias
-        return (
+        try:
+            tipo=self.Parent.Parent.Parent.Parent.pdctipo
+        except:
+            tipo=''
+        fields= (
             ( 50, (cn('pdc_codice'),     "Cod.",            _STR, True )),
             ( 30, (cn('tipana_codice'),  "T.",              _STR, True )),
             (325, (cn('pdc_descriz'),    "Ragione sociale", _STR, True )),
@@ -1288,8 +1299,19 @@ class CliForSearchResultsGrid(ga.SearchResultsGrid):
             (150, (cn('anag_numtel'),    "Telefono",        _STR, True )),
             (150, (cn('anag_numfax'),    "FAX",             _STR, True )),
             (200, (cn('anag_email'),     "e-mail",          _STR, True )),
-            (  1, (cn('pdc_id'),         "#pdc",            _STR, True )),
         )
-
+        l = list(fields)
+        if tipo=='C':
+            try:
+                from fatturapa_ver import VERSION_STRING
+                if VERSION_STRING >= '1.1.17':
+                    l.append( [200, (cn('anag_ftel_pec'),     "pec x fatt.Elettroniche",          _STR, True )])
+                    l.append( [ 80, (cn('anag_ftel_codsdi'),  "Cod.SDI",      _STR, True )])
+            except:
+                pass
+        l.append([  1, (cn('pdc_id'),         "#pdc",            _STR, True )])
+        fields = tuple(l)
+        return fields
+     
     def SetColumn2Fit(self):
         self.SetFitColumn(2)
