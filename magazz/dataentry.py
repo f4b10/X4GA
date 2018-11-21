@@ -1370,8 +1370,9 @@ class MagazzPanel(aw.Panel,\
         
     def PrintRichiestaDati(self):
         rpt.Report(self, self.dbdoc, 'DatiSdi')
-        self.CreateMemo(codCli=self.dbdoc.pdc.codice,
-                        desCli=self.dbdoc.pdc.descriz)
+        if self.dbdoc.cfgdoc.ftel_memo:
+            self.CreateMemo(codCli=self.dbdoc.pdc.codice,
+                            desCli=self.dbdoc.pdc.descriz)
 
     def AggiornaDatiFtel(self, pec, codsdi):
         if len(pec)>0:
@@ -1383,10 +1384,11 @@ class MagazzPanel(aw.Panel,\
             curs = db_conn.cursor()
             curs.execute(cmd) 
             curs.close()                                   
-            self.CreateMemo(codCli=self.dbdoc.pdc.codice,
-                            desCli=self.dbdoc.pdc.descriz,
-                            pec=pec,
-                            codSdi=codsdi)
+            if self.dbdoc.cfgdoc.ftel_memo:
+                self.CreateMemo(codCli=self.dbdoc.pdc.codice,
+                                desCli=self.dbdoc.pdc.descriz,
+                                pec=pec,
+                                codSdi=codsdi)
         except:
             print 'errore'
 
