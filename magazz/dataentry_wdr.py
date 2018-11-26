@@ -3734,6 +3734,74 @@ def MultiLineFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
+
+def RichiestaDatiFunc( parent, call_fit = True, set_sizer = True ):
+    item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    
+    item1 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    
+    item2 = wx.StaticText( parent, ID_TEXT, "Attenzione! Non risulta ancora essere stata comunicata la destinazione", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item2.SetFont( wx.Font( 13, wx.ROMAN, wx.NORMAL, wx.NORMAL ) )
+    item1.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item3 = wx.StaticText( parent, ID_TEXT, "a cui inviare la fattura elettronica.", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item3.SetFont( wx.Font( 13, wx.ROMAN, wx.NORMAL, wx.NORMAL ) )
+    item1.Add( item3, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item1.Add( [ 20, 20 ] , 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+    item4 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    
+    item5 = wx.StaticText( parent, ID_TEXT, "Indirizzo di posta certificata", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item5.SetFont( wx.Font( 13, wx.ROMAN, wx.NORMAL, wx.NORMAL ) )
+    item4.Add( item5, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item6 = wx.TextCtrl( parent, ID_TEXTCTRL, "", wx.DefaultPosition, [80,-1], 0 )
+    item6.SetFont( wx.Font( 13, wx.ROMAN, wx.NORMAL, wx.NORMAL ) )
+    item6.SetName( "pec" )
+    item4.Add( item6, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+
+    item7 = wx.StaticText( parent, ID_TEXT, "o in alternativa", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item4.Add( item7, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+
+    item4.Add( [ 2, 2 ] , 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item8 = wx.StaticText( parent, ID_TEXT, "Codice Univoco SDI", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item8.SetFont( wx.Font( 13, wx.ROMAN, wx.NORMAL, wx.NORMAL ) )
+    item4.Add( item8, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item9 = TextCtrl( parent, ID_TEXTCTRL, "", wx.DefaultPosition, [80,-1], 0 )
+    item9.SetFont( wx.Font( 13, wx.ROMAN, wx.NORMAL, wx.NORMAL ) )
+    item9.SetName( "codsdi" )
+    item4.Add( item9, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+
+    item4.AddGrowableCol( 1 )
+
+    item1.Add( item4, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item1.AddGrowableCol( 0 )
+
+    item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item10 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    
+    item11 = wx.Button( parent, ID_BUTTON, "Conferma", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item11.SetDefault()
+    item11.SetFont( wx.Font( 13, wx.ROMAN, wx.NORMAL, wx.NORMAL ) )
+    item11.SetName( "btnUpdate" )
+    item10.Add( item11, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+    item0.Add( item10, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item0.AddGrowableCol( 0 )
+
+    if set_sizer == True:
+        parent.SetSizer( item0 )
+        if call_fit == True:
+            item0.SetSizeHints( parent )
+    
+    return item0
+
 # Menubar functions
 
 # Toolbar functions

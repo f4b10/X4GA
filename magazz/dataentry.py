@@ -1399,22 +1399,34 @@ class MagazzPanel(aw.Panel,\
                 piva = self.dbdoc.datiAnag[1].piva
                 
                 if (naz==None or len(naz.strip())==0 or naz=='IT') and len(piva)>0:
-                    from fatturapa_ver import VERSION_STRING
-                    if VERSION_STRING >= '1.1.17':
-                        self.viewFtel = True
-                        from fatturapa_magazz.dbtables import ReadFeSetup
-                        ReadFeSetup()
-                        if self.dbdoc.cfgdoc.ftel_check and Env.Azienda.Login.dataElab>=Env.Azienda.config.FE_DATAB2B:
-                            if not self.CheckSend2SDI():
-                                from fatturapa_magazz.fatturapa import RichiestaDialog
-                                dlg = RichiestaDialog(self, style=wx.CLOSE_BOX)
-                                dlg.ShowModal()
-                                if dlg.NeedPrint():
-                                    self.PrintRichiestaDati()
-                                else:
-                                    pec, codsdi = dlg.GetValoriSdi() 
-                                    self.AggiornaDatiFtel(pec, codsdi)
-                                dlg.Destroy()
+                    if self.dbdoc.cfgdoc.ftel_check:
+                        if not self.CheckSend2SDI():
+                            dlg = RichiestaDialog(self, style=wx.CLOSE_BOX)
+                            dlg.ShowModal()
+                            if dlg.NeedPrint():
+                                self.PrintRichiestaDati()
+                            else:
+                                pec, codsdi = dlg.GetValoriSdi() 
+                                self.AggiornaDatiFtel(pec, codsdi)
+                            dlg.Destroy()
+                    #===========================================================
+                    # from fatturapa_ver import VERSION_STRING
+                    # if VERSION_STRING >= '1.1.17':
+                    #     self.viewFtel = True
+                    #     from fatturapa_magazz.dbtables import ReadFeSetup
+                    #     ReadFeSetup()
+                    #     if self.dbdoc.cfgdoc.ftel_check and Env.Azienda.Login.dataElab>=Env.Azienda.config.FE_DATAB2B:
+                    #         if not self.CheckSend2SDI():
+                    #             from fatturapa_magazz.fatturapa import RichiestaDialog
+                    #             dlg = RichiestaDialog(self, style=wx.CLOSE_BOX)
+                    #             dlg.ShowModal()
+                    #             if dlg.NeedPrint():
+                    #                 self.PrintRichiestaDati()
+                    #             else:
+                    #                 pec, codsdi = dlg.GetValoriSdi() 
+                    #                 self.AggiornaDatiFtel(pec, codsdi)
+                    #             dlg.Destroy()
+                    #===========================================================
         except:
             pass
 
@@ -3915,3 +3927,62 @@ class ListDestDialog(aw.Dialog):
             #print 'codificato'
             self.mainPanel.SetDestCodificato(id_dest)
         self.EndModal(wx.ID_OK)
+
+
+
+
+class RichiestaPanel(aw.Panel):
+    """
+    Pannello  richiesta dati x fe
+    """
+    def __init__(self, *args, **kwargs):
+        cn = self.FindWindowByName
+        aw.Panel.__init__(self, *args, **kwargs)
+        wdr.RichiestaDatiFunc(self)
+        self.pec = self.FindWindowByName('pec')
+        self.codsdi = self.FindWindowByName('codsdi')
+        self.FindWindowByName('btnUpdate').Bind(wx.EVT_BUTTON, self.OnUpdateDati)
+        
+    def OnUpdateDati(self, evt):
+        print 'se compilate aggiorno altrimenti stampo'
+        if len(self.pec.GetValue().strip())==0 and len(self.codsdi.GetValue().strip())==0:
+            self.StampaRichiesta()
+        else:
+            self.SetValoriSdi()
+        evt.Skip()
+        
+    def StampaRichiesta(self):
+        self.Parent.needPrint = True
+    
+    def SetValoriSdi(self):
+        self.Parent.pec = self.pec.GetValue().strip()
+        self.Parent.codSdi = self.codsdi.GetValue().strip()
+        
+    
+        
+class RichiestaDialog(aw.Dialog):
+    """
+    Dialog richiesta dati x fe
+    """
+    needPrint = False
+    pec       = None
+    codSdi    = None
+    def __init__(self, *args, **kwargs):
+        aw.Dialog.__init__(self, *args, **kwargs)
+        title = 'Richiesta dati x Fatturazione Elettronica'
+        self.richiestaPanel = RichiestaPanel(self)
+        self.AddSizedPanel(self.richiestaPanel)
+        self.FindWindowByName('btnUpdate').Bind(wx.EVT_BUTTON, self.OnClose)
+    
+    def OnClose(self, evt):
+        self.Close()
+        evt.Skip()
+        
+    def NeedPrint(self):
+        return self.needPrint
+    
+    def GetValoriSdi(self):
+        return [self.pec, self.codSdi]
+    
+    
+    
