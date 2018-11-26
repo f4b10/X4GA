@@ -35,6 +35,19 @@ from Env import Azienda
 
 PSWD_MIN = Azienda.params['password-length']
 
+def mysql_hash_password(password):
+    retValue = ''
+    nr = 1345345333
+    add = 7
+    nr2 = 0x12345671
+    if len(password.strip())>0:
+        for c in (ord(x) for x in password if x not in (' ', '\t')):
+            nr^= (((nr & 63)+add)*c)+ (nr << 8) & 0xFFFFFFFF
+            nr2= (nr2 + ((nr2 << 8) ^ nr)) & 0xFFFFFFFF
+            add= (add + c) & 0xFFFFFFFF
+        retValue = "%08x%08x" % (nr & 0x7FFFFFFF,nr2 & 0x7FFFFFFF)
+    return retValue
+
 
 class PswPanel(aw.Panel):
     my=None
@@ -106,8 +119,13 @@ class PswPanel(aw.Panel):
         elif len(psw1)<PSWD_MIN and psw1==psw2:
             util.MsgDialog(self, "La password deve avere un lunghezza minima di %d caratteri" % PSWD_MIN)
         else:
-            self.x4cursor.execute("select old_password('%s');" % psw1)
-            e_psw=self.x4cursor.fetchone()[0]
+            try:
+                self.x4cursor.execute("select old_password('%s');" % psw1)
+                e_psw=self.x4cursor.fetchone()[0]
+            except:
+                e_psw=mysql_hash_password(psw1)
+                
+                
             sql="UPDATE utenti SET psw='%s' WHERE descriz='%s';" % (e_psw, self.username )
             self.x4cursor.execute(sql)
             self.OnAbort(event)

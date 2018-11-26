@@ -34,6 +34,19 @@ import awc.util as util
 from Env import Azienda
 bt = Azienda.BaseTab
 
+def mysql_hash_password(password):
+    retValue = ''
+    nr = 1345345333
+    add = 7
+    nr2 = 0x12345671
+    if len(password.strip())>0:
+        for c in (ord(x) for x in password if x not in (' ', '\t')):
+            nr^= (((nr & 63)+add)*c)+ (nr << 8) & 0xFFFFFFFF
+            nr2= (nr2 + ((nr2 << 8) ^ nr)) & 0xFFFFFFFF
+            add= (add + c) & 0xFFFFFFFF
+        retValue = "%08x%08x" % (nr & 0x7FFFFFFF,nr2 & 0x7FFFFFFF)
+    return retValue
+
 
 FRAME_TITLE = "Utenti"
 
@@ -340,8 +353,11 @@ class UtentiPanel(ga.AnagPanel):
         
         psw=self.FindWindowById(wdr.ID_PSW).GetValue()
         if self.oldPassword<>psw:
-            self.db_curs.execute("select old_password('%s');" % psw)
-            ecrypt_psw=self.db_curs.fetchone()[0]
+            try:
+                self.db_curs.execute("select old_password('%s');" % psw)
+                ecrypt_psw=self.db_curs.fetchone()[0]
+            except:
+                ecrypt_psw=mysql_hash_password(psw)
             self.FindWindowById(wdr.ID_PSW).SetValue(ecrypt_psw)
         out = ga.AnagPanel.TransferDataFromWindow(self, *args, **kwargs)
         
