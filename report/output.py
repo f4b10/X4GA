@@ -313,8 +313,10 @@ class print_Report:
                  multicopia_reactor=None,
                  commandprint=None,
                  filterScreen=None,
-                 isFronteRetro=False):
+                 isFronteRetro=False,
+                 WaterMarkExpression=None):
         
+        self.WaterMarkExpression = WaterMarkExpression
         self.printed = False
         output=upper(output)
         if not output in ["VIEW", "PRINT", "STORE"]:
@@ -419,7 +421,6 @@ class print_Report:
         """
         Inizio del ciclo di stampa
         """
-        
         # Predispongo i vari elementi del report
         self.loadUserParameter(self.oReport.get_ReportStru()) 
         
@@ -616,7 +617,8 @@ class print_Report:
                             self.stampaTitoloBand()
                             self.DelFiltersPanelTitleElements()
                             statit = False
-                    self.stampaTestata()
+                    if self.stampaTestata():
+                        self.PrintWaterMarkIfNeed()
                     
                     if not lBeginReport and self.rotturaGruppo():
                         self.stampoRottura()
@@ -1000,6 +1002,7 @@ class print_Report:
         if lPrint:
             if _debug==1:
                 print "Stampa Testata"
+        return lPrint
         
     def loadFlatProperty(self,d, dbTable):
         v=None
@@ -1159,6 +1162,32 @@ class print_Report:
         self.oCanvas.set_row(self.oCanvas.get_bottomMargin()+
                              self.oCanvas.get_altezzaReale())
         self.stampaGroupHeaderOnNewPage()
+
+    def ValutaWaterMark(self, exp):
+        ret = False
+        try:
+            if self.WaterMarkExpression:
+                exp=Expression(self.WaterMarkExpression)
+                ret = exp.evaluate(self.oCanvas)
+        except:
+            pass
+        return ret
+
+    def PrintWaterMarkIfNeed(self):
+        if self.ValutaWaterMark(self.WaterMarkExpression):
+            if _debug==1:
+                print 'wateramrk'
+            c = self.oCanvas
+            c.setFillGray(0.7)
+            c.saveState()
+            c.translate( 0, 0)
+            c.rotate( 10 )
+            c.setFontSize(25)
+            c.drawString(150,400,"COPIA FISCALMENTE NON VALIDA")
+            c.setFontSize(20)
+            c.drawString(175,375,"DOC.ELETTRONICO INVIATO A SDI")
+            c.restoreState()    
+        
 
     def stampaGroupHeaderOnNewPage(self):
         """

@@ -387,10 +387,14 @@ class Report:
                  otherquestions_filler=None, otherquestions_reactor=None,
                  multicopia_init=None, multicopia_reactor=None,
                  can_preview=True, can_print=True, skip_prompt=False,
+                 WaterMarkExpression=None,
                  **oa):
 
         self.messages = messages
         self.parameters = {}
+
+        print dbt.IsCartaFiscale()
+
 
         if not self.TestData(parent, dbt, testrec):
             return
@@ -505,6 +509,7 @@ class Report:
             p['multicopia_reactor'] = multicopia_reactor
             p['otherargs'] = oa
             p['commandprint'] = commandprint
+            p['WaterMarkExpression'] = WaterMarkExpression
             self.usedReport = self.StartReport()
 
             if updatelastprinter:
@@ -550,6 +555,7 @@ class Report:
         multicopia_init = p['multicopia_init']
         multicopia_reactor = p['multicopia_reactor']
         commandprint = p['commandprint']
+        WaterMarkExpression = p['WaterMarkExpression']
         oa = p['otherargs']
 
         name, ext = os.path.splitext(rptdef)
@@ -598,6 +604,7 @@ class Report:
                             multicopia_reactor=multicopia_reactor,
                             commandprint = commandprint,
                             isFronteRetro = isFronteRetro,
+                            WaterMarkExpression = WaterMarkExpression,
                             **oa)
             if esitoReturn == None:
                 esitoReturn = esito

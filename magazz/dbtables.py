@@ -45,12 +45,18 @@ import copy
 
 import awc.util as awu
 
+from awc.lib import ControllaCodFisc
 
 try:
     from custmagazz.defpresco import DefPrezzoSconti
 except:
     DefPrezzoSconti = None
 
+
+import sys
+_annoStartFE = 2018
+if hasattr(sys, 'frozen'):
+    _annoStartFE = 2019
 
 class NumProtIvaEsiste(Exception):
     pass
@@ -432,6 +438,48 @@ class DocMag(adb.DbTable):
         dbtlis = dbmov.AddJoin(\
             bt.TABNAME_TIPLIST,   "tiplist", idLeft="id_tiplist",\
             join=adb.JOIN_LEFT)
+
+
+    def IsCartaFiscale(self):
+        isFiscale = True
+        if self.datdoc.year>=_annoStartFE:
+            if self.config.ftel_enabled ==1:
+                isFiscale = not self.IsFe(self.GetAnag())
+        return isFiscale 
+
+    def IsFe(self, r):
+        isFe = True
+        if self.IsEstero(r):
+            isFe = False
+        else:
+            if len(r.piva.strip())==0:
+                isFe = False
+            elif  (r.ftel_codsdi or '')=='0000000':
+                isFe = False
+        return isFe    
+
+    def IsEstero(self, r):
+        return not self.GetNazioneFiscale(r)=='IT'
+
+    def GetNazioneFiscale(self, r):
+        nazione=''
+        #print 'verifico se presente nazione in dati per spesometro sm11_sedestt:%s' % r.vatprefix1
+        
+        if r.stato1.vatprefix==None or r.stato1.vatprefix=='IT':
+            if len(r.piva.strip())>0:
+                # partita iva presente
+                if len(r.nazione.strip())>0:
+                    nazione = r.nazione
+                else:
+                    nazione = 'IT'
+            else:
+                # partita iva assente
+                nazione = r.stato.vatprefix
+                if ControllaCodFisc(r.codfisc).Controlla():
+                    nazione='IT'
+        else:
+            nazione = r.stato1.vatprefix1
+        return nazione
 
 
     def get_numdoc_print(self):
@@ -2674,6 +2722,9 @@ class DocMag(adb.DbTable):
                         join=adb.JOIN_LEFT)
                     anag.AddJoin(\
                         'x4.stati',         "stato",  idLeft="id_stato",\
+                        join=adb.JOIN_LEFT)
+                    anag.AddJoin(\
+                        'x4.stati',         "stato1", idLeft="sm11_sedestt",\
                         join=adb.JOIN_LEFT)
                     anag.AddJoin(\
                         bt.TABNAME_SPEINC,  "spese",  idLeft="id_speinc",\

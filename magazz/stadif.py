@@ -345,7 +345,8 @@ class StaDifPanel(aw.Panel):
                        rptname, rowFunc=SetAnagAndRegCon,
                        changefilename=docs.GetPrintFileName(),
                        otherquestions_filler=PrintOtherQuestionsFiller,
-                       otherquestions_reactor=PrintOtherQuestionsReactor,)
+                       otherquestions_reactor=PrintOtherQuestionsReactor,
+                       WaterMarkExpression='not RS.IsCartaFiscale()')
         if r.usedReport:
             if r.usedReport.printed:
                 if dpflag:

@@ -1601,7 +1601,8 @@ class MagazzPanel(aw.Panel,\
                        otherquestions_filler=PrintOtherQuestionsFiller,
                        otherquestions_reactor=PrintOtherQuestionsReactor,
                        multicopia_init=PrintMultiCopiaInit,
-                       skip_prompt = skip_prompt)
+                       skip_prompt = skip_prompt,
+                       WaterMarkExpression='not RS.IsCartaFiscale()')
 
         out = False
         ur = r.GetUsedReport()
