@@ -442,7 +442,7 @@ class DocMag(adb.DbTable):
 
     def IsCartaFiscale(self):
         isFiscale = True
-        if self.datdoc.year>=_annoStartFE:
+        if self.datdoc.year>=2019:
             if self.config.ftel_enabled ==1:
                 isFiscale = not self.IsFe(self.GetAnag())
         return isFiscale 
