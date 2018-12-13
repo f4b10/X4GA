@@ -30,6 +30,12 @@ import mx.Odt
 
 history = (
 
+    ('1.5.66', dt.Date(2018, 12, 03), (
+         ("BET1268",
+         """Aggiunta dicitura copia fiscalmente non valida ove necessario"""
+        ),
+        ),),
+           
     ('1.5.64', dt.Date(2018, 11, 20), (
          ("BET1267",
          """Integrazione visualizzazione elenco clienti con plugin fatturapa. 

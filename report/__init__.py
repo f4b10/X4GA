@@ -393,9 +393,6 @@ class Report:
         self.messages = messages
         self.parameters = {}
 
-        print dbt.IsCartaFiscale()
-
-
         if not self.TestData(parent, dbt, testrec):
             return
 
