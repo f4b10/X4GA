@@ -444,8 +444,9 @@ class DocMag(adb.DbTable):
         isFiscale = True
         if self.datdoc.year>=2019:
             if self.config.ftel_enabled ==1:
-                isFiscale = not self.IsFe(self.GetAnag())
-        return isFiscale 
+                #isFiscale = not self.IsFe(self.GetAnag()) 
+                isFiscale = False 
+        return isFiscale
 
     def IsFe(self, r):
         isFe = True
