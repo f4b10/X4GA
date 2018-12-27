@@ -1182,10 +1182,12 @@ class print_Report:
             c.saveState()
             c.translate( 0, 0)
             c.rotate( 10 )
-            c.setFontSize(25)
-            c.drawString(150,400,"COPIA FISCALMENTE NON VALIDA")
-            c.setFontSize(20)
-            c.drawString(175,375,"DOC.ELETTRONICO INVIATO A SDI")
+            c.setFontSize(15)
+            c.drawString(150,400,"Stampa priva di valenza giuridico-fiscale ai sensi dell’art. 21 (Dpr 633/72)")
+            c.setFontSize(12)
+            c.drawString(190,375,"salvo per i soggetti non titolari di partita Iva e/o non residenti ai sensi")
+            c.setFontSize(12)
+            c.drawString(265,350,"del comma 909 art. 1 L.205/2017")
             c.restoreState()    
         
 
