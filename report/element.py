@@ -33,7 +33,12 @@ from reportlab.lib.pagesizes import A4, landscape, portrait
 from reportlab.lib.colors import *
 from reportlab.lib.enums import TA_LEFT, TA_CENTER, TA_RIGHT, TA_JUSTIFY
 from reportlab.platypus import Paragraph as BaseParagraph
-from reportlab.platypus.paragraph import _handleBulletWidth, ParaLines, _parser, _sameFrag, FragLine
+try:
+    from reportlab.platypus.paragraph import _handleBulletWidth, ParaLines, _parser, _sameFrag, FragLine
+except:
+    import reportlab
+    from reportlab.platypus.paragraph import _handleBulletWidth, ParaLines, _sameFrag, FragLine    
+    _parser=reportlab.platypus.paraparser.ParaParser()
 from reportlab.pdfbase.pdfmetrics import stringWidth
 from reportlab.lib.styles import ParagraphStyle, PropertySet
 
