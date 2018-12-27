@@ -39,7 +39,7 @@ class ComboBoxWithPyData(wx.ComboBox):
             
     def ClearAll(self):
         self.pyData=[]
-        wx.ComboBox.ClearAll()
+        wx.ComboBox.Clear()
         
     def Append(self, text, pyData=None):
         wx.ComboBox.Append(self, text)
