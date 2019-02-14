@@ -38,7 +38,8 @@ def GetConfigPath(_appdesc=None, _appcode=None):
             a = wx.GetApp()
             isapp = a is not None
             if not isapp:
-                a = wx.PySimpleApp()
+                #a = wx.PySimpleApp()
+                a = wx.App(False)
                 a.SetAppName(_appdesc)
             else:
                 if a.GetAppName() != _appdesc:
