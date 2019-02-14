@@ -39,7 +39,8 @@ GRID_ROW_HEIGHT = 24
 def GetCodiceStandardWidth():
     isapp = (wx.GetApp() is not None)
     if not isapp:
-        dummy_app = wx.PySimpleApp()
+        #dummy_app = wx.PySimpleApp()
+        dummy_app = wx.App(False)
     f = wx.SystemSettings.GetFont(wx.SYS_SYSTEM_FONT)
     if not isapp:
         dummy_app.Destroy()
