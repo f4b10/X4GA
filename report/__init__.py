@@ -33,7 +33,7 @@ from reportlab.pdfgen import canvas
 try:
     from pyPdf import PdfFileWriter, PdfFileReader
 except:
-    print 'impossibile gestire fronte/retro'
+    #print 'impossibile gestire fronte/retro'
     pass
 
 
