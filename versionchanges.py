@@ -30,6 +30,21 @@ import mx.Odt
 
 history = (
 
+    ('1.5.70', dt.Date(2018, 02, 14), (
+         ("BET1271",
+         """Ottimizzato richiamo programma openssl.exe"""
+        ),
+         ("BET1270",
+         """Aggiunto watermark alla generazione dei documenti differita"""
+        ),
+        ),),
+           
+    ('1.5.69', dt.Date(2018, 12, 03), (
+         ("BET1269",
+         """Aggiunta openssl in distribuzione per eleborare file firmati .p7m"""
+        ),
+        ),),
+           
     ('1.5.66', dt.Date(2018, 12, 03), (
          ("BET1268",
          """Aggiunta dicitura copia fiscalmente non valida ove necessario"""
