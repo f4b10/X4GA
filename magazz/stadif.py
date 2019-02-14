@@ -386,7 +386,8 @@ class StaDifPanel(aw.Panel):
                             #d2p._info.titleprint = rpttitle
                             r = rpt.Report(self, d2p, rptname, rowFunc=self.SetAnagAndRegCon, output="STORE",
                                            changepathname=pathname, changefilename=filename, forcechoice=True,
-                                           emailbutton=totemails)
+                                           emailbutton=totemails,
+                                           WaterMarkExpression='not RS.IsCartaFiscale()')
                             ur = r.GetUsedReport()
                             if ur is None:
                                 break
