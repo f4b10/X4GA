@@ -120,6 +120,9 @@ class CfgCausale(object):
                      "codice",       #Codice causale
                      "descriz",      #Descrizione causale
                      "esercizio",    #Esercizio
+                     "competenza",   #Attiva Competenza
+                     "fepass",       #Attiva acquisizione fatture elettroniche passive
+                     "feidsdi",      #Attiva gestione idSdi
                      "tipo",         #Tipologia
                      "datdoc",       #Data documento
                      "numdoc",       #Numero documento
@@ -167,7 +170,7 @@ class CfgCausale(object):
     def CfgCausale_Read(self, idcau):
         #lettura configurazione causale
         cmd =\
-"""SELECT cau.id, cau.codice, cau.descriz, cau.esercizio, cau.tipo, """\
+"""SELECT cau.id, cau.codice, cau.descriz, cau.esercizio, cau.competenza, cau.fepass, cau.feidsdi, cau.tipo, """\
 """cau.datdoc, cau.numdoc, cau.id_regiva, riv.codice, riv.descriz, """\
 """riv.tipo, cau.regivadyn, cau.numiva, cau.modpag, cau.pcf, cau.pcfscon, cau.pcfimp, """\
 """cau.pcfsgn, cau.pcfabb, cau.pcfspe, cau.pcfins, cau.pades, """\
@@ -195,6 +198,7 @@ class CfgCausale(object):
                 nkey += 1
             del key, nkey
         #lettura sottoconti preferiti
+        print 'setto self._cfg_fepass %s' % self._cfg_fepass
         self._cfg_pdcpref = []
         self._cfg_pdcpref_da = {}
         cmd =\

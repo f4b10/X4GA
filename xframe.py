@@ -1612,24 +1612,24 @@ class XFrame(aw.Frame):
         bt = Env.Azienda.BaseTab
         if bt.TIPO_CONTAB == "O":
             from contab.dataentry_i_o import ContabFrameTipo_I_O as RegContabFrameIva_O
-            self.LaunchFrame(RegContabFrameIva_O)
+            self.LaunchFrame(RegContabFrameIva_O, size=(1100,500))
         elif bt.TIPO_CONTAB == "S":
             from contab.dataentry_i_s import ContabFrameTipo_I_S as RegContabFrameIva_S
-            self.LaunchFrame(RegContabFrameIva_S)
+            self.LaunchFrame(RegContabFrameIva_S, size=(1100,500))
         else:
             awu.MsgDialog(None, message="Manca setup contabilità ordinaria/semplificata")
 
     def OnDataEntryContabSaldaConto(self, event):
         from contab.dataentry_sc import ContabFrameTipo_SC as RegContabFrameSC
-        self.LaunchFrame(RegContabFrameSC)
+        self.LaunchFrame(RegContabFrameSC, size=(1100,500))
 
     def OnDataEntryContabComposto(self, event):
         from contab.dataentry_c import ContabFrameTipo_C as RegContabFrameC
-        self.LaunchFrame(RegContabFrameC)
+        self.LaunchFrame(RegContabFrameC, size=(1100,500))
     
     def OnDataEntryContabSolaIva(self, event):
         from contab.dataentry_i_si import ContabFrameTipo_I_SI as RegContabFrameIva_SI
-        self.LaunchFrame(RegContabFrameIva_SI)
+        self.LaunchFrame(RegContabFrameIva_SI, size=(1100,500))
         
     def OnPcfNew(self, event):
         from contab.pcf import PcfDialog

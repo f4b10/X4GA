@@ -696,7 +696,7 @@ class TabSetupDialog(aw.Dialog):
             db = setup._info.db
 
             oldver, oldmod = setup.codice, setup.descriz
-
+            #print oldver, oldmod
             # -------------------------------------------------------------------------------------
 
             if oldver<'0.9.45' and ok:
@@ -1329,6 +1329,25 @@ UPDATE `cfgsetup`
                                     ADD COLUMN `authtls` TINYINT(1) AFTER `authpswd`""")
 
 #            if oldver<'1.4.52' and ok:
+
+            if oldver<'1.5.71' and ok:
+                
+                #print 'adegua datcompete'
+
+                err = None
+                try:
+                    db.Execute('UPDATE contab_h SET datcompete=datreg where datcompete is null')
+                except Exception, e:
+                    err = repr(e.args)
+                if err:
+                    aw.awu.MsgDialog(self, "Errore in aggiornamento data competenza Registrazioni Contabili" )  
+                    ok = False
+
+
+
+
+
+
 
 
             moveDatiFtel= False

@@ -51,6 +51,11 @@ import crypt, base64
 
 import sys, getopt, gc
 
+import calendar
+import datetime
+
+
+
 _USER_MAX_SQL_COUNT = None
 def GetUserMaxSqlCount():
     return _USER_MAX_SQL_COUNT
@@ -105,7 +110,57 @@ def GetAncestorByName(obj, objName):
     return foundObj
 
 
+def GetPeriodoFromDate(periodicita=None, dreg=None):
+    if periodicita=='M':
+        mm = dreg.month
+        aa = dreg.year
+    else:
+        mm = int((dreg.month-1)/3)+1
+        aa = dreg.year
+    return mm, aa
 
+def GetPeriodoPrecedente(periodicita=None, dreg=None):
+    mm, aa = GetPeriodoFromDate(periodicita=periodicita, dreg=dreg)
+    if mm>1:
+        mm=mm-1
+    else:
+        if periodicita=='M':
+            mm=12
+        else:
+            mm=4
+        aa=aa-1
+    return mm,aa
+
+def GetDateFromPeriod(periodicita=None, mm=None, aa=None, am=None):
+    if am:
+        mm = am[0]
+        aa = am[1]
+    if periodicita=='M':
+        dStart = datetime.datetime.strptime('01%02d%04d' % (mm, aa), "%d%m%Y").date()
+        _,day = calendar.monthrange(aa,mm)
+        dEnd   = datetime.datetime.strptime('%02d%02d%04d' % (day, mm, aa), "%d%m%Y").date()
+    else:
+        mm1 = ((mm-1)*3)+1
+        dStart = datetime.datetime.strptime('01%02d%04d' % (mm1, aa), "%d%m%Y").date()
+        _,day = calendar.monthrange(aa,mm1+2)
+        dEnd   = datetime.datetime.strptime('%02d%02d%04d' % (day, mm1+2, aa), "%d%m%Y").date()
+    return  dStart, dEnd
+
+def GetPeriodoSuccessivo(periodicita=None, dreg=None):
+    mm, aa = GetPeriodoFromDate(periodicita=periodicita, dreg=dreg)
+    mm = mm + 1
+    if periodicita=='M':
+        if mm>12:
+            mm=1
+            aa=aa+1
+    else:
+        if mm>4:
+            mm=1
+            aa=aa+1
+    return mm,aa
+
+def DataIta(data):
+    return data.strftime("%d-%m-%y")
 #===============================================================================
 # def IsZoomGridAbilitato():
 #     ZOOMGRID=False
@@ -135,6 +190,13 @@ def GetAncestorByName(obj, objName):
 #     return ZOOMGRID
 #===============================================================================
 
+global canRegFe
+canRegFe = False
+try:
+    import feinreg_contab
+    canRegFe = True
+except:
+    canRegFe = False
 
 
 
@@ -2055,6 +2117,9 @@ class Azienda(object):
                 [ "datdoc",      "CHAR",      1, None, "Tipo di gestione Data Documento", None ],
                 [ "numdoc",      "CHAR",      1, None, "Tipo di gestione Numero Documento", None ],
                 [ "numiva",      "CHAR",      1, None, "Tipo di gestione Numero protocollo IVA", None ],
+                [ "competenza",  "CHAR",      1, None, "Tipo di gestione periodo competenza", None ],
+                [ "fepass",      "CHAR",      1, None, "Acquisizione da fatture Elettroniche ricevute", None ],
+                [ "feidsdi",     "CHAR",      1, None, "Abilita richiesta idSdi", None ],
                 [ "modpag",      "CHAR",      1, None, "Tipo di gestione Mod. Pagamento", None ],
                 [ "pcf",         "CHAR",      1, None, "Gestione scadenzario", None ],
                 [ "pcfscon",     "CHAR",      1, None, "Gestione scadenzario: saldaconto", None ],
@@ -2430,7 +2495,9 @@ class Azienda(object):
                 [ "id_caus",    "INT",    idw, None, "ID causale", None ],
                 [ "tipreg",     "CHAR",     1, None, "Tipo di registrazione", None ],
                 [ "datreg",     "DATE",  None, None, "Data registrazione", None ],
+                [ "datcompete", "DATE",  None, None, "Data competenza", None ],
                 [ "datdoc",     "DATE",  None, None, "Data documento", None ],
+                [ "idsdi",      "VARCHAR", 10, None, "Idedntificativi file SDI", None],
                 [ "numdoc",     "VARCHAR", 20, None, "Numero documento", None ],
                 [ "numiva",     "INT",     10, None, "Numero protocollo IVA", None ],
                 [ "numreg",     "INT",     10, None, "numero reg. mirage", None ],

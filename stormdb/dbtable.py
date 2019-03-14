@@ -2743,6 +2743,15 @@ class DbTable(object):
         return out
 
     @classmethod
+    def ditab(self, date):
+        out = None
+        try:
+            if date is not None: out = date.Format(fmt='%d/%m/%y').split()[0]
+        except:
+            pass
+        return out
+
+    @classmethod
     def dhita(self, date):
         out = None
         try:
@@ -2762,6 +2771,26 @@ class DbTable(object):
             except:
                 pass
         return out
+
+    @classmethod
+    def d2p(self, date):
+        def GetPeriodicita():
+            periodicita=''
+            s = adb.DbTable('cfgsetup', 'setup')
+            if s.Retrieve('setup.chiave=%s', 'liqiva_periodic') and s.OneRow():
+                periodicita = s.flag
+            del s        
+            return periodicita
+        
+        periodicita = GetPeriodicita()
+        mm = aa = 0
+        if periodicita=='M':
+            mm = date.month
+            aa = date.year
+        else:
+            mm = int((date.month-1)/3)+1
+            aa = date.year
+        return '%02d/%04d' % (mm, aa)
 
     @classmethod
     def sepn(cls, num, dec=0, sepm=True, zeroblank=False):

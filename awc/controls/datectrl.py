@@ -313,6 +313,11 @@ class DateCtrl(wx.Control, cmix.TextCtrlMixin):
             dlg.Destroy()
         event.Skip()
 
+    def ChangeValue( self, d ):
+        self.notifyChanges=False
+        self.SetValue(d)
+        self.notifyChanges=True
+
     def SetValue( self, d ):
         if d is None:
             self.maskedCtrl.SetValue("")

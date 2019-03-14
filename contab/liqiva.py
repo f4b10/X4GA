@@ -90,6 +90,7 @@ class GridRegStatus(dbglib.DbGrid):
             ( 50, (cn(reg, 'tipo'),       "Tipo",        _STR, True)),
             ( -1, (cn(reg, 'lastprtdat'), "Data Stampa", _DAT, True)),
             ( 60, (cn(reg, 'lastprtnum'), "Protocollo",  _NUM, True)),
+            ( 60, (cn(reg, 'id'),         "Id",          _NUM, True)),
         )
 
         colmap  = [c[1] for c in cols]
@@ -337,7 +338,12 @@ class LiqIvaPanel(aw.Panel):
         self.totaliq = {}
 
         self.dbstatus = dbc.RegIvaStatus()
-        self.dbliq = dbc.LiqIva()
+        self.dbliq    = dbc.LiqIva()
+        self.dbliqAtt = dbc.LiqIva()
+        self.dbliqPre = dbc.LiqIva()
+        self.dbliqSuc = dbc.LiqIva()
+        
+        
 
         anno = Env.Azienda.Esercizio.dataElab.year
         mese = Env.Azienda.Esercizio.dataElab.month
@@ -402,8 +408,17 @@ class LiqIvaPanel(aw.Panel):
         g = GridRiepAliq(cn('panel_riepaliqxtipreg'))
         self.gridaliqxtip = g
 
-        g = GridRiepAliq(cn('panel_riepaliqxreg'))
-        self.gridaliqxreg = g
+        g = GridRiepAliq(cn('panel_riepaliqxregSunto'))
+        self.gridaliqxregSunto = g
+
+        g = GridRiepAliq(cn('panel_riepaliqxregAttuale'))
+        self.gridaliqxregAttuale = g
+
+        g = GridRiepAliq(cn('panel_riepaliqxregPrecedente'))
+        self.gridaliqxregPrecedente = g
+
+        g = GridRiepAliq(cn('panel_riepaliqxregSuccessivo'))
+        self.gridaliqxregSuccessivo = g
 
         cn('splitriep').SetSashPosition(180)
         cn('splitriep').SetSashGravity(.5)
@@ -838,6 +853,9 @@ class LiqIvaPanel(aw.Panel):
     def GetPeriodo(self):
         cn = lambda x: self.FindWindowById(x)
         per = self.dbliq._tipoper
+        per = self.dbliqPre._tipoper
+        per = self.dbliqAtt._tipoper
+        per = self.dbliqSuc._tipoper
         if cn(wdr.ID_TIPOPER).GetSelection() == 1:
             out = 0 #selezione manuale delle date, periodo=0
         else:
@@ -847,6 +865,44 @@ class LiqIvaPanel(aw.Panel):
                 out = cn(wdr.ID_TRIM).GetSelection()+1
         return out
 
+
+    def UpdateLiqGeneric(self, db=None, msg='', dbName=None):
+        cn = self.FindWindowByName
+        wait = awc.util.WaitDialog(self, message=\
+                                   """%s\n"""
+                                   """Estrazione dati dai registri """
+                                   """iva in corso...""" % msg,\
+                                   maximum=0)
+
+        r = db
+        r.SetPeriodo(self.GetPeriodo(),
+                     cn('datmin').GetValue(),
+                     cn('datmax').GetValue())
+        r.SetDebug()
+        r.Retrieve()
+
+        wait.progress.SetRange(r.RowsCount())
+        def UpdateBar(reg):
+            wait.SetValue(reg.RowNumber())
+
+        r.Totalizza(UpdateBar, dbName=dbName)
+
+        wait.Close()
+        wait.Destroy()
+        
+    def UpdateLiqSunto(self):
+        self.UpdateLiqGeneric(db=self.dbliq, msg='PERIODO COMPETENZA SELEZIONATO', dbName='_riepaliq')
+
+    def UpdateLiqAttuale(self):
+        self.UpdateLiqGeneric(db=self.dbliqAtt, msg='PERIODO SELEZIONATO', dbName='_riepaliqAtt')
+
+    def UpdateLiqPrecedente(self):
+        self.UpdateLiqGeneric(db=self.dbliqPre, msg='PERIODO PRECEDENTE', dbName='_riepaliqPre')
+        
+    def UpdateLiqSuccessivo(self):
+        self.UpdateLiqGeneric(db=self.dbliqSuc, msg='PERIODO SUCCESSIVO', dbName='_riepaliqSuc')
+        
+    
     def UpdateLiq(self):
         """
         Aggiornamento dati.
@@ -866,34 +922,33 @@ class LiqIvaPanel(aw.Panel):
                 aw.awu.MsgDialog(self, msg, style=wx.ICON_ERROR)
                 return
 
-        wait = awc.util.WaitDialog(self, message=\
-                                   """Estrazione dati dai registri """
-                                   """iva in corso...""",\
-                                   maximum=0)
-
-        r = self.dbliq
-        r.SetPeriodo(self.GetPeriodo(),
-                     cn('datmin').GetValue(),
-                     cn('datmax').GetValue())
-        r.Retrieve()
-
-        wait.progress.SetRange(r.RowsCount())
-        def UpdateBar(reg):
-            wait.SetValue(reg.RowNumber())
-
-        r.Totalizza(UpdateBar)
-
+        print self.FindWindowByName('labelRiepPre')
+        print self.FindWindowByName('labelRiepAtt')
+        print self.FindWindowByName('labelRiepSuc')
+        self.FindWindowByName('labelRiepSunto').SetLabel('Riepilogo Registrazioni di competenza del periodo osservato')
+        self.FindWindowByName('labelRiepPre').SetLabel('Riepilogo Registrazioni del periodo osservato di competenza del periodo precedente')
+        self.FindWindowByName('labelRiepAtt').SetLabel('Riepilogo Registrazioni del periodo osservato')
+        self.FindWindowByName('labelRiepSuc').SetLabel('Riepilogo Registrazioni del periodo successivo di competenza del periodo osservato')
+        self.UpdateLiqSunto()
+        self.UpdateLiqAttuale()
+        self.UpdateLiqPrecedente()
+        self.UpdateLiqSuccessivo()
+        
+        
         self.UpdateAll()
 
-        wait.Close()
-        wait.Destroy()
 
         cn('workzone').SetSelection(1)
         cn('riepzone').SetSelection(0)
         cn('tipreg').SetSelection(0)
 
     def UpdateAll(self):
-        self.UpdateGridAliqxReg()
+        
+        #=======================================================================
+        # self.UpdateLiqRiepilogo()
+        #=======================================================================
+        
+        self.UpdateAllGridAliqxReg()
         self.UpdateGridAliqxTip()
         self.UpdateProspetto()
 
@@ -908,14 +963,114 @@ class LiqIvaPanel(aw.Panel):
         wx.CallAfter(EnableCalc)
 
     def OnRegChanged(self, event):
-        self.UpdateGridAliqxReg(event.GetRow())
+        #self.UpdateGridAliqxReg(event.GetRow())
+        self.UpdateAllGridAliqxReg(event.GetRow())
         event.Skip()
 
-    def UpdateGridAliqxReg(self, row=0):
-        g = self.gridaliqxreg
+#===============================================================================
+#     def GetAliquotexRegistro(self):
+#         newDic={}
+#         for dbName in ['dbliq', 'dbliqPre', 'dbliqSuc']:
+#             db = getattr(self, dbName)
+#             #print dbName
+#             for k in db._totxreg.keys():
+#                 if not k in newDic.keys():
+#                     newDic[k]=[]
+#                 for i, r in enumerate(db._totxreg[k]):
+#                     #===========================================================
+#                     # if i==0:
+#                     #     print 'idRegistro=%s' % k
+#                     print r
+#                     #===========================================================
+#                     if not r[0] in newDic[k]:
+#                         newDic[k].append(r[0])
+#             #print '-'*80
+#         return newDic        
+# 
+#     def GetDatiAliquota(self, k, idAliq):
+#         #print '  idAliq:%s' % idAliq
+#         dati=[]
+#         for dbName in ['dbliq', 'dbliqPre', 'dbliqSuc']:
+#             db = getattr(self, dbName)
+#             for r in db._totxreg[k]:
+#                 if r[0]==idAliq:
+#                     dati=[]
+#                     dati.append(r[dbc.LIQIVA_ALIQ_ID   ])
+#                     dati.append(r[dbc.LIQIVA_ALIQ_COD  ])
+#                     dati.append(r[dbc.LIQIVA_ALIQ_DESC ])
+#                     dati.append(r[dbc.LIQIVA_ALIQ_PERC ])
+#                     dati.append(r[dbc.LIQIVA_ALIQ_INDED])
+#                     dati.append(r[dbc.LIQIVA_ALIQ_TIPO ])                
+#                     dati.append(0)
+#                     dati.append(0)
+#                     dati.append(0)
+#                     dati.append(0)
+#                     dati.append(0)
+#                     break
+#             if len(dati)>0:
+#                 break    
+#         return dati
+#         
+#     def SetTotaliAliquota(self):
+#         for reg in self.totLiqRiep.keys():
+#             print reg
+#             for [dbName, segno] in [['dbliq',+1], ['dbliqPre',-1], ['dbliqSuc', +1]]:
+#                 db = getattr(self, dbName)
+#                 for rigaIva in db._totxreg[reg]:
+#                     idAliq = rigaIva[0]
+#                     print ' ', idAliq
+#                     print 'cerca totali aliquota per idAliq=%s in %s ' % (idAliq, (self.totLiqRiep))
+# 
+#     def UpdateLiqRiepilogo(self):
+#         dictReg = self.GetAliquotexRegistro()
+#         self.totLiqRiep = {}
+#         datiRegistro = []
+#         for k in dictReg.keys():
+#             d=[]
+#             for idAliq in dictReg[k]:
+#                 dati = self.GetDatiAliquota(k, idAliq)
+#                 d.append(dati)
+#             self.totLiqRiep[k]=d
+#         print '.'*60
+#         print self.totLiqRiep
+#         self.ViewTotali(self.totLiqRiep)
+#         print '-'*60
+#         self.SetTotaliAliquota()
+#         
+#     def ViewTotali(self, dict):
+#         for k in dict.keys():
+#             if len(dict[k])>0:
+#                 print 'Registro:%s' % k
+#                 for r in dict[k]:
+#                     print '  ', r
+#===============================================================================
+        
+
+    def UpdateAllGridAliqxReg(self, row=0):
+        self.UpdateGridAliqSunto(row=row)
+        self.UpdateGridAliqxRegAttuale(row=row)
+        self.UpdateGridAliqxRegPrecedente(row=row)
+        self.UpdateGridAliqxRegSuccessivo(row=row)
+        
+    def UpdateGridAliqSunto(self, row=0):
+        self.UpdateGridAliqxReg(row=row, grid=self.gridaliqxregSunto, db=self.dbliq)
+    
+    def UpdateGridAliqxRegAttuale(self, row=0):
+        self.UpdateGridAliqxReg(row=row, grid=self.gridaliqxregAttuale, db=self.dbliqAtt)
+    
+    def UpdateGridAliqxRegPrecedente(self, row=0):
+        self.UpdateGridAliqxReg(row=row, grid=self.gridaliqxregPrecedente, db=self.dbliqPre)
+    
+    def UpdateGridAliqxRegSuccessivo(self, row=0):
+        self.UpdateGridAliqxReg(row=row, grid=self.gridaliqxregSuccessivo, db=self.dbliqSuc)
+    
+    
+    def UpdateGridAliqxReg(self, row=0, grid=None, db=None):
+        #g = self.gridaliqxregAttuale
+        g = grid
         reg = self.dbstatus
         reg.MoveRow(row)
-        liq = self.dbliq
+        liq = db
 
         for i, r in enumerate(g.GetTotalsRows()):
             #print g.GetTable().totals[i]
@@ -924,6 +1079,11 @@ class LiqIvaPanel(aw.Panel):
             else:
                 newDes=r[1].replace('Acquisti', 'Vendite')
             g.GetTable().totals[i] = (r[0], newDes, r[2], r[3], r[4])
+        #=======================================================================
+        # print 'view liq._totxreg'
+        # for x in liq._totxreg.keys():
+        #     print x, liq._totxreg[x]
+        #=======================================================================
 
         if reg.id in liq._totxreg:
             g.ChangeData(liq._totxreg[reg.id])

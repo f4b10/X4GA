@@ -127,7 +127,11 @@ def RegIvaFunc( parent, call_fit = True, set_sizer = True ):
 
     item7 = wx.Panel( item4, -1 )
     PanelTotFunc(item7, False)
-    item4.AddPage( item7, "Aliquote" )
+    item4.AddPage( item7, "Aliquote x Periodo" )
+
+    item8 = wx.Panel( item4, -1 )
+    PanelTotCompeteFunc(item8, False)
+    item4.AddPage( item8, "Aliquote x Competenza" )
 
     item0.Add( item3, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
@@ -267,7 +271,7 @@ def PanelSelFunc( parent, call_fit = True, set_sizer = True ):
     item2.SetName( "tiposta" )
     item1.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item4 = wx.StaticBox( parent, -1, "Text" )
+    item4 = wx.StaticBox( parent, -1, "" )
     item3 = wx.StaticBoxSizer( item4, wx.VERTICAL )
     
     item5 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -1123,7 +1127,7 @@ def LiqIvaRiepRegFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_PANEL_RIEPALIQXREG = 10085
+ID_NOTEBOOK = 10085
 
 def LiqIvaRiepAliqFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -1134,9 +1138,26 @@ def LiqIvaRiepAliqFunc( parent, call_fit = True, set_sizer = True ):
     item1.SetFont( wx.Font( 10, wx.SWISS, wx.NORMAL, wx.BOLD ) )
     item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item2 = wx.Panel( parent, ID_PANEL_RIEPALIQXREG, wx.DefaultPosition, [200,160], 0 )
-    item2.SetName( "panel_riepaliqxreg" )
-    item0.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item3 = wx.Notebook( parent, ID_NOTEBOOK, wx.DefaultPosition, [200,160], 0 )
+    item2 = item3
+    
+    item4 = wx.Panel( item3, -1 )
+    LiqIvaRiepAliqSuntoFunc(item4, False)
+    item3.AddPage( item4, "RIEPILOGO" )
+
+    item5 = wx.Panel( item3, -1 )
+    LiqIvaRiepAliqPrecedenteFunc(item5, False)
+    item3.AddPage( item5, "Periodo Precedente" )
+
+    item6 = wx.Panel( item3, -1 )
+    LiqIvaRiepAliqAttualeFunc(item6, False)
+    item3.AddPage( item6, "Periodo Selezionato" )
+
+    item7 = wx.Panel( item3, -1 )
+    LiqIvaRiepAliqSuccessivoFunc(item7, False)
+    item3.AddPage( item7, "Periodo Successivo" )
+
+    item0.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
     item0.AddGrowableCol( 0 )
 
@@ -1789,6 +1810,130 @@ def FatturatoContabileClientiFornitFunc( parent, call_fit = True, set_sizer = Tr
     item0.AddGrowableCol( 0 )
 
     item0.AddGrowableRow( 2 )
+
+    if set_sizer == True:
+        parent.SetSizer( item0 )
+        if call_fit == True:
+            item0.SetSizeHints( parent )
+    
+    return item0
+
+ID_PANEL_RIEPALIQXREG = 10129
+
+def LiqIvaRiepAliqAttualeFunc( parent, call_fit = True, set_sizer = True ):
+    item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    
+    item1 = wx.StaticText( parent, ID_TEXT, "", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item1.SetForegroundColour( wx.BLUE )
+    item1.SetFont( wx.Font( 13, wx.ROMAN, wx.NORMAL, wx.NORMAL ) )
+    item1.SetName( "labelRiepAtt" )
+    item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item2 = wx.Panel( parent, ID_PANEL_RIEPALIQXREG, wx.DefaultPosition, [200,160], 0 )
+    item2.SetName( "panel_riepaliqxregAttuale" )
+    item0.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item0.AddGrowableCol( 0 )
+
+    item0.AddGrowableRow( 1 )
+
+    if set_sizer == True:
+        parent.SetSizer( item0 )
+        if call_fit == True:
+            item0.SetSizeHints( parent )
+    
+    return item0
+
+
+def LiqIvaRiepAliqPrecedenteFunc( parent, call_fit = True, set_sizer = True ):
+    item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    
+    item1 = wx.StaticText( parent, ID_TEXT, "", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item1.SetForegroundColour( wx.BLUE )
+    item1.SetFont( wx.Font( 13, wx.ROMAN, wx.NORMAL, wx.NORMAL ) )
+    item1.SetName( "labelRiepPre" )
+    item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item2 = wx.Panel( parent, ID_PANEL_RIEPALIQXREG, wx.DefaultPosition, [200,160], 0 )
+    item2.SetName( "panel_riepaliqxregPrecedente" )
+    item0.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item0.AddGrowableCol( 0 )
+
+    item0.AddGrowableRow( 1 )
+
+    if set_sizer == True:
+        parent.SetSizer( item0 )
+        if call_fit == True:
+            item0.SetSizeHints( parent )
+    
+    return item0
+
+
+def LiqIvaRiepAliqSuccessivoFunc( parent, call_fit = True, set_sizer = True ):
+    item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    
+    item1 = wx.StaticText( parent, ID_TEXT, "", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item1.SetForegroundColour( wx.BLUE )
+    item1.SetFont( wx.Font( 13, wx.ROMAN, wx.NORMAL, wx.NORMAL ) )
+    item1.SetName( "labelRiepSuc" )
+    item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item2 = wx.Panel( parent, ID_PANEL_RIEPALIQXREG, wx.DefaultPosition, [200,160], 0 )
+    item2.SetName( "panel_riepaliqxregSuccessivo" )
+    item0.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item0.AddGrowableCol( 0 )
+
+    item0.AddGrowableRow( 1 )
+
+    if set_sizer == True:
+        parent.SetSizer( item0 )
+        if call_fit == True:
+            item0.SetSizeHints( parent )
+    
+    return item0
+
+
+def LiqIvaRiepAliqSuntoFunc( parent, call_fit = True, set_sizer = True ):
+    item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    
+    item1 = wx.StaticText( parent, ID_TEXT, "", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item1.SetForegroundColour( wx.BLUE )
+    item1.SetFont( wx.Font( 13, wx.ROMAN, wx.NORMAL, wx.NORMAL ) )
+    item1.SetName( "labelRiepSunto" )
+    item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item2 = wx.Panel( parent, ID_PANEL_RIEPALIQXREG, wx.DefaultPosition, [200,160], 0 )
+    item2.SetName( "panel_riepaliqxregSunto" )
+    item0.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item0.AddGrowableCol( 0 )
+
+    item0.AddGrowableRow( 1 )
+
+    if set_sizer == True:
+        parent.SetSizer( item0 )
+        if call_fit == True:
+            item0.SetSizeHints( parent )
+    
+    return item0
+
+ID_PANGRIDRIEPCOMPETENZA = 10130
+
+def PanelTotCompeteFunc( parent, call_fit = True, set_sizer = True ):
+    item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    
+    item1 = wx.StaticText( parent, ID_TEXT, "Aliquote IVA x competenza", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item1.SetForegroundColour( wx.BLUE )
+    item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+
+    item2 = wx.Panel( parent, ID_PANGRIDRIEPCOMPETENZA, wx.DefaultPosition, [200,200], wx.SUNKEN_BORDER )
+    item0.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item0.AddGrowableCol( 0 )
+
+    item0.AddGrowableRow( 1 )
 
     if set_sizer == True:
         parent.SetSizer( item0 )

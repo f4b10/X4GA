@@ -22,7 +22,8 @@
 # ------------------------------------------------------------------------------
 
 import sys
-
+import os
+import datetime
 import wx
 import wx.grid as gl
 import awc.controls.dbgrid as dbglib
@@ -31,7 +32,7 @@ import MySQLdb
 
 import awc.controls.windows as aw
 from awc.controls.dbgrid import DbGrid
-from awc.controls.datectrl import DateCtrl
+from awc.controls.datectrl import DateCtrl, EVT_DATECHANGED
 from awc.controls.linktable import LinkTable
 
 import Env
@@ -55,6 +56,7 @@ import cfg.cfgprogr as progr
 from cfg.dbtables import ProgrEsercizio
 
 from cfg.dbtables import ProgrStampaGiornale, ProgrStampaMastri
+
 
 
 #costanti per l'uscita dal dialog se modale
@@ -137,6 +139,11 @@ class ContabPanel(aw.Panel,\
         self.reg_st_regiva = None
         self.reg_st_giobol = None
         self.reg_nocalciva = None
+        
+        self.reg_aacompetenza = ''
+        self.reg_mmcompetenza = ''
+        self.reg_datcompete   = None
+        self.reg_idsdi        = None
 
         self._grid_dav = None  #grid dare-avere
 
@@ -181,6 +188,18 @@ class ContabPanel(aw.Panel,\
             self.InitPanelHead()
             self.InitPanelBody()
 
+            self.periodic="M"
+            s = DbTable(bt.TABNAME_CFGSETUP, 'setup')
+            if s.Retrieve('setup.chiave=%s', 'liqiva_periodic') and s.OneRow():
+                self.periodic = s.flag
+            del s
+            if self.periodic=='M':
+                self.FindWindowByName('labelMese').SetLabel('Mese')
+            else:
+                self.FindWindowByName('labelMese').SetLabel('Trim.')
+
+
+
             wdr.DialogFunc( self, True )
 
             self.controls = awc.util.DictNamedChildrens(self)
@@ -196,6 +215,10 @@ class ContabPanel(aw.Panel,\
             butmod = self.controls["button_modify"]
             butquit = self.controls["button_quit"]
             butdel = self.controls["button_delete"]
+            #===================================================================
+            btnViewFe = self.controls['btnviewfe']
+            #===================================================================
+
 
             self.InitCausale()
 
@@ -207,9 +230,73 @@ class ContabPanel(aw.Panel,\
             self.Bind(wx.EVT_BUTTON, self.OnRegModify, butmod)
             self.Bind(wx.EVT_BUTTON, self.OnRegQuit,   butquit)
             self.Bind(wx.EVT_BUTTON, self.OnRegDelete, butdel)
+            #===================================================================
+            self.Bind(wx.EVT_BUTTON, self.OnViewFe, btnViewFe )
+            #===================================================================
+            
+            
+            
+            
+            
 
             self.Bind(wx.EVT_SIZE,   self.OnResize)
+            
 
+            
+            self.controls['datdoc'].Bind(EVT_DATECHANGED, self.OnChangeDatDoc)
+
+
+    def OnViewFe(self, evt):
+        if Env.canRegFe:
+            print 'cerco in fepass record con id_reg=%s e restituisce datdoc e filexml' % self.reg_id
+            # self.db_curs.execute('select datdoc, filexml from fepass where id_reg=108948')
+            # datdoc, filexmlx= self.db_curs.fetchall()[0]
+            
+            if not self.pathXml == None:
+                filename = self.pathXml
+                if os.path.isfile(filename):
+                    try:
+                        from fatturapa_magazz.fatturapa import ViewFattureElettronicheDialog
+                        xx = ViewFattureElettronicheDialog(self)
+                        xx.View(filename=filename)
+                    except:
+                        pass
+                else:
+                    aw.awu.MsgDialog(self, 'File .xml non presente', style=wx.ICON_INFORMATION)        
+        evt.Skip()
+        
+        
+    def SetPeriodo(self, datdoc, update=True):
+        self.controls['aacompetenza'].Append('%s' % datdoc.year)
+        self.controls['aacompetenza'].Append('%s' % (datdoc.year-1))
+        self.controls['aacompetenza'].SetValue('%s' % datdoc.year)
+        if self.periodic=="M":
+            self.controls['mmcompetenza'].Append('%02d' % datdoc.month)
+            if datdoc.month>1:
+                self.controls['mmcompetenza'].Append('%02d' % (datdoc.month-1))
+            else:
+                self.controls['mmcompetenza'].Append('%02d' % 12)
+            if update:
+                self.controls['mmcompetenza'].SetValue('%02d' % datdoc.month)
+        else:
+            trim = int((datdoc.month-1)/3.0)+1
+            self.controls['mmcompetenza'].Append('%02d' % trim)
+            if trim>1:
+                self.controls['mmcompetenza'].Append('%02d' % (trim-1))
+            else:
+                self.controls['mmcompetenza'].Append('%02d' % 4)
+            if update:
+                self.controls['mmcompetenza'].SetValue('%02d' % trim)
+        
+
+    def OnChangeDatDoc(self, evt):
+        datdoc = self.controls['datdoc'].GetValue()
+        self.controls['aacompetenza'].Clear()
+        self.controls['mmcompetenza'].Clear()
+        if not datdoc==None:
+            self.SetPeriodo(datdoc)
+        evt.Skip()
+    
     def OptimizeSize(self, min_width=1000, min_height=640):
         mw, mh = min_width, min_height
         pw, ph = self.GetSize()
@@ -283,6 +370,7 @@ class ContabPanel(aw.Panel,\
     def OnRegEnd( self, event ):
         if round(self.totdare,6) == round(self.totavere,6):
             if self.RegSave():
+                self.pathXml = None
                 if self.oneregonly_id:
                     try:
                         if self.GetParent().IsModal():
@@ -327,6 +415,7 @@ class ContabPanel(aw.Panel,\
                     self.Destroy()
             else:
                 self.SetRegStatus(STATUS_SELCAUS)
+            self.pathXml=None
 
     def OnRegDelete(self, event):
         action = MsgDialog(self,\
@@ -448,12 +537,19 @@ class ContabPanel(aw.Panel,\
         oldcau = self.cauid
         cauid = ctrcau.GetValue()
         self.cauid = cauid
+        self.pathXml = None
         if cauid is None:
             self.caudes = None
             self.UpdateButtons()
         else:
             self.caudes = ctrcau.GetValueDes()
             self.CfgCausale_Read(self.cauid)
+            if Env.canRegFe and self._cfg_fepass=='1':
+                try:
+                    self.pathXml = self.GetXmlPath(self.reg_id)
+                    print 'setta self.pathXml'
+                except:
+                    pass
             self.EnableAllControls()
             self.SetDefaultItem(self.controls['button_new'])
             cauchanged = (self.cauid != oldcau)
@@ -536,11 +632,21 @@ class ContabPanel(aw.Panel,\
 
     def UpdateButtons(self, enable = True):
         status = self.status
+        
         self.controls["button_new"].Enable(enable and\
                                            self.canedit and\
                                            self.canins and\
                                            self.cauid is not None and\
                                            status == STATUS_SELCAUS)
+        
+        #=======================================================================
+        # self.controls["btnfepass"].Enable(enable and\
+        #                                    self.canedit and\
+        #                                    self.canins and\
+        #                                    self.cauid is not None and\
+        #                                    status == STATUS_SELCAUS and\
+        #                                    self._cfg_fepass=='1')
+        #=======================================================================
 
         self.controls["button_search"].Enable(enable and\
                                               self.cauid is not None and\
@@ -620,15 +726,17 @@ class ContabPanel(aw.Panel,\
         try:
             cmd =\
                 """SELECT reg.id, reg.esercizio, reg.id_caus, reg.tipreg, """\
-                """reg.datreg, reg.datdoc, reg.numdoc, """\
+                """reg.datreg, reg.datdoc, reg.numdoc, reg.datcompete, reg.idsdi, """\
                 """reg.id_regiva, reg.numiva, """\
                 """reg.st_regiva, reg.st_giobol, """\
                 """reg.id_modpag, reg.nocalciva, """\
-                """riv.codice, riv.descriz """\
+                """riv.codice, riv.descriz, cfg.fepass """\
                 """FROM %s AS reg """\
                 """LEFT JOIN %s AS riv ON reg.id_regiva=riv.id """\
+                """LEFT JOIN %s AS cfg ON reg.id_caus=cfg.id """\
                 """WHERE reg.id=%%s;""" % ( bt.TABNAME_CONTAB_H,\
-                                            bt.TABNAME_REGIVA )
+                                            bt.TABNAME_REGIVA, \
+                                            bt.TABNAME_CFGCONTAB )
             self.db_curs.execute(cmd, idreg)
             rsh = self.db_curs.fetchone()
 
@@ -643,6 +751,8 @@ class ContabPanel(aw.Panel,\
                 self.reg_datreg,\
                 self.reg_datdoc,\
                 self.reg_numdoc,\
+                self.reg_datcompete,\
+                self.reg_idsdi,\
                 self.reg_regiva_id,\
                 self.reg_numiva,\
                 self.reg_st_regiva,\
@@ -650,17 +760,41 @@ class ContabPanel(aw.Panel,\
                 self.reg_modpag_id,\
                 self.reg_nocalciva,\
                 self.reg_regiva_cod,\
-                self.reg_regiva_des = rsh
+                self.reg_regiva_des,\
+                self._cfg_fepass = rsh
+                
+                self.reg_aacompetenza=self.reg_datcompete.year
+                self.reg_mmcompetenza=self.reg_datcompete.month
+                
                 self.reg_id = int(self.reg_id)
                 self.cauid = self.reg_cau_id
                 self._cfg_regiva_id = self.reg_regiva_id
                 self._cfg_regiva_cod = self.reg_regiva_cod
                 self._cfg_regiva_des = self.reg_regiva_des
                 out = True
+                if Env.canRegFe and self._cfg_fepass=='1':
+                    self.pathXml = self.GetXmlPath(self.reg_id)
+                
             else:
                 MsgDialog(self, "La registrazione #%d non è stata trovata."\
                           % idreg)
         return out
+
+    def GetXmlPath(self, idReg):
+        fileXml=None
+        try:
+            from fein_acq.dbtables import FepassTabe 
+            dbFe = FepassTabe()
+            dbFe.Retrieve('fepass.id_reg=%s' % idReg)
+            if dbFe.RowsCount()>0:
+                print dbFe.filexml
+                fileXml = dbFe.filexml
+                fileXml = os.path.join(dbFe.GetDestPath(dbFe.datdoc), fileXml)
+                print fileXml
+        except:
+            pass 
+        return fileXml
+        
 
     def CheckRegIva(self):
         canSave=True
@@ -883,7 +1017,19 @@ class ContabPanel(aw.Panel,\
             self.reg_datreg = self.controls["datreg"].GetValue()
             self.reg_datdoc = self.controls["datdoc"].GetValue()
             self.reg_numdoc = self.controls["numdoc"].GetValue()
-
+            
+            self.reg_idsdi  = self.controls["idsdi"].GetValue()
+            
+            if self._cfg_competenza=='1':
+                if self.periodic=="M":
+                    self.reg_datcompete = datetime.datetime.strptime('01/%s/%s' % (self.controls["mmcompetenza"].GetValue(), self.controls["aacompetenza"].GetValue()), '%d/%m/%Y').date()
+                    #print 'Mensile: %s/%s %s' % (self.controls["mmcompetenza"].GetValue(), self.controls["aacompetenza"].GetValue(), self.reg_datcompete)
+                else:
+                    mm = (int(self.controls["mmcompetenza"].GetValue())*3)-2
+                    self.reg_datcompete = datetime.datetime.strptime('01/%s/%s' % (mm, self.controls["aacompetenza"].GetValue()), '%d/%m/%Y').date()
+                    #print 'Trimestrale: %s/%s %s' % (self.controls["mmcompetenza"].GetValue(), self.controls["aacompetenza"].GetValue(), self.reg_datcompete)
+            else:
+                self.reg_datcompete = self.reg_datreg 
         return gvalid
 
     def RegWriteHead(self):
@@ -900,15 +1046,17 @@ class ContabPanel(aw.Panel,\
                 self.reg_regiva_id,\
                 self.reg_numiva,\
                 self.reg_modpag_id,\
-                self.reg_nocalciva]
+                self.reg_nocalciva,\
+                self.reg_datcompete,\
+                self.reg_idsdi]
         headwritten = False
         bodywritten = False
         if self.newreg:
             #inserimento testata nuova registrazione
             cmd =\
 """INSERT INTO %s (esercizio, id_caus, tipreg, datreg, datdoc, numdoc, """\
-"""id_regiva, numiva, id_modpag, nocalciva) """\
-"""VALUES (%%s, %%s, %%s, %%s, %%s, %%s, %%s, %%s, %%s, %%s)"""\
+"""id_regiva, numiva, id_modpag, nocalciva, datcompete, idsdi) """\
+"""VALUES (%%s, %%s, %%s, %%s, %%s, %%s, %%s, %%s, %%s, %%s, %%s, %%s)"""\
 % bt.TABNAME_CONTAB_H
 
         else:
@@ -916,7 +1064,7 @@ class ContabPanel(aw.Panel,\
             cmd =\
 """UPDATE %s SET esercizio=%%s, id_caus=%%s, tipreg=%%s, datreg=%%s, """\
 """datdoc=%%s, numdoc=%%s, id_regiva=%%s, numiva=%%s, id_modpag=%%s, """\
-"""nocalciva=%%s """\
+"""nocalciva=%%s, datcompete=%%s, idsdi=%%s """\
 """WHERE id=%%s"""\
 % bt.TABNAME_CONTAB_H
             par.append(self.reg_id)
@@ -1088,6 +1236,11 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
         self.reg_modpag_id = None
         self.reg_regiva_cod = None
         self.reg_regiva_des = None
+        
+        self.reg_aacompetenza = None
+        self.reg_mmcompetenza = None
+        self.reg_datcompete   = None
+        self.reg_idsdi        = None
         #reset variabili registrazione
         self.id_pdcpa = None
         self.totdare = 0
@@ -1145,7 +1298,19 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
             cmd =\
 """DELETE FROM %s WHERE id_reg=%%s""" % bt.TABNAME_CONTAB_B
             self.db_curs.execute(cmd, self.reg_id)
+            if Env.canRegFe:
+                try:
+                    cmd = "update %s set id_reg=Null WHERE id_reg=%s" % (bt.TABNAME_FEPASS, self.reg_id)
+                    print cmd
+                    self.db_curs.execute(cmd)
+                except:
+                    pass
+                
+            
+            
+            
             self.controls['butattach'].SetKey(self.reg_id, delete=True)
+            
             out = True
         except MySQLdb.Error, e:
             MsgDialogDbError(self, e)
@@ -1159,18 +1324,40 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
         datreg = self.controls["datreg"]
         datdoc = self.controls["datdoc"]
         numdoc = self.controls["numdoc"]
+        idsdi  = self.controls["idsdi"]
+
+        aacompetenza = self.controls["aacompetenza"]
+        mmcompetenza = self.controls["mmcompetenza"]
 
         if self.status == STATUS_SELCAUS:
             reg_id.SetValue(None)
             datreg.SetValue(None)
             datdoc.SetValue(None)
             numdoc.SetValue("")
+            aacompetenza.SetValue("")
+            mmcompetenza.SetValue("")
+            idsdi.SetValue("")
         else:
             reg_id.SetValue(self.reg_id)
             datreg.SetValue(self.reg_datreg)
-            datdoc.SetValue(self.reg_datdoc)
+            datdoc.ChangeValue(self.reg_datdoc)
             numdoc.SetValue(self.reg_numdoc)
-
+            if self.reg_idsdi:
+                idsdi.SetValue(self.reg_idsdi)
+            else:
+                idsdi.SetValue("")
+                
+            try:
+                if self.reg_datcompete==None:
+                    self.SetPeriodo(self.reg_datdoc, update=not self._cfg_competenza)
+                else:
+                    self.SetPeriodo(self.reg_datcompete, update=True)
+                    
+                aacompetenza.SetValue('%04d' % self.reg_aacompetenza)
+                mmcompetenza.SetValue('%02d' % self.reg_mmcompetenza)
+            except:
+                pass
+            
     def UpdatePanelBody(self):
         """
         Aggiorna i controlli del dettaglio in base al corrente recordset
@@ -1247,6 +1434,33 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
         self.controls["numdoc"].Enable(enable and\
                                        self._cfg_numdoc in ('0', '1'))
 
+
+
+
+
+        
+        print self._cfg_competenza
+        print 'abilitazione acquisizione fepass: %s' % self._cfg_fepass
+        
+        
+        self.controls["idsdi"].Enable(enable and \
+                                      self._cfg_feidsdi=='1')
+        
+        
+        
+        
+                
+        if not enable or self._cfg_competenza=='0':
+            self.controls["aacompetenza"].Clear()
+            self.controls["mmcompetenza"].Clear()
+        
+        self.controls["aacompetenza"].Enable(enable and\
+                                       self._cfg_competenza=='1')
+        
+        self.controls["mmcompetenza"].Enable(enable and\
+                                       self._cfg_competenza=='1')
+
+        
         #self.controls["rivdes"].Enable(enable and\
             #self._cfg_regiva_id is not None)
 
@@ -1377,11 +1591,23 @@ class RegSearchPanel(aw.Panel):
         cn = self.FindWindowByName
         self.gridsrc = self.GridClass(cn('pangridsearch'))
 
+        self.periodic="M"
+        s = DbTable(bt.TABNAME_CFGSETUP, 'setup')
+        if s.Retrieve('setup.chiave=%s', 'liqiva_periodic') and s.OneRow():
+            self.periodic = s.flag
+        del s
+
+
+
+
         self.cauid = None
         self.caudes = None
 
         self.datmin = cn('srcdatmin')
         self.datmax = cn('srcdatmax')
+
+        self.datcompmin = cn('srcdatcompmin')
+        self.datcompmax = cn('srcdatcompmax')
 
         d2 = DATSEARCH2
         if not d2:
@@ -1432,6 +1658,10 @@ class RegSearchPanel(aw.Panel):
         dmax = self.datmax.GetValue()
         global DATSEARCH2
         DATSEARCH2 = dmax
+        
+        dcompmin = self.datcompmin.GetValue()
+        dcompmax = self.datcompmax.GetValue()
+        
         filter = "id_caus=%d" % self.cauid
         par = []
         if dmin:
@@ -1440,6 +1670,14 @@ class RegSearchPanel(aw.Panel):
         if dmax:
             filter += " and DATREG<=%s"
             par.append(dmax)
+
+        if dcompmin:
+            filter += " and DATCOMPETE>=%s"
+            par.append(dcompmin)
+        if dcompmax:
+            filter += " and DATCOMPETE<=%s"
+            par.append(dcompmax)
+        print 'filter(dataentry)=%s' % filter
         try:
             wx.BeginBusyCursor()
             try:

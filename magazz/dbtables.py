@@ -442,10 +442,11 @@ class DocMag(adb.DbTable):
 
     def IsCartaFiscale(self):
         isFiscale = True
-        if self.datdoc.year>=2019:
-            if self.config.ftel_enabled ==1:
-                #isFiscale = not self.IsFe(self.GetAnag()) 
-                isFiscale = False 
+        if not self.config.ftel_nowmark:
+            if self.datdoc.year>=2019:
+                if self.config.ftel_enabled ==1:
+                    #isFiscale = not self.IsFe(self.GetAnag()) 
+                    isFiscale = False 
         return isFiscale
 
     def IsFe(self, r):
@@ -479,7 +480,7 @@ class DocMag(adb.DbTable):
                 if ControllaCodFisc(r.codfisc).Controlla():
                     nazione='IT'
         else:
-            nazione = r.stato1.vatprefix1
+            nazione = r.stato1.vatprefix
         return nazione
 
 

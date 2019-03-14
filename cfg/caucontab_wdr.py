@@ -18,6 +18,7 @@ from awc.controls.numctrl import NumCtrl
 from awc.controls.datectrl import DateCtrl
 from awc.controls.radiobox import RadioBox
 from awc.controls.checkbox import CheckBox
+from awc.controls.choice import Choice
 from awc.controls.linktable import LinkTable
 from awc.controls.dbgrid import DbGrid
 
@@ -98,12 +99,12 @@ def CauContabCardFunc( parent, call_fit = True, set_sizer = True ):
 ID_TIPREG = 16002
 ID_NUMDOC = 16003
 ID_NUMIVA = 16004
-ID_ESERC = 16005
-ID_DATDOC = 16006
-ID_PRALCF = 16007
-ID_TEXT = 16008
-ID_RPTNAME = 16009
-ID_RADIOBOX = 16010
+ID_RADIOBOX = 16005
+ID_ESERC = 16006
+ID_DATDOC = 16007
+ID_PRALCF = 16008
+ID_TEXT = 16009
+ID_RPTNAME = 16010
 ID_FOREIGN = 16011
 ID_BTNMAGREG = 16012
 ID_PDCROW1 = 16013
@@ -134,6 +135,11 @@ def Setup1Func( parent, call_fit = True, set_sizer = True ):
     item5.SetName( "numiva" )
     item3.Add( item5, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP, 5 )
 
+    item6 = RadioBox( parent, ID_RADIOBOX, "Periodo Competenza", wx.DefaultPosition, wx.DefaultSize, 
+        ["Non Gestito","Gestito"] , 1, wx.RA_SPECIFY_COLS )
+    item6.SetName( "competenza" )
+    item3.Add( item6, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
+
     item3.AddGrowableCol( 0 )
 
     item3.AddGrowableCol( 1 )
@@ -142,44 +148,68 @@ def Setup1Func( parent, call_fit = True, set_sizer = True ):
 
     item1.Add( item3, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item6 = RadioBox( parent, ID_ESERC, "Esercizio", wx.DefaultPosition, wx.DefaultSize, 
+    item7 = RadioBox( parent, ID_ESERC, "Esercizio", wx.DefaultPosition, wx.DefaultSize, 
         ["In corso","Precedente"] , 1, wx.RA_SPECIFY_COLS )
-    item6.SetName( "esercizio" )
-    item1.Add( item6, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+    item7.SetName( "esercizio" )
+    item1.Add( item7, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
-    item7 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    item8 = wx.FlexGridSizer( 0, 2, 0, 0 )
     
-    item8 = RadioBox( parent, ID_DATDOC, "Data documento", wx.DefaultPosition, wx.DefaultSize, 
+    item9 = RadioBox( parent, ID_DATDOC, "Data documento", wx.DefaultPosition, wx.DefaultSize, 
         ["Non gestita","Gestita, non proposta","Gestita, proposta data registrazione"] , 1, wx.RA_SPECIFY_COLS )
-    item8.SetName( "datdoc" )
-    item7.Add( item8, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+    item9.SetName( "datdoc" )
+    item8.Add( item9, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 
-    item9 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    item10 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
-    item10 = RadioBox( parent, ID_PRALCF, "Allegati Clienti/Fornitori", wx.DefaultPosition, wx.DefaultSize, 
+    item11 = RadioBox( parent, ID_PRALCF, "Allegati Clienti/Fornitori", wx.DefaultPosition, wx.DefaultSize, 
         ["Non considera","Incrementa","Diminuisce"] , 1, wx.RA_SPECIFY_COLS )
-    item10.SetName( "pralcf" )
-    item9.Add( item10, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+    item11.SetName( "pralcf" )
+    item10.Add( item11, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
-    item12 = wx.StaticBox( parent, -1, "Stampa a fine reg." )
-    item11 = wx.StaticBoxSizer( item12, wx.VERTICAL )
+    item12 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
-    item13 = wx.StaticText( parent, ID_TEXT, "Nome report:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item11.Add( item13, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item13 = RadioBox( parent, ID_RADIOBOX, "Fatt.Elettroniche", wx.DefaultPosition, wx.DefaultSize, 
+        ["Non Acquisisci","Acquisisce"] , 1, wx.RA_SPECIFY_COLS )
+    item13.SetName( "fepass" )
+    item12.Add( item13, 0, wx.GROW|wx.LEFT|wx.RIGHT, 5 )
 
-    item14 = TextCtrl_LC( parent, ID_RPTNAME, "", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item14.SetName( "rptname" )
-    item11.Add( item14, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item12.AddGrowableCol( 0 )
 
-    item9.Add( item11, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+    item12.AddGrowableRow( 0 )
 
-    item9.AddGrowableCol( 1 )
+    item10.Add( item12, 0, wx.GROW, 5 )
 
-    item7.Add( item9, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item14 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    
+    item15 = RadioBox( parent, ID_RADIOBOX, "Id SDI", wx.DefaultPosition, wx.DefaultSize, 
+        ["Non Gestito","Gestito"] , 1, wx.RA_SPECIFY_COLS )
+    item15.SetName( "feidsdi" )
+    item14.Add( item15, 0, wx.GROW|wx.LEFT|wx.RIGHT, 5 )
 
-    item7.AddGrowableCol( 1 )
+    item14.AddGrowableCol( 0 )
 
-    item1.Add( item7, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item14.AddGrowableRow( 0 )
+
+    item10.Add( item14, 0, wx.GROW, 5 )
+
+    item17 = wx.StaticBox( parent, -1, "Stampa a fine reg." )
+    item16 = wx.StaticBoxSizer( item17, wx.VERTICAL )
+    
+    item18 = wx.StaticText( parent, ID_TEXT, "Nome report:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item16.Add( item18, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item19 = TextCtrl_LC( parent, ID_RPTNAME, "", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item19.SetName( "rptname" )
+    item16.Add( item19, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item10.Add( item16, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+
+    item10.AddGrowableCol( 1 )
+
+    item8.Add( item10, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item1.Add( item8, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item1.AddGrowableCol( 0 )
 
@@ -187,130 +217,130 @@ def Setup1Func( parent, call_fit = True, set_sizer = True ):
 
     item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item15 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    item20 = wx.FlexGridSizer( 0, 2, 0, 0 )
     
-    item16 = RadioBox( parent, ID_RADIOBOX, "Registro IVA", wx.DefaultPosition, wx.DefaultSize, 
+    item21 = RadioBox( parent, ID_RADIOBOX, "Registro IVA", wx.DefaultPosition, wx.DefaultSize, 
         ["Fisso da causale","Variabile da magazzino"] , 1, wx.RA_SPECIFY_COLS )
-    item16.SetName( "regivadyn" )
-    item15.Add( item16, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item21.SetName( "regivadyn" )
+    item20.Add( item21, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item18 = wx.StaticBox( parent, -1, "" )
-    item17 = wx.StaticBoxSizer( item18, wx.VERTICAL )
+    item23 = wx.StaticBox( parent, -1, "" )
+    item22 = wx.StaticBoxSizer( item23, wx.VERTICAL )
     
-    item19 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    item24 = wx.FlexGridSizer( 0, 2, 0, 0 )
     
-    item20 = wx.StaticText( parent, ID_TEXT, "Registro IVA fisso:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item20.SetName( "id_regiva_label" )
-    item19.Add( item20, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
-
-    item21 = wx.FlexGridSizer( 1, 0, 0, 0 )
-    
-    item22 = LinkTable(parent, ID_FOREIGN ); item22.SetDataLink( bt.TABNAME_REGIVA, "id_regiva", RegIvaDialog )
-    item21.Add( item22, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
-
-    item23 = wx.Button( parent, ID_BTNMAGREG, "Registri per magazzino", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item23.SetName( "_regiva_detmag" )
-    item21.Add( item23, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
-
-    item21.AddGrowableCol( 0 )
-
-    item19.Add( item21, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
-
-    item24 = wx.StaticText( parent, ID_TEXT, "Sottoconto Partita fisso:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item24.SetName( "id_regiva_label" )
-    item19.Add( item24, 0, wx.ALIGN_CENTER|wx.LEFT, 5 )
-
-    item25 = PdcRow1LinkTable(parent, ID_PDCROW1)
-    item19.Add( item25, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
-
-    item19.AddGrowableCol( 1 )
-
-    item17.Add( item19, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
-
-    item15.Add( item17, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item15.AddGrowableCol( 1 )
-
-    item0.Add( item15, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item25 = wx.StaticText( parent, ID_TEXT, "Registro IVA fisso:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item25.SetName( "id_regiva_label" )
+    item24.Add( item25, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
 
     item26 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
-    item27 = CheckBox( parent, ID_QUAIVANOB, "Permetti squadratura tra totale sezione IVA e Dare/Avere", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item27.SetName( "quaivanob" )
-    item26.Add( item27, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item27 = LinkTable(parent, ID_FOREIGN ); item27.SetDataLink( bt.TABNAME_REGIVA, "id_regiva", RegIvaDialog )
+    item26.Add( item27, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item28 = UnoZeroCheckBox( parent, ID_DAVSCORP, "Attiva colonna scorporo su griglia Dare/Avere", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item28.SetName( "davscorp" )
-    item26.Add( item28, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item28 = wx.Button( parent, ID_BTNMAGREG, "Registri per magazzino", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item28.SetName( "_regiva_detmag" )
+    item26.Add( item28, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
 
-    item0.Add( item26, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item26.AddGrowableCol( 0 )
 
-    item29 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    item24.Add( item26, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item29 = wx.StaticText( parent, ID_TEXT, "Sottoconto Partita fisso:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item29.SetName( "id_regiva_label" )
+    item24.Add( item29, 0, wx.ALIGN_CENTER|wx.LEFT, 5 )
+
+    item30 = PdcRow1LinkTable(parent, ID_PDCROW1)
+    item24.Add( item30, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+
+    item24.AddGrowableCol( 1 )
+
+    item22.Add( item24, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item20.Add( item22, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item20.AddGrowableCol( 1 )
+
+    item0.Add( item20, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item31 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
-    item31 = wx.StaticBox( parent, -1, "Partita" )
-    item30 = wx.StaticBoxSizer( item31, wx.VERTICAL )
-    
-    item32 = wx.StaticText( parent, ID_TEXT, "Descrizione:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item30.Add( item32, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item32 = CheckBox( parent, ID_QUAIVANOB, "Permetti squadratura tra totale sezione IVA e Dare/Avere", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item32.SetName( "quaivanob" )
+    item31.Add( item32, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item33 = wx.TextCtrl( parent, ID_TEXTCTRL, "", wx.DefaultPosition, [200,-1], 0 )
-    item33.SetName( "pades" )
-    item30.Add( item33, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item33 = UnoZeroCheckBox( parent, ID_DAVSCORP, "Attiva colonna scorporo su griglia Dare/Avere", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item33.SetName( "davscorp" )
+    item31.Add( item33, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item0.Add( item31, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item34 = wx.FlexGridSizer( 0, 2, 0, 0 )
     
-    item35 = wx.StaticText( parent, ID_TEXT, "Tipo sottoconto:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item34.Add( item35, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item36 = wx.StaticBox( parent, -1, "Partita" )
+    item35 = wx.StaticBoxSizer( item36, wx.VERTICAL )
+    
+    item37 = wx.StaticText( parent, ID_TEXT, "Descrizione:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item35.Add( item37, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item36 = wx.StaticText( parent, ID_TEXT, "Segno:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item34.Add( item36, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item38 = wx.TextCtrl( parent, ID_TEXTCTRL, "", wx.DefaultPosition, [200,-1], 0 )
+    item38.SetName( "pades" )
+    item35.Add( item38, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item37 = LinkTable(parent, ID_FOREIGN); item37.SetDataLink(bt.TABNAME_PDCTIP, "id_pdctippa", PdcTipDialog )
-    item34.Add( item37, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+    item39 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    
+    item40 = wx.StaticText( parent, ID_TEXT, "Tipo sottoconto:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item39.Add( item40, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item38 = TextCtrl( parent, ID_TEXTCTRL, "", wx.DefaultPosition, [24,-1], 0 )
-    item38.SetName( "pasegno" )
-    item34.Add( item38, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item41 = wx.StaticText( parent, ID_TEXT, "Segno:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item39.Add( item41, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item42 = LinkTable(parent, ID_FOREIGN); item42.SetDataLink(bt.TABNAME_PDCTIP, "id_pdctippa", PdcTipDialog )
+    item39.Add( item42, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+
+    item43 = TextCtrl( parent, ID_TEXTCTRL, "", wx.DefaultPosition, [24,-1], 0 )
+    item43.SetName( "pasegno" )
+    item39.Add( item43, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+
+    item39.AddGrowableCol( 0 )
+
+    item35.Add( item39, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item44 = CheckBox( parent, ID_CAMSEGR1, "Permetti cambio segno su riga partita", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item44.SetName( "camsegr1" )
+    item35.Add( item44, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item34.Add( item35, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item46 = wx.StaticBox( parent, -1, "Contropartita" )
+    item45 = wx.StaticBoxSizer( item46, wx.VERTICAL )
+    
+    item47 = wx.StaticText( parent, ID_TEXT, "Descrizione:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item45.Add( item47, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item48 = wx.TextCtrl( parent, ID_TEXTCTRL, "", wx.DefaultPosition, [200,-1], 0 )
+    item48.SetName( "cpdes" )
+    item45.Add( item48, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item49 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    
+    item50 = wx.StaticText( parent, ID_TEXT, "Tipo sottoconto:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item49.Add( item50, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item51 = LinkTable(parent, ID_FOREIGN); item51.SetDataLink(bt.TABNAME_PDCTIP, "id_pdctipcp", PdcTipDialog)
+    item49.Add( item51, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+
+    item49.AddGrowableCol( 0 )
+
+    item45.Add( item49, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item34.Add( item45, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
 
     item34.AddGrowableCol( 0 )
 
-    item30.Add( item34, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item34.AddGrowableCol( 1 )
 
-    item39 = CheckBox( parent, ID_CAMSEGR1, "Permetti cambio segno su riga partita", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item39.SetName( "camsegr1" )
-    item30.Add( item39, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
-
-    item29.Add( item30, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item41 = wx.StaticBox( parent, -1, "Contropartita" )
-    item40 = wx.StaticBoxSizer( item41, wx.VERTICAL )
-    
-    item42 = wx.StaticText( parent, ID_TEXT, "Descrizione:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item40.Add( item42, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
-
-    item43 = wx.TextCtrl( parent, ID_TEXTCTRL, "", wx.DefaultPosition, [200,-1], 0 )
-    item43.SetName( "cpdes" )
-    item40.Add( item43, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
-
-    item44 = wx.FlexGridSizer( 0, 1, 0, 0 )
-    
-    item45 = wx.StaticText( parent, ID_TEXT, "Tipo sottoconto:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item44.Add( item45, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
-
-    item46 = LinkTable(parent, ID_FOREIGN); item46.SetDataLink(bt.TABNAME_PDCTIP, "id_pdctipcp", PdcTipDialog)
-    item44.Add( item46, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
-
-    item44.AddGrowableCol( 0 )
-
-    item40.Add( item44, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
-
-    item29.Add( item40, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item29.AddGrowableCol( 0 )
-
-    item29.AddGrowableCol( 1 )
-
-    item0.Add( item29, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item0.Add( item34, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item0.AddGrowableCol( 0 )
 

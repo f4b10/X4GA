@@ -1593,6 +1593,22 @@ class RegIva(adb.DbTable,
         adb.DbTable.__init__(self,\
                              bt.TABNAME_CONTAB_H, "reg", *args, **kwargs)
 
+        self.periodic="M"
+        s = adb.DbTable(bt.TABNAME_CFGSETUP, 'setup')
+        if s.Retrieve('setup.chiave=%s', 'liqiva_periodic') and s.OneRow():
+            self.periodic = s.flag
+        del s
+
+        print 'campo aggiuntivo'
+        if self.periodic=='M':
+            self.AddField('concat(LPAD(month(datcompete),2,"0"), "/", year(datcompete) )', "competenza")
+        else:
+            self.AddField('concat(LPAD(((month(datcompete)-1)div 3)+1,2,"0") , "/", year(datcompete) )', "competenza")
+            
+
+
+
+
         r = adb.DbTable(bt.TABNAME_REGIVA, "riv")
         if not r.Get(rivid) or r.RowsCount() != 1:
             raise Exception, "Registro IVA errato (id=%s)" % rivid
@@ -1681,6 +1697,9 @@ class RegIva(adb.DbTable,
             bt.TABNAME_REGIVA,    "rei", idLeft="id_regiva")
 
         self._riepaliq = None
+        self._riepaliqAtt = None
+        self._riepaliqPre = None
+        self._riepaliqSuc = None
         self._tipostampa = None
         self._year = Env.Azienda.Esercizio.year
         self._datmin = None
@@ -1768,21 +1787,76 @@ class RegIva(adb.DbTable,
         """
         self.ClearFilters()
         self.AddFilter("reg.id_regiva='%s'" % self._rivid)
-        self.AddFilter(r"reg.datreg>=%s", dreg1)
-        self.AddFilter(r"reg.datreg<=%s", dreg2)
+        #=======================================================================
+        # print '1 - modifico filtro per comprendere data di competenza'
+        # self.AddFilter(r"reg.datreg>='%s' or reg.datcompete>='%s'" % (dreg1, dreg1))
+        # self.AddFilter(r"reg.datreg<='%s' or reg.datcompete<='%s'" % (dreg2, dreg2))
+        #=======================================================================
+        self.AddFilter(r"reg.datreg>='%s'" % dreg1)
+        self.AddFilter(r"reg.datreg<='%s'" % dreg2)
         if protini:# is not None:
             self.AddFilter(r"reg.numiva>=%s", protini)
 
+        dreg1Pre, dreg2Pre = self.GetDatePeriodoPrecedente(dreg1)
+        dreg1Suc, dreg2Suc = self.GetDatePeriodoSuccessivo(dreg1)
+        print Env.DataIta(dreg1Pre), Env.DataIta(dreg2Pre)
+        print Env.DataIta(dreg1), Env.DataIta(dreg2)
+        print Env.DataIta(dreg1Suc), Env.DataIta(dreg2Suc)
+        
         if self._riepaliq is None:
             i = self._info
-            self._riepaliq = RiepIva(self._rivid, i.segnop, i.segnom,
-                                     dreg1, dreg2)
-        ra = self._riepaliq
+            self._riepaliq    = RiepIva(self._rivid, i.segnop, i.segnom, dreg1, dreg2)
+            self._riepaliqAtt = RiepIva(self._rivid, i.segnop, i.segnom, dreg1, dreg2)
+            self._riepaliqPre = RiepIva(self._rivid, i.segnop, i.segnom, dreg1, dreg2)
+            self._riepaliqSuc = RiepIva(self._rivid, i.segnop, i.segnom, dreg1, dreg2)
+            
+        self.SetFilterRiepAliqIva(db=self._riepaliq,    viewPeriod='R', dreg1=dreg1, dreg2=dreg2, dreg1Pre=dreg1Pre, dreg2Pre=dreg2Pre, dreg1Suc=dreg1Suc, dreg2Suc=dreg2Suc, protini=protini, radate=radate, raprot=raprot )
+        self.SetFilterRiepAliqIva(db=self._riepaliqAtt, viewPeriod='A', dreg1=dreg1, dreg2=dreg2, dreg1Pre=dreg1Pre, dreg2Pre=dreg2Pre, dreg1Suc=dreg1Suc, dreg2Suc=dreg2Suc, protini=protini, radate=radate, raprot=raprot )
+        self.SetFilterRiepAliqIva(db=self._riepaliqPre, viewPeriod='P', dreg1=dreg1, dreg2=dreg2, dreg1Pre=dreg1Pre, dreg2Pre=dreg2Pre, dreg1Suc=dreg1Suc, dreg2Suc=dreg2Suc, protini=protini, radate=radate, raprot=raprot )
+        self.SetFilterRiepAliqIva(db=self._riepaliqSuc, viewPeriod='S', dreg1=dreg1, dreg2=dreg2, dreg1Pre=dreg1Pre, dreg2Pre=dreg2Pre, dreg1Suc=dreg1Suc, dreg2Suc=dreg2Suc, protini=protini, radate=radate, raprot=raprot )
+        pass
+    
+    def GetDatePeriodoPrecedente(self, dreg):
+        return Env.GetDateFromPeriod(periodicita=self.periodic, am=Env.GetPeriodoPrecedente(periodicita=self.periodic, dreg=dreg))
+
+    def GetDatePeriodoSuccessivo(self, dreg):
+        return Env.GetDateFromPeriod(periodicita=self.periodic, am=Env.GetPeriodoSuccessivo(periodicita=self.periodic, dreg=dreg))
+    
+        
+    def SetFilterRiepAliqIva(self, db=None, viewPeriod="A", 
+                             dreg1   =None, dreg2=None,
+                             dreg1Pre=None, dreg2Pre=None, 
+                             dreg1Suc=None, dreg2Suc=None,                             
+                             protini =None, radate=None, raprot=None):
+        # viewPeriod indica se devono essere considerate le registrazione:
+        # A del periodo considerato (ATTIVO)
+        # P del periodo precedente
+        # S del periodo successivo
+        #
+        # Se viewPeriod=="A" => db=self._riepaliq e dreg1, dreg2 estremi periodo considerato
+        # Se viewPeriod=="P" => db=self._riepaliqPre e dreg1, dreg2 estremi periodo precedente
+        # Se viewPeriod=="S" => db=self._riepaliqSuc e dreg1, dreg2 estremi periodo successivo
+        ra = db
+        ra.SetDebug()
         ra.ClearFilters()
         ra.AddFilter("reg.id_regiva='%s'" % self._rivid)
         if radate is None: radate = dreg1
-        ra.AddFilter(r"reg.datreg>=%s", radate)
-        ra.AddFilter(r"reg.datreg<=%s", dreg2)
+        #=======================================================================
+        # print '2 - modifico filtro per comprendere data di competenza'
+        # ra.AddFilter(r"reg.datreg>='%s' or reg.datcompete>='%s'" % (radate, radate))
+        # ra.AddFilter(r"reg.datreg<='%s' or reg.datcompete<='%s'" % (dreg2, dreg2))
+        #=======================================================================
+        if viewPeriod=='R':
+            ra.AddFilter(r"reg.datcompete>='%s'"% radate)
+            ra.AddFilter(r"reg.datcompete<='%s'" % dreg2)
+        elif viewPeriod=='A':
+            ra.AddFilter(r"reg.datreg>='%s'"% radate)
+            ra.AddFilter(r"reg.datreg<='%s'" % dreg2)
+        elif viewPeriod=='P':
+            ra.AddFilter(r"reg.datreg>='%s' and reg.datreg<='%s' and reg.datcompete>='%s' and reg.datcompete<='%s'" % (dreg1, dreg2, dreg1Pre, dreg2Pre))
+        elif viewPeriod=='S':
+            ra.AddFilter(r"reg.datreg>='%s' and reg.datreg<='%s' and reg.datcompete>='%s' and reg.datcompete<='%s'" % (dreg1Suc, dreg2Suc, dreg1, dreg2))
+            
         if raprot:# is not None:
             ra.AddFilter(r"reg.numiva>=%s", raprot)
 
@@ -1796,6 +1870,19 @@ class RegIva(adb.DbTable,
 
         self._datmin = dreg1
         self._datmax = dreg2
+        print 'impostato filtro per _riepaliq (%s):' % db
+        for w in ra.GetFilters():
+            print '   ', w
+        print 'impostato filtro per self (%s):' % self
+        for w in self.GetFilters():
+            print '   ', w
+        print '%s' % ('-'*60)
+        pass
+
+        
+        
+        
+        
 
     def Retrieve(self, *args, **kwargs):
         """
@@ -1803,7 +1890,12 @@ class RegIva(adb.DbTable,
         totalizzazione delle aliquote iva.
         """
         out = adb.DbTable.Retrieve(self, *args, **kwargs)
-        if out and self._riepaliq is not None: out = self._riepaliq.Retrieve()
+        print 'ricerca totalizzazioni per registro'
+        if out and self._riepaliq is not None: 
+            out = self._riepaliq.Retrieve()
+            out = self._riepaliqAtt.Retrieve()
+            out = self._riepaliqPre.Retrieve()
+            out = self._riepaliqSuc.Retrieve()
         return out
 
     def GetTotIva(self):
@@ -1939,6 +2031,31 @@ class RiepIva(adb.DbTable):
 
 
 # ------------------------------------------------------------------------------
+
+class RiepilogoIvaCompetenza(adb.DbMem):
+    
+    def __init__(self):
+        adb.DbMem.__init__(self, fields='sezione,total_imponib,total_imposta,total_indeduc,idreg,codicereg,descrizreg,tiporeg,idaliq,codicealiq,desaliq,percivaaliq,percindaliq,tipoaliq,isnormalaliq,isceealiq,issospaliq')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 class RiepRegCon(adb.DbTable):
@@ -2170,6 +2287,20 @@ class RiepRegIva(adb.DbTable):
 
         self.pdc = pdc
 
+        self.periodic="M"
+        s = adb.DbTable(bt.TABNAME_CFGSETUP, 'setup')
+        if s.Retrieve('setup.chiave=%s', 'liqiva_periodic') and s.OneRow():
+            self.periodic = s.flag
+        del s
+
+        #print 'campo aggiuntivo'
+        if self.periodic=='M':
+            self.AddField('concat(LPAD(month(datcompete),2,"0"), "/", year(datcompete) )', "competenza")
+        else:
+            self.AddField('concat(LPAD(((month(datcompete)-1)div 3)+1,2,"0") , "/", year(datcompete) )', "competenza")
+            
+
+
         sgnexpr = """
 IF(regiva.tipo='A' AND tot.segno='D'
 OR regiva.tipo<>'A' AND tot.segno='A',1,-1)"""
@@ -2198,8 +2329,8 @@ LIQIVA_ALIQ_TIPO =  5
 LIQIVA_TOTIMPONIB = 6
 LIQIVA_TOTIMPOSTA = 7
 LIQIVA_TOTINDEDUC = 8
-LIQIVA_TOTOPATT = 9
-LIQIVA_TOTOPPAS = 10
+LIQIVA_TOTOPATT   = 9
+LIQIVA_TOTOPPAS   = 10
 
 class ValoriErrati_Exception(Exception):
     pass
@@ -2391,22 +2522,47 @@ class LiqIva(adb.DbTable):
                 r.SetLimits(self._datmin, self._datmax)
                 r.Retrieve()
                 self.regiva = r
+                if self.regiva._riepaliq.RowsCount()>0:
+                    print self.regiva._riepaliq
+                    print self.regiva._riepaliqAtt
+                    print self.regiva._riepaliqPre
+                    print self.regiva._riepaliqSuc
+                    pass
 
-    def Totalizza(self, cbf=None):
+                #===============================================================
+                # print self.descriz
+                # for x in self.regiva._riepaliq:
+                #     msg = ''
+                #     for n in self.regiva._riepaliq.GetFieldNames():
+                #         msg = '%s %s=%s' % (msg, n, getattr(x, n))
+                #     print msg
+                #     #for n in self.regiva.GetField
+                #===============================================================
+                pass
 
+    def Totalizza(self, cbf=None, dbName='_riepaliq'):
+        print 'classname: %s' % self.__class__.__name__
         mt = self._totali
 
         for key in "AVC":
             del self._totxtip[key][:]
 
         self.ResetTotali()
-
+        print 'carico totali per registro'
         self._totxreg = {}
         for r in self:
             self._totxreg[r.id] = []
             tipo = r.regiva._rivtipo
             key = ('acqnor', 'vennor', 'vencor')["AVC".index(tipo)]
-            for aliq in r.regiva._riepaliq:
+            
+            riepilogo = getattr(r.regiva, dbName)
+            #===================================================================
+            # print riepilogo
+            # print r.regiva._riepaliq
+            #===================================================================
+            
+            
+            for aliq in riepilogo:
                 for t, tot in enumerate((self._totxreg[r.id],\
                                          self._totxtip[r.regiva._rivtipo])):
                     n = None

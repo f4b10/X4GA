@@ -22,7 +22,7 @@
 # ------------------------------------------------------------------------------
 
 import copy
-
+import os
 import wx
 import wx.grid as gl
 
@@ -62,6 +62,8 @@ import stormdb as adb
 
 from contab.util import SetWarningPag
 
+
+    
 
 (GridSelectedEvent, EVT_GRIDSELECTED) = wx.lib.newevent.NewEvent()
 
@@ -764,6 +766,9 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
         ContabPanelTipo_E   x registrazioni di sola iva.
     """
 
+    id_fepass = None
+    pathXml   = None
+
     def __init__(self, *args, **kwargs):
         """
         Costruttore standard.
@@ -924,6 +929,19 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
                 dlgPa.controls['pdcpa'].SetValue(self._cfg_id_pdcrow1)
             if dlgPa.ShowModal() > 0:
                 cn = lambda x: self.FindWindowByName(x)
+                if not dlgPa.selectedFe==None:
+                    self.feDatDoc = dlgPa.controls['datdoc'].GetValue() 
+                    self.feNumDoc = dlgPa.controls['numdoc'].GetValue()
+                    self.feMM     = dlgPa.controls['mmcompetenza'].GetValue()
+                    self.feAA     = dlgPa.controls['aacompetenza'].GetValue()
+                    self.feIdSdi  = dlgPa.controls['idsdi'].GetValue()
+                    self.pathXml  = dlgPa.selectedFe['pathXml']
+                    self.id_fepass= dlgPa.selectedFe['id']
+                    print 'path xml %s' % dlgPa.selectedFe['pathXml']
+                    print 'da assegnare a mese: %s' % dlgPa.controls['mmcompetenza'].GetItems()
+                    print 'da assegnare a anno: %s' % dlgPa.controls['aacompetenza'].GetItems()
+                    wx.CallAfter(self.SetFromFe)
+                
                 regiva_id = cn('id_regiva').GetValue()
                 regiva_cod = cn('id_regiva').GetValueCod()
                 regiva_des = cn('id_regiva').GetValueDes()
@@ -993,7 +1011,18 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
                             self.SetAliqIvaDefault(t.anag.aliqiva)
                             if len(self.regrsb)>1:
                                 self.InitPdcIndeduc(1)
-
+                #===============================================================
+                # print dlgPa.controls['datdoc'].GetValue()
+                # print dlgPa.controls['numdoc'].GetValue()
+                # self.controls['datdoc'].ChangeValue(dlgPa.controls['datdoc'].GetValue())
+                # self.controls['numdoc'].ChangeValue(dlgPa.controls['numdoc'].GetValue())
+                # 
+                # self.controls['mmcompetenza'].SetValue(dlgPa.controls['mmcompetenza'].GetValue())
+                # self.controls['aacompetenza'].SetValue(dlgPa.controls['aacompetenza'].GetValue())
+                #===============================================================
+                
+                
+                
                 self.SetRegStatus(ctb.STATUS_EDITING)
 
             else:
@@ -1001,6 +1030,16 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
                 self.SetRegStatus(ctb.STATUS_SELCAUS)
 
             dlgPa.Destroy()
+
+
+    def SetFromFe(self):
+        print 'assegna valuri acquisiti da fattura elettronica'
+        self.controls['datdoc'].ChangeValue(self.feDatDoc )
+        self.controls['numdoc'].ChangeValue(self.feNumDoc )
+        self.controls['idsdi'].ChangeValue(self.feIdSdi )
+        self.controls['mmcompetenza'].SetValue(self.feMM )
+        self.controls['aacompetenza'].SetValue(self.feAA )
+        
 
     def AddDefaultRow(self, row):
         self.regrsb.append(row)
@@ -1259,6 +1298,17 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
             out = self.ScadStorno()
             if out:
                 out = self.ScadWrite()
+                if out and Env.canRegFe and not self.id_fepass==None:
+                    try:
+                        print 'memorizza id_fepass: %s nel record %s' % (self.id_fepass, self.reg_id)
+                        cmd = 'UPDATE %s SET id_reg=%s where id=%s' % (bt.TABNAME_FEPASS, self.reg_id, self.id_fepass )
+                        print cmd
+                        self.db_curs.execute(cmd)
+                        out = True
+                        #self.pathXml = None
+                    except MySQLdb.Error, e:
+                        MsgDialogDbError(self, e)
+                        out = False                    
         if out:
             self.ReportFineReg()
         return out
@@ -1484,7 +1534,7 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
         if src.IsEmpty():
             return True
         msg = \
-            """Esiste già una registrazione su questo registro IVA,\n"""\
+            u"""Esiste già una registrazione su questo registro IVA,\n"""\
             """facente capo alla stessa anagrafica e con lo stesso\n"""\
             """numero di documento:\n\n"""
         msg += """%s %s n.%s del %s,\nregistrato il %s,\n%s %s\n\n"""\
@@ -1526,7 +1576,8 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
 
     def RegWriteHead(self):
         written = False
-        if self.CheckNumIva(canForce = True):
+        # rimosso controllo protocollo Iva
+        if True or self.CheckNumIva(canForce = True):
             if self.CheckDocumento():
                 written = ctb.ContabPanel.RegWriteHead(self)
                 if written:
@@ -1547,6 +1598,10 @@ class SelRowPa(wx.Dialog):
     eventuali sottoconti di contropartita preferiti, definiti nella causale
     e/o nel sottoconto di partita stesso.
     """
+    pathXml = None
+    abilitaFePass = None
+    selectedFe = None
+    
     def __init__(self, parent, id=-1, title="Ricerca sottoconto",\
                  pos=wx.DefaultPosition, size=(400,300),\
                  style=wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER):
@@ -1554,6 +1609,7 @@ class SelRowPa(wx.Dialog):
         wx.Dialog.__init__(self, parent, id, title, pos, size)
 
         self.id_cau = parent.cauid
+        self.abilitaFePass = parent._cfg_fepass
         self.id = None
         self.cod = None
         self.des = None
@@ -1594,9 +1650,25 @@ class SelRowPa(wx.Dialog):
 
         self.Bind( wx.EVT_CLOSE, self.OnClose )
         self.Bind( wx.EVT_BUTTON, self.OnOk, id = wdr.ID_BTNOK )
+        
+        try:
+            self.btnAcqFe  = self.FindWindowByName('btnAcqfe')
+            self.btnViewFe = self.FindWindowByName('btnViewFe') 
+            self.btnAcqFe.Bind(wx.EVT_BUTTON, self.OnAcqFe)
+            self.btnViewFe .Bind(wx.EVT_BUTTON, self.OnViewFe)
+        except:
+            pass
 
         self.InitGridPref()
         self.UpdateGridPref()
+        
+        if not Env.canRegFe or not self.abilitaFePass=='1':
+            try:
+                self.FeHide()
+            except:
+                pass         
+        
+        
 
     def FillContent(self):
         wdr.SelRowPaFunc(self)
@@ -1648,6 +1720,125 @@ class SelRowPa(wx.Dialog):
 
     def OnClose(self, event):
         self.EndModal(0)
+
+    def FeHide(self):
+        self.FindWindowByName('btnViewFe').Hide()
+        self.feDocumento.GetStaticBox().Hide()
+        self.controls["datdoc"].Hide()        
+        self.controls["numdoc"].Hide()        
+        self.controls['labeldatdoc'].Hide()
+        self.controls['labelnumdoc'].Hide()
+
+        self.feSdi.GetStaticBox().Hide()
+        self.controls["datric"].Hide()        
+        self.controls["idsdi"].Hide()        
+        self.controls['labeldatric'].Hide()
+        self.controls['labelidsdi'].Hide()
+
+        self.feCompetenza.GetStaticBox().Hide()
+        self.controls["aacompetenza"].Hide()        
+        self.controls["mmcompetenza"].Hide()        
+        self.controls['labelmese'].Hide()
+        self.controls['labelanno'].Hide()
+
+    def SetSelectedFe(self, record):
+        print 'SetSelectedFe %s' % record
+        self.selectedFe = record
+
+    def SetPeriod(self, datdoc):
+        self.controls['aacompetenza'].Clear()
+        self.controls['mmcompetenza'].Clear()
+        
+        self.controls['aacompetenza'].Append('%s' % datdoc.year)
+        self.controls['aacompetenza'].Append('%s' % (datdoc.year-1))
+        self.controls['aacompetenza'].SetValue('%s' % datdoc.year)
+        
+        if self.periodic=="M":
+            self.controls['mmcompetenza'].Append('%02d' % datdoc.month)
+            if datdoc.month>1:
+                self.controls['mmcompetenza'].Append('%02d' % (datdoc.month-1))
+            else:
+                self.controls['mmcompetenza'].Append('%02d' % 12)
+            self.controls['mmcompetenza'].SetValue('%02d' % datdoc.month)
+        else:
+            trim = int((datdoc.month-1)/3.0)+1
+            self.controls['mmcompetenza'].Append('%02d' % trim)
+            if trim>1:
+                self.controls['mmcompetenza'].Append('%02d' % (trim-1))
+            else:
+                self.controls['mmcompetenza'].Append('%02d' % 4)
+            self.controls['mmcompetenza'].SetValue('%02d' % trim)
+        
+
+    def SetSelectedFeValue(self):
+        print 'in SelRowPa %s' % self.selectedFe
+        if self.selectedFe:
+            self.controls["pdcpa"].SetValue(self.selectedFe['id_pdc'])
+            self.controls["totdoc"].SetValue(self.selectedFe['totdoc'])        
+            self.controls["datdoc"].SetValue(self.selectedFe['datdoc'])        
+            self.controls["numdoc"].SetValue(self.selectedFe['numdoc'])        
+            self.controls["datric"].SetValue(self.selectedFe['datmail'])        
+            self.controls["idsdi"].SetValue(self.selectedFe['sdi_id'])
+            self.SetPeriod(self.selectedFe['datdoc'])  
+
+    def OnViewFe(self, evt):
+        if not self.selectedFe==None:
+            filename = self.selectedFe['pathXml']
+            if os.path.isfile(filename):
+                try:
+                    from fatturapa_magazz.fatturapa import ViewFattureElettronicheDialog
+                    xx = ViewFattureElettronicheDialog(self)
+                    #_, f = os.path.split(filename)
+                    xx.View(filename=filename)
+                except:
+                    pass
+            else:
+                aw.awu.MsgDialog(self, 'File .xml non presente', style=wx.ICON_INFORMATION)
+        pass
+
+        
+    def OnAcqFe(self, evt):
+        #=======================================================================
+        # try:
+        #     from feinreg_contab import contab
+        #     canImportFe = True
+        # except:
+        #     canImportFe = False
+        #     
+        # if canImportFe and self.abilitaFePass=='1':
+        #=======================================================================
+            
+        if Env.canRegFe and self.abilitaFePass=='1':
+            obj = evt.GetEventObject()
+            self.periodic="M"
+            s = adb.DbTable(bt.TABNAME_CFGSETUP, 'setup')
+            if s.Retrieve('setup.chiave=%s', 'liqiva_periodic') and s.OneRow():
+                self.periodic = s.flag
+            del s
+            if self.periodic=='M':
+                self.FindWindowByName('labelMese').SetLabel('Mese')
+            else:
+                self.FindWindowByName('labelMese').SetLabel('Trim.')
+            
+            self.selectedFe=None
+            from feinreg_contab import dataentry            
+            dlg = dataentry.ViewFeDialog(self, title="Selezione Fattura Elettrinica da Registrare", size=(1000,400), mainPanel=self)
+            dlg.ShowModal()
+            self.SetSelectedFeValue()
+        else:
+            self.FeHide()
+            if not Env.canRegFe:
+                aw.awu.MsgDialog(self,
+                                 u"""Funzionalità attivabile solo in presenza del plugin feinreg""",
+                                 style=wx.ICON_INFORMATION)
+            elif self.abilitaFePass=='0':
+                aw.awu.MsgDialog(self,
+                                 u"""La causale contabile non prevede l'acqusizione dalle fatture ricevute""",
+                                 style=wx.ICON_INFORMATION)
+                      
+            
+        evt.Skip()
+
 
     def OnOk(self, event):
         if self.Validate():
@@ -1724,7 +1915,9 @@ class Reg_I_SearchGrid(ctb.RegSearchGrid):
         _NUM = gl.GRID_VALUE_NUMBER
         _STR = gl.GRID_VALUE_STRING
         _IMP = bt.GetValIntMaskInfo()
-        return (( 80, ( 1, "Data reg.",  _DAT, False)),
+        return (
+                ( 50, ( 9, "Compet.",    _STR, True )),
+                ( 80, ( 1, "Data reg.",  _DAT, False)),
                 ( 30, ( 2, "Reg.",       _STR, False)),
                 ( 60, ( 3, "Prot.",      _STR, False)),
                 (200, ( 4, "Sottoconto", _STR, False)),
@@ -1755,6 +1948,11 @@ class Reg_I_SearchPanel(ctb.RegSearchPanel):
         ctb.DATSEARCH1 = dmin
         dmax = self.datmax.GetValue()
         ctb.DATSEARCH2 = dmax
+        
+        dcompmin = self.datcompmin.GetValue()
+        dcompmax = self.datcompmax.GetValue()        
+        
+        
         filter = "reg.id_caus=%d" % self.cauid
         par = []
         if dmin:
@@ -1763,13 +1961,22 @@ class Reg_I_SearchPanel(ctb.RegSearchPanel):
         if dmax:
             filter += " AND reg.datreg<=%s"
             par.append(dmax)
+
+        if dcompmin:
+            filter += " and DATCOMPETE>=%s"
+            par.append(dcompmin)
+        if dcompmax:
+            filter += " and DATCOMPETE<=%s"
+            par.append(dcompmax)
+        #print 'filter (dataentry_i)=%s' % filter
+            
         try:
             wx.BeginBusyCursor()
             try:
                 cmd = \
 """   SELECT reg.id, reg.datreg, riv.codice, reg.numiva, """\
 """          pdc.descriz, reg.numdoc, reg.datdoc, """\
-"""IF(row.segno="D", row.importo, 0), IF(row.segno="A", row.importo, 0) """\
+"""IF(row.segno="D", row.importo, 0), IF(row.segno="A", row.importo, 0), reg.datcompete """\
 """     FROM ((%s AS reg JOIN %s AS cau ON reg.id_caus=cau.id) """\
 """LEFT JOIN contab_b AS row ON row.id_reg=reg.id) """\
 """LEFT JOIN pdc AS pdc ON row.id_pdcpa=pdc.id """\
@@ -1781,7 +1988,23 @@ class Reg_I_SearchPanel(ctb.RegSearchPanel):
                 db_curs.execute(cmd, par)
                 rs = db_curs.fetchall()
                 db_curs.close()
-                self.gridsrc.ChangeData(rs)
+                #print self.periodic
+                rsList = []
+                for r in list(rs):
+                    rList = list(r)
+                    dtComp = rList[9]
+                    try:
+                        if self.periodic=="M":
+                            w = '%02d/%04d' % (dtComp.month, dtComp.year)
+                        else:
+                            trimestre = int((dtComp.month-1)/3.0)+1
+                            w = '%02d/%04d' % (trimestre, dtComp.year)
+                    except:
+                        w = ''
+                        pass
+                    rList[9] = w
+                    rsList.append(rList)
+                self.gridsrc.ChangeData(rsList)
 
             except MySQLdb.Error, e:
                 MsgDialogDbError(self, e)

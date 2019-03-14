@@ -30,6 +30,16 @@ import mx.Odt
 
 history = (
 
+    ('1.5.71', dt.Date(2018, 03, 8), (
+         ("BET1273",
+         """Introdotta data competenza su reg.contabile"""
+        ),
+         ("BET1272",
+         """Adeguati registyri a gestione data competenza"""
+        ),
+        ),),
+           
+
     ('1.5.70', dt.Date(2018, 02, 14), (
          ("BET1271",
          """Ottimizzato richiamo programma openssl.exe"""

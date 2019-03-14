@@ -116,6 +116,7 @@ class GridReg(dbglib.DbGridColoriAlternati):
 
         cols = (\
             ( 60, (cn(reg, 'numiva'),  "Prot.",     _NUM, True )),\
+            ( 60, (cn(reg, 'competenza'),  "Compet.", _STR, True )),\
             ( 80, (cn(reg, 'datreg'),  "Data reg.", _DAT, True )),\
             (100, (cn(cau, 'descriz'), "Causale",   _STR, True )),\
             ( 80, (cn(reg, 'datdoc'),  "Data Doc.", _DAT, True )),\
@@ -288,16 +289,22 @@ class GridTotAliq(dbglib.DbGridColoriAlternati):
     """
     Griglia totali aliquote
     """
-    def __init__(self, parent, dbreg):
+    nomeDb = None
+    
+    def __init__(self, parent, dbreg, nomeDb = None):
         """
         Parametri:
         parent griglia  (wx.Panel)
         dbtable totali aliquote (DbMem)
         """
-
         size = parent.GetClientSizeTuple()
-
-        self.dbriep = dbreg._riepaliq
+        # da correggere
+        
+        self.nomeDb = nomeDb
+        self.dbriep = getattr(dbreg, nomeDb)
+        
+        #self.dbriep = dbreg._riepaliqAtt
+        #self.dbriep = dbreg._riepaliq
         mov = self.dbriep
         iva = mov.iva
 
@@ -399,6 +406,7 @@ class RegIvaPanel(aw.Panel):
     gridreg = None
     gridaliq = None
     gridriep = None
+    gridriepcompetenza = None
 
     def __init__(self, *args, **kwargs):
 
@@ -481,7 +489,13 @@ class RegIvaPanel(aw.Panel):
         if self.gridriep:
 #            self.gridriep.Destroy()
             wx.CallAfter(self.gridriep.Destroy)
-        self.gridriep = GridTotAliq(cn(wdr.ID_PANGRIDRIEP), self.dbreg)
+        self.gridriep = GridTotAliq(cn(wdr.ID_PANGRIDRIEP), self.dbreg, nomeDb='_riepaliqAtt')
+        
+        if self.gridriepcompetenza:
+#            self.gridriep.Destroy()
+            wx.CallAfter(self.gridriepcompetenza.Destroy)
+        self.gridriepcompetenza = GridTotAliq(cn(wdr.ID_PANGRIDRIEPCOMPETENZA), self.dbreg, nomeDb='_riepaliq')
+        
 
     def OnTipoStaChanged(self, event):
         self.SetTipoSta(event.GetEventObject().GetValue())
@@ -511,19 +525,117 @@ class RegIvaPanel(aw.Panel):
         event.Skip()
 
     def Stampa(self):
+        def cn(x):
+            return self.FindWindowByName(x)        
         reg = self.dbreg
-        r = reg._riepaliq
+        
+        lAliquote = []
+        for nomeDb in ['_riepaliq', '_riepaliqAtt', '_riepaliqPre', '_riepaliqSuc']:
+            db= getattr(reg, nomeDb)
+            db.reg.regiva = db.reg.rei
+            db.aliqiva = db.iva
+            for c in 'tiposta intatt intdes intanno intpag'.split():
+                for o in (reg, db):
+                    setattr(o._info, c, cn(c).GetValue())            
+            for recIva in db:          
+                #===============================================================
+                # print db._info.datmax
+                # print db._info.datmin
+                # print db._info.tiposta
+                # print db.total_imponib
+                # print db.total_imposta
+                # print db.total_indeduc
+                # print db.reg.regiva.id
+                # print db.reg.regiva.codice
+                # print db.reg.regiva.descriz
+                # print db.reg.regiva.tipo
+                
+                # print db.aliqiva.codice
+                # print db.aliqiva.perciva
+                # print db.aliqiva.percind
+                # print db.aliqiva.tipo
+                # print db.aliqiva.IsNormale()
+                # print db.aliqiva.IsCEE()
+                # print db.aliqiva.IsSosp()  
+                #===============================================================
+                if not recIva.aliqiva.id in [x[0] for x in lAliquote]:
+                    lAliquote.append([recIva.aliqiva.id, 
+                                      recIva.aliqiva.codice,      
+                                      recIva.aliqiva.descriz,
+                                      recIva.aliqiva.perciva,     
+                                      recIva.aliqiva.percind,     
+                                      recIva.aliqiva.tipo,        
+                                      recIva.aliqiva.IsNormale(),
+                                      recIva.aliqiva.IsCEE(),     
+                                      recIva.aliqiva.IsSosp()])
+        print lAliquote
+        
+        dbRC = dbc.RiepilogoIvaCompetenza()
+        
+        dbRC._info.datmax = reg._riepaliqAtt._info.datmax
+        dbRC._info.datmin = reg._riepaliqAtt._info.datmin
+        dbRC._info.tiporeg = reg._riepaliqAtt.reg.regiva.tipo
+        dbRC._info.codicereg = reg._riepaliqAtt.reg.regiva.codice
+        dbRC._info.descrizreg = reg._riepaliqAtt.reg.regiva.descriz
+        
+        dbRC._info.tiposta = reg._info.tiposta
+        
+        for id, codice,des,perciva,percind,tipo,isnormale,iscee,issosp in lAliquote:
+            print id, codice, des, perciva,percind,tipo,isnormale,iscee,issosp
+            for nomeDb, segno, sez in [('_riepaliqAtt', 1, 'ATT'), 
+                           ('_riepaliqPre',-1, 'PRE'),
+                           ('_riepaliqSuc', 1, 'SUC')]:
+                db= getattr(reg, nomeDb)
+                found=False
+                for recIva in db:
+                    if recIva.aliqiva.id == id:
+                        found=True
+                        break
+                    
+                if found:
+                    print '%s PRESENTE %s' % (nomeDb, segno*recIva.total_imponib)
+                    dbRC.CreateNewRow()
+                    
+                    dbRC.sezione       = sez              
+                    
+                    dbRC.idreg         = recIva.reg.regiva.id        
+                    dbRC.codicereg     = recIva.reg.regiva.codice    
+                    dbRC.descrizreg    = recIva.reg.regiva.descriz   
+                    dbRC.tiporeg       = recIva.reg.regiva.tipo
+                    
+                    dbRC.idaliq        = recIva.aliqiva.id       
+                    dbRC.codicealiq    = recIva.aliqiva.codice       
+                    dbRC.desaliq       = recIva.aliqiva.descriz       
+                    dbRC.percivaaliq   = recIva.aliqiva.perciva      
+                    dbRC.percindaliq   = recIva.aliqiva.percind      
+                    dbRC.tipoaliq      = recIva.aliqiva.tipo         
+                    dbRC.isnormalaliq  = recIva.aliqiva.IsNormale()  
+                    dbRC.isceealiq     = recIva.aliqiva.IsCEE()
+                    dbRC.issospaliq    = recIva.aliqiva.IsSosp()
+                      
+                    dbRC.total_imponib = segno*recIva.total_imponib        
+                    dbRC.total_imposta = segno*recIva.total_imposta        
+                    dbRC.total_indeduc = segno*recIva.total_indeduc
+                
+        reg._riepaliqCompetenza = dbRC    
+            
+        r = reg._riepaliqAtt
         #per compatilibità alias tabelle con riep.iva fatto x lista mov.
         r.reg.regiva = r.reg.rei
         r.aliqiva = r.iva
-        if self.FindWindowById(wdr.ID_GRIDZONE).GetSelection() == 2:
+        
+        selectedPage = self.FindWindowById(wdr.ID_GRIDZONE).GetSelection()
+        
+        if selectedPage == 2:
             name = 'Riepilogo IVA'
             db = r
+        elif selectedPage == 3:
+            name = 'Riepilogo IVA x competenza'
+            db = dbRC
         else:
             name = 'Registro IVA'
             db = reg
-        def cn(x):
-            return self.FindWindowByName(x)
+
         for c in 'tiposta intatt intdes intanno intpag'.split():
             for o in (reg, r):
                 setattr(o._info, c, cn(c).GetValue())

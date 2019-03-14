@@ -460,15 +460,16 @@ class IntRegIvaGrid(dbglib.DbGridColoriAlternati, _IntRegGridMixin):
         _IMP = bt.GetValIntMaskInfo()
         
         cols = (\
+            ( 46, (cn(reg, "competenza"),"Compet",       _STR, True)),
             ( 80, (cn(reg, "datreg"),    "Data reg.",    _DAT, True)),
-            ( 35, (cn(cau, "codice"),    "Cod.",         _STR, True)),
+            ( 15, (cn(cau, "codice"),    "C.",           _STR, True)),
             (120, (cn(cau, "descriz"),   "Causale",      _STR, True)),
-            ( 50, (cn(pdc, "codice"),    "Cod.",         _STR, True)),
-            (220, (cn(pdc, "descriz"),   "Sottoconto",   _STR, True)),
-            ( 50, (cn(reg, "numdoc"),    "Num.doc.",     _STR, True)),
+            ( 35, (cn(pdc, "codice"),    "Cod.",         _STR, True)),
+            (200, (cn(pdc, "descriz"),   "Sottoconto",   _STR, True)),
+            ( 50, (cn(reg, "numdoc"),    "N.doc.",       _STR, True)),
             ( 80, (cn(reg, "datdoc"),    "Data doc.",    _DAT, True)),
-            ( 60, (cn(reg, "numiva"),    "Prot.",        _NUM, True)),
-            ( 40, (cn(riv, "codice"),    "R.IVA",        _STR, True)),
+            ( 45, (cn(reg, "numiva"),    "Prot.",        _NUM, True)),
+            ( 25, (cn(riv, "codice"),    "Reg",          _STR, True)),
             (110, (ncimponib,            "Imponibile",   _IMP, True)),
             (110, (ncimposta,            "Imposta",      _IMP, True)),
             (110, (ncindeduc,            "Indeducibile", _IMP, True)),
