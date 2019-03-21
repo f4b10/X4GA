@@ -1036,10 +1036,12 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
         print 'assegna valuri acquisiti da fattura elettronica'
         self.controls['datdoc'].ChangeValue(self.feDatDoc )
         self.controls['numdoc'].ChangeValue(self.feNumDoc )
+        self.reg_numdoc = self.feNumDoc
         self.controls['idsdi'].ChangeValue(self.feIdSdi )
         self.controls['mmcompetenza'].SetValue(self.feMM )
         self.controls['aacompetenza'].SetValue(self.feAA )
-        
+        self.ScadCalc()
+
 
     def AddDefaultRow(self, row):
         self.regrsb.append(row)
@@ -1898,8 +1900,15 @@ class SelRowPa(wx.Dialog):
                     except MySQLdb.Error, e:
                         MsgDialogDbError(self, e)
                     else:
+                        nRow=len(rs)
                         for rec in rs:
-                            self.rspref.append(list(rec))
+                            if nRow==1:
+                                print 'seleziono'
+                                l=list(rec)
+                                l[0]=1
+                                self.rspref.append(l)
+                            else:
+                                self.rspref.append(list(rec))
 
             self._grid_pref.ResetView()
             self._grid_pref.AutoSizeColumns()

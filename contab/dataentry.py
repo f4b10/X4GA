@@ -763,8 +763,13 @@ class ContabPanel(aw.Panel,\
                 self.reg_regiva_des,\
                 self._cfg_fepass = rsh
                 
-                self.reg_aacompetenza=self.reg_datcompete.year
-                self.reg_mmcompetenza=self.reg_datcompete.month
+                try:
+                    self.reg_aacompetenza=self.reg_datcompete.year
+                    self.reg_mmcompetenza=self.reg_datcompete.month
+                except:
+                    self.reg_aacompetenza=self.reg_datreg.year
+                    self.reg_mmcompetenza=self.reg_datreg.month
+                    
                 
                 self.reg_id = int(self.reg_id)
                 self.cauid = self.reg_cau_id

@@ -2359,6 +2359,7 @@ class DocMag(adb.DbTable):
         reg.id_regiva = self.GetRegIva()
         reg.id_valuta = self.id_valuta
         reg.id_modpag = self.id_modpag
+        reg.datcompete= self.datdoc
 
         segnopa = reg.config.pasegno
         if segnopa == "D":

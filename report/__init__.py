@@ -174,7 +174,13 @@ class MultiReportStandardDialog(wx.Dialog):
         self._can_preview = kwargs.pop('can_preview', True)
         self._can_print = kwargs.pop('can_print', True)
         wx.Dialog.__init__(self, *args, **kwargs)
-        self.FillControls()
+        for i in range(2):
+            try:
+                self.FillControls()
+                break
+            except:
+                pass
+            
         self.CenterOnScreen()
         def cn(x):
             return self.FindWindowByName(x)
@@ -399,6 +405,7 @@ class Report:
         #ricerca del report
         for pathsrc in self.GetPaths():
             test = "%s/%s" % (pathsrc, rptdef)
+            print 'cerco:%s' % test
             if os.path.isdir(test) or os.path.isfile(test+'.jrxml'):
                 if os.path.isfile(test+'.jrxml') and output == "STORE" and not forcechoice:
                     rptdef = test+'.jrxml'
@@ -508,7 +515,7 @@ class Report:
             p['commandprint'] = commandprint
             p['WaterMarkExpression'] = WaterMarkExpression
             self.usedReport = self.StartReport()
-
+            
             if updatelastprinter:
                 self.set_default_printer(printer)
 
