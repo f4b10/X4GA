@@ -35,7 +35,7 @@ history = (
          """Introdotta data competenza su reg.contabile"""
         ),
          ("BET1272",
-         """Adeguati registyri a gestione data competenza"""
+         """Adeguati registri a gestione data competenza"""
         ),
         ),),
            

@@ -1444,8 +1444,10 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
 
 
         
-        print self._cfg_competenza
-        print 'abilitazione acquisizione fepass: %s' % self._cfg_fepass
+        #=======================================================================
+        # print self._cfg_competenza
+        # print 'abilitazione acquisizione fepass: %s' % self._cfg_fepass
+        #=======================================================================
         
         
         self.controls["idsdi"].Enable(enable and \

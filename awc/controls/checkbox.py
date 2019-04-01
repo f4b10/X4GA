@@ -237,6 +237,8 @@ class CheckListFromText(CheckListBox):
         return check
 
     def SetValue(self, v=''):
+        if v==None:
+            v=''
         lChecked=v.split('|')
         for n in lChecked:
             if not self.IsPresent(n):
