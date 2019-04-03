@@ -1027,12 +1027,16 @@ class ContabPanel(aw.Panel,\
             
             if self._cfg_competenza=='1':
                 if self.periodic=="M":
-                    self.reg_datcompete = datetime.datetime.strptime('01/%s/%s' % (self.controls["mmcompetenza"].GetValue(), self.controls["aacompetenza"].GetValue()), '%d/%m/%Y').date()
-                    #print 'Mensile: %s/%s %s' % (self.controls["mmcompetenza"].GetValue(), self.controls["aacompetenza"].GetValue(), self.reg_datcompete)
+                    try:
+                        self.reg_datcompete = datetime.datetime.strptime('01/%s/%s' % (self.controls["mmcompetenza"].GetValue(), self.controls["aacompetenza"].GetValue()), '%d/%m/%Y').date()
+                    except:
+                        self.reg_datcompete = self.reg_datreg
                 else:
                     mm = (int(self.controls["mmcompetenza"].GetValue())*3)-2
-                    self.reg_datcompete = datetime.datetime.strptime('01/%s/%s' % (mm, self.controls["aacompetenza"].GetValue()), '%d/%m/%Y').date()
-                    #print 'Trimestrale: %s/%s %s' % (self.controls["mmcompetenza"].GetValue(), self.controls["aacompetenza"].GetValue(), self.reg_datcompete)
+                    try:
+                        self.reg_datcompete = datetime.datetime.strptime('01/%s/%s' % (mm, self.controls["aacompetenza"].GetValue()), '%d/%m/%Y').date()
+                    except:
+                        self.reg_datcompete = self.reg_datreg
             else:
                 self.reg_datcompete = self.reg_datreg 
         return gvalid

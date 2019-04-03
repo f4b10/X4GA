@@ -31,6 +31,9 @@ import mx.Odt
 history = (
 
     ('1.5.71', dt.Date(2018, 03, 8), (
+         ("BUG0171",
+         """Corretto richiamo reg.contabili prive di data di competenza (pubblicata succ.alla prima pubblicazione)"""
+        ),
          ("BET1273",
          """Introdotta data competenza su reg.contabile"""
         ),
