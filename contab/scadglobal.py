@@ -387,7 +387,7 @@ class ScadGlobalPanel(aw.Panel):
                           (wdr.ID_PRINTPCF,  self.OnPrintPartite)):
             self.Bind(wx.EVT_BUTTON, func, id=cid)
     
-    def CreateGrids(self, _prefixIdGrid):
+    def CreateGrids(self, _prefixIdGrid=''):
         
         cbi = self.FindWindowById
         cbn = self.FindWindowByName
