@@ -1579,6 +1579,9 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
             self.SetValue(None)
         return old
 
+    def ChangeValue(self, id):
+        self.currentid = id
+
     def SetValue(self, id, txt=None, stopevents=True):
         """
         Seleziona il record sulla tabella collegata in base all'C{ID} passato
@@ -1679,8 +1682,14 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
     def SetValueCod(self, val):
         return self._ctrcod.SetValue(val)
 
+    def ChangeValueCod(self, val):
+        return self._ctrcod.ChangeValue(val)
+
     def SetValueDes(self, val):
         return self._ctrdes.SetValue(val)
+
+    def ChangeValueDes(self, val):
+        return self._ctrdes.ChangeValue(val)
 
     def SetBackgroundColour(self, *args, **kwargs):
         for ctr in self._ctrcod, self._ctrdes:
