@@ -72,7 +72,7 @@ def PdfPrint(filename, printer, copies=1, cbex=None, usedde=False, cmdprint=Fals
             pass
 
 
-    if cmdprint and bool(pdfcmd):
+    if cmdprint and bool():
         import subprocess
         try:
             for n in range(copies):                
