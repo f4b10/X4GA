@@ -590,6 +590,7 @@ class GridScadenzario(dbglib.DbGridColoriAlternati,
 
         self.Bind(gl.EVT_GRID_CELL_LEFT_DCLICK, self.OnDblClick)
 
+
     def GetAttr(self, row, col, rscol, attr=gl.GridCellAttr):
         rspcf = self.dbscad.GetPartite().GetRecordset()
         return self.ScadenzarioColorsGetAttr(rspcf, row, col, rscol, attr)

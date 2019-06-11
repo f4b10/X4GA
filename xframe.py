@@ -1823,7 +1823,7 @@ class XFrame(aw.Frame):
 
     def OnCatalogo(self, event):
         import webbrowser  
-        url = 'http://www.x4ga.com/catalogo/Catalogo.html'
+        url = 'http://www.x4ga.com/OnLineHelp/catalogo/Catalogo.html'
         webbrowser.open(url, new=0, autoraise=True)        
     
     def OnQuit(self, event):

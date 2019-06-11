@@ -30,7 +30,35 @@ import mx.Odt
 
 history = (
 
-    ('1.5.71', dt.Date(2018, 03, 8), (
+    ('1.5.73', dt.Date(2019, 06, 10), (
+         ("BET1275",
+         """Aggiunto indice su data competenza a tabella testate documenti contabili"""
+        ),
+        ),),
+
+
+    ('1.5.72', dt.Date(2019, 05, 9), (
+         ("BET1274",
+         """Intercettate eventuali fatture elettroniche malformate che pur dichiarando allegato non lo incorporano"""
+        ),
+         ("BUG0172",
+         """Corretto conservazione idSdi al cambio data registrazione"""
+        ),
+         ("BUG0173",
+         """Corretto mancata numero pagina su riepilogo registro Iva per competenza."""
+        ),
+         ("BET1274",
+         """Controllo Partita Iva da Anagrafica Cliente/Fornitore  ora visualizza Ragione sociale e Indirizzo"""
+        ),
+         ("BET1275",
+         """Introdotta possibilità di limitare la visualizzazione alle sole partite aperte quando in registrazione di contabilità si voglia legare la scadenza visualizzata ad altra registrazione."""
+        ),
+                                      
+                                      
+        ),),
+
+
+    ('1.5.71', dt.Date(2019, 03, 8), (
          ("BUG0171",
          """Corretto richiamo reg.contabili prive di data di competenza (pubblicata succ.alla prima pubblicazione)"""
         ),
@@ -43,7 +71,7 @@ history = (
         ),),
            
 
-    ('1.5.70', dt.Date(2018, 02, 14), (
+    ('1.5.70', dt.Date(2019, 02, 14), (
          ("BET1271",
          """Ottimizzato richiamo programma openssl.exe"""
         ),

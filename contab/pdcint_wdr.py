@@ -1437,6 +1437,7 @@ def IntRegConFunc( parent, call_fit = True, set_sizer = True ):
     item74.Add( item76, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item77 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    parent.sizer_piede = item77
     
     item78 = wx.BoxSizer( wx.HORIZONTAL )
     

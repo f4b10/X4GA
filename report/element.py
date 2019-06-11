@@ -951,14 +951,18 @@ class immagine(rettangolo):
             #                         dx-(self.set_pen()*2),
             #                         dy-(self.set_pen()*2))
             #===================================================================
-
-            oCanvas.drawInlineImage(str(name),
-                                    x0+self.set_pen(),
-                                    y0+self.set_pen(),
-                                    dx-(self.set_pen()*2),
-                                    dy-(self.set_pen()*2),
-                                    preserveAspectRatio=(self.scaleImage=='RetainShape')
-                                    )
+            try:
+                oCanvas.drawInlineImage(str(name),
+                                        x0+self.set_pen(),
+                                        y0+self.set_pen(),
+                                        dx-(self.set_pen()*2),
+                                        dy-(self.set_pen()*2),
+                                        preserveAspectRatio=(self.scaleImage=='RetainShape')
+                                        )
+            except:
+                # incontrati problemi nel generare il file png del colore etichetta
+                print 'ERRORE IMMAGINE'
+                pass
 
 
 import reportlab.graphics.barcode.eanbc as eanbc

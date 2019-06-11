@@ -2519,7 +2519,8 @@ class Azienda(object):
 
             cls.contab_h_indexes = [ ["PRIMARY KEY", "id"],
                                       ["KEY",        "id_regiva,numiva,numdoc"],
-                                      ["KEY",        "datreg,id_regiva,numiva"], ]
+                                      ["KEY",        "datreg,id_regiva,numiva"], 
+                                      ["KEY",        "datcompete,id_regiva,numiva"], ]
 
 
             cls.contab_b =\

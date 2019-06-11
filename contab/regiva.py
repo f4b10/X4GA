@@ -534,8 +534,12 @@ class RegIvaPanel(aw.Panel):
             db= getattr(reg, nomeDb)
             db.reg.regiva = db.reg.rei
             db.aliqiva = db.iva
+            
+            dbRC = dbc.RiepilogoIvaCompetenza()
+            
+            
             for c in 'tiposta intatt intdes intanno intpag'.split():
-                for o in (reg, db):
+                for o in (reg, db, dbRC):
                     setattr(o._info, c, cn(c).GetValue())            
             for recIva in db:          
                 #===============================================================
@@ -568,9 +572,9 @@ class RegIvaPanel(aw.Panel):
                                       recIva.aliqiva.IsNormale(),
                                       recIva.aliqiva.IsCEE(),     
                                       recIva.aliqiva.IsSosp()])
-        print lAliquote
+        #print lAliquote
         
-        dbRC = dbc.RiepilogoIvaCompetenza()
+        #dbRC = dbc.RiepilogoIvaCompetenza()
         
         dbRC._info.datmax = reg._riepaliqAtt._info.datmax
         dbRC._info.datmin = reg._riepaliqAtt._info.datmin

@@ -196,8 +196,10 @@ class PartitaIvaEntryCtrl(_EntryCtrlMixin):
                 e = 'ESISTENTE'
                 wx.BeginBusyCursor()
                 try:
-                    try:
-                        if not c.CheckVies():
+                    try: 
+                        check, rs, addr = c.CheckVies(full=True)
+                        if not check:
+                        #if not c.CheckVies():
                             e = 'NON %s' % e
                         err = None
                     except FaultException, e:
@@ -219,6 +221,8 @@ class PartitaIvaEntryCtrl(_EntryCtrlMixin):
             def cn(x):
                 return dlg.FindWindowByName(x)
             cn('operat').SetLabel(e)
+            cn('rs').SetLabel(rs)
+            cn('addr').SetLabel(addr)
             def onButtonWEB(event):
                 try:
                     wx.BeginBusyCursor()

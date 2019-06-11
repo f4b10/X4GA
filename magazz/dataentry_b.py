@@ -1706,10 +1706,10 @@ class GridBody(object):
             if pv>0 and cstu>0:
                 try:
                     if sc == 1 or sc=='1':
-                        cstu = cstu + (cstu * iv /100)
-
-
-
+                        try:
+                            cstu = cstu + (cstu * iv /100)
+                        except:
+                            pass
                     bprc = round((pv/cstu)*100, 2) - 100
                 except ZeroDivisionError:
                     bprc = 0

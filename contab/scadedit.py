@@ -43,11 +43,19 @@ class ScadLinkPanel(aw.Panel):
     def __init__(self, *args, **kwargs):
         aw.Panel.__init__(self, *args, **kwargs)
         wdr.ScadLinkFunc(self)
+        self.onlyOpen = self.FindWindowByName('onlyOpen')
         self.dbscad = c.dbtables.PdcScadenzario()
+        self.dbscad.SetView(self.onlyOpen.GetValue())
         pp = self.FindWindowById(wdr.ID_PANGRIDSCAD)
         self.gridscad = GridScadenzario(pp, self.dbscad)
         self.pcfdata = [None, None, None, None]
         self.Bind(wx.EVT_BUTTON, self.OnPcfSelect, id=wdr.ID_BTNSEL)
+        self.onlyOpen.Bind(wx.EVT_CHECKBOX, self.OnUpdate)
+    
+    
+    def OnUpdate(self, evt):
+        self.SetPdc(self.Parent.pdcid)
+        evt.Skip()
     
     def OnPcfSelect(self, event):
         rows = self.gridscad.GetSelectedRows()
@@ -62,7 +70,15 @@ class ScadLinkPanel(aw.Panel):
             event.Skip()
     
     def SetPdc(self, pdcid):
-        self.dbscad.Get(pdcid)
+        if self.onlyOpen.GetValue():
+            self.dbscad.ClearFilters()
+            self.dbscad.AddFilter('pdc.id=%s' % pdcid)
+            self.dbscad.AddPcfFilter('sintesi.imptot<>sintesi.imppar')
+            self.dbscad.Retrieve()
+        else:
+            self.dbscad.ClearFilters()
+            self.dbscad.ClearPcfFilters()
+            self.dbscad.Get(pdcid)
         self.gridscad.ChangeData(self.dbscad.GetPartite().GetRecordset())
     
     def GetPcfData(self, *args, **kwargs):
@@ -76,16 +92,16 @@ class ScadLinkDialog(aw.Dialog):
     def __init__(self, *args, **kwargs):
         kwargs['title'] = 'Aggancio partita'
         if 'pdcid' in kwargs:
-            pdcid = kwargs.pop('pdcid')
+            self.pdcid = kwargs.pop('pdcid')
         else:
-            pdcid = None
+            self.pdcid = None
         aw.Dialog.__init__(self, *args, **kwargs)
         self.panel = ScadLinkPanel(self)
         self.AddSizedPanel(self.panel)
         self.CenterOnScreen()
         self.Bind(wx.EVT_BUTTON, self.OnPcfSelect, id=wdr.ID_BTNSEL)
-        if pdcid:
-            self.SetPdc(pdcid)
+        if self.pdcid:
+            self.SetPdc(self.pdcid)
     
     def OnPcfSelect(self, event):
         self.EndModal(wx.ID_OK)

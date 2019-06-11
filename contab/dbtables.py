@@ -1065,6 +1065,9 @@ class PdcScadenzario(PdcSintesiPartite):
     N.B.
     Vedi _PartiteMixin per le funzionalità di filtro sulle partite.
     """
+    onlyOpen = False
+    
+    
     def __init__(self, **kwargs):
 
         PdcSintesiPartite.__init__(self, **kwargs)
@@ -1093,8 +1096,10 @@ class PdcScadenzario(PdcSintesiPartite):
 
         #mastro.AddField("(mastro.imptot)*IF(tipana.tipo='C',1,-1)", 'cf_imptot')
         #mastro.AddField("(mastro.imppar)*IF(tipana.tipo='C',1,-1)", 'cf_imppar')
-
         self.Get(-1)
+
+    def SetView(self, onlyOpen):
+        self.onlyOpen=True
 
     def ClearPcfFilters(self, maxincpag=None):
         PdcSintesiPartite.ClearPcfFilters(self)
@@ -1837,7 +1842,7 @@ class RegIva(adb.DbTable,
         # Se viewPeriod=="P" => db=self._riepaliqPre e dreg1, dreg2 estremi periodo precedente
         # Se viewPeriod=="S" => db=self._riepaliqSuc e dreg1, dreg2 estremi periodo successivo
         ra = db
-        ra.SetDebug()
+        #ra.SetDebug()
         ra.ClearFilters()
         ra.AddFilter("reg.id_regiva='%s'" % self._rivid)
         if radate is None: radate = dreg1
@@ -1870,14 +1875,16 @@ class RegIva(adb.DbTable,
 
         self._datmin = dreg1
         self._datmax = dreg2
-        print 'impostato filtro per _riepaliq (%s):' % db
-        for w in ra.GetFilters():
-            print '   ', w
-        print 'impostato filtro per self (%s):' % self
-        for w in self.GetFilters():
-            print '   ', w
-        print '%s' % ('-'*60)
-        pass
+        #=======================================================================
+        # print 'impostato filtro per _riepaliq (%s):' % db
+        # for w in ra.GetFilters():
+        #     print '   ', w
+        # print 'impostato filtro per self (%s):' % self
+        # for w in self.GetFilters():
+        #     print '   ', w
+        # print '%s' % ('-'*60)
+        # pass
+        #=======================================================================
 
         
         
@@ -1890,7 +1897,7 @@ class RegIva(adb.DbTable,
         totalizzazione delle aliquote iva.
         """
         out = adb.DbTable.Retrieve(self, *args, **kwargs)
-        print 'ricerca totalizzazioni per registro'
+        # print 'ricerca totalizzazioni per registro'
         if out and self._riepaliq is not None: 
             out = self._riepaliq.Retrieve()
             out = self._riepaliqAtt.Retrieve()

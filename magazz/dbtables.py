@@ -2829,7 +2829,11 @@ class DocMag(adb.DbTable):
         return y
 
     def GetPrintPathName(self):
-        return '+Documenti %s/%s' % (self.datdoc.year, self.config.toolprint)
+        try:
+            retValue = '+Documenti %s/%s' % (self.datdoc.year, self.config.toolprint)
+        except:
+            retValue = '+Documenti %s/%s' % (Env.Azienda.Login.dataElab.year, self.config.toolprint)
+        return retValue
 
     def GetPrintFileName(self):
         N = self.GetPrintFileName_Normalize

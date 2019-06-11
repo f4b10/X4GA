@@ -805,126 +805,137 @@ def SelRowPaFunc( parent, call_fit = True, set_sizer = True ):
 
     item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item0.Add( [ 20, 20 ] , 0, wx.ALIGN_CENTER, 5 )
-
-    item8 = wx.StaticText( parent, ID_TEXT, "Contropartite interessate alla registrazione:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item8.SetForegroundColour( wx.BLUE )
-    item0.Add( item8, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
-
-    item9 = wx.Panel( parent, ID_PANGRID_PDCPREF, wx.DefaultPosition, [480,150], wx.SUNKEN_BORDER )
-    item9.SetName( "pdcpref" )
-    item0.Add( item9, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item10 = wx.FlexGridSizer( 0, 3, 0, 0 )
+    item8 = wx.FlexGridSizer( 0, 2, 0, 0 )
     
-    item12 = wx.StaticBox( parent, -1, "Documento" )
-    item11 = wx.StaticBoxSizer( item12, wx.VERTICAL )
-    parent.feDocumento = item11
+    item8.Add( [ 5, 5 ] , 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item9 = wx.StaticText( parent, ID_TEXT, "", wx.DefaultPosition, [100,-1], wx.ALIGN_RIGHT )
+    item9.SetForegroundColour( wx.RED )
+    item9.SetName( "msgSegno" )
+    item8.Add( item9, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item8.AddGrowableCol( 0 )
+
+    item0.Add( item8, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+
+    item10 = wx.StaticText( parent, ID_TEXT, "Contropartite interessate alla registrazione:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item10.SetForegroundColour( wx.BLUE )
+    item0.Add( item10, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+
+    item11 = wx.Panel( parent, ID_PANGRID_PDCPREF, wx.DefaultPosition, [480,150], wx.SUNKEN_BORDER )
+    item11.SetName( "pdcpref" )
+    item0.Add( item11, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item12 = wx.FlexGridSizer( 0, 3, 0, 0 )
     
-    item13 = wx.FlexGridSizer( 0, 3, 0, 0 )
+    item14 = wx.StaticBox( parent, -1, "Documento" )
+    item13 = wx.StaticBoxSizer( item14, wx.VERTICAL )
+    parent.feDocumento = item13
     
-    item14 = wx.StaticText( parent, ID_TEXT, "Data:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item14.SetName( "labelDatDoc" )
-    item13.Add( item14, 0, wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
-
-    item15 = wx.StaticText( parent, ID_TEXT, "Numero:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item15.SetName( "labelNumDoc" )
-    item13.Add( item15, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
-
-    item13.Add( [ 2, 2 ] , 0, wx.ALIGN_CENTER|wx.ALL, 5 )
-
-    item16 = DateCtrl( parent, ID_TXT_DATDOC, "", wx.DefaultPosition, [80,-1], 0 )
-    item16.SetName( "datdoc" )
-    item13.Add( item16, 0, wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
-
-    item17 = TextCtrl( parent, ID_TXT_NUMDOC, "", wx.DefaultPosition, [100,-1], 0 )
-    item17.SetName( "numdoc" )
-    item13.Add( item17, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
-
-    item18 = SquaredFlatBitmapButton(parent, ID_ACTION,awcimg.getFilter16Bitmap()); item18.SetName('btnViewFe')
-    item13.Add( item18, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
-
-    item11.Add( item13, 0, wx.GROW|wx.BOTTOM, 5 )
-
-    item10.Add( item11, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
-
-    item20 = wx.StaticBox( parent, -1, "Competenza" )
-    item19 = wx.StaticBoxSizer( item20, wx.VERTICAL )
-    parent.feCompetenza = item19
+    item15 = wx.FlexGridSizer( 0, 3, 0, 0 )
     
-    item21 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    item16 = wx.StaticText( parent, ID_TEXT, "Data:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item16.SetName( "labelDatDoc" )
+    item15.Add( item16, 0, wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+
+    item17 = wx.StaticText( parent, ID_TEXT, "Numero:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item17.SetName( "labelNumDoc" )
+    item15.Add( item17, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item15.Add( [ 2, 2 ] , 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+    item18 = DateCtrl( parent, ID_TXT_DATDOC, "", wx.DefaultPosition, [80,-1], 0 )
+    item18.SetName( "datdoc" )
+    item15.Add( item18, 0, wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+
+    item19 = TextCtrl( parent, ID_TXT_NUMDOC, "", wx.DefaultPosition, [100,-1], 0 )
+    item19.SetName( "numdoc" )
+    item15.Add( item19, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item20 = SquaredFlatBitmapButton(parent, ID_ACTION,awcimg.getFilter16Bitmap()); item20.SetName('btnViewFe')
+    item15.Add( item20, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item13.Add( item15, 0, wx.GROW|wx.BOTTOM, 5 )
+
+    item12.Add( item13, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item22 = wx.StaticBox( parent, -1, "Competenza" )
+    item21 = wx.StaticBoxSizer( item22, wx.VERTICAL )
+    parent.feCompetenza = item21
     
-    item22 = wx.StaticText( parent, ID_TEXT, "Mese", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item22.SetName( "labelMese" )
-    item21.Add( item22, 0, wx.ALIGN_CENTER, 5 )
+    item23 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    
+    item24 = wx.StaticText( parent, ID_TEXT, "Mese", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item24.SetName( "labelMese" )
+    item23.Add( item24, 0, wx.ALIGN_CENTER, 5 )
 
-    item23 = wx.StaticText( parent, ID_TEXT, "Anno", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item23.SetName( "labelAnno" )
-    item21.Add( item23, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+    item25 = wx.StaticText( parent, ID_TEXT, "Anno", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item25.SetName( "labelAnno" )
+    item23.Add( item25, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
-    item24 = wx.ComboBox( parent, ID_COMBO, "", wx.DefaultPosition, [38,-1], 
+    item26 = wx.ComboBox( parent, ID_COMBO, "", wx.DefaultPosition, [38,-1], 
         ["ComboItem"] , wx.CB_DROPDOWN )
-    item24.SetName( "mmcompetenza" )
-    item21.Add( item24, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item26.SetName( "mmcompetenza" )
+    item23.Add( item26, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item25 = wx.ComboBox( parent, ID_COMBO, "", wx.DefaultPosition, [52,-1], [], wx.CB_DROPDOWN )
-    item25.SetName( "aacompetenza" )
-    item21.Add( item25, 0, wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+    item27 = wx.ComboBox( parent, ID_COMBO, "", wx.DefaultPosition, [52,-1], [], wx.CB_DROPDOWN )
+    item27.SetName( "aacompetenza" )
+    item23.Add( item27, 0, wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
 
-    item19.Add( item21, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
+    item21.Add( item23, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item10.Add( item19, 0, 0, 5 )
+    item12.Add( item21, 0, 0, 5 )
 
-    item27 = wx.StaticBox( parent, -1, "Sdi" )
-    item26 = wx.StaticBoxSizer( item27, wx.VERTICAL )
-    parent.feSdi = item26
+    item29 = wx.StaticBox( parent, -1, "Sdi" )
+    item28 = wx.StaticBoxSizer( item29, wx.VERTICAL )
+    parent.feSdi = item28
     
-    item28 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    item30 = wx.FlexGridSizer( 0, 2, 0, 0 )
     
-    item29 = wx.StaticText( parent, ID_TEXT, "Ricevuta il", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item29.SetName( "labelDatRic" )
-    item28.Add( item29, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+    item31 = wx.StaticText( parent, ID_TEXT, "Ricevuta il", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item31.SetName( "labelDatRic" )
+    item30.Add( item31, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
 
-    item30 = wx.StaticText( parent, ID_TEXT, "Id Sdi", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item30.SetName( "labelIdSdi" )
-    item28.Add( item30, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+    item32 = wx.StaticText( parent, ID_TEXT, "Id Sdi", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item32.SetName( "labelIdSdi" )
+    item30.Add( item32, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
-    item31 = DateCtrl( parent, ID_TEXTCTRL, "", wx.DefaultPosition, [80,-1], 0 )
-    item31.SetName( "datric" )
-    item28.Add( item31, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item33 = DateCtrl( parent, ID_TEXTCTRL, "", wx.DefaultPosition, [80,-1], 0 )
+    item33.SetName( "datric" )
+    item30.Add( item33, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item32 = wx.TextCtrl( parent, ID_TEXTCTRL, "", wx.DefaultPosition, [100,-1], 0 )
-    item32.SetName( "idsdi" )
-    item28.Add( item32, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item34 = wx.TextCtrl( parent, ID_TEXTCTRL, "", wx.DefaultPosition, [100,-1], 0 )
+    item34.SetName( "idsdi" )
+    item30.Add( item34, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item26.Add( item28, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
+    item28.Add( item30, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item10.Add( item26, 0, 0, 5 )
+    item12.Add( item28, 0, 0, 5 )
 
-    item0.Add( item10, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+    item0.Add( item12, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item33 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    item35 = wx.FlexGridSizer( 0, 2, 0, 0 )
     
-    item34 = wx.FlexGridSizer( 0, 3, 0, 0 )
+    item36 = wx.FlexGridSizer( 0, 3, 0, 0 )
     
-    item35 = wx.Button( parent, ID_BUTTON, "Acquisisci da Fatture Elettroniche", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item35.SetName( "btnAcqfe" )
-    item34.Add( item35, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item37 = wx.Button( parent, ID_BUTTON, "Acquisisci da Fatture Elettroniche", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item37.SetName( "btnAcqfe" )
+    item36.Add( item37, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item34.Add( [ 20, 20 ] , 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+    item36.Add( [ 20, 20 ] , 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item36 = wx.Button( parent, ID_BTNOK, "OK", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item36.SetDefault()
-    item36.SetName( "button_ok" )
-    item34.Add( item36, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item38 = wx.Button( parent, ID_BTNOK, "OK", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item38.SetDefault()
+    item38.SetName( "button_ok" )
+    item36.Add( item38, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item34.AddGrowableCol( 1 )
+    item36.AddGrowableCol( 1 )
 
-    item33.Add( item34, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 0 )
+    item35.Add( item36, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 0 )
 
-    item33.AddGrowableCol( 0 )
+    item35.AddGrowableCol( 0 )
 
-    item0.Add( item33, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 0 )
+    item0.Add( item35, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 0 )
 
     item0.AddGrowableCol( 0 )
 

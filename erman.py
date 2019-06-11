@@ -109,14 +109,25 @@ class X4Error:
             h.write('%s\n' % x)
         d = Env.DateTime.now()
         w('Eccezione: %s - %s' % tuple(d.Format().split()))
-        x = ' Versione: %s' % Env.__version__
-        import version as v
-        if v.MODVERSION_NAME:
-            x += ' mod '+v.MODVERSION_NAME+' v. '+v.MODVERSION_STRING
+        
+        
+        if not len(az.codice)==0:
+            x = ' Versione: %s' % Env.__version__
+            import version as v
+            if v.MODVERSION_NAME:
+                x += ' mod '+v.MODVERSION_NAME+' v. '+v.MODVERSION_STRING
+            else:
+                x += ' head'
+            w(x)
+            w('  Azienda: %s - %s' % (az.codice, az.descrizione))
         else:
-            x += ' head'
-        w(x)
-        w('  Azienda: %s - %s' % (az.codice, az.descrizione))
+            try:
+                import feversion
+                w(' Versione: %s %s' % (feversion.MODVERSION_NAME, feversion.VERSION_STRING))
+            except:
+                pass
+            w('DBAzienda: %s' % az.DB.schema)
+            
         w('Operatore: %s - %s' % (az.Login.usercode, az.Login.username))
         w('')
         w('Traceback:')

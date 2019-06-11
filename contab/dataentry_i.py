@@ -1038,6 +1038,7 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
         self.controls['numdoc'].ChangeValue(self.feNumDoc )
         self.reg_numdoc = self.feNumDoc
         self.controls['idsdi'].ChangeValue(self.feIdSdi )
+        self.reg_idsdi = self.feIdSdi
         self.controls['mmcompetenza'].SetValue(self.feMM )
         self.controls['aacompetenza'].SetValue(self.feAA )
         self.ScadCalc()
@@ -1776,6 +1777,11 @@ class SelRowPa(wx.Dialog):
         print 'in SelRowPa %s' % self.selectedFe
         if self.selectedFe:
             self.controls["pdcpa"].SetValue(self.selectedFe['id_pdc'])
+            self.FindWindowByName('msgSegno').SetLabel('')
+            if self.selectedFe['totdoc']<0:
+                self.selectedFe['totdoc'] = -1*self.selectedFe['totdoc']
+                self.FindWindowByName('msgSegno').SetLabel('invertito segno')
+            
             self.controls["totdoc"].SetValue(self.selectedFe['totdoc'])        
             self.controls["datdoc"].SetValue(self.selectedFe['datdoc'])        
             self.controls["numdoc"].SetValue(self.selectedFe['numdoc'])        

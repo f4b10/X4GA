@@ -2901,20 +2901,33 @@ ID_BTNSEL = 20218
 def ScadLinkFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
-    item1 = wx.StaticText( parent, ID_TEXT, "Selezionare la partita alla quale agganciare la scadenza selezionata:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item1.SetForegroundColour( wx.BLUE )
-    item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
-
-    item2 = wx.Panel( parent, ID_PANGRIDSCAD, wx.DefaultPosition, [770,310], wx.SUNKEN_BORDER )
-    item0.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item3 = wx.BoxSizer( wx.HORIZONTAL )
+    item1 = wx.FlexGridSizer( 0, 3, 0, 0 )
     
-    item4 = wx.Button( parent, ID_BTNSEL, "Seleziona", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item4.SetDefault()
-    item3.Add( item4, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item2 = wx.StaticText( parent, ID_TEXT, "Selezionare la partita alla quale agganciare la scadenza selezionata:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item2.SetForegroundColour( wx.BLUE )
+    item1.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
 
-    item0.Add( item3, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item1.Add( [ 5, 5 ] , 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+
+    item3 = wx.CheckBox( parent, ID_CHECKBOX, "Visualizza solo partite aperte", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item3.SetValue( True )
+    item3.SetName( "onlyOpen" )
+    item1.Add( item3, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+
+    item1.AddGrowableCol( 1 )
+
+    item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+
+    item4 = wx.Panel( parent, ID_PANGRIDSCAD, wx.DefaultPosition, [770,310], wx.SUNKEN_BORDER )
+    item0.Add( item4, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item5 = wx.BoxSizer( wx.HORIZONTAL )
+    
+    item6 = wx.Button( parent, ID_BTNSEL, "Seleziona", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item6.SetDefault()
+    item5.Add( item6, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item0.Add( item5, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item0.AddGrowableCol( 0 )
 

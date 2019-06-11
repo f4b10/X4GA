@@ -1282,8 +1282,14 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
                                           'Attenzione!\nSi desidera continuare a registrare in data %s.' % self.wrkDatReg.strftime('%d-%m-%Y'),
                                           style = wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT) == wx.ID_NO:
                         self.reg_datreg = Esercizio.dataElab
+                        if self.reg_datdoc==None:
+                            print self.controls["datdoc"].GetValue()
+                            self.reg_datdoc=self.controls["datdoc"].GetValue()
                     else:
                         self.reg_datreg = self.wrkDatReg
+                        if self.reg_datdoc==None:
+                            print self.controls["datdoc"].GetValue()
+                            self.reg_datdoc=self.controls["datdoc"].GetValue()
                         self.consensoEspresso=True
                 else:
                     self.reg_datreg = self.wrkDatReg
@@ -1349,7 +1355,10 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
         else:
             reg_id.SetValue(self.reg_id)
             datreg.SetValue(self.reg_datreg)
-            datdoc.ChangeValue(self.reg_datdoc)
+            if self.reg_datdoc:
+                datdoc.ChangeValue(self.reg_datdoc)
+            else:
+                datdoc.SetValue(None)
             numdoc.SetValue(self.reg_numdoc)
             if self.reg_idsdi:
                 idsdi.SetValue(self.reg_idsdi)

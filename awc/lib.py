@@ -76,14 +76,17 @@ class ControllaPIVA(object):
 #                                                               'piva':  self.piva}
     
     def GetPIvaDateURL(self):
-        return """http://www1.agenziaentrate.it/servizi/vies/transazione.htm?"""\
-               """s=%(stato)s&p=%(piva)s""" % {'stato': self.stato or 'IT',
-                                               'piva':  self.piva}
+        #=======================================================================
+        # return """http://www1.agenziaentrate.it/servizi/vies/transazione.htm?"""\
+        #        """s=%(stato)s&p=%(piva)s""" % {'stato': self.stato or 'IT',
+        #                                        'piva':  self.piva}
+        #=======================================================================
+        return """http://www1.agenziaentrate.it/servizi/vies"""
     
     def GetPIvaDateOpenWebPage(self):
         os.startfile(self.GetPIvaDateURL())
     
-    def CheckVies(self):
+    def CheckVies(self, full=False):
         
         from awc.checkvat.wsdl.checkVatService_client import checkVatServiceLocator, checkVatRequest
 
@@ -96,16 +99,17 @@ class ControllaPIVA(object):
         request._vatNumber = self.piva
         
         response = portType.checkVat(request)
-        #=======================================================================
-        # if response._valid:
-        #     print response.Name
-        #     print response.Address
-        #     pass
-        #=======================================================================
-        
-        
-        
-        return response._valid
+        if not full:
+            ret = response._valid
+        else:
+            name=''
+            address = ''
+            if response._valid:
+                name    =  response.Name
+                address = response.Address
+            ret = [response._valid, name, address ]
+        #print ret
+        return ret
 
 
 # ------------------------------------------------------------------------------
