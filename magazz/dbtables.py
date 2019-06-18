@@ -26,7 +26,7 @@ Definizione classi specializzate x gestione magazzino.
 """
 
 import os
-
+import time
 import stormdb as adb
 
 import Env
@@ -2837,6 +2837,10 @@ class DocMag(adb.DbTable):
 
     def GetPrintFileName(self):
         N = self.GetPrintFileName_Normalize
+        for i in  range(5):
+            if not self.config.descriz==None and not self.pdc.descriz==None:
+                break
+            time.sleep(1)
         td = N(self.config.descriz)
         dd = N(self.pdc.descriz)
         filename = "%s n. %s - %s (%s)" % (td, self.numdoc, dd.upper(), self.pdc.codice)
