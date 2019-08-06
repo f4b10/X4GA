@@ -3567,9 +3567,12 @@ class _InventarioMixin(adb.DbTable):
     _imponib = True
 
     def __init__(self, **kwargs):
-
         if not 'writable' in kwargs:
             kwargs['writable'] = False
+        if 'dbName' in kwargs.keys():
+            dbName = kwargs['dbName']
+        else:
+            dbName = None
         adb.DbTable.__init__(self, bt.TABNAME_PROD, 'prod', **kwargs)
 
         tip = self.AddJoin(bt.TABNAME_TIPART,  'tipart',  join=adb.JOIN_LEFT)
@@ -3590,15 +3593,16 @@ class _InventarioMixin(adb.DbTable):
 
         self._info.calciva = False
         self._info.valivati = False
+        
 
         self._info.dblis = adb.DbTable(bt.TABNAME_LISTINI, 'lis',
-                                       writable=False)
+                                       writable=False, dbName=dbName)
         self._info.dblis.AddOrder("lis.data", adb.ORDER_DESCENDING)
 
         self._info.dbtli = adb.DbTable(bt.TABNAME_TIPLIST, 'tiplist',
-                                       writable=False)
+                                       writable=False, dbName=dbName)
 
-        setup = adb.DbTable(bt.TABNAME_CFGSETUP, 'setup', writable=False)
+        setup = adb.DbTable(bt.TABNAME_CFGSETUP, 'setup', writable=False, dbName=dbName)
         if setup.Retrieve('chiave="magdatchi"') and setup.OneRow():
             if setup.data is not None:
                 self._info.g_datalastchi = setup.data
@@ -3714,7 +3718,7 @@ class InventarioDaMovim(_InventarioMixin):
     MovimClass = MovimTable
 
     def __init__(self, ultraTot=None, flatmag=False, **kwargs):
-
+        #print 'InventarioDaMovim', kwargs
         _InventarioMixin.__init__(self, **kwargs)
 
         self._info.flatmag = flatmag

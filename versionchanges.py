@@ -30,6 +30,15 @@ import mx.Odt
 
 history = (
 
+    ('1.5.75', dt.Date(2019, 8, 6), (
+         ("BET1277",
+         """Attivata possibilita' di interrompere dialogo Wait."""
+        ),
+         ("BET1276",
+         """Modificate dbTable per aggirare problema di MySql gone away."""
+        ),
+        ),),
+
     ('1.5.73', dt.Date(2019, 06, 10), (
          ("BET1275",
          """Aggiunto indice su data competenza a tabella testate documenti contabili"""
