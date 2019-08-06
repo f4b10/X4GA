@@ -310,7 +310,7 @@ class WaitDialog(wx.Dialog):
         
         wx.Dialog.__init__(self, parent, -1, style=style, **kwargs)
         wdr.WorkInProgressFunc(self)
-        
+        self.IsStopped = False
         if not message:
             if   dataread:  message = "Estrazione dati in corso"
             elif datawrite: message = "Aggiornamento dati in corso"
@@ -330,9 +330,11 @@ class WaitDialog(wx.Dialog):
         self.progress = p
         self.progress2 = self.FindWindowById(wdr.ID_PROGRESS2)
         
+        self.canbreak = canbreak
         b = self.FindWindowById(wdr.ID_BTNBREAK)
         if canbreak:
             self.Bind(wx.EVT_BUTTON, self.OnButtonBreak, id=wdr.ID_BTNBREAK)
+            self.Bind(EVT_WAITBREAK, self.OnStop)            
         else:
             b.Show(False)
         
@@ -343,6 +345,12 @@ class WaitDialog(wx.Dialog):
     
     def SetButtonBreakEnable(self, enable):
         self.FindWindowById(wdr.ID_BTNBREAK).Enable(enable)
+
+
+    def OnStop(self, event):
+        #print event
+        self.IsStopped=True
+        event.Skip()
     
     def OnButtonBreak(self, event):
         evt = WaitBreakEvent(_evtWAITBREAK, self.GetId())
@@ -371,6 +379,9 @@ class WaitDialog(wx.Dialog):
         return self.progress.GetValue()
     
     def SetValue(self, value):
+        if self.canbreak:
+            #wx.SafeYield(onlyIfNeeded=True)
+            wx.YieldIfNeeded()
         self.progress.SetValue(value)
         self._Update()
         return True
