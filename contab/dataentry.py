@@ -1370,9 +1370,10 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
                     self.SetPeriodo(self.reg_datdoc, update=not self._cfg_competenza)
                 else:
                     self.SetPeriodo(self.reg_datcompete, update=True)
-                    
-                aacompetenza.SetValue('%04d' % self.reg_aacompetenza)
-                mmcompetenza.SetValue('%02d' % self.reg_mmcompetenza)
+                #===============================================================
+                # aacompetenza.SetValue('%04d' % self.reg_aacompetenza)
+                # mmcompetenza.SetValue('%02d' % self.reg_mmcompetenza)
+                #===============================================================
             except:
                 pass
             
