@@ -225,8 +225,12 @@ class XFrame(aw.Frame):
             sizer.Add(nb, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 0)
             
             if show_promem:
-                rp = promem.PromemPanel(nb, -1)
-                nb.AddPage(rp, 'Promemoria')
+                try:
+                    rp = promem.PromemPanel(nb, -1)
+                    nb.AddPage(rp, 'Promemoria')
+                except:
+                    show_promem = False
+                    pass 
             
             if show_feeds:
                 feeds = [['Notizie (beta)', "http://www.ilsole24ore.com/rss/norme-e-tributi/fisco.xml"]]
