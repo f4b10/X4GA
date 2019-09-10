@@ -29,6 +29,18 @@ import mx.DateTime as dt
 import mx.Odt
 
 history = (
+    ('1.5.77', dt.Date(2019, 9, 5), (
+         ("BET1277",
+         """Importazione forzata di wx.tichtext."""
+        ),
+        ),),
+           
+    ('1.5.76', dt.Date(2019, 8, 26), (
+         ("BUG0173",
+         """Corretta attribuzione errata periodo di competenza in aziende in regime trimestrali."""
+        ),
+        ),),
+
 
     ('1.5.75', dt.Date(2019, 8, 6), (
          ("BET1277",
