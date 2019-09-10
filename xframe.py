@@ -23,6 +23,7 @@
 
 import sys
 import wx
+import wx.richtext
 import lib
 import stormdb as adb
 import rss
