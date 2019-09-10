@@ -3861,6 +3861,7 @@ def ClientiCommFunc( parent, call_fit = True, set_sizer = True ):
     item13 = wx.StaticBoxSizer( item14, wx.VERTICAL )
     
     item15 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    parent.sizerFatturazione = item15
     
     item16 = wx.StaticText( parent, ID_TEXT, "Status:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item15.Add( item16, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
