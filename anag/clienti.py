@@ -343,18 +343,14 @@ class ClientiPanel(pdcrel._CliForPanel):
         self._auto_bilcee = getattr(self, "_auto_bilcee_clienti", None)
 
         self.db_report = "Lista Clienti"
-
-
-
         
-
-
-
+    def LoadCardFunc(self, p):
+        wdr.ClientiCardFunc( p, True )
 
     def InitAnagCard(self, parent):
         wdr.LinkTableClienteFornitore = wdr.LinkTableCliente
         p = aw.Panel( parent, -1)
-        wdr.ClientiCardFunc( p, True )
+        self.LoadCardFunc(p)
         def cn(x):
             return self.FindWindowByName(x)
         
