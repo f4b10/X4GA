@@ -31,6 +31,9 @@ import mx.Odt
 history = (
     ('1.5.77', dt.Date(2019, 9, 5), (
          ("BET1277",
+         """Aggiunta possibilità di interrogare documenti di magazzino per destinazione"""
+        ),
+         ("BET1277",
          """Importazione forzata di wx.tichtext."""
         ),
         ),),
