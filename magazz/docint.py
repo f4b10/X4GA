@@ -214,6 +214,7 @@ class DocIntGrid(dbglib.DbGridColoriAlternati, _DocIntGridMixin):
 
         for tab, name in (("doc", "id_magazz"),\
                           ("doc", "id_pdc"),\
+                          ("doc", "id_dest"),\
                           ("doc", "id_agente"),\
                           ("doc", "id_zona")):
             ctr = cn(name)
@@ -298,7 +299,8 @@ class DocIntPanel(aw.Panel):
         # self.dbtpd = dbm.adb.DbTable(bt.TABNAME_CFGMAGDOC, 'tipdoc')
         #=======================================================================
         self.SetData()
-        wdr.DocMagFunc(self)
+        self.LoadWdr()
+        #wdr.DocMagFunc(self)
         cn = self.FindWindowByName
         pp = self.FindWindowById(wdr.ID_PANGRIDDOC)
         self.griddoc = DocIntGrid(pp, self, self.dbdoc, idGrid='intdocmag')
@@ -306,6 +308,10 @@ class DocIntPanel(aw.Panel):
         for cid, func in ((wdr.ID_MASBUTUPD, self.griddoc.GridDocOnUpdateFilters),
                           (wdr.ID_MASBUTPRT, self.griddoc.GridDocOnPrint)):
             self.Bind(wx.EVT_BUTTON, func, id=cid)
+
+    def LoadWdr(self):
+        wdr.DocMagFunc(self)
+        
 
     def SetData(self):
         self.dbdoc = dbm.ElencoDocum()

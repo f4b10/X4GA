@@ -571,6 +571,18 @@ class LinkTableGruPrez(LinkTable):
 # ------------------------------------------------------------------------------
 
 
+class LinkTableDestin(LinkTable):
+
+    def __init__(self, parent, id, name=None, **kwargs):
+        LinkTable.__init__(self, parent, id, **kwargs)
+        #from anag.gruprez import GruPrezDialog
+        #self.SetDataLink(Env.Azienda.BaseTab.TABNAME_DESTIN, name, GruPrezDialog)
+        self.SetDataLink(Env.Azienda.BaseTab.TABNAME_DESTIN, name)
+
+
+# ------------------------------------------------------------------------------
+
+
 class DataLinkGruPrezEditor(gred.DataLinkCellEditor):
     baseclass = LinkTableGruPrez
 
