@@ -603,11 +603,30 @@ class DocMag(adb.DbTable):
         if not sconto and bt.MAGSCOCAT and mov.prod.id_catart is not None:
             #da cliente/categoria, se attivato
             scc = self._info.dbscc
-            if scc.Retrieve('scc.id_pdc=%s and scc.id_catart=%s',
-                            self.id_pdc, mov.prod.id_catart):
-                if scc.sconto1 or scc.sconto2 or scc.sconto3 or scc.sconto4 or scc.sconto5 or scc.sconto6:
-                    sconto = getattr(scc, scontocol) or 0
-                    tipo = 'C'
+            
+            scontoFound=False
+            if 'id_gruart' in scc.GetFieldNames():
+                # GESTIONE SCONTI CATEGORIA GRUPPO
+                if scc.Retrieve('scc.id_pdc=%s and scc.id_catart=%s and scc.id_gruart=%s',
+                            self.id_pdc, mov.prod.id_catart, mov.prod.id_gruart):
+                    if scc.OneRow():
+                        if scc.sconto1 or scc.sconto2 or scc.sconto3 or scc.sconto4 or scc.sconto5 or scc.sconto6:
+                            sconto = getattr(scc, scontocol) or 0
+                            tipo = 'C'
+                            #scontoFound=True
+                    else:
+                        if scc.Retrieve('scc.id_pdc=%s and scc.id_catart=%s and scc.id_gruart is null',
+                                    self.id_pdc, mov.prod.id_catart):
+                            if scc.sconto1 or scc.sconto2 or scc.sconto3 or scc.sconto4 or scc.sconto5 or scc.sconto6:
+                                sconto = getattr(scc, scontocol) or 0
+                                tipo = 'C'
+                else:
+                    # GESTIONE SCONTI CATEGORIA
+                    if scc.Retrieve('scc.id_pdc=%s and scc.id_catart=%s',
+                                    self.id_pdc, mov.prod.id_catart):
+                        if scc.sconto1 or scc.sconto2 or scc.sconto3 or scc.sconto4 or scc.sconto5 or scc.sconto6:
+                            sconto = getattr(scc, scontocol) or 0
+                            tipo = 'C'
         if not sconto and mov.config.tipsconti == '1': #sconti da prodotto
             sconto = getattr(mov.prod, scontocol) or 0
             tipo = 'P'
