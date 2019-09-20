@@ -109,6 +109,13 @@ class GridMov(maglib.GridMov):
         a(( 30, (cn(mov, "f_ann"),   "Man",          _CHK, True)))
         a(( 30, (cn(doc, "f_ann"),   "Ann",          _CHK, True)))
         a(( 30, (cn(doc, "f_acq"),   "Acq",          _CHK, True)))
+        #=======================================================================
+        # Introdotte a fini di debug
+        #=======================================================================
+        # a(( 30, (cn(tpm, "id"),      "Ini",          _STR, True)))
+        # a(( 30, (cn(tpm, "tv_isini"),"Ini",          _CHK, True)))
+        # a(( 30, (cn(tpm, "aggini"),  "g.i.",          _CHK, True)))
+        #=======================================================================
         a((  1, (cn(mov, "id"),      "#mov",         _STR, True)))
         a((  1, (cn(doc, "id"),      "#doc",         _STR, True)))
         
@@ -124,21 +131,8 @@ class GridMov(maglib.GridMov):
         grid.SetData( rsmas, colmap, canedit, canins)
         grid.GetTable().dbmov = self.dbmov
         
-        self._ncaggcar = cn(tpm, 'aggcar')
-        self._ncaggsca = cn(tpm, 'aggsca')
-        self._ncaggorc = cn(tpm, 'aggordcli')
-        self._ncaggorf = cn(tpm, 'aggordfor')
-        self._bgcolrow = stdcolor.NORMAL_BACKGROUND
-        self._bgcoltot = stdcolor.GetColour('aliceblue')
+        grid=self.SetTotalGrid(grid)
         
-        for label, func in (\
-            ('Tot. Carichi:',        lambda rsm, row: rsm[row][self._ncaggcar]),
-            ('Tot. Scarichi:',       lambda rsm, row: rsm[row][self._ncaggsca]),
-            ('Tot. Ord. Clienti:',   lambda rsm, row: rsm[row][self._ncaggorc]),
-            ('Tot. Ord. Fornitori:', lambda rsm, row: rsm[row][self._ncaggorf])):
-            grid.AddTotalsRow(3, label, (cn(mov, "qta"),
-                                         cn(mov, "importo"),
-                                         cn(mov, "imponibile"),), func)
         grid.SetCellDynAttr(self.GetAttr)
         
         ci = lambda x: parent.GetGrandParent().FindWindowById(x)
@@ -156,6 +150,29 @@ class GridMov(maglib.GridMov):
         parent.SetSizer(sz)
         sz.SetSizeHints(parent)
         self.gridmov = grid
+
+
+    def SetTotalGrid(self, grid):
+        cn = lambda db, col: db._GetFieldIndex(col, inline=True)
+        tpm = self.dbmov.tipmov
+        self._ncaggcar = cn(tpm, 'aggcar')
+        self._ncaggsca = cn(tpm, 'aggsca')
+        self._ncaggorc = cn(tpm, 'aggordcli')
+        self._ncaggorf = cn(tpm, 'aggordfor')
+        self._bgcolrow = stdcolor.NORMAL_BACKGROUND
+        self._bgcoltot = stdcolor.GetColour('aliceblue')
+                
+        for label, func in (\
+            ('Tot. Carichi:',        lambda rsm, row: rsm[row][self._ncaggcar]),
+            ('Tot. Scarichi:',       lambda rsm, row: rsm[row][self._ncaggsca]),
+            ('Tot. Ord. Clienti:',   lambda rsm, row: rsm[row][self._ncaggorc]),
+            ('Tot. Ord. Fornitori:', lambda rsm, row: rsm[row][self._ncaggorf])):
+            grid.AddTotalsRow(3, label, (cn(self.dbmov, "qta"),
+                                         cn(self.dbmov, "importo"),
+                                         cn(self.dbmov, "imponibile"),), func)                
+        pass
+        return grid
+
 
     def GetAttr(self, row, col, rscol, attr):
         if self.gridmov.IsOnTotalRow(row):
