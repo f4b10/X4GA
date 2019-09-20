@@ -143,6 +143,16 @@ def SetCSV_Quoting(x=csv.QUOTE_MINIMAL):
     global CSVFORMAT_QUOTING
     CSVFORMAT_QUOTING = x
 
+def GetCursor(dbName=None):
+    import Env
+    host = Env.Azienda.DB.servername
+    user = Env.Azienda.DB.username
+    pswd = Env.Azienda.DB.password
+    dba = adb.db.DB(dbType=getattr(adb.db.__database__, '_dbType'), globalConnection=False)
+    dba.Connect(host=host, user=user, passwd=pswd, db=dbName)
+    curs = dba._dbCon.cursor()    
+    return curs
+
 
 class DbInfo(object):
     def __init__(self):
@@ -3816,3 +3826,5 @@ class MultiEticList(DbMem):
         self.SetRecordset(rsp)
         self._info.dbetic.SetRecordset(rs0)
         return pt
+
+
