@@ -746,8 +746,7 @@ def HeadFunc( parent, call_fit = True, set_sizer = True ):
     item29 = wx.StaticText( parent, ID_TEXT, "Anno", wx.DefaultPosition, wx.DefaultSize, 0 )
     item27.Add( item29, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
-    item30 = wx.ComboBox( parent, ID_COMBO, "", wx.DefaultPosition, [38,-1], 
-        ["ComboItem"] , wx.CB_DROPDOWN )
+    item30 = wx.ComboBox( parent, ID_COMBO, "", wx.DefaultPosition, [38,-1], [], wx.CB_DROPDOWN )
     item30.SetName( "mmcompetenza" )
     item27.Add( item30, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 

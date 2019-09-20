@@ -267,17 +267,25 @@ class ContabPanel(aw.Panel,\
         
         
     def SetPeriodo(self, datdoc, update=True):
+        self.controls['aacompetenza'].Clear()
+        self.controls['mmcompetenza'].Clear()
+        
         self.controls['aacompetenza'].Append('%s' % datdoc.year)
-        self.controls['aacompetenza'].Append('%s' % (datdoc.year-1))
+        #self.controls['aacompetenza'].Append('%s' % (datdoc.year-1))
         self.controls['aacompetenza'].SetValue('%s' % datdoc.year)
         if self.periodic=="M":
             self.controls['mmcompetenza'].Append('%02d' % datdoc.month)
             if datdoc.month>1:
                 self.controls['mmcompetenza'].Append('%02d' % (datdoc.month-1))
-            else:
-                self.controls['mmcompetenza'].Append('%02d' % 12)
+            #===================================================================
+            # else:
+            #     self.controls['mmcompetenza'].Append('%02d' % 12)
+            #===================================================================
             if update:
-                self.controls['mmcompetenza'].SetValue('%02d' % datdoc.month)
+                if self.reg_mmcompetenza:
+                    self.controls['mmcompetenza'].SetValue('%02d' % self.reg_mmcompetenza)
+                else:
+                    self.controls['mmcompetenza'].SetValue('%02d' % datdoc.month)
         else:
             trim = int((datdoc.month-1)/3.0)+1
             self.controls['mmcompetenza'].Append('%02d' % trim)
@@ -1366,10 +1374,18 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
                 idsdi.SetValue("")
                 
             try:
-                if self.reg_datcompete==None:
-                    self.SetPeriodo(self.reg_datdoc, update=not self._cfg_competenza)
-                else:
-                    self.SetPeriodo(self.reg_datcompete, update=True)
+                #self.SetPeriodo(self.reg_datdoc, update=not self._cfg_competenza)
+                self.SetPeriodo(self.reg_datdoc, update=self._cfg_competenza)
+                
+                
+                #===============================================================
+                # if self.reg_datcompete==None:
+                #     self.SetPeriodo(self.reg_datdoc, update=not self._cfg_competenza)
+                # else:
+                #     self.SetPeriodo(self.reg_datcompete, update=True)
+                #===============================================================
+                    
+                    
                 #===============================================================
                 # aacompetenza.SetValue('%04d' % self.reg_aacompetenza)
                 # mmcompetenza.SetValue('%02d' % self.reg_mmcompetenza)
@@ -1470,8 +1486,9 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
         
         
         
-                
-        if not enable or self._cfg_competenza=='0':
+        # MARCELLO - Se data competenza non abilitata non abilito i controlli        
+        #if not enable or self._cfg_competenza=='0':
+        if self._cfg_competenza=='0':
             self.controls["aacompetenza"].Clear()
             self.controls["mmcompetenza"].Clear()
         
