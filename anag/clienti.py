@@ -68,8 +68,18 @@ class ScontiCategoriaGrid(dbglib.ADB_Grid):
         self.dbscc = dbscc
         self.id_pdc = None
 
-        scc = dbscc
-        cat = dbscc.catart
+        self.SetColumnGrid()
+        self.CreateGrid()
+
+        self.AppendContextMenuVoice('Scheda categoria', self.OnSchedaCatArt)
+        self.AppendContextMenuVoice('Elimina sconto', self.OnDeleteRow)
+
+
+    def SetColumnGrid(self):
+        scc = self.dbscc
+        cat = self.dbscc.catart
+        
+        
         def cn(tab, col):
             return tab._GetFieldIndex(col, inline=True)
         self.AddColumn(cat, 'codice',  'Cod.', col_width=40, is_editable=True,
@@ -83,10 +93,6 @@ class ScontiCategoriaGrid(dbglib.ADB_Grid):
         self.AddColumn(scc, 'id', '#scc', col_width=1)
         self.AddColumn(scc, 'id', '#cat', col_width=1)
 
-        self.CreateGrid()
-
-        self.AppendContextMenuVoice('Scheda categoria', self.OnSchedaCatArt)
-        self.AppendContextMenuVoice('Elimina sconto', self.OnDeleteRow)
 
     def SetPdc(self, idpdc):
         self.id_pdc = idpdc
@@ -621,7 +627,10 @@ class ClientiPanel(pdcrel._CliForPanel):
             if s.id_pdc is None:
                 s.id_pdc = self.db_recid
         if not scc.Save():
-            aw.awu.MsgDialog(self, message=repr(scc.GetError()))
+            msg='Mmemorizzazione sconti per categoria non riuscita'
+            msg='%s\n%s' % (msg, repr(scc.GetError()))
+            aw.awu.MsgDialog(self, message=msg)
+            #aw.awu.MsgDialog(self, message=repr(scc.GetError()))
 
     def InitVarList(self, parent):
         self.dbvli = dba.TabVarList()
@@ -644,7 +653,10 @@ class ClientiPanel(pdcrel._CliForPanel):
                 if v.id_cliente is None:
                     v.id_cliente = self.db_recid
             if not vli.Save():
-                aw.awu.MsgDialog(self, message=repr(vli.GetError()))
+                msg='Mmemorizzazione listini variabili non riuscita'
+                msg='%s\n%s' % (msg, repr(vli.GetError()))
+                aw.awu.MsgDialog(self, message=msg)                
+                #aw.awu.MsgDialog(self, message=repr(vli.GetError()))
 
 
 # ------------------------------------------------------------------------------
