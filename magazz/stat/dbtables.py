@@ -196,7 +196,12 @@ class _FatturatoVendite(adb.DbTable):
                           idLeft='id_status', idRight='id')
 
         self.AddGroups()
+        self.AddTotal()
+        self.ClearBaseFilters()
+        self.Reset()
 
+
+    def AddTotal(self):
         self.AddTotalOf('mov.qta*tipmov.%s' % self._statcol, 'statqtafat')
         # MODIFICATA PER GESTIRE SCORPORO 
         #self.AddTotalOf('mov.importo*tipmov.%s' % self._statcol, 'statvalfat')
@@ -204,8 +209,8 @@ class _FatturatoVendite(adb.DbTable):
         #=======================================================================
         self.AddTotalOf('mov.importo* IF(tipdoc.scorpiva=1,(100/(100+iva.perciva)),1) *tipmov.%s' % self._statcol, 'statvalfat')
         self.AddTotalOf('(mov.qta*mov.prezzo* IF(tipdoc.scorpiva=1,(100/(100+iva.perciva)),1) )*tipmov.%s' % self._statcol, 'statlrdfat')
-        self.ClearBaseFilters()
-        self.Reset()
+        
+
 
     def ClearBaseFilters(self):
         adb.DbTable.ClearBaseFilters(self)
