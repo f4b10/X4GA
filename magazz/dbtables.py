@@ -21,6 +21,9 @@
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
 
+# NON SO DA DOVE ARRIVI
+#from cgi import FieldStorage
+
 """
 Definizione classi specializzate x gestione magazzino.
 """
@@ -391,9 +394,15 @@ class DocMag(adb.DbTable):
 
 
     def SetBodyMultiJoin(self, writable=None):
+        fields=magazz.movfields
+        if 'ALGOR' in Env.Azienda.descrizione:
+            # per ALòGOR aggiungo la memorizzazione di prezzo1, prezzo2, prezzo3
+            fields.append('prezzo1')
+            fields.append('prezzo2')
+            fields.append('prezzo3')
         dbmov = self.AddMultiJoin(\
             bt.TABNAME_MOVMAG_B,  "mov",     idRight="id_doc",\
-            fields=magazz.movfields, writable=writable)
+            fields=fields, writable=writable)
 
         dbtmov = dbmov.AddJoin(\
             bt.TABNAME_CFGMAGMOV, "config",  idLeft="id_tipmov",\
