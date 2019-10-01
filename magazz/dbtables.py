@@ -396,10 +396,10 @@ class DocMag(adb.DbTable):
     def SetBodyMultiJoin(self, writable=None):
         fields=magazz.movfields
         if 'ALGOR' in Env.Azienda.descrizione:
-            # per ALòGOR aggiungo la memorizzazione di prezzo1, prezzo2, prezzo3
-            fields.append('prezzo1')
-            fields.append('prezzo2')
-            fields.append('prezzo3')
+            # per ALGOR aggiungo la memorizzazione di prezzo1, prezzo2, prezzo3
+            if not 'prezzo1' in fields:fields.append('prezzo1')
+            if not 'prezzo2' in fields:fields.append('prezzo2')
+            if not 'prezzo3' in fields:fields.append('prezzo3')
         dbmov = self.AddMultiJoin(\
             bt.TABNAME_MOVMAG_B,  "mov",     idRight="id_doc",\
             fields=fields, writable=writable)
