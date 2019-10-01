@@ -1387,6 +1387,25 @@ class GridBody(object):
                 mov.um         = self.dbprod.um
                 if mov.config.askvalori == 'T':
                     p, s1, s2, s3, s4, s5, s6 = self.GridBodyDefPrezzoSconti6()
+                    
+                    #########################################################
+                    # per ALGOR
+                    if 'ALGOR' in Env.Azienda.descrizione:
+                        prezzo1 = prezzo2 = prezzo3 = 0
+                        list = self.dbdoc._info.dblist
+                        list.ClearFilters()
+                        list.AddFilter("id_prod=%s", self.dbdoc.mov.id_prod)
+                        if bt.MAGDATLIS:
+                            list.AddFilter("data<=%s", self.dbdoc.datreg)
+                        if list.Retrieve() and list.RowsCount()>0:
+                            prezzo1 = list.__getattr__("prezzo1") or 0                    
+                            prezzo2 = list.__getattr__("prezzo2") or 0                    
+                            prezzo3 = list.__getattr__("prezzo3") or 0                    
+                        mov.prezzo1 = prezzo1
+                        mov.prezzo2 = prezzo2
+                        mov.prezzo3 = prezzo3
+                    
+                    
                     mov.prezzo = p
                     mov.sconto1 = s1 or 0
                     mov.sconto2 = s2 or 0
