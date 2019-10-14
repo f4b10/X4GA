@@ -2174,8 +2174,17 @@ class RiepMovCon(adb.DbTable):
         self.Get(-1)
 
 
+class RiepMovConFe(RiepMovCon):
+    """
+    Riepilogo registrazioni contabili, viste x dettaglio regstrazione.
+    """
+    def __init__(self, *args, **kwargs):
+        RiepMovCon.__init__(self, **kwargs)
+        pcp = self.AddJoin(\
+            bt.TABNAME_PDC,      "pdccp",     idLeft="id_pdccp",  idRight="id",\
+            join=adb.JOIN_LEFT)
+        self.Get(-1)
 # ------------------------------------------------------------------------------
-
 
 class GiornaleGenerale(RiepMovCon):
 
