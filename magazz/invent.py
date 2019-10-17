@@ -523,7 +523,36 @@ class InventPanel(aw.Panel):
                         i.AddFilter("%s.codice>=%%s" % name, v1)
                     if v2:
                         i.AddFilter("%s.codice<=%%s" % name, v2.rstrip()+'Z')
-        
+
+        if i.tabinfo('cfgautom', 'maginidoc', 'aut_id', 'codice'):
+            v_idmagaz=i._info.g_magazz
+            v_datinv =i._info.g_data
+            v_tipdoc =i.tabinfo('cfgautom', 'maginidoc', 'aut_id', 'codice')
+            v_tipmov =i.tabinfo('cfgautom', 'maginimov', 'aut_id', 'codice')
+            #===================================================================
+            # print 'aggiungere filtro su inizializzazione giacenze'
+            # print '        id_magazz: %s' % v_idmagaz
+            # print '  data inventario: %s' % v_datinv 
+            # print 'id tipo documento: %s' % v_tipmov 
+            # print 'id tipo movimento: %s' % v_tipdoc 
+            # print '-'*80
+            #===================================================================
+            filter = """(
+(select g.dtGiaIni from SearchGiacIniziale g 
+    where (g.id_prod=prod.id and g.id_tipmov=%s and g.dtGiaIni<%s and g.id_magazz=%s) 
+    order by g.dtGiaIni desc  limit 1 ) is null or
+(select g.dtGiaIni  from SearchGiacIniziale g 
+    where (g.id_prod=prod.id and g.id_tipmov=%s and g.dtGiaIni<%s and g.id_magazz=%s)
+    order by g.dtGiaIni desc  limit 1 ) <=doc.datdoc
+)""" % (v_tipmov, '"%s"'% v_datinv, v_idmagaz, v_tipmov, '"%s"' % v_datinv, v_idmagaz)
+            #===================================================================
+            # print filter
+            #===================================================================
+
+            i.AddFilter(filter)
+        #=======================================================================
+        # i.SetDebug()
+        #=======================================================================
         i.ClearOrders()
         i._info.raggrcat = False
         s1 = 1
