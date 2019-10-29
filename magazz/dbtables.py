@@ -614,7 +614,13 @@ class DocMag(adb.DbTable):
             scc = self._info.dbscc
             
             scontoFound=False
-            if 'id_gruart' in scc.GetFieldNames():
+            try:
+                # introdotto per gestire situazione Algor
+                inFattura = self.pdc.anag.tiposco=='F'
+            except:
+                inFattura=True
+                
+            if 'id_gruart' in scc.GetFieldNames() and inFattura:
                 # GESTIONE SCONTI CATEGORIA GRUPPO
                 if scc.Retrieve('scc.id_pdc=%s and scc.id_catart=%s and scc.id_gruart=%s',
                             self.id_pdc, mov.prod.id_catart, mov.prod.id_gruart):
