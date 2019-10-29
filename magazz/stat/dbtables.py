@@ -176,7 +176,7 @@ class _FatturatoVendite(adb.DbTable):
         tpm = self.AddJoin(bt.TABNAME_CFGMAGMOV,  'tipmov')
 
         doc = self.AddJoin(bt.TABNAME_MOVMAG_H,   'doc', idLeft='id_doc',
-                           idRight='id', fields='id_tipdoc,id_pdc,id_agente')
+                           idRight='id', fields='id_tipdoc,id_pdc,id_agente,datdoc')
         tpd = doc.AddJoin(bt.TABNAME_CFGMAGDOC,    'tipdoc')
 
         pdc = doc.AddJoin(bt.TABNAME_PDC,         'pdc')
