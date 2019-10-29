@@ -1407,6 +1407,19 @@ JOIN movmag_b mov ON mov.id_doc=doc.id
 JOIN pdc ON pdc.id=doc.id_pdc
 WHERE tpd.clasdoc IN ("vencli", "rescli") AND (doc.f_ann IS NULL OR doc.f_ann<>1)
 GROUP BY doc.id""")
+                
+                #crea vista per recupero ultima documento di azzeramento giacenze
+                db.Execute(r"""
+CREATE VIEW searchgiaciniziale AS
+select b.id_prod AS id_prod,
+        h.id_magazz AS id_magazz,
+        b.id_tipmov AS id_tipmov,
+        h.datdoc AS dtGiaIni from movmag_b b 
+left join movmag_h h on h.id = b.id_doc 
+left join cfgmagmov c on c.id = b.id_tipmov 
+order by h.datdoc
+""")
+
         if ok:
             self.PerformExternalAdaptations()
 
