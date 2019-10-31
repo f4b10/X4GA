@@ -482,16 +482,22 @@ class print_Report:
                     else:
                         raise Exception, msg
             elif name == 'EnqueueTable':
-                val = replace(val, "RS.", "dbTable.")
-                try:
-                    queuetab = eval(val)
-                except Exception, e:
-                    msg = 'Errore in valutazione tabella report accodato\n(%s)'\
-                        % repr(e.args)
-                    if messages:
-                        aw.awu.MsgDialog(parentWindow, message=msg)
-                    else:
-                        raise Exception, msg
+                if val=="RS":
+                    queuetab = dbTable
+                elif 'RS.' in val:
+                    val = replace(val, "RS.", "dbTable.")
+                    try:
+                        queuetab = eval(val)
+                    except Exception, e:
+                        msg = 'Errore in valutazione tabella report accodato\n(%s)'\
+                            % repr(e.args)
+                        if messages:
+                            aw.awu.MsgDialog(parentWindow, message=msg)
+                        else:
+                            raise Exception, msg
+                    
+                    
+                    
             elif name == 'UseLabeler':
                 uselabeler = (val == 'True')
         
@@ -668,7 +674,10 @@ class print_Report:
             if not noMove and dbrow is not None:
                 dbTable.MoveRow(dbrow)
             
-            del dbTable._info.report_nome_copia
+            try:
+                del dbTable._info.report_nome_copia
+            except:
+                pass
         
         if canvas:
             #report accodato, ritorno
