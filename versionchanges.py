@@ -29,6 +29,12 @@ import mx.DateTime as dt
 import mx.Odt
 
 history = (
+    ('1.5.80', dt.Date(2019, 11, 4), (
+         ("BET1278",
+         """Aggiunto campo codice_studio per consentire di relazionare il piano dei conti aziendale con quello dell'eventuale studio di consulenza"""
+        ),
+        ),),
+           
     ('1.5.77', dt.Date(2019, 9, 5), (
          ("BET1277",
          """Aggiunta possibilità di interrogare documenti di magazzino per destinazione"""
