@@ -48,7 +48,8 @@ import awc.controls.windows as aw
 import awc.util as awu
 
 import stormdb as adb
-
+from Env import msgbox
+MsgBox = aw.awu.MsgDialog
 
 _debug = 0
 
@@ -664,9 +665,12 @@ class print_Report:
                     #richiamo report accodato
                     qd = nameXmlFile.replace('\\','/')
                     qd = qd[:qd.rindex('/')+1]+queuedef+'.jrxml'
-                    pn = self.oCanvas.userVariableList['PAGE_NUMBER'].valore
-                    print_Report(qd, dbTable=queuetab, canvas=self.oCanvas,
-                                 parentWindow=parentWindow, firstPageNumber=pn)
+                    if os.path.isfile(qd):
+                        pn = self.oCanvas.userVariableList['PAGE_NUMBER'].valore
+                        print_Report(qd, dbTable=queuetab, canvas=self.oCanvas,
+                                     parentWindow=parentWindow, firstPageNumber=pn)
+                    else:
+                        MsgBox(parentWindow, 'Non esiste la definizione del reporte accodato.\n%s.jrxml' % queuedef)
             
             if self.lFlatReport == True:
                 dbTable.SetFlatView(False)       
