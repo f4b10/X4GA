@@ -25,7 +25,7 @@ from awc.controls.textctrl import TextCtrl, TextCtrl_LC
 from awc.controls.datectrl import DateCtrl
 from awc.controls.numctrl import NumCtrl
 from awc.controls.radiobox import RadioBox
-from awc.controls.checkbox import CheckBox, RCheckBox
+from awc.controls.checkbox import CheckBox, RCheckBox, CheckListBox
 from awc.controls.choice import Choice
 
 from contab.awcontrols import SelEsercizioExChoice
@@ -1978,8 +1978,9 @@ ID_PCFRAGGRZNA = 10159
 ID_PCFCLIAGE = 10160
 ID_AGENTEFROM = 10161
 ID_PCFMAXDATINCPAG = 10162
-ID_PANSEL = 10163
-ID_PCFGRIDZONE = 10164
+ID_BUTTON = 10163
+ID_PANSEL = 10164
+ID_PCFGRIDZONE = 10165
 
 def ScadenzarioFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -2080,17 +2081,21 @@ def ScadenzarioFunc( parent, call_fit = True, set_sizer = True ):
 
     item20.Add( item21, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item26 = wx.Button( parent, ID_PCFBUTUPD, "Aggiorna", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item26.SetDefault()
-    item26.SetName( "btnupdate_pcf" )
+    item26 = wx.Button( parent, ID_BUTTON, "Set Causali", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item26.SetName( "btnSetCau" )
     item20.Add( item26, 0, wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+
+    item27 = wx.Button( parent, ID_PCFBUTUPD, "Aggiorna", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item27.SetDefault()
+    item27.SetName( "btnupdate_pcf" )
+    item20.Add( item27, 0, wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
 
     item20.AddGrowableCol( 0 )
 
     item3.Add( item20, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item27 = PcfTotaliPanel(parent, ID_PCFTOTALI)
-    item3.Add( item27, 0, wx.ALIGN_RIGHT|wx.RIGHT, 5 )
+    item28 = PcfTotaliPanel(parent, ID_PCFTOTALI)
+    item3.Add( item28, 0, wx.ALIGN_RIGHT|wx.RIGHT, 5 )
 
     item3.AddGrowableCol( 0 )
 
@@ -2098,29 +2103,29 @@ def ScadenzarioFunc( parent, call_fit = True, set_sizer = True ):
 
     item2.Add( item3, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL, 5 )
 
-    item28 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    item29 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
-    item29 = ScadenzarioSelPanel( parent, ID_PANSEL, wx.DefaultPosition, [200,160], 0 )
-    item29.SetName( "filterspanel" )
-    item28.Add( item29, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item30 = ScadenzarioSelPanel( parent, ID_PANSEL, wx.DefaultPosition, [200,160], 0 )
+    item30.SetName( "filterspanel" )
+    item29.Add( item30, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item28.AddGrowableCol( 0 )
+    item29.AddGrowableCol( 0 )
 
-    item28.AddGrowableRow( 1 )
+    item29.AddGrowableRow( 1 )
 
-    item2.Add( item28, 0, wx.GROW, 5 )
+    item2.Add( item29, 0, wx.GROW, 5 )
 
     item2.AddGrowableCol( 1 )
 
     item1.Add( item2, 0, wx.GROW|wx.LEFT|wx.BOTTOM, 5 )
 
-    item30 = wx.SplitterWindow( parent, ID_PCFGRIDZONE, wx.DefaultPosition, [-1,220], wx.SP_BORDER|wx.SP_3D|wx.CLIP_CHILDREN )
-    item31 = wx.Panel( item30, -1 )
-    ScadenzarioTotFunc( item31, False, True )
-    item32 = wx.Panel( item30, -1 )
-    ScadenzarioDetFunc( item32, False, True )
-    item30.SplitVertically( item31, item32 )
-    item1.Add( item30, 0, wx.GROW, 5 )
+    item31 = wx.SplitterWindow( parent, ID_PCFGRIDZONE, wx.DefaultPosition, [-1,220], wx.SP_BORDER|wx.SP_3D|wx.CLIP_CHILDREN )
+    item32 = wx.Panel( item31, -1 )
+    ScadenzarioTotFunc( item32, False, True )
+    item33 = wx.Panel( item31, -1 )
+    ScadenzarioDetFunc( item33, False, True )
+    item31.SplitVertically( item32, item33 )
+    item1.Add( item31, 0, wx.GROW, 5 )
 
     item1.AddGrowableCol( 0 )
 
@@ -2139,9 +2144,9 @@ def ScadenzarioFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_PCFTOTZONE = 10165
-ID_PCFBTNPRTRIEP = 10166
-ID_PCFBTNPRTALL = 10167
+ID_PCFTOTZONE = 10166
+ID_PCFBTNPRTRIEP = 10167
+ID_PCFBTNPRTALL = 10168
 
 def ScadenzarioTotFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -2177,8 +2182,8 @@ def ScadenzarioTotFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_PCFPANGRIDDET = 10168
-ID_PCFGRIDDET = 10169
+ID_PCFPANGRIDDET = 10169
+ID_PCFGRIDDET = 10170
 
 def ScadenzarioDetFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -2204,12 +2209,12 @@ def ScadenzarioDetFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_CTRQUADCF = 10170
-ID_CTRQUADANA1 = 10171
-ID_CTRQUADANA2 = 10172
-ID_BTNUPD = 10173
-ID_BTNPRT = 10174
-ID_CTRPANDIFF = 10175
+ID_CTRQUADCF = 10171
+ID_CTRQUADANA1 = 10172
+ID_CTRQUADANA2 = 10173
+ID_BTNUPD = 10174
+ID_BTNPRT = 10175
+ID_CTRPANDIFF = 10176
 
 def PdcQuadPcfContFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -2278,23 +2283,23 @@ def PdcQuadPcfContFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_TIPOSTA = 10176
-ID_TIPORD = 10177
-ID_TIPOTIT = 10178
-ID_TIPODES = 10179
-ID_TEXTCTRL = 10180
-ID_MASTRO1 = 10181
-ID_MASTRO2 = 10182
-ID_CONTO1 = 10183
-ID_CONTO2 = 10184
-ID_PDC1 = 10185
-ID_PDC2 = 10186
-ID_TIPANA1 = 10187
-ID_TIPANA2 = 10188
-ID_UPDATE = 10189
-ID_INTESTAPAG = 10190
-ID_PRINT = 10191
-ID_MASTRIZONE = 10192
+ID_TIPOSTA = 10177
+ID_TIPORD = 10178
+ID_TIPOTIT = 10179
+ID_TIPODES = 10180
+ID_TEXTCTRL = 10181
+ID_MASTRO1 = 10182
+ID_MASTRO2 = 10183
+ID_CONTO1 = 10184
+ID_CONTO2 = 10185
+ID_PDC1 = 10186
+ID_PDC2 = 10187
+ID_TIPANA1 = 10188
+ID_TIPANA2 = 10189
+ID_UPDATE = 10190
+ID_INTESTAPAG = 10191
+ID_PRINT = 10192
+ID_MASTRIZONE = 10193
 
 def MastriSottocontoFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -2465,7 +2470,7 @@ def MastriSottocontoFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_PANGRIDPDC = 10193
+ID_PANGRIDPDC = 10194
 
 def MastriSottocontoPdcFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -2512,18 +2517,18 @@ def MastriSottocontoRegFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_PCFGROUP = 10194
-ID_PCFLABPDC = 10195
-ID_PCFPDC1 = 10196
-ID_PCFPDC2 = 10197
-ID_PCFCAUS1 = 10198
-ID_PCFCAUS2 = 10199
-ID_PCFZONA1 = 10200
-ID_PCFZONA2 = 10201
-ID_PCFAGENTE1 = 10202
-ID_PCFAGENTE2 = 10203
-ID_PCFCATANA1 = 10204
-ID_PCFCATANA2 = 10205
+ID_PCFGROUP = 10195
+ID_PCFLABPDC = 10196
+ID_PCFPDC1 = 10197
+ID_PCFPDC2 = 10198
+ID_PCFCAUS1 = 10199
+ID_PCFCAUS2 = 10200
+ID_PCFZONA1 = 10201
+ID_PCFZONA2 = 10202
+ID_PCFAGENTE1 = 10203
+ID_PCFAGENTE2 = 10204
+ID_PCFCATANA1 = 10205
+ID_PCFCATANA2 = 10206
 
 def ScadenzarioGruppoFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -2747,8 +2752,8 @@ def ScadenzarioGruppoFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_ALIQ = 10206
-ID_PANGRIDMOV = 10207
+ID_ALIQ = 10207
+ID_PANGRIDMOV = 10208
 
 def IntAliqIvaFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -3019,9 +3024,9 @@ def IntAliqIvaFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_PANDATE = 10208
-ID_PANPCF = 10209
-ID_SCADCOLORS = 10210
+ID_PANDATE = 10209
+ID_PANPCF = 10210
+ID_SCADCOLORS = 10211
 
 def EffettiPresentatiFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 2, 0, 0 )
@@ -3058,10 +3063,10 @@ def EffettiPresentatiFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_PCFMODPAG1 = 10211
-ID_PCFMODPAG2 = 10212
-ID_PCFBANCAPAG = 10213
-ID_PCFNOBANCAPAG = 10214
+ID_PCFMODPAG1 = 10212
+ID_PCFMODPAG2 = 10213
+ID_PCFBANCAPAG = 10214
+ID_PCFNOBANCAPAG = 10215
 
 def ScadenzarioSelFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.BoxSizer( wx.VERTICAL )
@@ -3181,7 +3186,7 @@ def ScadenzarioSelFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_EMAILZONE = 10215
+ID_EMAILZONE = 10216
 
 def DocsEmailFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -3206,7 +3211,7 @@ def DocsEmailFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_PANGRIDEMAIL = 10216
+ID_PANGRIDEMAIL = 10217
 
 def DocsEmailGridFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -3230,11 +3235,11 @@ def DocsEmailGridFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_EMAILFROM = 10217
-ID_EMAILTO = 10218
-ID_EMAILDATE = 10219
-ID_BUTEMAILOPENPDF = 10220
-ID_EMAILBODY = 10221
+ID_EMAILFROM = 10218
+ID_EMAILTO = 10219
+ID_EMAILDATE = 10220
+ID_BUTEMAILOPENPDF = 10221
+ID_EMAILBODY = 10222
 
 def DocsEmailPreviewFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -3308,14 +3313,14 @@ def DocsEmailPreviewFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_DATSCA1 = 10222
-ID_DATSCA2 = 10223
-ID_MODPAG1 = 10224
-ID_MODPAG2 = 10225
-ID_GIORNIRIT = 10226
-ID_PERCINT = 10227
-ID_BUTUPDATE = 10228
-ID_PANGRIDPCF = 10229
+ID_DATSCA1 = 10223
+ID_DATSCA2 = 10224
+ID_MODPAG1 = 10225
+ID_MODPAG2 = 10226
+ID_GIORNIRIT = 10227
+ID_PERCINT = 10228
+ID_BUTUPDATE = 10229
+ID_PANGRIDPCF = 10230
 
 def InteressiPartiteScaduteFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -3451,13 +3456,13 @@ def InteressiPartiteScaduteFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_AGENTE = 10230
-ID_CLIFID_ALL = 10231
-ID_CLIFID_SCO = 10232
-ID_CLIFID_PCF = 10233
-ID_CLIFID_ESP = 10234
-ID_CLIFID_GGS = 10235
-ID_PANGRIDFID = 10236
+ID_AGENTE = 10231
+ID_CLIFID_ALL = 10232
+ID_CLIFID_SCO = 10233
+ID_CLIFID_PCF = 10234
+ID_CLIFID_ESP = 10235
+ID_CLIFID_GGS = 10236
+ID_PANGRIDFID = 10237
 
 def SitFidiClientiFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -3531,6 +3536,51 @@ def SitFidiClientiFunc( parent, call_fit = True, set_sizer = True ):
     item0.AddGrowableCol( 0 )
 
     item0.AddGrowableRow( 2 )
+
+    if set_sizer == True:
+        parent.SetSizer( item0 )
+        if call_fit == True:
+            item0.SetSizeHints( parent )
+    
+    return item0
+
+ID_CHECKLISTBOX = 10238
+
+def SetCauFunc( parent, call_fit = True, set_sizer = True ):
+    item0 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    
+    item1 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    
+    item2 = wx.StaticText( parent, ID_TEXT, 
+        "Al fine di soddisfare particolari esigenze aziendali è\n"
+        "possibile indicare quali causali contabili debbano essere\n"
+        "ignorate nella visualizzazione dllo scandenzrio.",
+        wx.DefaultPosition, wx.DefaultSize, 0 )
+    item1.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item3 = wx.StaticText( parent, ID_TEXT, "Causali contabili escluse da scadenzario", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item3.SetForegroundColour( wx.RED )
+    item3.SetName( "lblSetCau" )
+    item1.Add( item3, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+
+    item4 = CheckListBox( parent, ID_CHECKLISTBOX, wx.DefaultPosition, [80,320], [], 0 )
+    item4.SetName( "causali" )
+    item1.Add( item4, 0, wx.GROW|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item5 = wx.Button( parent, ID_BUTTON, "OK", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item5.SetDefault()
+    item5.SetName( "btnSave" )
+    item1.Add( item5, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+
+    item1.AddGrowableCol( 0 )
+
+    item1.AddGrowableRow( 2 )
+
+    item0.Add( item1, 0, wx.GROW|wx.ALL, 5 )
+
+    item0.AddGrowableCol( 0 )
+
+    item0.AddGrowableRow( 0 )
 
     if set_sizer == True:
         parent.SetSizer( item0 )

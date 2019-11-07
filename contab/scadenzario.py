@@ -206,6 +206,7 @@ class ScadenzarioPanel(aw.Panel):
     detanag = False
     
     agente_mode = 'anag'
+    cauEscluse  = ''
     def SetAgenteMode(self, mode):
         self.agente_mode = mode
     
@@ -248,9 +249,39 @@ class ScadenzarioPanel(aw.Panel):
             self.Bind(wx.EVT_BUTTON, func, id=cid)
         
         self.Bind(wx.EVT_SIZE, self.OnSize)
+
+        self.btnSetCau = cbn('btnSetCau')
+        self.btnSetCau.Bind(wx.EVT_BUTTON, self.OnSetCau)
+        self.cauEscluse = self.GetCausaliEscluse()
+
+        
+        cbn('pcftipocf').Bind(wx.EVT_RADIOBOX, self.OnSelectTipoAnag)
+        
+        
         
         self.UpdateFilters(warn=False)
         self.TestCliFor()
+    
+    
+    def OnSelectTipoAnag(self, evt):
+        enable = self.FindWindowByName('pcftipocf').GetValue()=='C'
+        self.btnSetCau.Enable(enable)
+        evt.Skip()
+         
+    def GetCausaliEscluse(self):
+        cauEx=''
+        dbSetup=adb.DbTable(Env.Azienda.BaseTab.TABNAME_CFGSETUP, 'setup')        
+        dbSetup.Retrieve('chiave="scad_cau_escluse"')
+        if dbSetup.OneRow():
+            cauEx=dbSetup.descriz
+        return cauEx
+    
+    
+    def OnSetCau(self, evt):
+        dlg = SetCauDialog(self)
+        dlg.ShowModal()
+        self.cauEscluse = self.GetCausaliEscluse()        
+        evt.Skip()
     
     def OpenTables(self, agedoc=False):
         
@@ -567,6 +598,10 @@ class ScadenzarioPanel(aw.Panel):
         if cn('pcfsolins').IsChecked():
             pdc.AddPcfFilter('sintesi.insoluto=1')
         
+        if len(self.cauEscluse)>0 and self.FindWindowByName('pcftipocf').GetValue()=='C':
+            flt = 'not sintesi.id_caus in (%s)' % self.cauEscluse[:-1]
+            pdc.AddPcfFilter(flt)
+        
         ra = None
         c = cn('pcfraggrage')
         if c:
@@ -587,6 +622,7 @@ class ScadenzarioPanel(aw.Panel):
                 self.gridtot1.SetGridMode('zona')
         else:
             rz = None
+            
         pdc.ClearOrders()
         if cn('pcforder').GetValue() == "C":
             if ra:
@@ -867,3 +903,93 @@ class ScadenzarioGruppoFrame(aw.Frame):
         aw.Frame.__init__(self, *args, **kwargs)
         self.AddSizedPanel(ScadenzarioGruppoPanel(self, -1))
         self.CenterOnScreen()
+
+
+
+class SetCauDialog(aw.Dialog):
+    """
+    Dialog SetCausali
+    """
+    def __init__(self, *args, **kwargs):
+        if not kwargs.has_key('title') and len(args) < 3:
+            kwargs['title'] = "Esclusione Causali"
+        aw.Dialog.__init__(self, *args, **kwargs)
+        self.panel = SetCauPanel(self, -1)
+        self.AddSizedPanel(self.panel)
+        self.CenterOnScreen()
+
+class SetCauFrame(aw.Frame):
+    """
+    Frame SetCausali
+    """
+    def __init__(self, *args, **kwargs):
+        if not kwargs.has_key('title') and len(args) < 3:
+            kwargs['title'] = "Scheda Attrezzatuara"
+        aw.Frame.__init__(self, *args, **kwargs)
+        self.panel = SetCauPanel(self, -1)
+        self.AddSizedPanel(self.panel)
+        self.CenterOnScreen()
+        
+class SetCauPanel(aw.Panel):
+    """
+    Pannello SetCausali
+    """
+    def __init__(self, *args, **kwargs):
+        aw.Panel.__init__(self, *args, **kwargs)
+        wdr.SetCauFunc(self)        
+        cn=self.FindWindowByName
+        self.causali=cn('causali')
+        self.btnSave=cn('btnSave')
+        self.dbSetup=adb.DbTable(Env.Azienda.BaseTab.TABNAME_CFGSETUP, 'setup')
+        self.LoadCausali()
+        self.btnSave.Bind(wx.EVT_BUTTON, self.OnSave)
+        self.causali.Bind(wx.EVT_CHECKLISTBOX, self.OnCheck)
+        
+    def OnCheck(self, evt):
+        conta=self.GetCheckedCount()
+        evt.Skip()   
+        
+    def GetCheckedCount(self):
+        conta=0
+        for i in range(self.causali.GetCount()):
+            if self.causali.IsChecked(i):
+                conta=conta+1
+        if conta==0:
+            msg = 'Nessuna Causale Contabile esclusa dallo scadenziario'
+        else:
+            msg = 'n.%s Causali Contabili escluse dallo scadenziario' % conta
+        self.FindWindowByName('lblSetCau').SetLabel(msg)
+        return conta 
+        
+    def LoadCausali(self):
+        dbCau=adb.DbTable(Env.Azienda.BaseTab.TABNAME_CFGCONTAB, 'cau')
+        dbCau.AddOrder('codice')
+        dbCau.Retrieve()
+        for r in dbCau:
+            self.causali.Append('%s - %s' % (r.codice, r.descriz))
+            self.causali.SetPyData(self.causali.GetCount()-1,'%s' % r.id)          
+        
+        self.dbSetup.Retrieve('chiave="scad_cau_escluse"')
+        if self.dbSetup.OneRow():
+            lCauId = self.dbSetup.descriz.split(',')
+            for i in range(self.causali.GetCount()):
+                id = self.causali.GetPyData(i)
+                if id in lCauId:
+                    self.causali.Check(i, True)
+        self.GetCheckedCount()
+                
+    def OnSave(self, evt):
+        tmp=''
+        for i in range(self.causali.GetCount()):
+            if self.causali.IsChecked(i):
+                tmp='%s%s,' % (tmp, self.causali.GetPyData(i))
+        self.dbSetup.Retrieve('chiave="scad_cau_escluse"')
+        if len(tmp)>0:
+            if not self.dbSetup.OneRow():
+                self.dbSetup.CreateNewRow()
+            self.dbSetup.chiave="scad_cau_escluse"
+            self.dbSetup.descriz=tmp
+        else:
+            self.dbSetup.Delete()
+        if self.dbSetup.Save():
+            self.GetParent().Close()
