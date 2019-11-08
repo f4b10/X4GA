@@ -2708,14 +2708,22 @@ def ScadenzarioGruppoFunc( parent, call_fit = True, set_sizer = True ):
 
     item20.Add( item21, 0, wx.GROW|wx.RIGHT, 5 )
 
+    item48 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    
+    item49 = wx.Button( parent, ID_BUTTON, "Set Causali", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item49.SetName( "btnSetCau" )
+    item48.Add( item49, 0, wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item50 = wx.Button( parent, ID_PCFBUTUPD, "Aggiorna", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item50.SetDefault()
+    item50.SetName( "btnupdate_pcf" )
+    item48.Add( item50, 0, wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item20.Add( item48, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
+
     item20.AddGrowableCol( 0 )
 
     item19.Add( item20, 0, wx.GROW, 5 )
-
-    item48 = wx.Button( parent, ID_PCFBUTUPD, "Aggiorna", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item48.SetDefault()
-    item48.SetName( "btnupdate_pcf" )
-    item19.Add( item48, 0, wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM|wx.ALL, 5 )
 
     item19.AddGrowableCol( 0 )
 
@@ -2727,13 +2735,13 @@ def ScadenzarioGruppoFunc( parent, call_fit = True, set_sizer = True ):
 
     item1.Add( item2, 0, wx.GROW|wx.LEFT|wx.BOTTOM, 5 )
 
-    item49 = wx.SplitterWindow( parent, ID_PCFGRIDZONE, wx.DefaultPosition, [-1,320], wx.SP_BORDER|wx.SP_3D|wx.CLIP_CHILDREN )
-    item50 = wx.Panel( item49, -1 )
-    ScadenzarioTotFunc( item50, False, True )
-    item51 = wx.Panel( item49, -1 )
-    ScadenzarioDetFunc( item51, False, True )
-    item49.SplitVertically( item50, item51 )
-    item1.Add( item49, 0, wx.GROW|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item51 = wx.SplitterWindow( parent, ID_PCFGRIDZONE, wx.DefaultPosition, [-1,320], wx.SP_BORDER|wx.SP_3D|wx.CLIP_CHILDREN )
+    item52 = wx.Panel( item51, -1 )
+    ScadenzarioTotFunc( item52, False, True )
+    item53 = wx.Panel( item51, -1 )
+    ScadenzarioDetFunc( item53, False, True )
+    item51.SplitVertically( item52, item53 )
+    item1.Add( item51, 0, wx.GROW|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item1.AddGrowableCol( 0 )
 

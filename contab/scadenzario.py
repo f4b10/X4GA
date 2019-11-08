@@ -250,13 +250,15 @@ class ScadenzarioPanel(aw.Panel):
         
         self.Bind(wx.EVT_SIZE, self.OnSize)
 
+        if cbn('pcftipocf')==None:
+            self.isGruppo=True
+        else:
+            self.isGruppo=False
+            cbn('pcftipocf').Bind(wx.EVT_RADIOBOX, self.OnSelectTipoAnag)
+        
         self.btnSetCau = cbn('btnSetCau')
         self.btnSetCau.Bind(wx.EVT_BUTTON, self.OnSetCau)
         self.cauEscluse = self.GetCausaliEscluse()
-
-        
-        cbn('pcftipocf').Bind(wx.EVT_RADIOBOX, self.OnSelectTipoAnag)
-        
         
         
         self.UpdateFilters(warn=False)
@@ -270,15 +272,18 @@ class ScadenzarioPanel(aw.Panel):
          
     def GetCausaliEscluse(self):
         cauEx=''
-        dbSetup=adb.DbTable(Env.Azienda.BaseTab.TABNAME_CFGSETUP, 'setup')        
-        dbSetup.Retrieve('chiave="scad_cau_escluse"')
+        dbSetup=adb.DbTable(Env.Azienda.BaseTab.TABNAME_CFGSETUP, 'setup') 
+        if self.isGruppo:
+            dbSetup.Retrieve('chiave="scadgru_cau_escluse"')
+        else:
+            dbSetup.Retrieve('chiave="scad_cau_escluse"')
         if dbSetup.OneRow():
             cauEx=dbSetup.descriz
         return cauEx
     
     
     def OnSetCau(self, evt):
-        dlg = SetCauDialog(self)
+        dlg = SetCauDialog(self, isGruppo=self.isGruppo)
         dlg.ShowModal()
         self.cauEscluse = self.GetCausaliEscluse()        
         evt.Skip()
@@ -598,10 +603,15 @@ class ScadenzarioPanel(aw.Panel):
         if cn('pcfsolins').IsChecked():
             pdc.AddPcfFilter('sintesi.insoluto=1')
         
-        if len(self.cauEscluse)>0 and self.FindWindowByName('pcftipocf').GetValue()=='C':
-            flt = 'not sintesi.id_caus in (%s)' % self.cauEscluse[:-1]
-            pdc.AddPcfFilter(flt)
-        
+        if self.isGruppo:
+            if len(self.cauEscluse)>0:
+                flt = 'not sintesi.id_caus in (%s)' % self.cauEscluse[:-1]
+                pdc.AddPcfFilter(flt)
+        else:
+            if len(self.cauEscluse)>0 and self.FindWindowByName('pcftipocf').GetValue()=='C':
+                flt = 'not sintesi.id_caus in (%s)' % self.cauEscluse[:-1]
+                pdc.AddPcfFilter(flt)
+                    
         ra = None
         c = cn('pcfraggrage')
         if c:
@@ -911,10 +921,11 @@ class SetCauDialog(aw.Dialog):
     Dialog SetCausali
     """
     def __init__(self, *args, **kwargs):
+        isGruppo= kwargs.pop('isGruppo', False)
         if not kwargs.has_key('title') and len(args) < 3:
             kwargs['title'] = "Esclusione Causali"
         aw.Dialog.__init__(self, *args, **kwargs)
-        self.panel = SetCauPanel(self, -1)
+        self.panel = SetCauPanel(self, -1, isGruppo=isGruppo)
         self.AddSizedPanel(self.panel)
         self.CenterOnScreen()
 
@@ -934,7 +945,13 @@ class SetCauPanel(aw.Panel):
     """
     Pannello SetCausali
     """
+    chiave = None
     def __init__(self, *args, **kwargs):
+        isGruppo= kwargs.pop('isGruppo', False)
+        if isGruppo:
+            self.chiave='scadgru_cau_escluse'
+        else:
+            self.chiave='scad_cau_escluse'
         aw.Panel.__init__(self, *args, **kwargs)
         wdr.SetCauFunc(self)        
         cn=self.FindWindowByName
@@ -969,7 +986,7 @@ class SetCauPanel(aw.Panel):
             self.causali.Append('%s - %s' % (r.codice, r.descriz))
             self.causali.SetPyData(self.causali.GetCount()-1,'%s' % r.id)          
         
-        self.dbSetup.Retrieve('chiave="scad_cau_escluse"')
+        self.dbSetup.Retrieve('chiave="%s"' % self.chiave)
         if self.dbSetup.OneRow():
             lCauId = self.dbSetup.descriz.split(',')
             for i in range(self.causali.GetCount()):
@@ -983,11 +1000,11 @@ class SetCauPanel(aw.Panel):
         for i in range(self.causali.GetCount()):
             if self.causali.IsChecked(i):
                 tmp='%s%s,' % (tmp, self.causali.GetPyData(i))
-        self.dbSetup.Retrieve('chiave="scad_cau_escluse"')
+        self.dbSetup.Retrieve('chiave="%s"' % self.chiave)
         if len(tmp)>0:
             if not self.dbSetup.OneRow():
                 self.dbSetup.CreateNewRow()
-            self.dbSetup.chiave="scad_cau_escluse"
+            self.dbSetup.chiave=self.chiave
             self.dbSetup.descriz=tmp
         else:
             self.dbSetup.Delete()
