@@ -274,7 +274,9 @@ class ScadenzarioPanel(aw.Panel):
         cauEx=''
         dbSetup=adb.DbTable(Env.Azienda.BaseTab.TABNAME_CFGSETUP, 'setup') 
         if self.isGruppo:
-            dbSetup.Retrieve('chiave="scadgru_cau_escluse"')
+            grp=self.FindWindowByName('scadgrp').GetValue()
+            if not grp ==None:
+                dbSetup.Retrieve('chiave="scad%s_cau_escluse"' % grp)
         else:
             dbSetup.Retrieve('chiave="scad_cau_escluse"')
         if dbSetup.OneRow():
@@ -283,9 +285,16 @@ class ScadenzarioPanel(aw.Panel):
     
     
     def OnSetCau(self, evt):
-        dlg = SetCauDialog(self, isGruppo=self.isGruppo)
-        dlg.ShowModal()
-        self.cauEscluse = self.GetCausaliEscluse()        
+        do = True
+        if self.isGruppo:
+            if self.FindWindowByName('scadgrp').GetValue()==None:
+                aw.awu.MsgDialog(self, "Selezionare un gruppo")
+                do = False
+                
+        if do:
+            dlg = SetCauDialog(self, isGruppo=self.isGruppo, idGruppo=self.FindWindowByName('scadgrp'))
+            dlg.ShowModal()
+            self.cauEscluse = self.GetCausaliEscluse()        
         evt.Skip()
     
     def OpenTables(self, agedoc=False):
@@ -922,10 +931,11 @@ class SetCauDialog(aw.Dialog):
     """
     def __init__(self, *args, **kwargs):
         isGruppo= kwargs.pop('isGruppo', False)
+        idGruppo= kwargs.pop('idGruppo', False)
         if not kwargs.has_key('title') and len(args) < 3:
             kwargs['title'] = "Esclusione Causali"
         aw.Dialog.__init__(self, *args, **kwargs)
-        self.panel = SetCauPanel(self, -1, isGruppo=isGruppo)
+        self.panel = SetCauPanel(self, -1, isGruppo=isGruppo, idGruppo=idGruppo)
         self.AddSizedPanel(self.panel)
         self.CenterOnScreen()
 
@@ -946,10 +956,12 @@ class SetCauPanel(aw.Panel):
     Pannello SetCausali
     """
     chiave = None
+    
     def __init__(self, *args, **kwargs):
         isGruppo= kwargs.pop('isGruppo', False)
+        idGruppo= kwargs.pop('idGruppo', False)
         if isGruppo:
-            self.chiave='scadgru_cau_escluse'
+            self.chiave='scadgru%s_cau_escluse' % idGruppo.GetValue()
         else:
             self.chiave='scad_cau_escluse'
         aw.Panel.__init__(self, *args, **kwargs)

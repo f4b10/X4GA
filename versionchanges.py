@@ -29,6 +29,12 @@ import mx.DateTime as dt
 import mx.Odt
 
 history = (
+    ('1.5.81', dt.Date(2019, 11, 10), (
+         ("BET1279",
+         """Aggiunta possibilità di escludere causali contabili da scadenzari"""
+        ),
+        ),),
+           
     ('1.5.80', dt.Date(2019, 11, 4), (
          ("BET1278",
          """Aggiunto campo codice_studio per consentire di relazionare il piano dei conti aziendale con quello dell'eventuale studio di consulenza"""
