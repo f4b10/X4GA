@@ -512,6 +512,7 @@ def DialogFunc( parent, call_fit = True, set_sizer = True ):
     item1 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
     item2 = wx.BoxSizer( wx.HORIZONTAL )
+    parent.btnMain = item2
     
     item3 = wx.Button( parent, ID_BTN_NEW, "&Inserisci", wx.DefaultPosition, wx.DefaultSize, 0 )
     item3.SetToolTip( wx.ToolTip("Inserisce un nuovo documento") )
