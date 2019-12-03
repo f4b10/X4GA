@@ -193,7 +193,8 @@ def ProdCardFunc( parent, call_fit = True, set_sizer = True ):
     item1.Add( item2, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item3 = wx.StaticText( parent, ID_TEXT, "Descrizione:", wx.DefaultPosition, [90,-1], 0 )
-    item1.Add( item3, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
+    item3.SetName( "labelDescrizione" )
+    item1.Add( item3, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 
     item4 = wx.StaticText( parent, ID_TEXT, "Extra:", wx.DefaultPosition, [90,-1], 0 )
     item1.Add( item4, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
