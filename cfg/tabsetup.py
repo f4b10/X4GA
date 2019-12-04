@@ -1765,7 +1765,10 @@ class AdeguaPanel(aw.Panel):
 
             if tab=='catart':
                 for change in self.adeg[tab]:
-                    fl, tipo = change
+                    try:
+                        fl, tipo = change
+                    except:
+                        fl, tipo, _ = change
                     if fl=='caudoc' and tipo==1:
                         self.UpdateCatart()
             wait.SetValue(n)
