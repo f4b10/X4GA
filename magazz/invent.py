@@ -283,7 +283,8 @@ class InventPanel(aw.Panel):
         
         aw.Panel.__init__(self, *args, **kwargs)
         
-        self.dbinvdat = dbm.InventarioDaMovim(flatmag=True)
+        #self.dbinvdat = dbm.InventarioDaMovim(flatmag=True)
+        self.dbinvdat = dbm.InventarioDaMovim(flatmag=True, fields='id,codice,descriz,id_catart,id_gruart,id_status,id_gruprez,costo,prezzo,barcode')
         self.dbinvdat.ShowDialog(self)
         self.dbinvsch = dbm.InventarioDaScheda(flatmag=True)
         self.dbinvsch.ShowDialog(self)
@@ -497,6 +498,7 @@ class InventPanel(aw.Panel):
         val = cn("datinv").GetValue()
         if val is not None:
             i.SetDataInv(val)
+            
         
         self.SetMagFilter()
         
@@ -524,7 +526,7 @@ class InventPanel(aw.Panel):
                     if v2:
                         i.AddFilter("%s.codice<=%%s" % name, v2.rstrip()+'Z')
 
-        if i.tabinfo('cfgautom', 'maginidoc', 'aut_id', 'codice'):
+        if self.FindWindowByName('invdata').IsChecked() and i.tabinfo('cfgautom', 'maginidoc', 'aut_id', 'codice'):
             v_idmagaz=i._info.g_magazz
             v_datinv =i._info.g_data
             v_tipdoc =i.tabinfo('cfgautom', 'maginidoc', 'aut_id', 'codice')
