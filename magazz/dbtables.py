@@ -400,10 +400,16 @@ class DocMag(adb.DbTable):
             if not 'prezzo1' in fields:fields.append('prezzo1')
             if not 'prezzo2' in fields:fields.append('prezzo2')
             if not 'prezzo3' in fields:fields.append('prezzo3')
+        #=======================================================================
+        # dbmov = self.AddMultiJoin(\
+        #     bt.TABNAME_MOVMAG_B,  "mov",     idRight="id_doc",\
+        #     fields=fields, writable=writable, orderJoin='numriga')
+        #=======================================================================
         dbmov = self.AddMultiJoin(\
             bt.TABNAME_MOVMAG_B,  "mov",     idRight="id_doc",\
             fields=fields, writable=writable)
-
+        dbmov.AddOrder('mov.numriga')
+    
         dbtmov = dbmov.AddJoin(\
             bt.TABNAME_CFGMAGMOV, "config",  idLeft="id_tipmov",\
             join=adb.JOIN_LEFT)
@@ -3613,10 +3619,10 @@ class _InventarioMixin(adb.DbTable):
         cat = self.AddJoin(bt.TABNAME_CATART,  'catart',  join=adb.JOIN_LEFT)
         gru = self.AddJoin(bt.TABNAME_GRUART,  'gruart',  join=adb.JOIN_LEFT)
         mar = self.AddJoin(bt.TABNAME_MARART,  'marart',  join=adb.JOIN_LEFT)
-        iva = self.AddJoin(bt.TABNAME_ALIQIVA, 'aliqiva', join=adb.JOIN_LEFT)
+        iva = self.AddJoin(bt.TABNAME_ALIQIVA, 'aliqiva', join=adb.JOIN_LEFT, fields='id,codice,descriz,tipo,modo,perciva,percind')
         sta = self.AddJoin(bt.TABNAME_STATART, 'status',  join=adb.JOIN_LEFT)
         pdc = self.AddJoin(bt.TABNAME_PDC,     'pdcforn', join=adb.JOIN_LEFT, idLeft='id_fornit', idRight='id')
-        frn = pdc.AddJoin(bt.TABNAME_FORNIT,   'fornit',  join=adb.JOIN_LEFT, idLeft='id', idRight='id')
+        frn = pdc.AddJoin(bt.TABNAME_FORNIT,   'fornit',  join=adb.JOIN_LEFT, idLeft='id', idRight='id', fields='id')
 
         self.total_giac =  0
 
@@ -3677,7 +3683,7 @@ class _InventarioMixin(adb.DbTable):
             scorp = bt.MAGSCORPPRE
 
         elif tipo == VALINV_PREZZOLIST:
-            out = None
+            out = True
             lis = self._info.dblis
             lis.ClearFilters()
             lis.AddFilter("lis.id_prod=%s", self.id)
@@ -3688,9 +3694,14 @@ class _InventarioMixin(adb.DbTable):
             if numlis is None:
                 tli = self._info.dbtli
                 tli.Retrieve('tiplist.id=%s', id_lis)
-                numlis = int(tli.tipoprezzo)
-            out = getattr(lis, 'prezzo%d' % numlis)
-            scorp = bt.MAGSCORPPRE
+                try:
+                    numlis = int(tli.tipoprezzo)
+                except:
+                    MsgDialog(None, 'Specificare listino di vandita')
+                    out=False
+            if out:         
+                out = getattr(lis, 'prezzo%d' % numlis)
+                scorp = bt.MAGSCORPPRE
 
         else:
             raise """Tipo di valorizzazione da implementare"""
@@ -3703,8 +3714,10 @@ class _InventarioMixin(adb.DbTable):
             elif scorp and not self._info.calciva:
                 #il valore è ivato, e si vuole imponibile: scorporo iva
                 out = round(out/(1+perciva), 2)
-
-        self._info.valivati = scorp or self._info.calciva
+        try:
+            self._info.valivati = scorp or self._info.calciva
+        except:
+            pass
 
         return out or 0
 
