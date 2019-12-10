@@ -270,6 +270,7 @@ class DbRelation(object):
         self.operator =   None
         self.joinType =   None
         self.expression = None
+        self.order      = None
 
 
 # ------------------------------------------------------------------------------
@@ -737,7 +738,9 @@ class DbTable(object):
         if where:
             self.AddFilter(where)
         if order:
-            self.AddOrder(order)
+            dbrel.ClearOrders()
+            dbrel.AddOrder(order)            
+            #self.AddOrder(order)
         iroot = self
         while True:
             if iroot._info.iRoot is None or\
