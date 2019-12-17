@@ -41,6 +41,7 @@ def AnagCardFunc( parent, call_fit = True, set_sizer = True ):
     item1.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 0 )
 
     item3 = wx.StaticText( parent, ID_TXT_DESCRIZ, "Descrizione:", wx.DefaultPosition, [90,-1], 0 )
+    item3.SetName( "labelDescrizione" )
     item1.Add( item3, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 0 )
 
     item4 = wx.StaticText( parent, ID_TEXT, "id", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
@@ -92,6 +93,7 @@ def PdcRelAnagCardFunc( parent, call_fit = True, set_sizer = True ):
     item3 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
     item4 = wx.StaticText( parent, ID_TEXT, "Descrizione:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item4.SetName( "labelDescrizione" )
     item3.Add( item4, 0, wx.ALIGN_BOTTOM|wx.LEFT|wx.TOP, 5 )
 
     item5 = AutoNotes(parent, ID_AUTONOTES); item5.SetName('_attach_autotext')
