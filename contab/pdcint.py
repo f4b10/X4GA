@@ -198,12 +198,17 @@ class GridMastro(dbglib.DbGridColoriAlternati):
         mov = pdc.GetMastro()
         row = event.GetRow()
         mov.MoveRow(row)
+        
         try:
-            cls = contab.RegConDialogClass(mov.id_reg)
+            table = self.GetTable()
+            idReg= table.data[row][mov._GetFieldIndex('id_reg', True)]
+            cls = contab.RegConDialogClass(idReg)
+            #cls = contab.RegConDialogClass(mov.id_reg)
             if cls:
                 wx.BeginBusyCursor()
                 dlg = cls(aw.awu.GetParentFrame(self))
-                dlg.SetOneRegOnly(mov.id_reg)
+                #dlg.SetOneRegOnly(mov.id_reg)
+                dlg.SetOneRegOnly(idReg)
                 wx.EndBusyCursor()
                 if dlg.ShowModal() in (ctb.REG_MODIFIED, ctb.REG_DELETED):
                     evt = contab.RegChangedEvent(contab._evtREGCHANGED,
@@ -605,9 +610,15 @@ class GridScadenzario(dbglib.DbGridColoriAlternati,
         pdc = self.dbscad
         pcf = pdc.GetPartite()
         pcf.MoveRow(row)
+        
+        table = self.GetTable()
+        idReg= table.data[row][pcf._GetFieldIndex('id', True)]
+        
+        
         wx.BeginBusyCursor()
         dlg = PcfDialog(self)
-        dlg.SetPcf(pcf.id)
+        dlg.SetPcf(idReg)
+        #dlg.SetPcf(pcf.id)
         wx.EndBusyCursor()
         if dlg.ShowModal() != 0:
             evt = contab.PcfChangedEvent(contab._evtPCFCHANGED, self.GetId())

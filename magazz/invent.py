@@ -543,18 +543,10 @@ class InventPanel(aw.Panel):
 #             i.AddFilter(filter)
 #===============================================================================
 
-        i.ClearOrders()
-        i._info.raggrcat = False
-        s1 = 1
-        s2 = 1
-        c = cn('raggrcat')
-        if c:
-            if c.GetValue():
-                i.AddOrder('catart.codice')
-                i._info.raggrcat = True
-                s1 = 35
-                s2 = 120
-        i.AddOrder('prod.codice')
+
+        
+        s1, s2 = self.SetOrders(i)
+        
         
         i.Retrieve()
         
@@ -595,6 +587,20 @@ class InventPanel(aw.Panel):
         g.AutoSizeColumns()
 
 
+    def SetOrders(self, i):
+        i.ClearOrders()
+        i._info.raggrcat = False        
+        s1=1
+        s2=2
+        c = self.FindWindowByName('raggrcat')
+        if c:
+            if c.GetValue():
+                i.AddOrder('catart.codice')
+                i._info.raggrcat = True
+                s1 = 35
+                s2 = 120
+        i.AddOrder('prod.codice')
+        return (s1,s2)
 # ------------------------------------------------------------------------------
 
 

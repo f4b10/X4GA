@@ -89,13 +89,19 @@ class TipOrdRadioBox(RadioBox):
 
     def __init__(self, *args, **kwargs):
         RadioBox.__init__(self, *args, **kwargs)
-        self.SetDataLink(values=("C","D"))
+        self.SetDataLink(values=("C","D","G","T"))
 
 class TipoGiacenzaRadioBox(RadioBox):
 
     def __init__(self, *args, **kwargs):
         RadioBox.__init__(self, *args, **kwargs)
         self.SetDataLink(values=("T","Z","P","N"))
+
+class StatusRadioBox(RadioBox):
+
+    def __init__(self, *args, **kwargs):
+        RadioBox.__init__(self, *args, **kwargs)
+        self.SetDataLink(values=("T","V","N"))
 
 
 
@@ -272,9 +278,10 @@ ID_TIPORD = 14019
 ID_TIPVAL = 14020
 ID_TIPGIACON = 14021
 ID_TIPGIAFIS = 14022
-ID_BTNESTRAI = 14023
-ID_PANGRID = 14024
-ID_BTNLIST = 14025
+ID_RADIOBOX = 14023
+ID_BTNESTRAI = 14024
+ID_PANGRID = 14025
+ID_BTNLIST = 14026
 
 def EditGiacenzeFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -385,7 +392,7 @@ def EditGiacenzeFunc( parent, call_fit = True, set_sizer = True ):
     item1.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item30 = TipOrdRadioBox( parent, ID_TIPORD, "Ordinamento", wx.DefaultPosition, wx.DefaultSize, 
-        ["Codice","Descrizione"] , 1, wx.RA_SPECIFY_COLS )
+        ["Codice","Descrizione","Cat/Gru/Cod","Cat/Gru/Desc"] , 1, wx.RA_SPECIFY_COLS )
     item30.SetName( "tipord" )
     item1.Add( item30, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
 
@@ -404,32 +411,45 @@ def EditGiacenzeFunc( parent, call_fit = True, set_sizer = True ):
     item33.SetName( "tipgiafis" )
     item1.Add( item33, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
 
-    item34 = wx.Button( parent, ID_BTNESTRAI, "Estrai giacenze", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item34.SetName( "btnestrai" )
-    item1.Add( item34, 0, wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
+    item34 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    
+    item35 = StatusRadioBox( parent, ID_RADIOBOX, "Status Prodotti", wx.DefaultPosition, wx.DefaultSize, 
+        ["Tutti","Escludi Nascosti","Solo Nadcosti"] , 1, wx.RA_SPECIFY_COLS )
+    item35.SetName( "tipStatus" )
+    item34.Add( item35, 0, wx.GROW|wx.ALL, 5 )
+
+    item34.Add( [ 20, 20 ] , 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+    item36 = wx.Button( parent, ID_BTNESTRAI, "Estrai giacenze", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item36.SetName( "btnestrai" )
+    item34.Add( item36, 0, wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
+
+    item34.AddGrowableRow( 1 )
+
+    item1.Add( item34, 0, wx.GROW|wx.BOTTOM, 5 )
 
     item1.AddGrowableCol( 4 )
 
     item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item35 = wx.StaticLine( parent, ID_LINE, wx.DefaultPosition, [20,-1], wx.LI_HORIZONTAL )
-    item0.Add( item35, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+    item37 = wx.StaticLine( parent, ID_LINE, wx.DefaultPosition, [20,-1], wx.LI_HORIZONTAL )
+    item0.Add( item37, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
-    item36 = wx.StaticText( parent, ID_TEXT, "Giacenze prodotti", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item36.SetForegroundColour( wx.BLUE )
-    item0.Add( item36, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+    item38 = wx.StaticText( parent, ID_TEXT, "Giacenze prodotti", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item38.SetForegroundColour( wx.BLUE )
+    item0.Add( item38, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
 
-    item37 = wx.Panel( parent, ID_PANGRID, wx.DefaultPosition, [800,400], 0 )
-    item37.SetName( "pangrid" )
-    item0.Add( item37, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item39 = wx.Panel( parent, ID_PANGRID, wx.DefaultPosition, [800,400], 0 )
+    item39.SetName( "pangrid" )
+    item0.Add( item39, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item38 = wx.BoxSizer( wx.HORIZONTAL )
+    item40 = wx.BoxSizer( wx.HORIZONTAL )
     
-    item39 = wx.Button( parent, ID_BTNLIST, "Lista giacenze rilevate", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item39.SetName( "btnlist" )
-    item38.Add( item39, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+    item41 = wx.Button( parent, ID_BTNLIST, "Lista giacenze rilevate", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item41.SetName( "btnlist" )
+    item40.Add( item41, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
-    item0.Add( item38, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item0.Add( item40, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item0.AddGrowableCol( 0 )
 
@@ -442,10 +462,10 @@ def EditGiacenzeFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_TIPOPROD = 14026
-ID_TIPOVAL = 14027
-ID_STAGCON = 14028
-ID_BTNPRINT = 14029
+ID_TIPOPROD = 14027
+ID_TIPOVAL = 14028
+ID_STAGCON = 14029
+ID_BTNPRINT = 14030
 
 def ListGiacenzeFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -482,12 +502,12 @@ def ListGiacenzeFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_PANGRIDRIEP = 14030
-ID_TIPDOC = 14031
-ID_TIPMOV = 14032
-ID_DATDOC = 14033
-ID_NUMDOC = 14034
-ID_BTNGENMOV = 14035
+ID_PANGRIDRIEP = 14031
+ID_TIPDOC = 14032
+ID_TIPMOV = 14033
+ID_DATDOC = 14034
+ID_NUMDOC = 14035
+ID_BTNGENMOV = 14036
 
 def GeneraMovimentiFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )

@@ -949,6 +949,7 @@ def ListiniAttualiFunc( parent, call_fit = True, set_sizer = True ):
 ID_DATAVAL = 14082
 ID_INCL_COSTO = 14083
 ID_INCL_PZCONF = 14084
+ID_CHECKBOX = 14085
 
 def ListiniAttualiSelDataFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.BoxSizer( wx.VERTICAL )
@@ -973,6 +974,12 @@ def ListiniAttualiSelDataFunc( parent, call_fit = True, set_sizer = True ):
     item6.SetName( "incl_pzconf" )
     item1.Add( item6, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
+    item1.Add( [ 20, 20 ] , 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+    item7 = CheckBox( parent, ID_CHECKBOX, "Includi Prodotti esclusi dalle ricerche", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item7.SetName( "includiHide" )
+    item1.Add( item7, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+
     item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     if set_sizer == True:
@@ -982,8 +989,8 @@ def ListiniAttualiSelDataFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_PDC = 14085
-ID_BUTCHICOSA = 14086
+ID_PDC = 14086
+ID_BUTCHICOSA = 14087
 
 def GrigliaPrezziAttualiSelDataFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.BoxSizer( wx.VERTICAL )
@@ -1029,7 +1036,7 @@ def GrigliaPrezziAttualiSelDataFunc( parent, call_fit = True, set_sizer = True )
     
     return item0
 
-ID_ELENCOTITLE = 14087
+ID_ELENCOTITLE = 14088
 
 def VediPrezziInVigoreFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -1058,7 +1065,7 @@ def VediPrezziInVigoreFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_PANGRIDRIEP = 14088
+ID_PANGRIDRIEP = 14089
 
 def ChiCosaFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -1078,10 +1085,10 @@ def ChiCosaFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_NUMPRODOTTI = 14089
-ID_NEW_GRUPREZ = 14090
-ID_SOLOSENZAGP = 14091
-ID_BUTASSEGNA = 14092
+ID_NUMPRODOTTI = 14090
+ID_NEW_GRUPREZ = 14091
+ID_SOLOSENZAGP = 14092
+ID_BUTASSEGNA = 14093
 
 def AssegnaGruPrezFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -1267,7 +1274,7 @@ def ValutaCostiPrezziBaseFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_PANGRIDMOV = 14093
+ID_PANGRIDMOV = 14094
 
 def MovimentiPrezziFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -1291,12 +1298,12 @@ def MovimentiPrezziFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_DATREG1 = 14094
-ID_DATREG2 = 14095
-ID_FILT_ANAG1 = 14096
-ID_FILT_ANAG2 = 14097
-ID_FILT_AGENTE1 = 14098
-ID_FILT_AGENTE2 = 14099
+ID_DATREG1 = 14095
+ID_DATREG2 = 14096
+ID_FILT_ANAG1 = 14097
+ID_FILT_ANAG2 = 14098
+ID_FILT_AGENTE1 = 14099
+ID_FILT_AGENTE2 = 14100
 
 def ValutaPrezziClientiFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -1396,10 +1403,10 @@ def ValutaCostiFornitoriFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_PANBASE = 14100
-ID_PANANAG = 14101
-ID_PANGRIDVPV = 14102
-ID_PRINT = 14103
+ID_PANBASE = 14101
+ID_PANANAG = 14102
+ID_PANGRIDVPV = 14103
+ID_PRINT = 14104
 
 def ValutaPrezziApplicatiFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )

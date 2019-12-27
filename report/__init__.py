@@ -405,7 +405,7 @@ class Report:
         #ricerca del report
         for pathsrc in self.GetPaths():
             test = "%s/%s" % (pathsrc, rptdef)
-            print 'cerco:%s' % test
+            #print 'cerco:%s' % test
             if os.path.isdir(test) or os.path.isfile(test+'.jrxml'):
                 if os.path.isfile(test+'.jrxml') and output == "STORE" and not forcechoice:
                     rptdef = test+'.jrxml'

@@ -143,7 +143,8 @@ class EditGiacenzeGrid(dbglib.DbGridColoriAlternati):
         cst = pro.procos
         gia = pro.progia
         mag = gia.magazz
-        
+        cat = pro.catart
+        gru = pro.gruart
         self.proidcol = cc(pro, 'id')
         self.descrizcol = cc(pro, 'descriz')
         
@@ -180,6 +181,11 @@ class EditGiacenzeGrid(dbglib.DbGridColoriAlternati):
             self.COL_VALUNI = b((110, (self.rscvaluni, "Costo Medio",    _PRZ, True)))
         
         self.COL_VALORE =     a((120, (-1,             "Valore",         _FLV, True)))
+
+
+        self.COL_catart = b(( 40, (cc(cat, "codice"),  "Cod.",         _STR, True)))
+        self.COL_gruart = b(( 40, (cc(gru, "codice"),  "Cod.",         _STR, True)))
+
         
         self.COL_ID_GIA = a((  1, (cc(gia, "id"),      "#gia",           _STR, True)))
         self.COL_ID_PRO = a((  1, (cc(pro, "id"),      "#pro",           _STR, True)))
@@ -388,6 +394,9 @@ class EditGiacenzePanel(wx.Panel):
                            ('btnlist', self.OnPrint)):
             self.Bind(wx.EVT_BUTTON, func, cn(name))
         self.Bind(EVT_UPDATETOTALS, self.OnUpdateTotali)
+        cn('tipord').SetValue('T')
+    
+    
     
     def OnPrint(self, event):
         self.PrintGiac()
@@ -475,6 +484,15 @@ class EditGiacenzePanel(wx.Panel):
                     pro.AddFilter('progia.giafis>0')
                 elif tg == 'N':
                     pro.AddFilter('progia.giafis<0')
+
+            ts = cn('tipStatus').GetValue()
+            if ts in 'VN':
+                if ts == 'V':
+                    pro.AddFilter('status.hidesearch=0 OR status.hidesearch IS NULL')
+                elif ts == 'N':
+                    pro.AddFilter('status.hidesearch=1')
+
+
                     
 #----------------------------------------------------------------------------------------------- gio
             v1 = cn('codice1').GetValue()
@@ -511,6 +529,15 @@ class EditGiacenzePanel(wx.Panel):
                 pro.AddOrder('prod.codice')
             elif to == "D":
                 pro.AddOrder('prod.descriz')
+            elif to == "G":
+                pro.AddOrder('catart.codice')
+                pro.AddOrder('gruart.codice')
+                pro.AddOrder('prod.codice')
+            elif to == "T":
+                pro.AddOrder('catart.codice')
+                pro.AddOrder('gruart.codice')
+                pro.AddOrder('prod.descriz')
+            
             pro.Retrieve()
             pro.SetTipVal(tpv)
             grid = self.gridgiac

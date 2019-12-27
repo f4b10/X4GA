@@ -1326,6 +1326,7 @@ def IntRegConFunc( parent, call_fit = True, set_sizer = True ):
     item52 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
     item53 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    parent.sizerCheck = item53
     
     item54 = wx.StaticText( parent, ID_TEXT, "Esercizio:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item53.Add( item54, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
@@ -1433,7 +1434,7 @@ def IntRegConFunc( parent, call_fit = True, set_sizer = True ):
     item75.SetForegroundColour( wx.BLUE )
     item74.Add( item75, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
 
-    item76 = wx.Panel( parent, ID_PANGRIDREG, wx.DefaultPosition, [980,360], wx.SUNKEN_BORDER )
+    item76 = wx.Panel( parent, ID_PANGRIDREG, wx.DefaultPosition, [1080,360], wx.SUNKEN_BORDER )
     item74.Add( item76, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item77 = wx.FlexGridSizer( 1, 0, 0, 0 )

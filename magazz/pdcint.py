@@ -235,12 +235,15 @@ class PdcIntMagMovGrid(dbglib.DbGridColoriABlocchi):
         row = event.GetRow()
         dbmov = self.dbmov
         if 0 <= row < dbmov.RowsCount():
+            table = self.GetTable()
+            idDoc= table.data[row][dbmov._GetFieldIndex('id_doc', True)]        
             dbmov.MoveRow(row)
             wx.BeginBusyCursor()
             try:
                 Dialog = magazz.GetDataentryDialogClass()
                 dlg = Dialog(aw.awu.GetParentFrame(self))
-                dlg.SetOneDocOnly(dbmov.doc.id)
+                #dlg.SetOneDocOnly(dbmov.doc.id)
+                dlg.SetOneDocOnly(idDoc)
                 dlg.CenterOnScreen()
             finally:
                 wx.EndBusyCursor()

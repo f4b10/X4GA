@@ -160,11 +160,13 @@ class EditGiacenzeTable(adb.DbTable):
             self.SetTipVal(kwargs.pop('tipval'))
         
         adb.DbTable.__init__(self, bt.TABNAME_PROD, 'prod')
+        sta = self.AddJoin(bt.TABNAME_STATART,'status', idLeft='id_status', idRight='id', join=adb.JOIN_LEFT)
         cos = self.AddJoin(bt.TABNAME_PROCOS, 'procos', idLeft='id', idRight='id_prod', join=adb.JOIN_LEFT)
         gia = self.AddJoin(bt.TABNAME_PROGIA, 'progia', idLeft='id', idRight='id_prod', join=adb.JOIN_LEFT)
         mag = gia.AddJoin(bt.TABNAME_MAGAZZ,  'magazz', join=adb.JOIN_LEFT)
         
         cat = self.AddJoin(bt.TABNAME_CATART, 'catart', idLeft='id_catart', idRight='id', join=adb.JOIN_LEFT)
+        gru = self.AddJoin(bt.TABNAME_GRUART, 'gruart', idLeft='id_gruart', idRight='id', join=adb.JOIN_LEFT)
         
         self.Reset()
         self.AddOrder('prod.codice')

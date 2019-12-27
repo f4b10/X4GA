@@ -65,6 +65,8 @@ class ListiniAttualiGrid(dbglib.DbGridColoriAlternati):
         cols = []
         def a(x):
             cols.append(x)
+        a(( 30, (cc("catart"),      "Cat.",        _STR, True )))
+        a(( 45, (cc("gruart"),      "Gruppo",        _STR, True )))
         a(( 80, (cc("prod_codice"),      "Codice",        _STR, True )))
         a((300, (cc("prod_descriz"),     "Prodotto",      _STR, True )))
         
@@ -209,6 +211,12 @@ class ListiniAttualiPanel(aw.Panel):
             li.AddFilter("pdc.descriz>=%s", c1)
         if c2:
             li.AddFilter("pdc.descriz<=%s", c2)
+            
+            
+        if self.FindWindowByName('includiHide').GetValue()==0:
+            li.AddFilter("(not status.hidesearch=%s or status.hidesearch is null)", 1)
+            
+            
         lis.Retrieve(li.cmd, li.par)
         self.InitGrid()
         self.gridlis.ChangeData(lis.GetRecordset())

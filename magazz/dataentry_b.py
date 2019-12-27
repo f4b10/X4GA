@@ -1417,6 +1417,10 @@ class GridBody(object):
                     mov.sconto4 = self.GridBodyDefSconto(4, mov)
                     mov.sconto5 = self.GridBodyDefSconto(5, mov)
                     mov.sconto6 = self.GridBodyDefSconto(6, mov)
+                    if 'ALGOR' in Env.Azienda.descrizione:
+                        if mov.config.tipologia=='O':
+                            mov.sconto1 = mov.sconto2 = mov.sconto3 = mov.sconto4 = mov.sconto5 = mov.sconto6 = 0
+                    
                     if bt.MAGPZCONF:
                         mov.pzconf = mov.prod.pzconf
                         if bt.MAGPZGRIP:

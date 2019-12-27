@@ -52,14 +52,20 @@ class _DocIntGridMixin(object):
         assert isinstance(self, dbglib.DbGrid)
         row = event.GetRow()
         dbdoc = self.dbdoc
+        
         if 0 <= row < dbdoc.RowsCount():
+            table = self.GetTable()
+            idDoc= table.data[row][dbdoc._GetFieldIndex('id', True)]        
+            idTipDoc= table.data[row][dbdoc._GetFieldIndex('id_tipdoc', True)]        
             dbdoc.MoveRow(row)
-            if magazz.CheckPermUte(dbdoc.id_tipdoc, 'leggi'):
+            if magazz.CheckPermUte(idTipDoc, 'leggi'):
+            #if magazz.CheckPermUte(dbdoc.id_tipdoc, 'leggi'):
                 wx.BeginBusyCursor()
                 try:
                     Dialog = magazz.GetDataentryDialogClass()
                     dlg = Dialog(aw.awu.GetParentFrame(self))
-                    dlg.SetOneDocOnly(dbdoc.id)
+                    dlg.SetOneDocOnly(idDoc)
+                    #dlg.SetOneDocOnly(dbdoc.id)
                     dlg.CenterOnScreen()
                 finally:
                     wx.EndBusyCursor()

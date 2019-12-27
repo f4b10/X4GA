@@ -469,7 +469,7 @@ class TabProdListiniAttualiTable(adb.DbMem):
     datamax = None
     
     def __init__(self, **kwargs):
-        adb.DbMem.__init__(self, 'prod_id,prod_codice,prod_descriz,prod_descextra,prod_pzconf,prod_codfor,prod_barcode,pdc_id,pdc_codice,pdc_descriz,prod_costo,prod_prezzo,listino_data,listino_prezzo1,listino_prezzo2,listino_prezzo3,listino_prezzo4,listino_prezzo5,listino_prezzo6,listino_prezzo7,listino_prezzo8,listino_prezzo9')
+        adb.DbMem.__init__(self, 'catart,gruart,prod_id,prod_codice,prod_descriz,prod_descextra,prod_pzconf,prod_codfor,prod_barcode,pdc_id,pdc_codice,pdc_descriz,prod_costo,prod_prezzo,listino_data,listino_prezzo1,listino_prezzo2,listino_prezzo3,listino_prezzo4,listino_prezzo5,listino_prezzo6,listino_prezzo7,listino_prezzo8,listino_prezzo9')
         self.prod = self.NullProd(self)
         self._keys = ['prod_costo', 'prod_prezzo']
         self._keys += ['listino_prezzo%d'%l for l in range(1,10)]
@@ -482,7 +482,9 @@ class TabProdListiniAttualiTable(adb.DbMem):
     def Retrieve(self, filter_cmd=None, filter_par=[]):
         if bt.MAGDATLIS:
             cmd = """
-            SELECT prod.id        'prod_id', 
+            SELECT  catart.codice 'catart',
+                    gruart.codice 'gruart',
+                   prod.id        'prod_id', 
                    prod.codice    'prod_codice', 
                    prod.descriz   'prod_descriz', 
                    prod.descextra 'prod_descextra',
@@ -527,7 +529,9 @@ class TabProdListiniAttualiTable(adb.DbMem):
             par = [self.datamax]
         else:
             cmd = """
-            SELECT prod.id        'prod_id', 
+            SELECT catart.codice 'catart',
+                    gruart.codice 'gruart',
+                    prod.id        'prod_id', 
                    prod.codice    'prod_codice', 
                    prod.descriz   'prod_descriz', 
                    prod.descextra 'prod_descextra', 
@@ -565,6 +569,10 @@ class TabProdListiniAttualiTable(adb.DbMem):
             cmd += """
             WHERE %s
             """ % filter_cmd
+        if 'ALGOR' in Env.Azienda.descrizione:
+            cmd = '%s order by catart.codice, gruart.codice, prod.descriz' % cmd  
+            print cmd 
+            
         par += filter_par
         db = adb.db.__database__
         db.Retrieve(cmd, par)
