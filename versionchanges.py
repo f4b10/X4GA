@@ -29,6 +29,13 @@ import mx.DateTime as dt
 import mx.Odt
 
 history = (
+    ('1.5.85', dt.Date(2019, 11, 10), (
+         ("BET1280",
+         """Per ovviare a problema di MySql gone away"""
+        ),
+        ),),
+           
+
     ('1.5.81', dt.Date(2019, 11, 10), (
          ("BET1279",
          """Aggiunta possibilità di escludere causali contabili da scadenzari"""

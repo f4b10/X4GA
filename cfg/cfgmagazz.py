@@ -145,7 +145,10 @@ class CfgDocMov(adb.DbTable):
                          "noprint",   #Flag esclusione righe da stampa doc.
                          "f_acqpdt")  #Flag acquisizione letture da pdt
         
-        adb.DbTable.__init__(self, bt.TABNAME_CFGMAGDOC, "tipdoc")
+        try:
+            adb.DbTable.__init__(self, bt.TABNAME_CFGMAGDOC, "tipdoc")
+        except:
+            adb.DbTable.__init__(self, bt.TABNAME_CFGMAGDOC, "tipdoc", dbName=Azienda.DB.schema)
         
         dbmov = self.AddMultiJoin(\
             bt.TABNAME_CFGMAGMOV, "tipmov")

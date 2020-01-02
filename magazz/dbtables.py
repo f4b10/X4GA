@@ -124,10 +124,17 @@ class DocMag(adb.DbTable):
     datiAnag = None
     def __init__(self, writable=True, **kwargs):
         kwargs['writable'] = writable
-        adb.DbTable.__init__(self,\
-                             bt.TABNAME_MOVMAG_H,  "doc",\
-                             **kwargs)
 
+        try:
+            adb.DbTable.__init__(self,\
+                                 bt.TABNAME_MOVMAG_H,  "doc",\
+                                 **kwargs)
+        except:
+            kwargs['dbName']=Env.Azienda.DB.schema
+            adb.DbTable.__init__(self,\
+                                 bt.TABNAME_MOVMAG_H,  "doc",\
+                                 **kwargs)
+            
         self.dbiva = iva.IVA_Table()
 
         dbtdoc = self.AddJoin(\
