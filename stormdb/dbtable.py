@@ -394,6 +394,7 @@ class DbTable(object):
             database  (DB) database object used to execute all the database
                       commands (default=__connection__)
         """
+        
         if dbName:
             import Env
             host = Env.Azienda.DB.servername
@@ -402,7 +403,8 @@ class DbTable(object):
             dba = adb.db.DB(dbType=getattr(adb.db.__database__, '_dbType'), globalConnection=False)
             dba.Connect(host=host, user=user, passwd=pswd, db=dbName)
             db=dba
-            adb.db.__database__ = db
+            if dbName == Env.Azienda.DB.schema:
+                adb.db.__database__ = db
         
         if db is None:
             db = adb.db.__database__
