@@ -1555,7 +1555,7 @@ class MagazzPanel(aw.Panel,\
                     sendem = False
 
         if self.status == STATUS_EDITING:
-            self.dbdoc.f_printed = 1
+            #self.dbdoc.f_printed = 1
             if not self.DocSave(doc):
                 return False
             self.UpdateDocIdControls()
@@ -1607,6 +1607,13 @@ class MagazzPanel(aw.Panel,\
         out = False
         ur = r.GetUsedReport()
         if ur is not None and ur.completed:
+            if (self.dbdoc.f_printed or 0)==0:            
+                d,n = os.path.split(r.parameters['rptdef'])
+                if not '(NOFS)' in n:
+                    print 'settare flag di stampato'
+                    self.dbdoc.f_printed = 1
+                    self.DocSave(doc)
+            
             out = True
             self.viewFtel = False
             try:

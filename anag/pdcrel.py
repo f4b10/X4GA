@@ -311,7 +311,7 @@ class _PdcRelPanel(ga.AnagPanel,\
     def GetValueSearchValues(self):
         vsf = ga.AnagPanel.GetValueSearchValues(self)
         for n, (col, ctr) in enumerate(self.anag_db_datalink):
-            if isinstance(ctr, (wx.RadioBox, wx.CheckBox)):
+            if isinstance(ctr, (wx.RadioBox, wx.CheckBox, wx.ComboBox)):
                 continue
             if type(ctr) in (str, unicode):
                 value = getattr(self, ctr)

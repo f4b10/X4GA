@@ -29,6 +29,18 @@ import mx.DateTime as dt
 import mx.Odt
 
 history = (
+    ('1.5.86', dt.Date(2019, 01, 20), (
+        ("BET1283",
+         """Rimosso bug che inibiva l'utilizzo filtro per valori su schede anagrafiche"""
+        ),
+        ("BET1282",
+         """Aggiunta colonna giacenza finale su schede prodotti"""
+        ),
+        ("BET1281",
+         """Introdotta possibilita di stampa di documenti di magazzino che non aggiornano flasg di stampa (NOFS)"""
+        ),
+        ),),
+           
     ('1.5.85', dt.Date(2019, 11, 10), (
          ("BET1280",
          """Per ovviare a problema di MySql gone away"""

@@ -1643,7 +1643,7 @@ class DbGridTable(gridlib.PyGridTableBase):
         if type(cols) != list:
             cols = list(cols)
         self.totals.append((lblcol, lbl, cols, [0]*len(cols), cbfilt))
-
+        
     def GetTotalsRows(self):
         return self.totals
 

@@ -943,6 +943,7 @@ class AnagPanel(aw.Panel):
         event.Skip()
 
     def OnCallValueSearch(self, event):
+        print 'OnCallValueSearch'
         if self.valuesearch:
             self.valuesearchvalues = self.GetValueSearchValues()
             self.UpdateSearch()
@@ -1271,7 +1272,7 @@ class AnagPanel(aw.Panel):
         vsf = []
         if self.valuesearch:
             for n, (col, ctr) in enumerate(self.db_datalink):
-                if isinstance(ctr, (wx.RadioBox, wx.CheckBox)):
+                if isinstance(ctr, (wx.RadioBox, wx.CheckBox, wx.ComboBox)):
                     continue
                 if type(ctr) in (str, unicode):
                     value = getattr(self, ctr)

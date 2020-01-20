@@ -648,7 +648,14 @@ class DB(object):
             return '!BASE64|%s|' % base64_encoded
         if type(x) in (str, unicode):
             if '\n' in x or '"' in x or '=' in x:
-                return '!BASE64|%s|' % base64.b64encode(x)
+                try:
+                    return '!BASE64|%s|' % base64.b64encode(x)
+                except:
+                    x=x.encode('ascii', 'ignore')
+                    try:
+                        return '!BASE64|%s|' % base64.b64encode(x)
+                    except:
+                        pass
             x = x.encode('utf-8')
         else:
             x = str(x)

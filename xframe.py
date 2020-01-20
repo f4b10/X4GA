@@ -253,6 +253,13 @@ class XFrame(aw.Frame):
         sizer.SetSizeHints(self)
         
         self.Fit()
+        
+        if len(self.MenuBar.GetMenus())>10:
+            n=len(self.MenuBar.GetMenus())-10
+            x,y=self.Size
+            self.Size=(x+(n*50), y)
+        
+        
         self.Layout()
         
         if show_promem:

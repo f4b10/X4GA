@@ -67,6 +67,7 @@ def ProdProgrGridColumns(mov):
     _IMPQ = bt.GetMagQtaMaskInfo()
     _IMPV = bt.GetValIntMaskInfo()
     return [\
+        ( qw, (cn(mov,"total_giac"),   "Giacenza",     _IMPQ, True )),\
         ( qw, (cn(mov,"total_ini"),    "Giac.Iniz.",  _IMPQ, True )),\
         ( qw, (cn(mov,"total_car"),    "Carichi",     _IMPQ, True )),\
         ( qw, (cn(mov,"total_sca"),    "Scarichi",    _IMPQ, True )),\
@@ -112,6 +113,7 @@ class ProdProSchedaGrid(dbglib.DbGridColoriAlternati):
                           'codice'),    "Cod.",      _STR, True)),
                 ( 70, (cn(pro.magazz, 
                           'descriz'),   "Magazzino", _STR, True)),
+                (110, (cn(pro, 'finale'),  "Giacenza",  _QTA, True)),
                 (110, (cn(pro, 'ini'),  "Giac.In.",  _QTA, True)),
                 (110, (cn(pro, 'car'),  "Carichi",   _QTA, True)),
                 (110, (cn(pro, 'sca'),  "Scarichi",  _QTA, True)),
@@ -133,7 +135,7 @@ class ProdProSchedaGrid(dbglib.DbGridColoriAlternati):
         self.SetData((), colmap, canedit, canins, links, afteredit,
                      newRowFunc=None)
         
-        self.AddTotalsRow(1, 'Totali:', (2,3,4,5,6,7,))
+        self.AddTotalsRow(1, 'Totali:', (cn(pro, 'finale'),2,3,4,5,6,7,))
         
         map(lambda c:\
             self.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))

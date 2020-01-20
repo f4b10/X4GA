@@ -4263,8 +4263,8 @@ class ProdProgrDaScheda(adb.DbTable):
     def __init__(self):
         adb.DbTable.__init__(self, bt.TABNAME_PRODPRO, 'pp')
         self.AddJoin(bt.TABNAME_MAGAZZ, 'magazz')
+        self.AddField('pp.ini+pp.car-pp.sca', 'finale')
         self.Reset()
-
 
 # ------------------------------------------------------------------------------
 
