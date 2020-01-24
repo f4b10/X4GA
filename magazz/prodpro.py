@@ -379,7 +379,7 @@ class ProdProgrPanel(wx.Panel):
     def GridProMovOnUpdate(self, event):
         self.GridProMovUpdate()
 
-    def GridProMovUpdate(self):
+    def GridProMovUpdate(self, prod=None):
         
         mov = self.dbpromov.mov
         mov.ClearFilters()
@@ -397,8 +397,13 @@ class ProdProgrPanel(wx.Panel):
             mov.AddFilter("doc.datreg<=%s", par)
         
         wx.BeginBusyCursor()
+        
+        if prod:
+            self.idProd=prod
+        
         pm = self.dbpromov
-        pm.Get(pm.id)
+        pm.Retrieve('mov.id_prod=%s' % self.idProd)
+        #pm.Get(pm.id)
         self.gridpromov.ChangeData(pm.GetRecordset())
         wx.EndBusyCursor()
 
@@ -409,4 +414,4 @@ class ProdProgrPanel(wx.Panel):
             self.dbprosch.Retrieve("id_prod=%s", prod)
         self.GridProSchedaUpdate()
         self.GridProMagUpdate()
-        self.GridProMovUpdate()
+        self.GridProMovUpdate(prod)
