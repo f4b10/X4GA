@@ -270,17 +270,16 @@ class ContabPanel(aw.Panel,\
         self.controls['aacompetenza'].Clear()
         self.controls['mmcompetenza'].Clear()
         
-        self.controls['aacompetenza'].Append('%s' % datdoc.year)
-        #self.controls['aacompetenza'].Append('%s' % (datdoc.year-1))
-        self.controls['aacompetenza'].SetValue('%s' % datdoc.year)
+        if self.reg_aacompetenza:
+            self.controls['aacompetenza'].Append('%s' % self.reg_aacompetenza)
+            self.controls['aacompetenza'].SetValue('%s' % self.reg_aacompetenza)
+        else:
+            self.controls['aacompetenza'].Append('%s' % datdoc.year)
+            self.controls['aacompetenza'].SetValue('%s' % datdoc.year)
         if self.periodic=="M":
             self.controls['mmcompetenza'].Append('%02d' % datdoc.month)
             if datdoc.month>1:
                 self.controls['mmcompetenza'].Append('%02d' % (datdoc.month-1))
-            #===================================================================
-            # else:
-            #     self.controls['mmcompetenza'].Append('%02d' % 12)
-            #===================================================================
             if update:
                 if self.reg_mmcompetenza:
                     self.controls['mmcompetenza'].SetValue('%02d' % self.reg_mmcompetenza)
@@ -302,7 +301,7 @@ class ContabPanel(aw.Panel,\
         self.controls['aacompetenza'].Clear()
         self.controls['mmcompetenza'].Clear()
         if not datdoc==None:
-            self.SetPeriodo(datdoc)
+            (datdoc)
         evt.Skip()
     
     def OptimizeSize(self, min_width=1000, min_height=640):
@@ -1374,22 +1373,8 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
                 idsdi.SetValue("")
                 
             try:
-                #self.SetPeriodo(self.reg_datdoc, update=not self._cfg_competenza)
+                print 'prima di settare periodo di competenza'
                 self.SetPeriodo(self.reg_datdoc, update=self._cfg_competenza)
-                
-                
-                #===============================================================
-                # if self.reg_datcompete==None:
-                #     self.SetPeriodo(self.reg_datdoc, update=not self._cfg_competenza)
-                # else:
-                #     self.SetPeriodo(self.reg_datcompete, update=True)
-                #===============================================================
-                    
-                    
-                #===============================================================
-                # aacompetenza.SetValue('%04d' % self.reg_aacompetenza)
-                # mmcompetenza.SetValue('%02d' % self.reg_mmcompetenza)
-                #===============================================================
             except:
                 pass
             
