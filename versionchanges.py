@@ -29,7 +29,20 @@ import mx.DateTime as dt
 import mx.Odt
 
 history = (
-    ('1.5.86', dt.Date(2019, 01, 20), (
+    ('1.5.87', dt.Date(2020, 01, 24), (
+        ("BUG0176",
+         """Rimosso bug in movimentazione scheda prodotti che al variare dei criteri non produceva risultati"""
+        ),
+        ("BUG0175",
+         """Rimosso bug data competenza reg.contabili che si verificava alla correzione della stessa"""
+        ),
+        ("BUG0174",
+         """Rimosso bug ripristinava erroneamente i ripristini parziali"""
+        ),
+        ),),
+           
+           
+    ('1.5.86', dt.Date(2020, 01, 20), (
         ("BET1283",
          """Rimosso bug che inibiva l'utilizzo filtro per valori su schede anagrafiche"""
         ),
