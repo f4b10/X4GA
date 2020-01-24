@@ -1030,6 +1030,8 @@ class DB(object):
                 elif content_reading:
                     RaiseXmlError('Fine struttura durante la lettura del contenuto')
 
+
+
                 structure_reading = False
                 structure = []
                 indexes = []
@@ -1062,22 +1064,23 @@ class DB(object):
                         index_name = index['name']
                     indexes.append('%(index_family)s %(index_name)s (%(index_fields)s)' % locals())
 
-                if not self.Execute('DROP TABLE `%s`.`%s`' % (database_name, tab_name)):
-                    if self.dbError.code != 1051:
+                if tables is None or tab_name in tables:
+                    if not self.Execute('DROP TABLE `%s`.`%s`' % (database_name, tab_name)):
+                        if self.dbError.code != 1051:
+                            raise Exception, self.dbError.description
+    
+                    coldef = structure+indexes
+                    #TODO: Parametrizzare engine
+                    cmd = 'CREATE TABLE `%s`.`%s` (\n%s) ENGINE=MyISAM' % (database_name, tab_name, ',\n'.join(coldef))
+                    if tab_auti:
+                        cmd += " AUTO_INCREMENT=%d" % tab_auti
+                    if tab_cset:
+                        cmd += " DEFAULT CHARSET=%s" % tab_cset
+                    if tab_desc:
+                        cmd += " COMMENT='%s'" % tab_desc
+    
+                    if not self.Execute(cmd):
                         raise Exception, self.dbError.description
-
-                coldef = structure+indexes
-                #TODO: Parametrizzare engine
-                cmd = 'CREATE TABLE `%s`.`%s` (\n%s) ENGINE=MyISAM' % (database_name, tab_name, ',\n'.join(coldef))
-                if tab_auti:
-                    cmd += " AUTO_INCREMENT=%d" % tab_auti
-                if tab_cset:
-                    cmd += " DEFAULT CHARSET=%s" % tab_cset
-                if tab_desc:
-                    cmd += " COMMENT='%s'" % tab_desc
-
-                if not self.Execute(cmd):
-                    raise Exception, self.dbError.description
 
             elif l.startswith('<content'):
 
