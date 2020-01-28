@@ -46,6 +46,43 @@ class GridMov(maglib.GridMov):
         
         size = parent.GetClientSizeTuple()
         
+        
+        cols= self.SetColumnGrid()        
+        
+        colmap  = [c[1] for c in cols]
+        colsize = [c[0] for c in cols]
+        
+        canedit = False
+        canins = False
+        
+        rsmas = self.dbmov.GetRecordset()
+        
+        grid = dbglib.DbGrid(parent, -1, size=size, tableClass=maglib.GridTable, idGrid='movprod')
+        grid.SetData( rsmas, colmap, canedit, canins)
+        grid.GetTable().dbmov = self.dbmov
+        
+        grid=self.SetTotalGrid(grid)
+        
+        grid.SetCellDynAttr(self.GetAttr)
+        
+        ci = lambda x: parent.GetGrandParent().FindWindowById(x)
+        
+        ci(wdr.ID_MASBUTUPD).Bind(wx.EVT_BUTTON, self.GridMovOnUpdateFilters)
+        
+        map(lambda c:\
+            grid.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
+        
+        grid.AutoSizeColumns()
+        sz = wx.FlexGridSizer(1,0,0,0)
+        sz.AddGrowableCol( 0 )
+        sz.AddGrowableRow( 0 )
+        sz.Add(grid, 0, wx.GROW|wx.ALL, 0)
+        parent.SetSizer(sz)
+        sz.SetSizeHints(parent)
+        self.gridmov = grid
+
+
+    def SetColumnGrid(self):
         cn = lambda db, col: db._GetFieldIndex(col, inline=True)
         mov = self.dbmov
         doc = mov.doc
@@ -66,7 +103,7 @@ class GridMov(maglib.GridMov):
         
         ncqtaeva = cn(mov, 'total_evas_qta')
         ncqtares = cn(mov, 'total_resid_qta')
-        
+
         cols = []
         a = cols.append
         a(( 35, (cn(mag, "codice"),  "Mag.",         _STR, True)))
@@ -118,39 +155,8 @@ class GridMov(maglib.GridMov):
         #=======================================================================
         a((  1, (cn(mov, "id"),      "#mov",         _STR, True)))
         a((  1, (cn(doc, "id"),      "#doc",         _STR, True)))
+        return cols
         
-        colmap  = [c[1] for c in cols]
-        colsize = [c[0] for c in cols]
-        
-        canedit = False
-        canins = False
-        
-        rsmas = self.dbmov.GetRecordset()
-        
-        grid = dbglib.DbGrid(parent, -1, size=size, tableClass=maglib.GridTable, idGrid='movprod')
-        grid.SetData( rsmas, colmap, canedit, canins)
-        grid.GetTable().dbmov = self.dbmov
-        
-        grid=self.SetTotalGrid(grid)
-        
-        grid.SetCellDynAttr(self.GetAttr)
-        
-        ci = lambda x: parent.GetGrandParent().FindWindowById(x)
-        
-        ci(wdr.ID_MASBUTUPD).Bind(wx.EVT_BUTTON, self.GridMovOnUpdateFilters)
-        
-        map(lambda c:\
-            grid.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
-        
-        grid.AutoSizeColumns()
-        sz = wx.FlexGridSizer(1,0,0,0)
-        sz.AddGrowableCol( 0 )
-        sz.AddGrowableRow( 0 )
-        sz.Add(grid, 0, wx.GROW|wx.ALL, 0)
-        parent.SetSizer(sz)
-        sz.SetSizeHints(parent)
-        self.gridmov = grid
-
 
     def SetTotalGrid(self, grid):
         cn = lambda db, col: db._GetFieldIndex(col, inline=True)
@@ -159,17 +165,27 @@ class GridMov(maglib.GridMov):
         self._ncaggsca = cn(tpm, 'aggsca')
         self._ncaggorc = cn(tpm, 'aggordcli')
         self._ncaggorf = cn(tpm, 'aggordfor')
+        self._ncaggini = cn(tpm, 'aggini')        
+        
         self._bgcolrow = stdcolor.NORMAL_BACKGROUND
         self._bgcoltot = stdcolor.GetColour('aliceblue')
                 
         for label, func in (\
+            ('Giac.Iniziale:',       lambda rsm, row: rsm[row][self._ncaggini]),                                    
             ('Tot. Carichi:',        lambda rsm, row: rsm[row][self._ncaggcar]),
             ('Tot. Scarichi:',       lambda rsm, row: rsm[row][self._ncaggsca]),
             ('Tot. Ord. Clienti:',   lambda rsm, row: rsm[row][self._ncaggorc]),
             ('Tot. Ord. Fornitori:', lambda rsm, row: rsm[row][self._ncaggorf])):
+            #===================================================================
+            # grid.AddTotalsRow(3, label, (cn(self.dbmov, "qta"),                 # mantenuto per storia non serve
+            #                              cn(self.dbmov, "finale"),
+            #                              cn(self.dbmov, "importo"),
+            #                              cn(self.dbmov, "imponibile"),), func)
+            #===================================================================
             grid.AddTotalsRow(3, label, (cn(self.dbmov, "qta"),
                                          cn(self.dbmov, "importo"),
-                                         cn(self.dbmov, "imponibile"),), func)                
+                                         cn(self.dbmov, "imponibile"),), func)
+            
         pass
         return grid
 
