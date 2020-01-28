@@ -29,6 +29,12 @@ import mx.DateTime as dt
 import mx.Odt
 
 history = (
+    ('1.5.88', dt.Date(2020, 01, 28), (
+        ("BET1284",
+         """Agginti campi calcolati alla dbTable ProdMastro utilizzata dalla scheda prodotti"""
+        ),
+        ),),
+           
     ('1.5.87', dt.Date(2020, 01, 24), (
         ("BUG0176",
          """Rimosso bug in movimentazione scheda prodotti che al variare dei criteri non produceva risultati"""
