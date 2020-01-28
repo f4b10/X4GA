@@ -3532,6 +3532,9 @@ class ProdMastro(adb.DbTable):
             join=adb.JOIN_LEFT,\
             dbTabClass=Movim)
 
+        # AGGIUNTI CAMPI PER VISUALIZZARE CARICHI E SCARICHI E GIACENZA FINALE
+        mov.AddField("if(tipmov.aggsca=0,1,-1)*(mov.qta*tipmov.aggini+mov.qta*tipmov.aggsca+mov.qta*tipmov.aggcar)", 'finale')
+        mov.AddField("mov.qta*tipmov.aggini+mov.qta*tipmov.aggsca+mov.qta*tipmov.aggcar", 'qtaplus')
         #TODO:SCORPORO X BARBARA
         mov.AddField("mov.importo*IF(tipdoc.scorpiva=1,100/(100+iva.perciva),1)", "imponibile")
         mov.AddField("mov.prezzo*IF(tipdoc.scorpiva=1,100/(100+iva.perciva),1)", "prezzoimp")
