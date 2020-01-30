@@ -2863,6 +2863,8 @@ class DocMag(adb.DbTable):
 
     def GetPrintFileName_Normalize(self, x):
         c = True
+        if x==None:
+            x=''
         x = x.lower().encode('ascii', 'xmlcharrefreplace')
         y = ''
         for n in range(len(x)):
