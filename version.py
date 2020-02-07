@@ -31,7 +31,7 @@ from _version import apptype, appType, appinfo
 
 VERSION_MAJOR   = 1
 VERSION_MINOR   = 5
-VERSION_RELEASE = 88
+VERSION_RELEASE = 89
 VERSION_TAG     = ""
 VERSION_TYPE    = apptype
 VERSION_TYPEXT  = appType
