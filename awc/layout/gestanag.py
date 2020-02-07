@@ -1574,7 +1574,11 @@ class AnagPanel(aw.Panel):
                     if rec[n] == None:
                         self.ResetControl(ctr)
                     else:
-                        ctr.SetValue( rec[n] )
+                        try:
+                            ctr.SetValue( rec[n] )
+                        except:
+                            #print ctr
+                            pass
                     if col in 'codice descriz'.split():
                         ctr.SetEditable(False)
                     if ctr.GetName() == 'codice':
