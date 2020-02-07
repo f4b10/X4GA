@@ -415,11 +415,20 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
                     newdata=data
                     newdata=self.Titoli.ChangeOrder(colonnaOrdinata.GetPosition(), data)
                     objRs, objDb = self.GetPanelDataSource()
+                    #print 'TODO: MARCELLO PROBABILMENTE DA REMMARE'
                     if objRs:
-                        objRs.db_rs=newdata
+                        try:
+                            if len(objRs.db_rs[0])==len(newdata[0]):
+                                objRs.db_rs=newdata
+                        except:
+                            pass
                     elif objDb:
                         db=objDb.GetPanelDataSource()
-                        db._info.rs=newdata
+                        try:
+                            if len(db._info.rs)==len(newdata[0]):
+                                db._info.rs=newdata
+                        except:
+                            pass
                     t.ChangeData(newdata)
                     self.ChangeData(newdata)
         self.FocusGained()
@@ -588,11 +597,35 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
             else:
                 if self.Titoli:
                     newdata=self.Titoli.ChangeOrder(col, data)
+                    #print 'TODO: MARCELLO: PROBABILMENTE DA REMMARE'
+                    #TODO: MARCELLO: PROBABILMENTE DA REMMARE
+                    #===========================================================
+                    # if objRs:
+                    #     objRs.db_rs=newdata
+                    # elif objDb:
+                    #     db=objDb.GetPanelDataSource()
+                    #     db._info.rs=newdata
+                    #===========================================================
                     if objRs:
-                        objRs.db_rs=newdata
+                        try:
+                            if len(objRs.db_rs[0])==len(newdata[0]):
+                                objRs.db_rs=newdata
+                            else:
+                                pass
+                        except:
+                            pass
                     elif objDb:
                         db=objDb.GetPanelDataSource()
-                        db._info.rs=newdata
+                        try:
+                            if len(db._info.rs)==len(newdata[0]):
+                                db._info.rs=newdata
+                            else:
+                                pass
+                        except:
+                            pass
+                    
+                    
+                    
                     t.ChangeData(newdata)
                     self.ChangeData(newdata)
 
