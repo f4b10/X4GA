@@ -458,6 +458,15 @@ class ListiniGrid(dbglib.DbGridColoriAlternati):
         if bt.MAGVSGLIS >= 6:
             self.COL_P_VSG6 = c(( wr, None,    (cn(gpr, "prcpresco6"),  "SG%6",    _PRC, False)))
         
+        dbList = adb.DbTable(bt.TABNAME_TIPLIST, 'tiplis', writable=False)
+        dbList.Retrieve()
+        titListini={}
+        for r in dbList:
+            titListini[r.tipoprezzo]=r.descriz
+        
+        
+        
+        
         for l in range(1,bt.MAGNUMLIS+1):
             
             if l <= bt.MAGRICLIS:
@@ -468,7 +477,15 @@ class ListiniGrid(dbglib.DbGridColoriAlternati):
                 C((wp, n, (cn(lis, n), "Sc.L#%d"%l, _PRC, False)))
             
             n = 'prezzo%d'%l
-            C((wp, n, (cn(lis, n), "Listino #%d"%l, _PRE, False)))
+            try:
+                C((wp, n, (cn(lis, n), "%s"%(titListini['%s'%l]), _PRE, False)))
+            except:
+                C((wp, n, (cn(lis, n), "Listino #%d"%l, _PRE, False)))
+            
+            
+            
+            
+            
             
             #ricarica effettiva del listino - visualizzazione
             setattr(self, 'COL_P_VRE%d'%l, None) 
