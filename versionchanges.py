@@ -29,9 +29,24 @@ import mx.DateTime as dt
 import mx.Odt
 
 history = (
+    ('1.5.90', dt.Date(2020, 03, 17), (
+        ("BET1287",
+         """Ottimizzazioni interne"""
+        ),
+                                       
+        ("BET1286",
+         """Aggiunto report per produtte mastri sottoconti senza riporto anni precedenti"""
+        ),
+                                       
+        ),),
+           
     ('1.5.88', dt.Date(2020, 01, 28), (
+        ("BET1285",
+         """Assegnato ai titoli delle colonne dei listini le descrizioni indicate nella tabella tiplist"""
+        ),
+                                       
         ("BET1284",
-         """Agginti campi calcolati alla dbTable ProdMastro utilizzata dalla scheda prodotti"""
+         """Aggiunti campi calcolati alla dbTable ProdMastro utilizzata dalla scheda prodotti"""
         ),
         ),),
            
