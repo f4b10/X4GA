@@ -80,10 +80,22 @@ class ListiniAttualiGrid(dbglib.DbGridColoriAlternati):
         
         if bt.MAGDATLIS:
             a(( 80, (cc("listino_data"), "Data val.",     _DAT, True )))
+
+
+        dbList = adb.DbTable(bt.TABNAME_TIPLIST, 'tiplis', writable=False)
+        dbList.Retrieve()
+        titListini={}
+        for r in dbList:
+            titListini[r.tipoprezzo]=r.descriz
+
+
         
         for l in range(1,bt.MAGNUMLIS+1):
             n = 'listino_prezzo%d'%l
-            a((wp, (cc(n),               "Listino #%d"%l, _PRZ, False)))
+            try:
+                a((wp, (cc(n),               "%s"%(titListini['%s'%l]), _PRZ, False)))
+            except:
+                a((wp, (cc(n),               "Listino #%d"%l, _PRZ, False)))
         
         a(( 50, (cc("pdc_codice"),       "Cod.",          _STR, True )))
         a((250, (cc("pdc_descriz"),      "Fornitore",     _STR, True )))
