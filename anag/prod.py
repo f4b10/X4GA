@@ -1485,6 +1485,13 @@ class ProdPanel(ga.AnagPanel):
         
         self.prccols = []
         
+        
+        dbList = adb.DbTable(bt.TABNAME_TIPLIST, 'tiplis', writable=False)
+        dbList.Retrieve()
+        titListini={}
+        for r in dbList:
+            titListini[r.tipoprezzo]=r.descriz
+            
         for l in range(1, bt.MAGNUMLIS+1, 1):
             
             if bt.MAGNUMLIS >= l:
@@ -1496,7 +1503,10 @@ class ProdPanel(ga.AnagPanel):
                     c = b(( pw, (cn('ricsco%d'%l), "Sc.L#%d"%l, _PRS, True)))
                     setattr(self, 'COL_SCOLIS%d'%l, c)
                     self.prccols.append(c)
-                c = b(( pw, (cn('prezzo%d'%l), "Listino #%d"%l,  _FLT, True)))
+                try:
+                    c = b(( pw, (cn('prezzo%d'%l), "%s"%(titListini['%s'%l]),  _FLT, True)))
+                except:
+                    c = b(( pw, (cn('prezzo%d'%l), "Listino #%d"%l,  _FLT, True)))
                 setattr(self, 'COL_PRZ%d'%l, c)
         
         if not bt.MAGDATLIS:
