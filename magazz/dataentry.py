@@ -375,8 +375,8 @@ class MagazzPanel(aw.Panel,\
         self.status = None
         self.caufilt = None
 
-        wdr.DialogFunc(self, True)
-
+        self.SetDialogFunc()
+        
         self.FindWindowById(wdr.ID_BTN_PRINT1).Hide()
         self.boxanag = None
         self.boxdest = None
@@ -385,7 +385,17 @@ class MagazzPanel(aw.Panel,\
         if postinit:
             self.Post_Init()
 
+    def SetDialogFunc(self):
+        wdr.DialogFunc(self, True)
+
+    def BeforePost_Init(self):
+        pass
+    
+    def AfterPost_Init(self):
+        pass
+
     def Post_Init(self):
+        self.BeforePost_Init()
 
         self.InitPanelTot()
 
@@ -596,6 +606,7 @@ class MagazzPanel(aw.Panel,\
             self.SetAcceleratorKey(wx.WXK_F10, wdr.ID_BTN_NEXT,  use_alt=False)
             self.SetAcceleratorKey(wx.WXK_F6,  wdr.ID_BTN_PRINT1, use_alt=False)
             self.SetAcceleratorKey(wx.WXK_F12, wdr.ID_BTNBODYADD,use_alt=False)
+        self.AfterPost_Init()
 
     def OnButHidden1(self, event):
         self.LanchDialog(1)
@@ -772,7 +783,10 @@ class MagazzPanel(aw.Panel,\
             if f[bt.TABSETUP_COLUMNTYPE] in 'CHAR,VARCHAR':
                 c = self.FindWindowByName(f[bt.TABSETUP_COLUMNNAME])
                 if c:
-                    c.SetMaxLength(f[bt.TABSETUP_COLUMNLENGTH])
+                    try:
+                        c.SetMaxLength(f[bt.TABSETUP_COLUMNLENGTH])
+                    except:
+                        pass
 
     def TestQuit(self):
         out = True
