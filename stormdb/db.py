@@ -419,7 +419,7 @@ class DB(object):
         self.dbError.Reset()
         logmsg('reset')
 
-    def Execute(self, sql, par=None):
+    def Execute(self, sql, par=None, debug=False):
         """
         Method used for updating/inserting values on the tables based on a
         single list of parameters, if present.
@@ -430,6 +430,11 @@ class DB(object):
         self.dbError.Reset()
         if self._dbType == 'mysql':
             try:
+                
+                if 'insert' in sql:
+                    print sql
+                
+                
                 dbCursor = self._dbCon.cursor()
                 logmsg('execute: %s' % sql, 'parameters: %s' % repr(par))
                 self.recordCount = dbCursor.execute(sql, par)
@@ -439,6 +444,8 @@ class DB(object):
                 del dbCursor
                 success = True
             except MySQLdb.Error, e:
+                if debug:
+                    print e
                 self.recordCount = 0
                 self._Error_MySQLdb(e)
                 self.dbError.exception = e
