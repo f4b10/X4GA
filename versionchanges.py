@@ -29,6 +29,12 @@ import mx.DateTime as dt
 import mx.Odt
 
 history = (
+    ('1.5.91', dt.Date(2020, 04, 3), (
+        ("BET1288",
+         """Potenziate classi FileEntryCtrl e FullPathFileEntryCtrl"""
+        ),
+        ),),
+
     ('1.5.90', dt.Date(2020, 03, 17), (
         ("BET1287",
          """Ottimizzazioni interne"""
