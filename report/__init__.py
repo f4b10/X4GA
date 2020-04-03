@@ -26,6 +26,10 @@ import os, sys
 import glob
 import cStringIO
 
+_DEBUG = True and not hasattr(sys, 'frozen')
+
+
+
 from report.output import print_Report as PrintRpt
 
 from report.read import iReportDef
@@ -405,7 +409,8 @@ class Report:
         #ricerca del report
         for pathsrc in self.GetPaths():
             test = "%s/%s" % (pathsrc, rptdef)
-            #print 'cerco:%s' % test
+            if _DEBUG:
+                print 'cerco:%s' % test
             if os.path.isdir(test) or os.path.isfile(test+'.jrxml'):
                 if os.path.isfile(test+'.jrxml') and output == "STORE" and not forcechoice:
                     rptdef = test+'.jrxml'
