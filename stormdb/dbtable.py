@@ -1856,7 +1856,7 @@ class DbTable(object):
                     if parins:
                         print "   Parameters:\n%s" % parins
                     print "="*60
-                written = info.db.Execute(cmdInsert, parins)
+                written = info.db.Execute(cmdInsert, parins, debug=self._info.debug)
                 if written:
                     curid = info.db.GetInsertedId()
 
