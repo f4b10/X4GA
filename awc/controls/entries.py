@@ -404,6 +404,8 @@ class FolderEntryCtrl(_EntryCtrlMixin):
 
 class FileEntryCtrl(_EntryCtrlMixin):
     request_description = "Seleziona il file:"
+    wildcard = None
+    path     = None
 
     def GetFiller(self):
         return wdr.FileEntryFunc
@@ -413,10 +415,14 @@ class FileEntryCtrl(_EntryCtrlMixin):
         event.Skip()
 
     def FileChoice(self, fullpath=False):
-        dlg = wx.FileDialog(self, self.request_description, style=wx.OPEN)
+        dlg = wx.FileDialog(self, self.request_description, style=wx.OPEN, wildcard=self.wildcard)
         addr = self.FindWindowById(wdr.ID_ADDRESS)
-        cwd = os.getcwd().lower()
-        dlg.SetPath(os.path.join(cwd, addr.GetValue().replace('./', '')))
+        if self.path and len(addr.GetValue())==0:
+            cwd = self.path.lower()
+            dlg.SetDirectory(self.path)
+        else:
+            cwd = os.getcwd().lower()
+            dlg.SetPath(os.path.join(cwd, addr.GetValue().replace('./', '')))
         if dlg.ShowModal() == wx.ID_OK:
             if fullpath:
                 #name = dlg.GetPath().lower().replace(cwd+'\\', './').replace('\\', '/')
@@ -430,7 +436,11 @@ class FileEntryCtrl(_EntryCtrlMixin):
     def GetDialogValue(self, dlg):
         return
 
-
+    def SetWildcard(self, wildcard):
+        self.wildcard=wildcard
+        
+    def SetPath(self, path):
+        self.path = path
 # ------------------------------------------------------------------------------
 
 
