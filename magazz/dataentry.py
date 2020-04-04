@@ -1624,7 +1624,6 @@ class MagazzPanel(aw.Panel,\
             if (self.dbdoc.f_printed or 0)==0:            
                 d,n = os.path.split(r.parameters['rptdef'])
                 if not '(NOFS)' in n:
-                    print 'settare flag di stampato'
                     self.dbdoc.f_printed = 1
                     self.DocSave(doc)
             
@@ -2346,7 +2345,6 @@ class MagazzPanel(aw.Panel,\
                     self.DefNumDoc()
                 if not doc.numiva:
                     self.DefNumIva()
-            print 'num.doc:%s num.iva:%s' % (doc.numdoc, doc.numiva)
             save = True
     
             if doc.cfgdoc.pienum and (doc.id is None or retrySave):
