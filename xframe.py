@@ -689,6 +689,7 @@ class XFrame(aw.Frame):
 
             (self.OnChangeIva,                 ID_CHANGEIVA),
             (self.OnSyncSede,                  ID_RUNSYNC),
+            (self.OnRepair,                    ID_REPAIRTABLE),
             
             (self.OnHelp,                      ID_HELP),
             (self.OnAbout,                     ID_ABOUT),
@@ -1806,6 +1807,10 @@ class XFrame(aw.Frame):
     def OnChangeIva(self, event):
         from strumenti.changeiva import ChangeIvaFrame
         self.LaunchFrame(ChangeIvaFrame)            
+
+    def OnRepair(self, event):
+        from strumenti.ripara import RiparaFrame
+        self.LaunchFrame(RiparaFrame, centered=True)            
             
     def OnSyncSede(self, event):
         import sync.manager as manager

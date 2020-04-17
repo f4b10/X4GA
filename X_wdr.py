@@ -1381,13 +1381,14 @@ ID_CHIUSMAGAZZ_GENMOVINI = 10258
 ID_MENUCHIUSMAGAZZ = 10259
 ID_MENUCHIUSURE = 10260
 ID_BACKUPEXPLORER = 10261
-ID_RUNSYNC = 10262
-ID_CHANGEIVA = 10263
-ID_UTILITY = 10264
-ID_MENUSTRUMENTI = 10265
-ID_ABOUT = 10266
-ID_UPDATES = 10267
-ID_CATALOGO = 10268
+ID_REPAIRTABLE = 10262
+ID_RUNSYNC = 10263
+ID_CHANGEIVA = 10264
+ID_UTILITY = 10265
+ID_MENUSTRUMENTI = 10266
+ID_ABOUT = 10267
+ID_UPDATES = 10268
+ID_CATALOGO = 10269
 
 def XMenuBarFunc():
     item0 = wx.MenuBar(wx.MB_DOCKABLE)
@@ -1797,6 +1798,8 @@ def XMenuBarFunc():
     item40.AppendSeparator()
     
     item53 = wx.Menu()
+    item53.Append( ID_REPAIRTABLE, "Ripara Tabelle", "" )
+    item53.AppendSeparator()
     item53.Append( ID_RUNSYNC, "Sincronizza con Sede", "" )
     item53.AppendSeparator()
     item53.Append( ID_CHANGEIVA, "Modifica Cod.Iva su prodotti", "" )
@@ -1814,7 +1817,7 @@ def XMenuBarFunc():
     return item0
 
 ID_INTMAGSRCDES = 5013
-ID_HELP = 10269
+ID_HELP = 10270
 
 def XLiteMenuBar():
     item0 = wx.MenuBar()
