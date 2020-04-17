@@ -353,7 +353,7 @@ class TabSetupPanel(aw.Panel):
                     if not change and flen:
                         # inserito test su tipo data VARCHAR perchè in presenza di tale tipo di
                         # dato la struttura fisica ritorna la lunghezza effettiva del campo moltiplicato 3
-                        if ftype == 'VARCHAR':
+                        if ftype == 'VARCHAR' or ftype == 'CHAR':
                             lenPhys=(struphys[n][2])/3
                         else:
                             lenPhys=struphys[n][2]
