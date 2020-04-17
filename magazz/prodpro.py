@@ -412,6 +412,6 @@ class ProdProgrPanel(wx.Panel):
             self.dbpromag.Get(prod)
             self.dbpromov.Get(prod)
             self.dbprosch.Retrieve("id_prod=%s", prod)
-        self.GridProSchedaUpdate()
-        self.GridProMagUpdate()
-        self.GridProMovUpdate(prod)
+        self.GridProSchedaUpdate()   # self.proschegrid   ID_PPRPANPROPRO
+        self.GridProMagUpdate()      # self.gridpromag    ID_PPRPANPROMAG
+        self.GridProMovUpdate(prod)  # self.gridpromov    ID_PROMOVPAN
