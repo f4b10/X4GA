@@ -1073,14 +1073,19 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
 
         cn = self.FindWindowByName
 
-        id, cf, pi = map(lambda x: cn(x).GetValue(), 'id codfisc piva'.split())
+        id, cf, pi, grupi = map(lambda x: cn(x).GetValue(), 'id codfisc piva grupiva'.split())
 
         do = True
+        
+        canProceed = True
         for ctr in range(3):
             err = ''
             if ctr == 0:
                 #controllo presenza
-                if not cf and not pi:
+                if (not cf or not pi) and grupi==1:
+                    err = "Se indicato gruppo IVA e' necessario specificare sia Codice Fiscale che Partita Iva"
+                    canProceed = False
+                elif not cf and not pi:
                     err = 'Mancano sia il Codice Fiscale che la Partita IVA'
                 elif not cf:
                     err = 'Manca il Codice Fiscale'
@@ -1115,14 +1120,16 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
                             err = "%s e' gia' presente su:\n" % des
                             err += '\n'.join(['%s %s' % (db.pdc.codice,
                                                          db.pdc.descriz)])
-            if err:
+            if err and canProceed:
                 err += '\n\nProcedo ugualmente?'
                 x = MsgDialog(self, message=err,
                               style=wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT)
                 do = x == wx.ID_YES
                 if not do:
                     break
-
+            elif err and not canProceed:
+                x = MsgDialog(self, message=err)
+                break
         if do:
 
             if cn('id_stato').GetValue() is None:

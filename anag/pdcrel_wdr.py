@@ -3468,7 +3468,8 @@ def GriglieCollegateFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_SPEDINDZONE = 14184
+ID_CHECKBOX = 14184
+ID_SPEDINDZONE = 14185
 
 def CliForAnagFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -3544,7 +3545,7 @@ def CliForAnagFunc( parent, call_fit = True, set_sizer = True ):
     item19 = wx.StaticLine( parent, ID_LINE, wx.DefaultPosition, [20,-1], wx.LI_HORIZONTAL )
     item3.Add( item19, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 0 )
 
-    item20 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    item20 = wx.FlexGridSizer( 0, 3, 0, 0 )
     
     item21 = wx.StaticText( parent, ID_TEXT, "Cod. Fiscale:", wx.DefaultPosition, [90,-1], 0 )
     item20.Add( item21, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
@@ -3552,34 +3553,41 @@ def CliForAnagFunc( parent, call_fit = True, set_sizer = True ):
     item22 = wx.StaticText( parent, ID_TEXT, "P.IVA:", wx.DefaultPosition, [40,-1], 0 )
     item20.Add( item22, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item23 = CodiceFiscaleEntryCtrl( parent, ID_TXT_CODFISC, "", wx.DefaultPosition, [140,-1], 0 )
-    item23.SetName( "codfisc" )
-    item20.Add( item23, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+    item23 = wx.StaticText( parent, ID_TEXT, "Gruppo Iva", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item20.Add( item23, 0, wx.ALIGN_CENTER|wx.RIGHT, 5 )
 
-    item24 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    item24 = CodiceFiscaleEntryCtrl( parent, ID_TXT_CODFISC, "", wx.DefaultPosition, [140,-1], 0 )
+    item24.SetName( "codfisc" )
+    item20.Add( item24, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+
+    item25 = wx.FlexGridSizer( 0, 2, 0, 0 )
     
-    item25 = TextCtrl( parent, ID_TXT_NAZIONE, "", wx.DefaultPosition, [40,-1], 0 )
-    item25.SetName( "nazione" )
-    item24.Add( item25, 0, wx.GROW, 5 )
+    item26 = TextCtrl( parent, ID_TXT_NAZIONE, "", wx.DefaultPosition, [40,-1], 0 )
+    item26.SetName( "nazione" )
+    item25.Add( item26, 0, wx.GROW, 5 )
 
-    item26 = PartitaIvaEntryCtrl( parent, ID_TXT_PIVA, "", wx.DefaultPosition, [100,-1], 0 )
-    item26.SetName( "piva" )
-    item24.Add( item26, 0, wx.GROW|wx.RIGHT, 5 )
+    item27 = PartitaIvaEntryCtrl( parent, ID_TXT_PIVA, "", wx.DefaultPosition, [100,-1], 0 )
+    item27.SetName( "piva" )
+    item25.Add( item27, 0, wx.GROW|wx.RIGHT, 5 )
 
-    item20.Add( item24, 0, wx.ALIGN_CENTER, 5 )
+    item20.Add( item25, 0, wx.ALIGN_CENTER, 5 )
+
+    item28 = CheckBox( parent, ID_CHECKBOX, "", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item28.SetName( "grupiva" )
+    item20.Add( item28, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
 
     item3.Add( item20, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item2.Add( item3, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
 
-    item28 = wx.StaticBox( parent, -1, "Note" )
-    item27 = wx.StaticBoxSizer( item28, wx.VERTICAL )
+    item30 = wx.StaticBox( parent, -1, "Note" )
+    item29 = wx.StaticBoxSizer( item30, wx.VERTICAL )
     
-    item29 = TextCtrl_LC( parent, ID_TEXTCTRL, "", wx.DefaultPosition, [-1,70], wx.TE_MULTILINE )
-    item29.SetName( "note" )
-    item27.Add( item29, 0, wx.GROW, 5 )
+    item31 = TextCtrl_LC( parent, ID_TEXTCTRL, "", wx.DefaultPosition, [-1,70], wx.TE_MULTILINE )
+    item31.SetName( "note" )
+    item29.Add( item31, 0, wx.GROW, 5 )
 
-    item2.Add( item27, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item2.Add( item29, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
     item2.AddGrowableCol( 0 )
 
@@ -3587,26 +3595,26 @@ def CliForAnagFunc( parent, call_fit = True, set_sizer = True ):
 
     item1.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item30 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    item32 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
-    item32 = wx.Notebook( parent, ID_SPEDINDZONE, wx.DefaultPosition, wx.DefaultSize, 0 )
-    item31 = item32
+    item34 = wx.Notebook( parent, ID_SPEDINDZONE, wx.DefaultPosition, wx.DefaultSize, 0 )
+    item33 = item34
     
-    item33 = wx.Panel( item32, -1 )
-    CliForSpedIndFunc(item33, False)
-    item32.AddPage( item33, "Spedizione documenti" )
+    item35 = wx.Panel( item34, -1 )
+    CliForSpedIndFunc(item35, False)
+    item34.AddPage( item35, "Spedizione documenti" )
 
-    item34 = wx.Panel( item32, -1 )
-    Spesometro2011Func(item34, False)
-    item32.AddPage( item34, "Dati per lo spesometro" )
+    item36 = wx.Panel( item34, -1 )
+    Spesometro2011Func(item36, False)
+    item34.AddPage( item36, "Dati per lo spesometro" )
 
-    item30.Add( item31, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+    item32.Add( item33, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item30.AddGrowableCol( 0 )
+    item32.AddGrowableCol( 0 )
 
-    item30.AddGrowableRow( 0 )
+    item32.AddGrowableRow( 0 )
 
-    item1.Add( item30, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item1.Add( item32, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item1.AddGrowableCol( 0 )
 
@@ -3614,83 +3622,83 @@ def CliForAnagFunc( parent, call_fit = True, set_sizer = True ):
 
     item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item35 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    item37 = wx.FlexGridSizer( 0, 2, 0, 0 )
     
-    item37 = wx.StaticBox( parent, -1, "Recapiti" )
-    item36 = wx.StaticBoxSizer( item37, wx.VERTICAL )
+    item39 = wx.StaticBox( parent, -1, "Recapiti" )
+    item38 = wx.StaticBoxSizer( item39, wx.VERTICAL )
     
-    item38 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    item40 = wx.FlexGridSizer( 0, 2, 0, 0 )
     
-    item39 = wx.StaticText( parent, ID_TEXT, "Telefono #1:", wx.DefaultPosition, [50,-1], 0 )
-    item38.Add( item39, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item41 = wx.StaticText( parent, ID_TEXT, "Telefono #1:", wx.DefaultPosition, [50,-1], 0 )
+    item40.Add( item41, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item40 = wx.StaticText( parent, ID_TEXT, "Telefono #2:", wx.DefaultPosition, [50,-1], 0 )
-    item38.Add( item40, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+    item42 = wx.StaticText( parent, ID_TEXT, "Telefono #2:", wx.DefaultPosition, [50,-1], 0 )
+    item40.Add( item42, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
 
-    item41 = PhoneEntryCtrl( parent, ID_TXT_NUMTEL, "", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item41.SetName( "numtel" )
-    item38.Add( item41, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item43 = PhoneEntryCtrl( parent, ID_TXT_NUMTEL, "", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item43.SetName( "numtel" )
+    item40.Add( item43, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item42 = PhoneEntryCtrl( parent, ID_TXT_NUMTEL2, "", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item42.SetName( "numtel2" )
-    item38.Add( item42, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+    item44 = PhoneEntryCtrl( parent, ID_TXT_NUMTEL2, "", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item44.SetName( "numtel2" )
+    item40.Add( item44, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
 
-    item43 = wx.StaticText( parent, ID_TEXT, "FAX #1:", wx.DefaultPosition, [40,-1], 0 )
-    item38.Add( item43, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP, 5 )
+    item45 = wx.StaticText( parent, ID_TEXT, "FAX #1:", wx.DefaultPosition, [40,-1], 0 )
+    item40.Add( item45, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP, 5 )
 
-    item44 = wx.StaticText( parent, ID_TEXT, "FAX #2:", wx.DefaultPosition, [40,-1], 0 )
-    item38.Add( item44, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+    item46 = wx.StaticText( parent, ID_TEXT, "FAX #2:", wx.DefaultPosition, [40,-1], 0 )
+    item40.Add( item46, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
 
-    item45 = PhoneEntryCtrl( parent, ID_TXT_NUMFAX, "", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item45.SetName( "numfax" )
-    item38.Add( item45, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item47 = PhoneEntryCtrl( parent, ID_TXT_NUMFAX, "", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item47.SetName( "numfax" )
+    item40.Add( item47, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item46 = PhoneEntryCtrl( parent, ID_TXT_NUMFAX2, "", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item46.SetName( "numfax2" )
-    item38.Add( item46, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+    item48 = PhoneEntryCtrl( parent, ID_TXT_NUMFAX2, "", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item48.SetName( "numfax2" )
+    item40.Add( item48, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
 
-    item38.AddGrowableCol( 0 )
+    item40.AddGrowableCol( 0 )
 
-    item38.AddGrowableCol( 1 )
+    item40.AddGrowableCol( 1 )
 
-    item36.Add( item38, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item38.Add( item40, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item47 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    item49 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
-    item48 = wx.StaticText( parent, ID_TEXT, "E-Mail:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item47.Add( item48, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP, 5 )
+    item50 = wx.StaticText( parent, ID_TEXT, "E-Mail:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item49.Add( item50, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP, 5 )
 
-    item49 = MailEntryCtrl( parent, ID_TXT_EMAIL, "", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item49.SetName( "email" )
-    item47.Add( item49, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item51 = MailEntryCtrl( parent, ID_TXT_EMAIL, "", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item51.SetName( "email" )
+    item49.Add( item51, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item50 = wx.StaticText( parent, ID_TEXT, "Url Sito Internet:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item47.Add( item50, 0, wx.ALIGN_BOTTOM|wx.RIGHT|wx.TOP, 5 )
+    item52 = wx.StaticText( parent, ID_TEXT, "Url Sito Internet:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item49.Add( item52, 0, wx.ALIGN_BOTTOM|wx.RIGHT|wx.TOP, 5 )
 
-    item51 = HttpEntryCtrl( parent, ID_TXT_SITEURL, "", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item51.SetName( "siteurl" )
-    item47.Add( item51, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item53 = HttpEntryCtrl( parent, ID_TXT_SITEURL, "", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item53.SetName( "siteurl" )
+    item49.Add( item53, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item47.AddGrowableCol( 0 )
+    item49.AddGrowableCol( 0 )
 
-    item36.Add( item47, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item38.Add( item49, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item35.Add( item36, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+    item37.Add( item38, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
 
-    item53 = ContattiNotebook( parent, ID_CONTATTIZONE, wx.DefaultPosition, wx.DefaultSize, 0 )
-    item52 = item53
+    item55 = ContattiNotebook( parent, ID_CONTATTIZONE, wx.DefaultPosition, wx.DefaultSize, 0 )
+    item54 = item55
     
-    item54 = wx.Panel( item53, -1 )
-    CliForContattiFunc(item54, False)
-    item53.AddPage( item54, "Contatti" )
+    item56 = wx.Panel( item55, -1 )
+    CliForContattiFunc(item56, False)
+    item55.AddPage( item56, "Contatti" )
 
-    item35.Add( item52, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP, 5 )
+    item37.Add( item54, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP, 5 )
 
-    item35.AddGrowableCol( 0 )
+    item37.AddGrowableCol( 0 )
 
-    item35.AddGrowableCol( 1 )
+    item37.AddGrowableCol( 1 )
 
-    item0.Add( item35, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item0.Add( item37, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item0.AddGrowableCol( 0 )
 
@@ -3822,8 +3830,7 @@ def CliForContattiFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_CTRTIPDOCPRE = 14185
-ID_CHECKBOX = 14186
+ID_CTRTIPDOCPRE = 14186
 ID_COMMZONE = 14187
 
 def ClientiCommFunc( parent, call_fit = True, set_sizer = True ):
