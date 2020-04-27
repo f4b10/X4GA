@@ -1950,7 +1950,7 @@ class Azienda(object):
                 [ "sm11_no",       "TINYINT",  1, None, "Flag esclusione da spesometro 2011", None ],
                 [ "notot_liqupas", "TINYINT",  1, None, "Flag esclusione da totalizzatori passivita'", None ],
                 [ "notot_liquatt", "TINYINT",  1, None, "Flag esclusione da totalizzatori attivita'", None ],
-                [ "ftel_natura",   "CHAR",     2, None, "Natura aliquota", None ],
+                [ "ftel_natura",   "CHAR",     4, None, "Natura aliquota", None ],
                 [ "ftel_rifnorm",  "VARCHAR",255, None, "Riferimento normativo", None ],]
 
             cls.aliqiva_indexes = cls.std_indexes
