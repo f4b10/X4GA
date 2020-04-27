@@ -30,6 +30,9 @@ import mx.Odt
 
 history = (
     ('1.5.92', dt.Date(2020, 04, 16), (
+        ("BET1292",
+         """Aggiunte totalizzazioni su varie grid contabili, magazzino, scadenzari, effetti"""
+        ),
         ("BET1291",
          """Aggiunto Flag Gruppo Iva su Gestione Schede Clienti e Fornitori"""
         ),
