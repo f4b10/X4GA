@@ -215,6 +215,9 @@ class GridPcf(dbglib.DbGrid):
         
         self.SetData([], colmap, canedit, canins)
         
+        
+        
+        
         def GridAttr(row, col, rscol, attr):
             if row<self.dbpcf.RowsCount():
                 if row != self.dbpcf.RowNumber():
@@ -241,6 +244,18 @@ class GridPcf(dbglib.DbGrid):
         sz.Add(self, 0, wx.GROW|wx.ALL, 0)
         parent.SetSizer(sz)
         sz.SetSizeHints(parent)
+        self.DefTotal(2)
+    
+    
+    def DefTotal(self, col=1):
+        def cn(db, col):
+            return db._GetFieldIndex(col, inline=True)   
+        self.AddTotalsRow(col, 'Totali',[cn(self.dbpcf, 'imptot'),
+                                        cn(self.dbpcf, 'imppar'),
+                                        cn(self.dbpcf, 'saldo'),
+                                        ])
+        
+    
     
     def UpdateGrid(self, datamin, datamax, clifor, tipmpa, saldo_filter):
         filters = []

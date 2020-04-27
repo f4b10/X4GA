@@ -363,7 +363,7 @@ class SpesometroGrid(dbgrid.ADB_Grid):
         dbgrid.ADB_Grid.__init__(self, parent, db_table=dbspe, can_edit=True, on_menu_select='row', idGrid='spesometro')
         
         self.current_pdc = None
-        
+        self.dbspe = dbspe
         s = dbspe
         _float = self.TypeFloat(6, bt.VALINT_DECIMALS)
         
@@ -450,6 +450,41 @@ class SpesometroGrid(dbgrid.ADB_Grid):
         self.SetRowLabelSize(40)
         self.SetRowLabelAlignment(wx.ALIGN_RIGHT, wx.ALIGN_BOTTOM)
         self.SetRowDynLabel(self.GetRowLabel)
+        self.DefTotal()
+    
+    def DefTotal(self, col=1):
+        def cn(db, col):
+            return db._GetFieldIndex(col, inline=True)   
+        self.AddTotalsRow(col, 'Totali',[cn(self.dbspe, 'IVA_Imponib'),
+                                        cn(self.dbspe, 'IVA_NonImponib'),
+                                        cn(self.dbspe, 'IVA_Esente'    ),
+                                        cn(self.dbspe, 'IVA_FuoriCampo'),
+                                        cn(self.dbspe, 'IVA_AllImpo'   ),
+                                        cn(self.dbspe, 'IVA_Imposta'   ),
+                                        cn(self.dbspe, 'IVA_Totale'    ),
+                                        cn(self.dbspe, 'fa_att_tot'    ),
+                                        cn(self.dbspe, 'fa_att_iva'    ),
+                                        cn(self.dbspe, 'fa_att_var'    ),
+                                        cn(self.dbspe, 'fa_att_viv'    ),
+                                        cn(self.dbspe, 'fa_pas_tot'    ),
+                                        cn(self.dbspe, 'fa_pas_iva'    ),
+                                        cn(self.dbspe, 'fa_pas_var'    ),
+                                        cn(self.dbspe, 'fa_pas_viv'    ),
+                                        cn(self.dbspe, 'bl_att_tot'    ),
+                                        cn(self.dbspe, 'bl_att_iva'    ),
+                                        cn(self.dbspe, 'bl_pas_tot'    ),
+                                        cn(self.dbspe, 'bl_pas_iva'    ),
+                                        cn(self.dbspe, 'sa_att_tot'    ),
+                                        ])
+    
+
+
+
+
+
+
+
+    
     
     def GetRowLabel(self, row):
         if 0 <= row < self.db_table.RowsCount():

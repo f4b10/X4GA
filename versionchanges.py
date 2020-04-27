@@ -29,6 +29,21 @@ import mx.DateTime as dt
 import mx.Odt
 
 history = (
+    ('1.5.92', dt.Date(2020, 04, 16), (
+        ("BET1291",
+         """Aggiunto Flag Gruppo Iva su Gestione Schede Clienti e Fornitori"""
+        ),
+        ("BUG0177",
+         """Rimosso bug che impediva l'adeguamento della struttura per i campi di tipo CHAR"""
+        ),
+        ("BET1290",
+         """Aggiunti nuovi codici Natura alla gestione delle tabelle Aliquote IVA"""
+        ),
+        ("BET1289",
+         """Aggiunta al menu strumenti la nuova funzione ripara tabelle che si fa carico di riparare tutte le tabelle del database corrente"""
+        ),
+        ),),
+
     ('1.5.91', dt.Date(2020, 04, 3), (
         ("BET1288",
          """Potenziate classi FileEntryCtrl e FullPathFileEntryCtrl"""

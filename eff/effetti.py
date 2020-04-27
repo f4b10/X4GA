@@ -336,6 +336,7 @@ class EffGrid(dbglib.DbGridColoriAlternati):
         sz.Add(self, 0, wx.GROW|wx.ALL, 0)
         parent.SetSizer(sz)
         sz.SetSizeHints(parent)
+        self.DefTotal(2)
 
         self.Bind(gl.EVT_GRID_CMD_EDITOR_SHOWN, self.OnEditorShown)
 
@@ -347,6 +348,13 @@ class EffGrid(dbglib.DbGridColoriAlternati):
         eff.MoveRow(row)
         eff.id_effbap = value
         return True
+
+    def DefTotal(self, col=1):
+        def cn(db, col):
+            return db._GetFieldIndex(col, inline=True)   
+        self.AddTotalsRow(col, 'Totali',[cn(self.dbeff, 'impeff'),
+                                        cn(self.dbeff, 'saldo'),
+                                        ])
 
     def OnEditorShown(self, event):
         if event.GetCol() == gbapcod:

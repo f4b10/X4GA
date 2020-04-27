@@ -152,7 +152,9 @@ class GridReg(dbglib.DbGridColoriAlternati):
         parent.SetSizer(sz)
         sz.SetSizeHints(parent)
 
+
         self.Bind(gl.EVT_GRID_SELECT_CELL, self.OnSelected)
+
 
     def GetAttr(self, row, col, rscol, attr=gl.GridCellAttr):
         attr = dbglib.DbGridColoriAlternati.GetAttr(self, row, col, rscol, attr)

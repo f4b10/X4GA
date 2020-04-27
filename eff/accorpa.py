@@ -140,6 +140,12 @@ class PcfGrid(dbglib.DbGrid):
         sz.Add(self, 0, wx.GROW|wx.ALL, 0)
         parent.SetSizer(sz)
         sz.SetSizeHints(parent)
+        #self.DefTotal(3)
+    
+    #===========================================================================
+    # def DefTotal(self, col=1):
+    #     self.AddTotalsRow(col, 'Totali',[RSACC_SALDO,])
+    #===========================================================================
     
     def OnCellSelected(self, event):
         event.Skip()

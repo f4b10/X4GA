@@ -127,6 +127,8 @@ class IntRegConGrid(dbglib.DbGridColoriAlternati, _IntRegGridMixin):
         parent.SetSizer(sz)
         sz.SetSizeHints(parent)
         
+        self.DefTotal(8)
+        
         self.Bind(gl.EVT_GRID_CELL_LEFT_DCLICK, self.OnApriReg)
     
     def MakeColumns(self):
@@ -165,6 +167,14 @@ class IntRegConGrid(dbglib.DbGridColoriAlternati, _IntRegGridMixin):
         
         self.SetAnchorColumns(10, 2)
         return 8, cols
+
+    def DefTotal(self, col=1):
+        def cn(db, col):
+            return db._GetFieldIndex(col, inline=True)   
+        self.AddTotalsRow(col, 'Totali',[cn(self.dbreg.body, 'dare'),
+                                        cn(self.dbreg.body, 'avere'),
+                                        ])
+
         
     def GetAttr(self, row, col, rscol, attr=gl.GridCellAttr):
         attr = dbglib.DbGridColoriAlternati.GetAttr(self, row, col, rscol, attr)
@@ -500,8 +510,16 @@ class IntRegIvaGrid(dbglib.DbGridColoriAlternati, _IntRegGridMixin):
         sz.Add(self, 0, wx.GROW|wx.ALL, 0)
         parent.SetSizer(sz)
         sz.SetSizeHints(parent)
-        
+        self.DefTotal()
         self.Bind(gl.EVT_GRID_CELL_LEFT_DCLICK, self.OnApriReg)
+
+    def DefTotal(self, col=1):
+        def cn(db, col):
+            return db._GetFieldIndex(col, inline=True)   
+        self.AddTotalsRow(col, 'Totali',[cn(self.dbreg, 'total_imponib'),
+                                        cn(self.dbreg, 'total_imposta'),
+                                        cn(self.dbreg, 'total_indeduc'),
+                                        ])
     
     def UpdateGrid(self):
         self.ChangeData(self.dbreg.GetRecordset())
@@ -735,8 +753,16 @@ class IntAliqIvaGrid(dbglib.DbGridColoriAlternati):
         sz.Add(self, 0, wx.GROW|wx.ALL, 0)
         parent.SetSizer(sz)
         sz.SetSizeHints(parent)
-        
+        self.DefTotal(9)
         self.Bind(gl.EVT_GRID_CELL_LEFT_DCLICK, self.OnApriReg)
+    
+    def DefTotal(self, col=1):
+        def cn(db, col):
+            return db._GetFieldIndex(col, inline=True)   
+        self.AddTotalsRow(col, 'Totali',[cn(self.dbmov, 'valimponib'),
+                                        cn(self.dbmov, 'valimposta'),
+                                        cn(self.dbmov, 'valindeduc'),
+                                        ])
     
     def OnApriReg(self, event):
         mov = self.dbmov
