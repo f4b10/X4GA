@@ -41,7 +41,7 @@ from awc.controls import EVT_DATECHANGED
 
 import awc.controls.linktable as linktab
 
-FRAME_TITLE = "Cambia codice Iva a prodotti"
+FRAME_TITLE = "Riparazione Tabelle"
 
 
 
