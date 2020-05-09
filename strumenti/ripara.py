@@ -101,14 +101,6 @@ class RiparaPanel(aw.Panel):
         nOk    = 0
         nError = 0
         for i, n in enumerate(lTable):
-            cmd = 'REPAIR TABLE %s' % n
-            self.dbCurs.execute(cmd)
-            ret = self.dbCurs.fetchall()
-            esito = ret[0][3]
-            
-            
-            
-            
             try:
                 indexes = [j for j,x in enumerate(Env.Azienda.BaseTab.tabelle) if x[0] == n][0]
                 des = Env.Azienda.BaseTab.tabelle[indexes][1]
@@ -118,16 +110,35 @@ class RiparaPanel(aw.Panel):
             des = des[0:40]
             n = '%s%s' % (n, ' '*60)
             n = n[0:20]
+            
             if i==0:
-                msg = '%03d - %s %s %s' % (i+1, n, des, esito)
+                msg = '%03d - %s %s' % (i+1, n, des)
             else:
-                msg = '%s\n%03d - %s %s %s' % (msg, i+1, n,  des, esito)
+                msg = '%s\n%03d - %s %s' % (msg, i+1, n,  des)
+            self.Stato.SetValue(msg)
+            self.Stato.SetInsertionPointEnd()
+            
+            cmd = 'REPAIR TABLE %s' % n
+            self.dbCurs.execute(cmd)
+            ret = self.dbCurs.fetchall()
+            esito = ret[0][3]
+            
+            
+            
+            
+            #===================================================================
+            # if i==0:
+            #     msg = '%03d - %s %s %s' % (i+1, n, des, esito)
+            # else:
+            #     msg = '%s\n%03d - %s %s %s' % (msg, i+1, n,  des, esito)
+            #===================================================================
             if esito=='OK':
                 nOk = nOk + 1
             else:
                 nError = nError + 1
+                
+            msg = '%s %s' % (msg, esito)
             self.Stato.SetValue(msg)
-            
             self.Stato.SetInsertionPointEnd()
             
             
