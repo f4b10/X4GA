@@ -1755,6 +1755,10 @@ class GridBody(object):
                 inv.Get(idpro)
                 giac = inv.total_giac
                 cstu = inv.costo or 0
+                if cstu==0 and idpro:
+                    dbProd = adb.DbTable(bt.TABNAME_PROD, 'prod', writable=True)
+                    dbProd.Get(idpro)
+                    cstu = dbProd.costo or 0
                 vc = (inv.total_iniv or 0) + (inv.total_carv or 0)
                 cv = (inv.total_ini or 0) + (inv.total_car or 0)
                 try:
