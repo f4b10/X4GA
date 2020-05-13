@@ -404,7 +404,7 @@ class FolderEntryCtrl(_EntryCtrlMixin):
 
 class FileEntryCtrl(_EntryCtrlMixin):
     request_description = "Seleziona il file:"
-    wildcard = None
+    wildcard = "*.*"
     path     = None
 
     def GetFiller(self):
