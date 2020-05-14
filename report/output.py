@@ -51,6 +51,10 @@ import stormdb as adb
 from Env import msgbox
 MsgBox = aw.awu.MsgDialog
 
+
+from pyPdf import PdfFileReader, PdfFileWriter
+from pyPdf.pdf import PageObject, RectangleObject
+
 _debug = 0
 
 
@@ -520,7 +524,7 @@ class print_Report:
         for mc in multicopia:
             
             dbTable._info.report_nome_copia = mc
-            
+            self.OutputPageDimension=self.loadDuplicaOnPage(self.oReport.get_ReportStru())
             self.lFlatReport=self.loadFlatProperty(self.oReport.get_ReportStru(), dbTable)
             if self.lFlatReport == True:
                 dbTable.SetFlatView()       
@@ -695,6 +699,9 @@ class print_Report:
                 self.oCanvas.save()
                 if type(nameOutputFile) in (str, unicode) and sys.platform == 'win32':
                     nameOutputFile = nameOutputFile.replace('/', '\\')
+                if self.OutputPageDimension:
+                    self.DuplicaOnPage(filePdf=nameOutputFile)
+                    
                 if output != "STORE":
                     if sys.platform == 'win32':
                         from pdfprint import PdfView, PdfPrint
@@ -760,6 +767,42 @@ class print_Report:
                         break
                 else:
                     raise Exception, msg
+    
+    def DuplicaOnPage(self, filePdf):
+        H, V, OFFSET = self.OutputPageDimension
+        reader = PdfFileReader(open(filePdf,'rb'))
+        numPage = reader.getNumPages()
+        output = PdfFileWriter()
+        for i in range(numPage):
+            pagina1 = reader.getPage(i)
+            pageA4 = PageObject.createBlankPage(None, H, V)
+            pagina1.mediaBox = RectangleObject([0, 0, H, V])
+            
+            newPage = PageObject.createBlankPage(None, pagina1.mediaBox.getWidth(), pagina1.mediaBox.getHeight())
+            newPage.mergeScaledTranslatedPage(pagina1, 1, 0, V/2)  # -400 is approximate mid-page
+            newPage.mergePage(pageA4)
+            
+            newPage.mergeScaledTranslatedPage(pagina1, 1, 0, OFFSET)  # -400 is approximate mid-page
+            newPage.mergePage(pageA4)
+            
+            output.addPage(newPage)
+        
+        outputStream = file(filePdf, "wb")
+        output.write(outputStream)
+        outputStream.close()
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        pass
+    
+    
+    
     
     def OnTimer(self, event):
         self.progressBar.SetValue(self.dbt_row+1)
@@ -1032,6 +1075,22 @@ class print_Report:
                     eval(i)
             self.flatProperty=v        
         return not (v==None)
+
+    def loadDuplicaOnPage(self, d):
+        dimension = None
+        dim={}
+        l= [e for e in d if e[:8]=="property"]
+        for i in l:
+            e=d[i]
+            if e["name"]=="DuplicaOnPage":
+                for k in e['value'].split(','):
+                    n,v = k.split('=')
+                    dim[n.strip()]=float(v)
+                if not 'StartPosition' in dim.keys():
+                    dim['StartPosition']=14
+                dimension = (dim['H'], dim['V'], dim['StartPosition'])
+                break
+        return dimension
 
     def gruppiOnNewPage(self):
         """
