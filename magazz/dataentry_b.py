@@ -1756,7 +1756,8 @@ class GridBody(object):
                 giac = inv.total_giac
                 cstu = inv.costo or 0
                 if cstu==0 and idpro:
-                    dbProd = adb.DbTable(bt.TABNAME_PROD, 'prod', writable=True)
+                    # Calcolo Costo Ultimo
+                    dbProd = self.dbprod
                     dbProd.Get(idpro)
                     cstu = dbProd.costo or 0
                 vc = (inv.total_iniv or 0) + (inv.total_carv or 0)
@@ -1767,12 +1768,18 @@ class GridBody(object):
                     cstm = 0
                 self._cache_giacenze[idpro] = (giac, cstu, cstm)
             giac, cstu, cstm = self._cache_giacenze[idpro]
+            
             #aggiorno dati prodotto
             pro = self.dbprod
             if pro.id != idpro:
                 ElapsedTime('', reset=True)
                 pro.Get(idpro)
                 ElapsedTime('UpdateProdZone - pro.Get(idpro)')
+                
+                
+                
+                
+                
 
 
             ElapsedTime('', reset=True)
