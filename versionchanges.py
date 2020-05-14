@@ -29,7 +29,38 @@ import mx.DateTime as dt
 import mx.Odt
 
 history = (
-    ('1.5.92', dt.Date(2020, 04, 16), (
+    ('1.5.92', None, (
+        ("BET1293",
+"""Introdotta la proprieta' personalizzata DuplicaOnPage nella definizione
+dei report per consentire di riportare su una stessa pagina due copie dello
+stesso report.<crlf>
+<crlf>                                    +-----------+   
+<crlf>                                    !aaaaaaaaa!     
+<crlf>+-----------+                !aaaaaaaaa!     
+<crlf>!aaaaaaaaa!               !aaaaaaaaa!     
+<crlf>!aaaaaaaaa!     ==>  +-----------+   
+<crlf>!aaaaaaaaa!               !aaaaaaaaa!   
+<crlf>+-----------+                !aaaaaaaaa!     
+<crlf>                                    !aaaaaaaaa!     
+<crlf>                                    +-----------+   
+<crlf>
+<crlf>Nelle proprieta' personalizzate del report deve essere inserita la proprietà
+<crlf>DuplicaOnPage
+<crlf>a cui assegnare i valori:<crlf>
+     H=<dimensione in pixel dell'altezza della pagina di output>, <crlf>
+     V=<dimensione in pixel della larghezza della pagina di output>, <crlf>
+     StartPosition=<scarto tra le due pagine accodate><crlf>
+     se non viene specificata StartPosition viene assunto il valore di default 14
+<crlf>
+<crlf>Esempio:
+<crlf>DuplicaOnPage    valore:  H = 595.32, V = 841.92, StartPosition = 14
+<crlf>
+<crlf>N.B.: i valori H = 595.32, V = 841.92 identificano il foglio A4 verticale
+         """
+        ),
+        ("BUG0178",
+         """Rimosso bug che in dataentry documenti di magazzino inibiva la visualizzazione dell'ultimo costo di acquisto del prodotto in caso di prodotti non movimentati"""
+        ),
         ("BET1292",
          """Aggiunte totalizzazioni su varie grid contabili, magazzino, scadenzari, effetti"""
         ),
