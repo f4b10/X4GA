@@ -30,6 +30,12 @@ import mx.Odt
 
 history = (
     ('1.5.92', None, (
+        ("BET1295",
+         """Spostata in basso e resa piu' chiara dicitura da apporre sui documenti non fiscali"""
+        ),
+        ("BET1294",
+         """Aggiunta possibilita' di invertire il set delle causali contabili da considerare in interrogazione scadenzari clienti/fornitori"""
+        ),
         ("BET1293",
 """Introdotta la proprieta' personalizzata DuplicaOnPage nella definizione
 dei report per consentire di riportare su una stessa pagina due copie dello
