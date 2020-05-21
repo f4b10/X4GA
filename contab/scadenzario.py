@@ -969,12 +969,24 @@ class SetCauPanel(aw.Panel):
         wdr.SetCauFunc(self)        
         cn=self.FindWindowByName
         self.causali=cn('causali')
+        self.inverti=cn('inverti')
         self.btnSave=cn('btnSave')
         self.dbSetup=adb.DbTable(Env.Azienda.BaseTab.TABNAME_CFGSETUP, 'setup')
         self.LoadCausali()
+        self.inverti.Bind(wx.EVT_CHECKBOX, self.OnInverti)
         self.btnSave.Bind(wx.EVT_BUTTON, self.OnSave)
         self.causali.Bind(wx.EVT_CHECKLISTBOX, self.OnCheck)
         
+
+    def OnInverti(self, evt):
+        l2Check=[]
+        for i in range(self.causali.GetCount()):
+            if not self.causali.IsChecked(i):
+                l2Check.append(i)
+        self.causali.SetChecked(l2Check)    
+        self.GetCheckedCount()    
+        evt.Skip()
+    
     def OnCheck(self, evt):
         conta=self.GetCheckedCount()
         evt.Skip()   

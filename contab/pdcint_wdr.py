@@ -3553,7 +3553,8 @@ def SitFidiClientiFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_CHECKLISTBOX = 10238
+ID_CHECKBOX = 10238
+ID_CHECKLISTBOX = 10239
 
 def SetCauFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 2, 0, 0 )
@@ -3567,19 +3568,30 @@ def SetCauFunc( parent, call_fit = True, set_sizer = True ):
         wx.DefaultPosition, wx.DefaultSize, 0 )
     item1.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item3 = wx.StaticText( parent, ID_TEXT, "Causali contabili escluse da scadenzario", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item3.SetForegroundColour( wx.RED )
-    item3.SetName( "lblSetCau" )
-    item1.Add( item3, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+    item3 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    
+    item4 = wx.StaticText( parent, ID_TEXT, "Inverti selezionate", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item3.Add( item4, 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP, 5 )
 
-    item4 = CheckListBox( parent, ID_CHECKLISTBOX, wx.DefaultPosition, [80,320], [], 0 )
-    item4.SetName( "causali" )
-    item1.Add( item4, 0, wx.GROW|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item5 = wx.CheckBox( parent, ID_CHECKBOX, "", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item5.SetName( "inverti" )
+    item3.Add( item5, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP, 5 )
 
-    item5 = wx.Button( parent, ID_BUTTON, "OK", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item5.SetDefault()
-    item5.SetName( "btnSave" )
-    item1.Add( item5, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+    item1.Add( item3, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+
+    item6 = wx.StaticText( parent, ID_TEXT, "Causali contabili escluse da scadenzario", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item6.SetForegroundColour( wx.RED )
+    item6.SetName( "lblSetCau" )
+    item1.Add( item6, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+
+    item7 = CheckListBox( parent, ID_CHECKLISTBOX, wx.DefaultPosition, [80,320], [], 0 )
+    item7.SetName( "causali" )
+    item1.Add( item7, 0, wx.GROW|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item8 = wx.Button( parent, ID_BUTTON, "OK", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item8.SetDefault()
+    item8.SetName( "btnSave" )
+    item1.Add( item8, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
     item1.AddGrowableCol( 0 )
 
