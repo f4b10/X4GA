@@ -30,6 +30,9 @@ import mx.Odt
 
 history = (
     ('1.5.92', None, (
+        ("BET1296",
+         """Modificata interrogazione conbtabile fatturatro Clienti/Fornitori per consentire selezione per data documento e Anagrafica"""
+        ),
         ("BET1295",
          """Spostata in basso e resa piu' chiara dicitura da apporre sui documenti non fiscali"""
         ),

@@ -188,6 +188,7 @@ class SendMail(object):
             smtp.sendmail(self.SendFrom, self.SendTo, self.msg.as_string() )
             smtp.close()
         except Exception, e:
+            print e
             self.error = repr(e.args)
             return False
         

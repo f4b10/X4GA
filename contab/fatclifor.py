@@ -97,6 +97,7 @@ class FatturatoContabileClientiFornitGrid(dbglib.DbGridColoriAlternati):
         AC((  w, (cn('total_fuoricampo'), "Fuori campo",    _VAL, True)))
         if detail:
             AC((120, (cn('aliq_descriz'), "Aliquota IVA",   _STR, True)))
+            AC((  1, (cn('id_regcon'),        "#reg",           _STR, True)))
         AC((  1, (cn('pdc_id'),           "#pdc",           _STR, True)))
         
         self._col_codfisc = cn('anag_codfisc')
@@ -167,16 +168,19 @@ class FatturatoContabileClientiFornitPanel(aw.Panel):
         self.detail = False
         wdr.FatturatoContabileClientiFornitFunc(self)
         cn = self.FindWindowByName
+        self.idPdc = cn('id_pdc')
+        self.acqven = cn('acqven')
         self.dbfat = dbc.FatturatoContabileClienti() #cambia in base a radiobox acquisti/vendite
         self.gridfat = FatturatoContabileClientiFornitGrid(cn('pangridfat'), self.dbfat)
-        self.Bind(wx.EVT_RADIOBOX, self.OnAcqVenChanged, cn('acqven'))
+        self.acqven.Bind(wx.EVT_RADIOBOX, self.OnAcqVenChanged)
         self.Bind(EVT_LINKTABCHANGED, self.OnStatoChanged, cn('id_stato'))
         for name, func in (('butupd', self.OnUpdateData),
                            ('butprt', self.OnPrintData),):
             self.Bind(wx.EVT_BUTTON, func, cn(name))
         
+        self.acqven.SetValue('A')
+        self.idPdc.SetPdcTipCods('F')         
         self.TestRegIva()
-        
         wx.CallAfter(lambda: cn('datmin').SetFocus())
     
     def GetPanelDataSource(self):
@@ -209,12 +213,19 @@ class FatturatoContabileClientiFornitPanel(aw.Panel):
         event.Skip()
     
     def OnAcqVenChanged(self, event):
+        selectedTipo='CF'
         self.TestRegIva()
+        self.idPdc.SetValue(None)
+        if self.acqven.GetValue()=='A':
+            selectedTipo='F'
+        elif self.acqven.GetValue()=='V':
+            selectedTipo='C'
+        self.idPdc.SetPdcTipCods(selectedTipo)
         event.Skip()
     
     def TestRegIva(self):
         cn = self.FindWindowByName
-        av = cn('acqven').GetValue()
+        av = self.acqven.GetValue()
         if av == 'A':
             tipi = 'A'
         else:
@@ -244,17 +255,22 @@ class FatturatoContabileClientiFornitPanel(aw.Panel):
             event.Skip()
     
     def Validate(self):
+        lSuccess = True
         cn = self.FindWindowByName
+        dd1, dd2 = map(lambda x: cn(x).GetValue(), 'datdocmin datdocmax'.split())
         d1, d2 = map(lambda x: cn(x).GetValue(), 'datmin datmax'.split())
-        if not d1 or not d2 or d2<d1:
-            aw.awu.MsgDialog(self, "Date non valide", style=wx.ICON_ERROR)
-            return False
-        return True
+        if not dd1 and not dd2 and dd2<dd1:
+            aw.awu.MsgDialog(self, "Periodo Documenti non valido", style=wx.ICON_ERROR)
+            lSuccess = False
+        elif not d1 and not d2 and d2<d1:
+            aw.awu.MsgDialog(self, "Periodo Registrazioni non valido", style=wx.ICON_ERROR)
+            lSuccess = False
+        return lSuccess
     
     def UpdateData(self):
         cn = self.FindWindowByName
-        av, qa, d1, d2, ss, si, sc, sx, ct = map(lambda x: cn(x).GetValue(), 
-                                                 'acqven qualianag datmin datmax id_stato stati_ita stati_cee stati_ext congr_tipana'.split())
+        av, qa, d1, d2, dd1, dd2, ss, si, sc, sx, ct, idPdc = map(lambda x: cn(x).GetValue(), 
+                                                 'acqven qualianag datmin datmax datdocmin datdocmax id_stato stati_ita stati_cee stati_ext congr_tipana id_pdc'.split())
         self.detail = dr = cn('detail').IsChecked()
         if av == 'A':
             fat = self.dbfat = dbc.FatturatoContabileFornitori(detail=dr)
@@ -272,8 +288,22 @@ class FatturatoContabileClientiFornitPanel(aw.Panel):
         fat.AddFilter('reg.id_regiva IN (%s)' % ', '.join(map(str, ri)))
         if ct:
             fat.AddFilter('tipana.tipo=%s', fat.clifor)
-        fat.AddFilter('reg.datreg>=%s', d1)
-        fat.AddFilter('reg.datreg<=%s', d2)
+
+        if idPdc:
+            fat.AddFilter('pdc.id=%s', idPdc)
+            
+
+        if d1:
+            fat.AddFilter('reg.datreg>=%s', d1)
+        if d2:
+            fat.AddFilter('reg.datreg<=%s', d2)
+
+        if dd1:
+            fat.AddFilter('reg.datdoc>=%s', dd1)
+        
+        if dd2:
+            fat.AddFilter('reg.datdoc<=%s', dd2)
+        
         if qa == "A":
             #solo anagrafiche in blacklist
             fat.AddFilter('IF(tipana.tipo="C", cliente.is_blacklisted=1, fornit.is_blacklisted=1)')

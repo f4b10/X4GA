@@ -3661,6 +3661,9 @@ class FatturatoContabileClienti(adb.DbTable):
 
         if detail:
             AG = AT = self.AddField
+            
+            AG('mov.id_reg', 'id_regcon')
+            
             tp = 'total_'
         else:
             AG = self.AddGroupOn
