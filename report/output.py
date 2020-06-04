@@ -1255,11 +1255,21 @@ class print_Report:
             c.translate( 0, 0)
             c.rotate( 10 )
             c.setFontSize(15)
-            c.drawString(130,300,"Stampa priva di valenza giuridico-fiscale ai sensi dell’art. 21 (Dpr 633/72)")
-            c.setFontSize(12)
-            c.drawString(170,275,"salvo per i soggetti non titolari di partita Iva e/o non residenti ai sensi")
-            c.setFontSize(12)
-            c.drawString(245,250,"del comma 909 art. 1 L.205/2017")
+
+
+            if not 'BESTAGNO' in Env.Azienda.descrizione:
+                c.drawString(150,400,"Stampa priva di valenza giuridico-fiscale ai sensi dell’art. 21 (Dpr 633/72)")            
+                c.setFontSize(12)
+                c.drawString(190,375,"salvo per i soggetti non titolari di partita Iva e/o non residenti ai sensi")            
+                c.setFontSize(12)
+                c.drawString(265,350,"del comma 909 art. 1 L.205/2017")            
+            else:
+                c.drawString(130,300,"Stampa priva di valenza giuridico-fiscale ai sensi dell’art. 21 (Dpr 633/72)")
+                c.setFontSize(12)
+                c.drawString(170,275,"salvo per i soggetti non titolari di partita Iva e/o non residenti ai sensi")
+                c.setFontSize(12)
+                c.drawString(245,250,"del comma 909 art. 1 L.205/2017")
+            
             c.restoreState()    
         
 
