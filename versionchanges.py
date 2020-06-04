@@ -29,12 +29,18 @@ import mx.DateTime as dt
 import mx.Odt
 
 history = (
+    ('1.5.93', None, (
+        ("BET1297",
+         """Aggiunto parametro execute tra i parametri di lancio per consentire l'esecuzione automatica di funzioni di X4 che non prevedano intervento dell'utente"""
+        ),
+        ),),
+
     ('1.5.92', None, (
         ("BET1296",
          """Modificata interrogazione conbtabile fatturatro Clienti/Fornitori per consentire selezione per data documento e Anagrafica"""
         ),
         ("BET1295",
-         """Spostata in basso e resa piu' chiara dicitura da apporre sui documenti non fiscali"""
+         """Spostata in basso e resa piu' chiara dicitura da apporre sui documenti non fiscali solo sotto particolari condizioni"""
         ),
         ("BET1294",
          """Aggiunta possibilita' di invertire il set delle causali contabili da considerare in interrogazione scadenzari clienti/fornitori"""

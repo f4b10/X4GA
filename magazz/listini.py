@@ -27,6 +27,7 @@ import wx
 import wx.grid as gl
 import awc.controls.dbgrid as dbglib
 import awc.controls.windows as aw
+#from numpy.core.defchararray import startswith
 MsgBox = aw.awu.MsgDialog
 
 import magazz.listini_wdr as wdr
@@ -387,17 +388,23 @@ class ListiniGrid(dbglib.DbGridColoriAlternati):
         self.COL_P_ERP1 = self.COL_P_ERP2 = self.COL_P_ERP3 =\
         self.COL_P_ERP4 = self.COL_P_ERP5 = self.COL_P_ERP6 = None
         if bt.MAGERPLIS >= 1:
-            self.COL_P_ERP1 = C(( wr, None,    (cn(pro, "ricar1"),   "RP%1",    _PRR, False)))
+#            self.COL_P_ERP1 = C(( wr, None,    (cn(pro, "ricar1"),   "RP%1",    _PRR, False)))
+            self.COL_P_ERP1 = C(( wr, "ricar1",    (cn(pro, "ricar1"),   "RP%1",    _PRR, False)))
         if bt.MAGERPLIS >= 2:
-            self.COL_P_ERP2 = C(( wr, None,    (cn(pro, "ricar2"),   "RP%2",    _PRR, False)))
+#            self.COL_P_ERP2 = C(( wr, None,    (cn(pro, "ricar2"),   "RP%2",    _PRR, False)))
+            self.COL_P_ERP2 = C(( wr, "ricar2",    (cn(pro, "ricar2"),   "RP%2",    _PRR, False)))
         if bt.MAGERPLIS >= 3:
-            self.COL_P_ERP3 = C(( wr, None,    (cn(pro, "ricar3"),   "RP%3",    _PRR, False)))
+#            self.COL_P_ERP3 = C(( wr, None,    (cn(pro, "ricar3"),   "RP%3",    _PRR, False)))
+            self.COL_P_ERP3 = C(( wr, "ricar3",    (cn(pro, "ricar3"),   "RP%3",    _PRR, False)))
         if bt.MAGERPLIS >= 4:
-            self.COL_P_ERP4 = C(( wr, None,    (cn(pro, "ricar4"),   "RP%4",    _PRR, False)))
+#            self.COL_P_ERP4 = C(( wr, None,    (cn(pro, "ricar4"),   "RP%4",    _PRR, False)))
+            self.COL_P_ERP4 = C(( wr, "ricar4",    (cn(pro, "ricar4"),   "RP%4",    _PRR, False)))
         if bt.MAGERPLIS >= 5:
-            self.COL_P_ERP5 = C(( wr, None,    (cn(pro, "ricar5"),   "RP%5",    _PRR, False)))
+#            self.COL_P_ERP5 = C(( wr, None,    (cn(pro, "ricar5"),   "RP%5",    _PRR, False)))
+            self.COL_P_ERP5 = C(( wr, "ricar5",    (cn(pro, "ricar5"),   "RP%5",    _PRR, False)))
         if bt.MAGERPLIS >= 6:
-            self.COL_P_ERP6 = C(( wr, None,    (cn(pro, "ricar6"),   "RP%6",    _PRR, False)))
+#            self.COL_P_ERP6 = C(( wr, None,    (cn(pro, "ricar6"),   "RP%6",    _PRR, False)))
+            self.COL_P_ERP6 = C(( wr, "ricar6",    (cn(pro, "ricar6"),   "RP%6",    _PRR, False)))
         
         #ricariche sul gruppo prezzi - visualizzazione 
         self.COL_P_VRG1 = self.COL_P_VRG2 = self.COL_P_VRG3 =\
@@ -430,17 +437,23 @@ class ListiniGrid(dbglib.DbGridColoriAlternati):
         self.COL_P_ESP1 = self.COL_P_ESP2 = self.COL_P_ESP3 =\
         self.COL_P_ESP4 = self.COL_P_ESP5 = self.COL_P_ESP6 = None
         if bt.MAGESPLIS >= 1:
-            self.COL_P_ESP1 = C(( wr, None,    (cn(pro, "sconto1"),  "SP%1",    _PRC, False)))
+#            self.COL_P_ESP1 = C(( wr, None,    (cn(pro, "sconto1"),  "SP%1",    _PRC, False)))
+            self.COL_P_ESP1 = C(( wr, "sconto1",    (cn(pro, "sconto1"),  "SP%1",    _PRC, False)))
         if bt.MAGESPLIS >= 2:
-            self.COL_P_ESP2 = C(( wr, None,    (cn(pro, "sconto2"),  "SP%2",    _PRC, False)))
+#            self.COL_P_ESP2 = C(( wr, None,    (cn(pro, "sconto2"),  "SP%2",    _PRC, False)))
+            self.COL_P_ESP2 = C(( wr, "sconto2",    (cn(pro, "sconto2"),  "SP%2",    _PRC, False)))
         if bt.MAGESPLIS >= 3:
-            self.COL_P_ESP3 = C(( wr, None,    (cn(pro, "sconto3"),  "SP%3",    _PRC, False)))
+#            self.COL_P_ESP3 = C(( wr, None,    (cn(pro, "sconto3"),  "SP%3",    _PRC, False)))
+            self.COL_P_ESP3 = C(( wr, "sconto3",    (cn(pro, "sconto3"),  "SP%3",    _PRC, False)))
         if bt.MAGESPLIS >= 4:
-            self.COL_P_ESP4 = C(( wr, None,    (cn(pro, "sconto4"),  "SP%4",    _PRC, False)))
+#            self.COL_P_ESP4 = C(( wr, None,    (cn(pro, "sconto4"),  "SP%4",    _PRC, False)))
+            self.COL_P_ESP4 = C(( wr, "sconto4",    (cn(pro, "sconto4"),  "SP%4",    _PRC, False)))
         if bt.MAGESPLIS >= 5:
-            self.COL_P_ESP5 = C(( wr, None,    (cn(pro, "sconto5"),  "SP%5",    _PRC, False)))
+#            self.COL_P_ESP5 = C(( wr, None,    (cn(pro, "sconto5"),  "SP%5",    _PRC, False)))
+            self.COL_P_ESP5 = C(( wr, "sconto5",    (cn(pro, "sconto5"),  "SP%5",    _PRC, False)))
         if bt.MAGESPLIS >= 6:
-            self.COL_P_ESP6 = C(( wr, None,    (cn(pro, "sconto6"),  "SP%6",    _PRC, False)))
+#            self.COL_P_ESP6 = C(( wr, None,    (cn(pro, "sconto6"),  "SP%6",    _PRC, False)))
+            self.COL_P_ESP6 = C(( wr, "sconto6",    (cn(pro, "sconto6"),  "SP%6",    _PRC, False)))
         
         #scontistiche sul gruppo prezzi - visualizzazione 
         self.COL_P_VSG1 = self.COL_P_VSG2 = self.COL_P_VSG3 =\
@@ -802,6 +815,10 @@ class ListiniGrid(dbglib.DbGridColoriAlternati):
                         field = '%s%d' % (name, num+1)
                         setattr(pro, field, getattr(lis.prod, field))
                 pro.id_gruprez = lis.prod.id_gruprez
+                
+                if exclude == 'id_gruprez' or exclude.startswith('ricar') or exclude.startswith('sconto'):
+                    setattr(pro, exclude, getattr(lis, exclude))
+                    
                 tipo, val = pro.RicalcolaPC()
                 do = False
                 sf = adb.DbTable.samefloat
@@ -944,10 +961,14 @@ class ListiniGrid(dbglib.DbGridColoriAlternati):
             gridcol = self.colnames.index(namecol)
         try:
             c = self.listcols[gridcol]
-            if c in 'p_costo p_prezzo'.split() or c.startswith('riclis') or c.startswith('scolis'):
+#            if c in 'p_costo p_prezzo'.split() or c.startswith('riclis') or c.startswith('scolis'):
+            if c in 'p_costo p_prezzo'.split() or c.startswith('riclis') or c.startswith('scolis') \
+                        or c.startswith('ricar') or c.startswith('sconto'):
                 lis = self.dblis
                 self.promod[lis.prod.id] = [lis.p_costo, lis.p_prezzo]
-                if self.autoricalc and c in 'p_costo p_prezzo'.split():
+#                if self.autoricalc and c in 'p_costo p_prezzo'.split():
+                if self.autoricalc and c in 'p_costo p_prezzo'.split() \
+                        or c.startswith('ricar')  or c.startswith('sconto'):
                     self.RicalcolaPC(row, exclude=self.listcols[gridcol])
                 if self.autolistino and (c.startswith('riclis') or c.startswith('scolis')):
                     self.RicalcolaListini(row)
