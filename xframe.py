@@ -169,7 +169,27 @@ class XFrame(aw.Frame):
         
         self.custom_info = None
         ci = self.GetFrameCustomInfo()
-        if ci:
+        
+        if ci and len(ci.getElementsByTagName('execute'))>0:
+            _Import, _Function, _Parameters = self.GetExecuteInfo(ci)
+            try:
+                m = __import__(_Import, {}, {}, False)
+            except:
+                m=None
+                print 'impossibile importare modulo %s' % _Import
+                aw.awu.MsgDialog(None, 'impossibile importare modulo %s' % _Import)
+            if m:
+                try:
+                    function_to_call = getattr(m.lib, _Function)
+                    function_to_call(_Parameters)
+                except:
+                    print 'Funzione %s non trovata nel modulo %s' % (_Function, _Import )
+                    aw.awu.MsgDialog(None, 'Funzione %s non trovata nel modulo %s' % (_Function, _Import ))
+            sys.exit()
+            
+        
+        if ci and len(ci.getElementsByTagName('execute'))==0:
+            #if len(ci.getElementsByTagName('execute'))==0:
             try:
                 f = ci.getElementsByTagName('customize_frame')[0]
                 def _int(n, d):
@@ -273,6 +293,21 @@ class XFrame(aw.Frame):
         self.Bind(EVT_STATUSBAR_TEXTCHANGE_EVENT, self.OnStatusBarTextChange)
         self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
     
+    def GetExecuteInfo(self, ci):
+        f = ci.getElementsByTagName('execute')[0]
+        _Import = f.getElementsByTagName('import')[0].getAttribute('module')
+        _Function = f.getElementsByTagName('function')[0].getAttribute('name')
+        
+        _Parameters={}
+        for n in f.getElementsByTagName('parameters')[0].childNodes:
+            if n.nodeType==xml.dom.minidom.Node.ELEMENT_NODE:
+                _Parameters[n.tagName]= n.getAttribute('value')
+        return _Import, _Function, _Parameters
+        
+        
+        
+        
+        
     def DisplayUserStatusBar(self):
         import Env
         v = Env.version
@@ -354,21 +389,28 @@ class XFrame(aw.Frame):
             p = opj(p, 'cust')
             p = opj(p, 'frame')
             p = opj(p, Env.Azienda.codice)
+            
             names = []
-            if Env.Azienda.params['custom-menu']:
-                names.append(Env.Azienda.params['custom-menu'])
-            names.append(Env.Azienda.Login.username)
-            names.append('__allusers__')
-            for f in names:
-                f = opj(p, f)
-                if not f.endswith('.x4f'):
-                    f += '.x4f'
-                if os.path.exists(f):
-                    try:
-                        self.custom_info = xml.dom.minidom.parse(f)
-                        break
-                    except Exception, e:
-                        aw.awu.MsgDialog(self, repr(e.args), style=wx.ICON_ERROR)
+            if Env.Azienda.params['execute']:
+                file=opj(p, Env.Azienda.params['execute'])
+                #print file
+                self.custom_info = xml.dom.minidom.parse(file)    
+                #print self.custom_info.toprettyxml('   ', '')        
+            else:
+                if Env.Azienda.params['custom-menu']:
+                    names.append(Env.Azienda.params['custom-menu'])
+                names.append(Env.Azienda.Login.username)
+                names.append('__allusers__')
+                for f in names:
+                    f = opj(p, f)
+                    if not f.endswith('.x4f'):
+                        f += '.x4f'
+                    if os.path.exists(f):
+                        try:
+                            self.custom_info = xml.dom.minidom.parse(f)
+                            break
+                        except Exception, e:
+                            aw.awu.MsgDialog(self, repr(e.args), style=wx.ICON_ERROR)
         return self.custom_info
     
     def GetMenuPers(self):
