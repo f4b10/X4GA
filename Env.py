@@ -847,6 +847,7 @@ class Azienda(object):
               'redirect-output': 0,
               'show-syspath': 0,
               'custom-menu': '',
+              'execute': '',
               'login': '',}
 
     """
