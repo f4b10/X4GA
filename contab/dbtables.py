@@ -408,6 +408,10 @@ class DbRegCon(adb.DbTable,
                         pcf.datscad =   scad.datscad
                         pcf.imptot =    0
                         pcf.imppar =    0
+                        pcf.insoluto =  0
+                        pcf.riba     =  0
+                        pcf.contrass =  0
+                        
                 if not do:
                     break
                 pcf.datscad = scad.datscad
@@ -420,7 +424,7 @@ class DbRegCon(adb.DbTable,
                 elif cfg.pcfimp == '2':
                     if   cfg.pcfsgn == '+': pcf.imppar += scad.importo
                     elif cfg.pcfsgn == '-': pcf.imppar -= scad.importo
-                pcf.riba = scad.f_riba
+                pcf.riba = scad.f_riba or 0
                 if True:#pcf.riba:
                     pcf.id_effbap = self._info.id_effbap
                 if not pcf.Save():
