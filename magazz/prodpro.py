@@ -234,8 +234,11 @@ class ProdProgrPanel(wx.Panel):
         if col < 2:
             attr.SetBackgroundColour(self._bgcol0)
         else:
-            attr.SetBackgroundColour([self._bgcol1,
+            try:
+                attr.SetBackgroundColour([self._bgcol1,
                                       self._bgcol2][(col-2)/5])
+            except:
+                pass
         attr.SetReadOnly()
         return attr
     
