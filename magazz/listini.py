@@ -353,6 +353,7 @@ class ListiniGrid(dbglib.DbGridColoriAlternati):
         
         cols = []
         self.colnames = ['codice','descriz','p_costo','p_prezzo']
+        self.fldtosav = []
         self.edcols = []
         def c(col, ed=False):
             n = len(cols)
@@ -390,21 +391,27 @@ class ListiniGrid(dbglib.DbGridColoriAlternati):
         if bt.MAGERPLIS >= 1:
 #            self.COL_P_ERP1 = C(( wr, None,    (cn(pro, "ricar1"),   "RP%1",    _PRR, False)))
             self.COL_P_ERP1 = C(( wr, "ricar1",    (cn(pro, "ricar1"),   "RP%1",    _PRR, False)))
+            self.fldtosav.append('ricar1')
         if bt.MAGERPLIS >= 2:
 #            self.COL_P_ERP2 = C(( wr, None,    (cn(pro, "ricar2"),   "RP%2",    _PRR, False)))
             self.COL_P_ERP2 = C(( wr, "ricar2",    (cn(pro, "ricar2"),   "RP%2",    _PRR, False)))
+            self.fldtosav.append('ricar2')
         if bt.MAGERPLIS >= 3:
 #            self.COL_P_ERP3 = C(( wr, None,    (cn(pro, "ricar3"),   "RP%3",    _PRR, False)))
             self.COL_P_ERP3 = C(( wr, "ricar3",    (cn(pro, "ricar3"),   "RP%3",    _PRR, False)))
+            self.fldtosav.append('ricar3')
         if bt.MAGERPLIS >= 4:
 #            self.COL_P_ERP4 = C(( wr, None,    (cn(pro, "ricar4"),   "RP%4",    _PRR, False)))
             self.COL_P_ERP4 = C(( wr, "ricar4",    (cn(pro, "ricar4"),   "RP%4",    _PRR, False)))
+            self.fldtosav.append('ricar4')
         if bt.MAGERPLIS >= 5:
 #            self.COL_P_ERP5 = C(( wr, None,    (cn(pro, "ricar5"),   "RP%5",    _PRR, False)))
             self.COL_P_ERP5 = C(( wr, "ricar5",    (cn(pro, "ricar5"),   "RP%5",    _PRR, False)))
+            self.fldtosav.append('ricar5')
         if bt.MAGERPLIS >= 6:
 #            self.COL_P_ERP6 = C(( wr, None,    (cn(pro, "ricar6"),   "RP%6",    _PRR, False)))
             self.COL_P_ERP6 = C(( wr, "ricar6",    (cn(pro, "ricar6"),   "RP%6",    _PRR, False)))
+            self.fldtosav.append('ricar6')
         
         #ricariche sul gruppo prezzi - visualizzazione 
         self.COL_P_VRG1 = self.COL_P_VRG2 = self.COL_P_VRG3 =\
@@ -439,21 +446,27 @@ class ListiniGrid(dbglib.DbGridColoriAlternati):
         if bt.MAGESPLIS >= 1:
 #            self.COL_P_ESP1 = C(( wr, None,    (cn(pro, "sconto1"),  "SP%1",    _PRC, False)))
             self.COL_P_ESP1 = C(( wr, "sconto1",    (cn(pro, "sconto1"),  "SP%1",    _PRC, False)))
+            self.fldtosav.append('sconto1')
         if bt.MAGESPLIS >= 2:
 #            self.COL_P_ESP2 = C(( wr, None,    (cn(pro, "sconto2"),  "SP%2",    _PRC, False)))
             self.COL_P_ESP2 = C(( wr, "sconto2",    (cn(pro, "sconto2"),  "SP%2",    _PRC, False)))
+            self.fldtosav.append('sconto2')
         if bt.MAGESPLIS >= 3:
 #            self.COL_P_ESP3 = C(( wr, None,    (cn(pro, "sconto3"),  "SP%3",    _PRC, False)))
             self.COL_P_ESP3 = C(( wr, "sconto3",    (cn(pro, "sconto3"),  "SP%3",    _PRC, False)))
+            self.fldtosav.append('sconto3')
         if bt.MAGESPLIS >= 4:
 #            self.COL_P_ESP4 = C(( wr, None,    (cn(pro, "sconto4"),  "SP%4",    _PRC, False)))
             self.COL_P_ESP4 = C(( wr, "sconto4",    (cn(pro, "sconto4"),  "SP%4",    _PRC, False)))
+            self.fldtosav.append('sconto4')
         if bt.MAGESPLIS >= 5:
 #            self.COL_P_ESP5 = C(( wr, None,    (cn(pro, "sconto5"),  "SP%5",    _PRC, False)))
             self.COL_P_ESP5 = C(( wr, "sconto5",    (cn(pro, "sconto5"),  "SP%5",    _PRC, False)))
+            self.fldtosav.append('sconto5')
         if bt.MAGESPLIS >= 6:
 #            self.COL_P_ESP6 = C(( wr, None,    (cn(pro, "sconto6"),  "SP%6",    _PRC, False)))
             self.COL_P_ESP6 = C(( wr, "sconto6",    (cn(pro, "sconto6"),  "SP%6",    _PRC, False)))
+            self.fldtosav.append('sconto6')
         
         #scontistiche sul gruppo prezzi - visualizzazione 
         self.COL_P_VSG1 = self.COL_P_VSG2 = self.COL_P_VSG3 =\
@@ -612,6 +625,14 @@ class ListiniGrid(dbglib.DbGridColoriAlternati):
             self.lastrow = event.GetRow()
         event.Skip()
     
+    def GetIndexCol(self, fieldName):
+        try:
+            idx= self.dblis.prod.GetFieldNames().index(fieldName)
+        except:
+            idx=None
+        return idx
+    
+    
     def GetAttr(self, row, col, rscol, attr=gl.GridCellAttr):
         attr = dbglib.DbGridColoriAlternati.GetAttr(self, row, col, rscol, attr)
         readonly = not col in self.edcols
@@ -628,6 +649,24 @@ class ListiniGrid(dbglib.DbGridColoriAlternati):
                 bg = 'yellow'
             if 'E%' in self.GetColLabelValue(col):
                 fg = 'darkgray'
+                
+            if col==self.COL_P_ERP1:
+                v_ricar1=self.Table.data[row][self.Table.rsColumns[self.COL_P_ERP1]]
+                if (v_ricar1 or 0)<>0:
+                    fg = 'blue'
+            elif col==self.COL_P_ESP1:
+                v_sconto1=self.Table.data[row][self.Table.rsColumns[self.COL_P_ESP1]]
+                if (v_sconto1 or 0)<>0:
+                    fg = 'blue'
+            if col==self.COL_P_ERP1 or col==self.COL_P_ESP1:
+                try:
+                    v_sconto1=self.Table.data[row][self.Table.rsColumns[self.COL_P_ESP1]]
+                    v_ricar1=self.Table.data[row][self.Table.rsColumns[self.COL_P_ERP1]]
+                    if (v_ricar1 or 0)<>0 and (v_sconto1 or 0)<>0:
+                        fg = 'red'
+                except:
+                    pass
+                    
             if fg:
                 attr.SetTextColour(fg)
             if bg:
@@ -756,6 +795,12 @@ class ListiniGrid(dbglib.DbGridColoriAlternati):
                     if v['ricalcpc']:
                         self.RicalcolaPC(row)
                     self.promod[lis.prod.id] = [lis.p_costo, lis.p_prezzo]
+                    #-------------------------------------------------------------------------- Gio
+                    for n, col in enumerate(self.fldtosav):
+                        yy=getattr(lis,col)
+                        self.promod[lis.prod.id].append(yy)
+                    #-------------------------------------------------------------------------- Gio
+
                 if v['tvlist'] == 'R':
                     self.RicalcolaListini(row)
                 elif v['tvlist'] == 'V':
@@ -816,8 +861,13 @@ class ListiniGrid(dbglib.DbGridColoriAlternati):
                         setattr(pro, field, getattr(lis.prod, field))
                 pro.id_gruprez = lis.prod.id_gruprez
                 
-                if exclude == 'id_gruprez' or exclude.startswith('ricar') or exclude.startswith('sconto'):
-                    setattr(pro, exclude, getattr(lis, exclude))
+                #===============================================================
+                # if exclude == 'id_gruprez' or exclude.startswith('ricar') or exclude.startswith('sconto'):
+                #     setattr(pro, exclude, getattr(lis, exclude))
+                #===============================================================
+                if exclude:
+                    if exclude == 'id_gruprez' or exclude.startswith('ricar') or exclude.startswith('sconto'):
+                        setattr(pro, exclude, getattr(lis, exclude))
                     
                 tipo, val = pro.RicalcolaPC()
                 do = False
@@ -834,6 +884,11 @@ class ListiniGrid(dbglib.DbGridColoriAlternati):
                 if self.autolistino:
                     pro.RicalcolaListini(lis)
                 self.promod[lis.prod.id] = [lis.p_costo, lis.p_prezzo]
+#-------------------------------------------------------------------------- Gio
+                for n, col in enumerate(self.fldtosav):
+                    yy=getattr(lis,col)
+                    self.promod[lis.prod.id].append(yy)
+#-------------------------------------------------------------------------- Gio
                 if not row in self.modrows:
                     self.modrows.append(row)
                 chg = True
@@ -916,6 +971,9 @@ class ListiniGrid(dbglib.DbGridColoriAlternati):
     def GetProMod(self):
         return self.promod
     
+    def GetFldToSav(self):
+        return self.fldtosav
+    
     def OnValueChanged(self, row, gridcol, col, value):
         lis = self.dblis
         lis.MoveRow(row)
@@ -966,9 +1024,14 @@ class ListiniGrid(dbglib.DbGridColoriAlternati):
                         or c.startswith('ricar') or c.startswith('sconto'):
                 lis = self.dblis
                 self.promod[lis.prod.id] = [lis.p_costo, lis.p_prezzo]
+#-------------------------------------------------------------------------- Gio
+                for n, col in enumerate(self.fldtosav):
+                    yy=getattr(lis,col)
+                    self.promod[lis.prod.id].append(yy)
+#-------------------------------------------------------------------------- Gio
+
 #                if self.autoricalc and c in 'p_costo p_prezzo'.split():
-                if self.autoricalc and c in 'p_costo p_prezzo'.split() \
-                        or c.startswith('ricar')  or c.startswith('sconto'):
+                if self.autoricalc and (c in 'p_costo p_prezzo'.split() or c.startswith('ricar')  or c.startswith('sconto')):
                     self.RicalcolaPC(row, exclude=self.listcols[gridcol])
                 if self.autolistino and (c.startswith('riclis') or c.startswith('scolis')):
                     self.RicalcolaListini(row)
@@ -1662,7 +1725,9 @@ class ListiniPanel(aw.Panel, aw.awu.LimitiFiltersMixin):
                 for pid in pm:
                     if pro.Get(pid) and pro.OneRow():
                         w = False
-                        for n, col in enumerate('costo,prezzo'.split(',')):
+#                        for n, col in enumerate('costo,prezzo'.split(',')):
+                        fldtoagg=['costo','prezzo']+self.gridlis.GetFldToSav()
+                        for n, col in enumerate(fldtoagg):
                             pv = getattr(pro, col)
                             lv = pm[pid][n]
                             if not sf(pv, lv):

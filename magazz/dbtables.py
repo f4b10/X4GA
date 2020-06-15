@@ -4869,6 +4869,9 @@ class DettaglioEvasioni(Movim):
 
 class Prodotti(adb.DbTable):
 
+    ricar1 = ricar2 = ricar3 = ricar4 = ricar5 = ricar6 = 0
+    sconto1 = sconto2 = sconto3 = sconto4 = sconto5 = sconto6 = 0
+
     def __init__(self, table=None, alias=None, **kwargs):
         if table is None:
             table = bt.TABNAME_PROD
@@ -5012,6 +5015,10 @@ class Prodotti(adb.DbTable):
 
 
 class Listino(adb.DbTable):
+
+    ricar1 = ricar2 = ricar3 = ricar4 = ricar5 = ricar6 = 0
+    sconto1 = sconto2 = sconto3 = sconto4 = sconto5 = sconto6 = 0
+
 
     def __init__(self):
         adb.DbTable.__init__(self, bt.TABNAME_LISTINI, 'lis', writable=True)
