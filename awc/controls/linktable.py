@@ -1163,8 +1163,11 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
             self.CallCard(new=True)
         elif val == -3:
             #richiama scheda elemento per selezioni cerca valori
-            self.CallValueSearch()
-            self.ShowFilterLinksTitle()
+            try:
+                self.CallValueSearch()
+                self.ShowFilterLinksTitle()
+            except:
+                pass
         elif val == -4:
             #azzera selezioni cerca valori
             del self.valuesearch[:]
