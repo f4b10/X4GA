@@ -29,9 +29,31 @@ import mx.DateTime as dt
 import mx.Odt
 
 history = (
+    ('1.5.94', dt.Date(2020, 8, 4), (
+        ("BET1297",
+         """Riallineamento con versioni non pubblicate"""
+        ),
+        ),),
+
     ('1.5.93', None, (
         ("BET1297",
-         """Aggiunto parametro execute tra i parametri di lancio per consentire l'esecuzione automatica di funzioni di X4 che non prevedano intervento dell'utente"""
+         """Aggiunto parametro execute tra i parametri di lancio per consentire l'esecuzione automatica di funzioni di X4 che non prevedano intervento dell'utente
+         deve essere predisposto un file con estensione .x4r nella cartella cust\\frame nel seguente formato:
+<crlf>
+<crlf><?xml version="1.0" encoding="utf-8"?>
+<crlf><execute>
+<crlf>    <import module="custlib.lib" /> 
+<crlf>    <function name="ExportGiacenze" /> 
+<crlf>    <parameters>
+<crlf>    </parameters>
+<crlf></execute>         
+<crlf>
+<crlf>dove:
+<crlf>    <import> - indica il modulo da importare contenente la funziomne da eseguire
+<crlf>    <function> - indica il nome della funzione da avviare
+<crlf>    <parameters> - eventuiali parametri da passare alla funzione
+<crlf>             
+         """
         ),
         ),),
 
@@ -135,13 +157,13 @@ stesso report.<crlf>
            
     ('1.5.86', dt.Date(2020, 01, 20), (
         ("BET1283",
-         """Rimosso bug che inibiva l'utilizzo filtro per valori su schede anagrafiche"""
+         """Rimosso bug che inibiva utilizzo filtro per valori su schede anagrafiche"""
         ),
         ("BET1282",
          """Aggiunta colonna giacenza finale su schede prodotti"""
         ),
         ("BET1281",
-         """Introdotta possibilita di stampa di documenti di magazzino che non aggiornano flasg di stampa (NOFS)"""
+         """Introdotta possibilita di stampa di documenti di magazzino che non aggiornino flasg di stampa (NOFS)"""
         ),
         ),),
            
