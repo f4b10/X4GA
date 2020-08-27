@@ -29,6 +29,15 @@ import mx.DateTime as dt
 import mx.Odt
 
 history = (
+    ('1.5.94 bis', dt.Date(2020, 8, 4), (
+        ("BET1299",
+         """Corretto bug funzionamento combobox per ritardare visualizzazione avviso"""
+        ),
+        ("BET1298",
+         """Corretto bug su assegnazione valore a combobox (errore in duplicazione modalita' di pagamento"""
+        ),
+        ),),
+
     ('1.5.94', dt.Date(2020, 8, 4), (
         ("BET1297",
          """Riallineamento con versioni non pubblicate"""
