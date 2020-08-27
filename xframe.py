@@ -285,7 +285,7 @@ class XFrame(aw.Frame):
         if show_promem:
             rp.populate()
             self.promem = rp
-            if hasattr(sys, 'frozen'):
+            if hasattr(sys, 'frozen') or True:
                 rp.autoUpdate(5)
                 rp.startReminder(1)
         
