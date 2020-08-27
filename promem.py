@@ -486,7 +486,7 @@ class PromemAlertPanel(wx.Panel):
                    (0, 12,  0),    #12 ore
                    (1,  0,  0),    #1 giorno
                    (2,  0,  0))[n] #2 giorni
-        newdat = adb.DateTime.now()+adb.DateTime.DateTimeDelta(d,h,m)
+        newdat = adb.DateTime.now()+adb.DateTime.DateTimeDelta(d, 0, 0, 0, m, h)
         cn('datarem').SetValue(newdat)
         self.pm.datarem = newdat
     
