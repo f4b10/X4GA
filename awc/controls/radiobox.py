@@ -57,10 +57,14 @@ class RadioBox(wx.RadioBox,\
             value = self._values[self.index_if_not_found]
         if value == '' and ' ' in self._values:
             value = ' '
-        if value in self._values:
-            n = self._values.index(value)
-            if n <= self.GetCount()-1:
-                wx.RadioBox.SetSelection(self, n)
+        try:
+            value = '%s' % value
+            if value in self._values:
+                n = self._values.index(value)
+                if n <= self.GetCount()-1:
+                    wx.RadioBox.SetSelection(self, n)
+        except:
+            pass
 
     def GetValue(self):
         out = None
