@@ -401,7 +401,7 @@ class IntRegConPanel(aw.Panel):
         tot.ClearOrders()
         tot.AddOrder('IF(regiva.tipo="A",0,IF(regiva.tipo="V",1,2))')
         tot.AddOrder('aliqiva.codice')
-        tot.SetDebug()
+        #tot.SetDebug()
         tot.Retrieve()
         mov._info.riepiva = tot
         mov._info.id_pdc_hilite = self.FindWindowByName('id_pdc').GetValue()

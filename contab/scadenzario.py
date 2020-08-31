@@ -60,7 +60,7 @@ class GridScadTot(dbglib.DbGridColoriAlternati):
         self.mode = kwargs.pop('agente_mode', None)
         
         self.dbscad = dbscad
-        self.dbscad.SetDebug()
+        #self.dbscad.SetDebug()
         dbscad.Get(-1)
         
         cn = lambda db, col: db._GetFieldIndex(col, inline=True)

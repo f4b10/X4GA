@@ -878,7 +878,7 @@ class LiqIvaPanel(aw.Panel):
         r.SetPeriodo(self.GetPeriodo(),
                      cn('datmin').GetValue(),
                      cn('datmax').GetValue())
-        r.SetDebug()
+        #r.SetDebug()
         r.Retrieve()
 
         wait.progress.SetRange(r.RowsCount())
