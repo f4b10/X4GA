@@ -1855,9 +1855,14 @@ class MagazzPanel(aw.Panel,\
         if name in self.dbdoc._info.fieldNames:
             setattr(doc, name, value)
             if self.status == STATUS_GETKEY:
-                if   name == "datreg" and doc.cfgdoc.datdoc in '13':
-                    doc.datdoc = value
-                    self.controls["datdoc"].SetValue(value)
+                if   name == "datreg":
+                    if not isinstance(doc.cfgdoc.datdoc, basestring):
+                        setDatDoc=False
+                    else:
+                        setDatDoc=doc.cfgdoc.datdoc in '13'
+                    if setDatDoc:
+                        doc.datdoc = value
+                        self.controls["datdoc"].SetValue(value)
                 if name in ("id_magazz", "datreg") and not doc.cfgdoc.pienum:
                     if doc.id is None:
                         self.DefNumDoc()
