@@ -52,9 +52,12 @@ class CatArtPanel(ga.AnagPanel):
         p = wx.Panel( parent, -1)
         wdr.CatArtCardFunc( p, True )
         self.FindWindowByName('caudoc').SetDataChanged=self.SetDataChanged
+        self.checkAll=self.FindWindowByName('checkAll')
+        self.checkAll.Bind(wx.EVT_CHECKBOX, self.OnInverti)
         return p
 
-
+    def OnInverti(self, evt):
+        self.FindWindowByName('caudoc').Inverti()
 # ------------------------------------------------------------------------------
 
 

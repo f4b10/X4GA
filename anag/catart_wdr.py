@@ -61,10 +61,14 @@ class AttivaCausali(CheckListFromText):
         event.Skip()
 
     def _SwitchSelect(self, event):
+        self.Inverti()
+        event.Skip()
+
+    def Inverti(self):
         for i in range(len(self.GetItems())):
             self.Check(i, not self.IsChecked(i))
         self.SetDataChanged()
-        event.Skip()
+        
 
 
 
@@ -103,7 +107,8 @@ def CatArtCardFunc( parent, call_fit = True, set_sizer = True ):
 ID_TEXT = 16002
 ID_PDCACQ = 16003
 ID_PDCVEN = 16004
-ID_LTAB = 16005
+ID_CHECKBOX = 16005
+ID_LTAB = 16006
 
 def CatArtCardAnagFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -135,12 +140,22 @@ def CatArtCardAnagFunc( parent, call_fit = True, set_sizer = True ):
     
     item9 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
-    item10 = wx.StaticText( parent, ID_TEXT, "Accessibile dai seguenti documenti", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item9.Add( item10, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+    item10 = wx.FlexGridSizer( 0, 3, 0, 0 )
+    
+    item11 = wx.StaticText( parent, ID_TEXT, "Accessibile dai seguenti documenti", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item10.Add( item11, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
 
-    item11 = AttivaCausali( parent, ID_LTAB, wx.DefaultPosition, [220,300], [], 0 )
-    item11.SetName( "caudoc" )
-    item9.Add( item11, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item10.Add( [ 20, 5 ] , 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+    item12 = wx.CheckBox( parent, ID_CHECKBOX, "Inverti Selezionati", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item12.SetName( "checkAll" )
+    item10.Add( item12, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+
+    item9.Add( item10, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+
+    item13 = AttivaCausali( parent, ID_LTAB, wx.DefaultPosition, [220,300], [], 0 )
+    item13.SetName( "caudoc" )
+    item9.Add( item13, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item9.AddGrowableCol( 0 )
 
