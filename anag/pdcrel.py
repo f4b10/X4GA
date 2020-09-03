@@ -1105,12 +1105,20 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
                 #controllo univocità
                 db = adb.DbTable(self.tabanag, 'anag', writable=False)
                 db.AddJoin(bt.TABNAME_PDC, 'pdc', idLeft='id', idRight='id')
+                if self.tabanag=='clienti':
+                    db.AddJoin(bt.TABNAME_STATCLI, 'status', idLeft='id_status', fields='hidesearch', join=adb.JOIN_LEFT)
+                elif self.tabanag=='fornit':
+                    db.AddJoin(bt.TABNAME_STATFOR, 'status', idLeft='id_status', fields='hidesearch', join=adb.JOIN_LEFT)
+                else:
+                    db.AddJoin(bt.TABNAME_STATPDC, 'status', idLeft='id_status', fields='hidesearch', join=adb.JOIN_LEFT)
+                    
                 db.Reset()
                 for col, val, des in (('piva',    pi, 'La Partita IVA'),
                                       ('codfisc', cf, 'Il Codice Fiscale')):
                     db.ClearFilters()
                     if val:
                         db.AddFilter('anag.%s=%%s' % col, cn(col).GetValue())
+                        db.AddFilter('not status.hidesearch=1  or status.hidesearch is null')
                         if id:
                             db.AddFilter('anag.id<>%s', id)
                         db.Retrieve()
