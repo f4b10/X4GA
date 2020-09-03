@@ -23,6 +23,7 @@ from awc.controls.entries import FolderEntryCtrl
 from anag.basetab import WorkZoneNotebook, PhotoContainerPanel
 
 from anag.mag import MagazzDialog
+from anag.valute import ValuteDialog
 
 import Env
 bt = Env.Azienda.BaseTab
@@ -264,7 +265,7 @@ def ContabSetup( parent, call_fit = True, set_sizer = True ):
     item22 = wx.StaticText( parent, ID_TEXT, "Valuta di conto:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item21.Add( item22, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
 
-    item23 = LinkTable(parent, ID_CONTABVAL ); item23.SetDataLink( bt.TABNAME_VALUTE, "setup_contab_valcon", None); item23.SetObligatory(True)
+    item23 = LinkTable(parent, ID_CONTABVAL ); item23.SetDataLink( bt.TABNAME_VALUTE, "setup_contab_valcon", ValuteDialog); item23.SetObligatory(True)
     item21.Add( item23, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
     item24 = wx.StaticText( parent, ID_TEXT, "Numero di decimali su importi:", wx.DefaultPosition, wx.DefaultSize, 0 )

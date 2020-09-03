@@ -97,7 +97,10 @@ class _SetupPanel(aw.Panel):
                         val = db.data
                     else:
                         val = self.DecodeValue(db.descriz, name, ctr.GetWindowStyle() & wx.TE_PASSWORD == wx.TE_PASSWORD)
-                    ctr.SetValue(val)
+                    try:
+                        ctr.SetValue(val)
+                    except:
+                        pass
 
     def SetupWrite(self):
 
