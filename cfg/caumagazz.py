@@ -309,6 +309,8 @@ class CauMagazzPanel(ga.AnagPanel):
     def __init__(self, *args, **kwargs):
 
         ga.AnagPanel.__init__(self, *args, **kwargs)
+        
+
         self.SetDbSetup( bt.tabelle[ bt.TABSETUP_TABLE_CFGMAGDOC ] )
 
         self.dbmov = adb.DbTable(bt.TABNAME_CFGMAGMOV, 'tipmov', fields=movfields)
@@ -316,7 +318,8 @@ class CauMagazzPanel(ga.AnagPanel):
         self.dbmov.Reset()
         self._grid_mov = None
         self.loadmovs = True
-
+        
+        
     def InitControls(self, *args, **kwargs):
         ga.AnagPanel.InitControls(self, *args, **kwargs)
         cols = bt.tabelle[bt.TABSETUP_TABLE_CFGMAGMOV][bt.TABSETUP_TABLESTRUCTURE]
@@ -464,6 +467,11 @@ class CauMagazzPanel(ga.AnagPanel):
         self.Bind(wx.EVT_BUTTON, self.OnNewMov,  id = wdr.ID_BUTNEWMOV)
         self.Bind(wx.EVT_BUTTON, self.OnDelMov,  id = wdr.ID_BUTDELMOV)
 
+        self.checkAll=self.FindWindowByName('checkAll')
+        self.checkAll.Bind(wx.EVT_CHECKBOX, self.OnSelectAll)
+
+
+
         self.EnableDatiAcc()
 
         DB = Env.Azienda.DB
@@ -587,6 +595,16 @@ class CauMagazzPanel(ga.AnagPanel):
                 ctr = self.FindWindowById(ID_BTN_RECSAVE)
                 if ctr:
                     ctr.Enable(False)
+
+
+    def OnSelectAll(self, evt):
+        print evt
+        self.FindWindowByName('catdoc').InvertiCheck()
+        
+        
+        
+        
+        evt.Skip()
 
     def OnNewMov(self, event):
         self._grid_mov.AddNewRow()

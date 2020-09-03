@@ -91,10 +91,13 @@ class AttivaCategorie(CheckListFromText):
         event.Skip()
 
     def _SwitchSelect(self, event):
+        self.InvertiCheck()
+        event.Skip()
+
+    def InvertiCheck(self):
         for i in range(len(self.GetItems())):
             self.Check(i, not self.IsChecked(i))
         self.SetDataChanged()
-        event.Skip()
 
 class RCheckBox(CheckBox):
     def __init__(self, parent, id, label, pos, size, style):
@@ -1838,12 +1841,22 @@ def Doc4Func( parent, call_fit = True, set_sizer = True ):
     
     item1 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
-    item2 = wx.StaticText( parent, ID_TEXT, "Categorie Articoli Visibili", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item1.Add( item2, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+    item2 = wx.FlexGridSizer( 0, 3, 0, 0 )
+    
+    item3 = wx.StaticText( parent, ID_TEXT, "Categorie Articoli Visibili", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item2.Add( item3, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
 
-    item3 = AttivaCategorie( parent, ID_LTAB, wx.DefaultPosition, [220,300], [], 0 )
-    item3.SetName( "catdoc" )
-    item1.Add( item3, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item2.Add( [ 5, 20 ] , 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+
+    item4 = wx.CheckBox( parent, ID_CHECKBOX, "Inverti selezione", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item4.SetName( "checkAll" )
+    item2.Add( item4, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+
+    item1.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+
+    item5 = AttivaCategorie( parent, ID_LTAB, wx.DefaultPosition, [220,300], [], 0 )
+    item5.SetName( "catdoc" )
+    item1.Add( item5, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item1.AddGrowableRow( 1 )
 
