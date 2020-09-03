@@ -4057,7 +4057,8 @@ class Azienda(object):
         @classmethod
         def ReadAziendaSetup(cls):
 
-            cfg = adb.DbTable(cls.TABNAME_CFGSETUP, 'cfg', writable=False)
+            #cfg = adb.DbTable(cls.TABNAME_CFGSETUP, 'cfg', writable=False)
+            cfg = adb.DbTable(cls.TABNAME_CFGSETUP, 'cfg')
 
             keys = cls.GetSetupKeys()
             for p in plugins:
@@ -4124,6 +4125,20 @@ class Azienda(object):
                                   """Configurazione azienda errata: manca """\
                                   """la definizione %s.\nVerificare il setup """\
                                   """dei dati aziendali.""" % err
+                        #=======================================================
+                        # #-------------------------------------------------------------------------          
+                        # # in alternativa al costrutto If precedente in modo da da non interrompere
+                        # # l'esecuzione e dare la possibilità di configurare il setup dell'azienda.
+                        # #-------------------------------------------------------------------------          
+                        # cfg.CreateNewRow()
+                        # cfg.chiave = key
+                        # if col=='flag':
+                        #     cfg.flag=0
+                        # elif col=='codice':
+                        #     cfg.codice=''
+                        # cfg.Save()
+                        # #-------------------------------------------------------------------------          
+                        #=======================================================
             cls.defstru()
             cls.SetMailParams()
             cls.SetXmppParams()
