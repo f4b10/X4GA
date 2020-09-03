@@ -167,7 +167,8 @@ def Main():
     except ImportError:
         pass
     
-    if hasattr(sys, 'frozen'):
+    #if hasattr(sys, 'frozen') or True:
+    if hasattr(sys, 'frozen'): 
         import erman
         def _exceptionhook(type, err, traceback):
             erman.ErrorWarning(err, traceback)
