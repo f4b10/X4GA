@@ -1899,6 +1899,9 @@ class DbGridTable(gridlib.PyGridTableBase):
                     value = 0
                 try:
                     out = locale.format("%%.%df" % _dec, value, 1, monetary=True).rjust(w)
+                    if '\x92' in out:
+                        out=out.replace('.', ',')
+                        out=out.replace('\x92', '.')
                 except:
                     pass
 
