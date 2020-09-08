@@ -29,7 +29,16 @@ import mx.DateTime as dt
 import mx.Odt
 
 history = (
-    ('1.5.94 bis', dt.Date(2020, 8, 4), (
+    ('1.5.94 tris', dt.Date(2020, 9, 8), (
+        ("BET1391",
+         """Corretto bug su impostazione area geografica"""
+        ),
+        ("BET1390",
+         """Aggiunta pulsante inversione selezione su set categorie merci abilitate"""
+        ),
+        ),),
+
+    ('1.5.94 bis', dt.Date(2020, 8, 13), (
         ("BET1299",
          """Corretto bug funzionamento combobox per ritardare visualizzazione avviso"""
         ),
