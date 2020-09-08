@@ -645,7 +645,8 @@ class LicenseSetup(Setup):
 def InitSettings(ask_missing_config=True):
     out = True
     try:
-        locale.setlocale( locale.LC_ALL, "it" )
+        locale.setlocale( locale.LC_ALL, "italian" )
+        #locale.setlocale( locale.LC_ALL, "it" )
     except locale.Error:
         locale.setlocale( locale.LC_ALL)
     config = GeneralSetup()
