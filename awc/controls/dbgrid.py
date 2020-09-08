@@ -1899,9 +1899,13 @@ class DbGridTable(gridlib.PyGridTableBase):
                     value = 0
                 try:
                     out = locale.format("%%.%df" % _dec, value, 1, monetary=True).rjust(w)
-                    if '\x92' in out:
-                        out=out.replace('.', ',')
-                        out=out.replace('\x92', '.')
+                    #===========================================================
+                    # if value < 1000:
+                    #     out=out.replace('.', ',')
+                    # elif '\x92' in out:
+                    #     out=out.replace('.', ',')
+                    #     out=out.replace('\x92', '.')
+                    #===========================================================
                 except:
                     pass
 
@@ -2121,7 +2125,7 @@ class DbGridTable(gridlib.PyGridTableBase):
                     def strunicode(x):
                         if x is None: return ''
                         x = unicode(x).encode('utf-8')
-                        if CSVFORMAT_EXCELZERO and (x or ' ')[0].isdigit():
+                        if CSVFORMAT_EXCELZERO and (x or ' ')[0] in '0123456789+-*/':
                             x = '="%s"' % x
                         return x
                     colmap = {gridlib.GRID_VALUE_DATETIME:         strdate,
@@ -2160,9 +2164,9 @@ class DbGridTable(gridlib.PyGridTableBase):
                                 
                             if val==None:
                                 val=  self.GetValue(row, col)  
-                                
                             try:
-                                rs.append(colmap[types[col]](val))
+                                out = colmap[types[col]](val)
+                                rs.append(out)
                             except:
                                 rs.append('')
                         if row%100==0:
