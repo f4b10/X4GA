@@ -1229,7 +1229,10 @@ class AnagPanel(aw.Panel):
             if self.TestForDeletion() and AskForDeletion(self):
                 out = self.DeleteDataRecord()
                 if out:
-                    self._btnattach.SetKey(self.db_recid, delete=True)
+                    try:
+                        self._btnattach.SetKey(self.db_recid, delete=True)
+                    except:
+                        pass
                 self.UpdateSearch()
                 event.Skip()
         return out
