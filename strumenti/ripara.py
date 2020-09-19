@@ -109,15 +109,14 @@ class RiparaPanel(aw.Panel):
             des = '%s%s' % (des, ' '*60)
             des = des[0:40]
             n = '%s%s' % (n, ' '*60)
-            n = n[0:20]
-            
             if i==0:
-                msg = '%03d - %s %s' % (i+1, n, des)
+                msg = '%03d - %s %s' % (i+1, n[0:20], des)
             else:
-                msg = '%s\n%03d - %s %s' % (msg, i+1, n,  des)
+                msg = '%s\n%03d - %s %s' % (msg, i+1, n[0:20],  des)
             self.Stato.SetValue(msg)
             self.Stato.SetInsertionPointEnd()
             
+            n = n.strip()            
             cmd = 'REPAIR TABLE %s' % n
             self.dbCurs.execute(cmd)
             ret = self.dbCurs.fetchall()
