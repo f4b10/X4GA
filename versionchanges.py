@@ -29,7 +29,7 @@ import mx.DateTime as dt
 import mx.Odt
 
 history = (
-    ('1.5.94 tris', dt.Date(2020, 9, 8), (
+    ('1.5.95', dt.Date(2020, 9, 21), (
         ("BET1391",
          """Corretto bug su impostazione area geografica"""
         ),
