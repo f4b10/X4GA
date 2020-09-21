@@ -63,6 +63,11 @@ class RadioBox(wx.RadioBox,\
                 n = self._values.index(value)
                 if n <= self.GetCount()-1:
                     wx.RadioBox.SetSelection(self, n)
+            elif  int(value) in self._values:
+                n = self._values.index(int(value))
+                if n <= self.GetCount()-1:
+                    wx.RadioBox.SetSelection(self, n)
+                
         except:
             pass
 
