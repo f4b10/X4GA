@@ -29,6 +29,14 @@ import mx.DateTime as dt
 import mx.Odt
 
 history = (
+    ('1.5.96', dt.Date(2020, 10, 30), (
+        ("BET1393",
+         """Introdotto bottone su anagrafica Clienti/Fornitori per geolocalizzazione su google maps"""
+        ),
+        ("BET1392",
+         """Gestita eventualita' di sconti null in cambio listino a documento"""
+        ),
+        ),),
     ('1.5.95', dt.Date(2020, 9, 21), (
         ("BET1391",
          """Corretto bug su impostazione area geografica"""
