@@ -51,9 +51,12 @@ import stormdb as adb
 from Env import msgbox
 MsgBox = aw.awu.MsgDialog
 
-
-from pyPdf import PdfFileReader, PdfFileWriter
-from pyPdf.pdf import PageObject, RectangleObject
+# inserito perchè in python 2.7 non sono presenti le librerie
+try:
+    from pyPdf import PdfFileReader, PdfFileWriter
+    from pyPdf.pdf import PageObject, RectangleObject
+except:
+    pass
 
 _debug = 0
 
