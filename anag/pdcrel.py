@@ -71,6 +71,18 @@ CONTACT_TYPE_CALL =  1
 ID_BTN_CARDPDC = wx.NewId()
 
 
+def open_dir(f):
+    if os.sys.platform.startswith('win'):
+        f = f.replace('/', '\\')
+    try:
+        os.startfile(f)  # @UndefinedVariable
+        esito=True
+    except:
+        esito=False
+    return esito
+
+
+
 class _PdcRangeCode(object):
     """
     Mixin x classi che gestiscono sottoconti.  Offre il metodo per determinare
@@ -117,6 +129,18 @@ class _PdcRangeCode(object):
                 ctr.SetValue(self.NewRangeCode(tipo))
         event.Skip()
 
+    def OnViewMap(self, evt):
+        ind = [v for v in self.anag_db_datalink if v[0]=='indirizzo'][0][1].GetValue()
+        cap = [v for v in self.anag_db_datalink if v[0]=='cap'][0][1].GetValue()
+        citta = [v for v in self.anag_db_datalink if v[0]=='citta'][0][1].GetValue()
+        prov = [v for v in self.anag_db_datalink if v[0]=='prov'][0][1].GetValue()
+        wrk = '%s, %s %s %s' % (ind, cap, citta, prov)
+        wrk = wrk.replace(' ', '+')
+        wrk = wrk.replace('/', '')
+        wrk = wrk.replace('\\', '')
+        url = 'https://www.google.it/maps/place/%s' % wrk
+        open_dir(url)
+        evt.Skip()
 
 # ------------------------------------------------------------------------------
 
@@ -180,6 +204,7 @@ class _PdcRelPanel(ga.AnagPanel,\
         if self._btnattach is not None:
             self._btnattach.SetScope(self.db_tabname)#self.tabanag)
         self.Bind(lt.EVT_LINKTABCHANGED, self.OnTipanaChanged, id=wdr.ID_CTRPDCTIP)
+        self.FindWindowByName('btnViewMap').Bind(wx.EVT_BUTTON, self.OnViewMap)
 
     def SetControlsMaxLength(self, fields, controls):
         ga.AnagPanel.SetControlsMaxLength(self, fields, controls)
