@@ -1729,12 +1729,12 @@ class DocMag(adb.DbTable):
                         mov.prezzo = prz
                         ND = bt.VALINT_DECIMALS
                         mov.importo = round(mov.qta*mov.prezzo\
-                                            *(100-mov.sconto1)/100\
-                                            *(100-mov.sconto2)/100\
-                                            *(100-mov.sconto3)/100\
-                                            *(100-mov.sconto4)/100\
-                                            *(100-mov.sconto5)/100\
-                                            *(100-mov.sconto6)/100, ND)
+                                            *(100-(mov.sconto1 or 0))/100\
+                                            *(100-(mov.sconto2 or 0))/100\
+                                            *(100-(mov.sconto3 or 0))/100\
+                                            *(100-(mov.sconto4 or 0))/100\
+                                            *(100-(mov.sconto5 or 0))/100\
+                                            *(100-(mov.sconto6 or 0))/100, ND)
                     else:
                         if not mov.prod.codice in lisnul:
                             lisnul.append(mov.prod.codice)
