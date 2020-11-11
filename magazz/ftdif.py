@@ -819,7 +819,14 @@ class FtDifPanel(aw.Panel):
                             dbt.totimponib += impriga
                         if not mov.MoveNext():
                             break
+                    
                 dbt.mov.MoveFirst()
+                nr = dbt._info.recordNumber
+                try:
+                    dbt.MoveRow(0)
+                    dbt.MoveRow(nr)
+                except:
+                    pass
                 report.StoreRecordPosition = dbt.SavePosition()
                 dbt.allinea = 1
         self.Stampa(docs, LISTEFOLDER, "Lista documenti generati", rowFunc=LoadMovs)
