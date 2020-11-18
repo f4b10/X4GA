@@ -479,6 +479,9 @@ class Frame(wx.Frame, mixin):
     def SetTitle(self, title):
         wx.Frame.SetTitle(self, self.__StandardTitle__(title))
     
+    def SetTitleAbs(self, title):
+        wx.Frame.SetTitle(self, title)
+    
     def SetSize(self, *args, **kwargs):
         wx.Frame.SetSize(self, *args, **kwargs)
         self.CheckDimensions()
