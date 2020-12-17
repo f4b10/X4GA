@@ -661,8 +661,8 @@ class FtDifPanel(aw.Panel):
             d2 = today
 
         if _DEBUG:
-            d1 = dt.DateTime(2020, 7, 1)
-            d2 = dt.DateTime(2020, 7, 5)
+            d1 = dt.DateTime(2020, 12, 1)
+            d2 = dt.DateTime(2020, 12, 5)
 
 
 
