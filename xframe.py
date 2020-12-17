@@ -452,12 +452,24 @@ class XFrame(aw.Frame):
                         menu.Append(mid, v.getAttribute('menu'))
                         err = None
                         try:
-                            sf, mv, md = map(lambda x: v.getAttribute(x),
-                                             'frame menu desc'.split())
-                            n = sf.rindex('.')
-                            sm, sf = sf[:n], sf[n+1:]
+                            sf, mv, md, fx = map(lambda x: v.getAttribute(x),
+                                             'frame menu desc function'.split())
+                            if len(sf)>0:
+                                isFrame=True
+                                n = sf.rindex('.')
+                                sm, sf = sf[:n], sf[n+1:]
+                            else:
+                                isFrame=False
+                                n = fx.rindex('.')
+                                sm, sf = fx[:n], fx[n+1:]
+                                
                             cm = __import__(sm, fromlist=True)
-                            if hasattr(cm, sf):
+                            
+                            if not isFrame:
+                                n=sf.index('(')
+                                sf=sf[:n]
+                            
+                            if isFrame and hasattr(cm, sf):
                                 fc = getattr(cm, sf)
                                 self.menupers[mid] = {'frame': fc,
                                                       'voice': mv,
@@ -465,6 +477,11 @@ class XFrame(aw.Frame):
                                 for key in keys:
                                     if key.startswith('frame_'):
                                         self.menupers[mid][key] = v.getAttribute(key)
+                            elif not isFrame and getattr(cm, sf, None):
+                                fc = getattr(cm, sf)
+                                self.menupers[mid] = {'function': fc,
+                                                      'voice': mv,
+                                                      'desc': md,}
                             else:
                                 err = "Frame non trovato: %s" % sf
                             if not err:
@@ -477,10 +494,17 @@ class XFrame(aw.Frame):
                                         err = "Immagine toolbar non trovata: %s" % ti
                                     else:
                                         tid = wx.NewId()
-                                        self.toolpers[tid] = {'image': getattr(im, ti),
-                                                              'frame': fc,
-                                                              'voice': mv,
-                                                              'desc': md,}
+                                        if isFrame:
+                                            self.toolpers[tid] = {'image': getattr(im, ti),
+                                                                  'frame': fc,
+                                                                  'voice': mv,
+                                                                  'desc': md,}
+                                        else:
+                                            self.toolpers[tid] = {'image': getattr(im, ti),
+                                                                  'function': fc,
+                                                                  'voice': mv,
+                                                                  'desc': md,}
+                                            
                                         self.toollist.append(tid)
                         except Exception, e:
                             err = "Configurazione voce menu errata: %s" % repr(e.args)
@@ -1108,8 +1132,12 @@ class XFrame(aw.Frame):
     
     def LaunchToolPers(self, toolid):
         if toolid in self.toolpers:
-            fc = self.toolpers[toolid]['frame']
-            self.LaunchFrame(fc, dialog=issubclass(fc,aw.Dialog))
+            if 'frame' in self.toolpers[toolid].keys():
+                fc = self.toolpers[toolid]['frame']
+                self.LaunchFrame(fc, dialog=issubclass(fc,aw.Dialog))
+            elif 'function' in self.toolpers[toolid].keys():
+                f=self.toolpers[toolid]['function']
+                x=f()
     
     def CreateStdToolBar(self):
         old = self.GetToolBar()
