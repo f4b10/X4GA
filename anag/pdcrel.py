@@ -204,7 +204,10 @@ class _PdcRelPanel(ga.AnagPanel,\
         if self._btnattach is not None:
             self._btnattach.SetScope(self.db_tabname)#self.tabanag)
         self.Bind(lt.EVT_LINKTABCHANGED, self.OnTipanaChanged, id=wdr.ID_CTRPDCTIP)
-        self.FindWindowByName('btnViewMap').Bind(wx.EVT_BUTTON, self.OnViewMap)
+        try:
+            self.FindWindowByName('btnViewMap').Bind(wx.EVT_BUTTON, self.OnViewMap)
+        except:
+            pass
 
     def SetControlsMaxLength(self, fields, controls):
         ga.AnagPanel.SetControlsMaxLength(self, fields, controls)
