@@ -217,7 +217,7 @@ def SetConfigBasePath(appdesc=None, pathprefix=''):
 
 
 from __builtin__ import round as round_bi
-def _round(n,d):
+def _round(n,d=0):
     return round_bi(n+0.0000001,d)
 
 import __builtin__
@@ -509,16 +509,16 @@ class GeneralSetup(Setup):
                 Azienda.imagePath = val
 
         elif sec == 'DataExport':
-
+ 
             if opt == 'csvdelimiter':
                 dbgrid.CSVFORMAT_DELIMITER = val
-
+ 
             elif opt == 'csvquotechar':
                 dbgrid.CSVFORMAT_QUOTECHAR = val
-
+ 
             elif opt == 'csvquoting':
                 dbgrid.CSVFORMAT_QUOTING = val
-
+ 
             elif opt == 'csvexcelzero':
                 dbgrid.CSVFORMAT_EXCELZERO = bool(int(val or 0))
 
