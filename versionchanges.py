@@ -29,6 +29,27 @@ import mx.DateTime as dt
 import mx.Odt
 
 history = (
+    ('1.5.96 bis', dt.Date(2020, 12, 28), (
+        ("BET1396",
+         """Introdotta opzione in setup azienda (scheda magazzino) per gestire la priorità del codice iva proposto all'atto dell'inserimento di un documento di magazzino.
+<crlf>Consente di specificare se il codice iva proposto nel corpo del documento debba essere quello indicato in testata o quello associasto al prodotto.
+<crlf>Il meccanismo viene innescato solo nel caso al prodotto richiamato sia associato un codice di esenzione iva."""
+        ),
+        ("BET1395",
+         """Perfezionato il codice di esecuzione automatica per consentire il richiamo automatico di Frame."""
+        ),
+        ("BET1394",
+         """Introdotta la possibilita' per i menu' esterni di richiamare funzioni oltre che frame.
+<crlf>Le specifiche da indicare nel menu' esterno dovranno essere nella forma:
+<crlf>            <voice menu="Sito"
+<crlf>                description="Sito Fassi"
+<crlf>                function="util.fassi.apri_Url()"
+<crlf>                toolbar="images.getTB_Pastel_IntForBitmap"/>         
+         
+         
+         """
+        ),
+        ),),
     ('1.5.96', dt.Date(2020, 10, 30), (
         ("BET1393",
          """Introdotto bottone su anagrafica Clienti/Fornitori per geolocalizzazione su google maps"""
