@@ -185,11 +185,8 @@ class XFrame(aw.Frame):
                 except:
                     print 'Funzione %s non trovata nel modulo %s' % (_Function, _Import )
                     aw.awu.MsgDialog(None, 'Funzione %s non trovata nel modulo %s' % (_Function, _Import ))
-            sys.exit()
-            
         
         if ci and len(ci.getElementsByTagName('execute'))==0:
-            #if len(ci.getElementsByTagName('execute'))==0:
             try:
                 f = ci.getElementsByTagName('customize_frame')[0]
                 def _int(n, d):
@@ -301,7 +298,7 @@ class XFrame(aw.Frame):
         _Parameters={}
         for n in f.getElementsByTagName('parameters')[0].childNodes:
             if n.nodeType==xml.dom.minidom.Node.ELEMENT_NODE:
-                _Parameters[n.tagName]= n.getAttribute('value')
+                _Parameters[n.tagName]= n.firstChild.nodeValue
         return _Import, _Function, _Parameters
         
         
@@ -393,9 +390,7 @@ class XFrame(aw.Frame):
             names = []
             if Env.Azienda.params['execute']:
                 file=opj(p, Env.Azienda.params['execute'])
-                #print file
                 self.custom_info = xml.dom.minidom.parse(file)    
-                #print self.custom_info.toprettyxml('   ', '')        
             else:
                 if Env.Azienda.params['custom-menu']:
                     names.append(Env.Azienda.params['custom-menu'])
