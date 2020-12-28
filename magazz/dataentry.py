@@ -2271,15 +2271,32 @@ class MagazzPanel(aw.Panel,\
                 """Confermi le informazioni inserite?"""
                 if aw.awu.MsgDialog(self, msg, style=wx.ICON_ERROR|wx.YES_NO|wx.NO_DEFAULT) != wx.ID_YES:
                     return False
+                
+            msg =\
+            """Attenzione!\n"""\
+            """Sono presenti righe con aliquota IVA diversa da quella impostata nella testata.\n"""\
+            """Confermi le informazioni inserite?"""                
             for mov in doc.mov:
-                if mov.id_aliqiva is not None and mov.id_aliqiva != doc.id_aliqiva:
-                    msg =\
-                    """Attenzione!\n"""\
-                    """Sono presenti righe con aliquota IVA diversa da quella impostata nella testata.\n"""\
-                    """Confermi le informazioni inserite?"""
+                err=False
+                if bt.MAGIVAPREVA==None or bt.MAGIVAPREVA=='0':
+                    print 'no priorita'
+                    if mov.id_aliqiva is not None and mov.id_aliqiva != doc.id_aliqiva:
+                        err=True
+                else:
+                    print 'priorita'
+                    if mov.id_aliqiva is not None and (mov.id_aliqiva != doc.id_aliqiva and mov.id_aliqiva != mov.prod.id_aliqiva):
+                        err=True
+                    
+
+                if err:                    
                     if aw.awu.MsgDialog(self, msg, style=wx.ICON_INFORMATION|wx.YES_NO|wx.NO_DEFAULT) != wx.ID_YES:
                         return False
                     break
+
+                
+                
+                
+                
         wz = self.FindWindowByName('workzone')
         if wz.GetPageText(wz.GetSelection()).lower() != 'piede':
             self.UpdatePanelFoot()

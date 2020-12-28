@@ -457,6 +457,7 @@ class GridBody(object):
     def __init__(self):
         object.__init__(self)
 
+
         self.gridbody = None
         self.gridlist = None
         self.gridmovi = None
@@ -476,6 +477,11 @@ class GridBody(object):
         m.RSMOV_PDCCG_cod = mov.pdccg._GetFieldIndex("codice", inline=True)
         m.RSMOV_PDCCG_des = mov.pdccg._GetFieldIndex("descriz", inline=True)
 
+        self.GetEsenti()
+        
+
+
+
         class UsableProdTable(adb.DbTable):
             def __init__(self):
                 adb.DbTable.__init__(self, bt.TABNAME_PROD, 'prod', writable=True)
@@ -493,6 +499,14 @@ class GridBody(object):
         self.dbinv = dbm.InventarioDaMovim()
 
         self._cache_giacenze = {}
+
+    def GetEsenti(self):
+        self.esenti=[]
+        if (bt.MAGIVAPREVA or 0)=='1':
+            iva = dbm.AliqIva()
+            self.esenti = iva.GetEsenti()
+            #print self.esenti
+
 
     def SetPdcCgTip(self, pdc_cg_tip):
         self.pdc_cg_tip = pdc_cg_tip
@@ -1623,6 +1637,11 @@ class GridBody(object):
                     idaliq = self.dbanag.id_aliqiva
                 except:
                     idaliq = None
+            if bt.MAGIVAPREVA or False:
+                print (bt.MAGIVAPREVA or False), mov.prod.codice, mov.prod.descriz, mov.prod.id_aliqiva
+                if idaliq in self.esenti and mov.prod.id_aliqiva in self.esenti:
+                    idaliq = mov.prod.id_aliqiva
+                
         if idaliq is None and not (tiprig or ' ') in "DI":
             idaliq = mov.prod.id_aliqiva
             if idaliq is None and hasattr(self, '_auto_magivadef'):

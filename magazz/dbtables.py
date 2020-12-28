@@ -67,6 +67,21 @@ class NumProtIvaEsiste(Exception):
 
 # ------------------------------------------------------------------------------
 
+class AliqIva(adb.DbTable):
+    def __init__(self):
+        adb.DbTable.__init__(self, bt.TABNAME_ALIQIVA, 'iva', writable=False)
+        self.Reset()
+        
+    def GetEsenti(self):
+        esenti=[]
+        self.ClearFilters()
+        self.Retrieve('iva.perciva=0')
+        for r in self:
+            #print r.id, r.perciva
+            esenti.append(r.id)
+        return esenti
+        
+
 
 class SendMailInfo(object):
 
