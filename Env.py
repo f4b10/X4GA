@@ -1183,6 +1183,7 @@ class Azienda(object):
         MAGSCOCAT = 0        #flag gestione sconti per categoria
         MAGSCORPCOS = None   #flag scorporo iva da costo
         MAGSCORPPRE = None   #flag scorporo iva da prezzi
+        MAGIVAPREVA = None   #flag scorporo iva da prezzi
         GESFIDICLI = False   #flag gestione fidi clienti
         MAGIMGPROD = False   #flag gestione immagine prodotto su scheda
         MAGDIGSEARCH = True  #flag ricerca prodotti in digitazione
@@ -4182,6 +4183,7 @@ class Azienda(object):
                 ('MAGSCOCAT',       'magscocat',          f, _int, 'del flag di attivazione degli sconti per categoria'),
                 ('MAGSCORPCOS',     'magscorpcos',        f, _str, 'del flag di scorporo iva dal costo di acquisto'),
                 ('MAGSCORPPRE',     'magscorppre',        f, _str, 'del flag di scorporo iva dal prezzo di vendita'),
+                ('MAGIVAPREVA',     'magivapreva',        f, _str, None),
                 ('GESFIDICLI',      'gesfidicli',         f, _str, 'del flag di attivazione fidi clienti'),
                 ('MAGIMGPROD',      'magimgprod',         f, _str, 'del flag di attivazione immagine prodotto'),
                 ('MAGDIGSEARCH',    'magdigsearch',       f, _int, 'del flag di ricerca immediata prodotti in digitazione codice'),

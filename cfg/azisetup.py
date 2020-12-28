@@ -398,6 +398,7 @@ class AziendaSetupPanel(_SetupPanel):
                    bt.MAGSCOCAT,
                    bt.MAGSCORPCOS,
                    bt.MAGSCORPPRE,
+                   bt.MAGIVAPREVA,
                    bt.GESFIDICLI,
                    bt.MAGIMGPROD,
                    bt.MAGDIGSEARCH,
@@ -490,6 +491,7 @@ class AziendaSetupPanel(_SetupPanel):
             bt.MAGSCOCAT = int(cn('setup_magscocat').GetValue())
             bt.MAGSCORPCOS = cn('setup_magscorpcos').GetValue()
             bt.MAGSCORPPRE = cn('setup_magscorppre').GetValue()
+            bt.MAGIVAPREVA = cn('setup_magivapreva').GetValue()
             bt.GESFIDICLI = cn('setup_gesfidicli').GetValue()
             bt.MAGIMGPROD = cn('setup_magimgprod').GetValue()
             bt.MAGDIGSEARCH = bool(cn('setup_magdigsearch').GetValue())
@@ -584,6 +586,7 @@ class AziendaSetupPanel(_SetupPanel):
                     bt.MAGSCOCAT,
                     bt.MAGSCORPCOS,
                     bt.MAGSCORPPRE,
+                    bt.MAGIVAPREVA,
                     bt.GESFIDICLI,
                     bt.MAGIMGPROD,
                     bt.MAGDIGSEARCH,
