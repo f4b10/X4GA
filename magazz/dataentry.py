@@ -2279,11 +2279,11 @@ class MagazzPanel(aw.Panel,\
             for mov in doc.mov:
                 err=False
                 if bt.MAGIVAPREVA==None or bt.MAGIVAPREVA=='0':
-                    print 'no priorita'
+                    #print 'no priorita'
                     if mov.id_aliqiva is not None and mov.id_aliqiva != doc.id_aliqiva:
                         err=True
                 else:
-                    print 'priorita'
+                    #print 'priorita'
                     if mov.id_aliqiva is not None and (mov.id_aliqiva != doc.id_aliqiva and mov.id_aliqiva != mov.prod.id_aliqiva):
                         err=True
                     
