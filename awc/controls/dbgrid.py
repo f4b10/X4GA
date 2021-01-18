@@ -1692,7 +1692,10 @@ class DbGridTable(gridlib.PyGridTableBase):
                             tr[3][tot] += self.GetDataValue(row, col,
                                                             gridcols=True) or 0
                         else:
-                            tr[3][tot] += rsrow[col] or 0
+                            try:
+                                tr[3][tot] += rsrow[col] or 0
+                            except:
+                                pass
 
     def SetGetExternal(self, rscol, getExternal):
         self.getExternal = (rscol, getExternal)
