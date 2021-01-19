@@ -657,7 +657,8 @@ class LiqIvaPanel(aw.Panel):
         cn = lambda x: self.FindWindowById(x)
         anno = cn(wdr.ID_ANNO).GetValue()
         d1 = d2 = None
-        if not (anno is None or anno<2009 or anno>2020):
+        #if not (anno is None or anno<2009 or anno>2020):
+        if not anno is None:
             try:
                 if self.dbliq._tipoper == "M":
                     mese = cn(wdr.ID_MESE).GetSelection()+1
