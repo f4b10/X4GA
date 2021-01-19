@@ -29,6 +29,15 @@ import mx.DateTime as dt
 import mx.Odt
 
 history = (
+    ('1.5.97', dt.Date(2021, 1, 18), (
+        ("BET1397",
+         """Introdotto in definizione tabella body indicazione della relazione con la tabella head"""
+        ),
+        ("BUG0179",
+         """Rimosso test su anno che inibiva aggiornamento della liquidazione IVA"""
+        ),
+        ),),
+
     ('1.5.96 bis', dt.Date(2020, 12, 28), (
         ("BET1396",
          """Introdotta opzione in setup azienda (scheda magazzino) per gestire la priorità del codice iva proposto all'atto dell'inserimento di un documento di magazzino.
