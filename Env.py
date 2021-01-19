@@ -2567,6 +2567,9 @@ class Azienda(object):
                                      ["KEY",         "id_reg,numriga"],
                                      ["KEY",         "id_pdcpa,id_reg"] ]
 
+            cls.contab_b_link = [cls.TABNAME_CONTAB_H, 'id', cls.TABNAME_CONTAB_B, 'id_reg', 'datreg']
+
+
 
             cls.pcf =\
               [ [ "id",         "INT",     idw, None, "ID Partita", "AUTO_INCREMENT" ],
@@ -2625,6 +2628,10 @@ class Azienda(object):
 
             cls.contab_s_indexes = [ ["PRIMARY KEY", "id"],
                                      ["KEY",         "id_reg,datscad"], ]
+
+
+            cls.contab_s_link = [cls.TABNAME_CONTAB_H, 'id', cls.TABNAME_CONTAB_S, 'id_reg', 'datreg']
+
 
 
             cls.cfgprogr =\
@@ -3240,6 +3247,7 @@ class Azienda(object):
                                       ["KEY",         "id_moveva"],
                                       ["KEY",         "id_movacc"], ]
 
+            cls.movmag_b_link = [cls.TABNAME_MOVMAG_H, 'id', cls.TABNAME_MOVMAG_B, 'id_doc', 'datdoc']
 
             cls.macro =\
               [ [ "id",         "INT",      idw, None, "ID Macro", "AUTO_INCREMENT" ],
