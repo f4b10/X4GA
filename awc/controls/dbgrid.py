@@ -714,11 +714,16 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
         event.Skip()
 
     def OnSaveLayout(self, event):
-        if self.LayoutFilename:
-            MakeDirIfNeed(self.LayoutFilename)
-            if os.path.exists(self.LayoutFilename):
-                os.remove(self.LayoutFilename)
-            self.SaveLayout(self.LayoutFilename)    
+        if self.isZoomOn:
+            if self.LayoutFilename:
+                MakeDirIfNeed(self.LayoutFilename)
+                if os.path.exists(self.LayoutFilename):
+                    os.remove(self.LayoutFilename)
+                self.SaveLayout(self.LayoutFilename)
+        else:
+            msg = 'Salvataggio layout griglia consentito\nsolo in presenza del plugin Grid'
+            import awc.util as awu
+            awu.MsgDialog(self, message=msg, style=wx.ICON_INFORMATION)
         event.Skip()
         
     def OnResetLayout(self, event):
