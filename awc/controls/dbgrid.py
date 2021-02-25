@@ -726,11 +726,11 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
             if os.path.exists(self.LayoutFilename):
                 os.remove(self.LayoutFilename)
                 self.Refresh()
-        p,f = os.path.split(self.LayoutFilename)
-        try:
-            Env.Azienda.Login.userLayout.remove(f)
-        except:
-            pass
+            try:
+                p,f = os.path.split(self.LayoutFilename)
+                Env.Azienda.Login.userLayout.remove(f)
+            except:
+                pass
         event.Skip()
         
 
