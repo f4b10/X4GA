@@ -39,7 +39,10 @@ history = (
         ("BET15983",
          """Aggiunto richiamo metodo AfterRegDelete al termine della cancellazione della registrazione contabile docuta alla cancellazione del documento di magazzino"""
         ),
-                                     
+        ("BET15984",
+         """Modificata la modalita' di aggiornamento del flag di stampa per velocizzare l'elaborazione ed evitare di richiedere una seconda volta la memorizzazione del documento"""
+        ),
+            
         ("BUG15981",
          """Introdotto gestione dell'errore in  personalizzazione grid"""
         ),

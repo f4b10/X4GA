@@ -1622,12 +1622,14 @@ class MagazzPanel(aw.Panel,\
         out = False
         ur = r.GetUsedReport()
         if ur is not None and ur.completed:
-            if (self.dbdoc.f_printed or 0)==0:            
+            if (self.dbdoc.f_printed or 0)==0:
                 d,n = os.path.split(r.parameters['rptdef'])
                 if not '(NOFS)' in n:
-                    self.dbdoc.f_printed = 1
-                    self.DocSave(doc)
-            
+                    try:
+                        cmd='update movmag_h set f_printed=1 where id=%s' % self.dbdoc.id
+                        self.db_curs.execute(cmd )
+                    except:
+                        pass
             out = True
             self.viewFtel = False
             try:
