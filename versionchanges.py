@@ -29,6 +29,23 @@ import mx.DateTime as dt
 import mx.Odt
 
 history = (
+    ('1.5.98', dt.Date(2021, 3, 9), (
+        ("BET15981",
+         """Aggiunto richiamo metodo AfterDocSave al termine della memorizzazione del documento di magazzino"""
+        ),
+        ("BET15982",
+         """Aggiunto richiamo metodo AfterDocDelete al termine della cancellazione del documento di magazzino"""
+        ),
+        ("BET15983",
+         """Aggiunto richiamo metodo AfterRegDelete al termine della cancellazione della registrazione contabile docuta alla cancellazione del documento di magazzino"""
+        ),
+                                     
+        ("BUG15981",
+         """Introdotto gestione dell'errore in  personalizzazione grid"""
+        ),
+        ),),
+
+
     ('1.5.97', dt.Date(2021, 1, 18), (
         ("BET1397",
          """Introdotto in definizione tabella body indicazione della relazione con la tabella head"""

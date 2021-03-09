@@ -92,9 +92,10 @@ import contab.pdcint as pdcint
 
 from awc.controls.attachbutton import AttachTableList
 
+import sys
+_DEBUG = True and not hasattr(sys, 'frozen')
 
 _GIORNI=180
-_DEBUG = False
 today = Env.Azienda.Esercizio.dataElab
 datregsrc1 = today-today.day+1
 datregsrc2 = today
@@ -2251,7 +2252,9 @@ class MagazzPanel(aw.Panel,\
     def BeforeDocSave(self):
         pass
 
-    def AfterDocSave(self):
+    def AfterDocSave(self, idDoc=None):
+        if _DEBUG:
+            print 'AfterDocSave idDoc=%s' % idDoc
         pass
 
 
@@ -2449,7 +2452,7 @@ class MagazzPanel(aw.Panel,\
                 % repr(doc.GetError())
             MsgDialog(self, err)
         if saved:
-            saved=self.AfterDocSave()
+            self.AfterDocSave(idDoc=doc.id)
         return saved
 
     def ExtraCheck(self):
@@ -2464,6 +2467,10 @@ class MagazzPanel(aw.Panel,\
         self.ResetFidoView()
         Env.FreeMemory()
 
+    def AfterDocDelete(self, idDoc=None):
+        if _DEBUG:
+            print 'AfterDocDelete idDoc=%s' % idDoc
+
     def OnDocDelete(self, event):
         action = MsgDialog(self,\
 """Sei sicuro di voler cancellare il documento?  Confermando, non sarà """\
@@ -2471,11 +2478,13 @@ class MagazzPanel(aw.Panel,\
 """Confermi l'operazione di eliminazione ?""",\
                   style = wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT)
         if action == wx.ID_YES:
+            idDoc=self.dbdoc.id
             if self.RegDelete():
                 if self.onedoconly_id:
                     event.Skip()
                 else:
                     self.SetRegStatus(STATUS_SELCAUS)
+                self.AfterDocDelete(idDoc=idDoc)
         Env.FreeMemory()
 
     def OnResize(self, event):
@@ -2964,6 +2973,10 @@ class MagazzPanel(aw.Panel,\
             if f in self.controls:
                 self.controls[f].SetValue(v)
 
+
+    def AfterRegDelete(self):
+        pass
+    
     def RegDelete(self):
         out = True
         doc = self.dbdoc
@@ -2985,6 +2998,8 @@ class MagazzPanel(aw.Panel,\
                 awc.util.MsgDialog(self, message=\
                     "Errore nella cancellazione del documento:"+\
                     "\n %s" % repr(doc.GetError()))
+        if out:
+            self.AfterRegDelete()
         return out
 
     def UpdatePanelHead(self):
