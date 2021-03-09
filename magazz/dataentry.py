@@ -2251,6 +2251,9 @@ class MagazzPanel(aw.Panel,\
     def BeforeDocSave(self):
         pass
 
+    def AfterDocSave(self):
+        pass
+
 
     def DocSave(self, doc=None):
         if doc is None:
@@ -2445,7 +2448,8 @@ class MagazzPanel(aw.Panel,\
                 """verificato un problema sul database:\n\n%s"""\
                 % repr(doc.GetError())
             MsgDialog(self, err)
-
+        if saved:
+            saved=self.AfterDocSave()
         return saved
 
     def ExtraCheck(self):
