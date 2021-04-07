@@ -29,6 +29,19 @@ import mx.DateTime as dt
 import mx.Odt
 
 history = (
+    ('1.5.99', dt.Date(2021, 4, 7), (
+        ("BET15991",
+         """Velocizzata inizializzazione dbTable nel recupero della struttura tabella"""
+        ),
+        ("BET15992",
+         """Ridimensionata e alleggerita scritta obliqua su documenti di magazzino"""
+        ),
+        ("BET15993",
+         """Introditto nuovo metodo per ComboBoxwithPyData"""
+        ),
+        ),),
+
+    
     ('1.5.98', dt.Date(2021, 3, 9), (
         ("BET15981",
          """Aggiunto richiamo metodo AfterDocSave al termine della memorizzazione del documento di magazzino"""
@@ -45,6 +58,9 @@ history = (
             
         ("BUG15981",
          """Introdotto gestione dell'errore in  personalizzazione grid"""
+        ),
+        ("BUG15982",
+         """Rimosso bug che inibiva il corretto aggiornamento a video dei radiobox che contemplano il valore None"""
         ),
         ),),
 
