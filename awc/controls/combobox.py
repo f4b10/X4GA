@@ -60,4 +60,10 @@ class ComboBoxWithPyData(wx.ComboBox):
         wx.ComboBox.SetString(self, n, text)
         self.pyData[n]=pyData
         
-
+    def SetSelectedByPyData(self, pyData=None ):
+        idx = self.pyData.index(pyData)
+        self.SetSelection (idx)
+        
+        
+        
+        
