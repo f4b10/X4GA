@@ -338,7 +338,14 @@ class DB(object):
                 else:
                     self.rs = rs
                 self.recordCount = dbCursor.rowcount
-                self.description = dbCursor.description
+                try:
+                    import Env
+                    if self._dbType == 'mysql' and 'SHOW COLUMNS' in sql.upper() and Env.newInitTable:
+                        self.description = rs
+                    else:
+                        self.description = dbCursor.description
+                except:
+                    self.description = dbCursor.description
                 dbCursor.close()
                 success = True
             except MySQLdb.Error, e:

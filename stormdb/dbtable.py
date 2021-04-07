@@ -20,8 +20,6 @@
 # You should have received a copy of the GNU General Public License
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
-
-
 import copy
 
 import stormdb as adb
@@ -465,8 +463,17 @@ class DbTable(object):
             readstru = False
         if readstru:
             if self._info.db._dbType == "mysql":
-                cmd = "SELECT %s FROM %s LIMIT 1"\
-                    % (", ".join(self._info.fields), self._info.tableName)
+                try:
+                    import Env
+                    if self._info.fields==['*'] and Env.newInitTable:
+                        cmd='SHOW columns FROM %s' % self._info.tableName
+                    else:
+                        cmd = "SELECT %s FROM %s LIMIT 1"\
+                            % (", ".join(self._info.fields), self._info.tableName)
+                except:
+                    cmd = "SELECT %s FROM %s LIMIT 1"\
+                        % (", ".join(self._info.fields), self._info.tableName)
+                    pass
             elif self._info.db._dbType == "adodb":
                 cmd = "SELECT TOP 1 %s FROM %s"\
                     % (", ".join(self._info.fields), self._info.tableName)
@@ -3021,6 +3028,14 @@ class DbTable(object):
             self.Copy2Store()
 
     def CheckStore(self, adbStore=None):
+        import Env
+        adb.ClearCache()
+        try:
+            oldValue = Env.newInitTable
+            Env.newInitTable = False
+        except:
+            oldValue=False
+        
         self.SetConnectionStore(adbStore)
         self.adeg={}
         self.CheckStoreTable()
@@ -3030,7 +3045,13 @@ class DbTable(object):
             engine='INNODB'
         else:
             engine='MYISAM'
-        return self.Adegua(engine=engine)
+        ret =  self.Adegua(engine=engine) 
+        try:  
+            Env.newInitTable=oldValue
+        except:
+            pass
+
+        return ret
         #return self.Adegua()
 
     def Move2Store(self, adbStore=None, field2Store=None):

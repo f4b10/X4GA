@@ -101,4 +101,4 @@ def SetDefaultOpenMode(openMode=None):
 
 from stormdb.db import DB
 from stormdb.dbtable import DbTable, SubDbTable, DbMem, SplittedTable,\
-     SetForeignKeyTemplate
+     SetForeignKeyTemplate,ClearCache

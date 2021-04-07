@@ -190,6 +190,9 @@ def DataIta(data):
 #     return ZOOMGRID
 #===============================================================================
 
+global newInitTable
+newInitTable=True
+
 global canRegFe
 canRegFe = False
 try:
