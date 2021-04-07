@@ -249,6 +249,7 @@ class TabSetupPanel(aw.Panel):
 
     def Analizza(self, reindex=False):
 
+
         ci = lambda x: self.FindWindowById(x)
 
         blobs = ("BLOB", "LONGBLOB", "VARBINARY", "VARCHAR", "TEXT")
@@ -279,6 +280,8 @@ class TabSetupPanel(aw.Panel):
         #         engine='MYISAM'
         #     self.ChangeEngine(engine)
         #=======================================================================
+        
+        
         for name, desc, stru, index, constr, voice in bt.tabelle:
             try:
                 index = getattr(bt, '%s_indexes' % name)
@@ -451,7 +454,6 @@ class TabSetupPanel(aw.Panel):
             status.SetLabel(label)
             self.Update()
             wx.Yield()
-
         but = ci(wdr.ID_SHOWDIFF)
         if nta > 0:
             ctradeg.SetLabel("""%d tabelle da adeguare""" % nta)
@@ -500,9 +502,17 @@ class TabSetupDialog(aw.Dialog):
             self.ChangeEngine(engine)
 
         self.Show()
+        
+        adb.ClearCache()
+        oldValue = Env.newInitTable
+        Env.newInitTable = False
+         
         self.panel.Analizza(reindex=self.reindex)
         self.Show(False)
-        return aw.Dialog.ShowModal(self)
+        ret = aw.Dialog.ShowModal(self)
+        Env.newInitTable=oldValue        
+        adb.ClearCache()
+        return ret
 
     def EndModal(self, ret):
         if ret == 2:
