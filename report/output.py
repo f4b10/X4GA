@@ -1253,19 +1253,47 @@ class print_Report:
             if _debug==1:
                 print 'wateramrk'
             c = self.oCanvas
-            c.setFillGray(0.85)
+            #c.setStrokeColorCMYK(0.5,0,0,0.3)
+            c.setFillGray(0.90)
             c.saveState()
             c.translate( 0, 0)
             c.rotate( 10 )
             c.setFontSize(15)
 
 
+#===============================================================================
+#             #===============================================================
+#             # c.drawString(130,320,"Stampa priva di valenza giuridico-fiscale ai sensi dell’art. 21 (Dpr 633/72)")            
+#             # c.setFontSize(12)
+#             # c.drawString(170,310,"salvo per i soggetti non titolari di partita Iva e/o non residenti ai sensi")            
+#             # c.setFontSize(12)
+#             # c.drawString(245,300,"del comma 909 art. 1 L.205/2017")            
+#             #===============================================================
+# 
+#             try:
+#                 print self.oReport.structure['pageFooter']['band']['height']
+#             except:
+#                 pass
+#===============================================================================
+
             if not 'BESTAGNO' in Env.Azienda.descrizione:
-                c.drawString(150,400,"Stampa priva di valenza giuridico-fiscale ai sensi dell’art. 21 (Dpr 633/72)")            
+                x=220
+                y=300
+                #===============================================================
+                # try:
+                #     print self.oReport.structure['pageFooter']['band']['height']
+                #     y = self.oReport.structure['pageFooter']['band']['height']
+                #     y1 = self.oReport.structure['summary']['band']['height']
+                #     y = y + y1 +10
+                #     print 'y=%s' % y
+                # except:
+                #     pass
+                #===============================================================
+                c.drawString(x-115, y+20,"Stampa priva di valenza giuridico-fiscale ai sensi dell’art. 21 (Dpr 633/72)")            
                 c.setFontSize(12)
-                c.drawString(190,375,"salvo per i soggetti non titolari di partita Iva e/o non residenti ai sensi")            
+                c.drawString(x-75, y+10,"salvo per i soggetti non titolari di partita Iva e/o non residenti ai sensi")            
                 c.setFontSize(12)
-                c.drawString(265,350,"del comma 909 art. 1 L.205/2017")            
+                c.drawString(x, y,"del comma 909 art. 1 L.205/2017")            
             else:
                 c.drawString(130,300,"Stampa priva di valenza giuridico-fiscale ai sensi dell’art. 21 (Dpr 633/72)")
                 c.setFontSize(12)
