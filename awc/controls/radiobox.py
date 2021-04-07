@@ -58,7 +58,8 @@ class RadioBox(wx.RadioBox,\
         if value == '' and ' ' in self._values:
             value = ' '
         try:
-            value = '%s' % value
+            if value:
+                value = '%s' % value
             if value in self._values:
                 n = self._values.index(value)
                 if n <= self.GetCount()-1:
