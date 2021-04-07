@@ -3212,7 +3212,7 @@
 						key="textField-56"/>
 					<box></box>
 					<textElement textAlignment="Right">
-						<font/>
+						<font size="5"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[RS.DecodNatura(RS.Natura)]]></textFieldExpression>
 				</textField>
