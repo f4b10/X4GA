@@ -199,6 +199,24 @@ class _MagazzPanel_O_Mixin(object):
         warnctr.SetForegroundColour(warnColor)
         self.rowsok = out
         self.UpdatePanelDAcc()
+        if out:
+            try:
+                if bt.MAGPZCONF or bt.MAGPZGRIP:
+                    for i, r in enumerate(doc.mov):
+                        if r.pzconf and r.nmconf:
+                            if not r.qta == r.pzconf*r.nmconf:
+                                #aw.awu.MsgDialog(self, "Verificare quantità su riga %s.\nIncongruenza tra quantita' indicata (%.3f) e calcolata (%.3f)" % ((i+1), r.qta, (r.pzconf*r.nmconf) ))
+                                FMT='%.' + '%sf' % bt.MAGQTA_DECIMALS
+                                WRK = "Verificare quantita' su riga %s. Qta indicata " + FMT +' diversa da calcolata ' +FMT
+                                warnText = WRK % ((i+1), r.qta, (r.pzconf*r.nmconf))
+                                warnctr.SetLabel(warnText)
+                                warnColor = wx.RED
+                                warnctr.SetForegroundColour(warnColor)                            
+                                out = False                    
+                                self.rowsok = out
+                                break
+            except:
+                pass
         return out
     
     

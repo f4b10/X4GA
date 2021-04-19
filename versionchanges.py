@@ -30,13 +30,16 @@ import mx.Odt
 
 history = (
     ('1.5.99', dt.Date(2021, 4, 7), (
-        ("BET15991",
+        ("BET15994",
+         """Compattata la stampa obliqua per documenti non fiscali e spostato in basso"""
+        ),
+        ("BET15993",
          """Velocizzata inizializzazione dbTable nel recupero della struttura tabella"""
         ),
         ("BET15992",
          """Ridimensionata e alleggerita scritta obliqua su documenti di magazzino"""
         ),
-        ("BET15993",
+        ("BET15991",
          """Introditto nuovo metodo per ComboBoxwithPyData"""
         ),
         ),),

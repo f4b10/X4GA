@@ -1272,10 +1272,49 @@ class MagazzPanel(aw.Panel,\
     def OnButModify(self, event):
         if self.status == STATUS_DISPLAY and self.canedit:
             if self.TestCanModify():
-                if self.TestPcf():
+                lContinue = True
+                wrk=self.TestAlreadySend()
+                if wrk > 0:
+                    if wrk == 1:
+                        msg = "ATTENZIONE!\nIl documento xml risulta gia' essere stato generato."
+                    elif wrk==2:
+                        msg = "ATTENZIONE!\nIl documento xml risulta gia' essere stato spostato nella cartella di invio."
+                    elif wrk==3:
+                        msg = "ATTENZIONE!\nIl documento xml risulta risulta essere già stato inviato e recapitato.\nNESSUNA MODIFICA E' CONSENTITA"
+                        MsgDialog(self, msg)
+                    lContinue=False
+                    if not wrk == 3:
+                        msg = '%s\nSi desidera procedere comunque alla modifica?' % msg
+                        style = wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT
+                        if MsgDialog(self, msg, style=style) == wx.ID_YES:
+                            if wrk==1:
+                                print 'rimuovere documento generato e ftel_numtrasm'
+                            elif wrk==2:
+                                print 'rimuovere documento generato, ftel_numtrasm, ftel_status '
+                            else:
+                                pass
+                            lContinue=True
+                elif wrk == -1:
+                    print 'rimuovere documento generato, ftel_numtrasm, ftel_status '
+                else:
+                    pass
+                            
+                if lContinue and self.TestPcf():
                     self.SetRegStatus(STATUS_EDITING)
                     self.UpdateBodyButtons()
         event.Skip()
+
+    def TestAlreadySend(self):
+        retValue = 0
+        if not self.dbdoc.ftel_numtrasm == None:
+            retValue=1      # file xml già generato
+        if self.dbdoc.ftel_status ==2 and self.dbdoc.ftel_sendname == None:
+            retValue = 2    # file xml spostato nelle cartella di invio ma non ancora trasmesso
+        if self.dbdoc.ftel_status ==2 and not self.dbdoc.ftel_sendname  == None and self.dbdoc.ftel_codstato in ('2', '4', '9'):
+            retValue = -1   # file xml già inviato ma scartato
+        if self.dbdoc.ftel_status ==2 and not self.dbdoc.ftel_sendname  == None and not self.dbdoc.ftel_codstato in ('2', '4', '9'):
+            retValue = 3    # file xml inviato e consegnato
+        return retValue
 
     def TestCanModify(self):
         """
