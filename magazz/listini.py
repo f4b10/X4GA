@@ -770,6 +770,7 @@ class ListiniGrid(dbglib.DbGridColoriAlternati):
     
     def VariaPerc(self):
         dlg = VariaPercDialog(self, -1, 'Variazioni percentuali')
+        chg=False
         if dlg.ShowModal() == wx.ID_OK:
             v = {}
             for c in aw.awu.GetAllChildrens(dlg):
@@ -811,8 +812,11 @@ class ListiniGrid(dbglib.DbGridColoriAlternati):
                             setattr(lis, 'prezzo%d'%l, round(p*(100+x)/100, DP))
                             if not row in self.modrows:
                                 self.modrows.append(row)
+                            chg=True
                 wait.SetValue(r)
             self.Refresh()
+            if chg:
+                self.RaiseListChanged()
             wait.Destroy()
         dlg.Destroy()
     
