@@ -522,7 +522,8 @@ class ProdSearchResultsGrid(ga.SearchResultsGrid):
         
         cols = [(100, (cn('prod_codice'),    "Cod.",         _STR, True)),
                 ( 40, (cn('tipart_codice'),  "Tipo",         _STR, True)),
-                (270, (cn('prod_descriz'),   "Descrizione",  _STR, True)),]
+                (270, (cn('prod_descriz'),   "Descrizione",  _STR, True)),
+                ( 30, (cn('prod_um'),        "U.m.",         _STR, True)),]
         
         cols.append(( 50, (cn('pdc_codice'),  "Cod.",        _STR, True)))
         cols.append((210, (cn('pdc_descriz'), "Fornitore",   _STR, True)))

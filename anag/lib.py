@@ -276,7 +276,8 @@ class LinkTableProd(LinkTable, LinkTableHideSearchMixin):
                         prod.codfor AS codfor,
                         prod.barcode AS barcode,
                         prod.costo,
-                        prod.prezzo"""
+                        prod.prezzo,
+                        prod.um"""
 
         if bt.MAGVISGIA:
             tabprogr = bt.TABNAME_PRODPRO
@@ -332,7 +333,8 @@ class LinkTableProd(LinkTable, LinkTableHideSearchMixin):
         _PRE = bt.GetMagPreMaskInfo()
 
         out = [( -1, ( 1, "Cod.",        _STR, False)),
-               (200, ( 2, "Descrizione", _STR, False)),]
+               (250, ( 2, "Descrizione", _STR, False)),
+               (30,  ( 7, "U.m",         _STR, False)),]
 
         if bt.MAGVISCPF:
             out.append((110, ( 3, "Cod.Forn.", _STR, False)))
@@ -347,7 +349,7 @@ class LinkTableProd(LinkTable, LinkTableHideSearchMixin):
             out.append((110, ( 6, "Prezzo",    _PRE, False)))
 
         if bt.MAGVISGIA:
-            out.append((120, ( 7, "Giacenza",  _QTA, False)))
+            out.append((120, ( 8, "Giacenza",  _QTA, False)))
 
         return out
 
