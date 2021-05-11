@@ -2901,6 +2901,7 @@ class Azienda(object):
                 [ "descanag",   "VARCHAR", 30, None, "Descrizione tipo sottoconto", None ],
                 [ "datdoc",     "CHAR",     1, None, "Flag tipo data documento", None ],
                 [ "numdoc",     "CHAR",     1, None, "Flag tipo numero documento", None ],
+                [ "chkdoc",     "CHAR",     1, None, "Flag x controllo sequenza documenti", None ],
                 [ "numest",     "CHAR",     1, None, "Flag tipo numerazione esterna", None ],
                 [ "docfam",     "CHAR",    10, None, "Famiglia documenti", None ],
                 [ "ctrnum",     "CHAR",     1, None, "Flag controllo numero documento", None ],
