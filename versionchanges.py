@@ -29,6 +29,15 @@ import mx.DateTime as dt
 import mx.Odt
 
 history = (
+    ('1.5.99', dt.Date(2021, 5, 7), (
+        ("BET15991",
+         """Introdotto su causali di magazzino flag per attivare o meno l'evidenziazione dei documenti fuori sequenza.
+<crlf>N.B.: Per motivi di retrocompatibilità se il flag è attivo, il documento è sottoposto al controllo della sequenza.<crlf>Se non è attivato, il controllo viene comunque effettuato per i documenti la cui numerazione è stabilita da:<crlf>- Protocollo IVA<crlf>- Documento/famiglia a piede.
+"""
+        ),
+        ),),
+
+
     ('1.5.99', dt.Date(2021, 4, 7), (
         ("BET15994",
          """Compattata la stampa obliqua per documenti non fiscali e spostato in basso"""

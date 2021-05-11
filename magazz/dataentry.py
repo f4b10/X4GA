@@ -30,6 +30,7 @@ import wx.grid as gl
 import awc.controls.dbgrid as dbglib
 
 import stormdb as adb
+from stormdb import DbTable
 
 import awc.controls.windows as aw
 from awc.controls.linktable import LinkTable
@@ -100,6 +101,8 @@ today = Env.Azienda.Esercizio.dataElab
 datregsrc1 = today-today.day+1
 datregsrc2 = today
 datdocsrc1 = datdocsrc2 = None
+datrifsrc1 = datrifsrc2 = None
+desrifsrc = None
 magsearch = None
 pdcsearch = None
 acqsearch = True
@@ -3605,6 +3608,7 @@ class GridSearchDoc(dbglib.DbGridColoriAlternati):
         a([ 35, (cn(doc, 'f_acq'),      "Acq",           _CHK, True)])
         a([ 50, (cn(des, 'codice'),     "Cod.",          _STR, True)])
         a([300, (cn(doc, '_destdesc'),  "Destinazione",  _STR, True)])
+        a([200, (cn(doc, 'desrif'),     "Riferimento",   _STR, True)])
         a([  1, (cn(doc, 'id'),         "doc#",          _STR, True)])
         a([  1, (cn(doc, 'id_reg'),     "reg#",          _STR, True)])
 
@@ -3628,7 +3632,7 @@ class GridSearchDoc(dbglib.DbGridColoriAlternati):
             attr.SetReadOnly(True)
         return attr
 
-    def UpdateGrid(self, td, dr1, dr2, dd1, dd2, mag, pdc, acq, ann):
+    def UpdateGrid(self, td, dr1, dr2, dd1, dd2, rf1, rf2, rfdes, mag, pdc, acq, ann):
         """
         Aggiorna i dati della griglia di ricerca.
         Passare:
@@ -3649,8 +3653,12 @@ class GridSearchDoc(dbglib.DbGridColoriAlternati):
         if dr2: docs.AddFilter("doc.datreg<=%s", dr2)
         if dd1: docs.AddFilter("doc.datdoc>=%s", dd1)
         if dd2: docs.AddFilter("doc.datdoc<=%s", dd2)
+        if rf1: docs.AddFilter("doc.datrif>=%s", rf1)
+        if rf2: docs.AddFilter("doc.datrif<=%s", rf2)
+        if rfdes: docs.AddFilter("doc.desrif LIKE %s", "%%%s%%" % rfdes)
         if not acq: docs.AddFilter("doc.f_acq IS NULL OR doc.f_acq<>1")
         if not ann: docs.AddFilter("doc.f_ann IS NULL OR doc.f_ann<>1")
+        docs.SetDebug()
         docs.Retrieve()
         self.ChangeData(docs.GetRecordset())
 
@@ -3677,12 +3685,16 @@ class DocSearch(wx.Dialog):
         wdr.DocSearchFunc(self)
         pangrid = self.FindWindowById(wdr.ID_SRCDOCPANGRID)
         self.gridsrc = GridSearchDoc(pangrid)
-        self.gridsrc.EnableColors((tipnum or '') in '23')
+        #self.gridsrc.EnableColors((tipnum or '') in '23')
+        self.gridsrc.EnableColors((tipnum or '')=='3' or self.GetChkDoc(tdocid)=='1')
 
         for name, val in (('srcdatreg1', datregsrc1),
                           ('srcdatreg2', datregsrc2),
                           ('srcdatdoc1', datdocsrc1),
                           ('srcdatdoc2', datdocsrc2),
+                          ('srcdatrif1', datrifsrc1),
+                          ('srcdatrif2', datrifsrc2),
+                          ('srcdesrif',  desrifsrc),
                           ('id_magazz',  pdcsearch),
                           ('id_pdc',     magsearch),
                           ('acqsearch',  acqsearch),
@@ -3707,6 +3719,13 @@ class DocSearch(wx.Dialog):
 
         self.Bind(wx.EVT_CLOSE, self.OnClose)
 
+    def GetChkDoc(self, idCau):
+        ret='0'
+        db=DbTable(Env.Azienda.BaseTab.TABNAME_CFGMAGDOC)
+        db.Get(idCau)
+        return db.chkdoc or '0'
+
+
     def OnFocusGainedBySearchControls(self, event):
         self.FindWindowById(wdr.ID_SRCBUTSRC).SetDefault()
         event.Skip()
@@ -3725,11 +3744,11 @@ class DocSearch(wx.Dialog):
         event.Skip()
 
     def UpdateSearch(self):
-        dr1, dr2, dd1, dd2, magid, pdcid, acq, ann =\
+        dr1, dr2, dd1, dd2, rf1, rf2, rfdes, magid, pdcid, acq, ann =\
             map(lambda x: self.FindWindowByName(x).GetValue(),
-                'srcdatreg1 srcdatreg2 srcdatdoc1 srcdatdoc2 id_magazz id_pdc acqsearch annsearch'.split())
+                'srcdatreg1 srcdatreg2 srcdatdoc1 srcdatdoc2 srcdatrif1 srcdatrif2 srcdesrif id_magazz id_pdc acqsearch annsearch'.split())
 
-        self.gridsrc.UpdateGrid(self.tdocid, dr1, dr2, dd1, dd2, magid, pdcid, acq, ann)
+        self.gridsrc.UpdateGrid(self.tdocid, dr1, dr2, dd1, dd2, rf1, rf2, rfdes, magid, pdcid, acq, ann)
         if self.gridsrc.dbdocs.IsEmpty():
             f = self.FindWindowById(wdr.ID_SRCDATREG1)
         else:
@@ -3752,13 +3771,16 @@ class DocSearch(wx.Dialog):
 
         global ricsearch; ricsearch = self.FindWindowByName('ricordasel').IsChecked()
         if ricsearch:
-            dr1, dr2, dd1, dd2, magid, pdcid, acq, ann =\
+            dr1, dr2, dd1, dd2, rf1, rf2, rfdes, magid, pdcid, acq, ann =\
                 map(lambda x: self.FindWindowByName(x).GetValue(),
-                    'srcdatreg1 srcdatreg2 srcdatdoc1 srcdatdoc2 id_magazz id_pdc acqsearch annsearch'.split())
+                    'srcdatreg1 srcdatreg2 srcdatdoc1 srcdatdoc2 srcdatrif1 srcdatrif2 srcdesrif id_magazz id_pdc acqsearch annsearch'.split())
             global datregsrc1; datregsrc1 = dr1
             global datregsrc2; datregsrc2 = dr2
             global datdocsrc1; datdocsrc1 = dd1
             global datdocsrc2; datdocsrc2 = dd2
+            global datrifsrc1; datrifsrc1 = rf1
+            global datrifsrc2; datrifsrc2 = rf2
+            global desrifsrc;  desrifsrc = rfdes
             global pdcsearch;  pdcsearch = pdcid
             global magsearch;  magsearch = magid
             global acqsearch;  acqsearch = acq
