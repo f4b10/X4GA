@@ -376,6 +376,7 @@ class CauMagazzPanel(ga.AnagPanel):
             self.Bind(wx.EVT_RADIOBOX, self.OnChanged, ctr)
 
         for name, val in ( ("valuta",     { True: 'X', False: ' '} ),
+                           ("chkdoc",     { True: '1', False: '0'} ),
                            ("ctrnum",     { True: 'X', False: ' '} ),
                            ("aggnum",     { True: 'X', False: ' '} ),
                            ("pienum",     { True: 'X', False: ' '} ),

@@ -208,7 +208,7 @@ ID_CTRPDCTIP = 16004
 ID_VALUTA = 16005
 ID_ECR_CASSA = 16006
 ID_NUMDOC = 16007
-ID_CHECKBOX = 16008
+ID_CHKNUM = 16008
 ID_DATDOC = 16009
 ID_TEXTCTRL = 16010
 ID_CTRNUM = 16011
@@ -319,7 +319,7 @@ def Doc1Func( parent, call_fit = True, set_sizer = True ):
     item19.SetName( "numdoc" )
     item17.Add( item19, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item20 = CheckBox( parent, ID_CHECKBOX, "Visualizza Documenti fuori sequenza", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item20 = CheckBox( parent, ID_CHKNUM, "Visualizza Documenti fuori sequenza", wx.DefaultPosition, wx.DefaultSize, 0 )
     item20.SetName( "chkdoc" )
     item17.Add( item20, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
@@ -1262,17 +1262,18 @@ ID_AGGPREZZO = 16118
 ID_MODIMPRICALC = 16119
 ID_AGGGRP = 16120
 ID_RICCOSTO = 16121
-ID_AGGFORNIT = 16122
-ID_ACQPDT = 16123
-ID_NOMASTROPROD = 16124
-ID_PROOBB = 16125
-ID_NOPROVVIG = 16126
-ID_LABELPDC = 16127
-ID_CTRPDC = 16128
-ID_ISACCONTO = 16129
-ID_ISACCSTOR = 16130
-ID_ACC_SEPIVA = 16131
-ID_PRTDESTOT = 16132
+ID_CHECKBOX = 16122
+ID_AGGFORNIT = 16123
+ID_ACQPDT = 16124
+ID_NOMASTROPROD = 16125
+ID_PROOBB = 16126
+ID_NOPROVVIG = 16127
+ID_LABELPDC = 16128
+ID_CTRPDC = 16129
+ID_ISACCONTO = 16130
+ID_ISACCSTOR = 16131
+ID_ACC_SEPIVA = 16132
+ID_PRTDESTOT = 16133
 
 def Mov1Func( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -1577,7 +1578,7 @@ def Mov1Func( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_TXTEMAIL = 16133
+ID_TXTEMAIL = 16134
 
 def Doc3Func( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -1601,24 +1602,24 @@ def Doc3Func( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_AGGINI = 16134
-ID_AGGINIV = 16135
-ID_AGGCAR = 16136
-ID_AGGCARV = 16137
-ID_AGGSCA = 16138
-ID_AGGSCAV = 16139
-ID_AGGORDFOR = 16140
-ID_AGGORDCLI = 16141
-ID_AGGCVCCAR = 16142
-ID_AGGCVCSCA = 16143
-ID_AGGCVFCAR = 16144
-ID_AGGCVFSCA = 16145
-ID_STATFTCLI = 16146
-ID_STATCSCLI = 16147
-ID_MANCOSTO = 16148
-ID_STATFTFOR = 16149
-ID_AGGGIAC = 16150
-ID_AGGGIAR = 16151
+ID_AGGINI = 16135
+ID_AGGINIV = 16136
+ID_AGGCAR = 16137
+ID_AGGCARV = 16138
+ID_AGGSCA = 16139
+ID_AGGSCAV = 16140
+ID_AGGORDFOR = 16141
+ID_AGGORDCLI = 16142
+ID_AGGCVCCAR = 16143
+ID_AGGCVCSCA = 16144
+ID_AGGCVFCAR = 16145
+ID_AGGCVFSCA = 16146
+ID_STATFTCLI = 16147
+ID_STATCSCLI = 16148
+ID_MANCOSTO = 16149
+ID_STATFTFOR = 16150
+ID_AGGGIAC = 16151
+ID_AGGGIAR = 16152
 
 def Mov2Func( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -1843,7 +1844,7 @@ def Mov2Func( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_LTAB = 16152
+ID_LTAB = 16153
 
 def Doc4Func( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 2, 0, 0 )
