@@ -3625,7 +3625,9 @@ class GridSearchDoc(dbglib.DbGridColoriAlternati):
         if self.colors and 0 < row < self.dbdocs.RowsCount():
             rs = self.dbdocs.GetRecordset()
             cnum = self.colnum
-            if rs[row][cnum] <= rs[row-1][cnum]  or rs[row][cnum] <> (rs[row-1][cnum] +1)   :
+            numPre = rs[row-1][cnum]
+            numAtt = rs[row][cnum]
+            if numPre >= numAtt  or not numPre+1==numAtt:
                 fgcol, bgcol = self.clrer
                 attr.SetTextColour(fgcol)
                 attr.SetBackgroundColour(bgcol)
