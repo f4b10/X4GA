@@ -3618,6 +3618,7 @@ class GridSearchDoc(dbglib.DbGridColoriAlternati):
 
     def EnableColors(self, ec):
         self.colors = ec
+        return ec
 
     def GetAttr(self, row, col, rscol, attr=gl.GridCellAttr):
         attr = dbglib.DbGridColoriAlternati.GetAttr(self, row, col, rscol, attr)
@@ -3646,21 +3647,26 @@ class GridSearchDoc(dbglib.DbGridColoriAlternati):
         id magazzino
         id anagrafica
         """
+        colora = self.EnableColors(self.GetParent().GetParent().isColored)
         docs = self.dbdocs
         docs.ClearFilters()
         docs.AddFilter("doc.id_tipdoc=%s", td)
         if mag: docs.AddFilter("doc.id_magazz=%s", mag)
-        if pdc: docs.AddFilter("doc.id_pdc=%s", pdc)
+        if pdc: docs.AddFilter("doc.id_pdc=%s", pdc); colora=False
         if dr1: docs.AddFilter("doc.datreg>=%s", dr1)
         if dr2: docs.AddFilter("doc.datreg<=%s", dr2)
         if dd1: docs.AddFilter("doc.datdoc>=%s", dd1)
         if dd2: docs.AddFilter("doc.datdoc<=%s", dd2)
-        if rf1: docs.AddFilter("doc.datrif>=%s", rf1)
-        if rf2: docs.AddFilter("doc.datrif<=%s", rf2)
-        if rfdes: docs.AddFilter("doc.desrif LIKE %s", "%%%s%%" % rfdes)
-        if not acq: docs.AddFilter("doc.f_acq IS NULL OR doc.f_acq<>1")
-        if not ann: docs.AddFilter("doc.f_ann IS NULL OR doc.f_ann<>1")
+        if rf1: docs.AddFilter("doc.datrif>=%s", rf1); colora=False
+        if rf2: docs.AddFilter("doc.datrif<=%s", rf2); colora=False
+        if rfdes: docs.AddFilter("doc.desrif LIKE %s", "%%%s%%" % rfdes); colora=False
+        if not acq: docs.AddFilter("doc.f_acq IS NULL OR doc.f_acq<>1"); colora=False
+        if not ann: docs.AddFilter("doc.f_ann IS NULL OR doc.f_ann<>1"); colora=False
         docs.SetDebug()
+        
+        self.EnableColors(colora)
+        
+        
         docs.Retrieve()
         self.ChangeData(docs.GetRecordset())
 
@@ -3688,7 +3694,7 @@ class DocSearch(wx.Dialog):
         pangrid = self.FindWindowById(wdr.ID_SRCDOCPANGRID)
         self.gridsrc = GridSearchDoc(pangrid)
         #self.gridsrc.EnableColors((tipnum or '') in '23')
-        self.gridsrc.EnableColors((tipnum or '')=='3' or self.GetChkDoc(tdocid)=='1')
+        self.isColored = self.gridsrc.EnableColors((tipnum or '')=='3' or self.GetChkDoc(tdocid)=='1')
 
         for name, val in (('srcdatreg1', datregsrc1),
                           ('srcdatreg2', datregsrc2),
