@@ -67,7 +67,7 @@ class StampaRegRadioBox(RadioBox):
 
     def __init__(self, *args, **kwargs):
         RadioBox.__init__(self, *args, **kwargs)
-        self.SetDataLink(values='Q S N'.split())
+        self.SetDataLink(values='P D R'.split())
 
 class ScadenzarioSelPanel(wx.Panel):
 
@@ -2288,19 +2288,20 @@ ID_TIPOSTA = 10177
 ID_TIPORD = 10178
 ID_TIPOTIT = 10179
 ID_TIPODES = 10180
-ID_TEXTCTRL = 10181
-ID_MASTRO1 = 10182
-ID_MASTRO2 = 10183
-ID_CONTO1 = 10184
-ID_CONTO2 = 10185
-ID_PDC1 = 10186
-ID_PDC2 = 10187
-ID_TIPANA1 = 10188
-ID_TIPANA2 = 10189
-ID_UPDATE = 10190
-ID_INTESTAPAG = 10191
-ID_PRINT = 10192
-ID_MASTRIZONE = 10193
+ID_CHECKBOX = 10181
+ID_TEXTCTRL = 10182
+ID_MASTRO1 = 10183
+ID_MASTRO2 = 10184
+ID_CONTO1 = 10185
+ID_CONTO2 = 10186
+ID_PDC1 = 10187
+ID_PDC2 = 10188
+ID_TIPANA1 = 10189
+ID_TIPANA2 = 10190
+ID_UPDATE = 10191
+ID_INTESTAPAG = 10192
+ID_PRINT = 10193
+ID_MASTRIZONE = 10194
 
 def MastriSottocontoFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -2311,7 +2312,7 @@ def MastriSottocontoFunc( parent, call_fit = True, set_sizer = True ):
     
     item3 = wx.FlexGridSizer( 0, 2, 0, 0 )
     
-    item4 = RadioBox( parent, ID_TIPOSTA, "Tipo di stampa", wx.DefaultPosition, wx.DefaultSize, 
+    item4 = StampaRegRadioBox( parent, ID_TIPOSTA, "Tipo di stampa", wx.DefaultPosition, wx.DefaultSize, 
         ["Stampa Provvisoria","Stampa Definitiva","Ristampa"] , 1, wx.RA_SPECIFY_COLS )
     item4.SetName( "tiposta" )
     item3.Add( item4, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
@@ -2354,8 +2355,9 @@ def MastriSottocontoFunc( parent, call_fit = True, set_sizer = True ):
     item13.SetName( "esercizio" )
     item11.Add( item13, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item14 = wx.StaticText( parent, ID_TEXT, "", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item11.Add( item14, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+    item14 = wx.CheckBox( parent, ID_CHECKBOX, "Ignora Esercizio", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item14.SetName( "noEsercizio" )
+    item11.Add( item14, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
     item15 = wx.StaticText( parent, ID_TEXT, "", wx.DefaultPosition, wx.DefaultSize, 0 )
     item11.Add( item15, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
@@ -2471,7 +2473,7 @@ def MastriSottocontoFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_PANGRIDPDC = 10194
+ID_PANGRIDPDC = 10195
 
 def MastriSottocontoPdcFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -2518,18 +2520,18 @@ def MastriSottocontoRegFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_PCFGROUP = 10195
-ID_PCFLABPDC = 10196
-ID_PCFPDC1 = 10197
-ID_PCFPDC2 = 10198
-ID_PCFCAUS1 = 10199
-ID_PCFCAUS2 = 10200
-ID_PCFZONA1 = 10201
-ID_PCFZONA2 = 10202
-ID_PCFAGENTE1 = 10203
-ID_PCFAGENTE2 = 10204
-ID_PCFCATANA1 = 10205
-ID_PCFCATANA2 = 10206
+ID_PCFGROUP = 10196
+ID_PCFLABPDC = 10197
+ID_PCFPDC1 = 10198
+ID_PCFPDC2 = 10199
+ID_PCFCAUS1 = 10200
+ID_PCFCAUS2 = 10201
+ID_PCFZONA1 = 10202
+ID_PCFZONA2 = 10203
+ID_PCFAGENTE1 = 10204
+ID_PCFAGENTE2 = 10205
+ID_PCFCATANA1 = 10206
+ID_PCFCATANA2 = 10207
 
 def ScadenzarioGruppoFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -2761,8 +2763,8 @@ def ScadenzarioGruppoFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_ALIQ = 10207
-ID_PANGRIDMOV = 10208
+ID_ALIQ = 10208
+ID_PANGRIDMOV = 10209
 
 def IntAliqIvaFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -3033,9 +3035,9 @@ def IntAliqIvaFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_PANDATE = 10209
-ID_PANPCF = 10210
-ID_SCADCOLORS = 10211
+ID_PANDATE = 10210
+ID_PANPCF = 10211
+ID_SCADCOLORS = 10212
 
 def EffettiPresentatiFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 2, 0, 0 )
@@ -3072,10 +3074,10 @@ def EffettiPresentatiFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_PCFMODPAG1 = 10212
-ID_PCFMODPAG2 = 10213
-ID_PCFBANCAPAG = 10214
-ID_PCFNOBANCAPAG = 10215
+ID_PCFMODPAG1 = 10213
+ID_PCFMODPAG2 = 10214
+ID_PCFBANCAPAG = 10215
+ID_PCFNOBANCAPAG = 10216
 
 def ScadenzarioSelFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.BoxSizer( wx.VERTICAL )
@@ -3195,7 +3197,7 @@ def ScadenzarioSelFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_EMAILZONE = 10216
+ID_EMAILZONE = 10217
 
 def DocsEmailFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -3220,7 +3222,7 @@ def DocsEmailFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_PANGRIDEMAIL = 10217
+ID_PANGRIDEMAIL = 10218
 
 def DocsEmailGridFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -3244,11 +3246,11 @@ def DocsEmailGridFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_EMAILFROM = 10218
-ID_EMAILTO = 10219
-ID_EMAILDATE = 10220
-ID_BUTEMAILOPENPDF = 10221
-ID_EMAILBODY = 10222
+ID_EMAILFROM = 10219
+ID_EMAILTO = 10220
+ID_EMAILDATE = 10221
+ID_BUTEMAILOPENPDF = 10222
+ID_EMAILBODY = 10223
 
 def DocsEmailPreviewFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -3322,14 +3324,14 @@ def DocsEmailPreviewFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_DATSCA1 = 10223
-ID_DATSCA2 = 10224
-ID_MODPAG1 = 10225
-ID_MODPAG2 = 10226
-ID_GIORNIRIT = 10227
-ID_PERCINT = 10228
-ID_BUTUPDATE = 10229
-ID_PANGRIDPCF = 10230
+ID_DATSCA1 = 10224
+ID_DATSCA2 = 10225
+ID_MODPAG1 = 10226
+ID_MODPAG2 = 10227
+ID_GIORNIRIT = 10228
+ID_PERCINT = 10229
+ID_BUTUPDATE = 10230
+ID_PANGRIDPCF = 10231
 
 def InteressiPartiteScaduteFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -3465,13 +3467,13 @@ def InteressiPartiteScaduteFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_AGENTE = 10231
-ID_CLIFID_ALL = 10232
-ID_CLIFID_SCO = 10233
-ID_CLIFID_PCF = 10234
-ID_CLIFID_ESP = 10235
-ID_CLIFID_GGS = 10236
-ID_PANGRIDFID = 10237
+ID_AGENTE = 10232
+ID_CLIFID_ALL = 10233
+ID_CLIFID_SCO = 10234
+ID_CLIFID_PCF = 10235
+ID_CLIFID_ESP = 10236
+ID_CLIFID_GGS = 10237
+ID_PANGRIDFID = 10238
 
 def SitFidiClientiFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -3553,7 +3555,6 @@ def SitFidiClientiFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_CHECKBOX = 10238
 ID_CHECKLISTBOX = 10239
 
 def SetCauFunc( parent, call_fit = True, set_sizer = True ):

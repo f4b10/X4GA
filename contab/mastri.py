@@ -106,6 +106,11 @@ class MastriSottocontoPanel(aw.Panel):
         wdr.MastriSottocontoFunc(self)
         def cn(x):
             return self.FindWindowByName(x)
+        
+        self.tiposta = cn('tiposta')
+        self.noEsercizio = cn('noEsercizio')
+        
+        
         self.dbpdc = dbc.MastriSottoconto()
         self.dbpdc.ShowDialog(self)
         self.dbpsm = dbx.ProgrStampaMastri()
@@ -121,6 +126,22 @@ class MastriSottocontoPanel(aw.Panel):
         cn('mastrizone').SetSashPosition(350)
         self.Bind(wx.EVT_CHOICE, self.OnEsercizioChanged, cn('esercizio'))
         self.Bind(gl.EVT_GRID_CMD_SELECT_CELL, self.OnUpdateReg, self.gridpdc)
+        
+        self.tiposta.Bind(wx.EVT_RADIOBOX, self.OnTipoSta)
+        
+    def OnTipoSta(self, evt):
+        titolo = self.FindWindowByName('tipotit')
+        if self.tiposta.GetValue()=='R':
+            self.noEsercizio.SetValue(False)
+            titolo.SetLabel('Ristampa')
+        elif self.tiposta.GetValue()=='D':
+            self.noEsercizio.SetValue(False)
+            titolo.SetLabel('Stampa definitiva')
+        else:
+            titolo.SetLabel('Stampa provvisoria')
+        self.noEsercizio.Enable(self.tiposta.GetValue()=='P')
+        evt.Skip()
+        
     
     def OnEsercizioChanged(self, event):
         self.SetDates()
@@ -170,6 +191,11 @@ class MastriSottocontoPanel(aw.Panel):
         def cn(x):
             return self.FindWindowByName(x)
         e, d1, d2, to = map(lambda x: cn(x).GetValue(), 'esercizio datreg1 datreg2 tipord'.split())
+        
+        
+        if self.noEsercizio.GetValue():
+            e=None
+        
         err = None
         if d1 is None:
             err = "Manca la data iniziale"
