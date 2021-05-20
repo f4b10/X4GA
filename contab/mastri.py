@@ -37,6 +37,7 @@ from contab.pdcint import GridMastro as MastriSottocontoRegGrid
 from cfg.cfgcontab import CfgContab
 
 import Env
+from magazz.listini import MsgBox
 bt = Env.Azienda.BaseTab
 stdcolor = Env.Azienda.Colours
 
@@ -45,14 +46,17 @@ import stormdb as adb
 import report as rpt
 
 
+from awc.controls.dbgrid import ADB_Grid
+
 FRAME_TITLE = "Mastri sottoconto"
 
 
-class MastriSottocontoPdcGrid(dbglib.DbGrid2Colori):
+class MastriSottocontoPdcGrid(ADB_Grid):
     
     def __init__(self, parent, dbpdc):
         
-        dbglib.DbGrid2Colori.__init__(self, parent, -1, 
+        ADB_Grid.__init__(self, parent, -1, 
+                                      db_table=dbpdc,
                                       size=parent.GetClientSizeTuple(),
                                       idGrid='mastriconti')
         
@@ -71,6 +75,7 @@ class MastriSottocontoPdcGrid(dbglib.DbGrid2Colori):
             ( 40, (cn(con, 'codice'),  "Con.",       _STR, True )),\
             ( 50, (cn(pdc, 'codice'),  "Cod.",       _STR, True )),\
             (100, (cn(pdc, 'descriz'), "Sottoconto", _STR, True )),\
+            ( 1 , (cn(pdc, 'id'),      "#Id", _STR, True )),\
         )
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
@@ -92,6 +97,34 @@ class MastriSottocontoPdcGrid(dbglib.DbGrid2Colori):
         parent.SetSizer(sz)
         sz.SetSizeHints(parent)
 
+    def ShowContextMenu(self, position, row, col):
+
+        def _Stampa(event):
+            try:
+                row = self.GetSelectedRows()[0]
+            except:
+                row=None
+            idPdc=0
+            if not row==None:
+                idPdc =0
+                p = self.db_table
+                try:
+                    p.MoveRow(row)
+                    idPdc =p.id
+                except:
+                    pass
+                
+            if not idPdc==None:
+                obj = self.GetParent().GetParent().GetParent().GetParent()
+                if obj.tiposta.GetValue()=='P':
+                    obj.StampaMastrino(idPdc=idPdc)
+                else:
+                    MsgBox(self, "La Stampa del singolo mastro è consentita solo in modalità provvisoria.")
+            event.Skip()
+
+        self.ResetContextMenu()
+        self.AppendContextMenuVoice('Stampa Mastro', _Stampa)
+        ADB_Grid.ShowContextMenu(self, position, row, col)
 
 # ------------------------------------------------------------------------------
 
@@ -248,11 +281,14 @@ class MastriSottocontoPanel(aw.Panel):
         self.StampaMastrino()
         event.Skip()
     
-    def StampaMastrino(self):
+    def StampaMastrino(self, idPdc=None):
         db = self.dbpdc
-        cpp = aw.awu.MsgDialog(self, "Vuoi un solo sottoconto per ogni pagina?",
-                               style=wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT)
-        db._info.cpp = (cpp == wx.ID_YES)
+        if not idPdc==None:
+            db._info.cpp = True
+        else:
+            cpp = aw.awu.MsgDialog(self, "Vuoi un solo sottoconto per ogni pagina?",
+                                   style=wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT)
+            db._info.cpp = (cpp == wx.ID_YES)
         db._info.intestapag = self.FindWindowByName('intestapag').GetValue() == 1
         def setCPP(rptdef, dbt):
             groups = rptdef.lGroup
@@ -263,8 +299,17 @@ class MastriSottocontoPanel(aw.Panel):
                     else:
                         snp = 'false'
                     groups[g].isStartNewPage = snp
-        rpt.Report(self, db, "Mastro sottoconto", testrec=db.mov, startFunc=setCPP)
-
+                    
+        if idPdc==None:
+            rpt.Report(self, db, "Mastro sottoconto", testrec=db.mov, startFunc=setCPP)
+        else:
+            oldFilter = db._info.filters[:]
+            db.AddFilter('pdc.id=%s' % idPdc)
+            db.Retrieve()                    
+            rpt.Report(self, db, "Mastro sottoconto", changefilename='Mastro %s' % db.descriz.encode('ascii', 'ignore'), testrec=db.mov, startFunc=setCPP)
+            db.ClearFilters()
+            db._info.filters = oldFilter[:] 
+            db.Retrieve()   
 
 # ------------------------------------------------------------------------------
 
