@@ -884,6 +884,11 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
                         msg = "La data di registrazione è antecedente l'ultima stampa definitiva del registro Iva"
                     elif (rei.lastprtnum or 0)>0 and rei.lastprtdat.year == self.reg_datreg.year and self.reg_numiva<rei.lastprtnum:
                         msg = "Il numero di protocollo Iva è inferiore all'ultimo protocollo stampato in definitivo sul registro."
+                    elif self.reg_datcompete <= rei.lastprtdat:
+                        msg="Il mese di competenza deve essere maggiore all'ultima stampa definitiva del registro."
+                    elif self.reg_datcompete.year <> rei.lastprtdat.year:
+                        msg="L'anno di competenza deve essere = alla data registrazione"                        
+                        
                 if msg:
                     awu.MsgDialog(self, msg, style=wx.ICON_ERROR)
                     out = False
