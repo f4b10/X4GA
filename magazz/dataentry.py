@@ -2407,7 +2407,6 @@ class MagazzPanel(aw.Panel,\
 
 
         ################################################################
-
         retrySave = False
         idRegCon  = None
         while True:    
@@ -2429,7 +2428,7 @@ class MagazzPanel(aw.Panel,\
     #===========================================================================
                 
                 
-                dlg = NumDocDialog(self, doc.cfgdoc.datdoc, doc.cfgdoc.numdoc, doc.cfgdoc.askprotiva)
+                dlg = NumDocDialog(self, doc.cfgdoc.datdoc, doc.cfgdoc.numdoc, doc.cfgdoc.askprotiva, canAbort=not retrySave)
                 dk = {}
                 for name, val in (('numdoc', doc.numdoc),
                                   ('numiva', doc.numiva),
@@ -3808,8 +3807,15 @@ class DocSearch(wx.Dialog):
 
 
 class NumDocDialog(aw.Dialog):
+    canAbort = None
 
     def __init__(self, parent, tipdat, tipnum, tipniv, **kwargs):
+        
+        if 'canAbort' in kwargs.keys():
+            self.canAbort=kwargs.pop('canAbort')
+        else:
+            self.canAbort=True
+        
         kwargs['title'] = 'Attribuzione numero documento'
         kwargs['style'] = wx.DEFAULT_DIALOG_STYLE
         aw.Dialog.__init__(self, parent, **kwargs)
@@ -3822,6 +3828,7 @@ class NumDocDialog(aw.Dialog):
         self.CenterOnScreen()
         def ci(x):
             return self.FindWindowByName(x)
+        self.btnAbort = self.FindWindowById(wdr.ID_BTNABORT)
         ci('datdoc').Enable(tipdat != '3')
         ci('numiva').Enable(tipniv is not None and\
                             len(tipniv)>0 and\
@@ -3834,7 +3841,10 @@ class NumDocDialog(aw.Dialog):
         self.Bind(linktab.EVT_LINKTABCHANGED, self.OnDataChanged,\
                   id=wdr.ID_MAGAZZ)
         self.Bind(wx.EVT_BUTTON, self.OnSave, id=wdr.ID_BTNSAVE)
-        self.Bind(wx.EVT_BUTTON, self.OnQuit, id=wdr.ID_BTNABORT)
+        if self.canAbort:
+            self.Bind(wx.EVT_BUTTON, self.OnQuit, id=wdr.ID_BTNABORT)
+        else:
+            self.btnAbort.Hide()
 
         self.panel.SetDefaultItem(self.FindWindowById(wdr.ID_BTNSAVE))
 
@@ -3846,13 +3856,24 @@ class NumDocDialog(aw.Dialog):
 
         self.panel.SetAcceleratorKey(wx.WXK_F6,  wdr.ID_BTNSAVE, use_alt=False)
         self.panel.SetAcceleratorKey(wx.WXK_F10, wdr.ID_BTNSAVE,use_alt=False)
-        self.panel.SetAcceleratorKey(wx.WXK_ESCAPE, wdr.ID_BTNABORT,use_alt=False)
-        self.panel.SetAcceleratorKey(wx.WXK_F9, wdr.ID_BTNABORT,use_alt=False)
 
+        if self.canAbort:
+            self.panel.SetAcceleratorKey(wx.WXK_ESCAPE, wdr.ID_BTNABORT,use_alt=False)
+            self.panel.SetAcceleratorKey(wx.WXK_F9, wdr.ID_BTNABORT,use_alt=False)
+            
 
+    def _OnQuit(self, evt):
+        if self.canAbort:
+            evt.Skip()
+        else:
+            pass
+        
     def OnQuit(self, evt):
-        self.Close()
-        evt.Skip()
+        if self.canAbort:
+            self.Close()
+            evt.Skip()
+        else:
+            pass
 
     def OnDataChanged(self, event):
         def cn(x):
