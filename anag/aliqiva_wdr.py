@@ -14,7 +14,9 @@ import wx.animate
 from awc.controls.radiobox import RadioBox
 from awc.controls.numctrl import NumCtrl
 from awc.controls.textctrl import TextCtrl, TextCtrl_LC
-
+from awc.controls.linktable import LinkTable
+from Env import Azienda
+bt = Azienda.BaseTab
 
 from anag.basetab import AnagCardPanel, WorkZoneNotebook, UnoZeroCheckBox
 
@@ -68,10 +70,11 @@ def AliqIvaCardFunc( parent, call_fit = True, set_sizer = True ):
 ID_TEXT = 16002
 ID_PERCIVA = 16003
 ID_PERCIND = 16004
-ID_TIPO = 16005
-ID_MODO = 16006
-ID_SM11_NO = 16007
-ID_CHECKBOX = 16008
+ID_CTRALIQIVA = 16005
+ID_TIPO = 16006
+ID_MODO = 16007
+ID_SM11_NO = 16008
+ID_CHECKBOX = 16009
 
 def AliqIvaCardDatiFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.BoxSizer( wx.VERTICAL )
@@ -79,7 +82,7 @@ def AliqIvaCardDatiFunc( parent, call_fit = True, set_sizer = True ):
     item2 = wx.StaticBox( parent, -1, "Percentuali di calcolo" )
     item1 = wx.StaticBoxSizer( item2, wx.VERTICAL )
     
-    item3 = wx.FlexGridSizer( 0, 4, 0, 0 )
+    item3 = wx.FlexGridSizer( 0, 6, 0, 0 )
     
     item4 = wx.StaticText( parent, ID_TEXT, "Aliquota %:", wx.DefaultPosition, wx.DefaultSize, 0 )
     item3.Add( item4, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
@@ -93,59 +96,67 @@ def AliqIvaCardDatiFunc( parent, call_fit = True, set_sizer = True ):
     item7 = NumCtrl( parent, integerWidth=3, fractionWidth=2, allowNegative=False, groupDigits=False); item7.SetName("percind")
     item3.Add( item7, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 
+    item8 = wx.StaticText( parent, ID_TEXT, "Codice Split Payment corrispondente:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item3.Add( item8, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+    item9 = LinkTable(parent, ID_CTRALIQIVA ); item9.SetDataLink( bt.TABNAME_ALIQIVA, "id_split")
+    item3.Add( item9, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+
+    item3.AddGrowableCol( 5 )
+
     item1.Add( item3, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
     item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item8 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    item10 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
-    item9 = RadioBox( parent, ID_TIPO, "Tipologia", wx.DefaultPosition, wx.DefaultSize, 
+    item11 = RadioBox( parent, ID_TIPO, "Tipologia", wx.DefaultPosition, wx.DefaultSize, 
         ["Acquisti/Vendite","Acquisti CEE","Vendite in split payment","Deducibilità differita"] , 1, wx.RA_SPECIFY_COLS )
-    item9.SetName( "tipo" )
-    item8.Add( item9, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item10 = wx.FlexGridSizer( 0, 1, 0, 0 )
-    
-    item11 = ModoIvaRadioBox( parent, ID_MODO, "L'importo assogettato a questa aliquota è:", wx.DefaultPosition, wx.DefaultSize, 
-        ["Imponibile","Non Imponibile","Esente","Fuori Campo"] , 1, wx.RA_SPECIFY_COLS )
-    item11.SetName( "modo" )
+    item11.SetName( "tipo" )
     item10.Add( item11, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item13 = wx.StaticBox( parent, -1, "Spesometro 2011" )
-    item12 = wx.StaticBoxSizer( item13, wx.VERTICAL )
+    item12 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
-    item14 = UnoZeroCheckBox( parent, ID_SM11_NO, "Escludi dalla compilazione dello spesometro", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item14.SetName( "sm11_no" )
-    item12.Add( item14, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item13 = ModoIvaRadioBox( parent, ID_MODO, "L'importo assogettato a questa aliquota è:", wx.DefaultPosition, wx.DefaultSize, 
+        ["Imponibile","Non Imponibile","Esente","Fuori Campo"] , 1, wx.RA_SPECIFY_COLS )
+    item13.SetName( "modo" )
+    item12.Add( item13, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item10.Add( item12, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item16 = wx.StaticBox( parent, -1, "Totalizzatori per Comunicazioni Liquidazioni Iva" )
-    item15 = wx.StaticBoxSizer( item16, wx.VERTICAL )
+    item15 = wx.StaticBox( parent, -1, "Spesometro 2011" )
+    item14 = wx.StaticBoxSizer( item15, wx.VERTICAL )
     
-    item17 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    item16 = UnoZeroCheckBox( parent, ID_SM11_NO, "Escludi dalla compilazione dello spesometro", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item16.SetName( "sm11_no" )
+    item14.Add( item16, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item12.Add( item14, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item18 = wx.StaticBox( parent, -1, "Totalizzatori per Comunicazioni Liquidazioni Iva" )
+    item17 = wx.StaticBoxSizer( item18, wx.VERTICAL )
     
-    item18 = UnoZeroCheckBox( parent, ID_CHECKBOX, "Escludi da Operazioni Attive", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item18.SetName( "notot_liquatt" )
-    item17.Add( item18, 0, wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
+    item19 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    
+    item20 = UnoZeroCheckBox( parent, ID_CHECKBOX, "Escludi da Operazioni Attive", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item20.SetName( "notot_liquatt" )
+    item19.Add( item20, 0, wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item19 = UnoZeroCheckBox( parent, ID_CHECKBOX, "Escludi da Operazioni Passive", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item19.SetName( "notot_liqupas" )
-    item17.Add( item19, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item21 = UnoZeroCheckBox( parent, ID_CHECKBOX, "Escludi da Operazioni Passive", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item21.SetName( "notot_liqupas" )
+    item19.Add( item21, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item15.Add( item17, 0, wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
+    item17.Add( item19, 0, wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item10.Add( item15, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+    item12.Add( item17, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item12.AddGrowableCol( 0 )
+
+    item10.Add( item12, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item10.AddGrowableCol( 0 )
 
-    item8.Add( item10, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item10.AddGrowableCol( 1 )
 
-    item8.AddGrowableCol( 0 )
-
-    item8.AddGrowableCol( 1 )
-
-    item0.Add( item8, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item0.Add( item10, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     if set_sizer == True:
         parent.SetSizer( item0 )
@@ -154,7 +165,7 @@ def AliqIvaCardDatiFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_RADIOBOX = 16009
+ID_RADIOBOX = 16010
 
 def AliqIvaCardAllegFunc( parent, call_fit = True, set_sizer = True ):
     item1 = wx.StaticBox( parent, -1, "Progressivi allegati clienti/fornitori" )
@@ -225,7 +236,7 @@ def AliqIvaCardAllegFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_TEXTCTRL = 16010
+ID_TEXTCTRL = 16011
 
 def AliqIvaCardNaturaFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 2, 0, 0 )
