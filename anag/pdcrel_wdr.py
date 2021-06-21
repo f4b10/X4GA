@@ -4056,77 +4056,81 @@ def ClientiCommFunc( parent, call_fit = True, set_sizer = True ):
     item60.SetName( "ddtfixpre" )
     item58.Add( item60, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
 
+    item61 = UnoZeroCheckBox( parent, ID_DDTSTAPRE, "Soggetto a Split Payment", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item61.SetName( "splitpay" )
+    item58.Add( item61, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP, 5 )
+
     item58.AddGrowableCol( 3 )
 
     item43.Add( item58, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item42.Add( item43, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
 
-    item62 = wx.StaticBox( parent, -1, "Fatturazione Elettronica" )
-    item61 = wx.StaticBoxSizer( item62, wx.VERTICAL )
-    parent.ftel = item61
+    item63 = wx.StaticBox( parent, -1, "Fatturazione Elettronica" )
+    item62 = wx.StaticBoxSizer( item63, wx.VERTICAL )
+    parent.ftel = item62
     
-    item63 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    item64 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
-    item64 = CheckBox( parent, ID_CHECKBOX, "Invia Fattura Elettronica", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item64.SetName( "ftel_flag" )
-    item63.Add( item64, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+    item65 = CheckBox( parent, ID_CHECKBOX, "Invia Fattura Elettronica", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item65.SetName( "ftel_flag" )
+    item64.Add( item65, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
 
-    item65 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    item66 = wx.FlexGridSizer( 0, 2, 0, 0 )
     
-    item66 = AziPaRadioBox( parent, ID_RADIOBOX, "Tipo Cliente", wx.DefaultPosition, wx.DefaultSize, 
+    item67 = AziPaRadioBox( parent, ID_RADIOBOX, "Tipo Cliente", wx.DefaultPosition, wx.DefaultSize, 
         ["Privato B2B","Ente Pubblico"] , 1, wx.RA_SPECIFY_COLS )
-    item66.SetName( "ftel_tipo" )
-    item65.Add( item66, 0, wx.ALIGN_CENTER|wx.LEFT, 5 )
+    item67.SetName( "ftel_tipo" )
+    item66.Add( item67, 0, wx.ALIGN_CENTER|wx.LEFT, 5 )
 
-    item67 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    item68 = wx.FlexGridSizer( 0, 2, 0, 0 )
     
-    item68 = wx.StaticText( parent, ID_TEXT, "Cod.Ufficio:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item68.SetName( "l_ftel_codice" )
-    item67.Add( item68, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item69 = wx.StaticText( parent, ID_TEXT, "Cod.Ufficio:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item69.SetName( "l_ftel_codice" )
+    item68.Add( item69, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item69 = TextCtrl( parent, ID_TEXTCTRL, "", wx.DefaultPosition, [60,-1], 0 )
-    item69.SetName( "ftel_codice" )
-    item67.Add( item69, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
+    item70 = TextCtrl( parent, ID_TEXTCTRL, "", wx.DefaultPosition, [60,-1], 0 )
+    item70.SetName( "ftel_codice" )
+    item68.Add( item70, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item70 = wx.StaticText( parent, ID_TEXT, "Cod. SdI:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item70.SetName( "l_ftel_codsdi" )
-    item67.Add( item70, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item71 = wx.StaticText( parent, ID_TEXT, "Cod. SdI:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item71.SetName( "l_ftel_codsdi" )
+    item68.Add( item71, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item71 = TextCtrl( parent, ID_TEXTCTRL, "", wx.DefaultPosition, [70,-1], 0 )
-    item71.SetName( "ftel_codsdi" )
-    item67.Add( item71, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
+    item72 = TextCtrl( parent, ID_TEXTCTRL, "", wx.DefaultPosition, [70,-1], 0 )
+    item72.SetName( "ftel_codsdi" )
+    item68.Add( item72, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item72 = wx.StaticText( parent, ID_TEXT, "Mail.pec:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item72.SetName( "l_ftel_pec" )
-    item67.Add( item72, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item73 = wx.StaticText( parent, ID_TEXT, "Mail.pec:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item73.SetName( "l_ftel_pec" )
+    item68.Add( item73, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item73 = MailEntryCtrl( parent, ID_TEXTCTRL, "", wx.DefaultPosition, [80,-1], 0 )
-    item73.SetName( "ftel_pec" )
-    item67.Add( item73, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item74 = MailEntryCtrl( parent, ID_TEXTCTRL, "", wx.DefaultPosition, [80,-1], 0 )
+    item74.SetName( "ftel_pec" )
+    item68.Add( item74, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item67.AddGrowableCol( 1 )
+    item68.AddGrowableCol( 1 )
 
-    item65.Add( item67, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+    item66.Add( item68, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item65.AddGrowableCol( 1 )
+    item66.AddGrowableCol( 1 )
 
-    item63.Add( item65, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item64.Add( item66, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item63.AddGrowableCol( 0 )
+    item64.AddGrowableCol( 0 )
 
-    item61.Add( item63, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item62.Add( item64, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item42.Add( item61, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+    item42.Add( item62, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item75 = CliComNotebook( parent, ID_COMMZONE, wx.DefaultPosition, wx.DefaultSize, 0 )
-    item74 = item75
+    item76 = CliComNotebook( parent, ID_COMMZONE, wx.DefaultPosition, wx.DefaultSize, 0 )
+    item75 = item76
     
-    item76 = wx.Panel( item75, -1 )
-    ScontiFidiPanelFunc(item76, False)
-    item75.AddPage( item76, "Sconti e fido" )
+    item77 = wx.Panel( item76, -1 )
+    ScontiFidiPanelFunc(item77, False)
+    item76.AddPage( item77, "Sconti e fido" )
 
-    item42.Add( item74, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
+    item42.Add( item75, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
 
     item42.AddGrowableCol( 0 )
 
