@@ -1194,6 +1194,23 @@ class XFrame(aw.Frame):
                 (self.OnPdcInterrPdc,              ID_TB_INTSOTT),
                 ):
                 self.Bind(wx.EVT_TOOL, func, id=cid)
+                
+                
+        try:
+            #import Env
+            conn = Env.Azienda.DB.connection
+            curs = conn.cursor()
+            sql = 'SET GLOBAL sql_mode="STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"'
+            curs.execute(sql)
+            sql = 'SET SESSION sql_mode="STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION";'
+            curs.execute(sql)
+            curs.close()
+        except:
+            print 'errore impostazione sql_mode'
+            pass                  
+                
+                
+                
         if tb:
             tb.Realize()
     
