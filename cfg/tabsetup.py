@@ -521,6 +521,18 @@ class TabSetupDialog(aw.Dialog):
             dlg.Destroy()
         self.PerformAdaptations()
         adb.dbtable.ClearCache()
+        try:
+            import Env
+            conn = Env.Azienda.DB.connection
+            curs = conn.cursor()
+            sql = 'SET GLOBAL sql_mode="STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"'
+            curs.execute(sql)
+            sql = 'SET SESSION sql_mode="STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION";'
+            curs.execute(sql)
+            curs.close()
+        except:
+            pass        
+        
         aw.Dialog.EndModal(self, ret)
 
 ###########################################################
@@ -1797,6 +1809,23 @@ class AdeguaPanel(aw.Panel):
                              """alla corrente versione %s""" % Env.__version__,\
                              style=wx.ICON_INFORMATION)
             self.GetParent().EndModal(1)
+
+
+        print 'passo'
+        try:
+            import Env
+            conn = Env.Azienda.DB.connection
+            curs = conn.cursor()
+            sql = 'SET GLOBAL sql_mode="STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"'
+            curs.execute(sql)
+            sql = 'SET SESSION sql_mode="STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION";'
+            curs.execute(sql)
+            curs.close()
+            print 'impostazione sql_mode'
+        except:
+            print 'errore impostazione sql_mode'
+            pass
+
 
 
 
