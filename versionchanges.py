@@ -29,6 +29,27 @@ import mx.DateTime as dt
 import mx.Odt
 
 history = (
+    ('1.6.00', dt.Date(2021, 6, 21), (
+        ("BET16001",
+         """Aggiunta gestione dei clienti soggetti a split payment"""
+        ),
+        ("BET16005",
+         """Potenziato l'algoritmo di assegnazione del numero documento a piede documento"""
+        ),
+        ("BET16004",
+         """All'avvio del programma viene impostato le variabili SET GLOBAL del database in modo da evitare problemi di compatibilità"""
+        ),
+        ("BET16003",
+         """Proposizione automatica della aliquota iva per split payment qualora si stia emettendo un documento a cliente soggetto a spli paymen"""
+        ),
+        ("BET16002",
+         """Aggiunta possibilità di indicare per ogni aliquota iva la corrispondente aliquota iva da usarsi in caso di split payment"""
+        ),
+        ("BET16001",
+         """Aggiunto flag su anagrafica cliente per attivarne la gestione con split payment"""
+        ),
+        ),),
+
     ('1.5.99', dt.Date(2021, 5, 7), (
         ("BET15991",
          """Introdotto su causali di magazzino flag per attivare o meno l'evidenziazione dei documenti fuori sequenza.
