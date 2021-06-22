@@ -1663,9 +1663,12 @@ class AdeguaPanel(aw.Panel):
         wait = aw.awu.WaitDialog(self, maximum=len(self.adeg))
         errors = False
 
-        bt = Env.Azienda.BaseTab
-
-
+        try:
+            bt = Env.Azienda.BaseTab
+        except:
+            import Env
+            bt = Env.Azienda.BaseTab
+        
 
         for n, tab in enumerate(self.adeg):
 
