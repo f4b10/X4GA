@@ -219,7 +219,12 @@ class TreeListCtrl(gizmos.TreeListCtrl):
                     html.append(line)
 
                 for r in html:
-                    output.write('%s\n' % r)
+                    try:
+                        r=r.replace(u'\u20ac', '&euro;')
+                        r=r.encode('ascii', 'ignore')
+                        output.write('%s\n' % r)
+                    except:
+                        pass
                 output.close()
                 input.close()
 
