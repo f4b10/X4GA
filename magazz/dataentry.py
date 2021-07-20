@@ -1309,14 +1309,16 @@ class MagazzPanel(aw.Panel,\
 
     def TestAlreadySend(self):
         retValue = 0
-        if not self.dbdoc.ftel_numtrasm == None:
-            retValue=1      # file xml già generato
-        if self.dbdoc.ftel_status ==2 and self.dbdoc.ftel_sendname == None:
-            retValue = 2    # file xml spostato nelle cartella di invio ma non ancora trasmesso
-        if self.dbdoc.ftel_status ==2 and not self.dbdoc.ftel_sendname  == None and self.dbdoc.ftel_codstato in ('2', '4', '9'):
-            retValue = -1   # file xml già inviato ma scartato
-        if self.dbdoc.ftel_status ==2 and not self.dbdoc.ftel_sendname  == None and not self.dbdoc.ftel_codstato in ('2', '4', '9'):
-            retValue = 3    # file xml inviato e consegnato
+        testFile='c:\\NOCHKFE_%s.x4' % Env.Azienda.codice
+        if not os.path.exists(testFile):
+            if not self.dbdoc.ftel_numtrasm == None:
+                retValue=1      # file xml già generato
+            if self.dbdoc.ftel_status ==2 and self.dbdoc.ftel_sendname == None:
+                retValue = 2    # file xml spostato nelle cartella di invio ma non ancora trasmesso
+            if self.dbdoc.ftel_status ==2 and not self.dbdoc.ftel_sendname  == None and self.dbdoc.ftel_codstato in ('2', '4', '9'):
+                retValue = -1   # file xml già inviato ma scartato
+            if self.dbdoc.ftel_status ==2 and not self.dbdoc.ftel_sendname  == None and not self.dbdoc.ftel_codstato in ('2', '4', '9'):
+                retValue = 3    # file xml inviato e consegnato
         return retValue
 
     def TestCanModify(self):
