@@ -29,6 +29,17 @@ import mx.DateTime as dt
 import mx.Odt
 
 history = (
+    ('1.6.02', dt.Date(2021, 6, 2), (
+        ("BET16021",
+         """Introdotto controllo su data registrazione e anno di competenza che devono riferirsi allo stesso anno"""
+        ),
+        ("BET16022",
+         """Inibita la possibilità di modificare documenti di magazzino gia' inviati a Sdi.
+<crlf><crlf>Qualora si desideri rinunciare a tale controllo e' necessario provvedere a creare sulla cartella principale un file il cui nome sia nel formato:
+<crlf><crlf>NOCHKFE_<codice>.x4
+<crlf><crlf>dove: <codice> deve essere sostituito dal codice azienda per la quale si desidera rinunciare al controllo."""
+        ),
+        ),),
     ('1.6.00', dt.Date(2021, 6, 21), (
         ("BET16001",
          """Aggiunta gestione dei clienti soggetti a split payment"""
