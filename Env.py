@@ -2425,6 +2425,8 @@ class Azienda(object):
                 [ "sconto5",        "DECIMAL",  5,    2, "Sconto perc.5", None ],
                 [ "sconto6",        "DECIMAL",  5,    2, "Sconto perc.6", None ],
                 [ "note",           "VARCHAR",ntw, None, "Annotazioni", None ],
+                [ "ddtstapre",      "TINYINT",  1, None, "Flag stampa prezzi su ddt", None ],
+                [ "splitpay",       "TINYINT",  1, None, "Flag abilitazione split payment", None ],
                 [ "notepag",        "VARCHAR",ntw, None, "Note per i pagamenti", None ],
                 [ "id_stato",       "INT",    idw, None, "ID Stato", None ],
                 [ "id_pdc",         "INT",    idw, None, "ID P.d.C. associato", None ],
