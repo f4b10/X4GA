@@ -886,7 +886,7 @@ class ContabPanelTipo_I(ctb.ContabPanel,\
                         msg = "Il numero di protocollo Iva è inferiore all'ultimo protocollo stampato in definitivo sul registro."
                     elif self.reg_datcompete <= rei.lastprtdat:
                         msg="Il mese di competenza deve essere maggiore all'ultima stampa definitiva del registro."
-                    elif self.reg_datcompete.year <> rei.lastprtdat.year:
+                    elif self.reg_datcompete.year <> self.reg_datreg.year:
                         msg="L'anno di competenza deve essere = alla data registrazione"                        
                         
                 if msg:
