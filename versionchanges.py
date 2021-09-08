@@ -39,6 +39,9 @@ history = (
 <crlf><crlf>NOCHKFE_<codice>.x4
 <crlf><crlf>dove: <codice> deve essere sostituito dal codice azienda per la quale si desidera rinunciare al controllo."""
         ),
+        ("BET16023",
+         """Rimosso bug che interrompeva ricalcolo listini in percentuale in caso di prodotto privo di listiuno"""
+        ),
         ),),
     ('1.6.00', dt.Date(2021, 6, 21), (
         ("BET16001",
