@@ -849,7 +849,10 @@ class DB(object):
                         continue
                     v = r[col]
                     if v is not None:
-                        c += '%s="%s" ' % (cols[col], self.ADB_EncodeValue(v))
+                        try:
+                            c += '%s="%s" ' % (cols[col], self.ADB_EncodeValue(v))
+                        except:
+                            c += '%s="%s" ' % (cols[col], self.ADB_EncodeValue(v.encode('ascii', 'ignore')))
                 if se:
                     for se_col in se:
                         se_func = se[se_col]
