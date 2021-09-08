@@ -505,9 +505,9 @@ class DocMag(adb.DbTable):
         #print 'verifico se presente nazione in dati per spesometro sm11_sedestt:%s' % r.vatprefix1
         
         if r.stato1.vatprefix==None or r.stato1.vatprefix=='IT':
-            if len(r.piva.strip())>0:
+            if len((r.piva or '').strip())>0:
                 # partita iva presente
-                if len(r.nazione.strip())>0:
+                if len((r.nazione or '').strip())>0:
                     nazione = r.nazione
                 else:
                     nazione = 'IT'
