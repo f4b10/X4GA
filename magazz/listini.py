@@ -782,6 +782,7 @@ class ListiniGrid(dbglib.DbGridColoriAlternati):
             lis = self.dblis
             DP = bt.MAGPRE_DECIMALS
             for r, row in enumerate(rows):
+
                 lis.MoveRow(row)
                 w = False
                 if v['pvcosto']:
@@ -809,10 +810,13 @@ class ListiniGrid(dbglib.DbGridColoriAlternati):
                         x = v['pvprezzo%d'%l]
                         if x:
                             p = getattr(lis, 'prezzo%d'%l)
-                            setattr(lis, 'prezzo%d'%l, round(p*(100+x)/100, DP))
-                            if not row in self.modrows:
-                                self.modrows.append(row)
-                            chg=True
+                            try:
+                                setattr(lis, 'prezzo%d'%l, round(p*(100+x)/100, DP))
+                                if not row in self.modrows:
+                                    self.modrows.append(row)
+                                chg=True
+                            except:
+                                pass
                 wait.SetValue(r)
             self.Refresh()
             if chg:
