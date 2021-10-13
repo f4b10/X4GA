@@ -220,9 +220,12 @@ class PartitaIvaEntryCtrl(_EntryCtrlMixin):
             wdr.CheckViesFunc(dlg)
             def cn(x):
                 return dlg.FindWindowByName(x)
-            cn('operat').SetLabel(e)
-            cn('rs').SetLabel(rs)
-            cn('addr').SetLabel(addr)
+            try:
+                cn('operat').SetLabel(e)
+                cn('rs').SetLabel(rs)
+                cn('addr').SetLabel(addr)
+            except:
+                pass
             def onButtonWEB(event):
                 try:
                     wx.BeginBusyCursor()
