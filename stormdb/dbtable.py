@@ -374,7 +374,7 @@ class DbTable(object):
 
     def __init__(self, tabName, tabAlias=None, primaryKey="id",\
                  fields="*", writable=None, mandatoryFields="",\
-                 defaults=None, db=None, getFilters=None, forceInsert=False, dbName=None):
+                 defaults=None, db=None, getFilters=None, forceInsert=False, dbName=None, isX4=True):
         """
         Constructor.
         The only required parameter is the table name
@@ -415,6 +415,7 @@ class DbTable(object):
         if defaults is None:
             defaults = {}
         self._info = DbInfo()
+        self._info.isX4 = isX4
         self._info.db = db
         self._info.tableName = tabName
         self._info.tableAlias = tabAlias
@@ -520,7 +521,7 @@ class DbTable(object):
         if type(fields) in (str, unicode):
             fields = fields.split(",")
         if not "*" in fields:
-            if not self._info.primaryKey in fields:
+            if not self._info.primaryKey in fields and self._info.isX4:
                 fields.append(self._info.primaryKey)
         self._info.fields = fields
         return self._info.fields
@@ -1438,7 +1439,7 @@ class DbTable(object):
                 self._info.primaryCol = ncol
             self._info.fieldCount += 1
 
-        if self._info.primaryCol < 0:
+        if self._info.primaryCol < 0 and self._info.isX4:
             raise Exception,\
                   """Unable to detect primary key column on table '%s'"""\
                   % self._info.tableName

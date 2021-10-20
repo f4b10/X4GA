@@ -29,6 +29,11 @@ import mx.DateTime as dt
 import mx.Odt
 
 history = (
+    ('1.6.03', dt.Date(2021, 6, 2), (
+        ("BET16031",
+         """Aggiunta possibilità di gestire tabelle che non rispettano gli standard di X4 (prive di id)"""
+        ),
+        ),),
     ('1.6.02', dt.Date(2021, 6, 2), (
         ("BET16021",
          """Introdotto controllo su data registrazione e anno di competenza che devono riferirsi allo stesso anno"""

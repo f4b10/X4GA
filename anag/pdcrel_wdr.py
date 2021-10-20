@@ -3885,6 +3885,7 @@ def ClientiCommFunc( parent, call_fit = True, set_sizer = True ):
 
     item14 = wx.StaticBox( parent, -1, "Fatturazione" )
     item13 = wx.StaticBoxSizer( item14, wx.VERTICAL )
+    parent.SizerFatturazione = item13
     
     item15 = wx.FlexGridSizer( 0, 2, 0, 0 )
     parent.sizerFatturazione = item15
