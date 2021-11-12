@@ -30,6 +30,9 @@ import mx.Odt
 
 history = (
     ('1.6.03', dt.Date(2021, 6, 2), (
+        ("BET16032",
+         """Aggiunta possibilità di gestire genericflag1 su scheda clienti/fornitori."""
+        ),
         ("BET16031",
          """Aggiunta possibilità di gestire tabelle che non rispettano gli standard di X4 (prive di id)"""
         ),
