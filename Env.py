@@ -2305,6 +2305,7 @@ class Azienda(object):
                 [ "perpro",         "DECIMAL",  5, 2,    "Percentuale provvigione", None ],
                 [ "ddtstapre",      "TINYINT",  1, None, "Flag stampa prezzi su ddt", None ],
                 [ "splitpay",       "TINYINT",  1, None, "Flag abilitazione split payment", None ],
+                [ "genericflag1",   "TINYINT",  1, None, "Flag generico 1", None ],
                 [ "ddtfixpre",      "TINYINT",  1, None, "Flag blocco scelta stampa prezzi su ddt", None ],
                 [ "is_blacklisted", "TINYINT",  1, None, "Flag anagrafica in blacklist paradisi fiscali", None ],
                 [ "aziper",         "CHAR",     1, None, "Tipo cliente", None ],
