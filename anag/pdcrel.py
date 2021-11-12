@@ -1001,6 +1001,20 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
         self.loadrelated = False
         _PdcRelPanel.InitControls(self, *args, **kwargs)
         self.loadrelated = True
+        try:
+            o=self.FindWindowByName('genericflag1')
+            if o:
+                cmd="SELECT descriz from cfgsetup where chiave='%s'" % 'clienti_genericflag1'
+                cursor = Env.Azienda.DB.connection.cursor()
+                cursor.execute(cmd)
+                rs=cursor.fetchone()
+                if rs:
+                    o.SetLabel(rs[0])
+                    o.Show()
+                else:
+                    o.Hide()
+        except:
+            pass            
 
         cn = self.FindWindowByName
         nb = cn('workzone')
