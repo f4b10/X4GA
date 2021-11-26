@@ -1361,6 +1361,9 @@ class AnagPanel(aw.Panel):
 
         return out
 
+    def BeforeUpdateDataRecord(self):
+        pass
+
     def UpdateDataRecord( self ):
         """
         Memorizzazione dati del record: il metodo effettua la validazione di tutti
@@ -1369,6 +1372,7 @@ class AnagPanel(aw.Panel):
         Se tutti i controlli hanno dato esito positivo alla validazione, viene
         richiamato il metodo L{self.TransferDataFromWindow}
         """
+        self.BeforeUpdateDataRecord()
         written = False
         newcod, newdes = map(lambda x: self.FindWindowByName(x).GetValue(),
                              ('codice', 'descriz'))

@@ -209,6 +209,7 @@ def AnagCardFunc( parent, call_fit = True, set_sizer = True ):
     item2 = wx.FlexGridSizer( 0, 2, 0, 0 )
     
     item3 = wx.StaticText( parent, ID_TEXT, "Codice:", wx.DefaultPosition, [60,-1], 0 )
+    item3.SetName( "labelCodice" )
     item2.Add( item3, 0, wx.ALIGN_CENTER_VERTICAL, 0 )
 
     item4 = wx.StaticText( parent, ID_TEXT, "ID:", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
@@ -232,6 +233,7 @@ def AnagCardFunc( parent, call_fit = True, set_sizer = True ):
     item7 = wx.BoxSizer( wx.VERTICAL )
     
     item8 = wx.StaticText( parent, ID_TXT_DESCRIZ, "Descrizione:", wx.DefaultPosition, [90,-1], 0 )
+    item8.SetName( "labelDescrizione" )
     item7.Add( item8, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item9 = wx.TextCtrl( parent, ID_TXT_RAGSOC, "", wx.DefaultPosition, [220,26], 0 )
