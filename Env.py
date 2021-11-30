@@ -3272,6 +3272,7 @@ class Azienda(object):
                 [ "codice",     "CHAR",      10, None, "Codice", "NOT NULL" ],
                 [ "descriz",    "VARCHAR",   60, None, "Descrizione", "NOT NULL" ],
                 [ "tipoprezzo", "CHAR",       1, None, "Tipo prezzo", None ],
+                [ "fl_ivato",   "TINYINT",    1, None, "Flag Scorporo", None ],
                 [ "id_macro",   "VARCHAR", 2048, None, "ID Macro prezzo personalizzato", None] ]
 
             cls.macro_indexes = cls.std_indexes

@@ -27,6 +27,7 @@ bt = Env.Azienda.BaseTab
 
 ID_ANAGMAIN = 16000
 ID_TIPOPREZZO = 16001
+ID_CHECKBOX = 16002
 
 def TipListCardFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -34,9 +35,28 @@ def TipListCardFunc( parent, call_fit = True, set_sizer = True ):
     item1 = AnagCardPanel(parent, -1)
     item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item2 = RadioBox( parent, ID_TIPOPREZZO, "Determinazione del prezzo", wx.DefaultPosition, wx.DefaultSize, 
+    item2 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    
+    item3 = RadioBox( parent, ID_TIPOPREZZO, "Determinazione del prezzo", wx.DefaultPosition, wx.DefaultSize, 
         ["Listino 1","Listino 2","Listino 3","Listino 4","Listino 5","Listino 6","Listino 7","Listino 8","Listino 9"] , 1, wx.RA_SPECIFY_COLS )
-    item2.SetName( "tipoprezzo" )
+    item3.SetName( "tipoprezzo" )
+    item2.Add( item3, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item5 = wx.StaticBox( parent, -1, "Tipo Prezzo" )
+    item4 = wx.StaticBoxSizer( item5, wx.VERTICAL )
+    
+    item6 = wx.CheckBox( parent, ID_CHECKBOX, "prezzo comprensivo di IVA", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item6.SetName( "fl_ivato" )
+    item4.Add( item6, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item2.Add( item4, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item2.AddGrowableCol( 0 )
+
+    item2.AddGrowableCol( 1 )
+
+    item2.AddGrowableRow( 0 )
+
     item0.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
     item0.AddGrowableCol( 0 )
