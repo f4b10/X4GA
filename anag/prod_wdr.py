@@ -514,8 +514,10 @@ def ProdAnagFunc( parent, call_fit = True, set_sizer = True ):
 
     item66 = wx.StaticBox( parent, -1, "Imballo" )
     item65 = wx.StaticBoxSizer( item66, wx.VERTICAL )
+    parent.Imballo = item65
     
     item67 = wx.FlexGridSizer( 0, 6, 0, 0 )
+    parent.DatiImballo = item67
     
     item68 = wx.StaticText( parent, ID_TEXT, "", wx.DefaultPosition, wx.DefaultSize, 0 )
     item67.Add( item68, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
