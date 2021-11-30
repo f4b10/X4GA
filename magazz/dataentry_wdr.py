@@ -2566,6 +2566,7 @@ def BodyStatDatiProd( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
     item1 = wx.BoxSizer( wx.VERTICAL )
+    parent.DatiProdotto = item1
     
     item2 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
@@ -2608,9 +2609,10 @@ def BodyStatDatiProd( parent, call_fit = True, set_sizer = True ):
     item13 = wx.FlexGridSizer( 0, 2, 0, 0 )
     
     item14 = wx.StaticText( parent, ID_TEXT, "Dimensioni imballo:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item14.SetName( "labelImballo" )
     item13.Add( item14, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item13.AddGrowableCol( 1 )
+    item13.AddGrowableCol( 0 )
 
     item1.Add( item13, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
