@@ -699,6 +699,11 @@ class DocMag(adb.DbTable):
         else:
             #scorporo iva su prezzo vendita
             sia = (bt.MAGSCORPPRE == '1')
+            
+        if self.tiplist.fl_ivato==1:
+            sia = True
+            
+            
         #scorporo iva su documento
         sid = (self.config.scorpiva == '1')
         nosconti = (prod.gruprez.nosconti == 1)
@@ -5183,8 +5188,15 @@ class ListiniAttuali(adb.DbMem):
                 cl = str(n)
                 dl = "LISTINO %d" % n
                 il = None
+                
             pre = getattr(lis, 'prezzo%d' % n)
-            pre, iva, pri, ind = self.CalcolaIVA(pro.id_aliqiva, pre, decimals=bt.MAGPRE_DECIMALS)
+            
+            if tli.fl_ivato == 1:
+                pre, iva, pri, ind = self.CalcolaIVA(pro.id_aliqiva, ivato=pre, decimals=bt.MAGPRE_DECIMALS)
+            else:
+                pre, iva, pri, ind = self.CalcolaIVA(pro.id_aliqiva, imponib=pre, decimals=bt.MAGPRE_DECIMALS)
+                
+            #pre, iva, pri, ind = self.CalcolaIVA(pro.id_aliqiva, pre, decimals=bt.MAGPRE_DECIMALS)
             prp = pro.prezzo or 0
             cos = pro.costo or 0
             spp = 0 #sconto su prezzo al pubblico
