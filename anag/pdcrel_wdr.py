@@ -3850,6 +3850,7 @@ def ClientiCommFunc( parent, call_fit = True, set_sizer = True ):
     item2 = wx.StaticBoxSizer( item3, wx.VERTICAL )
     
     item4 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    parent.sizerCondizioniPagamento = item4
     
     item5 = wx.StaticText( parent, ID_TEXT, "Modalità di pagamento:", wx.DefaultPosition, [180,-1], 0 )
     item4.Add( item5, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )

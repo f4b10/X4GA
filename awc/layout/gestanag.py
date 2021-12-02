@@ -681,7 +681,11 @@ class AnagPanel(aw.Panel):
         if not self.IsGestioneClientiFornitori():
             self.InitControls_PersonalPage()
 
-
+        if self.db_report == None:
+            try:
+                self.FindWindowById(ID_BTNPRINT).Hide()
+            except:
+                pass
 
 
     def InitControls_PersonalPage(self):

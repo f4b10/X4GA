@@ -29,7 +29,15 @@ import mx.DateTime as dt
 import mx.Odt
 
 history = (
-    ('1.6.03', dt.Date(2021, 6, 2), (
+    ('1.6.04', dt.Date(2021, 11, 29), (
+        ("BET16042",
+         """Aggiunta nuovo flag su tipi listino per gestire prezzi ivati."""
+        ),
+        ("BET16041",
+         """Modifiche interno per rendere accessibili sizer """
+        ),
+        ),),
+    ('1.6.03', dt.Date(2021, 11, 29), (
         ("BET16032",
          """Aggiunta possibilità di gestire genericflag1 su scheda clienti/fornitori."""
         ),
@@ -37,7 +45,7 @@ history = (
          """Aggiunta possibilità di gestire tabelle che non rispettano gli standard di X4 (prive di id)"""
         ),
         ),),
-    ('1.6.02', dt.Date(2021, 6, 2), (
+    ('1.6.02', dt.Date(2021, 10, 7), (
         ("BET16021",
          """Introdotto controllo su data registrazione e anno di competenza che devono riferirsi allo stesso anno"""
         ),
