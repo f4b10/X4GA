@@ -2380,12 +2380,21 @@ class DocMag(adb.DbTable):
                     if mov.pzconf and mov.prod.pzconf and mov.pzconf != mov.prod.pzconf:
                         p *= float(mov.pzconf)/float(mov.prod.pzconf)
                 elif mov.prod.pzconf:
-                    p = pc*mov.prod.pzconf
+                    pu = pc / mov.prod.pzconf
+                    #p = pc*mov.prod.pzconf
+                    #p = pc*mov.prod.pzconf
+                    p = pu*mov.qta
                 else:
                     p = pc*mov.qta
                 self.totpeso += round(p, 3)
         if mov.config.tqtaxcolli:
-            self.totcolli += (mov.nmconf or mov.qta or 0)
+            #self.totcolli += (mov.nmconf or mov.qta or 0)
+            if mov.nmconf:
+                self.totcolli += mov.nmconf
+            elif mov.prod.pzconf:
+                self.totcolli += int((mov.qta/mov.prod.pzconf)+0.99)
+            else:
+                self.totcolli += mov.qta or 0
 
     def CalcolaScadenze(self):
         if self.config.caucon.pcf == '1':
