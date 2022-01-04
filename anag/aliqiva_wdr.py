@@ -60,6 +60,8 @@ def AliqIvaCardFunc( parent, call_fit = True, set_sizer = True ):
 
     item0.AddGrowableCol( 0 )
 
+    item0.AddGrowableRow( 1 )
+
     if set_sizer == True:
         parent.SetSizer( item0 )
         if call_fit == True:
@@ -241,28 +243,38 @@ ID_TEXTCTRL = 16011
 def AliqIvaCardNaturaFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 2, 0, 0 )
     
-    item1 = RadioBox( parent, ID_RADIOBOX, "Natura", wx.DefaultPosition, wx.DefaultSize, 
+    item1 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    
+    item2 = RadioBox( parent, ID_RADIOBOX, "Natura", wx.DefaultPosition, wx.DefaultSize, 
         ["-","N1 - Escluso ex Art.15","N2 - Non soggetto","N2.1 - non soggette(artt. da 7 a 7-septies)","N2.2 - non soggette - altri casi","N3 - Non imponibile","N3.1 - non imponibili - esportazioni","N3.2 - non imponibili - cessioni intracomunitarie","N3.3 - non imponibili - cessioni verso San Marino","N3.4 - non imponibili - operaz.assimilate a esportazione","N3.5 - non imponibili - a seguito di dich. d'intento","N3.6 - non imponibili - altre operazioni no plafond","N4 - Esente","N5 - Regime del margine","N6 - Inversione contabile (reverse chanrge)","N6.1 - inversione contabile - cessione rottami ecc.","N6.2 - inversione contabile - cessione di oro/argento","N6.3 - inversione contabile - subappalto edile","N6.4 - inversione contabile - cessione di fabbricati","N6.5 - inversione contabile - cessione cellulari","N6.6 - inversione contabile - cessione prod.elettronici","N6.7 - inversione contabile - prestazioni edili ecc.","N6.8 - inversione contabile - operazioni sett.energetico","N6.9 - inversione contabile - altri casi","N7 - IVA assolta in altro stato UE"] , 2, wx.RA_SPECIFY_COLS )
-    item1.SetName( "ftel_natura" )
+    item2.SetName( "ftel_natura" )
+    item1.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item3 = UnoZeroCheckBox( parent, ID_CHECKBOX, "Soggetta a bollo virtuale", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item3.SetName( "ftel_bollo" )
+    item1.Add( item3, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
     item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item2 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    item4 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
-    item3 = wx.StaticText( parent, ID_TEXT, "Riferimento normativo", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item3.SetForegroundColour( wx.BLUE )
-    item2.Add( item3, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+    item5 = wx.StaticText( parent, ID_TEXT, "Riferimento normativo", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item5.SetForegroundColour( wx.BLUE )
+    item4.Add( item5, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
 
-    item4 = TextCtrl_LC( parent, ID_TEXTCTRL, "", wx.DefaultPosition, [400,40], wx.TE_MULTILINE )
-    item4.SetName( "ftel_rifnorm" )
-    item2.Add( item4, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
+    item6 = TextCtrl_LC( parent, ID_TEXTCTRL, "", wx.DefaultPosition, [400,40], wx.TE_MULTILINE )
+    item6.SetName( "ftel_rifnorm" )
+    item4.Add( item6, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item2.AddGrowableCol( 0 )
+    item4.AddGrowableCol( 0 )
 
-    item2.AddGrowableRow( 1 )
+    item4.AddGrowableRow( 1 )
 
-    item0.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item0.Add( item4, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item0.AddGrowableCol( 1 )
+
+    item0.AddGrowableRow( 0 )
 
     if set_sizer == True:
         parent.SetSizer( item0 )
