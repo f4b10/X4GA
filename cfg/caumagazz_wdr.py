@@ -1283,7 +1283,7 @@ def Mov1Func( parent, call_fit = True, set_sizer = True ):
     item2 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
     item3 = RadioBox( parent, ID_TIPOLOGIA, "Tipologia", wx.DefaultPosition, wx.DefaultSize, 
-        ["Descrizione","Merce","Servizi","Spese","Trasporto","Sc. ripart.","Sc. merce","Omaggio","Aum.Prezzi"] , 1, wx.RA_SPECIFY_COLS )
+        ["Descrizione","Merce","Servizi","Spese","Trasporto","Sc. ripart.","Sc. merce","Omaggio con Rivalsa","Omaggio senza Rivalsa","Aum.Prezzi","Bolli"] , 1, wx.RA_SPECIFY_COLS )
     item3.SetName( "tipologia" )
     item2.Add( item3, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 

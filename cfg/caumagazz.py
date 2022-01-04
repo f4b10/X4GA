@@ -368,7 +368,7 @@ class CauMagazzPanel(ga.AnagPanel):
                            ("aggcvfsca",  (0,1,-1)),\
                            ("provvig",    (0,1,-1)),\
                            ("mancosto",   ("N", "V", "M")),\
-                           ("tipologia",  "DMVSTIEOP"),\
+                           ("tipologia",  "DMVSTIEORPB"),\
                            ("clasdoc",    (None, "ordfor", "carfor", "resfor", "ordcli", "vencli", "rescli")),
                            ("modimpricalc", (" ", "Q", "P") ), ):
             ctr = cn(name)
