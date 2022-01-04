@@ -29,6 +29,20 @@ import mx.DateTime as dt
 import mx.Odt
 
 history = (
+    ('1.6.05', dt.Date(2022, 01, 04), (
+        ("BET16054",
+         """Aggiunto al metodo BeforeDocSave() la possibilità di interrompere la memorizzazione."""
+        ),
+        ("BET16053",
+         """Aggiunto metodo traduci a DbTable."""
+        ),
+        ("BET16052",
+         """Aggiunto ad aliquota Iva flag pe la gestione del bollo virtuale."""
+        ),
+        ("BET16051",
+         """Agginta alla tipologia documenti di magazzino Omaggio Senza Rivalsa e Bolli"""
+        ),
+        ),),
     ('1.6.04', dt.Date(2021, 11, 29), (
         ("BET16042",
          """Aggiunta nuovo flag su tipi listino per gestire prezzi ivati."""
