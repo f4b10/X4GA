@@ -2308,7 +2308,12 @@ class MagazzPanel(aw.Panel,\
     def DocSave(self, doc=None):
         if doc is None:
             doc = self.dbdoc
-        self.BeforeDocSave()
+            
+        retValue = self.BeforeDocSave()
+        print retValue
+        if retValue==False:
+            return False
+            
 
         if doc.config.caucon.id:
             try:
