@@ -2885,6 +2885,17 @@ class DbTable(object):
         return v2
 
     @classmethod
+    def traduci(cls, value, lista):
+        ret = value
+        for ita, fra in lista:
+            if value==ita:
+                ret = fra
+                break
+        return ret
+        
+
+
+    @classmethod
     def GetUnspecifiedVal(cls, val):
         if not val:
             val = '-n/s-'
