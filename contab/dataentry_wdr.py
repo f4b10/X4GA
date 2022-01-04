@@ -1042,9 +1042,15 @@ def PcfPanelFunc( parent, call_fit = True, set_sizer = True ):
 
     item5.Add( item19, 0, wx.GROW|wx.ALIGN_BOTTOM, 5 )
 
-    item23 = wx.Button( parent, ID_BUTANAG, "Apri scheda anagrafica", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item23.SetName( "butanag" )
-    item5.Add( item23, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+    item23 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    
+    item24 = wx.Button( parent, ID_BUTANAG, "Apri scheda anagrafica", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item24.SetName( "butanag" )
+    item23.Add( item24, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item23.AddGrowableCol( 0 )
+
+    item5.Add( item23, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item5.AddGrowableCol( 0 )
 
