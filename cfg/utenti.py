@@ -78,7 +78,9 @@ UTENTI_STRUCTURE = [["id",              "INT",       6, None, "ID Destinatario",
                     ["can_magazzchi",   "TINYINT1",  1, None, "Flag permesso magazzino: elaborazioni", None ],
                     ["can_backupdata",  "TINYINT1",  1, None, "Flag permesso backup: effettuare backup", None ],
                     ["can_restoredata", "TINYINT1",  1, None, "Flag permesso backup: ripristinare backup", None ],
-                    ["max_sqlrows",     "INT",       6, None, "Numero massimo di righe da visualizzare in ricerche sql", None ], ]
+                    ["can_update",      "TINYINT1",  1, None, "Flag permesso effettuare aggiornamenti", None ],
+                    ["max_sqlrows",     "INT",       6, None, "Numero massimo di righe da visualizzare in ricerche sql", None ], 
+                    ]
 
 
 def CheckUtentiStructure():
@@ -87,7 +89,8 @@ def CheckUtentiStructure():
     u.Reset()
     
     if not 'can_setupcontab' in u.GetFieldNames()\
-    or not 'max_sqlrows' in u.GetFieldNames():
+    or not 'max_sqlrows' in u.GetFieldNames()\
+    or not 'can_update' in u.GetFieldNames():
         if util.MsgDialog(None,
                           """La tabella di configurazione degli utenti\n"""
                           """deve essere modificata.\n\nProcedo?""", 
@@ -144,7 +147,8 @@ def CheckUtentiStructure():
             can_magazzela=1,
             can_magazzchi=1,
             can_backupdata=1,
-            can_restoredata=1"""
+            can_restoredata=1,
+            can_update=1"""
             if not u._info.db.Execute(cmd):
                 err = repr(u._info.db.dbError.description)
         else:
@@ -152,6 +156,26 @@ def CheckUtentiStructure():
         if err:
             util.MsgDialog(None, err, style=wx.ICON_ERROR)
             return False
+
+    if not 'can_update' in u.GetFieldNames():
+        cmd = """
+ALTER TABLE `x4`.`utenti` ADD COLUMN `can_update` TINYINT(1) DEFAULT 1;        
+        """
+        if not u._info.db.Execute(cmd):
+            err = repr(u._info.db.dbError.description)
+            util.MsgDialog(None, err, style=wx.ICON_ERROR)
+            return False
+
+        cmd = """
+        UPDATE `x4`.`utenti` SET  `can_update`=1;
+        """
+        if not u._info.db.Execute(cmd):
+            err = repr(u._info.db.dbError.description)
+            util.MsgDialog(None, err, style=wx.ICON_ERROR)
+            return False
+
+
+
     
     if not 'max_sqlrows' in u.GetFieldNames():
         cmd = """

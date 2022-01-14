@@ -239,7 +239,8 @@ ID_CAN_SETUPOTHER = 16034
 ID_CAN_SETUPOPTOTH = 16035
 ID_CAN_BACKUPDATA = 16036
 ID_CAN_RESTOREDATA = 16037
-ID_AZIENDE = 16038
+ID_CAN_UPDATE = 16038
+ID_AZIENDE = 16039
 
 def UtentiCardPage1Func( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 3, 0, 0 )
@@ -367,22 +368,39 @@ def UtentiCardPage1Func( parent, call_fit = True, set_sizer = True ):
 
     item19.Add( item29, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
+    item35 = wx.StaticBox( parent, -1, "Operazioni di Aggiornamento" )
+    item34 = wx.StaticBoxSizer( item35, wx.VERTICAL )
+    
+    item36 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    
+    item37 = wx.CheckBox( parent, ID_CAN_UPDATE, "Consentito", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item37.SetName( "can_update" )
+    item36.Add( item37, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+
+    item36.AddGrowableCol( 0 )
+
+    item36.AddGrowableCol( 1 )
+
+    item34.Add( item36, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item19.Add( item34, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
     item0.Add( item19, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL, 5 )
 
-    item34 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    item38 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
-    item35 = wx.StaticText( parent, ID_TEXT, "Diritti di accesso alle aziende", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item35.SetForegroundColour( wx.BLUE )
-    item34.Add( item35, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP, 5 )
+    item39 = wx.StaticText( parent, ID_TEXT, "Diritti di accesso alle aziende", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item39.SetForegroundColour( wx.BLUE )
+    item38.Add( item39, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP, 5 )
 
-    item36 = wx.CheckListBox( parent, ID_AZIENDE, wx.DefaultPosition, [360,-1], [], wx.LB_SINGLE )
-    item34.Add( item36, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
+    item40 = wx.CheckListBox( parent, ID_AZIENDE, wx.DefaultPosition, [360,-1], [], wx.LB_SINGLE )
+    item38.Add( item40, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item34.AddGrowableCol( 0 )
+    item38.AddGrowableCol( 0 )
 
-    item34.AddGrowableRow( 1 )
+    item38.AddGrowableRow( 1 )
 
-    item0.Add( item34, 0, wx.GROW, 5 )
+    item0.Add( item38, 0, wx.GROW, 5 )
 
     item0.AddGrowableCol( 2 )
 

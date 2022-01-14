@@ -1144,7 +1144,11 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
                 editors = None):
 
         if self._colmap_check:
-            assert not filter(lambda x: x[0] is None, colmap)
+            try:
+                assert not filter(lambda x: x[0] is None, colmap)
+            except:
+                print 'errore'
+                pass
 
         canIns = canIns and (newRowFunc is not None)
 

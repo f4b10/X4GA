@@ -183,7 +183,6 @@ class VersionsDb(adb.DbMem):
 
         if err:
             raise Exception, err
-
         return downloads
 
 
@@ -335,6 +334,12 @@ class ProgramUpdatePanel(aw.Panel):
                 self.Layout()
                 self.mode = MODE_UPDATE
                 self.gridver.SetFocus()
+                try:
+                    if not Env.Azienda.Login.userdata.can_update==1:
+                        self.action.Enable(False)
+                        self.message.SetLabel("E' disponibile una nuova versione ma non hai i diritti di download")
+                except:
+                    pass
             else:
                 self.SetStop("Non ci sono aggiornamenti rispetto alla versione in uso.")
         except Exception, e:

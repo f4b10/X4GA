@@ -29,6 +29,11 @@ import mx.DateTime as dt
 import mx.Odt
 
 history = (
+    ('1.6.06', dt.Date(2022, 01, 14), (
+        ("BET1606",
+         """Aggiunto flag di abilitazione o meno a ricercare aggiornamenti."""
+        ),
+        ),),
     ('1.6.05', dt.Date(2022, 01, 04), (
         ("BET16054",
          """Aggiunto al metodo BeforeDocSave() la possibilità di interrompere la memorizzazione."""
