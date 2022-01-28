@@ -134,9 +134,9 @@ class ContabPanelTipo_I_SI(ctbio.ContabPanelTipo_I_O):
         ctbio.ContabPanelTipo_I_O.RegReadBody(self, *args)
         #determinazione id fornitore
         cmd =\
-"""SELECT row.id_pdcpa """\
-"""FROM %s AS row """\
-"""WHERE row.id_reg=%%s and row.tipriga='I'""" % bt.TABNAME_CONTAB_B
+"""SELECT rowX4.id_pdcpa """\
+"""FROM %s AS rowX4 """\
+"""WHERE rowX4.id_reg=%%s and rowX4.tipriga='I'""" % bt.TABNAME_CONTAB_B
         self.db_curs.execute(cmd, self.reg_id)
         rs = self.db_curs.fetchone()
         if rs:
@@ -252,10 +252,10 @@ class Reg_SI_SearchPanel(ctbi.Reg_I_SearchPanel):
                 cmd = \
 """   SELECT reg.id, reg.datreg, riv.codice, reg.numiva, """\
 """          pdc.descriz, reg.numdoc, reg.datdoc, """\
-"""          SUM(row.imponib), SUM(row.imposta) """\
+"""          SUM(rowX4.imponib), SUM(rowX4.imposta) """\
 """     FROM ((%s AS reg JOIN %s AS cau ON reg.id_caus=cau.id) """\
-"""LEFT JOIN contab_b AS row ON row.id_reg=reg.id) """\
-"""LEFT JOIN pdc AS pdc ON row.id_pdcpa=pdc.id """\
+"""LEFT JOIN contab_b AS rowX4 ON rowX4.id_reg=reg.id) """\
+"""LEFT JOIN pdc AS pdc ON rowX4.id_pdcpa=pdc.id """\
 """     JOIN regiva AS riv ON reg.id_regiva=riv.id """\
 """    WHERE %s """\
 """ GROUP BY reg.id, reg.datreg, riv.codice, reg.numiva, """\
