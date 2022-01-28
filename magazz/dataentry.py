@@ -2563,18 +2563,21 @@ class MagazzPanel(aw.Panel,\
             self.SetRegStatus(STATUS_DISPLAY)
 
     def UpdateAllControls(self):
-        if   self.status == STATUS_SELCAUS: lbl = "Seleziona causale"
-        elif self.status == STATUS_DISPLAY: lbl = "Visualizzazione"
-        elif self.status in (STATUS_GETKEY, STATUS_EDITING):
-            if self.dbdoc.id is None: lbl = "Inserimento"
-            else:                     lbl = "Modifica"
-        if 'statusdes' in self.controls:
-            self.controls["statusdes"].SetLabel(lbl)
-        self.UpdateDocIdControls()
-        self.UpdatePanelDocId()
-        self.UpdatePanelHead()
-        self.UpdatePanelBody()
-        self.UpdatePanelFoot()
+        try:
+            if   self.status == STATUS_SELCAUS: lbl = "Seleziona causale"
+            elif self.status == STATUS_DISPLAY: lbl = "Visualizzazione"
+            elif self.status in (STATUS_GETKEY, STATUS_EDITING):
+                if self.dbdoc.id is None: lbl = "Inserimento"
+                else:                     lbl = "Modifica"
+            if 'statusdes' in self.controls:
+                self.controls["statusdes"].SetLabel(lbl)
+            self.UpdateDocIdControls()
+            self.UpdatePanelDocId()
+            self.UpdatePanelHead()
+            self.UpdatePanelBody()
+            self.UpdatePanelFoot()
+        except:
+            pass
 
     def DocSearchClass( self ):
         return DocSearch
