@@ -274,6 +274,7 @@ class GenericPersonalLinkedPage_InternalGrid(dbglib.DbGridColoriAlternati):
             if len(order)>0:
                 cmd = '%s ORDER BY %s' % (cmd, order)
             try:
+                rsdata = ()                
                 self.db_curs.execute(cmd, self.mainPanel.db_recid)
                 rsdata = self.db_curs.fetchall()
                 void = False
