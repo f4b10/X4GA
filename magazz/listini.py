@@ -369,8 +369,13 @@ class ListiniGrid(dbglib.DbGridColoriAlternati):
         self.COL_CODICE =  C(( 80, None,       (cn(pro, "codice"),   "Codice",        _STR, True )))
         self.proidcol = cn(pro, "id")
         
-        self.descrizcol = cn(pro, "descriz")
-        self.COL_DESCRIZ = C((240, None,       (self.descrizcol,     "Prodotto",      _STR, True )))
+        self.SetDescriz2View(pro, cols)
+        
+        
+        #=======================================================================
+        # self.descrizcol = cn(pro, "descriz")
+        # self.COL_DESCRIZ = C((240, None,       (self.descrizcol,     "Prodotto",      _STR, True )))
+        #=======================================================================
         
         if bt.MAGFORLIS:
             self.codforcol = cn(pro, "codfor")
@@ -618,6 +623,26 @@ class ListiniGrid(dbglib.DbGridColoriAlternati):
         
         self.lastrow = -1
         self.Bind(gl.EVT_GRID_SELECT_CELL, self.OnSelectCell)
+    
+    def SetDescriz2View(self, pro, cols):
+        def c(col, ed=False):
+            n = len(cols)
+            cols.append(col)
+            if col[1] is not None:
+                self.colnames.append(col[1])
+            if ed:
+                self.edcols.append(n)
+            return n
+        
+        def C(col):
+            return c(col, ed=True)
+        cn = lambda db, col: db._GetFieldIndex(col, inline=True)
+        _STR = gl.GRID_VALUE_STRING
+        
+        
+        self.descrizcol = cn(pro, "descriz")
+        self.COL_DESCRIZ = C((240, None,       (self.descrizcol,     "Prodotto",      _STR, True )))
+    
     
     def OnSelectCell(self, event):
         if event.GetRow() != self.lastrow:
