@@ -1201,24 +1201,24 @@ class ContabPanel(aw.Panel,\
         rsb = []
         try:
             cmd = """
-   SELECT row.numriga,
-          row.tipriga,
-          row.id_pdcpa,
+   SELECT rowX4.numriga,
+          rowX4.tipriga,
+          rowX4.id_pdcpa,
           pdc.codice,
           pdc.descriz,
-          if(row.segno="D", row.importo, NULL),
-          if(row.segno="A", row.importo, NULL),
-          row.id_aliqiva,
+          if(rowX4.segno="D", rowX4.importo, NULL),
+          if(rowX4.segno="A", rowX4.importo, NULL),
+          rowX4.id_aliqiva,
           iva.codice,
           iva.descriz,
-          row.solocont,
-          row.note,
-          row.ivaman,
-          row.davscorp
-     FROM %s AS row
-     JOIN %s AS pdc ON row.id_pdcpa=pdc.id
-LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
- WHERE row.id_reg=%%s""" % (bt.TABNAME_CONTAB_B,
+          rowX4.solocont,
+          rowX4.note,
+          rowX4.ivaman,
+          rowX4.davscorp
+     FROM %s AS rowX4
+     JOIN %s AS pdc ON rowX4.id_pdcpa=pdc.id
+LEFT JOIN %s AS iva ON rowX4.id_aliqiva=iva.id
+ WHERE rowX4.id_reg=%%s""" % (bt.TABNAME_CONTAB_B,
                             bt.TABNAME_PDC,
                             bt.TABNAME_ALIQIVA)
             self.db_curs.execute(cmd, idreg)
@@ -1706,14 +1706,15 @@ class RegSearchPanel(aw.Panel):
             try:
                 cmd = \
 """SELECT reg.id, reg.datreg, pdc.descriz, reg.numdoc, reg.datdoc, """\
-"""IF(row.segno="D", row.importo, 0), IF(row.segno="A", row.importo, 0) """\
+"""IF(rowX4.segno="D", rowX4.importo, 0), IF(rowX4.segno="A", rowX4.importo, 0) """\
 """FROM ((%s AS reg INNER JOIN %s AS cau ON reg.id_caus=cau.id) """\
-"""JOIN contab_b AS row ON row.id_reg=reg.id) """\
-"""JOIN pdc AS pdc ON row.id_pdcpa=pdc.id """\
-"""WHERE row.numriga=1 and %s """\
+"""JOIN contab_b AS rowX4 ON rowX4.id_reg=reg.id) """\
+"""JOIN pdc AS pdc ON rowX4.id_pdcpa=pdc.id """\
+"""WHERE rowX4.numriga=1 and %s """\
 """ORDER BY reg.datreg, year(reg.datdoc), reg.numdoc;"""\
  % (bt.TABNAME_CONTAB_H, bt.TABNAME_CFGCONTAB, filter)
                 db_curs = getattr(Env.adb.db.__database__, '_dbCon').cursor()
+                
                 db_curs.execute(cmd, par)
                 rs = db_curs.fetchall()
                 db_curs.close()
