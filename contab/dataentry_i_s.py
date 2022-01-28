@@ -821,38 +821,38 @@ class ContabPanelTipo_I_S(ContabPanelTipo_I_O):
         try:
             #recordset righe contabili
             cmd = """
-   SELECT row.numriga, 
-          row.tipriga, 
-          row.id_pdcpa, 
+   SELECT rowX4.numriga, 
+          rowX4.tipriga, 
+          rowX4.id_pdcpa, 
           pdc.codice, 
           pdc.descriz, 
-          if(row.segno="D", if(row.tipriga="O",NULL,row.importo), NULL),
-          if(row.segno="A", if(row.tipriga="O",NULL,row.importo), NULL), 
-          row.id_aliqiva,
+          if(rowX4.segno="D", if(rowX4.tipriga="O",NULL,rowX4.importo), NULL),
+          if(rowX4.segno="A", if(rowX4.tipriga="O",NULL,rowX4.importo), NULL), 
+          rowX4.id_aliqiva,
           iva.codice,
           iva.descriz,
           NULL,
-          row.note, 
-          row.ivaman, 
-          row.solocont,
-          if(row.tipriga IN ("I","O"), row.imponib, 0),
-          if(row.tipriga IN ("I","O"), row.imposta, 0),
-          if(row.tipriga IN ("I","O"), row.indeduc, 0),
-          if(row.tipriga IN ("I","O"), row.imposta+IF(row.tipriga="I",row.imponib,0), 0),
-          row.id_pdciva,
+          rowX4.note, 
+          rowX4.ivaman, 
+          rowX4.solocont,
+          if(rowX4.tipriga IN ("I","O"), rowX4.imponib, 0),
+          if(rowX4.tipriga IN ("I","O"), rowX4.imposta, 0),
+          if(rowX4.tipriga IN ("I","O"), rowX4.indeduc, 0),
+          if(rowX4.tipriga IN ("I","O"), rowX4.imposta+IF(rowX4.tipriga="I",rowX4.imponib,0), 0),
+          rowX4.id_pdciva,
           pdi.codice,
           pdi.descriz,
-          row.id_pdcind,
+          rowX4.id_pdcind,
           pdn.codice,
           pdn.descriz,
-          IF(row.tipriga='O',1,0)
+          IF(rowX4.tipriga='O',1,0)
           
-     FROM %s AS row
-     JOIN %s AS pdc ON row.id_pdcpa=pdc.id
-LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
-LEFT JOIN %s AS pdi ON row.id_pdciva=pdi.id
-LEFT JOIN %s AS pdn ON row.id_pdcind=pdn.id
-    WHERE row.id_reg=%%s and row.tipriga IN ('S','C','I','O','A')""" % (bt.TABNAME_CONTAB_B,
+     FROM %s AS rowX4
+     JOIN %s AS pdc ON rowX4.id_pdcpa=pdc.id
+LEFT JOIN %s AS iva ON rowX4.id_aliqiva=iva.id
+LEFT JOIN %s AS pdi ON rowX4.id_pdciva=pdi.id
+LEFT JOIN %s AS pdn ON rowX4.id_pdcind=pdn.id
+    WHERE rowX4.id_reg=%%s and rowX4.tipriga IN ('S','C','I','O','A')""" % (bt.TABNAME_CONTAB_B,
                                                                         bt.TABNAME_PDC,
                                                                         bt.TABNAME_ALIQIVA,
                                                                         bt.TABNAME_PDC,
