@@ -1996,12 +1996,12 @@ class Reg_I_SearchPanel(ctb.RegSearchPanel):
                 cmd = \
 """   SELECT reg.id, reg.datreg, riv.codice, reg.numiva, """\
 """          pdc.descriz, reg.numdoc, reg.datdoc, """\
-"""IF(row.segno="D", row.importo, 0), IF(row.segno="A", row.importo, 0), reg.datcompete """\
+"""IF(rowX4.segno="D", rowX4.importo, 0), IF(rowX4.segno="A", rowX4.importo, 0), reg.datcompete """\
 """     FROM ((%s AS reg JOIN %s AS cau ON reg.id_caus=cau.id) """\
-"""LEFT JOIN contab_b AS row ON row.id_reg=reg.id) """\
-"""LEFT JOIN pdc AS pdc ON row.id_pdcpa=pdc.id """\
+"""LEFT JOIN contab_b AS rowX4 ON rowX4.id_reg=reg.id) """\
+"""LEFT JOIN pdc AS pdc ON rowX4.id_pdcpa=pdc.id """\
 """     JOIN regiva AS riv ON reg.id_regiva=riv.id """\
-"""    WHERE (row.numriga=1 OR row.numriga IS NULL) and %s """\
+"""    WHERE (rowX4.numriga=1 OR rowX4.numriga IS NULL) and %s """\
 """ ORDER BY reg.datreg, reg.numiva"""\
  % (bt.TABNAME_CONTAB_H, bt.TABNAME_CFGCONTAB, filter)
                 db_curs = Env.adb.db.__database__._dbCon.cursor()
