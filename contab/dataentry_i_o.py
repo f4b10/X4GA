@@ -333,25 +333,25 @@ class ContabPanelTipo_I_O(ctbi.ContabPanelTipo_I):
             #recordset righe contabili
             #TODO: Aggiunto ordinamento per numriga     --------------- WARNING
             cmd = """
-   SELECT row.numriga,
-          row.tipriga,
-          row.id_pdcpa,
+   SELECT rowX4.numriga,
+          rowX4.tipriga,
+          rowX4.id_pdcpa,
           pdc.codice,
           pdc.descriz,
-          if(row.segno="D", row.importo, NULL),
-          if(row.segno="A", row.importo, NULL),
-          row.id_aliqiva,
+          if(rowX4.segno="D", rowX4.importo, NULL),
+          if(rowX4.segno="A", rowX4.importo, NULL),
+          rowX4.id_aliqiva,
           iva.codice,
           iva.descriz,
-          row.davscorp,
-          row.note,
-          row.ivaman,
-          row.solocont
-     FROM %s AS row
-     JOIN %s AS pdc ON row.id_pdcpa=pdc.id
-LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
-    WHERE row.id_reg=%%s and row.tipriga IN ('S','C','A')
-    ORDER BY row.numriga""" %  (bt.TABNAME_CONTAB_B,
+          rowX4.davscorp,
+          rowX4.note,
+          rowX4.ivaman,
+          rowX4.solocont
+     FROM %s AS rowX4
+     JOIN %s AS pdc ON rowX4.id_pdcpa=pdc.id
+LEFT JOIN %s AS iva ON rowX4.id_aliqiva=iva.id
+    WHERE rowX4.id_reg=%%s and rowX4.tipriga IN ('S','C','A')
+    ORDER BY rowX4.numriga""" %  (bt.TABNAME_CONTAB_B,
                                 bt.TABNAME_PDC,
                                 bt.TABNAME_ALIQIVA,)
             self.db_curs.execute(cmd, idreg)
@@ -359,16 +359,16 @@ LEFT JOIN %s AS iva ON row.id_aliqiva=iva.id
 
             #recordset righe iva
             cmd =\
-"""SELECT row.id_aliqiva, iva.codice, iva.descriz, """\
-"""row.imponib, row.imposta, row.importo, row.indeduc, """\
-"""row.ivaman, row.id_pdciva, pcv.codice, pcv.descriz, """\
-"""row.id_pdcind, pcn.codice, pcn.descriz, row.note, """\
-"""IF(row.tipriga='I',0,1) """\
-"""FROM %s AS row """\
-"""JOIN %s AS iva ON row.id_aliqiva=iva.id """\
-"""LEFT JOIN %s AS pcv ON row.id_pdciva=pcv.id """\
-"""LEFT JOIN %s AS pcn ON row.id_pdcind=pcn.id """\
-"""WHERE row.id_reg=%%s and row.tipriga IN ('I', 'O')""" % ( bt.TABNAME_CONTAB_B,\
+"""SELECT rowX4.id_aliqiva, iva.codice, iva.descriz, """\
+"""rowX4.imponib, rowX4.imposta, rowX4.importo, rowX4.indeduc, """\
+"""rowX4.ivaman, rowX4.id_pdciva, pcv.codice, pcv.descriz, """\
+"""rowX4.id_pdcind, pcn.codice, pcn.descriz, rowX4.note, """\
+"""IF(rowX4.tipriga='I',0,1) """\
+"""FROM %s AS rowX4 """\
+"""JOIN %s AS iva ON rowX4.id_aliqiva=iva.id """\
+"""LEFT JOIN %s AS pcv ON rowX4.id_pdciva=pcv.id """\
+"""LEFT JOIN %s AS pcn ON rowX4.id_pdcind=pcn.id """\
+"""WHERE rowX4.id_reg=%%s and rowX4.tipriga IN ('I', 'O')""" % ( bt.TABNAME_CONTAB_B,\
                                                              bt.TABNAME_ALIQIVA,\
                                                              bt.TABNAME_PDC,\
                                                              bt.TABNAME_PDC )
