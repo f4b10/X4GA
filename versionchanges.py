@@ -29,6 +29,17 @@ import mx.DateTime as dt
 import mx.Odt
 
 history = (
+    ('1.6.07', dt.Date(2022, 02, 02), (
+        ("BET1673",
+         """Aggiunta la gestione multiselect alla Linktable."""
+        ),
+        ("BET1672",
+         """Gestita la possibilità di multiselect sulla selezione documento in interrogazione documenti di magazzino."""
+        ),
+        ("BET1671",
+         """Aggiunto la possibilità di dettagliare il fatturato agenti per cliente."""
+        ),
+        ),),
     ('1.6.06', dt.Date(2022, 01, 14), (
         ("BET1606",
          """Aggiunto flag di abilitazione o meno a ricercare aggiornamenti."""
