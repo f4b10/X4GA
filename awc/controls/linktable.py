@@ -21,6 +21,7 @@
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
 
+import sys
 import string
 import wx
 import wx.lib.newevent
@@ -48,6 +49,7 @@ import stormdb as adb
 
 import awc.wxinit as wxinit
 
+import wx.grid as gridlib
 
 evt_LINKTABCHANGED = wx.NewEventType()
 EVT_LINKTABCHANGED = wx.PyEventBinder(evt_LINKTABCHANGED, 1)
@@ -71,6 +73,10 @@ COLORS_GRID = awc.controls.SEARCH_COLORS1
 COLORS_LABEL = 'black darkseagreen3'.split()
 
 GRID_HEIGHT = 200
+
+_SEPARATOR_MULTISELECT = ','
+_DEBUG = True and not hasattr(sys, 'frozen')
+
 
 
 _MAX_SQL_COUNT = None
@@ -229,11 +235,12 @@ class LinkTable(wx.Control,\
     _codewidth = wxinit.GetCodiceStandardWidth()#40
     _descwidth = None
 
-    def __init__(self, parent, id, pos=wx.DefaultPosition, size=wx.DefaultSize, style=wx.NO_BORDER, fontSize=8, **lt_kwargs):
+    def __init__(self, parent, id, pos=wx.DefaultPosition, size=wx.DefaultSize, style=wx.NO_BORDER, fontSize=8, multiSelect=False,  **lt_kwargs):
 
         wx.Control.__init__(self, parent, id, pos, size, style)
         cmix.ControlsMixin.__init__(self)
 
+        self.multiSelect = multiSelect
         self.fontSize = fontSize
         self.obligatory = False
         self.currentid = None
@@ -314,6 +321,14 @@ class LinkTable(wx.Control,\
         self._ctrcod = self.FindWindowById( ID_TXT_CODICE )
         self._ctrdes = self.FindWindowById( ID_TXT_DESCRIZ )
         self._btncrd = self.FindWindowById( ID_BTN_NEW )
+        
+        if self.multiSelect:
+            self._ctrcod.lowercaseok=True
+            self._ctrdes.lowercaseok=True
+        
+        
+        
+        
         w, h = self._ctrcod.GetSize()
         self._btncrd.SetSize((h, h))
         self._btnflt = self.FindWindowById( ID_BTN_FLT )
@@ -404,9 +419,7 @@ class LinkTable(wx.Control,\
     def SetFontSize(self, size):
         self.fontSize=size
         w,h = self.GetSize()
-        #print self.GetSize()
         self.SetSize((w, h/8.0*size))
-        #print self.GetSize()
         for id in (ID_TXT_CODICE, ID_TXT_DESCRIZ):
             c = self.FindWindowById(id)
             f=c.GetFont()
@@ -797,7 +810,9 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
                         obj=self._ctrdes
                         self.retsearch_ondescriz = True
 
-        if event.GetKeyCode() == wx.WXK_DOWN and active:
+        if event.GetKeyCode() == ord(_SEPARATOR_MULTISELECT) and active:
+            event.Skip()
+        elif event.GetKeyCode() == wx.WXK_DOWN and active:
             #FRECCIA GIU' richiama elenco
             self._fromkeydown = True
             self.HelpChoice(obj, exact=False, resetFields=False)
@@ -873,6 +888,14 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
 
             event.Skip()
 
+
+    def _OnCellClicked(self, evt):
+        # multiSelect
+        print evt
+        evt.Skip()
+
+
+
     def OnSizeChanged(self, event):
         self.AdjustFilterLinksTitle()
         if not getattr(self, '_redim', False):
@@ -899,14 +922,17 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
         if count:
             fields = 'COUNT(*)'
         else:
-            fields = '%(alias)s.id, %(alias)s.%(codice)s, %(alias)s.%(descriz)s' % locals()
+            if self.multiSelect:
+                fields = '%(alias)s.id, %(alias)s.%(codice)s, %(alias)s.%(descriz)s, 0 as SELE' % locals()
+            else:
+                fields = '%(alias)s.id, %(alias)s.%(codice)s, %(alias)s.%(descriz)s' % locals()
         return "SELECT %(fields)s FROM %(table)s %(alias)s" % locals()
 
     def GetValueSearchSqlJoins(self):
         return ''
 
     def SetDataGrid(self, grid, rs):
-        grid.SetData(rs, self.GetDataGridColumns())
+        grid.SetData(rs, self.GetDataGridColumns(), canEdit=self.multiSelect)
         self.AdjustColumnsSize(grid)
 
     def AdjustColumnsSize(self, grid):
@@ -914,9 +940,15 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
 
     def GetDataGridColumns(self):
         _STR = gridlib.GRID_VALUE_STRING
-        return (( 1, "Cod.",        _STR, False),
-                ( 2, "Descrizione", _STR, False))
-
+        _CHK = gridlib.GRID_VALUE_BOOL+":1,0"
+        if self.multiSelect:
+            ret = (( 3, "S.",          _CHK, True),
+                   ( 1, "Cod.",        _STR, True),
+                   ( 2, "Descrizione", _STR, True))
+        else:
+            ret = (( 1, "Cod.",        _STR, False),
+                   ( 2, "Descrizione", _STR, False))
+        return ret
     def SetData(self, rs):
         self._rs = rs
 
@@ -964,7 +996,8 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
             if showgrid:
                 w = True
             else:
-                cmd += " LIMIT 2"
+                if not self.multiSelect:
+                    cmd += " LIMIT 2"
                 w = False
             self.SetData(None)
             db = adb.db.__database__
@@ -975,6 +1008,10 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
                 except:
                     pass
             try:
+                if _DEBUG:
+                    print 'cmd: %s' % cmd
+                    print 'par: %s' % par
+                    print '-'*60
                 if db.Retrieve(cmd, par):
                     rs = db.rs
                     if len(rs) == 0:
@@ -984,11 +1021,32 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
                         else:
                             obj2 = self._ctrcod
                         obj2.SetValue('')
-                    elif not forceAll and (len(rs) == 1 or (self.codexclusive and obj == self._ctrcod and rs[0][1] == obj.GetValue())):
+                    elif not self.multiSelect and not forceAll and (len(rs) == 1 or (self.codexclusive and obj == self._ctrcod and rs[0][1] == obj.GetValue())):
                         self.SetValue(rs[0][0], obj.GetValue())
+                        out = True
+                    elif self.multiSelect and not forceAll and (len(rs) > 0 or (self.codexclusive and obj == self._ctrcod and rs[0][1] == obj.GetValue())):
+                        if _DEBUG:
+                            print 'Gestione multiSelect'
+                        lId  =[]
+                        des =''
+                        for i, r in enumerate(rs):
+                            des ='%s%s%s' % (des, r[2], _SEPARATOR_MULTISELECT)
+                            lId.append(r[0])
+                        if des[-1:]==_SEPARATOR_MULTISELECT:
+                            des = des[:-1]
+                        #self.SetValue(lId, des)
+                        self._ctrdes.SetValue(des)
+                        self.currentid=lId
                         out = True
                     else:
                         if showgrid:
+                            if self.multiSelect:
+                                codici = self._ctrcod.GetValue().split(_SEPARATOR_MULTISELECT)
+                                for r in rs:
+                                    if r[1] in codici:
+                                        r[len(r)-1]=1
+                            
+                            
                             if not resetFields:
                                 self.reset_fields_on_focus_lose = False
                             out = self.ShowGrid(rs)
@@ -1103,16 +1161,32 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
         if fltv and not forceAll:
             #filtro da valore digitato in codice o descrizione
             if fltv:
-                fltv = fltv.replace('..', r'%')
-                if self.space_search:
-                    fltv = fltv.replace(' ', r'%')
-                if expand and not fltv.endswith('%'):
-                    fltv += '%'
-                f = "%s LIKE %%s" % fltf
-                if not '.' in fltf:
+                if _SEPARATOR_MULTISELECT in fltv:
+                    fltv = fltv.replace(_SEPARATOR_MULTISELECT*2,_SEPARATOR_MULTISELECT)
+                    f = "%s IN (%%s)" % fltf
                     f = "%s.%s" % (self.db_alias, f)
-                cmd = AndApp(cmd, f)
-                par.append(fltv)
+                    #cfgmagdoc.codice LIKE %s
+                    if fltv[-1:]==_SEPARATOR_MULTISELECT:
+                        fltv = fltv[:-1]
+                    lfltv=fltv.split(_SEPARATOR_MULTISELECT)
+                    fltv=''
+                    for c in map(str, lfltv):
+                        fltv = '%s"%s"%s' % (fltv, c, _SEPARATOR_MULTISELECT)
+                    if fltv[-1:]==_SEPARATOR_MULTISELECT:
+                        fltv = fltv[:-1]
+                    f = f % fltv
+                    cmd = AndApp(cmd, f)
+                else:
+                    fltv = fltv.replace('..', r'%')
+                    if self.space_search:
+                        fltv = fltv.replace(' ', r'%')
+                    if expand and not fltv.endswith('%'):
+                        fltv += '%'
+                    f = "%s LIKE %%s" % fltf
+                    if not '.' in fltf:
+                        f = "%s.%s" % (self.db_alias, f)
+                    cmd = AndApp(cmd, f)
+                    par.append(fltv)
         return cmd, par
 
     def SetMinWidth(self, mw):
@@ -1142,7 +1216,11 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
         if hasattr(self, 'GetGridColumnSizes'):
             colsizes = self.GetGridColumnSizes()
         else:
-            colsizes = (codw+5, desw)
+            if self.multiSelect:
+                colsizes = (30, codw+5, desw-40)
+            else:
+                colsizes = (codw+5, desw)
+                
         if hasattr(self, 'GetGridColumn2Fit'):
             c2f = self.GetGridColumn2Fit()
         else:
@@ -1153,11 +1231,16 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
                               fixsrc=self.fixvaluesearch,
                               resetvs=len(self.valuesearch)>0, owner=self,
                               shownew=btnw.IsShown() and btnw.IsEnabled(),
-                              fontSize=self.fontSize)
+                              fontSize=self.fontSize,
+                              multiSelect=self.multiSelect)
         val = dlg.ShowModal()
         if val >= 0:
             self.SetValue(val)
             out = True
+        elif val==-999:
+            # multiSelect
+            val = dlg.lSelected
+            self.SetValue(val)
         elif val == -2:
             #inserimento nuovo elemento
             self.CallCard(new=True)
@@ -1594,11 +1677,12 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
         """
         self.HideFilterLinksTitle()
         self.currentid = id
-        if id is not None and type(id) not in (int, long, float):
-            raise Exception,\
-                  "Tipo di informazione non corretto (%s)" % type(id)
-        if id is not None:
-            id = int(id)
+        if not self.multiSelect:
+            if id is not None and type(id) not in (int, long, float):
+                raise Exception,\
+                      "Tipo di informazione non corretto (%s)" % type(id)
+            if id is not None:
+                id = int(id)
         oldhip = self._helpInProgress
         self._helpInProgress = True
         b = self.FindWindowById(ID_BTN_NEW)
@@ -1618,8 +1702,11 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
         else:
             cmd = self.GetSql()
             par = []
-            cmd += r' WHERE %s.id=%%s' % self.db_alias
-            par.append(id)
+            if self.multiSelect and  isinstance(id, list) :
+                cmd += r' WHERE %s.id in (%s)' % (self.db_alias, ','.join(map(str, id)))
+            else:    
+                cmd += r' WHERE %s.id=%%s' % self.db_alias
+                par.append(id)
             if self.filter and self.apply_filter_on_setvalue:
                 cmd += " AND (%s)" % self.filter
             if self.filterdyn:
@@ -1636,7 +1723,13 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
             rs = None
             try:
                 self.db_curs.execute(cmd, par)
-                rs = self.db_curs.fetchone()
+                if _DEBUG:
+                    print 'cmd: %s' % cmd
+                    print 'par: %s' % par
+                if self.multiSelect:
+                    rs = self.db_curs.fetchall()
+                else:
+                    rs = self.db_curs.fetchone()
             except MySQLdb.Error, e:
                 self.SetErrorValues(e)
                 self.iderror = True
@@ -1661,7 +1754,20 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
                     bmp = images.getCardFull16Bitmap()#bmpfull
                     tip = "Visualizza la scheda anagrafica (F11)"
                     enab = self.canedit or self.cansee
-                    valcd = (rs[1] or "", rs[2] or "")
+                    if self.multiSelect:
+                        if len(rs)==1:
+                            valcd = (rs[0][1] or "", rs[0][2] or "")
+                        else:
+                            lCode=[]
+                            lDes=[]
+                            for r in rs:
+                                lCode.append(r[1])
+                                lDes.append(r[2])             
+                            wCode = _SEPARATOR_MULTISELECT.join(map(str, lCode))
+                            wDes  = _SEPARATOR_MULTISELECT.join(map(str, lDes ))
+                            valcd = (wCode, wDes)
+                    else:
+                        valcd = (rs[1] or "", rs[2] or "")
                 self._stopevents = stopevents
                 self._ctrcod.SetValue(valcd[0])
                 self._ctrdes.SetValue(valcd[1])
@@ -1744,8 +1850,8 @@ class LinkTableDialog(wx.Dialog):
     def __init__(self, parent, id, title="", pos = wx.DefaultPosition,
                  size=wx.DefaultSize, style=wx.THICK_FRAME, linktab=None,
                  rs=None, colsizes=(-1, -1), valsrc=False, fixsrc=False,
-                 resetvs=False, owner=None, column2fit=1, shownew=False, fontSize=None):
-
+                 resetvs=False, owner=None, column2fit=1, shownew=False, fontSize=None, multiSelect=False):
+        self.multiSelect=multiSelect
         wx.Dialog.__init__(self, parent, id, title, pos, size, style)
 
         pos = list(pos)
@@ -1792,6 +1898,13 @@ class LinkTableDialog(wx.Dialog):
             pass
         #=======================================================================
         self.grid.SetFitColumn(column2fit)
+        if self.multiSelect:
+            self.grid.canEdit=True
+            self.is_editable=True
+            
+        
+        
+        
 #        self.grid.AutoSizeColumns()
         sz.Add(self.grid, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL)
         szb = wx.FlexGridSizer(1, 0, 0,0)
@@ -1829,7 +1942,12 @@ class LinkTableDialog(wx.Dialog):
         bselec.SetDefault()
         wx.CallAfter(lambda *x: self.grid.SetFocus())
         self.Show()
-
+        
+        if self.multiSelect:
+            self.grid.Bind( gridlib.EVT_GRID_CELL_LEFT_CLICK, self._OnCellClicked)
+            
+        
+        
         self.grid.Bind( gridlib.EVT_GRID_CELL_LEFT_DCLICK,\
                         self.OnCellSelected )
         for b, func in ((bclose, self.OnQuit),
@@ -1876,16 +1994,46 @@ class LinkTableDialog(wx.Dialog):
         self.EndModal(-1)
 
     def OnSel(self, event):
-        row = self.grid.GetGridCursorRow()
-        self.EndModal(self.rs[row][0])
+        if self.multiSelect:
+            self.lSelected = []
+            idxSele = len(self.rs[0])-1
+            for r in self.rs:
+                if r[idxSele]==1:
+                    self.lSelected.append(r[0])
+            self.EndModal(-999)
+        else:    
+            row = self.grid.GetGridCursorRow()
+            self.EndModal(self.rs[row][0])
 
     def OnHelpSelected(self, event):
         self.EndModal( event.GetSelection() )
 
     def OnCellSelected( self, event ):
-        row = event.GetRow()
-        self.EndModal(self.rs[row][0])
+        if not self.multiSelect:
+            row = event.GetRow()
+            self.EndModal(self.rs[row][0])
 
+    def _OnCellClicked(self, event):
+        if self.is_editable and self.multiSelect:
+            row, col = event.GetRow(), event.GetCol()
+            self._SwapCheckValue(row, col)
+        event_Skip = event.Skip
+        event.Skip = lambda: None
+        #self.OnCellClicked(event)
+        event_Skip()
+
+    def _SwapCheckValue(self, row, col):
+        idxSele = len(self.rs[0])-1
+        oldValue = self.rs[row][idxSele]
+        if oldValue==0:
+            newValue=1
+            checked = True
+        else:
+            newValue=0
+            checked = False
+        self.rs[row][idxSele] = newValue
+        wx.CallAfter(lambda: self.grid.ResetView())
+        return checked
 
 # ------------------------------------------------------------------------------
 
