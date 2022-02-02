@@ -46,10 +46,11 @@ FRAME_TITLE_FATT = "Fatturato Agenti"
 
 class FatturatoAgentiGrid(fatpdc._FatturatoVenditeGrid):
     
-    def GetColDef(self):
+    def GetColDef(self, dettaglio=False):
         
         def cn(db, col):
             return db._GetFieldIndex(col, inline=True)
+        self.dettaglio = dettaglio
         self.idGrid='fatturato_agenti'
         _STR = gl.GRID_VALUE_STRING
         _VAL = bt.GetValIntMaskInfo()
@@ -57,17 +58,33 @@ class FatturatoAgentiGrid(fatpdc._FatturatoVenditeGrid):
         mov = self.dbfat
         age = mov.doc.agente
         
-        return (\
-            ( 60, (cn(age, 'codice'),           "Cod.",      _STR, False)),
-            (220, (cn(age, 'descriz'),          "Agente",    _STR, False)),
-            (110, (cn(mov, 'total_statvalfat'), "Fatturato", _VAL, False)),
-            (  1, (cn(age, 'id'),               "#age",      _STR, False)),
-        )
+        if dettaglio:
+            pdc =mov.doc.pdc
+            ret = (\
+                    ( 60, (cn(age, 'codice'),           "Cod.",      _STR, False)),
+                    (150, (cn(age, 'descriz'),          "Agente",    _STR, False)),
+                    (380, (cn(pdc, 'descriz'),          "Cliente",   _STR, False)),
+                    (110, (cn(mov, 'total_statvalfat'), "Fatturato", _VAL, False)),
+                    (  1, (cn(age, 'id')+1,             "#age",      _STR, False)),
+                  ) 
+            
+        else:
+            ret = (\
+                    ( 60, (cn(age, 'codice'),           "Cod.",      _STR, False)),
+                    (220, (cn(age, 'descriz'),          "Agente",    _STR, False)),
+                    (110, (cn(mov, 'total_statvalfat'), "Fatturato", _VAL, False)),
+                    (  1, (cn(age, 'id'),               "#age",      _STR, False)),
+                  ) 
+        return ret
     
     def SetTotali(self):
         def cn(col):
             return self.dbfat._GetFieldIndex(col)
-        self.AddTotalsRow(1, 'Totali', (cn('total_statvalfat'),))
+        if self.dettaglio:
+            self.AddTotalsRow(1, 'Totali', (cn('total_statvalfat')+1,))
+        else:
+            self.AddTotalsRow(1, 'Totali', (cn('total_statvalfat'),))
+            
 
 
 # ------------------------------------------------------------------------------
@@ -82,7 +99,8 @@ class FatturatoAgentiPanel(fatpdc.FatturatoClientiPanel):
         f = self.dbfat
         f.ClearOrders()
         if tipord == 0: # per categoria
-            f.AddOrder('agente.codice')
+            f.AddOrder('agente.descriz')
+            f.AddOrder('pdc.descriz')
         elif tipord == 1: #per fatturato, da 0
             f.AddOrder('(total_statvalfat)', adb.ORDER_ASCENDING)
         elif tipord == 2: #per fatturato, dal massimo
@@ -93,9 +111,31 @@ class FatturatoAgentiPanel(fatpdc.FatturatoClientiPanel):
         self.dbfat.ShowDialog(self)
     
     def InitGrid(self):
+        self.IsDettaglio.Show()
+        self.IsDettaglio.Bind(wx.EVT_CHECKBOX, self.OnSelectView)
+        
+        
+        
         self.gridfat = FatturatoAgentiGrid(self.FindWindowByName('pangridfat'), 
                                            self.dbfat)
 
+    def OnSelectView(self, evt):
+        if self.IsDettaglio.GetValue():
+            #self.dbfat.Destroy()
+            self.dbfat = dbs.FatturatoAgentiDettagliato()
+            self.dbfat.Reset()
+            self.rptname = "Fatturato Agenti Dettagliato"            
+        else:
+            #self.dbfat.Destroy()
+            self.dbfat = dbs.FatturatoAgenti()
+            self.dbfat.Reset()
+            self.rptname = "Fatturato Agenti"
+            
+        self.gridfat.Destroy()
+        self.gridfat = FatturatoAgentiGrid(self.FindWindowByName('pangridfat'), 
+                                           self.dbfat,
+                                           dettaglio=self.IsDettaglio.GetValue())
+        evt.Skip()
 
 # ------------------------------------------------------------------------------
 

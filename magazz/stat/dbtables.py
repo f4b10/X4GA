@@ -264,6 +264,11 @@ class FatturatoAgenti(_FatturatoVendite):
     def AddGroups(self):
         self.AddGroupOn('agente.id')
 
+class FatturatoAgentiDettagliato(_FatturatoVendite):
+
+    def AddGroups(self):
+        self.AddGroupOn('agente.id')
+        self.AddGroupOn('doc.id_pdc')
 
 # ------------------------------------------------------------------------------
 

@@ -89,10 +89,11 @@ ID_STATART2 = 14025
 ID_TEXTCTRL = 14026
 ID_FATMIN = 14027
 ID_FATMAX = 14028
-ID_UPDATE = 14029
-ID_PRINT = 14030
-ID_LABGRIDFAT = 14031
-ID_PANGRIDFAT = 14032
+ID_CHECKBOX = 14029
+ID_UPDATE = 14030
+ID_PRINT = 14031
+ID_LABGRIDFAT = 14032
+ID_PANGRIDFAT = 14033
 
 def FatturatoPdcFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -306,16 +307,20 @@ def FatturatoPdcFunc( parent, call_fit = True, set_sizer = True ):
     item62 = wx.StaticBox( parent, -1, "Azioni" )
     item61 = wx.StaticBoxSizer( item62, wx.VERTICAL )
     
-    item63 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    item63 = wx.FlexGridSizer( 0, 3, 0, 0 )
     
-    item64 = wx.Button( parent, ID_UPDATE, "Applica", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item64.SetDefault()
-    item64.SetName( "btnok" )
-    item63.Add( item64, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item64 = CheckBox( parent, ID_CHECKBOX, "con Dettaglio", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item64.SetName( "IsDettaglio" )
+    item63.Add( item64, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
-    item65 = wx.Button( parent, ID_PRINT, "&Lista", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item65.SetName( "btnprint" )
-    item63.Add( item65, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item65 = wx.Button( parent, ID_UPDATE, "Applica", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item65.SetDefault()
+    item65.SetName( "btnok" )
+    item63.Add( item65, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+
+    item66 = wx.Button( parent, ID_PRINT, "&Lista", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item66.SetName( "btnprint" )
+    item63.Add( item66, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item61.Add( item63, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 
@@ -329,27 +334,27 @@ def FatturatoPdcFunc( parent, call_fit = True, set_sizer = True ):
 
     item0.Add( item18, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item66 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    item67 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
-    item67 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    item68 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
-    item68 = wx.StaticText( parent, ID_LABGRIDFAT, "Elenco fatturato", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item68.SetForegroundColour( wx.BLUE )
-    item67.Add( item68, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+    item69 = wx.StaticText( parent, ID_LABGRIDFAT, "Elenco fatturato", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item69.SetForegroundColour( wx.BLUE )
+    item68.Add( item69, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+
+    item68.AddGrowableCol( 0 )
+
+    item67.Add( item68, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item70 = wx.Panel( parent, ID_PANGRIDFAT, wx.DefaultPosition, [800,300], wx.SUNKEN_BORDER )
+    item70.SetName( "pangridfat" )
+    item67.Add( item70, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item67.AddGrowableCol( 0 )
 
-    item66.Add( item67, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item67.AddGrowableRow( 1 )
 
-    item69 = wx.Panel( parent, ID_PANGRIDFAT, wx.DefaultPosition, [800,300], wx.SUNKEN_BORDER )
-    item69.SetName( "pangridfat" )
-    item66.Add( item69, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item66.AddGrowableCol( 0 )
-
-    item66.AddGrowableRow( 1 )
-
-    item0.Add( item66, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item0.Add( item67, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item0.AddGrowableCol( 0 )
 

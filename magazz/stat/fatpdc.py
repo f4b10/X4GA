@@ -52,11 +52,15 @@ FRAME_TITLE_FATTFORCC = "Fatturato fornitori/categoria prodotto"
 
 class _FatturatoVenditeGrid(dbglib.DbGridColoriAlternati):
     
-    def __init__(self, parent, dbfat):
+    def __init__(self, parent, dbfat, dettaglio=False):
         
         self.dbfat = dbfat
         self.idGrid = None
-        coldef = self.GetColDef()
+        if dettaglio:
+            coldef = self.GetColDef(dettaglio=dettaglio)
+        else:
+            coldef = self.GetColDef()
+            
         sizes =  [c[0] for c in coldef]
         colmap = [c[1] for c in coldef]
         
@@ -87,7 +91,7 @@ class _FatturatoVenditeGrid(dbglib.DbGridColoriAlternati):
     def _SetFitColumn(self):
         self.SetFitColumn(1)
     
-    def GetColDef(self):
+    def GetColDef(self, dettaglio=False):
         raise Exception, 'Classe non istanziabile'
     
     def ResetView(self):
@@ -122,6 +126,10 @@ class _FatturatoVenditePanel(aw.Panel):
         today = Env.Azienda.Login.dataElab
         cn('datreg1').SetValue(Env.DateTime.Date(today.year,1,1))
         cn('datreg2').SetValue(today)
+        
+        self.IsDettaglio = cn('IsDettaglio')
+        self.IsDettaglio.Hide()
+        
         self.InitTableFatt()
         self.InitGrid()
         for name, func in (('btnok', self.OnUpdate),
