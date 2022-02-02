@@ -1109,7 +1109,8 @@ class LinkTableDocMagazz(LinkTable):
         self.dbdoc.AddJoin(Env.Azienda.BaseTab.TABNAME_PDCTIP, 'tipana', idLeft='id_pdctip')
     def SetValue(self, idtpd, *a, **kw):
         LinkTable.SetValue(self, idtpd, *a, **kw)
-        self.dbdoc.Get(idtpd)
+        if not self.multiSelect:
+            self.dbdoc.Get(idtpd)
 
 
 # ------------------------------------------------------------------------------
