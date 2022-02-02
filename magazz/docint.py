@@ -235,6 +235,7 @@ class DocIntGrid(dbglib.DbGridColoriAlternati, _DocIntGridMixin):
         doc.AddOrder('doc.numdoc')
 
         td = cn('id_tipdoc').GetValue()
+        print 'id selezionati: %s' % td
         if td:
             try:
                 df = cn('docfam').IsChecked()
@@ -248,7 +249,8 @@ class DocIntGrid(dbglib.DbGridColoriAlternati, _DocIntGridMixin):
                 doc.AddOrder('doc.datdoc')
                 doc.AddOrder('doc.numdoc')
             else:
-                doc.AddFilter('doc.id_tipdoc=%s', td)
+                print 'doc.id_tipdoc IN (%s)' % ','.join(map(str, td))
+                doc.AddFilter('doc.id_tipdoc IN (%s)' % ','.join(map(str, td)))
 
         for name in ("num", "dat"):
             for tipo in ("doc", "reg", "rif"):
@@ -347,8 +349,9 @@ class DocIntPanel(aw.Panel):
             else:
                 c.Enable()
         tpd = self.dbtpd
-        tpd.Get(cn('id_tipdoc').GetValue())
-        cn('docfam').Enable(bool(tpd.docfam))
+        if not isinstance(cn('id_tipdoc').GetValue(), list):
+            tpd.Get(cn('id_tipdoc').GetValue())
+            cn('docfam').Enable(bool(tpd.docfam))
 
 
     def GetPanelDataSource(self):

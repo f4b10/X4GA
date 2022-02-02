@@ -946,7 +946,7 @@ def DocMagSelFunc( parent, call_fit = True, set_sizer = True ):
 
     item8 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
-    item9 = LinkTableDocMagazz(parent, ID_TPD, "id_tipdoc")
+    item9 = LinkTableDocMagazz(parent, ID_TPD, "id_tipdoc", multiSelect=True)
     item8.Add( item9, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
     item10 = CheckBox( parent, ID_DOCFAM, "Doc.Famiglia", wx.DefaultPosition, wx.DefaultSize, 0 )
