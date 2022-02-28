@@ -656,12 +656,16 @@ class _LinkTablePdcMixin(LinkTable):
             filt = "tipo IN (%s)" \
                  % ','.join(map(lambda x: "'%s'" % x, list(tipanacods)))
         else:
-            filt = '1'
-        if dbtip.Retrieve(filt) and dbtip.RowsCount()>0:
-            self.SetFilterValue(dbtip.id)
-            self.SetFilterFilter(filt)
-            self.tipanacods = tipanacods
-            out = True
+            # CORRETTO PER GESTIONE MULTISELECT
+            #filt = '1'
+            filt = ''
+            
+        if len(filt)>0:
+            if dbtip.Retrieve(filt) and dbtip.RowsCount()>0:
+                self.SetFilterValue(dbtip.id)
+                self.SetFilterFilter(filt)
+                self.tipanacods = tipanacods
+                out = True
         return out
 
     def GetDialogClass(self):

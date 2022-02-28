@@ -80,12 +80,7 @@ class FatturatoAgentiGrid(fatpdc._FatturatoVenditeGrid):
     def SetTotali(self):
         def cn(col):
             return self.dbfat._GetFieldIndex(col)
-        if self.dettaglio:
-            self.AddTotalsRow(1, 'Totali', (cn('total_statvalfat')+1,))
-        else:
             self.AddTotalsRow(1, 'Totali', (cn('total_statvalfat'),))
-            
-
 
 # ------------------------------------------------------------------------------
 

@@ -322,18 +322,21 @@ class XApp(wx.App):
             files.sort()
             for f in files:
                 if f != f2e:
-                    name = f.replace('\\', '/')
-                    n = name.rindex('/')
-                    m = name[n+1:]
-                    n = m.index('-')
-                    m = m[:n]
-                    if m in Env.plugins:
-                        m = Env.plugins[m]
-                        parts = name[:-4].split('-')
-                        dlver = parts[-1]
-                        over = m.version
-                        if dlver > over:
-                            zips.append((name, 'P', m.title, dlver))
+                    try:
+                        name = f.replace('\\', '/')
+                        n = name.rindex('/')
+                        m = name[n+1:]
+                        n = m.index('-')
+                        m = m[:n]
+                        if m in Env.plugins:
+                            m = Env.plugins[m]
+                            parts = name[:-4].split('-')
+                            dlver = parts[-1]
+                            over = m.version
+                            if dlver > over:
+                                zips.append((name, 'P', m.title, dlver))
+                    except:
+                        pass
         
         if zips:
             if request:

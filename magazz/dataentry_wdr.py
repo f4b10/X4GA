@@ -1237,6 +1237,7 @@ def HeadFunc( parent, call_fit = True, set_sizer = True ):
     parent.situaFido = item76
     
     item78 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    parent.SizerScadenzario = item78
     
     item79 = wx.FlexGridSizer( 1, 0, 0, 0 )
     

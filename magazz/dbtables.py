@@ -1970,7 +1970,7 @@ class DocMag(adb.DbTable):
                     tipo = mov.config.tipologia
                     if tipo == "I":
                         totscrip = RoundImp(totscrip+imp)
-                    elif tipo not in "EDP":
+                    elif tipo not in "EDPN":
                         if mov.qta and mov.prezzo:
                             self.totscpra = RoundImp(self.totscpra+mov.qta*mov.prezzo-imp)
                         mi = mov.iva

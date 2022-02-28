@@ -815,7 +815,7 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
         elif event.GetKeyCode() == wx.WXK_DOWN and active:
             #FRECCIA GIU' richiama elenco
             self._fromkeydown = True
-            self.HelpChoice(obj, exact=False, resetFields=False)
+            self.HelpChoice(obj, exact=False, resetFields=False, pressedKey=event.GetKeyCode())
             if hasattr(self, '_fromkeydown'):
                 del self._fromkeydown
 
@@ -835,7 +835,7 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
                     if self.tabsearch_oncode:
                         if self._ctrcod.GetValue():
                             self._fromtab = True
-                            do = self.HelpChoice(obj, exact=False, resetFields=False)
+                            do = self.HelpChoice(obj, exact=False, resetFields=False, pressedKey=event.GetKeyCode())
                             del self._fromtab
                     if do:
                         self._ctrdes.SetFocus()
@@ -843,7 +843,7 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
                     do = True
                     if self.tabsearch_ondescriz:
                         if self._ctrdes.GetValue():
-                            do = self.HelpChoice(obj, exact=False, resetFields=False)
+                            do = self.HelpChoice(obj, exact=False, resetFields=False, pressedKey=event.GetKeyCode())
                     if do:
                         self.Navigate(wx.NavigationKeyEvent.IsForward)
 
@@ -852,12 +852,12 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
                 if self.retsearch_oncode:
                     if self._ctrcod.GetValue():
                         self._fromtab = True
-                        self.HelpChoice(obj, exact=False, resetFields=False)
+                        self.HelpChoice(obj, exact=False, resetFields=False, pressedKey=event.GetKeyCode())
                         del self._fromtab
             elif obj == self._ctrdes:
                 if self.retsearch_ondescriz:
                     if self._ctrdes.GetValue():
-                        self.HelpChoice(obj, exact=False, resetFields=False)
+                        self.HelpChoice(obj, exact=False, resetFields=False, pressedKey=event.GetKeyCode())
             event.Skip()
 
         elif event.GetKeyCode() == wx.WXK_F3 and active:
@@ -869,7 +869,7 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
             obj = event.GetEventObject()
             if obj in (self._ctrcod, self._ctrdes):
                 if self.CallValueSearch():
-                    if not self.HelpChoice(obj):
+                    if not self.HelpChoice(obj, pressedKey=event.GetKeyCode()):
                         self.ShowFilterLinksTitle()
 
         elif event.GetKeyCode() == wx.WXK_F11:
@@ -922,10 +922,13 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
         if count:
             fields = 'COUNT(*)'
         else:
-            if self.multiSelect:
-                fields = '%(alias)s.id, %(alias)s.%(codice)s, %(alias)s.%(descriz)s, 0 as SELE' % locals()
-            else:
-                fields = '%(alias)s.id, %(alias)s.%(codice)s, %(alias)s.%(descriz)s' % locals()
+            #===================================================================
+            # if self.multiSelect:
+            #     fields = '%(alias)s.id, %(alias)s.%(codice)s, %(alias)s.%(descriz)s, 0 as SELE4LINK' % locals()
+            # else:
+            #     fields = '%(alias)s.id, %(alias)s.%(codice)s, %(alias)s.%(descriz)s' % locals()
+            #===================================================================
+            fields = '%(alias)s.id, %(alias)s.%(codice)s, %(alias)s.%(descriz)s' % locals()
         return "SELECT %(fields)s FROM %(table)s %(alias)s" % locals()
 
     def GetValueSearchSqlJoins(self):
@@ -955,7 +958,9 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
     def GetData(self):
         return self._rs
 
-    def HelpChoice(self, obj, showgrid=True, forceAll=False, exact=None, resetFields=True):
+    def HelpChoice(self, obj, showgrid=True, forceAll=False, exact=None, resetFields=True, pressedKey=None):
+        if _DEBUG:
+            print 'pressed key: %s' %  pressedKey
         out = False
         if self._helpInProgress:
             return out
@@ -1008,10 +1013,19 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
                 except:
                     pass
             try:
-                if _DEBUG:
-                    print 'cmd: %s' % cmd
-                    print 'par: %s' % par
-                    print '-'*60
+                if self.multiSelect and not '0 as SELE4LINK' in cmd:
+                    cmd = cmd.replace("FROM", ", 0 as SELE4LINK FROM")
+                    
+                
+                
+                
+                #===============================================================
+                # if _DEBUG:
+                #     print 'cmd: %s' % cmd
+                #     print 'par: %s' % par
+                #     print 'obj: %s' % obj.GetValue()
+                #     print '-'*60
+                #===============================================================
                 if db.Retrieve(cmd, par):
                     rs = db.rs
                     if len(rs) == 0:
@@ -1024,7 +1038,9 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
                     elif not self.multiSelect and not forceAll and (len(rs) == 1 or (self.codexclusive and obj == self._ctrcod and rs[0][1] == obj.GetValue())):
                         self.SetValue(rs[0][0], obj.GetValue())
                         out = True
-                    elif self.multiSelect and not forceAll and (len(rs) > 0 or (self.codexclusive and obj == self._ctrcod and rs[0][1] == obj.GetValue())):
+                    #elif self.multiSelect and not forceAll and (len(rs) > 0 or (self.codexclusive and obj == self._ctrcod and rs[0][1] == obj.GetValue())):
+                    elif self.multiSelect and not pressedKey==317 and ('..' in obj.GetValue() or len(obj.GetValue())>0) and not forceAll and (len(rs) > 0 or (self.codexclusive and obj == self._ctrcod and rs[0][1] == obj.GetValue())):
+                        
                         if _DEBUG:
                             print 'Gestione multiSelect'
                         lId  =[]
@@ -1723,9 +1739,11 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
             rs = None
             try:
                 self.db_curs.execute(cmd, par)
-                if _DEBUG:
-                    print 'cmd: %s' % cmd
-                    print 'par: %s' % par
+                #===============================================================
+                # if _DEBUG:
+                #     print 'cmd: %s' % cmd
+                #     print 'par: %s' % par
+                #===============================================================
                 if self.multiSelect:
                     rs = self.db_curs.fetchall()
                 else:
@@ -1846,6 +1864,7 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
 
 
 class LinkTableDialog(wx.Dialog):
+    lSelected = []
 
     def __init__(self, parent, id, title="", pos = wx.DefaultPosition,
                  size=wx.DefaultSize, style=wx.THICK_FRAME, linktab=None,
@@ -1971,11 +1990,31 @@ class LinkTableDialog(wx.Dialog):
     def OnKeyDown(self, evt):
         ret = None
         kc = evt.GetKeyCode()
-        if kc == wx.WXK_RETURN or kc == 370: #370=enter del tastierino num.
+        if not self.multiSelect and (kc == wx.WXK_RETURN or kc == 370): #370=enter del tastierino num.
             row = self.grid.GetGridCursorRow()
             ret = self.rs[row][0]
+        if self.multiSelect and (kc == wx.WXK_RETURN or kc == 370): #370=enter del tastierino num.
+            self.lSelected=[]
+            for r in self.grid.GetTable().data:
+                if r[len(r)-1]==1:
+                    self.lSelected.append(r[0])
+            if len(self.lSelected)==0:
+                ret = -1
+            else:
+                ret = -999
+            
+            
+            
         elif kc == wx.WXK_ESCAPE:
             ret = -1
+        elif self.multiSelect and kc == wx.WXK_SPACE:
+            row = self.grid.GetGridCursorRow()
+            d=self.grid.GetTable().data
+            if d[row][len(d[row])-1]==0:
+                d[row][len(d[row])-1]=1
+            else:
+                d[row][len(d[row])-1]=0
+            self.grid.Refresh()
         if ret is None:
             evt.Skip()
         else:
@@ -2000,7 +2039,11 @@ class LinkTableDialog(wx.Dialog):
             for r in self.rs:
                 if r[idxSele]==1:
                     self.lSelected.append(r[0])
-            self.EndModal(-999)
+            if len(self.lSelected)==0:
+                # non è stato selezionato nulla
+                self.EndModal(-1)
+            else:
+                self.EndModal(-999)
         else:    
             row = self.grid.GetGridCursorRow()
             self.EndModal(self.rs[row][0])
