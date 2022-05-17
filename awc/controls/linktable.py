@@ -1240,7 +1240,10 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
         if hasattr(self, 'GetGridColumn2Fit'):
             c2f = self.GetGridColumn2Fit()
         else:
-            c2f = 1
+            if self.multiSelect:
+                c2f = 2
+            else:
+                c2f = 1
         dlg = LinkTableDialog(parent, -1, "", pos, size=size, linktab=self,
                               rs=rs, colsizes=colsizes, column2fit=c2f,
                               valsrc=self._btncrd.IsShown(),
