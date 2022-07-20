@@ -323,9 +323,9 @@ class IntRegConPanel(aw.Panel):
             reg.AddFilter("(SELECT COUNT(testmov.id) FROM %s testmov WHERE testmov.id_reg=body.id_reg AND testmov.id_pdcpa=%%s)>0" % bt.TABNAME_CONTAB_B, val)
         
         sg = gcv('stampagio')
-        if sg == "S":
+        if sg == "D":
             reg.AddFilter("reg.st_giobol=1")
-        elif sg == "N":
+        elif sg == "R":
             reg.AddFilter("reg.st_giobol IS NULL OR reg.st_giobol<>1")
         
         i1, i2 = map(lambda x: gcv(x), 'limimp1 limimp2'.split())
@@ -607,9 +607,9 @@ class IntRegIvaPanel(wx.Panel):
         for name, flag in (('stampareg', 'st_regiva'),
                            ('stampagio', 'st_giobol')):
             sr = gcv(name)
-            if sr == "S":
+            if sr == "D":
                 reg.AddFilter("reg.%s=1" % flag)
-            elif sr == "N":
+            elif sr == "R":
                 reg.AddFilter("reg.%s IS NULL OR reg.%s<>1" % (flag, flag))
     
     def UpdateGrid(self):
@@ -882,9 +882,9 @@ class IntAliqIvaPanel(wx.Panel):
         for name, flag in (('stampareg', 'st_regiva'),
                            ('stampagio', 'st_giobol')):
             sr = gcv(name)
-            if sr == "S":
+            if sr == "D":
                 mov.AddFilter("reg.%s=1" % flag)
-            elif sr == "N":
+            elif sr == "R":
                 mov.AddFilter("reg.%s IS NULL OR reg.%s<>1" % (flag, flag))
     
     def UpdateGrid(self):
