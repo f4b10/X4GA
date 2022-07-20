@@ -289,6 +289,7 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
 
     def OnChar(self, event):
         do = False
+        print event.GetKeyCode()
         if event.GetKeyCode() == wx.WXK_TAB:
             if TABTRAVERSAL:
                 do = True

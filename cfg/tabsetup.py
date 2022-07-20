@@ -1403,7 +1403,8 @@ UPDATE `cfgsetup`
 
 
             if ok:
-
+                db.Execute("DROP TABLE IF EXISTS stat_reddvend")
+        
                 #crea vista per analisi utile, ricarica e marginalità su vendite
                 db.Execute(r"""
 CREATE VIEW stat_reddvend AS
@@ -1431,6 +1432,9 @@ WHERE tpd.clasdoc IN ("vencli", "rescli") AND (doc.f_ann IS NULL OR doc.f_ann<>1
 GROUP BY doc.id""")
                 
                 #crea vista per recupero ultima documento di azzeramento giacenze
+                db.Execute("DROP TABLE IF EXISTS searchgiaciniziale")
+                db.Execute("DROP VIEW IF EXISTS searchgiaciniziale")
+
                 db.Execute(r"""
 CREATE VIEW searchgiaciniziale AS
 select b.id_prod AS id_prod,

@@ -151,6 +151,7 @@ class SendMail(object):
             SendTo = [SendTo]
         
         self.SendFrom =    SendFrom
+        #TODO: consentire invio mail a più indirizzi
         self.SendTo =      SendTo
         self.Subject =     Subject
         self.Message =     Message

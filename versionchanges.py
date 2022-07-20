@@ -29,6 +29,12 @@ import mx.DateTime as dt
 import mx.Odt
 
 history = (
+    ('1.6.08', dt.Date(2022, 03, 16), (
+        ("BET160801",
+         """Riallineamento versioni rilasciate"""
+        ),
+        ),),
+
     ('1.6.07', dt.Date(2022, 02, 02), (
         ("BET1673",
          """Aggiunta la gestione multiselect alla Linktable."""
