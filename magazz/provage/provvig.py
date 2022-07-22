@@ -229,6 +229,7 @@ class ProvvigAgentiPanel(wx.Panel):
             dbprov.AddHaving('total_saldo IS NULL OR total_saldo=0')
         wx.BeginBusyCursor()
         try:
+            dbprov.SetDebug()
             dbprov.Retrieve()
         finally:
             wx.EndBusyCursor()
