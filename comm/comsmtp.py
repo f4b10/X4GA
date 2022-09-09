@@ -148,7 +148,10 @@ class SendMail(object):
         
         SendFrom = SendFrom or SENDER
         if isinstance(SendTo, basestring):
-            SendTo = [SendTo]
+            if ';' in SendTo:
+                SendTo = SendTo.split(';')
+            else:
+                SendTo = [SendTo]
         
         self.SendFrom =    SendFrom
         #TODO: consentire invio mail a più indirizzi
