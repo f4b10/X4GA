@@ -36,6 +36,9 @@ history = (
         ),),
 
     ('1.6.07', dt.Date(2022, 02, 02), (
+        ("BET1674",
+         """Aggiunta la possibilita' di specificare su scheda clienti in corrispondenza del campo "spedizione documenti per posta elettronica"  piu' indirizzi a cui inviare i documenti separandoli con il carattere ; ."""
+        ),
         ("BET1673",
          """Aggiunta la gestione multiselect alla Linktable."""
         ),
