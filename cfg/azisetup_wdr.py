@@ -396,13 +396,14 @@ ID_MAGINDESCRIZ = 15069
 ID_MAGVISGIA = 15070
 ID_MAGVISCOS = 15071
 ID_MAGVISPRE = 15072
-ID_MAGVISCPF = 15073
-ID_MAGVISBCD = 15074
-ID_MAGPROVATT = 15075
-ID_MAGPROVCLI = 15076
-ID_MAGPROVPRO = 15077
-ID_MAGPROVMOV = 15078
-ID_MAGPROVSEQ = 15079
+ID_MAGVISRIC = 15073
+ID_MAGVISCPF = 15074
+ID_MAGVISBCD = 15075
+ID_MAGPROVATT = 15076
+ID_MAGPROVCLI = 15077
+ID_MAGPROVPRO = 15078
+ID_MAGPROVMOV = 15079
+ID_MAGPROVSEQ = 15080
 
 def MagazzSetup( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -912,19 +913,23 @@ def MagazzSetup( parent, call_fit = True, set_sizer = True ):
     item139.SetName( "setup_magvispre" )
     item137.Add( item139, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 
+    item140 = UnoZeroCheckBox( parent, ID_MAGVISRIC, "Ricarica", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item140.SetName( "setup_magvisric" )
+    item137.Add( item140, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+
     item128.Add( item137, 0, wx.ALIGN_CENTER, 5 )
 
-    item140 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    item141 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
-    item141 = UnoZeroCheckBox( parent, ID_MAGVISCPF, "Cod.Forn.", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item141.SetName( "setup_magviscpf" )
-    item140.Add( item141, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+    item142 = UnoZeroCheckBox( parent, ID_MAGVISCPF, "Cod.Forn.", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item142.SetName( "setup_magviscpf" )
+    item141.Add( item142, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 
-    item142 = UnoZeroCheckBox( parent, ID_MAGVISBCD, "Barcode", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item142.SetName( "setup_magvisbcd" )
-    item140.Add( item142, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+    item143 = UnoZeroCheckBox( parent, ID_MAGVISBCD, "Barcode", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item143.SetName( "setup_magvisbcd" )
+    item141.Add( item143, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 
-    item128.Add( item140, 0, wx.ALIGN_CENTER, 5 )
+    item128.Add( item141, 0, wx.ALIGN_CENTER, 5 )
 
     item124.Add( item128, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 
@@ -932,45 +937,45 @@ def MagazzSetup( parent, call_fit = True, set_sizer = True ):
 
     item0.Add( item124, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item143 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    item144 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
-    item145 = wx.StaticBox( parent, -1, "Provvigioni" )
-    item144 = wx.StaticBoxSizer( item145, wx.HORIZONTAL )
+    item146 = wx.StaticBox( parent, -1, "Provvigioni" )
+    item145 = wx.StaticBoxSizer( item146, wx.HORIZONTAL )
     
-    item146 = UnoZeroCheckBox( parent, ID_MAGPROVATT, "Attiva", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item146.SetName( "setup_magprovatt" )
-    item144.Add( item146, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 5 )
+    item147 = UnoZeroCheckBox( parent, ID_MAGPROVATT, "Attiva", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item147.SetName( "setup_magprovatt" )
+    item145.Add( item147, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 5 )
 
-    item147 = UnoZeroCheckBox( parent, ID_MAGPROVCLI, "Su clienti", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item147.SetName( "setup_magprovcli" )
-    item144.Add( item147, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+    item148 = UnoZeroCheckBox( parent, ID_MAGPROVCLI, "Su clienti", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item148.SetName( "setup_magprovcli" )
+    item145.Add( item148, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
 
-    item148 = UnoZeroCheckBox( parent, ID_MAGPROVPRO, "Su prodotti", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item148.SetName( "setup_magprovpro" )
-    item144.Add( item148, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+    item149 = UnoZeroCheckBox( parent, ID_MAGPROVPRO, "Su prodotti", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item149.SetName( "setup_magprovpro" )
+    item145.Add( item149, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item143.Add( item144, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+    item144.Add( item145, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
-    item149 = MagProvMovRadioBox( parent, ID_MAGPROVMOV, "Provvig. sui movimenti", wx.DefaultPosition, wx.DefaultSize, 
+    item150 = MagProvMovRadioBox( parent, ID_MAGPROVMOV, "Provvig. sui movimenti", wx.DefaultPosition, wx.DefaultSize, 
         ["Default","Eredita"] , 1, wx.RA_SPECIFY_ROWS )
-    item149.SetName( "setup_magprovmov" )
-    item143.Add( item149, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+    item150.SetName( "setup_magprovmov" )
+    item144.Add( item150, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 
-    item151 = wx.StaticBox( parent, -1, "Gerarchia ereditarietà" )
-    item150 = wx.StaticBoxSizer( item151, wx.HORIZONTAL )
+    item152 = wx.StaticBox( parent, -1, "Gerarchia ereditarietà" )
+    item151 = wx.StaticBoxSizer( item152, wx.HORIZONTAL )
     
-    item152 = wx.StaticText( parent, ID_TEXT, "Sequenza priorità provvig.:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item150.Add( item152, 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+    item153 = wx.StaticText( parent, ID_TEXT, "Sequenza priorità provvig.:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item151.Add( item153, 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
 
-    item153 = wx.TextCtrl( parent, ID_MAGPROVSEQ, "", wx.DefaultPosition, [80,-1], 0 )
-    item153.SetName( "setup_magprovseq" )
-    item150.Add( item153, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item154 = wx.TextCtrl( parent, ID_MAGPROVSEQ, "", wx.DefaultPosition, [80,-1], 0 )
+    item154.SetName( "setup_magprovseq" )
+    item151.Add( item154, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item143.Add( item150, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+    item144.Add( item151, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 
-    item143.AddGrowableCol( 2 )
+    item144.AddGrowableCol( 2 )
 
-    item0.Add( item143, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item0.Add( item144, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item0.AddGrowableCol( 0 )
 
@@ -981,21 +986,21 @@ def MagazzSetup( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_OPTLINKINDEX = 15080
-ID_OPTNOTIFICHE = 15081
-ID_OPTTABSEARCH = 15082
-ID_OPTDIGSEARCH = 15083
-ID_OPTSPASEARCH = 15084
-ID_OPTLNKCRDPDC = 15085
-ID_OPTLNKGRDPDC = 15086
-ID_OPTLNKCRDCLI = 15087
-ID_OPTLNKGRDCLI = 15088
-ID_OPTLNKCRDFOR = 15089
-ID_OPTLNKGRDFOR = 15090
-ID_BACKUPDIR = 15091
-ID_GCP_USER = 15092
-ID_GCP_PSWD = 15093
-ID_GC_PRINT = 15094
+ID_OPTLINKINDEX = 15081
+ID_OPTNOTIFICHE = 15082
+ID_OPTTABSEARCH = 15083
+ID_OPTDIGSEARCH = 15084
+ID_OPTSPASEARCH = 15085
+ID_OPTLNKCRDPDC = 15086
+ID_OPTLNKGRDPDC = 15087
+ID_OPTLNKCRDCLI = 15088
+ID_OPTLNKGRDCLI = 15089
+ID_OPTLNKCRDFOR = 15090
+ID_OPTLNKGRDFOR = 15091
+ID_BACKUPDIR = 15092
+ID_GCP_USER = 15093
+ID_GCP_PSWD = 15094
+ID_GC_PRINT = 15095
 
 def OpzioniFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -1148,8 +1153,8 @@ def OpzioniFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_TEXTCTRL = 15095
-ID_AZIENDA_LOGO = 15096
+ID_TEXTCTRL = 15096
+ID_AZIENDA_LOGO = 15097
 
 def DatiAziendaFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -1312,9 +1317,9 @@ def DatiAziendaFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_IMPORTFOLDER = 15097
-ID_LDEST = 15098
-ID_LTAB = 15099
+ID_IMPORTFOLDER = 15098
+ID_LDEST = 15099
+ID_LTAB = 15100
 
 def SyncFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 3, 0, 0 )
