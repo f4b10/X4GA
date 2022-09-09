@@ -2990,6 +2990,9 @@ class DocMag(adb.DbTable):
         sendto = sei.sendto
         if not sendto.startswith("<") and sendto.endswith(">"):
             _, sendto = sendto[:-1].split("<")
+        if ';' in sendto:
+            sendto = sendto.split(';')
+            
         if sm.send(SendFrom=sei.sendfrom,
                     SendTo=sendto,#sei.sendto,
                     Subject=sub,

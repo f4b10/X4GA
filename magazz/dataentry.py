@@ -1606,6 +1606,10 @@ class MagazzPanel(aw.Panel,\
                 else:
                     s = wx.ICON_QUESTION|wx.YES_NO|wx.YES_DEFAULT
                     msg += "Confermi l'invio?"
+                    if ';' in msg:
+                        msg = msg.replace(';', '\n')
+                    
+                    
                 if aw.awu.MsgDialog(self, msg, "Documento via email", style=s) == wx.ID_YES:
                     anag = doc.GetAnag()
                     if hasattr(anag, 'noexmail'):
