@@ -147,12 +147,17 @@ class XApp(wx.App):
                 s = adb.DbTable(bt.TABNAME_CFGSETUP, 'setup', writable=False)
                 if s.Retrieve("setup.chiave=%s", self.keyver) and s.OneRow():
                     azidbver = s.codice or azidbver
+                    #print 'azidbver: %s' % azidbver
                     azidbmod = s.descriz[:6] or azidbmod
                     azidbapp = s.descriz[7:]
                 self.setup = s
             except:
                 pass
             checkv = bt.__min_compat_ver__ > azidbver
+            
+            #print 'bt.__min_compat_ver__:%s' % bt.__min_compat_ver__
+            #print checkv
+            
             if ver.VERSION_STRING < azidbver:
                 version_problems.append(['X4 Gestione Aziendale', ver.VERSION_STRING, azidbver])
             checkm = False
@@ -179,7 +184,8 @@ class XApp(wx.App):
                             checkp = True
                 if checkp:
                     break
-        
+        #print checkv, checkm, checkp
+
         if checkv or checkm or checkp:
             compat = False
             if force:
