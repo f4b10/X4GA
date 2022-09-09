@@ -1783,7 +1783,7 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
                             lDes=[]
                             for r in rs:
                                 lCode.append(r[1])
-                                lDes.append(r[2])             
+                                lDes.append(r[2].encode('ascii', 'ignore'))             
                             wCode = _SEPARATOR_MULTISELECT.join(map(str, lCode))
                             wDes  = _SEPARATOR_MULTISELECT.join(map(str, lDes ))
                             valcd = (wCode, wDes)
