@@ -693,7 +693,7 @@ def StaDifFunc( parent, call_fit = True, set_sizer = True ):
 
     item21 = wx.Panel( parent, ID_PANGRID, wx.DefaultPosition, [660,300], wx.SUNKEN_BORDER )
     item21.SetName( "pangrid" )
-    item0.Add( item21, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item0.Add( item21, 0, wx.GROW|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item22 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
@@ -723,6 +723,8 @@ def StaDifFunc( parent, call_fit = True, set_sizer = True ):
     item0.Add( item22, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item0.AddGrowableCol( 0 )
+
+    item0.AddGrowableRow( 2 )
 
     if set_sizer == True:
         parent.SetSizer( item0 )
