@@ -162,10 +162,12 @@ import xframe as xfr
 
 def Main():
     
-    try:
-        import custrun
-    except ImportError:
-        pass
+    #===========================================================================
+    # try:
+    #     import custrun
+    # except ImportError:
+    #     pass
+    #===========================================================================
     
     #if hasattr(sys, 'frozen') or True:
     if hasattr(sys, 'frozen'): 
