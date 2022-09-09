@@ -44,9 +44,11 @@ class ProvvigAgentiDetTable(adb.DbTable):
         pcf = sca.AddJoin(bt.TABNAME_PCF,        'pcf', idLeft='id_pcf', fields=None, join=adb.JOIN_LEFT)
         
         self._AddGroups()
-        self.AddTotalOf('mov.importo*tipdoc.provvig)/count(mov.id', 'vendita')
+        #self.AddTotalOf('mov.importo*tipdoc.provvig)/count(mov.id', 'vendita')
+        self.AddAverageOf('mov.importo*tipdoc.provvig', 'vendita')
         self.AddAverageOf('IF(mov.perpro IS NULL, prod.perpro, mov.perpro)', 'perpro')
-        self.AddTotalOf('mov.importo*IF(mov.perpro IS NULL, prod.perpro, mov.perpro)*(tipdoc.provvig)/100)/count(mov.id', 'provvig')
+        #self.AddTotalOf('mov.importo*IF(mov.perpro IS NULL, prod.perpro, mov.perpro)*(tipdoc.provvig)/100)/count(mov.id', 'provvig')
+        self.AddAverageOf('mov.importo*IF(mov.perpro IS NULL, prod.perpro, mov.perpro)*(tipdoc.provvig)/100', 'provvig')
         self.AddTotalOf('pcf.imptot-pcf.imppar', 'saldo')
         
         self.AddBaseFilter('tipdoc.provvig IN (1, -1)')

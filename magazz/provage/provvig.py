@@ -108,10 +108,12 @@ class ProvvigAgentiDetGrid(dbglib.DbGridColoriAlternati):
             a(( 50, (cn('mov_sconto5'),    "Sc.%5",    _SCO, False)))
         if bt.MAGNUMSCO >= 6:
             a(( 50, (cn('mov_sconto6'),    "Sc.%6",    _SCO, False)))
-        a((110, (cn('total_vendita'),  "Vendita",      _VAL, False)))
+        #a((110, (cn('total_vendita'),  "Vendita",      _VAL, False)))
+        a((110, (cn('avg_vendita'),  "Vendita",      _VAL, False)))
         a(( 40, (cn('aliqiva_codice'), "Aliq.",        _STR, False)))
         a(( 50, (cn('avg_perpro'),     "Prov.%.",      _SCO, False)))
-        a((110, (cn('total_provvig'),  "Provvig.",     _VAL, False)))
+        #a((110, (cn('total_provvig'),  "Provvig.",     _VAL, False)))
+        a((110, (cn('avg_provvig'),  "Provvig.",     _VAL, False)))
         a(( 40, (cn('dest_codice'),    "Cod.",         _STR, False)))
         a((200, (cn('dest_descriz'),   "Destinatario", _STR, False)))
         a((  1, (cn('mov_id'),         "#mov",         _STR, False)))
@@ -127,8 +129,12 @@ class ProvvigAgentiDetGrid(dbglib.DbGridColoriAlternati):
     def SetTotali(self):
         def cn(col):
             return self.dbprov._GetFieldIndex(col)
-        self.AddTotalsRow(1, 'Totali', (cn('total_vendita'),
-                                        cn('total_provvig'),))
+        self.AddTotalsRow(1, 'Totali', (cn('avg_vendita'),
+                                        cn('avg_provvig'),))
+        #=======================================================================
+        # self.AddTotalsRow(1, 'Totali', (cn('total_vendita'),
+        #                                 cn('total_provvig'),))
+        #=======================================================================
     
     def AskForPageEject(self):
         return aw.awu.MsgDialog(self, "Vuoi un solo agente per ogni pagina?",
@@ -162,9 +168,11 @@ class ProvvigAgentiTotGrid(ProvvigAgentiDetGrid):
             (200, (cn('pdc_descriz'),    "Cliente",      _STR, False)),
             ( 40, (cn('dest_codice'),    "Cod.",         _STR, False)),
             (200, (cn('dest_descriz'),   "Destinatario", _STR, False)),
-            (110, (cn('total_vendita'),  "Vendita",      _VAL, False)),
+            #(110, (cn('total_vendita'),  "Vendita",      _VAL, False)),
+            (110, (cn('avg_vendita'),    "Vendita",      _VAL, False)),
             ( 50, (cn('avg_perpro'),     "Prov.%.",      _SCO, False)),
-            (110, (cn('total_provvig'),  "Provvig.",     _VAL, False)),
+            #(110, (cn('total_provvig'),  "Provvig.",     _VAL, False)),
+            (110, (cn('avg_provvig'),    "Provvig.",     _VAL, False)),
             (  1, (cn('doc_id'),         "#doc",         _STR, False)),
             (  1, (cn('pdc_id'),         "#pdc",         _STR, False)),
         )
