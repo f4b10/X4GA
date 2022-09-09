@@ -506,8 +506,8 @@ class ListAttGrid(dbglib.DbGridColoriAlternati):
 
 # ------------------------------------------------------------------------------
 
-
 class ProdSearchResultsGrid(ga.SearchResultsGrid):
+    
     
     def GetDbColumns(self):
         
@@ -515,7 +515,7 @@ class ProdSearchResultsGrid(ga.SearchResultsGrid):
         _DAT = gl.GRID_VALUE_DATETIME
         _PRZ = bt.GetMagPreMaskInfo()
         _QTA = bt.GetMagQtaMaskInfo()
-        
+        _RIC = gl.GRID_VALUE_FLOAT+":%d,%d" % (3, 2)
         def cn(col):
             return self.db._GetFieldIndex(col)
         tab = self.tabalias
@@ -526,16 +526,22 @@ class ProdSearchResultsGrid(ga.SearchResultsGrid):
                 ( 30, (cn('prod_um'),        "U.m.",         _STR, True)),]
         
         cols.append(( 50, (cn('pdc_codice'),  "Cod.",        _STR, True)))
-        cols.append((210, (cn('pdc_descriz'), "Fornitore",   _STR, True)))
+        if bt.MAGVISRIC:
+            cols.append((190, (cn('pdc_descriz'), "Fornitore",   _STR, True)))
+        else:
+            cols.append((210, (cn('pdc_descriz'), "Fornitore",   _STR, True)))
         
         if bt.MAGVISCPF:
             cols.append((115, (cn('prod_codfor'),  "Cod.Fornit.", _STR, True)))
         
         if bt.MAGVISBCD:
             cols.append((115, (cn('prod_barcode'), "Barcode",     _STR, True)))
-        
+
         if bt.MAGVISCOS:
             cols.append((100, (cn('prod_costo'),   "Costo",       _PRZ, True)))
+        
+        if bt.MAGVISRIC:
+            cols.append((100, (cn('prod_ricarica'),   "%Ric.",    _RIC, False)))
         
         if bt.MAGVISPRE:
             cols.append((100, (cn('prod_prezzo'),  "Prezzo",      _PRZ, True)))
@@ -882,6 +888,9 @@ class ProdPanel(ga.AnagPanel):
             fields += ', (%s) ~AS prod_totgiac' % self.GetGiacQuery()
         else:
             fields += ', NULL ~AS prod_totgiac'
+            
+        if bt.MAGVISRIC:
+            fields = '%s, (prod.prezzo-prod.costo)/prod.costo*100 ~AS prod_ricarica' % fields
         return fields
     
     def GetGiacQuery(self):

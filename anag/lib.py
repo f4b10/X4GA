@@ -117,6 +117,8 @@ class LinkTableProd(LinkTable, LinkTableHideSearchMixin):
             w += 110
         if bt.MAGVISGIA:
             w += 120
+        if bt.MAGVISRIC:
+            w += 520
         self.SetMinWidth(w)
         from anag.prod import ProdDialog
         self.cardclass = ProdDialog

@@ -1206,6 +1206,7 @@ class Azienda(object):
         MAGVISGIA = False    #flag visualizzazione giacenza prodotti in ricerca e gestione
         MAGVISPRE = False    #flag visualizzazione prezzo prodotti in ricerca e gestione
         MAGVISCOS = False    #flag visualizzazione costo prodotti in ricerca e gestione
+        MAGVISRIC = False    #flag visualizzazione costo prodotti in ricerca e gestione
         MAGVISCPF = False    #flag visualizzazione codice prodotto del fornitore prodotti in ricerca e gestione
         MAGVISBCD = False    #flag visualizzazione barcode prodotti in ricerca e gestione
         MAGGESACC = False    #flag gestione acconti
@@ -4237,6 +4238,7 @@ class Azienda(object):
                 ('MAGVISGIA',       'magvisgia',          f, _int, None),
                 ('MAGVISPRE',       'magvispre',          f, _int, None),
                 ('MAGVISCOS',       'magviscos',          f, _int, None),
+                ('MAGVISRIC',       'magvisric',          f, _int, None),
                 ('MAGVISCPF',       'magviscpf',          f, _int, None),
                 ('MAGVISBCD',       'magvisbcd',          f, _int, None),
                 ('MAGGESACC',       'maggesacc',          f, _int, None),
