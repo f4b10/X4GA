@@ -3182,6 +3182,17 @@ class MagazzPanel(aw.Panel,\
             if name == 'travet':
                 #TODO: enab = enab and bool(doc.cfgdoc.asktravet) and not self.FindWindowByName('enable_nocodevet').IsChecked()
                 enab = enab and bool(doc.tracur.askvet) and not self.FindWindowByName('enable_nocodevet').IsChecked()
+                try:
+                    if enab:
+                        self.controls['id_'+name].SetValueSilent(doc.pdc.anag.id_travet)
+                    else:
+                        self.controls['id_'+name].SetValueSilent(None)
+                except:
+                    pass
+                    
+                
+                
+                
             ctrls['id_'+name].Enable(self.status == STATUS_EDITING and enab)
         enab = cfgdoc.askdatiacc == 'X' and cfgdoc.asktracon == 'X' and doc.modpag.contrass == 1
         for name in 'id_tracon impcontr'.split():
