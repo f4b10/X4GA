@@ -29,7 +29,7 @@ import mx.DateTime as dt
 import mx.Odt
 
 history = (
-    ('1.6.10', dt.Date(2022, 99, 9), (
+    ('1.6.10', dt.Date(2022, 9, 9), (
         ("BET161001",
          """Riallineamento versioni rilasciate"""
         ),
