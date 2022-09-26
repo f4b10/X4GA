@@ -375,7 +375,7 @@ class HttpEntryCtrl(_EntryCtrlMixin):
 
     def OpenUrl(self):
         addr = self.FindWindowById(wdr.ID_ADDRESS).GetValue() or ''
-        if addr.startswith('http://'):
+        if addr.startswith('http://') or addr.startswith('https://'):
             os.startfile(addr)
 
 

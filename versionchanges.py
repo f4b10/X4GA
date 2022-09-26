@@ -36,6 +36,9 @@ history = (
         ("BET16102",
          """Documenti di Magazzino - Proposizione del vettore indicato in anagrafica ove richiesto."""
         ),
+        ("BET16103",
+         """Prevista geastione a https:\\ nell'oggetto HttpEntryCtrl per consentirne il richiamo diretto in sede di deinizione"""
+        ),
         ),),
 
     ('1.6.07', dt.Date(2022, 02, 02), (

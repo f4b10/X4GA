@@ -21,9 +21,10 @@ class HttpTextCtrl(TextCtrl_LC):
         TextCtrl_LC._OnFocusLost(self, event)
         v = self.GetValue() or ''
         if v:
-            p = 'http://'
-            if not v.lower().startswith(p):
-                self.SetValue(p+v)
+            if not 'http' in v:
+                p = 'http://'
+                if not v.lower().startswith(p):
+                    self.SetValue(p+v)
 
 
 class SquaredFlatBitmapButton(FlatBitmapButton):
