@@ -31,7 +31,7 @@ import mx.Odt
 history = (
     ('1.6.10', dt.Date(2022, 9, 9), (
         ("BET161001",
-         """Riallineamento versioni rilasciate."""
+         """Riallineamento versioni rilasciate. """
         ),
         ("BET16102",
          """Documenti di Magazzino - Proposizione del vettore indicato in anagrafica ove richiesto."""
