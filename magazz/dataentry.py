@@ -2162,7 +2162,10 @@ class MagazzPanel(aw.Panel,\
                         c = cn('nocodevet_%s' % field)
                         if c is not None:
                             c.SetValue(v)
-                        setattr(doc, 'nocodevet_%s' % field, v)
+                        try:
+                            setattr(doc, 'nocodevet_%s' % field, v)
+                        except:
+                            pass
                 self.EnableDatiAcc()
             elif "nocodedes" in name and not name.startswith("enable"):
                 self.UpdateHeadDest(update_nocodedes=False)
@@ -3183,16 +3186,13 @@ class MagazzPanel(aw.Panel,\
                 #TODO: enab = enab and bool(doc.cfgdoc.asktravet) and not self.FindWindowByName('enable_nocodevet').IsChecked()
                 enab = enab and bool(doc.tracur.askvet) and not self.FindWindowByName('enable_nocodevet').IsChecked()
                 try:
-                    if enab:
-                        self.controls['id_'+name].SetValueSilent(doc.pdc.anag.id_travet)
-                    else:
-                        self.controls['id_'+name].SetValueSilent(None)
+                    if self.FindWindowByName('id_travet').GetValue()==None:
+                        if enab:
+                            self.controls['id_'+name].SetValueSilent(doc.pdc.anag.id_travet)
+                        else:
+                            self.controls['id_'+name].SetValueSilent(None)
                 except:
                     pass
-                    
-                
-                
-                
             ctrls['id_'+name].Enable(self.status == STATUS_EDITING and enab)
         enab = cfgdoc.askdatiacc == 'X' and cfgdoc.asktracon == 'X' and doc.modpag.contrass == 1
         for name in 'id_tracon impcontr'.split():
