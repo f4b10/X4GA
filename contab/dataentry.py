@@ -414,6 +414,12 @@ class ContabPanel(aw.Panel,\
                         style = wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT)
             quit = (action == wx.YES)
         if quit:
+            try:
+                self.id_fepass=None
+            except:
+                pass
+            
+            
             if self.oneregonly_id:
                 try:
                     if self.GetParent().IsModal():
