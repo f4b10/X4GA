@@ -1835,7 +1835,7 @@ class SelRowPa(wx.Dialog):
             
             self.selectedFe=None
             from feinreg_contab import dataentry            
-            dlg = dataentry.ViewFeDialog(self, title="Selezione Fattura Elettrinica da Registrare", size=(1000,400), mainPanel=self)
+            dlg = dataentry.ViewFeDialog(self, title="Selezione Fattura Elettronica da Registrare", size=(1000,400), mainPanel=self)
             dlg.ShowModal()
             self.SetSelectedFeValue()
         else:
