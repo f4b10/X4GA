@@ -1271,12 +1271,19 @@ def DatiAziendaFunc( parent, call_fit = True, set_sizer = True ):
     item30.SetName( "setup_azienda_email" )
     item7.Add( item30, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item31 = wx.StaticText( parent, ID_TEXT, "Titolare privacy:", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
-    item7.Add( item31, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+    item31 = wx.StaticText( parent, ID_TEXT, "pec:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item7.Add( item31, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
     item32 = TextCtrl_LC( parent, ID_TEXTCTRL, "", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item32.SetName( "setup_azienda_titprivacy" )
+    item32.SetName( "setup_azienda_pec" )
     item7.Add( item32, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+
+    item33 = wx.StaticText( parent, ID_TEXT, "Titolare privacy:", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
+    item7.Add( item33, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+
+    item34 = TextCtrl_LC( parent, ID_TEXTCTRL, "", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item34.SetName( "setup_azienda_titprivacy" )
+    item7.Add( item34, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
     item7.AddGrowableCol( 1 )
 
@@ -1284,27 +1291,27 @@ def DatiAziendaFunc( parent, call_fit = True, set_sizer = True ):
 
     item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item33 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    item35 = wx.FlexGridSizer( 0, 2, 0, 0 )
     
-    item34 = wx.StaticText( parent, ID_TEXT, "Logo:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item33.Add( item34, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+    item36 = wx.StaticText( parent, ID_TEXT, "Logo:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item35.Add( item36, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
-    item35 = wx.StaticText( parent, ID_TEXT, "Descrizione attività:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item33.Add( item35, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+    item37 = wx.StaticText( parent, ID_TEXT, "Descrizione attività:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item35.Add( item37, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
-    item36 = PhotoContainerPanel( parent, ID_AZIENDA_LOGO, wx.DefaultPosition, [128,128], wx.SUNKEN_BORDER )
-    item36.SetName( "azienda_logo" )
-    item33.Add( item36, 0, wx.LEFT|wx.BOTTOM, 5 )
+    item38 = PhotoContainerPanel( parent, ID_AZIENDA_LOGO, wx.DefaultPosition, [128,128], wx.SUNKEN_BORDER )
+    item38.SetName( "azienda_logo" )
+    item35.Add( item38, 0, wx.LEFT|wx.BOTTOM, 5 )
 
-    item37 = TextCtrl_LC( parent, ID_TEXTCTRL, "", wx.DefaultPosition, [80,40], wx.TE_MULTILINE )
-    item37.SetName( "setup_azienda_infatti" )
-    item33.Add( item37, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item39 = TextCtrl_LC( parent, ID_TEXTCTRL, "", wx.DefaultPosition, [80,40], wx.TE_MULTILINE )
+    item39.SetName( "setup_azienda_infatti" )
+    item35.Add( item39, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item33.AddGrowableCol( 1 )
+    item35.AddGrowableCol( 1 )
 
-    item33.AddGrowableRow( 1 )
+    item35.AddGrowableRow( 1 )
 
-    item0.Add( item33, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item0.Add( item35, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item0.AddGrowableCol( 0 )
 
