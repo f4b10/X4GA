@@ -2290,7 +2290,7 @@ class AnagCard(aw.Panel):
 
 class _AnagMixin(object):
 
-    def OneCardOnly( self, onecodeonly ):
+    def OneCardOnly( self, onecodeonly, desProd=None, codProd=None ):
         if len(self.panel.db_rs) == 0:
             self.SetTitle( "Inserimento scheda" )
             if type(self.onecodeonly) in (str, unicode):
@@ -2299,6 +2299,11 @@ class _AnagMixin(object):
                 if ctr != None:
                     ctr.SetValue( onecodeonly )
                 self.panel.InsertingRecord()
+            if not desProd==None:
+                ctr = self.FindWindowByName("codice")
+                ctr.SetValue(codProd)
+                ctr = self.FindWindowByName("descriz")
+                ctr.SetValue(desProd)
             bmp = awcimg.getCardEmpty16Bitmap()
         else:
             self.SetTitle( "Scheda anagrafica" )
