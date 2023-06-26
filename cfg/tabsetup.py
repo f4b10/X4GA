@@ -412,6 +412,8 @@ class TabSetupPanel(aw.Panel):
                 err = e.args[0]
                 if type(err) in (list, tuple):
                     err = err[0]
+                elif type(err)==int:
+                    err = '%s' % err
                 if '1146' in err:
                     adeg.append(('-', ADEG_MISSINGTABLE))
                     for i, (indtype, indexpr) in enumerate(index):
