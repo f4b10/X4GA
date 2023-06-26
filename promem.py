@@ -95,6 +95,24 @@ class PromemPanel(wx.Panel):
         do = True
         if refresh:
             do = self.pmu.Retrieve() and self.pmu.refresh == 1
+            try:
+                if self.pmu._info.db.dbError.exception[0]==2006:
+                    print 'riattivare la connessione al server'
+                    
+                    #===========================================================
+                    # db = adb.DB(globalConnection=False)
+                    # db.Connect(host=Env.Azienda.DB.servername,
+                    #            user=Env.Azienda.DB.username,
+                    #            passwd=Env.Azienda.DB.password,
+                    #            db=Env.Azienda.DB.schema)                    
+                    # do = self.pmu.Retrieve() and self.pmu.refresh == 1
+                    #===========================================================
+                    
+                    
+                    
+                    
+            except:
+                pass
         
         if not do:
             return
