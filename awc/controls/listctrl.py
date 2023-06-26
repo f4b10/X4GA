@@ -32,10 +32,14 @@ CSVFORMAT_QUOTECHAR = '"'
 CSVFORMAT_QUOTING = csv.QUOTE_MINIMAL
 CSVFORMAT_EXCELZERO = False
 
+from wx.lib.mixins.listctrl import CheckListCtrlMixin
+
+
 class ListCtrl(wx.ListCtrl, cmix.ControlsMixin):
     def __init__(self, *args, **kwargs):
         wx.ListCtrl.__init__(self, *args, **kwargs)
         cmix.ControlsMixin.__init__(self)
+        
         self.Bind(wx.EVT_SET_FOCUS,  self.OnFocusGained)
         self.Bind(wx.EVT_KILL_FOCUS, self.OnFocusLost)
 
@@ -116,3 +120,38 @@ class ListCtrl(wx.ListCtrl, cmix.ControlsMixin):
 #
 #         pass
 #===============================================================================
+
+class CheckListCtrl(ListCtrl, CheckListCtrlMixin):
+    listCheck = []
+    
+    def __init__(self, *args, **kwargs):
+        ListCtrl.__init__(self, *args, **kwargs)
+        CheckListCtrlMixin.__init__(self)
+
+        self.Bind(wx.EVT_LIST_ITEM_SELECTED, self.OnItemSelected)
+        self.Bind(wx.EVT_LIST_ITEM_DESELECTED, self.OnItemDeselected)
+
+
+    def OnItemSelected(self, evt):
+        print 'SELEZIONO ', evt
+        evt.Skip()
+        
+    def OnItemDeselected(self, evt):
+        print 'DESELEZIONO', evt
+        evt.Skip()
+
+    def OnItemActivated(self, evt):
+        self.ToggleItem(evt.m_itemIndex)
+
+
+    # this is called by the base class when an item is checked/unchecked
+    def OnCheckItem(self, index, flag):
+        data = self.GetItemData(index)
+        if flag:
+            self.listCheck.append(index)
+            what = "checked"
+        else:
+            self.listCheck.remove(index)
+            what = "unchecked"
+        print data, index, what, self.listCheck
+
