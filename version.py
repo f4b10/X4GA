@@ -31,13 +31,13 @@ from _version import apptype, appType, appinfo
 
 VERSION_MAJOR   = 1
 VERSION_MINOR   = 6
-VERSION_RELEASE = 10
+VERSION_RELEASE = 11
 VERSION_TAG     = ""
 VERSION_TYPE    = apptype
 VERSION_TYPEXT  = appType
 VERSION_INFO    = appinfo
 
-__min_compat_ver__ = '1.6.10'
+__min_compat_ver__ = '1.6.11'
 
 VERSION = (VERSION_MAJOR, VERSION_MINOR, VERSION_RELEASE, VERSION_TAG)
 

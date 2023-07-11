@@ -2513,7 +2513,7 @@ class Azienda(object):
                 [ "datreg",     "DATE",  None, None, "Data registrazione", None ],
                 [ "datcompete", "DATE",  None, None, "Data competenza", None ],
                 [ "datdoc",     "DATE",  None, None, "Data documento", None ],
-                [ "idsdi",      "VARCHAR", 10, None, "Idedntificativi file SDI", None],
+                [ "idsdi",      "VARCHAR", 13, None, "Idedntificativi file SDI", None],
                 [ "numdoc",     "VARCHAR", 20, None, "Numero documento", None ],
                 [ "numiva",     "INT",     10, None, "Numero protocollo IVA", None ],
                 [ "numreg",     "INT",     10, None, "numero reg. mirage", None ],
