@@ -1477,11 +1477,14 @@ class GridBody(object):
                 if self.dbdoc.config.autoqtaonbc == 1:
                     c = self.gridbody.GetCellEditor(row,gridcol)._tc
                     if c.barcode_readed:
-                        mov.qta = 1
-                        ElapsedTime('', reset = True)
-                        DefImporto()
-                        ElapsedTime('DefImporto()')
-                        self._rowcol = (row+1, gridcol)
+                        self.AssegnaQta(mov, row, gridcol)
+                        #=======================================================
+                        # mov.qta = 1
+                        # ElapsedTime('', reset = True)
+                        # DefImporto()
+                        # ElapsedTime('DefImporto()')
+                        # self._rowcol = (row+1, gridcol)
+                        #=======================================================
             if self.dbdoc.config.colcg == 'X':
                 if mov.prod.id_pdcven:
                     mov.id_pdccg = mov.prod.id_pdcven
@@ -1597,6 +1600,36 @@ class GridBody(object):
             self.gridbody.ResetView()
 
         return True
+
+    def AssegnaQta(self, mov, row, gridcol):
+        def DefImporto():
+            i = round((mov.qta or 0)*(mov.prezzo or 0)\
+                      *(100-(mov.sconto1 or 0))/100\
+                      *(100-(mov.sconto2 or 0))/100\
+                      *(100-(mov.sconto3 or 0))/100\
+                      *(100-(mov.sconto4 or 0))/100\
+                      *(100-(mov.sconto5 or 0))/100\
+                      *(100-(mov.sconto6 or 0))/100, bt.VALINT_DECIMALS)
+            if len(str(abs(int(i)))) > bt.VALINT_INTEGERS:
+                msg =\
+                """Il valore dell'importo è troppo elevato,\n"""\
+                """sono permesse al massimo %d cifre intere.\n"""\
+                """L'importo sarà azzerato.""" % bt.VALINT_INTEGERS
+                aw.awu.MsgDialog(self, msg, "Valore errato", style=wx.ICON_ERROR)
+                i = 0
+            mov.importo = i
+            if mov.costou and mov.qta:
+                mov.costot = round(mov.qta*mov.costou, bt.VALINT_DECIMALS)
+        
+        print 'AssegnaQta id=%s numRow=%s' % (mov.id_prod, row)
+        mov.qta = 1
+        ElapsedTime('', reset = True)
+        DefImporto()
+        ElapsedTime('DefImporto()')
+        self._rowcol = (row+1, gridcol)        
+        
+        
+        
 
     def MakeTotalPesoColli(self):
         self.MakeTotals(pesocolli=True)
