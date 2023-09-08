@@ -1406,6 +1406,7 @@ UPDATE `cfgsetup`
 
             if ok:
                 db.Execute("DROP TABLE IF EXISTS stat_reddvend")
+                db.Execute("DROP VIEW IF EXISTS stat_reddvend")
         
                 #crea vista per analisi utile, ricarica e marginalità su vendite
                 db.Execute(r"""
