@@ -2219,7 +2219,7 @@ class Azienda(object):
                 [ "id_bricon",  "INT",    idw, None, "ID conto bilancio ricl.", None ],
                 [ "id_bilcee",  "INT",    idw, None, "ID bilancio CEE", None ],
                 [ "id_statpdc", "INT",    idw, None, "ID status p.d.c.", None ],
-                [ "codice_studio", "VARCHAR",    10, None, "Cod.Conto su Pdc Studio", None ],
+                [ "codice_studio", "VARCHAR",    12, None, "Cod.Conto su Pdc Studio", None ],
             ]
 
             cls.set_constraints(cls.TABNAME_PDC,
