@@ -2220,6 +2220,7 @@ class Azienda(object):
                 [ "id_bilcee",  "INT",    idw, None, "ID bilancio CEE", None ],
                 [ "id_statpdc", "INT",    idw, None, "ID status p.d.c.", None ],
                 [ "codice_studio", "VARCHAR",    12, None, "Cod.Conto su Pdc Studio", None ],
+                [ "rif_studio", "VARCHAR",    30, None, "Rif.Conto su Pdc Studio", None ],
             ]
 
             cls.set_constraints(cls.TABNAME_PDC,

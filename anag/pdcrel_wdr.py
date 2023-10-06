@@ -1010,7 +1010,7 @@ def DatiContabFunc( parent, call_fit = True, set_sizer = True ):
 
     item0.Add( item12, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item19 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    item19 = wx.FlexGridSizer( 0, 4, 0, 0 )
     
     item20 = wx.StaticText( parent, ID_TEXT, "Codice P.d.C Studio:", wx.DefaultPosition, [100,-1], wx.ALIGN_RIGHT )
     item19.Add( item20, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
@@ -1019,11 +1019,18 @@ def DatiContabFunc( parent, call_fit = True, set_sizer = True ):
     item21.SetName( "codice_studio" )
     item19.Add( item21, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
+    item22 = wx.StaticText( parent, ID_TEXT, "Riferimento:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item19.Add( item22, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+    item23 = wx.TextCtrl( parent, ID_TEXTCTRL, "", wx.DefaultPosition, [240,-1], 0 )
+    item23.SetName( "rif_studio" )
+    item19.Add( item23, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+
     item0.Add( item19, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item22 = wx.Panel( parent, ID_PANEL, wx.DefaultPosition, [880,160], 0 )
-    item22.SetName( "daticontab_other" )
-    item0.Add( item22, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+    item24 = wx.Panel( parent, ID_PANEL, wx.DefaultPosition, [880,160], 0 )
+    item24.SetName( "daticontab_other" )
+    item0.Add( item24, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
     item0.AddGrowableCol( 0 )
 
