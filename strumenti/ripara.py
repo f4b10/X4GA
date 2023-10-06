@@ -124,8 +124,14 @@ class RiparaPanel(aw.Panel):
             self.dbCurs.execute(cmd)
             ret = self.dbCurs.fetchall()
             esito = ret[0][3]
-            
-            
+
+            try:            
+                cmd = "ANALYZE TABLE %s PERSISTENT FOR ALL;" %n
+                self.dbCurs.execute(cmd)
+                ret = self.dbCurs.fetchall()
+                #esito = ret[0][3]
+            except:
+                pass
             
             
             #===================================================================
