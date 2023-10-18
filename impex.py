@@ -33,3 +33,6 @@ import wx
 import wx.lib.colourchooser
 import wx.lib.gridmovers
 import wx.lib.calendar
+import lxml.etree
+import lxml._elementpath
+
