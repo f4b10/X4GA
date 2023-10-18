@@ -29,6 +29,12 @@ import mx.DateTime as dt
 import mx.Odt
 
 history = (
+    ('1.6.12', dt.Date(2023, 10, 18), (
+        ("BET161201",
+         """Svincolata la visualizzazione delle fatture elettroniche dalla presenza o meno di Internet Explorer."""
+        ),
+        ),),
+
     ('1.6.11', dt.Date(2023, 7, 12), (
         ("BET161101",
          """Modifiche interne. """
