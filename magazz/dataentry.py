@@ -2487,6 +2487,9 @@ class MagazzPanel(aw.Panel,\
                     if doc.regcon.id:
                         doc.regcon.Erase()
     
+            for i, r in enumerate(doc.mov):
+                r.numriga = i+1
+    
             saved = doc.Save()
             
             if doc.DocAlreadyExist(docId=doc.id, regId=idRegCon):

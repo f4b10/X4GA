@@ -795,7 +795,10 @@ class GridBody(object):
                 self.GridBodyAddNewRow()
                 mov.MoveLast()
                 mov.id_tipmov = idTipMov
-                mov.descriz = row.encode().decode()
+                try:
+                    mov.descriz = row.encode().decode()
+                except:
+                    mov.descriz = row
             self.gridbody.ResetView()
             self.MakeTotals()
         dlg.Destroy()
@@ -2070,7 +2073,10 @@ class MultiLinePanel(aw.Panel):
         ml = MultiLineDescriz(txt, fontName, fontSize, fieldLen)
         outTxt=ml.GetLines()
         for i, r in enumerate(outTxt):
-            print i,r
+            try:
+                print i,r
+            except:
+                pass
         
         self.Parent.ReturnValue['esito']= True
         self.Parent.ReturnValue['testo']= outTxt
