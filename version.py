@@ -37,7 +37,7 @@ VERSION_TYPE    = apptype
 VERSION_TYPEXT  = appType
 VERSION_INFO    = appinfo
 
-__min_compat_ver__ = '1.6.11'
+__min_compat_ver__ = '1.6.12'
 
 VERSION = (VERSION_MAJOR, VERSION_MINOR, VERSION_RELEASE, VERSION_TAG)
 
