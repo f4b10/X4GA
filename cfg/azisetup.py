@@ -87,16 +87,26 @@ class _SetupPanel(aw.Panel):
         cn = self.FindWindowByName
         for ctr in aw.awu.GetAllChildrens(self):
             if ctr.GetName()[:6] == 'setup_':
+                try:
+                    isMultiSelect = ctr.multiSelect
+                except:
+                    isMultiSelect = False
                 name = ctr.GetName()[6:]
                 if db.Retrieve('setup.chiave=%s', name) and db.RowsCount() == 1:
                     if isinstance(ctr, (awradio.RadioBox, awcheck.CheckBox)):
                         val = db.flag
-                    elif isinstance(ctr, (int, long, lt.LinkTable, NumCtrl, wx.Choice)):
+                    elif isinstance(ctr, (int, long, lt.LinkTable, NumCtrl, wx.Choice)) and not isMultiSelect:
                         val = db.importo
                     elif isinstance(ctr, DateCtrl):
                         val = db.data
                     else:
-                        val = self.DecodeValue(db.descriz, name, ctr.GetWindowStyle() & wx.TE_PASSWORD == wx.TE_PASSWORD)
+                        if not isMultiSelect:
+                            val = self.DecodeValue(db.descriz, name, ctr.GetWindowStyle() & wx.TE_PASSWORD == wx.TE_PASSWORD)
+                        else:
+                            try:
+                                val = db.descriz.split(lt._SEPARATOR_MULTISELECT)
+                            except:
+                                val = ""
                     try:
                         ctr.SetValue(val)
                     except:
@@ -113,18 +123,32 @@ class _SetupPanel(aw.Panel):
             if name[:6] == 'setup_':
                 val = cn(name).GetValue()
                 name = ctr.GetName()[6:]
+                try:
+                    isMultiSelect = ctr.multiSelect
+                except:
+                    isMultiSelect = False
+                    
                 if db.Retrieve('setup.chiave=%s', name):
                     if db.RowsCount() == 0:
                         db.CreateNewRow()
                         db.chiave = name
                     if isinstance(ctr, (awradio.RadioBox, awcheck.CheckBox)):
                         db.flag = val
-                    elif isinstance(ctr, (int, long, lt.LinkTable, NumCtrl, wx.Choice)):
+                    elif isinstance(ctr, (int, long, lt.LinkTable, NumCtrl, wx.Choice)) and not isMultiSelect:
                         db.importo = val
                     elif isinstance(ctr, DateCtrl):
                         db.data = val
                     else:
-                        db.descriz = self.EncodeValue(val, name, ctr.GetWindowStyle() & wx.TE_PASSWORD == wx.TE_PASSWORD)
+                        if not type(val) is list:
+                            db.descriz = self.EncodeValue(val, name, ctr.GetWindowStyle() & wx.TE_PASSWORD == wx.TE_PASSWORD)
+                        else:
+                            # per gestire la memorizzazione di linkTable di tipo multiSelect
+                            wrk=''
+                            for e in val:
+                                wrk='%s%s%s' % (wrk, e, lt._SEPARATOR_MULTISELECT)
+                            if wrk[-1:]==lt._SEPARATOR_MULTISELECT:
+                                wrk = wrk[:-1]                                
+                                db.descriz = wrk 
                     if not db.Save():
                         aw.awu.MsgDialog(self, message="Problema in aggiornamento setup:\n%s" % repr(db.GetError()))
                         out = False
