@@ -1,7 +1,7 @@
 #!/usr/bin/python2
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
-# Name:         X.py
+# Name:         x4ga.py
 # Author:       Marcello Montaldo <marcello.montaldo@gmail.com>
 # Copyright:    (C) 2011 Astra S.r.l. C.so Cavallotti, 122 18038 Sanremo (IM)
 # ------------------------------------------------------------------------------
