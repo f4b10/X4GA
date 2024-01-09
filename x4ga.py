@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------------------------
 # Name:         X.py
-# Author:       Fabio Cassini <fabio.cassini@gmail.com>
+# Author:       Marcello Montaldo <marcello.montaldo@gmail.com>
 # Copyright:    (C) 2011 Astra S.r.l. C.so Cavallotti, 122 18038 Sanremo (IM)
 # ------------------------------------------------------------------------------
 # This file is part of X4GA
