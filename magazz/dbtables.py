@@ -42,6 +42,7 @@ import magazz
 import contab.dbtables as dbc
 import contab.iva as iva
 import anag.dbtables as dba
+import cfg.dbtables as dbCfg
 
 import mx
 import copy
@@ -2424,8 +2425,18 @@ class DocMag(adb.DbTable):
 
         is_split_payment = self.is_split_payment()
 
-        #testata registrazione
-        reg.esercizio = self.datdoc.year
+        # ------------ testata registrazione -------------------------
+        #
+
+        # reg.esercizio = self.datdoc.year come era prima sbagliato
+
+
+         
+        self.dbese = dbCfg.ProgrEsercizio()             # Imposta esercizio della registrazione contabile
+        e = self.dbese.GetEsercizioDaData(self.datdoc)  # in funzione della data documento e del giorno/mese
+        reg.esercizio = e                               # di inizio dell'esercizio contabile così come 
+                                                        # specificato in Setup Azienda
+
         reg.id_caus =   self.config.id_caucg
         reg.tipreg =    reg.config.tipo
         reg.datreg =    self.datreg

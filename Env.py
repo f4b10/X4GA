@@ -4144,10 +4144,15 @@ class Azienda(object):
                             setattr(Azienda.BaseTab_base, name, v)
                     else:
                         if err is not None:
-                            raise Azienda.BaseTab.AziendaSetupException, \
-                                  """Configurazione azienda errata: manca """\
-                                  """la definizione %s.\nVerificare il setup """\
-                                  """dei dati aziendali.""" % err
+                            pass
+                            #===================================================
+                            # raise Azienda.BaseTab.AziendaSetupException, \
+                            #       """Configurazione azienda errata: manca """\
+                            #       """la definizione %s.\nVerificare il setup """\
+                            #       """dei dati aziendali.""" % err
+                            #===================================================
+                                  
+                                  
                         #=======================================================
                         # #-------------------------------------------------------------------------          
                         # # in alternativa al costrutto If precedente in modo da da non interrompere
@@ -4172,7 +4177,7 @@ class Azienda(object):
         @classmethod
         def GetSetupKeys(cls):
 
-            tc = 'del tipo di contabilità'
+            tc = "del tipo di contabilita'"
             d = 'del numero di decimali su'
             f = 'flag'
             i = 'importo'
