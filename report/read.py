@@ -156,7 +156,7 @@ class iReportDef:
             if e.getAttribute(a).isdigit():
                 attributi[a.encode()]=float(e.getAttribute(a))
             else:
-                attributi[a.encode()]=e.getAttribute(a).encode()
+                attributi[a.encode()]=e.getAttribute(a).encode('ascii', 'ignore')
         self.structure=dict(attributi.items()+ self.explore_iReport(mainNode, "").items())
         
 

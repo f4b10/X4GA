@@ -143,6 +143,7 @@ def ListiniFunc( parent, call_fit = True, set_sizer = True ):
     item3 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
     item4 = wx.FlexGridSizer( 0, 3, 0, 0 )
+    parent.FiltriRicerca = item4
     
     item5 = wx.StaticText( parent, ID_TEXT, "Selezioni", wx.DefaultPosition, wx.DefaultSize, 0 )
     item5.SetForegroundColour( wx.BLUE )
@@ -256,6 +257,7 @@ def ListiniFunc( parent, call_fit = True, set_sizer = True ):
     item2.Add( item3, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item36 = wx.BoxSizer( wx.VERTICAL )
+    parent.selezioni = item36
     
     item37 = OrdinamentoRadioBox( parent, ID_ORDINAM, "Ordinamento", wx.DefaultPosition, wx.DefaultSize, 
         ["Codice","Descrizione","Cod.Fornitore","Barcode"] , 1, wx.RA_SPECIFY_COLS )
