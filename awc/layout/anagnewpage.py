@@ -147,10 +147,15 @@ class GenericPersonalLinkedPage_InternalGrid(dbglib.DbGridColoriAlternati):
                 try:
                     c.SetValue(None)
                 except:
+                    try:
+                        c.SetValue('')
+                    except:
+                        pass
                     pass
 
     def TestWarning(self, row):
         def cn(name):
+            #print 'cerco %s_%s' % (self.gridTableName, name)
             return self.mainPanel.FindWindowByName('%s_%s'% (self.gridTableName, name))
         ctr=cn('warning')
         if ctr:
