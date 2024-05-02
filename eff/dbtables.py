@@ -20,7 +20,7 @@
 # You should have received a copy of the GNU General Public License
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
-
+import Env
 from contab import dbtables as dbc
 bt = dbc.Env.Azienda.BaseTab
 
@@ -212,19 +212,40 @@ def GetEffConfig(tipo="R", banca=None):
 
 
 def InitConfig(tipo='R'):
+    # utilizzati da peidaigo
     print 'inizializza configurazione effetti di tipo %s' % tipo
     cfg=[]
     if tipo=='S':
+        #=======================================================================
+        # curs=Env.Azienda.DB.connection.cursor()
+        # sql = 'select count(id) from cfgeff where tipo="S" and zona="H" and riga=1 and macro like "%CBIBdySDDReq.00.01.00%"'
+        # curs.execute(sql)
+        # try:
+        #     rs = curs.fetchone()
+        #     ret = rs[0]
+        # except:
+        #     ret = 0         
+        # 
+        # if ret==1:
+        #     sql = 'select count(id) from cfgeff where tipo="S" and zona="H" and riga=1 and macro like "%CBIBdySDDReq.00.01.00%"'
+        #     
+        #     
+        #     
+        #=======================================================================
+        
+        
+        
+        
         cfg.append(['H ',  0, "'<?xml version=" + '"1.0" encoding="UTF-8"?>' +"'"])
-        cfg.append(['H ',  1, "'<CBIBdySDDReq xmlns=" +'"urn:CBI:xsd:CBIBdySDDReq.00.01.00" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"'+"'"])
-        cfg.append(['H ',  2, "'              xsi:schemaLocation=" +'"urn:CBI:xsd:CBIBdySDDReq.00.01.00 CBIBdySDDReq.00.01.00.xsd">' + "'"])
+        cfg.append(['H ',  1, "'<CBIBdySDDReq xmlns=" +'"urn:CBI:xsd:CBIBdySDDReq.00.01.01" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"'+"'"])
+        cfg.append(['H ',  2, "'              xsi:schemaLocation=" +'"urn:CBI:xsd:CBIBdySDDReq.00.01.01 CBIBdySDDReq.00.01.01.xsd">' + "'"])
         cfg.append(['H ',  3, "'  <PhyMsgInf>'"])
         cfg.append(['H ',  4, "'    <PhyMsgTpCd>' + info.PhyMsgTpCd +'</PhyMsgTpCd>'"])
         cfg.append(['H ',  5, "'    <NbOfLogMsg>1</NbOfLogMsg>'"])
         cfg.append(['H ',  6, "'  </PhyMsgInf>'"])
         cfg.append(['H ',  7, "'  <CBIEnvelSDDReqLogMsg>'"])
         cfg.append(['H ',  8, "'    <CBISDDReqLogMsg>'"])
-        cfg.append(['H ',  9, "'      <GrpHdr xmlns=" + '"urn:CBI:xsd:CBISDDReqLogMsg.00.01.00">' +"'"])
+        cfg.append(['H ',  9, "'      <GrpHdr xmlns=" + '"urn:CBI:xsd:CBISDDReqLogMsg.00.01.01">' +"'"])
         cfg.append(['H ', 10, "'        <MsgId>'+ info.MsgId + '</MsgId>'",                            '<!-- Identificativo univoco messaggio -->'])
         cfg.append(['H ', 11, "'        <CreDtTm>'+ info.CreDtTm + '</CreDtTm>'",                      '<!-- Data e Ora di Creazione -->'])
         cfg.append(['H ', 12, "'        <NbOfTxs>' + str(info.NbOfTxs) +'</NbOfTxs>'",                 '<!-- Numero totale disposizioni -->'])
@@ -241,7 +262,7 @@ def InitConfig(tipo='R'):
         cfg.append(['H ', 23, "'          </Id>'"])
         cfg.append(['H ', 24, "'        </InitgPty>'"])
         cfg.append(['H ', 25, "'      </GrpHdr>'"])
-        cfg.append(['H1',  0, "'      <PmtInf xmlns=" +'"urn:CBI:xsd:CBISDDReqLogMsg.00.01.00">' "'"])
+        cfg.append(['H1',  0, "'      <PmtInf xmlns=" +'"urn:CBI:xsd:CBISDDReqLogMsg.00.01.01">' "'"])
         cfg.append(['H1',  1, "'        <PmtInfId>' + info.PmtInfId + '</PmtInfId>'",                 '<!-- Identificativo Univoco della Sottodistinta -->'])
         cfg.append(['H1',  2, "'        <PmtMtd>DD</PmtMtd>'"])
         cfg.append(['H1',  3, "'        <PmtTpInf>'"])
