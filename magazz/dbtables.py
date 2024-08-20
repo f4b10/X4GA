@@ -62,6 +62,8 @@ _annoStartFE = 2018
 if hasattr(sys, 'frozen'):
     _annoStartFE = 2019
 
+_DEBUG = True and not hasattr(sys, 'frozen')
+
 class NumProtIvaEsiste(Exception):
     pass
 
@@ -2951,7 +2953,7 @@ class DocMag(adb.DbTable):
     def SendMail_Prepare(self):
         sei = self._info.sendmail_info
         sei.clear()
-        if bt.MAGDEMSENDFLAG and self.config.docemail == 1:
+        if bt.MAGDEMSENDFLAG and (self.config.docemail == 1 or True):
             anag = self.GetAnag()
             if hasattr(anag, 'docsemail'):
                 if anag.docsemail:
@@ -2983,7 +2985,10 @@ class DocMag(adb.DbTable):
                         sendem = False
                     sei.request = msg
                     sei.sendfrom = sender
-                    sei.sendto = "%s <%s>" % (self.pdc.descriz, anag.docsemail)
+                    if _DEBUG:
+                        sei.sendto = "%s <%s>" % (self.pdc.descriz, 'mimaec@libero.it')
+                    else:
+                        sei.sendto = "%s <%s>" % (self.pdc.descriz, anag.docsemail)
                     sei.message = body
                     if sendem:
                         msg += """Confermi la spedizione del documento via email?"""
@@ -3045,7 +3050,8 @@ class DocMag(adb.DbTable):
 
 
 class DocMag_Differiti(DocMag):
-
+    
+        #self.pdc.AddJoin('clienti', 'cli', idLeft='id', join=adb.JOIN_LEFT)
     def GetPrintFileName(self):
         def cap(x):
             c = True

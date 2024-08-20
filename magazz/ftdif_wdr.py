@@ -611,12 +611,13 @@ ID_MAGAZZ = 15046
 ID_YEAR = 15047
 ID_NUMDOC1 = 15048
 ID_NUMDOC2 = 15049
-ID_TIPEMAIL = 15050
-ID_UPDATE = 15051
-ID_PANGRID = 15052
-ID_EMAIL = 15053
-ID_LISTA = 15054
-ID_STAMPA = 15055
+ID_TEXTCTRL = 15050
+ID_TIPEMAIL = 15051
+ID_UPDATE = 15052
+ID_PANGRID = 15053
+ID_EMAIL = 15054
+ID_LISTA = 15055
+ID_STAMPA = 15056
 
 def StaDifFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -640,33 +641,57 @@ def StaDifFunc( parent, call_fit = True, set_sizer = True ):
     item8 = alib.LinkTableMagazz(parent, ID_MAGAZZ, 'id_magazz')
     item4.Add( item8, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item9 = wx.StaticText( parent, ID_TEXT, "Aliquota Iva", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item9 = wx.StaticText( parent, ID_TEXT, "Clienti dell'agente", wx.DefaultPosition, wx.DefaultSize, 0 )
     item4.Add( item9, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item10 = alib.LinkTableAliqIva(parent, ID_SOLOMP, 'aliqiva')
+    item10 = alib.LinkTableAgente(parent, ID_SOLOAGE, 'id_agente')
     item4.Add( item10, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item11 = wx.StaticText( parent, ID_TEXT, "Registrati nell'anno:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item4.Add( item11, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item11 = wx.StaticText( parent, ID_TEXT, "Aliquota Iva", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item4.Add( item11, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item12 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    item12 = alib.LinkTableAliqIva(parent, ID_SOLOMP, 'aliqiva')
+    item4.Add( item12, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+
+    item13 = wx.StaticText( parent, ID_TEXT, "Registrati nell'anno:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item4.Add( item13, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item14 = wx.FlexGridSizer( 0, 5, 0, 0 )
     
-    item13 = NumCtrl(parent, ID_YEAR, name='year', integerWidth=4, allowNegative=False, groupDigits=False)
-    item12.Add( item13, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+    item15 = NumCtrl(parent, ID_YEAR, name='year', integerWidth=4, allowNegative=False, groupDigits=False)
+    item14.Add( item15, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
-    item14 = wx.StaticText( parent, ID_TEXT, "dal num.:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item12.Add( item14, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT, 5 )
+    item16 = wx.StaticText( parent, ID_TEXT, "dal num.:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item14.Add( item16, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
-    item15 = NumCtrl(parent, ID_NUMDOC1, name='numdoc1', integerWidth=5, allowNegative=False, groupDigits=False)
-    item12.Add( item15, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+    item17 = NumCtrl(parent, ID_NUMDOC1, name='numdoc1', integerWidth=5, allowNegative=False, groupDigits=False)
+    item14.Add( item17, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
-    item16 = wx.StaticText( parent, ID_TEXT, "al num.:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item12.Add( item16, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT, 5 )
+    item18 = wx.StaticText( parent, ID_TEXT, "al num.:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item14.Add( item18, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
-    item17 = NumCtrl(parent, ID_NUMDOC2, name='numdoc2', integerWidth=5, allowNegative=False, groupDigits=False)
-    item12.Add( item17, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
+    item19 = NumCtrl(parent, ID_NUMDOC2, name='numdoc2', integerWidth=5, allowNegative=False, groupDigits=False)
+    item14.Add( item19, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT, 5 )
 
-    item4.Add( item12, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item4.Add( item14, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item20 = wx.StaticText( parent, ID_TEXT, "nel periodo dal", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item4.Add( item20, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item21 = wx.FlexGridSizer( 0, 5, 0, 0 )
+    
+    item22 = DateCtrl( parent, ID_TEXTCTRL, "", wx.DefaultPosition, [80,-1], 0 )
+    item22.SetName( "dtStart" )
+    item21.Add( item22, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+
+    item23 = wx.StaticText( parent, ID_TEXT, "al", wx.DefaultPosition, [25,-1], 0 )
+    item21.Add( item23, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+
+    item24 = DateCtrl( parent, ID_TEXTCTRL, "", wx.DefaultPosition, [80,-1], 0 )
+    item24.SetName( "dtEnd" )
+    item21.Add( item24, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+
+    item4.Add( item21, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item4.AddGrowableCol( 1 )
 
@@ -674,53 +699,53 @@ def StaDifFunc( parent, call_fit = True, set_sizer = True ):
 
     item1.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item18 = TipoEmailRadioBox( parent, ID_TIPEMAIL, "Seleziona la stampa dei documenti di:", wx.DefaultPosition, wx.DefaultSize, 
+    item25 = TipoEmailRadioBox( parent, ID_TIPEMAIL, "Seleziona la stampa dei documenti di:", wx.DefaultPosition, wx.DefaultSize, 
         ["Tutti i clienti","Solo clienti con email da spedire","Solo clienti con email, anche già spedite","Solo clienti senza email"] , 1, wx.RA_SPECIFY_COLS )
-    item18.SetName( "tipemail" )
-    item1.Add( item18, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
+    item25.SetName( "tipemail" )
+    item1.Add( item25, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
 
-    item19 = wx.Button( parent, ID_UPDATE, "Aggiorna", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item19.SetName( "update" )
-    item1.Add( item19, 0, wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM|wx.RIGHT|wx.BOTTOM, 5 )
+    item26 = wx.Button( parent, ID_UPDATE, "Aggiorna", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item26.SetName( "update" )
+    item1.Add( item26, 0, wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM|wx.RIGHT|wx.BOTTOM, 5 )
 
     item1.AddGrowableCol( 0 )
 
     item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item20 = wx.StaticText( parent, ID_TEXT, "Documenti presenti", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item20.SetForegroundColour( wx.BLUE )
-    item0.Add( item20, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+    item27 = wx.StaticText( parent, ID_TEXT, "Documenti presenti", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item27.SetForegroundColour( wx.BLUE )
+    item0.Add( item27, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
 
-    item21 = wx.Panel( parent, ID_PANGRID, wx.DefaultPosition, [660,300], wx.SUNKEN_BORDER )
-    item21.SetName( "pangrid" )
-    item0.Add( item21, 0, wx.GROW|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item28 = wx.Panel( parent, ID_PANGRID, wx.DefaultPosition, [660,300], wx.SUNKEN_BORDER )
+    item28.SetName( "pangrid" )
+    item0.Add( item28, 0, wx.GROW|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item22 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    item29 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
-    item23 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    item30 = wx.FlexGridSizer( 0, 2, 0, 0 )
     
-    item24 = wx.Button( parent, ID_EMAIL, "Spedisci email", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item24.SetName( "butemail" )
-    item24.Enable(False)
-    item23.Add( item24, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+    item31 = wx.Button( parent, ID_EMAIL, "Spedisci email", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item31.SetName( "butemail" )
+    item31.Enable(False)
+    item30.Add( item31, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
-    item22.Add( item23, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item29.Add( item30, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item25 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    item32 = wx.FlexGridSizer( 0, 2, 0, 0 )
     
-    item26 = wx.Button( parent, ID_LISTA, "Lista", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item26.SetName( "butlist" )
-    item25.Add( item26, 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+    item33 = wx.Button( parent, ID_LISTA, "Lista", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item33.SetName( "butlist" )
+    item32.Add( item33, 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
 
-    item27 = wx.Button( parent, ID_STAMPA, "Stampa documenti", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item27.SetName( "butprint" )
-    item25.Add( item27, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+    item34 = wx.Button( parent, ID_STAMPA, "Stampa documenti", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item34.SetName( "butprint" )
+    item32.Add( item34, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
-    item22.Add( item25, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item29.Add( item32, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item22.AddGrowableCol( 1 )
+    item29.AddGrowableCol( 1 )
 
-    item0.Add( item22, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item0.Add( item29, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item0.AddGrowableCol( 0 )
 
@@ -733,11 +758,11 @@ def StaDifFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_STORYDAT1 = 15056
-ID_STORYDAT2 = 15057
-ID_STORYORDER = 15058
-ID_STORYUPD = 15059
-ID_STORYPANGRID = 15060
+ID_STORYDAT1 = 15057
+ID_STORYDAT2 = 15058
+ID_STORYORDER = 15059
+ID_STORYUPD = 15060
+ID_STORYPANGRID = 15061
 
 def FtDifHistoryFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )

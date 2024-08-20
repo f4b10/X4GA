@@ -63,6 +63,7 @@ class DocsGrid(dbglib.DbGrid):
         mag = doc.magazz
         tpd = doc.config
         pdc = doc.pdc
+        cli = doc.pdc.cli
         des = doc.dest
 
         cn = lambda db, col: db._GetFieldIndex(col, inline=True)
@@ -84,6 +85,7 @@ class DocsGrid(dbglib.DbGrid):
             (100, (cn(doc, 'totimporto'), "Tot.Documento", _FLT, True )),\
             ( 40, (cn(des, 'codice'),     "Cod.",          _STR, True )),\
             (250, (cn(des, 'descriz'),    "Destinazione",  _STR, True )),\
+            (250, (cn(cli, 'docsemail'),  "Mail",          _STR, True )),\
             )
 
         colmap  = [c[1] for c in cols]
@@ -143,6 +145,11 @@ class StaDifPanel(aw.Panel):
             self.Layout()
 
         self.dbdocs = dbm.DocMag_Differiti()
+        self.dbdocs.pdc.AddJoin('clienti', 'cli', idLeft='id', join=adb.JOIN_LEFT)
+
+        
+        
+        
         self.dbdocs._info.stampadiff = True
         self.dbdocs.ShowDialog(self)
         self.dbdocs.AddField('0.0', 'dastampare')
@@ -210,18 +217,30 @@ class StaDifPanel(aw.Panel):
             aw.awu.MsgDialog(self, "Impossibile determinare la configurazione del documento")
             return
 
-        mg = cn('id_magazz').GetValue()
-        te = cn('tipemail').GetValue()
+        mg      = cn('id_magazz').GetValue()
+        ag      = cn('id_agente').GetValue()
+        te      = cn('tipemail').GetValue()
+        dtStart = cn('dtStart').GetValue()
+        dtEnd   = cn('dtEnd').GetValue()
         cn('butemail').Enable(te in 'CA')
 
         docs.ClearFilters()
         docs.AddFilter('doc.id_tipdoc=%s', td)
         if mg:
             docs.AddFilter('doc.id_magazz=%s', mg)
-        docs.AddFilter('YEAR(doc.datreg)=%s', ci(wdr.ID_YEAR).GetValue())
-        nd1, nd2 = [ci(x).GetValue() for x in (wdr.ID_NUMDOC1, wdr.ID_NUMDOC2)]
-        if nd1: docs.AddFilter('doc.numdoc>=%s', nd1)
-        if nd2: docs.AddFilter('doc.numdoc<=%s', nd2)
+        if ag:
+            docs.AddFilter('cli.id_agente=%s' % ag)
+            
+        if dtStart or dtEnd:
+            if dtStart:
+                docs.AddFilter('doc.datreg>="%s"' % dtStart)
+            if dtEnd:
+                docs.AddFilter('doc.datreg<="%s"' % dtEnd)
+        else:
+            docs.AddFilter('YEAR(doc.datreg)=%s', ci(wdr.ID_YEAR).GetValue())
+            nd1, nd2 = [ci(x).GetValue() for x in (wdr.ID_NUMDOC1, wdr.ID_NUMDOC2)]
+            if nd1: docs.AddFilter('doc.numdoc>=%s', nd1)
+            if nd2: docs.AddFilter('doc.numdoc<=%s', nd2)
 
         # selezione per aliquota iva
         iv = cn('aliqiva').GetValue()
@@ -243,7 +262,7 @@ class StaDifPanel(aw.Panel):
                     sel = True
                     if te in "CAS":
                         if anag.Get(rs[row][cpd]):
-                            sel = bool(anag.docsemail)
+                            sel = (bool(anag.docsemail)) and '@' in anag.docsemail 
                             if sel:
                                 if te == "S":
                                     sel = not sel
@@ -402,7 +421,7 @@ class StaDifPanel(aw.Panel):
                                 wait = aw.awu.WaitDialog(self, message="Invio email in corso...",
                                                          maximum=self.dbdocs.RowsCount())
                                 wx.Sleep(3)
-                            wait.SetMessage("Invio a: %s" % sei.sendto)
+                            wait.SetMessage("Invio a: %s" % (sei.sendto))
                             wx.Sleep(3)
                             d2p.SendMail(sei, ur.GetFileName())
                     if wait is not None:
