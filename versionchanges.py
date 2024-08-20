@@ -29,9 +29,24 @@ import mx.DateTime as dt
 import mx.Odt
 
 history = (
+    ('1.6.13', dt.Date(2024, 08, 20), (
+        ("BET161301",
+         """Aggiunta selezione per agente in stampa differita"""
+        ),
+        ("BET161302",
+         """Aggiunto in setup utenti il diritto o meno di modificare prodotti/clienti"""
+        ),
+        ("BET161303",
+         """Modificato formato per generazione SD"""
+        ),
+        ),),
+
     ('1.6.12', dt.Date(2023, 10, 18), (
         ("BET161201",
          """Svincolata la visualizzazione delle fatture elettroniche dalla presenza o meno di Internet Explorer."""
+        ),
+        ("BET161202",
+         """Modificati i tracciati .xml per generazione SDD come da circolare CBI."""
         ),
         ),),
 

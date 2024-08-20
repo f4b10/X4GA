@@ -182,6 +182,7 @@ class LinkTableProd(LinkTable, LinkTableHideSearchMixin):
 
 
     def GetSqlSearch(self, obj, forceAll, exact, count=False):
+        print 'GetSqlSearch'
         cmd = None
         par = []
         if obj == self._ctrcod:
@@ -206,10 +207,12 @@ class LinkTableProd(LinkTable, LinkTableHideSearchMixin):
                 chk = Env.GetAncestorByName(self, 'vincolocat' )
                 if not chk.IsChecked():
                     v=Env.GetAncestorByName(self, 'causale' ).GetValue()
-                    filterCateg = """
-                    FIND_IN_SET("%s", REPLACE(catart.caudoc, "|", ","))>0
-                    """\
-                    % v
+                    if v:
+                        filterCateg = """
+                        FIND_IN_SET("%s", REPLACE(catart.caudoc, "|", ","))>0
+                        """\
+                        % v
+                        filter = AndApp("(%s)" % self.basefilter, filterCateg )
                     filter = AndApp("(%s)" % self.basefilter, filterCateg )
             except:
                 pass
