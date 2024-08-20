@@ -230,17 +230,19 @@ ID_CAN_MAGAZZINT = 16025
 ID_CAN_MAGAZZDIF = 16026
 ID_CAN_MAGAZZELA = 16027
 ID_CAN_MAGAZZCHI = 16028
-ID_CAN_SETUPCONTAB = 16029
-ID_CAN_SETUPMAGAZZ = 16030
-ID_CAN_SETUPSETUP = 16031
-ID_CAN_SETUPOPTION = 16032
-ID_LINE = 16033
-ID_CAN_SETUPOTHER = 16034
-ID_CAN_SETUPOPTOTH = 16035
-ID_CAN_BACKUPDATA = 16036
-ID_CAN_RESTOREDATA = 16037
-ID_CAN_UPDATE = 16038
-ID_AZIENDE = 16039
+ID_CAN_UPDCLI = 16029
+ID_CAN_UPDPROD = 16030
+ID_CAN_SETUPCONTAB = 16031
+ID_CAN_SETUPMAGAZZ = 16032
+ID_CAN_SETUPSETUP = 16033
+ID_CAN_SETUPOPTION = 16034
+ID_LINE = 16035
+ID_CAN_SETUPOTHER = 16036
+ID_CAN_SETUPOPTOTH = 16037
+ID_CAN_BACKUPDATA = 16038
+ID_CAN_RESTOREDATA = 16039
+ID_CAN_UPDATE = 16040
+ID_AZIENDE = 16041
 
 def UtentiCardPage1Func( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 3, 0, 0 )
@@ -315,92 +317,126 @@ def UtentiCardPage1Func( parent, call_fit = True, set_sizer = True ):
 
     item19 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
-    item21 = wx.StaticBox( parent, -1, "Accesso ai menu di setup" )
+    item21 = wx.StaticBox( parent, -1, "Operazioni su Scheda Cliente" )
     item20 = wx.StaticBoxSizer( item21, wx.VERTICAL )
     
-    item22 = UnoZeroCheckBox( parent, ID_CAN_SETUPCONTAB, "Setup di contabilità", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item22.SetName( "can_setupcontab" )
-    item20.Add( item22, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item23 = UnoZeroCheckBox( parent, ID_CAN_SETUPMAGAZZ, "Setup di magazzino", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item23.SetName( "can_setupmagazz" )
-    item20.Add( item23, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item24 = UnoZeroCheckBox( parent, ID_CAN_SETUPSETUP, "Setup delle impostazioni generali", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item24.SetName( "can_setupsetup" )
-    item20.Add( item24, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item25 = UnoZeroCheckBox( parent, ID_CAN_SETUPOPTION, "Setup delle opzioni varie", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item25.SetName( "can_setupoption" )
-    item20.Add( item25, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item26 = wx.StaticLine( parent, ID_LINE, wx.DefaultPosition, [20,-1], wx.LI_HORIZONTAL )
-    item20.Add( item26, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item27 = UnoZeroCheckBox( parent, ID_CAN_SETUPOTHER, "Altre impostazioni (da cust/plugin)", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item27.SetName( "can_setupother" )
-    item20.Add( item27, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item28 = UnoZeroCheckBox( parent, ID_CAN_SETUPOPTOTH, "Altre opzioni (da cust/plugin)", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item28.SetName( "can_setupoptoth" )
-    item20.Add( item28, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
-
-    item19.Add( item20, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
-
-    item30 = wx.StaticBox( parent, -1, "Operazioni di backup/restore" )
-    item29 = wx.StaticBoxSizer( item30, wx.VERTICAL )
+    item22 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
-    item31 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    item23 = wx.CheckBox( parent, ID_CAN_UPDCLI, "Consentito", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item23.SetName( "can_updcli" )
+    item22.Add( item23, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+
+    item22.AddGrowableCol( 0 )
+
+    item22.AddGrowableCol( 1 )
+
+    item20.Add( item22, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item19.Add( item20, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item25 = wx.StaticBox( parent, -1, "Operazioni su Scheda Prodotti" )
+    item24 = wx.StaticBoxSizer( item25, wx.VERTICAL )
     
-    item32 = wx.CheckBox( parent, ID_CAN_BACKUPDATA, "Backup", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item32.SetName( "can_backupdata" )
-    item31.Add( item32, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
-
-    item33 = wx.CheckBox( parent, ID_CAN_RESTOREDATA, "Restore", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item33.SetName( "can_restoredata" )
-    item31.Add( item33, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
-
-    item31.AddGrowableCol( 0 )
-
-    item31.AddGrowableCol( 1 )
-
-    item29.Add( item31, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
-
-    item19.Add( item29, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item35 = wx.StaticBox( parent, -1, "Operazioni di Aggiornamento" )
-    item34 = wx.StaticBoxSizer( item35, wx.VERTICAL )
+    item26 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
-    item36 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    item27 = wx.CheckBox( parent, ID_CAN_UPDPROD, "Consentito", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item27.SetName( "can_updprod" )
+    item26.Add( item27, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+
+    item26.AddGrowableCol( 0 )
+
+    item26.AddGrowableCol( 1 )
+
+    item24.Add( item26, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item19.Add( item24, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item29 = wx.StaticBox( parent, -1, "Accesso ai menu di setup" )
+    item28 = wx.StaticBoxSizer( item29, wx.VERTICAL )
     
-    item37 = wx.CheckBox( parent, ID_CAN_UPDATE, "Consentito", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item37.SetName( "can_update" )
-    item36.Add( item37, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+    item30 = UnoZeroCheckBox( parent, ID_CAN_SETUPCONTAB, "Setup di contabilità", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item30.SetName( "can_setupcontab" )
+    item28.Add( item30, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item36.AddGrowableCol( 0 )
+    item31 = UnoZeroCheckBox( parent, ID_CAN_SETUPMAGAZZ, "Setup di magazzino", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item31.SetName( "can_setupmagazz" )
+    item28.Add( item31, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item36.AddGrowableCol( 1 )
+    item32 = UnoZeroCheckBox( parent, ID_CAN_SETUPSETUP, "Setup delle impostazioni generali", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item32.SetName( "can_setupsetup" )
+    item28.Add( item32, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item34.Add( item36, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item33 = UnoZeroCheckBox( parent, ID_CAN_SETUPOPTION, "Setup delle opzioni varie", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item33.SetName( "can_setupoption" )
+    item28.Add( item33, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item19.Add( item34, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item34 = wx.StaticLine( parent, ID_LINE, wx.DefaultPosition, [20,-1], wx.LI_HORIZONTAL )
+    item28.Add( item34, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item35 = UnoZeroCheckBox( parent, ID_CAN_SETUPOTHER, "Altre impostazioni (da cust/plugin)", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item35.SetName( "can_setupother" )
+    item28.Add( item35, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item36 = UnoZeroCheckBox( parent, ID_CAN_SETUPOPTOTH, "Altre opzioni (da cust/plugin)", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item36.SetName( "can_setupoptoth" )
+    item28.Add( item36, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+
+    item19.Add( item28, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+    item38 = wx.StaticBox( parent, -1, "Operazioni di backup/restore" )
+    item37 = wx.StaticBoxSizer( item38, wx.VERTICAL )
+    
+    item39 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    
+    item40 = wx.CheckBox( parent, ID_CAN_BACKUPDATA, "Backup", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item40.SetName( "can_backupdata" )
+    item39.Add( item40, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+
+    item41 = wx.CheckBox( parent, ID_CAN_RESTOREDATA, "Restore", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item41.SetName( "can_restoredata" )
+    item39.Add( item41, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+
+    item39.AddGrowableCol( 0 )
+
+    item39.AddGrowableCol( 1 )
+
+    item37.Add( item39, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item19.Add( item37, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item43 = wx.StaticBox( parent, -1, "Operazioni di Aggiornamento" )
+    item42 = wx.StaticBoxSizer( item43, wx.VERTICAL )
+    
+    item44 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    
+    item45 = wx.CheckBox( parent, ID_CAN_UPDATE, "Consentito", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item45.SetName( "can_update" )
+    item44.Add( item45, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT, 5 )
+
+    item44.AddGrowableCol( 0 )
+
+    item44.AddGrowableCol( 1 )
+
+    item42.Add( item44, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item19.Add( item42, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item0.Add( item19, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL, 5 )
 
-    item38 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    item46 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
-    item39 = wx.StaticText( parent, ID_TEXT, "Diritti di accesso alle aziende", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item39.SetForegroundColour( wx.BLUE )
-    item38.Add( item39, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP, 5 )
+    item47 = wx.StaticText( parent, ID_TEXT, "Diritti di accesso alle aziende", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item47.SetForegroundColour( wx.BLUE )
+    item46.Add( item47, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP, 5 )
 
-    item40 = wx.CheckListBox( parent, ID_AZIENDE, wx.DefaultPosition, [360,-1], [], wx.LB_SINGLE )
-    item38.Add( item40, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
+    item48 = wx.CheckListBox( parent, ID_AZIENDE, wx.DefaultPosition, [360,-1], [], wx.LB_SINGLE )
+    item46.Add( item48, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item38.AddGrowableCol( 0 )
+    item46.AddGrowableCol( 0 )
 
-    item38.AddGrowableRow( 1 )
+    item46.AddGrowableRow( 1 )
 
-    item0.Add( item38, 0, wx.GROW, 5 )
+    item0.Add( item46, 0, wx.GROW, 5 )
 
     item0.AddGrowableCol( 2 )
 

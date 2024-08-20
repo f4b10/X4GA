@@ -79,6 +79,8 @@ UTENTI_STRUCTURE = [["id",              "INT",       6, None, "ID Destinatario",
                     ["can_backupdata",  "TINYINT1",  1, None, "Flag permesso backup: effettuare backup", None ],
                     ["can_restoredata", "TINYINT1",  1, None, "Flag permesso backup: ripristinare backup", None ],
                     ["can_update",      "TINYINT1",  1, None, "Flag permesso effettuare aggiornamenti", None ],
+                    ["can_updprod",     "TINYINT1",  1, None, "Flag permesso modificare scheda prodotti", None ],
+                    ["can_updcli",      "TINYINT1",  1, None, "Flag permesso modificare scheda prodotti", None ],
                     ["max_sqlrows",     "INT",       6, None, "Numero massimo di righe da visualizzare in ricerche sql", None ], 
                     ]
 
@@ -90,7 +92,9 @@ def CheckUtentiStructure():
     
     if not 'can_setupcontab' in u.GetFieldNames()\
     or not 'max_sqlrows' in u.GetFieldNames()\
-    or not 'can_update' in u.GetFieldNames():
+    or not 'can_update' in u.GetFieldNames()\
+    or not 'can_updprod' in u.GetFieldNames()\
+    or not 'can_updcli' in u.GetFieldNames():
         if util.MsgDialog(None,
                           """La tabella di configurazione degli utenti\n"""
                           """deve essere modificata.\n\nProcedo?""", 
@@ -122,7 +126,11 @@ def CheckUtentiStructure():
         ADD COLUMN `can_magazzela`   TINYINT(1) AFTER `can_magazzdif`,
         ADD COLUMN `can_magazzchi`   TINYINT(1) AFTER `can_magazzela`,
         ADD COLUMN `can_backupdata`  TINYINT(1) AFTER `can_magazzchi`,
-        ADD COLUMN `can_restoredata` TINYINT(1) AFTER `can_backupdata`;"""
+        ADD COLUMN `can_restoredata` TINYINT(1) AFTER `can_backupdata`,
+        ADD COLUMN `can_update`      TINYINT(1) AFTER `can_restoredata`,
+        ADD COLUMN `can_updprod`     TINYINT(1) AFTER `can_update`
+        ADD COLUMN `can_updcli`      TINYINT(1) AFTER `can_updprod`
+        ;"""
         if u._info.db.Execute(cmd):
             adb.dbtable.ClearCache()
             cmd = """
@@ -148,7 +156,10 @@ def CheckUtentiStructure():
             can_magazzchi=1,
             can_backupdata=1,
             can_restoredata=1,
-            can_update=1"""
+            can_update=1,
+            can_updprod=0,
+            can_updcli=0
+            """
             if not u._info.db.Execute(cmd):
                 err = repr(u._info.db.dbError.description)
         else:
@@ -158,24 +169,36 @@ def CheckUtentiStructure():
             return False
 
     if not 'can_update' in u.GetFieldNames():
-        cmd = """
-ALTER TABLE `x4`.`utenti` ADD COLUMN `can_update` TINYINT(1) DEFAULT 1;        
-        """
-        if not u._info.db.Execute(cmd):
-            err = repr(u._info.db.dbError.description)
-            util.MsgDialog(None, err, style=wx.ICON_ERROR)
-            return False
-
-        cmd = """
-        UPDATE `x4`.`utenti` SET  `can_update`=1;
-        """
-        if not u._info.db.Execute(cmd):
-            err = repr(u._info.db.dbError.description)
-            util.MsgDialog(None, err, style=wx.ICON_ERROR)
+        cmd = "ALTER TABLE x4.utenti ADD COLUMN can_update TINYINT(1) DEFAULT 0;"
+        cursor = Azienda.DB.connection.cursor()
+        try:
+            cursor.execute(cmd)
+            cmd = "UPDATE x4.utenti SET can_update=1;"
+            cursor.execute(cmd)
+        except:
             return False
 
 
+    if not 'can_updprod' in u.GetFieldNames():
+        cmd = "ALTER TABLE x4.utenti ADD COLUMN can_updprod TINYINT(1) DEFAULT 0;"
+        cursor = Azienda.DB.connection.cursor()
+        try:
+            cursor.execute(cmd)
+            cmd = "UPDATE x4.utenti SET can_updprod=0;"
+            cursor.execute(cmd)
+        except:
+            return False
 
+
+    if not 'can_updcli' in u.GetFieldNames():
+        cmd = "ALTER TABLE x4.utenti ADD COLUMN can_updcli TINYINT(1) DEFAULT 0;"
+        cursor = Azienda.DB.connection.cursor()
+        try:
+            cursor.execute(cmd)
+            cmd = "UPDATE x4.utenti SET can_updcli=0;"
+            cursor.execute(cmd)
+        except:
+            return False
     
     if not 'max_sqlrows' in u.GetFieldNames():
         cmd = """

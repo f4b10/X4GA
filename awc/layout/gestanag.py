@@ -1228,17 +1228,21 @@ class AnagPanel(aw.Panel):
         return linktable.LinkTable
 
     def OnRecordDelete( self, event ):
-        out = False
-        if self.db_recno >= 0:
-            if self.TestForDeletion() and AskForDeletion(self):
-                out = self.DeleteDataRecord()
-                if out:
-                    try:
-                        self._btnattach.SetKey(self.db_recid, delete=True)
-                    except:
-                        pass
-                self.UpdateSearch()
-                event.Skip()
+        if self.CanUpdate():
+            out = False
+            if self.db_recno >= 0:
+                if self.TestForDeletion() and AskForDeletion(self):
+                    out = self.DeleteDataRecord()
+                    if out:
+                        try:
+                            self._btnattach.SetKey(self.db_recid, delete=True)
+                        except:
+                            pass
+                    self.UpdateSearch()
+                    event.Skip()
+        else:
+            self.ViewMessageRifiuto()
+            out=False
         return out
 
     def SetInsertMode(self):
@@ -1368,6 +1372,31 @@ class AnagPanel(aw.Panel):
     def BeforeUpdateDataRecord(self):
         pass
 
+
+    def ViewMessageRifiuto(self):
+        MsgDialog(self,\
+    """Non si detengono i diritti per poter modificare la scheda.\n"""\
+    """Le modifiche apportate non saranno pertanto memorizzate.""",
+    style = wx.ICON_STOP )
+        
+
+    def CanUpdate(self):
+        canUpdate=True
+        try:
+            if self.db_tabname=="prod":
+                if not (Azienda.Login.userdata.can_updprod==1):
+                    canUpdate=False
+            else:
+                try:
+                    if self.tabanag=="clienti":
+                        if not (Azienda.Login.userdata.can_updcli==1):
+                            canUpdate=False
+                except:
+                    canUpdate=True
+        except:
+            canUpdate=True
+        return canUpdate        
+
     def UpdateDataRecord( self ):
         """
         Memorizzazione dati del record: il metodo effettua la validazione di tutti
@@ -1376,43 +1405,49 @@ class AnagPanel(aw.Panel):
         Se tutti i controlli hanno dato esito positivo alla validazione, viene
         richiamato il metodo L{self.TransferDataFromWindow}
         """
-        self.BeforeUpdateDataRecord()
-        written = False
-        newcod, newdes = map(lambda x: self.FindWindowByName(x).GetValue(),
-                             ('codice', 'descriz'))
-        if self.db_recno != NEW_RECORD and self._oricod is not None and self._orides is not None:
-            if newcod != self._oricod or newdes != self._orides:
-                msg = "Attenzione\n\nSto per variare i seguenti dati dell'elemento esistente:\n"
-                msg += "Prima della modifica:\ncodice=%s, descrizione=%s\n" % (self._oricod, self._orides)
-                msg += "Dopo la modifica:\ncodice=%s, descrizione=%s\n\n" % (newcod, newdes)
-                msg += "Confermi la variazione ?"
-                style = wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT
-                if MsgDialog(self, message=msg, style=style) != wx.ID_YES:
-                    return False
-        COLOR_NORMAL = wx.NullColour
-        COLOR_ERROR = wx.RED
-        valid = True
-        for col,ctr in self.db_datalink:
-            if isinstance(ctr, wx.Window):
-                if ctr.Validate():
-                    ctr.SetBackgroundColour(COLOR_NORMAL)
-                else:
-                    ctr.SetBackgroundColour(COLOR_ERROR)
-                    ctr.Refresh()
-                    valid = False
-        if valid:
-            if self.TransferDataFromWindow():
-                #TODO AGGIUNTA PER MEMORIZZARE DATI NELLE TABELLE LINKATE
-                self.UpdateDataRecord_PersonalPage()
-                self.UpdateDataControls( self.db_recno )
-                self._oricod, self._orides = newcod, newdes
-                written = True
+
+            
+        if self.CanUpdate():
+            self.BeforeUpdateDataRecord()
+            written = False
+            newcod, newdes = map(lambda x: self.FindWindowByName(x).GetValue(),
+                                 ('codice', 'descriz'))
+            if self.db_recno != NEW_RECORD and self._oricod is not None and self._orides is not None:
+                if newcod != self._oricod or newdes != self._orides:
+                    msg = "Attenzione\n\nSto per variare i seguenti dati dell'elemento esistente:\n"
+                    msg += "Prima della modifica:\ncodice=%s, descrizione=%s\n" % (self._oricod, self._orides)
+                    msg += "Dopo la modifica:\ncodice=%s, descrizione=%s\n\n" % (newcod, newdes)
+                    msg += "Confermi la variazione ?"
+                    style = wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT
+                    if MsgDialog(self, message=msg, style=style) != wx.ID_YES:
+                        return False
+            COLOR_NORMAL = wx.NullColour
+            COLOR_ERROR = wx.RED
+            valid = True
+            for col,ctr in self.db_datalink:
+                if isinstance(ctr, wx.Window):
+                    if ctr.Validate():
+                        ctr.SetBackgroundColour(COLOR_NORMAL)
+                    else:
+                        ctr.SetBackgroundColour(COLOR_ERROR)
+                        ctr.Refresh()
+                        valid = False
+            if valid:
+                if self.TransferDataFromWindow():
+                    #TODO AGGIUNTA PER MEMORIZZARE DATI NELLE TABELLE LINKATE
+                    self.UpdateDataRecord_PersonalPage()
+                    self.UpdateDataControls( self.db_recno )
+                    self._oricod, self._orides = newcod, newdes
+                    written = True
+            else:
+                MsgDialog(self,\
+    """Sono presenti valori non validi.  Correggere le parti evidenziate per """\
+    """continuare.  I dati non sono stati salvati.""" )
+    
         else:
-            MsgDialog(self,\
-"""Sono presenti valori non validi.  Correggere le parti evidenziate per """\
-"""continuare.  I dati non sono stati salvati.""" )
-
-
+            self.ViewMessageRifiuto()
+            self.LoadFieldsValues()
+            written = True
         return written
 
     def TransferDataFromWindow( self ):
