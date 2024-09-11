@@ -116,6 +116,27 @@ class DocsGrid(dbglib.DbGrid):
 
         self.Bind(gl.EVT_GRID_CELL_LEFT_CLICK, self.OnDocSeleziona)
 
+    def OnContextMenu(self, event):
+        row = event.GetRow()
+        doc = self.dbdoc
+        doc.MoveRow(row)
+        self.ResetContextMenu()
+
+        def OnDeselectAll(event):
+            print "OnDeselectAll"
+        def OnSelectAll(event):
+            print "OnSelectAll"
+        def OnInverti(event):
+            print "OnInverti"
+            self.DividiOrdine(row)
+
+
+        self.AppendContextMenuVoice('Deseleziona tutto', OnDeselectAll)
+        self.AppendContextMenuVoice('Seleziona tutto',   OnSelectAll)
+        self.AppendContextMenuVoice('Inverti selezione', OnInverti)
+
+
+
     def OnDocSeleziona(self, event):
         if event.GetCol() == 0:
             col = self.dbdoc._GetFieldIndex('dastampare', inline=True)

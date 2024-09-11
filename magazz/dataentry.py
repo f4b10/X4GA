@@ -1598,7 +1598,7 @@ class MagazzPanel(aw.Panel,\
 
         if self.status == STATUS_EDITING:
             sei = doc.SendMail_Prepare()
-            if sei.sendto and sei.request:
+            if sei.sendto and sei.request and doc.cfgdoc.docemail:
                 sendem = True
                 msg = sei.request
                 if sei.errors:

@@ -475,7 +475,10 @@ class DataLinkCellEditor(gridlib.PyGridCellEditor, CellEditorsMixin):
         if not show and self._tc._helpInProgress: return
         if not show and hasattr(self._tc, '_retain_focus'):
             show = True
-        self._tc.Enable()
+        try:
+            self._tc.Enable()
+        except:
+            pass
         #self.base_Show(show, attr)
         gridlib.PyGridCellEditor.Show(self, show, attr)
         if show:

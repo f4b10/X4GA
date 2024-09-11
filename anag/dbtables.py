@@ -953,6 +953,12 @@ class TabCatArt(adb.DbTable):
         self.AddOrder('catart.codice')
         self.Reset()
 
+class TabCatCli(adb.DbTable):
+    def __init__(self):
+        adb.DbTable.__init__(self, bt.TABNAME_CATCLI, 'catcli')
+        self.AddOrder('catcli.codice')
+        self.Reset()
+
 
 # ------------------------------------------------------------------------------
 

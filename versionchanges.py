@@ -29,7 +29,7 @@ import mx.DateTime as dt
 import mx.Odt
 
 history = (
-    ('1.6.13', dt.Date(2024, 08, 20), (
+    ('1.6.13', dt.Date(2024, 8, 20), (
         ("BET161301",
          """Aggiunta selezione per agente in stampa differita"""
         ),

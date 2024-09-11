@@ -1156,9 +1156,10 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
         linktables = self._MultiParam(linktables, LinkTabAttr)
         afterEdit = self._MultiParam(afterEdit, AfterEditAttr)
 
-        if type(editors) in (list, tuple):
-            if not type(editors[0]) in (list, tuple):
-                editors = (editors,)
+        if editors:
+            if type(editors) in (list, tuple):
+                if not type(editors[0]) in (list, tuple):
+                    editors = (editors,)
 
         #table = DbGridTable(self, rs, colmap, canIns, afterEdit, newRowFunc)
         table = self.tableClass(\

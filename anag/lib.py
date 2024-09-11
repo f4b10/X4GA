@@ -100,6 +100,7 @@ class LinkTableProd(LinkTable, LinkTableHideSearchMixin):
 
     def __init__(self, parent, id, name=None, **kwargs):
         #print kwargs
+        print 'LinkTableProd'
         LinkTable.__init__(self, parent, id, **kwargs)
         self.digitsearch_oncode = Env.Azienda.BaseTab.MAGDIGSEARCH
         self.tabsearch_oncode = not self.digitsearch_ondescriz
@@ -303,8 +304,9 @@ class LinkTableProd(LinkTable, LinkTableHideSearchMixin):
         FROM %s prod
         LEFT JOIN %s status ON prod.id_status=status.id
         LEFT JOIN %s catart ON prod.id_catart=catart.id
+        LEFT JOIN %s aliqiva ON prod.id_aliqiva=aliqiva.id
         """\
-            % (self.db_name, bt.TABNAME_STATART, bt.TABNAME_CATART)
+            % (self.db_name, bt.TABNAME_STATART, bt.TABNAME_CATART, bt.TABNAME_ALIQIVA)
 
 #        if bt.MAGVISGIA:
 #            out += """
