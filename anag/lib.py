@@ -362,7 +362,8 @@ class LinkTableProd(LinkTable, LinkTableHideSearchMixin):
 
     def GetDataGridColumns(self):
         cols = self.GetDataGridStructure()
-        return [c[1] for c in cols]
+        retValue = [c[1] for c in cols]
+        return retValue
 
     def AdjustColumnsSize(self, grid):
         cols = self.GetDataGridStructure()

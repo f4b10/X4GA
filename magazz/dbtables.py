@@ -5081,6 +5081,7 @@ class Listino(adb.DbTable):
         frn = pro.AddJoin(bt.TABNAME_PDC,     'fornit', join=adb.JOIN_LEFT, fields='id,codice,descriz', idLeft='id_fornit', idRight='id')
         self.AddField('prod.costo',  'p_costo')
         self.AddField('prod.prezzo', 'p_prezzo')
+        self.AddField('0',  'sele')
         self.AddOrder('prod.codice')
         self.AddOrder('lis.data', adb.ORDER_DESCENDING)
         self.Reset()

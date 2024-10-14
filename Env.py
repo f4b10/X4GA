@@ -3160,7 +3160,7 @@ class Azienda(object):
             if cls.MAGNOCODEDES:
                 cls.movmag_h += [\
                 [ "enable_nocodedes",     "TINYINT",  None, None, "Destinatario non codificato: flag attivazione", None ],
-                [ "nocodedes_descriz",    "VARCHAR",    60, None, "Destinatario non codificato: Descrizione", None ],
+                [ "nocodedes_descriz",    "VARCHAR",   120, None, "Destinatario non codificato: Descrizione", None ],
                 [ "nocodedes_indirizzo",  "VARCHAR",    60, None, "Destinatario non codificato: Indirizzo", None ],
                 [ "nocodedes_cap",        "CHAR",        5, None, "Destinatario non codificato: CAP", None ],
                 [ "nocodedes_citta",      "VARCHAR",    60, None, "Destinatario non codificato: Città", None ],
@@ -3745,7 +3745,7 @@ class Azienda(object):
 
             if cls.MAGNOCODEDES:
                 cls.pdt_h += [\
-                [ "nocodedes_descriz",    "VARCHAR",    60, None, "Destinatario non codificato: Descrizione", None ],
+                [ "nocodedes_descriz",    "VARCHAR",   120, None, "Destinatario non codificato: Descrizione", None ],
                 [ "nocodedes_indirizzo",  "VARCHAR",    60, None, "Destinatario non codificato: Indirizzo", None ],
                 [ "nocodedes_cap",        "CHAR",        5, None, "Destinatario non codificato: CAP", None ],
                 [ "nocodedes_citta",      "VARCHAR",    60, None, "Destinatario non codificato: Città", None ],

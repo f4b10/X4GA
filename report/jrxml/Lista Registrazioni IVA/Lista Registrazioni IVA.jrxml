@@ -17,6 +17,8 @@
 		 whenNoDataType="NoPages"
 		 isTitleNewPage="false"
 		 isSummaryNewPage="false">
+	<property name="EnqueueReport" value="&apos;_Riepilogo IVA&apos;" />
+	<property name="EnqueueTable" value="RS.RiepAliquote" />
 	<property name="ireport.scriptlethandling" value="0" />
 	<property name="ireport.encoding" value="UTF-8" />
 	<import value="java.util.*" />

@@ -235,11 +235,12 @@ class LinkTable(wx.Control,\
     _codewidth = wxinit.GetCodiceStandardWidth()#40
     _descwidth = None
 
-    def __init__(self, parent, id, pos=wx.DefaultPosition, size=wx.DefaultSize, style=wx.NO_BORDER, fontSize=8, multiSelect=False,  **lt_kwargs):
+    def __init__(self, parent, id, pos=wx.DefaultPosition, size=wx.DefaultSize, style=wx.NO_BORDER, fontSize=8, multiSelect=False, persistent=True,  **lt_kwargs):
 
         wx.Control.__init__(self, parent, id, pos, size, style)
         cmix.ControlsMixin.__init__(self)
 
+        self.persistent = persistent
         self.multiSelect = multiSelect
         self.fontSize = fontSize
         self.obligatory = False
@@ -270,6 +271,7 @@ class LinkTable(wx.Control,\
         self.fixvaluesearch = False
         self.filterlinks = []
         self.filtervalues = []
+        self.StdFilterValues = []
         self.filterlinkstitle = None
         self.exactcode = False
         self.codexclusive = False #ricerca esclusiva sul codice (se esatto, prende il record anche se ce ne sono altri con lo stesso inizio di codice)
@@ -1028,6 +1030,9 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
                 #===============================================================
                 if db.Retrieve(cmd, par):
                     rs = db.rs
+                    if 'FROM prod' in cmd:
+                        #print self.StdFilterValues
+                        self.filtervalues = [['id_catart', None, None], ['id_fornit', None, None]]
                     if len(rs) == 0:
                         self.currentid = None
                         if obj == self._ctrcod:
@@ -1403,6 +1408,7 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
                      cardclass = None,
                      filter = None,
                      filterlinks = None,
+                     persistent = True,
                      canedit=True,
                      canins=True,
                      cansee=True):
@@ -1441,6 +1447,7 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
         self._setDim()
         self.filter = filter
         self.SetFilterLinks(filterlinks)
+        self.persistent = persistent
         self.SetTips()
 
     def SetFilterLinks(self, filterlinks):
@@ -1470,6 +1477,7 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
                   in enumerate(filterlinks):
                     self.filtervalues.append([fl_col, fl_ins, None])
                     self.SetFilterValueTitle()
+                self.StdFilterValues=self.filtervalues
                 self.ActivateFilterButton()
 
     def SetFilterValueTitle(self, num=0):

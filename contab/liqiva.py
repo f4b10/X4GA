@@ -691,7 +691,7 @@ class LiqIvaPanel(aw.Panel):
         event.Skip()
 
     def OnStampa(self, event):
-        def ci(x):
+        def ci(x): 
             return self.FindWindowById(x)
         def cn(x):
             return self.FindWindowByName(x)

@@ -332,6 +332,7 @@ class AnagPanel(aw.Panel):
     """
     needSync = None
     autoCode = None
+    dDefaultValue={}
 
     def __init__(self, parent, id=None, pos = wx.DefaultPosition,\
                  size = wx.DefaultSize):
@@ -1311,6 +1312,11 @@ class AnagPanel(aw.Panel):
             if ctr:
                 ctr.SetValue(val)
 
+        if self.db_recno == NEW_RECORD:
+            if len(self.dDefaultValue.keys())>0:
+                for k in self.dDefaultValue.keys():
+                    self.FindWindowByName(k).SetValue(self.dDefaultValue[k])
+
     def TestForChanges(self):
         """
         Verifica che non ci siano editazioni attive sul record gestito.
@@ -1704,6 +1710,9 @@ class AnagPanel(aw.Panel):
                 ctr.SetValue(None)
         except:
             pass
+        
+        
+        
 
     def SetDataChanged(self, dmod=True, changedobject=None):
         if (self.db_recno is not None and self.acceptDataChanged) or not dmod:

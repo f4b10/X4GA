@@ -29,6 +29,13 @@ import mx.DateTime as dt
 import mx.Odt
 
 history = (
+    ('1.6.15', dt.Date(2024, 9, 20), (
+        ("BET161501",
+         """Possibilità di definire dei valori di defaul da proporre all'inserimento di schede anagrafiche"""
+        ),
+        ),),
+
+
     ('1.6.13', dt.Date(2024, 8, 20), (
         ("BET161301",
          """Aggiunta selezione per agente in stampa differita"""

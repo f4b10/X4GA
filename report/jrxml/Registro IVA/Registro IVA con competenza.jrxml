@@ -698,7 +698,7 @@
 		</columnHeader>
 		<detail>
 			<band height="8"  isSplitAllowed="true" >
-				<printWhenExpression><![CDATA[RS.mov.numriga > 1 or RS.rei.stacosric != 1]]></printWhenExpression>
+				<printWhenExpression><![CDATA[RS.mov.numriga > 1 or RS.rei.stacosric != 1 or RS.tipreg=="E"]]></printWhenExpression>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"

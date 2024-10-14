@@ -1270,6 +1270,7 @@ class DbGrid(gridlib.Grid, cmix.HelpedControl):
                 for lt_col, lt_rsidcol, lt_rscodcol, lt_rsdescol,\
                     lt_table, lt_filter, lt_cardclass, lt_fl, lt_events,\
                     lt_editor, lt_oncreate in linktables:
+                    print lt_table
                     if lt_col == col:
                         attr_editor = lt_editor( lt_table,
                                                  lt_rsidcol,

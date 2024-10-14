@@ -1682,10 +1682,13 @@ class GridBody(object):
             idaliq = mov.prod.id_aliqiva
             if idaliq is None and hasattr(self, '_auto_magivadef'):
                 idaliq = self._auto_magivadef
-            if self.dbanag.splitpay==1:
-                self.dbaliq.Get(idaliq)
-                if self.dbaliq.id_split:
-                    idaliq = self.dbaliq.id_split
+            try:
+                if (self.dbanag.splitpay or 0) == 1:
+                    self.dbaliq.Get(idaliq)
+                    if self.dbaliq.id_split:
+                        idaliq = self.dbaliq.id_split
+            except:
+                pass
         mov.id_aliqiva = idaliq
 
     def GridBodyIsRowOK(self):

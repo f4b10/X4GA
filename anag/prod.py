@@ -762,6 +762,7 @@ class ProdPanel(ga.AnagPanel):
         self._sqlrelcol += ', tipart.id, tipart.codice, tipart.descriz'
         self._sqlrelcol += ', marart.id, marart.codice, marart.descriz'
         self._sqlrelcol += ', pdc.id, pdc.codice, pdc.descriz'
+        self._sqlrelcol += ', aliqiva.id, aliqiva.codice, aliqiva.descriz, aliqiva.perciva'
         self._sqlrelcol += ', status.hidesearch'
         
         self._sqlrelfrm =\
@@ -770,12 +771,14 @@ class ProdPanel(ga.AnagPanel):
             " LEFT JOIN %s AS gruart ON %s.id_gruart=gruart.id"\
             " LEFT JOIN %s AS pdc    ON %s.id_fornit=pdc.id"\
             " LEFT JOIN %s AS marart ON %s.id_marart=marart.id"\
+            " LEFT JOIN %s AS aliqiva ON %s.id_aliqiva=aliqiva.id"\
             " LEFT JOIN %s AS status ON %s.id_status=status.id"\
             % (bt.TABNAME_TIPART,  bt.TABNAME_PROD,
                bt.TABNAME_CATART,  bt.TABNAME_PROD,
                bt.TABNAME_GRUART,  bt.TABNAME_PROD,
                bt.TABNAME_PDC,     bt.TABNAME_PROD,
                bt.TABNAME_MARART,  bt.TABNAME_PROD,
+               bt.TABNAME_ALIQIVA, bt.TABNAME_PROD,
                bt.TABNAME_STATART, bt.TABNAME_PROD,)
         
         self.db_tabprefix = "%s." % bt.TABNAME_PROD
