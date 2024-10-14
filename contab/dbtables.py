@@ -2178,6 +2178,7 @@ class RiepMovCon(adb.DbTable):
         self.Get(-1)
 
 
+
 class RiepMovConFe(RiepMovCon):
     """
     Riepilogo registrazioni contabili, viste x dettaglio regstrazione.
@@ -2272,7 +2273,93 @@ class MovAliqIvaTable(RiepMovCon):
         self.Reset()
 
 
+class RiepAliqMov(RiepMovCon):
+
+    def __init__(self, **kwargs):
+
+        RiepMovCon.__init__(self, **kwargs)
+
+        #importo, imposta, indeducibile con segno opportuno
+        self.AddField('IF(regiva.tipo="A" AND config.pasegno="A" OR regiva.tipo IN ("V", "C") AND config.pasegno="D", body.imponib, IF(regiva.tipo="A" AND config.pasegno="D" OR regiva.tipo IN ("V", "C") AND config.pasegno="A", -body.imponib, 0))', 'valimponib')
+        self.AddField('IF(regiva.tipo="A" AND config.pasegno="A" OR regiva.tipo IN ("V", "C") AND config.pasegno="D", body.imposta, IF(regiva.tipo="A" AND config.pasegno="D" OR regiva.tipo IN ("V", "C") AND config.pasegno="A", -body.imposta, 0))', 'valimposta')
+        self.AddField('IF(regiva.tipo="A" AND config.pasegno="A" OR regiva.tipo IN ("V", "C") AND config.pasegno="D", body.indeduc, IF(regiva.tipo="A" AND config.pasegno="D" OR regiva.tipo IN ("V", "C") AND config.pasegno="A", -body.indeduc, 0))', 'valindeduc')
+        sgnexpr = """
+IF(regiva.tipo='A' AND body.segno='D'
+OR regiva.tipo<>'A' AND body.segno='A',1,-1)"""
+        self.AddTotalOf("body.imponib*%s" % sgnexpr, "imponib")
+        self.AddTotalOf("body.imposta*%s" % sgnexpr, "imposta")
+        self.AddTotalOf("body.indeduc*%s" % sgnexpr, "indeduc")
+        
+        self.AddGroupOn("body.id_aliqiva")
+        self.ClearOrders()
+        self.AddOrder("aliqiva.codice")
+        self.Reset()
+
+
 # ------------------------------------------------------------------------------
+
+
+class RiepAliquote(adb.DbTable):
+    """
+    Riepilogo aliquote iva.
+    """
+    def __init__(self, **kwargs):
+
+        adb.DbTable.__init__(self, bt.TABNAME_CONTAB_H, "reg", fields='id', **kwargs)
+
+        config = self.AddJoin(\
+            bt.TABNAME_CFGCONTAB,"config",    idLeft="id_caus",\
+            join=adb.JOIN_LEFT, fields='id')
+
+        regiva = self.AddJoin(\
+            bt.TABNAME_REGIVA,   "regiva",    idLeft="id_regiva",\
+            join=adb.JOIN_LEFT, fields='id,tipo')
+
+        body = self.AddJoin(\
+            bt.TABNAME_CONTAB_B, "body",      idLeft="id", idRight="id_reg",\
+            join=adb.JOIN_LEFT, fields='id')
+        body.AddFilter("body.numriga=1 OR body.tipriga='E'")
+
+        pdc = body.AddJoin(\
+            bt.TABNAME_PDC,      "pdc",       idLeft="id_pdcpa", idRight="id",\
+            join=adb.JOIN_LEFT, fields='id')
+
+        tot = self.AddJoin(\
+            bt.TABNAME_CONTAB_B, "tot",       idLeft="id", idRight="id_reg",\
+            join=adb.JOIN_LEFT, fields='id')
+        tot.AddFilter("tot.tipriga IN ('I', 'E', 'O')")
+
+        iva = tot.AddJoin(\
+            bt.TABNAME_ALIQIVA, "iva",       idLeft="id_aliqiva", idRight="id",\
+            join=adb.JOIN_LEFT, fields='id,codice,descriz,tipo,perciva,percind')
+
+        self.pdc = pdc
+
+        self.periodic="M"
+        s = adb.DbTable(bt.TABNAME_CFGSETUP, 'setup')
+        if s.Retrieve('setup.chiave=%s', 'liqiva_periodic') and s.OneRow():
+            self.periodic = s.flag
+        del s
+
+        #print 'campo aggiuntivo'
+        if self.periodic=='M':
+            self.AddField('concat(LPAD(month(datcompete),2,"0"), "/", year(datcompete) )', "competenza")
+        else:
+            self.AddField('concat(LPAD(((month(datcompete)-1)div 3)+1,2,"0") , "/", year(datcompete) )', "competenza")
+            
+
+
+        sgnexpr = """
+IF(regiva.tipo='A' AND tot.segno='D'
+OR regiva.tipo<>'A' AND tot.segno='A',1,-1)"""
+        self.AddGroupOn("tot.id_aliqiva")
+        self.AddTotalOf("tot.imponib*%s" % sgnexpr, "imponib")
+        self.AddTotalOf("tot.imposta*%s" % sgnexpr, "imposta")
+        self.AddTotalOf("tot.indeduc*%s" % sgnexpr, "indeduc")
+
+        self.AddOrder("iva.codice")
+
+        self.Get(-1)
 
 
 class RiepRegIva(adb.DbTable):
@@ -2302,7 +2389,7 @@ class RiepRegIva(adb.DbTable):
 
         tot = self.AddJoin(\
             bt.TABNAME_CONTAB_B, "tot",       idLeft="id", idRight="id_reg",\
-            join=adb.JOIN_LEFT, fields=None)
+            join=adb.JOIN_LEFT, fields='id')
         tot.AddFilter("tot.tipriga IN ('I', 'E', 'O')")
 
         self.pdc = pdc
@@ -2335,6 +2422,7 @@ OR regiva.tipo<>'A' AND tot.segno='A',1,-1)"""
         self.AddOrder("reg.id")
 
         self.Get(-1)
+
 
 
 # ------------------------------------------------------------------------------

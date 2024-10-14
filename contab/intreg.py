@@ -21,6 +21,9 @@
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
 
+import sys
+_DEBUG = True and not hasattr(sys, 'frozen')
+
 import wx
 import wx.grid as gl
 import awc.controls.dbgrid as dbglib
@@ -449,6 +452,7 @@ class IntRegIvaGrid(dbglib.DbGridColoriAlternati, _IntRegGridMixin):
         _IntRegGridMixin.__init__(self)
         
         self.dbreg = dbc.RiepRegIva(writable=False)
+        self.dbRiepAliquote = dbc.RiepAliquote(writable=False)
         self.dbreg.ShowDialog(self)
         
         cn = lambda db, col: db._GetFieldIndex(col, inline=True)
@@ -533,6 +537,18 @@ class IntRegIvaPanel(wx.Panel):
     def __init__(self, *args, **kwargs):
         wx.Panel.__init__(self, *args, **kwargs)
         wdr.IntRegIvaFunc(self)
+
+        if _DEBUG:
+            import datetime
+            self.FindWindowByName('datreg1').ChangeValue(datetime.date(2024,9,1))
+            self.FindWindowByName('datreg2').ChangeValue(datetime.date(2024,9,15))
+            self.FindWindowByName('id_regiva').SetValue(57)
+            print 'alt1'
+
+        
+        
+
+
         
         pp = self.FindWindowById(wdr.ID_PANGRIDREG)
         self.gridreg = IntRegIvaGrid(pp)
@@ -548,27 +564,32 @@ class IntRegIvaPanel(wx.Panel):
         self.SetName('IntRegIva')
     
     def OnStampa(self, event):
-        db = self.gridreg.dbreg
         cn = self.FindWindowByName
         def SPV(key, value=None):
             if value is None:
                 value = cn(key).GetValue()
             db._info.SetPrintValue(key, value)
+            
         #valori di stampa per i filtri
-        ri = cn('id_regiva')
-        SPV('regivacod', ri.GetValueCod())
-        SPV('regivades', ri.GetValueDes())
-        cc = cn('id_caus')
-        SPV('causalecod', cc.GetValueCod())
-        SPV('causaledes', cc.GetValueDes())
-        for name in 'datreg1 datreg2 numreg1 numreg2 datdoc1 datdoc2 numdoc1 numdoc2 numpro1 numpro2'.split():
-            SPV(name)
-        #valori di stampa per totali
-        for tipo in 'AVC':
-            SPV('totimponib_%s' % tipo.lower())
-            SPV('totimposta_%s' % tipo.lower())
-            SPV('totindeduc_%s' % tipo.lower())
-            SPV('totnumreg_%s' % tipo.lower())
+        for db in [self.gridreg.dbreg, self.gridreg.dbRiepAliquote]: 
+            ri = cn('id_regiva')
+            SPV('regivacod', ri.GetValueCod())
+            SPV('regivades', ri.GetValueDes())
+            cc = cn('id_caus')
+            SPV('causalecod', cc.GetValueCod())
+            SPV('causaledes', cc.GetValueDes())
+            for name in 'datreg1 datreg2 numreg1 numreg2 datdoc1 datdoc2 numdoc1 numdoc2 numpro1 numpro2'.split():
+                SPV(name)
+            #valori di stampa per totali
+            for tipo in 'AVC':
+                SPV('totimponib_%s' % tipo.lower())
+                SPV('totimposta_%s' % tipo.lower())
+                SPV('totindeduc_%s' % tipo.lower())
+                SPV('totnumreg_%s' % tipo.lower())
+                
+        db = self.gridreg.dbreg
+        db.RiepAliquote = self.gridreg.dbRiepAliquote
+               
         rpt.Report(self, db, 'Lista Registrazioni IVA')
     
     def OnUpdateFilters(self, event):
@@ -577,40 +598,39 @@ class IntRegIvaPanel(wx.Panel):
         event.Skip()
     
     def UpdateFilters(self):
-        
-        reg = self.gridreg.dbreg
-        reg.ClearFilters()
-        
         def gcv(ctr):
             return self.FindWindowByName(ctr).GetValue()
-        
-        for col, op, name in (("reg.id",     ">=%s", "numreg1"),\
-                              ("reg.id",     "<=%s", "numreg2"),\
-                              ("reg.datreg", ">=%s", "datreg1"),\
-                              ("reg.datreg", "<=%s", "datreg2"),\
-                              ("reg.datdoc", ">=%s", "datdoc1"),\
-                              ("reg.datdoc", "<=%s", "datdoc2"),\
-                              ("reg.numdoc", ">=%s", "numdoc1"),\
-                              ("reg.numdoc", "<=%s", "numdoc2"),\
-                              ("reg.numiva", ">=%s", "numpro1"),\
-                              ("reg.numiva", "<=%s", "numpro2")):
-            val = gcv(name)
-            if val: reg.AddFilter("%s%s" % (col, op), val)
-        
-        for col in ("id_caus", "id_regiva"):
-            val = gcv(col)
-            if val: reg.AddFilter("reg.%s=%%s" % col, val)
-            else:
-                if col == "id_regiva":
-                    reg.AddFilter("reg.%s IS NOT NULL" % col)
-        
-        for name, flag in (('stampareg', 'st_regiva'),
-                           ('stampagio', 'st_giobol')):
-            sr = gcv(name)
-            if sr == "D":
-                reg.AddFilter("reg.%s=1" % flag)
-            elif sr == "R":
-                reg.AddFilter("reg.%s IS NULL OR reg.%s<>1" % (flag, flag))
+
+
+        for db in (self.gridreg.dbreg, self.gridreg.dbRiepAliquote):
+            db.ClearFilters()
+            for col, op, name in (("reg.id",     ">=%s", "numreg1"),\
+                                  ("reg.id",     "<=%s", "numreg2"),\
+                                  ("reg.datreg", ">=%s", "datreg1"),\
+                                  ("reg.datreg", "<=%s", "datreg2"),\
+                                  ("reg.datdoc", ">=%s", "datdoc1"),\
+                                  ("reg.datdoc", "<=%s", "datdoc2"),\
+                                  ("reg.numdoc", ">=%s", "numdoc1"),\
+                                  ("reg.numdoc", "<=%s", "numdoc2"),\
+                                  ("reg.numiva", ">=%s", "numpro1"),\
+                                  ("reg.numiva", "<=%s", "numpro2")):
+                val = gcv(name)
+                if val: db.AddFilter("%s%s" % (col, op), val)
+            
+            for col in ("id_caus", "id_regiva"):
+                val = gcv(col)
+                if val: db.AddFilter("reg.%s=%%s" % col, val)
+                else:
+                    if col == "id_regiva":
+                        db.AddFilter("reg.%s IS NOT NULL" % col)
+            
+            for name, flag in (('stampareg', 'st_regiva'),
+                               ('stampagio', 'st_giobol')):
+                sr = gcv(name)
+                if sr == "D":
+                    db.AddFilter("reg.%s=1" % flag)
+                elif sr == "R":
+                    db.AddFilter("reg.%s IS NULL OR reg.%s<>1" % (flag, flag))
     
     def UpdateGrid(self):
         db = self.gridreg.dbreg
@@ -619,37 +639,56 @@ class IntRegIvaPanel(wx.Panel):
                                % db.GetError())
         self.gridreg.UpdateGrid()
         self.UpdateTotals()
+        
+        db = self.gridreg.dbRiepAliquote
+        if _DEBUG:
+            db.SetDebug()
+        if not db.Retrieve():
+            awc.util.MsgDialog("Problema in lettura dati:\n\n%s"\
+                               % db.GetError())
+        
+    #===========================================================================
+    # def UpdateRiepilogoAliquote(self):
+    #     print 'UpdateRiepilogoAliquote'
+    #     dbRiepAliquote = dbc.RiepAliquote()
+    #     if _DEBUG:
+    #         dbRiepAliquote.SetDebug()
+    #     dbRiepAliquote.Retrieve()
+    #     pass
+    #     
+    #===========================================================================
+        
     
     def UpdateTotals(self):
-        
         reg = self.gridreg.dbreg
-        
-        totali = {"A": [0,0,0,0],\
-                  "V": [0,0,0,0],\
-                  "C": [0,0,0,0]}
-        cimponib, cimposta, cindeduc =\
-                map(lambda x: reg._GetFieldIndex("total_%s" % x, inline=True),\
-                    ("imponib", "imposta", "indeduc"))
-        ctipriv = reg.regiva._GetFieldIndex("tipo", inline=True)
-                
-        rs = reg.GetRecordset()
-        
-        wx.BeginBusyCursor()
-        try:
-            for r in range(reg.RowsCount()):
-                tipriv = rs[r][ctipriv]
-                totali[tipriv][0] += rs[r][cimponib] or 0
-                totali[tipriv][1] += rs[r][cimposta] or 0
-                totali[tipriv][2] += rs[r][cindeduc] or 0
-                totali[tipriv][3] += 1
-        finally:
-            wx.EndBusyCursor()
-        
-        scv = lambda x, y: self.FindWindowByName(x).SetValue(y)
-        
-        for tipriv in "AVC":
-            for n, col in enumerate(("imponib", "imposta", "indeduc", "numreg")):
-                scv("tot%s_%s" % (col, tipriv.lower()), totali[tipriv][n])
+        for i, reg in enumerate([self.gridreg.dbreg, self.gridreg.dbRiepAliquote]):
+            totali = {"A": [0,0,0,0],\
+                      "V": [0,0,0,0],\
+                      "C": [0,0,0,0]}
+            cimponib, cimposta, cindeduc =\
+                    map(lambda x: reg._GetFieldIndex("total_%s" % x, inline=True),\
+                        ("imponib", "imposta", "indeduc"))
+            ctipriv = reg.regiva._GetFieldIndex("tipo", inline=True)
+                    
+            rs = reg.GetRecordset()
+            
+            wx.BeginBusyCursor()
+            try:
+                for r in range(reg.RowsCount()):
+                    tipriv = rs[r][ctipriv]
+                    totali[tipriv][0] += rs[r][cimponib] or 0
+                    totali[tipriv][1] += rs[r][cimposta] or 0
+                    totali[tipriv][2] += rs[r][cindeduc] or 0
+                    totali[tipriv][3] += 1
+            finally:
+                wx.EndBusyCursor()
+            
+            scv = lambda x, y: self.FindWindowByName(x).SetValue(y)
+            
+            if i==0:
+                for tipriv in "AVC":
+                    for n, col in enumerate(("imponib", "imposta", "indeduc", "numreg")):
+                        scv("tot%s_%s" % (col, tipriv.lower()), totali[tipriv][n])
     
     #def StampaMastrino(self):
         #db = self.gridreg.dbmas
@@ -799,6 +838,11 @@ class IntAliqIvaPanel(wx.Panel):
         
         self.dbmov = dbc.MovAliqIvaTable()
         self.dbmov.AddBaseFilter("body.tipriga IN ('I', 'E', 'O')")
+        self.dbRiepAliquote = dbc.RiepAliqMov()
+        self.dbRiepAliquote.AddBaseFilter("body.tipriga IN ('I', 'E', 'O')")
+        
+        
+        
         def cn(x):
             return self.FindWindowByName(x)
         self.gridreg = IntAliqIvaGrid(cn('pangridmov'), self.dbmov)
@@ -814,31 +858,36 @@ class IntAliqIvaPanel(wx.Panel):
         self.SetName('IntUsoAliq')
     
     def OnStampa(self, event):
-        db = self.dbmov
-        cn = self.FindWindowByName
         def SPV(key, value=None):
             if value is None:
                 value = cn(key).GetValue()
             db._info.SetPrintValue(key, value)
-        #valori di stampa per i filtri
-        al = cn('id_aliqiva')
-        SPV('aliqivacod', al.GetValueCod())
-        SPV('aliqivades', al.GetValueDes())
-        ri = cn('id_regiva')
-        SPV('regivacod', ri.GetValueCod())
-        SPV('regivades', ri.GetValueDes())
-        cc = cn('id_caus')
-        SPV('causalecod', cc.GetValueCod())
-        SPV('causaledes', cc.GetValueDes())
-        for name in 'datreg1 datreg2 numreg1 numreg2 datdoc1 datdoc2 numdoc1 numdoc2 numpro1 numpro2'.split():
-            SPV(name)
-        #valori di stampa per totali
-        for tipo in 'AVC':
-            SPV('totimponib_%s' % tipo.lower())
-            SPV('totimposta_%s' % tipo.lower())
-            SPV('totindeduc_%s' % tipo.lower())
-            SPV('totnumreg_%s' % tipo.lower())
-        rpt.Report(self, db, 'Utilizzo Aliquote IVA')
+        db = self.dbmov
+        cn = self.FindWindowByName
+        for db in [self.dbmov, self.dbRiepAliquote]:
+            #valori di stampa per i filtri
+            al = cn('id_aliqiva')
+            SPV('aliqivacod', al.GetValueCod())
+            SPV('aliqivades', al.GetValueDes())
+            ri = cn('id_regiva')
+            SPV('regivacod', ri.GetValueCod())
+            SPV('regivades', ri.GetValueDes())
+            cc = cn('id_caus')
+            SPV('causalecod', cc.GetValueCod())
+            SPV('causaledes', cc.GetValueDes())
+            if _DEBUG:
+                print 'alt'
+            for name in 'datreg1 datreg2 numreg1 numreg2 datdoc1 datdoc2 numdoc1 numdoc2 numpro1 numpro2'.split():
+                SPV(name)
+            #valori di stampa per totali
+            for tipo in 'AVC':
+                SPV('totimponib_%s' % tipo.lower())
+                SPV('totimposta_%s' % tipo.lower())
+                SPV('totindeduc_%s' % tipo.lower())
+                SPV('totnumreg_%s' % tipo.lower())
+            
+        self.dbmov.RiepAliquote = self.dbRiepAliquote
+        rpt.Report(self, self.dbmov, 'Utilizzo Aliquote IVA')
         event.Skip()
     
     def OnUpdateFilters(self, event):
@@ -847,95 +896,107 @@ class IntAliqIvaPanel(wx.Panel):
         event.Skip()
     
     def UpdateFilters(self):
-        
-        mov = self.dbmov
-        mov.ClearFilters()
-        reg = mov.reg
-        
         def gcv(ctr):
             return self.FindWindowByName(ctr).GetValue()
         
-        for col, op, name in (("reg.id",     ">=%s", "numreg1"),\
-                              ("reg.id",     "<=%s", "numreg2"),\
-                              ("reg.datreg", ">=%s", "datreg1"),\
-                              ("reg.datreg", "<=%s", "datreg2"),\
-                              ("reg.numdoc", ">=%s", "numdoc1"),\
-                              ("reg.numdoc", "<=%s", "numdoc2"),\
-                              ("reg.numiva", ">=%s", "numpro1"),\
-                              ("reg.numiva", "<=%s", "numpro2")):
-            val = gcv(name)
-            if val: mov.AddFilter("%s%s" % (col, op), val)
-        
-        for col in "id_caus id_regiva".split():
-            val = gcv(col)
-            if val: mov.AddFilter("reg.%s=%%s" % col, val)
+        for mov in [self.dbmov, self.dbRiepAliquote]:
+            mov.ClearFilters()
+            reg = mov.reg
+            for col, op, name in (("reg.id",     ">=%s", "numreg1"),\
+                                  ("reg.id",     "<=%s", "numreg2"),\
+                                  ("reg.datreg", ">=%s", "datreg1"),\
+                                  ("reg.datreg", "<=%s", "datreg2"),\
+                                  ("reg.numdoc", ">=%s", "numdoc1"),\
+                                  ("reg.numdoc", "<=%s", "numdoc2"),\
+                                  ("reg.numiva", ">=%s", "numpro1"),\
+                                  ("reg.numiva", "<=%s", "numpro2")):
+                val = gcv(name)
+                if val: mov.AddFilter("%s%s" % (col, op), val)
+            
+            for col in "id_caus id_regiva".split():
+                val = gcv(col)
+                if val: mov.AddFilter("reg.%s=%%s" % col, val)
+                else:
+                    if col == "id_regiva":
+                        mov.AddFilter("reg.%s IS NOT NULL" % col)
+            
+            val = gcv('id_aliqiva')
+            if val:
+                mov.AddFilter("body.id_aliqiva=%s", val)
             else:
-                if col == "id_regiva":
-                    mov.AddFilter("reg.%s IS NOT NULL" % col)
-        
-        val = gcv('id_aliqiva')
-        if val:
-            mov.AddFilter("body.id_aliqiva=%s", val)
-        else:
-            mov.AddFilter("body.id_aliqiva IS NOT NULL")
-        
-        for name, flag in (('stampareg', 'st_regiva'),
-                           ('stampagio', 'st_giobol')):
-            sr = gcv(name)
-            if sr == "D":
-                mov.AddFilter("reg.%s=1" % flag)
-            elif sr == "R":
-                mov.AddFilter("reg.%s IS NULL OR reg.%s<>1" % (flag, flag))
+                mov.AddFilter("body.id_aliqiva IS NOT NULL")
+            
+            for name, flag in (('stampareg', 'st_regiva'),
+                               ('stampagio', 'st_giobol')):
+                sr = gcv(name)
+                if sr == "D":
+                    mov.AddFilter("reg.%s=1" % flag)
+                elif sr == "R":
+                    mov.AddFilter("reg.%s IS NULL OR reg.%s<>1" % (flag, flag))
     
     def UpdateGrid(self):
         db = self.dbmov
         if not db.Retrieve():
             awc.util.MsgDialog("Problema in lettura dati:\n\n%s"\
                                % db.GetError())
+        else:
+            db = self.dbRiepAliquote
+            db.SetDebug()
+            if not db.Retrieve():
+                awc.util.MsgDialog("Problema in lettura dati:\n\n%s"\
+                                   % db.GetError())
+            
+            
+            
         self.gridreg.ResetView()
         self.UpdateTotals()
 
     def UpdateTotals(self):
         def gc(tab, col):
             return tab._GetFieldIndex(col, inline=True)
-        mov = self.dbmov
-        coltipriva = gc(mov.reg.regiva, 'tipo')
-        colimponib = gc(mov, 'valimponib')
-        colimposta = gc(mov, 'valimposta')
-        colindeduc = gc(mov, 'valindeduc')
-        colidreg = gc(mov.reg, 'id')
-        totali = [0, #imponibile,
-                  0, #imposta,
-                  0, #indeducibile
-                  0] #numero operazioni
         def _totali():
             return []+totali
-        tot = {'A': _totali(),
-               'V': _totali(),
-               'C': _totali(),}
-        rs = mov.GetRecordset()
-        wx.BeginBusyCursor()
-        try:
-            for n in range(mov.RowsCount()):
-                tipreg = rs[n][coltipriva]
-                if (tipreg or ' ') in 'AVC':
-                    tot[tipreg][0] += rs[n][colimponib]
-                    tot[tipreg][1] += rs[n][colimposta]
-                    tot[tipreg][2] += rs[n][colindeduc]
-                    tot[tipreg][3] += 1
-                else:
-                    aw.awu.MsgDialog(self, "Registro iva non valido: registrazione #%d"%colidreg, style=wx.ICON_ERROR)
-                    break
-        finally:
-            wx.EndBusyCursor()
         
-        cn = self.FindWindowByName
-        for tipo in 'AVC':
-            t = tot[tipo]
-            cn('totimponib_%s' % tipo.lower()).SetValue(t[0])
-            cn('totimposta_%s' % tipo.lower()).SetValue(t[1])
-            cn('totindeduc_%s' % tipo.lower()).SetValue(t[2])
-            cn('totnumreg_%s' % tipo.lower()).SetValue(t[3])
+        
+        
+        for i, mov in enumerate([self.dbmov, self.dbRiepAliquote]):
+            
+            coltipriva = gc(mov.reg.regiva, 'tipo')
+            colimponib = gc(mov, 'valimponib')
+            colimposta = gc(mov, 'valimposta')
+            colindeduc = gc(mov, 'valindeduc')
+            colidreg = gc(mov.reg, 'id')
+            totali = [0, #imponibile,
+                      0, #imposta,
+                      0, #indeducibile
+                      0] #numero operazioni
+            tot = {'A': _totali(),
+                   'V': _totali(),
+                   'C': _totali(),}
+            rs = mov.GetRecordset()
+            wx.BeginBusyCursor()
+            try:
+                for n in range(mov.RowsCount()):
+                    tipreg = rs[n][coltipriva]
+                    if (tipreg or ' ') in 'AVC':
+                        tot[tipreg][0] += rs[n][colimponib]
+                        tot[tipreg][1] += rs[n][colimposta]
+                        tot[tipreg][2] += rs[n][colindeduc]
+                        tot[tipreg][3] += 1
+                    else:
+                        aw.awu.MsgDialog(self, "Registro iva non valido: registrazione #%d"%colidreg, style=wx.ICON_ERROR)
+                        break
+            finally:
+                wx.EndBusyCursor()
+            
+            if i==0:
+                cn = self.FindWindowByName
+                for tipo in 'AVC':
+                    t = tot[tipo]
+                    cn('totimponib_%s' % tipo.lower()).SetValue(t[0])
+                    cn('totimposta_%s' % tipo.lower()).SetValue(t[1])
+                    cn('totindeduc_%s' % tipo.lower()).SetValue(t[2])
+                    cn('totnumreg_%s' % tipo.lower()).SetValue(t[3])
     
     #def StampaMastrino(self):
         #db = self.gridreg.dbmas

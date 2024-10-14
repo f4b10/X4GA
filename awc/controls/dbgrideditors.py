@@ -343,7 +343,7 @@ class DataLinkCellEditor(gridlib.PyGridCellEditor, CellEditorsMixin):
     baseclass = None
     def __init__(self, tabname, rscolid, rscolcod, rscoldes=None,\
                  cardclass = None, filter = None, filterlinks = None,\
-                 eventBindings=None, oncreate=None, persistent=True):
+                 eventBindings=None, oncreate=None):
 
         if eventBindings is None:
             eventBindings = []
@@ -360,7 +360,6 @@ class DataLinkCellEditor(gridlib.PyGridCellEditor, CellEditorsMixin):
         self.lt_rscoldes = rscoldes
         self.lt_cardclass = cardclass
         self.lt_filter = filter
-        self.lt_persistent = persistent
 
         self.lt_filterlinks = filterlinks
         self.lt_eventBindings = eventBindings

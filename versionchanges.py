@@ -30,6 +30,12 @@ import mx.Odt
 
 history = (
     ('1.6.15', dt.Date(2024, 9, 20), (
+        ("BET161503",
+         """Reset filtro categorie su immissione doc. di magazzino."""
+        ),
+        ("BET161502",
+         """Aggiunta riepilogo aliquote iva a Lista registrazioni Iva e Utilizzo aliquote Iva """
+        ),
         ("BET161501",
          """Possibilità di definire dei valori di defaul da proporre all'inserimento di schede anagrafiche"""
         ),

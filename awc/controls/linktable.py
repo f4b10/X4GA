@@ -235,12 +235,11 @@ class LinkTable(wx.Control,\
     _codewidth = wxinit.GetCodiceStandardWidth()#40
     _descwidth = None
 
-    def __init__(self, parent, id, pos=wx.DefaultPosition, size=wx.DefaultSize, style=wx.NO_BORDER, fontSize=8, multiSelect=False, persistent=True,  **lt_kwargs):
+    def __init__(self, parent, id, pos=wx.DefaultPosition, size=wx.DefaultSize, style=wx.NO_BORDER, fontSize=8, multiSelect=False, **lt_kwargs):
 
         wx.Control.__init__(self, parent, id, pos, size, style)
         cmix.ControlsMixin.__init__(self)
 
-        self.persistent = persistent
         self.multiSelect = multiSelect
         self.fontSize = fontSize
         self.obligatory = False
@@ -1408,7 +1407,6 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
                      cardclass = None,
                      filter = None,
                      filterlinks = None,
-                     persistent = True,
                      canedit=True,
                      canins=True,
                      cansee=True):
@@ -1447,7 +1445,6 @@ Per cercare mediante contenuto, digitare .. seguito dal testo da ricercare all'i
         self._setDim()
         self.filter = filter
         self.SetFilterLinks(filterlinks)
-        self.persistent = persistent
         self.SetTips()
 
     def SetFilterLinks(self, filterlinks):
