@@ -45,7 +45,7 @@ class GridMov(maglib.GridMovEva):
     
     def __init__(self, parent, dlg):
         
-        maglib.GridMovEva.__init__(self, dlg)
+        maglib.GridMovEva.__init__(self, dlg, idGrid='evarighe')
         self.dbmov = dbm.ElencoMovimEva()
         self.dbmov.ShowDialog(parent)
         

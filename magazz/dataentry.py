@@ -548,12 +548,13 @@ class MagazzPanel(aw.Panel,\
                           (wdr.ID_BTNBODYDEL,  self.GridBodyOnDelete),
                           (wdr.ID_BTNBODYADD,  self.GridBodyOnAdd),
                           (wdr.ID_BTNBODYMULTI,self.GridBodyOnMulti),
+                          (wdr.ID_BTNBODYACCONTI, self.OnLinkToAcconto),
                           (wdr.ID_BTNBODYPDT,  self.GridBodyOnAcqPDT),
                           (wdr.ID_BTNBODYETIC, self.GridBodyOnLabels)):
             self.Bind(wx.EVT_BUTTON, func, id=cid)
 
 
-        self.FindWindowById(wdr.ID_BTNBODYADD).Hide()
+        #self.FindWindowById(wdr.ID_BTNBODYADD).Hide()
 
         for type in 'des vet'.split():
 
@@ -1010,9 +1011,9 @@ class MagazzPanel(aw.Panel,\
         self.UpdateDocIdControls()
         self.UpdatePanelHead()
         self.UpdateDatiScad()
-        self.UpdateDatiAcconto()
         self.UpdateDatiEvas()
         self.UpdateAnagAutoNotes()
+        self.UpdateDatiAcconto()
         self.IsHeadValid()
         self.MakeTotals(False)
         if self.interrpdc:
@@ -1469,24 +1470,11 @@ class MagazzPanel(aw.Panel,\
                                 pec, codsdi = dlg.GetValoriSdi() 
                                 self.AggiornaDatiFtel(pec, codsdi)
                             dlg.Destroy()
-                    #===========================================================
-                    # from fatturapa_ver import VERSION_STRING
-                    # if VERSION_STRING >= '1.1.17':
-                    #     self.viewFtel = True
-                    #     from fatturapa_magazz.dbtables import ReadFeSetup
-                    #     ReadFeSetup()
-                    #     if self.dbdoc.cfgdoc.ftel_check and Env.Azienda.Login.dataElab>=Env.Azienda.config.FE_DATAB2B:
-                    #         if not self.CheckSend2SDI():
-                    #             from fatturapa_magazz.fatturapa import RichiestaDialog
-                    #             dlg = RichiestaDialog(self, style=wx.CLOSE_BOX)
-                    #             dlg.ShowModal()
-                    #             if dlg.NeedPrint():
-                    #                 self.PrintRichiestaDati()
-                    #             else:
-                    #                 pec, codsdi = dlg.GetValoriSdi() 
-                    #                 self.AggiornaDatiFtel(pec, codsdi)
-                    #             dlg.Destroy()
-                    #===========================================================
+            if not self.FindWindowByName('accontodisp').GetValue()==0:                    
+                if self.PrevedeStornoAcconto(self.cauid):        
+                    self.FindWindowByName('butAcconti').Show()
+                else:
+                    self.FindWindowByName('butAcconti').Hide()
         except:
             pass
 
@@ -2103,7 +2091,38 @@ class MagazzPanel(aw.Panel,\
         a = doc._info.acconti
         a.GetForPdc(doc.id_pdc)
         cn = self.FindWindowByName
-        cn('accontodisp').SetValue((a.acconto_disponib or 0))
+        totAcconto = 0
+        for r in a:
+            print r.importo,r.scorpiva, r.perciva, r.total_storno, r.residuo_lordo or 0
+            #===================================================================
+            # if len(r.scorpiva.strip())==0 or r.scorpiva.strip()==0:
+            #     r.imponibile = r.accomov_importo
+            #     r.imposta    = round(r.accomov_importo * r.perciva / 100, 2)
+            #     r.importo    = r.imponibile + r.imposta
+            #     r.residuo_netto = r.acconto_disponib
+            #     r.residuo_lordo = r.residuo_netto + round(r.residuo_netto * r.perciva / 100, 2)
+            # else:
+            #     r.importo    = r.accomov_importo
+            #     r.imponibile = round(r.accomov_importo * 100/(100+r.perciva),2)
+            #     r.imposta    = r.importo - r.imponibile
+            #     
+            #     r.residuo_lordo = r.acconto_disponib
+            #     r.residuo_netto = round(r.residuo_lordo * 100/(100+r.perciva),2)
+            # totAcconto = totAcconto + (r.residuo_lordo or 0)
+            #===================================================================
+            print '%s - Acconto:%s Stornato:%s Residuo:%s' % (r.scorpiva,r.accomov_importo, r.total_storno, r.acconto_disponib)
+            totAcconto = totAcconto + (r.acconto_disponib or 0)
+            
+        cn('accontodisp').SetValue(totAcconto)
+        if not self.FindWindowByName('accontodisp').GetValue()==0:                    
+            if self.PrevedeStornoAcconto(self.cauid):        
+                self.FindWindowByName('butAcconti').Show()
+            else:
+                self.FindWindowByName('butAcconti').Hide()
+        
+        
+        
+        
 
     def EnableButFido(self, doc=None):
         if doc is None:
@@ -2311,13 +2330,50 @@ class MagazzPanel(aw.Panel,\
             print 'AfterDocSave idDoc=%s' % idDoc
         pass
 
-
+    def PrevedeStornoAcconto(self, idTipdoc):
+        retValue = False
+        if not idTipdoc is None:
+            db_conn = Env.Azienda.DB.connection
+            curs = db_conn.cursor()
+            try:
+                cmd = "select count(id) from cfgmagmov where id_tipdoc=%s and is_accstor=1" % idTipdoc
+                curs.execute(cmd)
+                result = curs.fetchone()
+                retValue = result[0]>=1
+                curs.close()
+            except:
+                pass
+        return retValue
+        
+        
+        
+        
     def DocSave(self, doc=None):
         if doc is None:
             doc = self.dbdoc
             
         retValue = self.BeforeDocSave()
-        print retValue
+        
+        found=True
+        if not self.FindWindowByName('accontodisp').GetValue()==0:
+            if self.PrevedeStornoAcconto(self.dbdoc.id_tipdoc):
+                idMovAcc = None
+                found=False
+                for r in self.dbdoc.mov:
+                    if self.dbdoc.mov.config.is_accstor==1:
+                        idMovAcc = r.id_movacc
+                        found=True
+                        break
+                if found:
+                    if idMovAcc==None:
+                        msg = "Non è consentito inserire righe di storno acconto senza indicare l'acconto da cui stornare.\n\nPROVVEDERE AD AGGANCIARE L'ACCONTO"
+                        aw.awu.MsgDialog(self, msg, style=wx.ICON_ERROR)
+                        return False
+        if not found:
+            msg = "Il cliente dispone di un acconto che non si sta utilizzando.\nDesideri proseguire comunque?"
+            if aw.awu.MsgDialog(self, msg, style=wx.ICON_ERROR|wx.YES_NO|wx.NO_DEFAULT) != wx.ID_YES:
+                return False
+        #print retValue
         if retValue==False:
             return False
             
@@ -2635,6 +2691,9 @@ class MagazzPanel(aw.Panel,\
             configurazione
         """
         self.SetCausale()
+        self.FindWindowByName('butAcconti').Hide()        
+
+
 
         if self.dbdoc.cfgdoc.multilinee==1:
             self.FindWindowByName('butmultilinea').Show()
@@ -3403,19 +3462,74 @@ class MagazzPanel(aw.Panel,\
                 daq = dbm.DocMag()
                 daq.Get(acqdocid)
                 headfields = []
-                for field, desc in (('id_modpag',  'Mod.Pagamento'),
-                                    ('id_bancf',   'Banca'),
-                                    ('id_speinc',  'Spese incasso'),
-                                    ('id_aliqiva', 'Aliquota IVA'),
-                                    ('id_agente',  'Agente'),
-                                    ('id_zona',    'Zona'),
-                                    ('id_tiplist', 'Listino'),
-                                    ('sconto1',    'Sconto 1'),
-                                    ('sconto2',    'Sconto 2'),
-                                    ('sconto3',    'Sconto 3'),
-                                    ('sconto4',    'Sconto 4'),
-                                    ('sconto5',    'Sconto 5'),
-                                    ('sconto6',    'Sconto 6'),):
+                lField=[]
+                lField.append(('id_modpag',  'Mod.Pagamento'))
+                lField.append(('id_bancf',   'Banca')        )
+                lField.append(('id_speinc',  'Spese incasso'))
+                lField.append(('id_aliqiva', 'Aliquota IVA') )
+                lField.append(('id_agente',  'Agente')       )
+                lField.append(('id_zona',    'Zona')         )
+                lField.append(('id_tiplist', 'Listino')      )
+                lField.append(('sconto1',    'Sconto 1')     )
+                lField.append(('sconto2',    'Sconto 2')     )
+                lField.append(('sconto3',    'Sconto 3')     )
+                lField.append(('sconto4',    'Sconto 4')     )
+                lField.append(('sconto5',    'Sconto 5')     )
+                lField.append(('sconto6',    'Sconto 6')     )
+                lField.append(('totpeso',    'Peso'    )     )
+                lField.append(('totcolli',   'Colli'   )     )
+                lField.append(('initrasp',   'Inizio Trasporto'   )     )
+                if bt.MAGNOCODEDES:
+                    lField.append(("enable_nocodedes",      'Flag Dest.'))
+                    lField.append(("nocodedes_descriz",     'Destinatario'))
+                    lField.append(("nocodedes_indirizzo",   'Indirizzo'))
+                    lField.append(("nocodedes_cap",         'CAP'))
+                    lField.append(("nocodedes_citta",       'Citta'))
+                    lField.append(("nocodedes_prov",        'Prov'))
+                    lField.append(("nocodedes_id_stato",    'Stato'))
+                    
+                    
+                if bt.MAGNOCODEVET:
+                    lField.append(("enable_nocodevet",     'Flag Vett.'))
+                    lField.append(("nocodevet_descriz",    'Vettore'   ))
+                    lField.append(("nocodevet_indirizzo",  'Indirizzo' ))
+                    lField.append(("nocodevet_cap",        'CAP'       ))
+                    lField.append(("nocodevet_citta",      'Citta'     ))
+                    lField.append(("nocodevet_prov",       'Prov'      ))
+                    lField.append(("nocodevet_id_stato",   'Stato'     ))
+                    lField.append(("nocodevet_codfisc",    'Cod.Fisc.' ))
+                    lField.append(("nocodevet_nazione",    'Nazione'   ))
+                    lField.append(("nocodevet_piva",       'Part.Iva'  ))
+                    if bt.MAGEXTRAVET:
+                        lField.append(("nocodevet_targa",   'Targa'        ))
+                        lField.append(("nocodevet_autista", 'Autista'      ))
+                        lField.append(("nocodevet_dichiar", 'Dichiarazione'))
+
+
+
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    
+                    
+                    
+                    
+                    
+                    
+                
+                for field, desc in lField:
                     v_doc = x_doc = getattr(daq, field)
                     if field == 'id_bancf':
                         v_ana = x_ana = None
@@ -3690,7 +3804,7 @@ class GridSearchDoc(dbglib.DbGridColoriAlternati):
         if rfdes: docs.AddFilter("doc.desrif LIKE %s", "%%%s%%" % rfdes); colora=False
         if not acq: docs.AddFilter("doc.f_acq IS NULL OR doc.f_acq<>1"); colora=False
         if not ann: docs.AddFilter("doc.f_ann IS NULL OR doc.f_ann<>1"); colora=False
-        docs.SetDebug()
+        #docs.SetDebug()
         
         self.EnableColors(colora)
         

@@ -45,7 +45,8 @@ class SituazioneGlobaleAccontiGrid(dbglib.DbGridColoriAlternati):
     def __init__(self, parent, dbacc):
         
         dbglib.DbGridColoriAlternati.__init__(self, parent, 
-                                              size=parent.GetClientSizeTuple())
+                                              size=parent.GetClientSizeTuple(),
+                                              idGrid="acccli")
         
         self.dbacc = dbacc
         

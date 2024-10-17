@@ -27,7 +27,6 @@
 """
 Definizione classi specializzate x gestione magazzino.
 """
-
 import os
 import time
 import stormdb as adb
@@ -5427,7 +5426,7 @@ class PdcSituazioneAcconti(adb.DbMem):
 
     def __init__(self):
 
-        adb.DbMem.__init__(self, 'pdc_id,pdc_codice,pdc_descriz,accomov_id,accotpd_id,accotpd_codice,accotpd_descriz,accotpm_id,accotpm_codice,accotpm_descriz,accodoc_id,accodoc_numdoc,accodoc_datdoc,accomov_descriz,accomov_importo,accoiva_id,accoiva_codice,accoiva_descriz,total_storno,acconto_disponib')
+        adb.DbMem.__init__(self, 'pdc_id,pdc_codice,pdc_descriz,accomov_id,accotpd_id,accotpd_codice,accotpd_descriz,accotpd_scorpiva,accotpm_id,accotpm_codice,accotpm_descriz,accodoc_id,accodoc_numdoc,accodoc_datdoc,accomov_descriz,accomov_importo,accoiva_id,accoiva_codice,accoiva_descriz,accoiva_perciva,total_storno,acconto_disponib')
         self.Reset()
 
         self._pdcid = None  #id cliente, None = tutti i clienti
@@ -5441,33 +5440,78 @@ class PdcSituazioneAcconti(adb.DbMem):
             dexfilter = ""
         else:
             dexfilter = " AND stormov.id_doc<>%s" % self._dexid
-        return """
-           accodoc.id_pdc  as accopdc_id,
-           accopdc.codice  as accopdc_codice,
-           accopdc.descriz as accopdc_descriz,
-           accomov.id      as accomov_id,
-           accotpd.id      as accotpd_id,
-           accotpd.codice  as accotpd_codice,
-           accotpd.descriz as accotpd_descriz,
-           accotpm.id      as accotpm_id,
-           accotpm.codice  as accotpm_codice,
-           accotpm.descriz as accotpm_descriz,
-           accodoc.id      as accodoc_id,
-           accodoc.numdoc  as accodoc_numdoc,
-           accodoc.datdoc  as accodoc_datdoc,
-           accomov.descriz as accomov_descriz,
-           accomov.importo as accomov_importo,
-           accoiva.id      as accoiva_id,
-           accoiva.codice  as accoiva_codice,
-           accoiva.descriz as accoiva_descriz, (
-
-               SELECT SUM(ABS(stormov.importo))
+        #=======================================================================
+        # cmd = """
+        #    accodoc.id_pdc   as accopdc_id,
+        #    accopdc.codice   as accopdc_codice,
+        #    accopdc.descriz  as accopdc_descriz,
+        #    accomov.id       as accomov_id,
+        #    accotpd.id       as accotpd_id,
+        #    accotpd.codice   as accotpd_codice,
+        #    accotpd.descriz  as accotpd_descriz,
+        #    accotpd.scorpiva as accotpd_scorpiva,
+        #    accotpm.id       as accotpm_id,
+        #    accotpm.codice   as accotpm_codice,
+        #    accotpm.descriz  as accotpm_descriz,
+        #    accodoc.id       as accodoc_id,
+        #    accodoc.numdoc   as accodoc_numdoc,
+        #    accodoc.datdoc   as accodoc_datdoc,
+        #    accomov.descriz  as accomov_descriz,
+        #    accomov.importo  as accomov_importo,
+        #    accoiva.id       as accoiva_id,
+        #    accoiva.codice   as accoiva_codice,
+        #    accoiva.descriz as accoiva_descriz, 
+        #    accoiva.perciva as accoiva_perciva, 
+        #    (
+        #        SELECT round(SUM(ABS(if(cfgmagdoc.scorpiva='1', stormov.importo, round(stormov.importo * (100+aliqiva.perciva)/100,2)   ))),2)
+        #          FROM movmag_b stormov
+        #          JOIN movmag_h stordoc ON stordoc.id=stormov.id_doc
+        #          left join aliqiva on aliqiva.id=stormov.id_aliqiva
+        #          left join cfgmagdoc on cfgmagdoc.id=stordoc.id_tipdoc
+        #         WHERE stormov.id_movacc=accomov.id  AND
+        #              (stormov.f_ann IS NULL OR stormov.f_ann != 1) AND
+        #              (stordoc.f_ann IS NULL OR stordoc.f_ann != 1)
+        #     ) AS total_storno""" % locals()
+        #=======================================================================
+        cmd = """
+           accodoc.id_pdc   as accopdc_id,
+           accopdc.codice   as accopdc_codice,
+           accopdc.descriz  as accopdc_descriz,
+           accomov.id       as accomov_id,
+           accotpd.id       as accotpd_id,
+           accotpd.codice   as accotpd_codice,
+           accotpd.descriz  as accotpd_descriz,
+           accotpd.scorpiva as accotpd_scorpiva,
+           accotpm.id       as accotpm_id,
+           accotpm.codice   as accotpm_codice,
+           accotpm.descriz  as accotpm_descriz,
+           accodoc.id       as accodoc_id,
+           accodoc.numdoc   as accodoc_numdoc,
+           accodoc.datdoc   as accodoc_datdoc,
+           accomov.descriz  as accomov_descriz,
+           accomov.importo  as accomov_importo,
+           accoiva.id       as accoiva_id,
+           accoiva.codice   as accoiva_codice,
+           accoiva.descriz as accoiva_descriz, 
+           accoiva.perciva as accoiva_perciva, 
+           (
+               SELECT round(SUM(ABS(if(cfgmagdoc.scorpiva='1', stormov.importo, round(stormov.importo * (100+aliqiva.perciva)/100,2)   ))
+               * if(cau.pasegno="A", -1, 1)
+               
+               
+               
+               ),2)
                  FROM movmag_b stormov
                  JOIN movmag_h stordoc ON stordoc.id=stormov.id_doc
-                WHERE stormov.id_movacc=accomov.id %(dexfilter)s AND (stormov.f_ann IS NULL OR stormov.f_ann != 1) AND (stordoc.f_ann IS NULL OR stordoc.f_ann != 1)
-
+                 left join aliqiva on aliqiva.id=stormov.id_aliqiva
+                 left join cfgmagdoc on cfgmagdoc.id=stordoc.id_tipdoc
+                 left join cfgcontab cau on cau.id=cfgmagdoc.id_caucg
+                 
+                WHERE stormov.id_movacc=accomov.id  AND
+                     (stormov.f_ann IS NULL OR stormov.f_ann != 1) AND
+                     (stordoc.f_ann IS NULL OR stordoc.f_ann != 1)
             ) AS total_storno""" % locals()
-
+        return cmd 
     def Retrieve(self):
 
         if self._pdcid is None:
@@ -5507,7 +5551,6 @@ SELECT acconti.*,
 
 %(having)s
         """ % locals()
-
         db = adb.db.__database__
         db.Retrieve(cmd)
         self.SetRecordset(db.rs)
@@ -5522,7 +5565,11 @@ SELECT acconti.*,
         self._pdcid = pdcid
         self._macid = macid
         self._dexid = dexid
-        return self.Retrieve()
+        if pdcid:
+            self.Retrieve()
+        else:
+            self.SetRecordset([])
+        #return self.Retrieve()
 
 
 # ------------------------------------------------------------------------------
@@ -5532,33 +5579,51 @@ class PdcTotaleAcconti(PdcSituazioneAcconti):
 
     def __init__(self):
 
-        adb.DbMem.__init__(self, 'pdc_id,pdc_codice,pdc_descriz,accomov_importo,total_storno,acconto_disponib')
+        adb.DbMem.__init__(self, 'pdc_id,pdc_codice,pdc_descriz,is_acconto,scorpiva,perciva,importo,imponibile,imposta,residuo_lordo,residuo_netto,accomov_importo,total_storno,acconto_disponib')
         self.Reset()
 
         self._pdcid = None  #id cliente, None = tutti i clienti
         self._macid = None  #id movimento acconto, None = tutti gli acconti
         self._dexid = None  #id documento da escludere nella determinazione degli storni, None = considera tutti gli storni che trova
         self._tutti = False #true estrae tutti gli acconti, false solo quelli in essere
-        self._group = "GROUP BY accodoc.id_pdc"
+        self._group = "GROUP BY accodoc.id_pdc, accotpd.scorpiva"
+        #self._group = "GROUP BY accodoc.id_pdc"
 
     def GetInnerSel(self):
         if self._dexid is None:
             dexfilter = ""
         else:
             dexfilter = " AND stormov.id_doc<>%s" % self._dexid
-        return """
+            
+        sql = """
            accodoc.id_pdc       as accopdc_id,
            accopdc.codice       as accopdc_codice,
            accopdc.descriz      as accopdc_descriz,
-           SUM(accomov.importo) as accomov_importo, SUM((
-
-               SELECT SUM(ABS(stormov.importo))
+           accotpm.is_acconto,
+           accotpd.scorpiva,
+           (select aliqiva.perciva from movmag_b left join aliqiva on aliqiva.id=movmag_b.id_aliqiva where movmag_b.id=accomov.id) as iva,            
+           0 as importo,
+           0 as imponibile,
+           0 as imposta,
+           0 as residuo_lordo,
+           0 as residuo_netto,
+           SUM(if(accotpd.scorpiva=1, accomov.importo,  accomov.importo * (100+accoiva.perciva)/100)                     ) as accomov_importo,
+           SUM((
+               SELECT round(SUM(ABS(if(cfgmagdoc.scorpiva='1', stormov.importo, round(stormov.importo * (100+aliqiva.perciva)/100,2)   ))
+               * if(cau.pasegno="A", -1, 1)
+               ),2)
                  FROM movmag_b stormov
                  JOIN movmag_h stordoc ON stordoc.id=stormov.id_doc
-                WHERE stormov.id_movacc=accomov.id %(dexfilter)s AND (stormov.f_ann IS NULL OR stormov.f_ann != 1) AND (stordoc.f_ann IS NULL OR stordoc.f_ann != 1)
+                 left join aliqiva on aliqiva.id=stormov.id_aliqiva
+                 left join cfgmagdoc on cfgmagdoc.id=stordoc.id_tipdoc
+                 left join cfgcontab cau on cau.id=cfgmagdoc.id_caucg
+                WHERE stormov.id_movacc=accomov.id  AND
+                     (stormov.f_ann IS NULL OR stormov.f_ann != 1) AND
+                     (stordoc.f_ann IS NULL OR stordoc.f_ann != 1)
 
             )) AS total_storno""" % locals()
 
+        return sql 
 
 # ------------------------------------------------------------------------------
 
@@ -5569,6 +5634,7 @@ class PdcSituazioneStorniAcconto(ElencoMovim):
         ElencoMovim.__init__(self, writable=True)
         self.AddBaseFilter('(mov.f_ann IS NULL OR mov.f_ann<>1) AND (doc.f_ann IS NULL OR doc.f_ann<>1)')
         self.AddField('0.0', 'acconto_disponib')
+        self.AddField('mov.importo * (100+iva.perciva)/100', 'lordo')
         self.Reset()
 
 

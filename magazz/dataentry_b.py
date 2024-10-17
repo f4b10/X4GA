@@ -256,7 +256,8 @@ class SelezionaMovimentoAccontoGrid(dbglib.DbGridColoriAlternati):
     def __init__(self, parent, dbacc):
 
         dbglib.DbGridColoriAlternati.__init__(self, parent,
-                                              size=parent.GetClientSizeTuple())
+                                              size=parent.GetClientSizeTuple(),
+                                              idGrid='eleacc')
 
         self.dbacc = dbacc
 
@@ -294,6 +295,9 @@ class SelezionaMovimentoAccontoGrid(dbglib.DbGridColoriAlternati):
         parent.SetSizer(sz)
         sz.SetSizeHints(parent)
 
+        self.AddTotalsRow(1, 'Totali', [cn('accomov_importo'),
+                                        cn('acconto_disponib')])
+
 
 # ------------------------------------------------------------------------------
 
@@ -303,7 +307,8 @@ class SelezionaMovimentoAccontoStorniGrid(dbglib.DbGridColoriAlternati):
     def __init__(self, parent, dbmov):
 
         dbglib.DbGridColoriAlternati.__init__(self, parent,
-                                              size=parent.GetClientSizeTuple())
+                                              size=parent.GetClientSizeTuple(),
+                                              idGrid='accstorni')
 
         self.dbmov = dbmov
         mov = dbmov
@@ -324,7 +329,7 @@ class SelezionaMovimentoAccontoStorniGrid(dbglib.DbGridColoriAlternati):
                 (150, (cn(tpd, 'descriz'),          "Causale",     _STR, True )),
                 ( 50, (cn(doc, 'numdoc'),           "Num.",        _NUM, True )),
                 ( 80, (cn(doc, 'datdoc'),           "Data",        _DAT, True )),
-                (110, (cn(mov, 'importo'),          "Storno",      _IMP, True )),
+                (110, (cn(mov, 'lordo'),            "Storno",      _IMP, True )),
                 ( 40, (cn(iva, 'codice'),           "IVA",         _STR, True )),
                 (110, (cn(mov, 'acconto_disponib'), "Disponibile", _IMP, False)),
                 (300, (cn(mov, 'descriz'),          "Descrizione", _STR, True )),)
@@ -413,15 +418,44 @@ class SelezionaMovimentoAccontoPanel(wx.Panel):
         else:
             self.UpdateStorni(None, 0)
 
+    def GetSegnoContabile(self, idCausale = None):
+        db_conn = Env.Azienda.DB.connection
+        curs = db_conn.cursor()
+        segno = None
+        try:
+            cmd = "select pasegno from cfgcontab where id=%s" % idCausale
+            curs.execute(cmd)
+            result = curs.fetchone()
+            segno= result[0]
+            curs.close()
+        except:
+            pass
+        return segno
+        
+        
+
     def UpdateStorni(self, accomov_id, accdisp):
         mov = self.dbsto
         if accomov_id is None:
             mov.Reset()
         else:
+            #mov.SetDebug()
             mov.Retrieve("mov.id_movacc=%s", accomov_id)
             for mov in mov:
-                accdisp -= abs(mov.importo)
+                segno = self.GetSegnoContabile(idCausale = mov.doc.tipdoc.id_caucg)
+                if not segno == 'A':
+                    accdisp -= abs(mov.lordo)
+                else:
+                    mov.lordo = - mov.lordo  
+
+                    accdisp += abs(mov.lordo)
                 mov.acconto_disponib = accdisp
+                    
+                    
+                #===============================================================
+                # accdisp -= abs(mov.importo)
+                # mov.acconto_disponib = accdisp
+                #===============================================================
         self.lastmovaccid = accomov_id
         self.gridsto.ChangeData(mov.GetRecordset())
 
@@ -1062,6 +1096,52 @@ class GridBody(object):
             self.GridBodyMenuPopup(event)
             event.Skip()
 
+    def GetIdMovStornoAcconto(self, idTipoDoc):
+        db_conn = Env.Azienda.DB.connection
+        curs = db_conn.cursor()
+        idTipMov=None
+        try:
+            cmd = "SELECT * FROM cfgmagmov c where id_tipdoc=%s and is_accstor=1 limit 1" % idTipoDoc
+            curs.execute(cmd)
+            result = curs.fetchone()
+            idTipMov= result[0]
+            curs.close()
+        except:
+            pass
+        return idTipMov
+
+
+    def OnLinkToAcconto(self, event):
+        doc = self.dbdoc
+        mov = doc.mov
+        a = dbm.PdcSituazioneAcconti()
+        a.GetForPdc(doc.id_pdc)
+        dlg = SelezionaMovimentoAccontoDialog(self)
+        dlg.SetPdcId(doc.id_pdc)
+        do = dlg.ShowModal() == wx.ID_OK
+        dlg.Destroy()
+        if do:
+            idTipMov = self.GetIdMovStornoAcconto(doc.id_tipdoc)
+            if idTipMov:
+                self.GridBodyAddNewRow()
+                mov.MoveLast()
+                dbacc = dlg.panel.dbacc
+                mov.id_tipmov = idTipMov
+                mov.descriz = "STORNO ACCONTO FT. N. %s DEL %s" % (dbacc.accodoc_numdoc,
+                                                                   doc.dita(dbacc.accodoc_datdoc))
+                mov.importo = min(dbacc.acconto_disponib, doc.totimponib)
+                if doc.cfgdoc.caucon.pasegno != "A":
+                    mov.importo = -mov.importo
+                mov.importo = -abs(mov.importo)
+                mov.id_aliqiva = dbacc.accoiva_id
+                mov.id_movacc = dbacc.accomov_id
+                self.MakeTotals()
+            else:
+                aw.awu.MsgDialog(self, 'Il tipo di documento non prevede nessun tipo di movimento di storno acconto.')
+                
+            self.gridbody.ForceRefresh()
+        
+
     def GridBodyOnLinkToAcconto(self, event):
         doc = self.dbdoc
         mov = doc.mov
@@ -1308,38 +1388,18 @@ class GridBody(object):
             anag = doc._info.anag = doc.GetAnag()
             ElapsedTime('doc.GetAnag()')
 
-            #===================================================================
-            # grip = self.dbdoc._info.dbgrip
-            # if not doc.cfgdoc.visultmov==1:
-            #     grip.Reset()
-            # else:
-            #     grip.ClearFilters()
-            #     grip.AddFilter("id_pdc=%s", getattr(anag, 'id_pdcgrp', None) or self.dbdoc.id_pdc)
-            #     grip.AddFilter("id_prod=%s", value)
-            #     if bt.MAGDATGRIP:
-            #         grip.AddFilter("data<=%s", self.dbdoc.datreg)
-            #     grip.Retrieve()
-            #     ElapsedTime('grip.Retrieve()')
-            #     if grip.IsEmpty():
-            #         sp = getattr(anag, 'grpstop', None)
-            #         msg = "Il prodotto non è presente nella griglia dell'anagrafica"
-            #         if sp == 'G':
-            #             msg += ".\nImpossibile procedere"
-            #             aw.awu.MsgDialog(self, msg, style=wx.ICON_ERROR)
-            #             return False
-            #         elif sp == 'F':
-            #             msg += ",tuttavia è possibile forzare il suo utilizzo.\n\nDesideri utilizzare questo prodotto?"
-            #             return aw.awu.MsgDialog(self, msg, style=wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT) == wx.ID_YES
-            #     ElapsedTime('self.grip.Retrieve()')
-            #===================================================================
         elif col == m.RSMOV_IMPORTO:
             doc = self.dbdoc
             mov = doc.mov
+            clasdoc = doc.cfgdoc.clasdoc
             if bt.MAGGESACC == 1 and mov.id_movacc is not None:
                 a = dbm.PdcSituazioneAcconti()
                 a.GetForPdc(doc.id_pdc, mov.id_movacc, doc.id)
                 if abs(value)>a.acconto_disponib:
                     aw.awu.MsgDialog(self, "L'acconto disponibile è di %s" % a.sepnvi(a.acconto_disponib), style=wx.ICON_ERROR)
+                    return False
+                elif value>0:
+                    aw.awu.MsgDialog(self, "L'acconto detratto deve essere negativo", style=wx.ICON_ERROR)
                     return False
         return True
 
@@ -1974,6 +2034,10 @@ class GridBody(object):
     def GridBodyOnMulti(self, event):
         if self.dbdoc.cfgdoc.multilinee==1:
             self.ShowMultiLineDialog()        
+        event.Skip()
+
+    def GridBodyOnAcconti(self, event):
+        print 'visualizza acconti'
         event.Skip()
 
 
