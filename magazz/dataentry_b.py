@@ -276,7 +276,11 @@ class SelezionaMovimentoAccontoGrid(dbglib.DbGridColoriAlternati):
                 (110, (cn('accomov_importo'),  "Acconto",     _IMP, True )),
                 ( 40, (cn('accoiva_codice'),   "IVA",         _STR, True )),
                 (110, (cn('acconto_disponib'), "Disponibile", _IMP, False)),
-                (300, (cn('accomov_descriz'),  "Descrizione", _STR, True )),)
+                (300, (cn('accomov_descriz'),  "Descrizione", _STR, True )),
+                (  1, (cn('accomov_id'),       "#idMov",      _STR, True )),)
+
+
+
 
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
@@ -332,7 +336,8 @@ class SelezionaMovimentoAccontoStorniGrid(dbglib.DbGridColoriAlternati):
                 (110, (cn(mov, 'lordo'),            "Storno",      _IMP, True )),
                 ( 40, (cn(iva, 'codice'),           "IVA",         _STR, True )),
                 (110, (cn(mov, 'acconto_disponib'), "Disponibile", _IMP, False)),
-                (300, (cn(mov, 'descriz'),          "Descrizione", _STR, True )),)
+                (300, (cn(mov, 'descriz'),          "Descrizione", _STR, True )),
+                (  1, (cn(mov, 'id'),               "#id",         _STR, True )),)
 
         colmap  = [c[1] for c in cols]
         colsize = [c[0] for c in cols]
@@ -1122,18 +1127,21 @@ class GridBody(object):
         dlg.Destroy()
         if do:
             idTipMov = self.GetIdMovStornoAcconto(doc.id_tipdoc)
+            idAliqiva = mov.iva.id
+            perciva   = mov.iva.perciva
             if idTipMov:
                 self.GridBodyAddNewRow()
                 mov.MoveLast()
                 dbacc = dlg.panel.dbacc
                 mov.id_tipmov = idTipMov
+                mov.id_aliqiva = idAliqiva
                 mov.descriz = "STORNO ACCONTO FT. N. %s DEL %s" % (dbacc.accodoc_numdoc,
                                                                    doc.dita(dbacc.accodoc_datdoc))
-                mov.importo = min(dbacc.acconto_disponib, doc.totimponib)
+                mov.importo = min(round(dbacc.acconto_disponib * 100 / (100+perciva),2) , doc.totimponib)
                 if doc.cfgdoc.caucon.pasegno != "A":
                     mov.importo = -mov.importo
                 mov.importo = -abs(mov.importo)
-                mov.id_aliqiva = dbacc.accoiva_id
+                #mov.id_aliqiva = dbacc.accoiva_id
                 mov.id_movacc = dbacc.accomov_id
                 self.MakeTotals()
             else:

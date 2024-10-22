@@ -5607,7 +5607,8 @@ class PdcTotaleAcconti(PdcSituazioneAcconti):
            0 as imposta,
            0 as residuo_lordo,
            0 as residuo_netto,
-           SUM(if(accotpd.scorpiva=1, accomov.importo,  accomov.importo * (100+accoiva.perciva)/100)                     ) as accomov_importo,
+           SUM(if(accotpd.scorpiva=1, accomov.importo,  round(accomov.importo * (100+accoiva.perciva)/100,2))                     ) as accomov_importo,
+           
            SUM((
                SELECT round(SUM(ABS(if(cfgmagdoc.scorpiva='1', stormov.importo, round(stormov.importo * (100+aliqiva.perciva)/100,2)   ))
                * if(cau.pasegno="A", -1, 1)
