@@ -3589,7 +3589,7 @@ def SelezionaMovimentoAccontoFunc( parent, call_fit = True, set_sizer = True ):
 
     item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item5 = wx.Panel( parent, ID_PANGRIDACC, wx.DefaultPosition, [600,120], wx.SUNKEN_BORDER )
+    item5 = wx.Panel( parent, ID_PANGRIDACC, wx.DefaultPosition, [750,120], wx.SUNKEN_BORDER )
     item5.SetName( "pangridacc" )
     item0.Add( item5, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
@@ -3637,7 +3637,7 @@ def SituazioneGlobaleAccontiFunc( parent, call_fit = True, set_sizer = True ):
 
     item1.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item5 = wx.Panel( parent, ID_PANGRIDCLI, wx.DefaultPosition, [400,160], 0 )
+    item5 = wx.Panel( parent, ID_PANGRIDCLI, wx.DefaultPosition, [500,600], 0 )
     item5.SetName( "pangridcli" )
     item1.Add( item5, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
@@ -3650,7 +3650,7 @@ def SituazioneGlobaleAccontiFunc( parent, call_fit = True, set_sizer = True ):
     item6 = parent.FindWindowByName('accontipanel')
     item0.Add( item6, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL, 5 )
 
-    item0.AddGrowableCol( 0 )
+    item0.AddGrowableCol( 1 )
 
     item0.AddGrowableRow( 0 )
 

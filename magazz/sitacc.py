@@ -39,47 +39,27 @@ bt = Env.Azienda.BaseTab
 
 FRAME_TITLE = "Situazione acconti clienti"
 
+class SituazioneGlobaleAccontiGrid(dbglib.ADB_Grid):
 
-class SituazioneGlobaleAccontiGrid(dbglib.DbGridColoriAlternati):
-    
     def __init__(self, parent, dbacc):
-        
-        dbglib.DbGridColoriAlternati.__init__(self, parent, 
-                                              size=parent.GetClientSizeTuple(),
-                                              idGrid="acccli")
-        
-        self.dbacc = dbacc
-        
-        _STR = gl.GRID_VALUE_STRING
-        _DAT = gl.GRID_VALUE_DATETIME
-        _NUM = gl.GRID_VALUE_NUMBER
-        _IMP = bt.GetValIntMaskInfo()
-        
-        def cn(col):
-            return dbacc._GetFieldIndex(col, inline=True)
-        
-        cols = (( 50, (cn('pdc_codice'),       "Cod.",       _STR, True )),
-                (200, (cn('pdc_descriz'),      "Anagrafica", _STR, True )),
-                (110, (cn('acconto_disponib'), "Acc.Disp.",  _IMP, False)),)
-        
-        colmap  = [c[1] for c in cols]
-        colsize = [c[0] for c in cols]
-        
-        self.SetData((), colmap, canEdit=False, canIns=False)
-        
-        self.AddTotalsRow(1, 'Totali:', (cn('acconto_disponib'),))
-        
-        map(lambda c:\
-            self.SetColumnDefaultSize(c[0], c[1]), enumerate(colsize))
-        
-        self.SetFitColumn(1)
-        self.AutoSizeColumns()
-        sz = wx.FlexGridSizer(1,0,0,0)
-        sz.AddGrowableCol( 0 )
-        sz.AddGrowableRow( 0 )
-        sz.Add(self, 0, wx.GROW|wx.ALL, 0)
-        parent.SetSizer(sz)
-        sz.SetSizeHints(parent)
+
+        dbglib.ADB_Grid.__init__(self, parent, db_table=dbacc,
+                                 can_edit=False, can_insert=False,
+                                 on_menu_select='row',
+                                 idGrid="acccli")
+        acc = self.dbacc = dbacc
+
+        AC = self.AddColumn
+        AC(acc, 'pdc_codice',        'Cod.',       col_width=50)
+        AC(acc, 'pdc_descriz',  '     Anagrafica', col_width=50, is_fittable=True)
+        AC(acc, 'acconto_disponib',  'Acconto',    col_type=self.TypeFloat())
+        self.CreateGrid()
+        #=======================================================================
+        # def cn(col):
+        #     return dbacc._GetFieldIndex(col, inline=True)        
+        # self.AddTotalsRow(1, 'Totali:', (cn('acconto_disponib'),))
+        #=======================================================================
+
 
 
 # ------------------------------------------------------------------------------
@@ -100,18 +80,32 @@ class SituazioneGlobaleAccontiPanel(wx.Panel):
         self.dbacc.VediSoloAperti()
         self.gridacc = SituazioneGlobaleAccontiGrid(cn('pangridcli'), self.dbacc)
         
-        self.UpdateData()
+        
+        wx.CallAfter(self.UpdateData)
+        #self.UpdateData()
         
         self.Bind(wx.EVT_CHECKBOX, self.OnUpdateData, cn('clientichiusi'))
         self.Bind(gl.EVT_GRID_CMD_SELECT_CELL, self.OnCellSelected, self.gridacc)
+        
+        
+        #=======================================================================
+        # x = self.GetSize().GetHeight()
+        # y = self.GetSize().GetWidth()+100
+        # self.SetSize(wx.Size(x, y))
+        # self.SetClientSize(self.GetSize())
+        # self.Refresh()
+        #=======================================================================
 #        self.Bind(gl.EVT_GRID_CELL_LEFT_DCLICK, self.OnSelectRow)
 #
     
     def OnUpdateData(self, event):
+        self.gridacc.ChangeData([])
         self.UpdateData()
         event.Skip()
     
     def UpdateData(self):
+        wait = aw.awu.WaitDialog(self, message='Recupero Situazione Acconti',
+                                           style=wx.ICON_INFORMATION)
         cn = self.FindWindowByName
         dbacc = self.dbacc
         if cn('clientichiusi').IsChecked():
@@ -122,6 +116,7 @@ class SituazioneGlobaleAccontiPanel(wx.Panel):
         dbacc.Retrieve()
         self.gridacc.ChangeData(dbacc.GetRecordset())
         self.UpdateDettagli()
+        wait.Destroy()        
         
     def OnCellSelected(self, event):
         self.UpdateDettagli(event.GetRow())
@@ -135,7 +130,7 @@ class SituazioneGlobaleAccontiPanel(wx.Panel):
         else:
             if row is None:
                 row = self.gridacc.GetSelectedRows()[0]
-            if 0 <= row < dbacc.RowsCount():
+            if 0 <= row < dbacc.RowsCount() and len(self.gridacc.GetTable().data)>0:
                 dbacc.MoveRow(row)
                 pdcid = dbacc.pdc_id
             else:

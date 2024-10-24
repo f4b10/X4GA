@@ -24,6 +24,7 @@
 import stormdb as adb
 import magazz as m
 import magazz.dataentry_wdr as wdr
+import wx.grid as gridlib
 
 import Env
 bt = Env.Azienda.BaseTab
@@ -250,8 +251,54 @@ class LongDescrizDialog(aw.Dialog):
 
 # ------------------------------------------------------------------------------
 
+class SelezionaMovimentoAccontoGrid(dbglib.ADB_Grid):
 
-class SelezionaMovimentoAccontoGrid(dbglib.DbGridColoriAlternati):
+    def __init__(self, parent, dbacc):
+
+        def CalcolaIva(row, col):
+            d = self.dbacc
+            try:
+                d.MoveRow(row)
+                importo = round(d.acconto_disponib * (100+d.accoiva_perciva)/100,2)
+            except:
+                importo=0
+            return importo
+
+
+
+        dbglib.ADB_Grid.__init__(self, parent, db_table=dbacc,
+                                 can_edit=False, can_insert=False,
+                                 on_menu_select='row',
+                                 idGrid="eleacc")    
+
+        acc = self.dbacc = dbacc
+
+        AC = self.AddColumn
+        AC(acc, 'accotpd_codice',    "Cod.",        col_width=30)
+        AC(acc, 'accotpd_descriz',   "Causale",     col_width=120, is_fittable=True)
+        AC(acc, 'accodoc_numdoc',    "Num.",        col_width=40)
+        AC(acc, 'accodoc_datdoc',    "Data",        col_type=self.TypeDate())
+        AC(acc, 'accomov_importo',   "Acconto\nNetto",     col_type=self.TypeFloat(8,2))
+        AC(acc, 'accoiva_codice',    "IVA",         col_width=30)
+        AC(acc, 'acconto_disponib',  "Disponibile\nNetto", col_type=self.TypeFloat(8,2))
+        AC(acc, 'accontoiva_disponib',"Disponibile\nIvato", col_type=self.TypeFloat(8,2))
+        AC(acc, 'accomov_descriz',   "Descrizione", col_width=150)
+        AC(acc, 'accomov_id',        "#idMov",      col_width=1)
+        
+        self.CreateGrid()
+        self.SetColLabelSize(35)        
+        
+        
+        def cn(col):
+            return dbacc._GetFieldIndex(col, inline=True)
+        
+        self.AddTotalsRow(1, 'Totali', [cn('acconto_disponib'),
+                                        cn('accontoiva_disponib'),
+                                        ])
+
+
+
+class ___SelezionaMovimentoAccontoGrid(dbglib.DbGridColoriAlternati):
 
     def __init__(self, parent, dbacc):
 
@@ -303,10 +350,46 @@ class SelezionaMovimentoAccontoGrid(dbglib.DbGridColoriAlternati):
                                         cn('acconto_disponib')])
 
 
+
 # ------------------------------------------------------------------------------
+class SelezionaMovimentoAccontoStorniGrid(dbglib.ADB_Grid):
+
+    def __init__(self, parent, dbmov):
+
+        dbglib.ADB_Grid.__init__(self, parent,
+                                              size=parent.GetClientSizeTuple(),
+                                              idGrid='accstorni')
+
+        def cn(tab, col):
+            return tab._GetFieldIndex(col, inline=True)
+        
+        self.db_table=self.dbmov = dbmov
+        mov = dbmov
+        tpm = mov.tipmov
+        iva = mov.iva
+        doc = mov.doc
+        tpd = doc.tipdoc
+
+        AC = self.AddColumn
+        AC(tpd, 'codice'          , "Cod."        ,  col_width=30)
+        AC(tpd, 'descriz'         , "Causale"     , col_width=120, is_fittable=True)
+        AC(doc, 'numdoc'          , "Num."        , col_width=40)
+        AC(doc, 'datdoc'          , "Data"        , col_type=self.TypeDate())
+        AC(mov, 'lordo'           , "Storno\nNetto"      , col_type=self.TypeFloat(8,2))
+        AC(iva, 'codice'          , "IVA"         , col_width=30)
+        AC(mov, 'acconto_disponib', "Disponibile\nNetto" , col_type=self.TypeFloat(8,2))
+        AC(mov, 'descriz'         , "Descrizione" , col_width=1300)
+        AC(mov, 'id'              , "#id"         , col_width=1)
+        
+        self.CreateGrid()
+        self.SetColLabelSize(35)        
+
+        self.AddTotalsRow(1, 'Totali', [cn(mov, 'lordo')])
 
 
-class SelezionaMovimentoAccontoStorniGrid(dbglib.DbGridColoriAlternati):
+
+
+class ___SelezionaMovimentoAccontoStorniGrid(dbglib.DbGridColoriAlternati):
 
     def __init__(self, parent, dbmov):
 
@@ -325,6 +408,7 @@ class SelezionaMovimentoAccontoStorniGrid(dbglib.DbGridColoriAlternati):
         _DAT = gl.GRID_VALUE_DATETIME
         _NUM = gl.GRID_VALUE_NUMBER
         _IMP = bt.GetValIntMaskInfo()
+        #_IMP = 'double:9,4'
 
         def cn(tab, col):
             return tab._GetFieldIndex(col, inline=True)
@@ -355,6 +439,10 @@ class SelezionaMovimentoAccontoStorniGrid(dbglib.DbGridColoriAlternati):
         sz.Add(self, 0, wx.GROW|wx.ALL, 0)
         parent.SetSizer(sz)
         sz.SetSizeHints(parent)
+
+
+        self.AddTotalsRow(1, 'Totali', [cn(mov, 'lordo')])
+
 
 
 # ------------------------------------------------------------------------------
@@ -448,19 +536,14 @@ class SelezionaMovimentoAccontoPanel(wx.Panel):
             mov.Retrieve("mov.id_movacc=%s", accomov_id)
             for mov in mov:
                 segno = self.GetSegnoContabile(idCausale = mov.doc.tipdoc.id_caucg)
-                if not segno == 'A':
-                    accdisp -= abs(mov.lordo)
+                mov.lordo = round(mov.lordo,2)
+                if not segno == 'D':
+                    accdisp -= (mov.lordo)
                 else:
-                    mov.lordo = - mov.lordo  
-
-                    accdisp += abs(mov.lordo)
+                    accdisp += (mov.lordo)
+                    mov.lordo = -mov.lordo
                 mov.acconto_disponib = accdisp
-                    
-                    
-                #===============================================================
-                # accdisp -= abs(mov.importo)
-                # mov.acconto_disponib = accdisp
-                #===============================================================
+                
         self.lastmovaccid = accomov_id
         self.gridsto.ChangeData(mov.GetRecordset())
 
@@ -1135,9 +1218,10 @@ class GridBody(object):
                 dbacc = dlg.panel.dbacc
                 mov.id_tipmov = idTipMov
                 mov.id_aliqiva = idAliqiva
-                mov.descriz = "STORNO ACCONTO FT. N. %s DEL %s" % (dbacc.accodoc_numdoc,
+                mov.descriz = "ACCONTO FT. N. %s DEL %s" % (dbacc.accodoc_numdoc,
                                                                    doc.dita(dbacc.accodoc_datdoc))
-                mov.importo = min(round(dbacc.acconto_disponib * 100 / (100+perciva),2) , doc.totimponib)
+                #mov.importo = min(round(dbacc.acconto_disponib * 100 / (100+perciva),2) , doc.totimponib)
+                mov.importo = min(dbacc.acconto_disponib , doc.totimponib)
                 if doc.cfgdoc.caucon.pasegno != "A":
                     mov.importo = -mov.importo
                 mov.importo = -abs(mov.importo)
@@ -1161,7 +1245,7 @@ class GridBody(object):
         dlg.Destroy()
         if do:
             dbacc = dlg.panel.dbacc
-            mov.descriz = "STORNO ACCONTO FT. N. %s DEL %s" % (dbacc.accodoc_numdoc,
+            mov.descriz = "ACCONTO FT. N. %s DEL %s" % (dbacc.accodoc_numdoc,
                                                                doc.dita(dbacc.accodoc_datdoc))
             mov.importo = min(dbacc.acconto_disponib, doc.totimponib)
             if doc.cfgdoc.caucon.pasegno != "A":
