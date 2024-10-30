@@ -3884,6 +3884,88 @@ def RichiestaDatiFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
+
+def ScorporoFunc( parent, call_fit = True, set_sizer = True ):
+    item0 = wx.FlexGridSizer( 2, 0, 0, 0 )
+    
+    item1 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    
+    item2 = wx.StaticText( parent, ID_TEXT, "Importo:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item1.Add( item2, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item3 = bt.GetValIntNumCtrl(parent, ID_SCADTOT, 'importo', editable=True)
+    item1.Add( item3, 0, wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+
+    item4 = wx.StaticText( parent, ID_TEXT, "% iva:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item1.Add( item4, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item5 = NumCtrl(parent, ID_NUMDOC, integerWidth=2, allowNegative=False, groupDigits=False); item5.SetName("perciva")
+    item1.Add( item5, 0, wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM, 5 )
+
+    item6 = wx.StaticText( parent, ID_TEXT, "Imponibile:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item1.Add( item6, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item7 = bt.GetValIntNumCtrl(parent, ID_SCADTOT, 'imponibile', editable=False)
+    item1.Add( item7, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item8 = wx.StaticText( parent, ID_TEXT, "Imposta:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item1.Add( item8, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item9 = bt.GetValIntNumCtrl(parent, ID_SCADTOT, 'imposta', editable=False)
+    item1.Add( item9, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item10 = wx.StaticLine( parent, ID_LINE, wx.DefaultPosition, [20,-1], wx.LI_HORIZONTAL )
+    item1.Add( item10, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 10 )
+
+    item11 = wx.StaticLine( parent, ID_LINE, wx.DefaultPosition, [20,-1], wx.LI_HORIZONTAL )
+    item1.Add( item11, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 10 )
+
+    item12 = wx.StaticText( parent, ID_TEXT, "Importo Ricalcolato:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item1.Add( item12, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+    item13 = bt.GetValIntNumCtrl(parent, ID_SCADTOT, 'newImporto', editable=False)
+    item1.Add( item13, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item14 = wx.StaticText( parent, ID_TEXT, "Arrotondamento:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item14.SetForegroundColour( wx.RED )
+    item14.SetFont( wx.Font( 12, wx.ROMAN, wx.NORMAL, wx.BOLD ) )
+    item14.SetName( "labelArrotondamento" )
+    item1.Add( item14, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+    item15 = bt.GetValIntNumCtrl(parent, ID_SCADTOT, 'arrotondamento', editable=False)
+    item1.Add( item15, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item16 = wx.StaticLine( parent, ID_LINE, wx.DefaultPosition, [20,-1], wx.LI_HORIZONTAL )
+    item1.Add( item16, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP, 10 )
+
+    item17 = wx.StaticLine( parent, ID_LINE, wx.DefaultPosition, [20,-1], wx.LI_HORIZONTAL )
+    item1.Add( item17, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP, 10 )
+
+    item0.Add( item1, 0, wx.GROW, 5 )
+
+    item18 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    
+    item19 = wx.Button( parent, ID_BUTTON, "Abbandona", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item19.SetName( "btnAbort" )
+    item18.Add( item19, 0, wx.ALIGN_CENTER, 15 )
+
+    item20 = wx.Button( parent, ID_BUTTON, "Assegna", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item20.SetName( "btnSave" )
+    item18.Add( item20, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+
+    item0.Add( item18, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.TOP, 5 )
+
+    item0.AddGrowableCol( 0 )
+
+    item0.AddGrowableRow( 0 )
+
+    if set_sizer == True:
+        parent.SetSizer( item0 )
+        if call_fit == True:
+            item0.SetSizeHints( parent )
+    
+    return item0
+
 # Menubar functions
 
 # Toolbar functions

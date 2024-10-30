@@ -2177,6 +2177,26 @@ class RiepMovCon(adb.DbTable):
 
         self.Get(-1)
 
+    def GetPartite(self, idReg):
+        retValue=''
+        self.db_conn = Env.Azienda.DB.connection
+        try:
+            curs = self.db_conn.cursor()
+            sql =""" 
+select h.datdoc, h.numdoc, importo, abbuono from contab_s s
+left join contab_h h on h.id=s.id_reg
+where s.id_reg=%s
+""" % idReg
+            curs.execute(sql)
+            rs=curs.fetchall()
+            for r in rs:
+                retValue = '%sDoc.n.%s del %s Euro %s\n' % (retValue, r[1], r[0].strftime('%d-%m-%y'), self.sepn(r[2],2) )
+            curs.close()
+            if len(retValue)>0:
+                retValue = retValue[:-1]
+        except:
+            pass
+        return retValue
 
 
 class RiepMovConFe(RiepMovCon):

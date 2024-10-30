@@ -375,16 +375,19 @@ class SelezionaMovimentoAccontoStorniGrid(dbglib.ADB_Grid):
         AC(tpd, 'descriz'         , "Causale"     , col_width=120, is_fittable=True)
         AC(doc, 'numdoc'          , "Num."        , col_width=40)
         AC(doc, 'datdoc'          , "Data"        , col_type=self.TypeDate())
-        AC(mov, 'lordo'           , "Storno\nNetto"      , col_type=self.TypeFloat(8,2))
+        AC(mov, 'lordo'           , "Acconto\nUtilizzato"      , col_type=self.TypeFloat(8,2))
+        AC(mov, 'accredito'       , "Acconto\nReso"      , col_type=self.TypeFloat(8,2))
         AC(iva, 'codice'          , "IVA"         , col_width=30)
         AC(mov, 'acconto_disponib', "Disponibile\nNetto" , col_type=self.TypeFloat(8,2))
-        AC(mov, 'descriz'         , "Descrizione" , col_width=1300)
+        AC(mov, 'descriz'         , "Descrizione" , col_width=130)
         AC(mov, 'id'              , "#id"         , col_width=1)
         
         self.CreateGrid()
         self.SetColLabelSize(35)        
 
-        self.AddTotalsRow(1, 'Totali', [cn(mov, 'lordo')])
+        self.AddTotalsRow(1, 'Totali', [cn(mov, 'lordo'),
+                                        cn(mov, 'accredito')
+                                       ] )
 
 
 
@@ -538,10 +541,15 @@ class SelezionaMovimentoAccontoPanel(wx.Panel):
                 segno = self.GetSegnoContabile(idCausale = mov.doc.tipdoc.id_caucg)
                 mov.lordo = round(mov.lordo,2)
                 if not segno == 'D':
+                    # FATTURA
                     accdisp -= (mov.lordo)
+                    mov.accredito =-abs(mov.lordo)
+                    mov.lordo = 0
                 else:
+                    # NOTA DI CREDITO
                     accdisp += (mov.lordo)
-                    mov.lordo = -mov.lordo
+                    mov.lordo = - abs(mov.lordo)
+                    mov.accredito = 0
                 mov.acconto_disponib = accdisp
                 
         self.lastmovaccid = accomov_id
@@ -896,6 +904,23 @@ class GridBody(object):
         key = event.GetKeyCode()
         if key==wx.WXK_F5 and self.dbdoc.cfgdoc.multilinee==1 and self.FindWindowByName('butmultilinea').IsEnabled():
             self.ShowMultiLineDialog()
+        elif key==wx.WXK_F7:
+            if self.canedit:
+                if self.status==3:
+                    if self.dbdoc.mov.config.is_acconto==1:
+                        importo = self.dbdoc.mov.importo
+                        perciva = self.dbdoc.mov.iva.perciva
+                        nrow = self.gridbody.GetGridCursorRow()
+                        #ncol = self.gridbody.GetGridCursorCol()
+                        ncol = self.COL_codiva
+                        dlg = ScorporoDialog(self, importo=importo, perciva=perciva)
+                        if dlg.ShowModal()==wx.ID_OK:
+                            imponibile = dlg.FindWindowByName('imponibile').GetValue()
+                            self.dbdoc.mov.importo=imponibile 
+                            self.gridbody.ChangeData(self.dbdoc.mov.GetRecordset()) 
+                            self.gridbody.SetGridCursor(nrow, ncol)
+                            dlg.Destroy()
+                            self.MakeTotals()
         event.Skip()
 
     def ShowMultiLineDialog(self):
@@ -1221,9 +1246,14 @@ class GridBody(object):
                 mov.descriz = "ACCONTO FT. N. %s DEL %s" % (dbacc.accodoc_numdoc,
                                                                    doc.dita(dbacc.accodoc_datdoc))
                 #mov.importo = min(round(dbacc.acconto_disponib * 100 / (100+perciva),2) , doc.totimponib)
-                mov.importo = min(dbacc.acconto_disponib , doc.totimponib)
+                if doc.cfgdoc.caucon.pasegno == "A":
+                    mov.importo = min(dbacc.acconto_disponib , doc.totimponib)
+                else:
+                    mov.importo = dbacc.acconto_disponib
+                    
                 if doc.cfgdoc.caucon.pasegno != "A":
                     mov.importo = -mov.importo
+                    
                 mov.importo = -abs(mov.importo)
                 #mov.id_aliqiva = dbacc.accoiva_id
                 mov.id_movacc = dbacc.accomov_id
@@ -1490,7 +1520,7 @@ class GridBody(object):
                 if abs(value)>a.acconto_disponib:
                     aw.awu.MsgDialog(self, "L'acconto disponibile è di %s" % a.sepnvi(a.acconto_disponib), style=wx.ICON_ERROR)
                     return False
-                elif value>0:
+                elif value>0 and not doc.cfgdoc.caucon.id==None:
                     aw.awu.MsgDialog(self, "L'acconto detratto deve essere negativo", style=wx.ICON_ERROR)
                     return False
         return True
@@ -2368,3 +2398,101 @@ class MultiLineDescriz():
                 for r in self.SplitParagraph(p):
                     outTxt.append(r)
         return outTxt
+
+
+
+class ScorporoDialog(aw.Dialog):
+
+    def __init__(self, *args, **kwargs):
+        if not kwargs.has_key('title') and len(args) < 3:
+            kwargs['title'] = "Calcolo scorporo"
+            
+        perciva = kwargs.pop('perciva')             
+        importo = kwargs.pop('importo')             
+            
+            
+        aw.Dialog.__init__(self, *args, **kwargs)
+        self.panel = ScorporoPanel(self, perciva=perciva, importo=importo)
+
+        self.AddSizedPanel(self.panel)
+
+        self.Fit()
+        self.SetMinSize(self.GetSize())
+        self.CenterOnScreen()
+
+
+class ScorporoPanel(aw.Panel):
+
+    def __init__(self, *args, **kwargs):
+        perciva = kwargs.pop('perciva')             
+        importo = kwargs.pop('importo')             
+        wx.Panel.__init__(self, *args, **kwargs)
+        wdr.ScorporoFunc(self)
+        
+        cn = self.FindWindowByName
+
+        self.btnClose   = cn('btnAbort')
+        self.btnSave    = cn('btnSave')
+        self.importo    = cn('importo')
+        self.perciva    = cn('perciva')
+        self.imponibile = cn('imponibile')
+        self.imposta    = cn('imposta')
+        self.newImporto = cn('newImporto')
+        self.arrotondamento = cn('arrotondamento')
+        self.labelArrotondamento = cn('labelArrotondamento')
+
+        try:
+            importo = round(importo + importo*perciva/100,2)
+        except:
+            importo=0
+            pass
+        self.importo.ChangeValue(importo or 0)
+        self.perciva.ChangeValue(perciva or 0)
+        self.CalcoloScorporo()        
+
+
+        self.btnSave.Bind(wx.EVT_BUTTON, self.OnSave)
+        self.btnClose.Bind(wx.EVT_BUTTON, self.OnClose)
+        self.GetParent().Bind(wx.EVT_CLOSE, self.OnQuit) 
+        
+        
+        self.importo.Bind(wx.EVT_KILL_FOCUS, self.OnScorpora)
+        self.perciva.Bind(wx.EVT_KILL_FOCUS, self.OnScorpora)
+               
+
+    def OnSave(self, evt):
+        print 'OnSave'
+        self.GetParent().Close()
+        self.GetParent().EndModal(wx.ID_OK)
+        evt.Skip()
+
+    def OnQuit(self, evt):
+        print 'quit'
+        canExit=True
+        if canExit:
+            evt.Skip()
+        
+    def OnClose(self, evt):
+        self.GetParent().Close()
+        evt.Skip()
+
+    def OnScorpora(self, evt):
+        self.CalcoloScorporo()
+        evt.Skip()
+    
+    def CalcoloScorporo(self):
+        importo = self.importo.GetValue()
+        perciva = self.perciva.GetValue()
+        imponibile = round(importo*100/(100+perciva),2)
+        imposta    = round(imponibile*perciva/100,2)
+        newImporto = imponibile + imposta
+        self.imponibile.ChangeValue(imponibile)
+        self.imposta.ChangeValue(imposta)
+        self.newImporto.ChangeValue(newImporto)
+        if importo - newImporto ==0:
+            self.labelArrotondamento.Hide()
+            self.arrotondamento.Hide()
+        else:
+            self.labelArrotondamento.Show()
+            self.arrotondamento.Show()
+        self.arrotondamento.ChangeValue(importo - newImporto)

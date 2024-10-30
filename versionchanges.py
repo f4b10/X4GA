@@ -29,6 +29,18 @@ import mx.DateTime as dt
 import mx.Odt
 
 history = (
+    ('1.6.17', dt.Date(2024,10, 15), (
+        ("BET161703",
+         """Potenziata la gestione degli acconti."""
+        ),
+        ("BET161702",
+         """Aggiunta possibilità in fase di immissione fattura di acconto di richiamare, sulla riga di immissione acconto, con il tasto F7 il calcolo dello scorporo dell'iva."""
+        ),
+        ("BET161701",
+         """Aggiunta tasto di recupero acconto"""
+        ),
+        ),),
+
     ('1.6.15', dt.Date(2024, 9, 20), (
         ("BET161503",
          """Reset filtro categorie su immissione doc. di magazzino."""

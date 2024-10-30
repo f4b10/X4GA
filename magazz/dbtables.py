@@ -5464,9 +5464,6 @@ class PdcSituazioneAcconti(adb.DbMem):
            (
                SELECT round(SUM((if(cfgmagdoc.scorpiva='1', stormov.importo, stormov.importo   ))
                * if(cau.pasegno="D", -1, 1)
-               
-               
-               
                ),2)
                  FROM movmag_b stormov
                  JOIN movmag_h stordoc ON stordoc.id=stormov.id_doc
@@ -5580,8 +5577,6 @@ SELECT acconti.*,
             self.CreateNewRow()
             for i, n in enumerate(self.GetFieldNames()):
                 try:
-                    
-                    print n, r[i]
                     setattr(self, n, r[i])
                 except:
                     pass
@@ -5633,6 +5628,7 @@ class PdcTotaleAcconti(PdcSituazioneAcconti):
 
 
     def GetInnerSel(self):
+        # per determinare il totale acconti disponible
         if self._dexid is None:
             dexfilter = ""
         else:
@@ -5653,7 +5649,7 @@ class PdcTotaleAcconti(PdcSituazioneAcconti):
            SUM(if(accotpd.scorpiva=1, accomov.importo,  accomov.importo)                     ) as accomov_importo,
            
            SUM((
-               SELECT round(SUM((if(cfgmagdoc.scorpiva='1', stormov.importo, round(stormov.importo * (100+aliqiva.perciva)/100,2)   ))
+               SELECT round(SUM((if(cfgmagdoc.scorpiva='1', stormov.importo, stormov.importo  ))
                * if(cau.pasegno="D", -1, 1)
                ),2)
                  FROM movmag_b stormov
@@ -5666,7 +5662,6 @@ class PdcTotaleAcconti(PdcSituazioneAcconti):
                      (stordoc.f_ann IS NULL OR stordoc.f_ann != 1)
 
             )) AS total_storno""" % locals()
-        print sql
         return sql 
 #===============================================================================
 #     def GetInnerSel(self):
@@ -5718,6 +5713,7 @@ class PdcSituazioneStorniAcconto(ElencoMovim):
         self.AddField('0.0', 'acconto_disponib')
         #self.AddField('mov.importo * (100+iva.perciva)/100', 'lordo')
         self.AddField('mov.importo', 'lordo')
+        self.AddField('mov.importo', 'accredito')
         self.Reset()
 
 

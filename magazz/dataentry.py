@@ -316,6 +316,7 @@ class MagazzPanel(aw.Panel,\
     gridbodyclass = GridBody
     _fidoAlreadyView = None
     _isReadOnly = None
+    _isAcconti = False
 
     def __init__(self, *args, **kwargs):
         postinit=True
@@ -2089,7 +2090,17 @@ class MagazzPanel(aw.Panel,\
             return
         doc = self.dbdoc
         a = doc._info.acconti
+        a.VediTutti()
         a.GetForPdc(doc.id_pdc)
+        a.VediSoloAperti()
+        if a.RowsCount()>0:
+            self._isAcconti = True
+        else:
+            self._isAcconti = False
+        
+        
+        
+        
         cn = self.FindWindowByName
         totAcconto = 0
         for r in a:
@@ -2110,19 +2121,16 @@ class MagazzPanel(aw.Panel,\
             #     r.residuo_netto = round(r.residuo_lordo * 100/(100+r.perciva),2)
             # totAcconto = totAcconto + (r.residuo_lordo or 0)
             #===================================================================
-            print '%s - Acconto:%s Stornato:%s Residuo:%s' % (r.scorpiva,r.accomov_importo, r.total_storno, r.acconto_disponib)
-            totAcconto = totAcconto + (r.acconto_disponib or 0)
+            totAcconto = totAcconto + round((r.acconto_disponib or 0)*(100+r.perciva)/100,2)
+            print '%s - Acconto:%s Stornato:%s Residuo:%s Acconto Disponibile Ivato:%s' % (r.scorpiva,r.accomov_importo, r.total_storno, r.acconto_disponib, totAcconto )
             
-        cn('accontodisp').SetValue(totAcconto)
-        if not self.FindWindowByName('accontodisp').GetValue()==0:                    
+        objAccontoDisp = cn('accontodisp') 
+        objAccontoDisp .SetValue(totAcconto)
+        if self._isAcconti:
             if self.PrevedeStornoAcconto(self.cauid):        
                 self.FindWindowByName('butAcconti').Show()
             else:
                 self.FindWindowByName('butAcconti').Hide()
-        
-        
-        
-        
 
     def EnableButFido(self, doc=None):
         if doc is None:
