@@ -2182,15 +2182,25 @@ class RiepMovCon(adb.DbTable):
         self.db_conn = Env.Azienda.DB.connection
         try:
             curs = self.db_conn.cursor()
-            sql =""" 
-select h.datdoc, h.numdoc, importo, abbuono from contab_s s
+#===============================================================================
+#             sql =""" 
+# select h.datdoc, h.numdoc, importo, abbuono from contab_s s
+# left join contab_h h on h.id=s.id_reg
+# where s.id_reg=%s
+# """ % idReg
+#===============================================================================
+
+            sql = """
+SELECT if(h.id_regiva is null, Concat('Rif.doc.num. ', p.numdoc, date_format(p.datdoc,' del.%%d-%%m-%%y')  ), date_format(s.datscad,'Scadenza %%d-%%m-%%y') ) as "Rif./Scad.",
+s.importo, s.abbuono, if (s.note is null, '', concat(' Note: ', s.note)) FROM contab_s s
 left join contab_h h on h.id=s.id_reg
-where s.id_reg=%s
-""" % idReg
+left join pcf p on p.id=s.id_pcf
+where id_reg=%s and s.importo<>0;
+""" % idReg            
             curs.execute(sql)
             rs=curs.fetchall()
             for r in rs:
-                retValue = '%sDoc.n.%s del %s Euro %s\n' % (retValue, r[1], r[0].strftime('%d-%m-%y'), self.sepn(r[2],2) )
+                retValue = '%s%s Euro %s %s\n' % (retValue, r[0], self.sepn(r[1],2), r[3] )
             curs.close()
             if len(retValue)>0:
                 retValue = retValue[:-1]
