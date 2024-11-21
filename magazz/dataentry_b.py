@@ -269,7 +269,7 @@ class SelezionaMovimentoAccontoGrid(dbglib.ADB_Grid):
         dbglib.ADB_Grid.__init__(self, parent, db_table=dbacc,
                                  can_edit=False, can_insert=False,
                                  on_menu_select='row',
-                                 idGrid="eleacc")    
+                                 idGrid="eleacc1")    
 
         acc = self.dbacc = dbacc
 
@@ -385,9 +385,11 @@ class SelezionaMovimentoAccontoStorniGrid(dbglib.ADB_Grid):
         self.CreateGrid()
         self.SetColLabelSize(35)        
 
-        self.AddTotalsRow(1, 'Totali', [cn(mov, 'lordo'),
-                                        cn(mov, 'accredito')
-                                       ] )
+        #=======================================================================
+        # self.AddTotalsRow(1, 'Totali', [cn(mov, 'lordo'),
+        #                                 cn(mov, 'accredito')
+        #                                ] )
+        #=======================================================================
 
 
 
@@ -444,7 +446,7 @@ class ___SelezionaMovimentoAccontoStorniGrid(dbglib.DbGridColoriAlternati):
         sz.SetSizeHints(parent)
 
 
-        self.AddTotalsRow(1, 'Totali', [cn(mov, 'lordo')])
+        #self.AddTotalsRow(1, 'Totali', [cn(mov, 'lordo')])
 
 
 
@@ -538,7 +540,11 @@ class SelezionaMovimentoAccontoPanel(wx.Panel):
             #mov.SetDebug()
             mov.Retrieve("mov.id_movacc=%s", accomov_id)
             for mov in mov:
-                segno = self.GetSegnoContabile(idCausale = mov.doc.tipdoc.id_caucg)
+                #print mov.descriz
+                if mov.doc.tipdoc.id_caucg:
+                    segno = self.GetSegnoContabile(idCausale = mov.doc.tipdoc.id_caucg)
+                else:
+                    segno = None
                 mov.lordo = round(mov.lordo,2)
                 if not segno == 'D':
                     # FATTURA
@@ -1223,6 +1229,15 @@ class GridBody(object):
             pass
         return idTipMov
 
+    def IsNotaCreditoMerce(self):
+        isMerce=False
+        doc = self.dbdoc
+        mov = doc.mov
+           
+        for r in mov:
+            if r.config.tipologia=='M' and not (r.config.is_acconto or r.config.is_accstor):
+                isMerce=True
+        return isMerce
 
     def OnLinkToAcconto(self, event):
         doc = self.dbdoc
@@ -1246,15 +1261,21 @@ class GridBody(object):
                 mov.descriz = "ACCONTO FT. N. %s DEL %s" % (dbacc.accodoc_numdoc,
                                                                    doc.dita(dbacc.accodoc_datdoc))
                 #mov.importo = min(round(dbacc.acconto_disponib * 100 / (100+perciva),2) , doc.totimponib)
-                if doc.cfgdoc.caucon.pasegno == "A":
+                if doc.cfgdoc.caucon.pasegno == "D":
                     mov.importo = min(dbacc.acconto_disponib , doc.totimponib)
                 else:
-                    mov.importo = dbacc.acconto_disponib
+                    if self.IsNotaCreditoMerce():
+                        mov.importo = min(dbacc.acconto_disponib , doc.totimponib)
+                    else:
+                        mov.importo = dbacc.acconto_disponib
                     
                 if doc.cfgdoc.caucon.pasegno != "A":
                     mov.importo = -mov.importo
-                    
-                mov.importo = -abs(mov.importo)
+                
+                if not len(doc.cfgdoc.caucon.pasegno or '')==0:
+                    mov.importo = -abs(mov.importo)
+                else:
+                    mov.importo = -mov.importo
                 #mov.id_aliqiva = dbacc.accoiva_id
                 mov.id_movacc = dbacc.accomov_id
                 self.MakeTotals()

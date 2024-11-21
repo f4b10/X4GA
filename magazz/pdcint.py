@@ -202,6 +202,7 @@ class PdcIntMagMovGrid(dbglib.DbGridColoriABlocchi):
         a((120, (cn(tpd, "descriz"), "Documento",    _STR, True)))
         a((120, (cn(tpm, "descriz"), "Movimento",    _STR, True)))
         a((  1, (cn(mov, "id"),      "#mov",         _STR, True)))
+        a((  1, (cn(mov, "id_movacc"),"#acc",        _STR, True)))
         a((  1, (cn(doc, "id"),      "#doc",         _STR, True)))
         a((  1, (cn(pro, "id"),      "#pro",         _STR, True)))
         

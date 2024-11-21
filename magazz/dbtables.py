@@ -5581,7 +5581,17 @@ SELECT acconti.*,
                 except:
                     pass
             if 'accoiva_perciva' in self.GetFieldNames():
-                self.accontoiva_disponib=round(self.acconto_disponib*(100+self.accoiva_perciva)/100,2)
+                try:
+                    self.accontoiva_disponib=round(self.acconto_disponib*(100+self.accoiva_perciva)/100,2)
+                except:
+                    self.accontoiva_disponib=0
+
+            elif 'perciva' in self.GetFieldNames():
+                try:
+                    self.accontoiva_disponib=round(self.acconto_disponib*(100+self.perciva)/100,2)
+                except:
+                    self.accontoiva_disponib=0
+                    pass
             
             
         
@@ -5613,7 +5623,7 @@ class PdcTotaleAcconti(PdcSituazioneAcconti):
 
     def __init__(self):
 
-        adb.DbMem.__init__(self, 'pdc_id,pdc_codice,pdc_descriz,is_acconto,scorpiva,perciva,importo,imponibile,imposta,residuo_lordo,residuo_netto,accomov_importo,total_storno,acconto_disponib')
+        adb.DbMem.__init__(self, 'pdc_id,pdc_codice,pdc_descriz,is_acconto,scorpiva,perciva,importo,imponibile,imposta,residuo_lordo,residuo_netto,accomov_importo,total_storno,acconto_disponib,accontoiva_disponib')
         self.Reset()
 
         self._pdcid = None  #id cliente, None = tutti i clienti

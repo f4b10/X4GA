@@ -52,7 +52,10 @@ class SituazioneGlobaleAccontiGrid(dbglib.ADB_Grid):
         AC = self.AddColumn
         AC(acc, 'pdc_codice',        'Cod.',       col_width=50)
         AC(acc, 'pdc_descriz',  '     Anagrafica', col_width=50, is_fittable=True)
-        AC(acc, 'acconto_disponib',  'Acconto',    col_type=self.TypeFloat())
+        AC(acc, 'acconto_disponib',  'Acconto Netto',    col_type=self.TypeFloat())
+        AC(acc, 'accontoiva_disponib',  'Acconto Lordo',    col_type=self.TypeFloat())
+        
+        
         self.CreateGrid()
         #=======================================================================
         # def cn(col):

@@ -1455,6 +1455,11 @@ class MagazzPanel(aw.Panel,\
             print 'errore'
 
     def OnAnagChanged(self, event):
+        DbgMsg('OnAnagChanged, control=%s' %event.GetEventObject().GetName())
+        self.AnagChanged()
+        event.Skip()        
+        
+    def AnagChanged(self):
         try:
             if self.dbdoc.pdc.id:
                 naz  = self.dbdoc.datiAnag[1].nazione
@@ -1480,7 +1485,6 @@ class MagazzPanel(aw.Panel,\
             pass
 
 
-        DbgMsg('OnAnagChanged, control=%s' %event.GetEventObject().GetName())
         self.ResetFidoView()
         self.UpdateHeadAnag(initAll=True)
         doc = self.dbdoc
@@ -1538,7 +1542,7 @@ class MagazzPanel(aw.Panel,\
                                       style=wx.ICON_INFORMATION)
                 del ds
         wx.CallAfter(self.TestModPagStatusAnag)
-        event.Skip()
+
 
 
         
@@ -1802,6 +1806,12 @@ class MagazzPanel(aw.Panel,\
             ("anagcodfisc", hcol["codfisc"] or ""),\
             ("anagpiva", hcol["piva"] or "")):
             self.controls[name].SetLabel(field)
+        if self.dbdoc.id_tipdoc:
+            if self._isAcconti:
+                if self.PrevedeStornoAcconto(self.dbdoc.id_tipdoc):
+                    self.FindWindowByName('butAcconti').Show()
+                else:
+                    self.FindWindowByName('butAcconti').Hide()
         self.Layout()
 
     def UpdateHeadDest(self, initAll=True, update_nocodedes=True):
@@ -2127,7 +2137,10 @@ class MagazzPanel(aw.Panel,\
         objAccontoDisp = cn('accontodisp') 
         objAccontoDisp .SetValue(totAcconto)
         if self._isAcconti:
-            if self.PrevedeStornoAcconto(self.cauid):        
+            idCau=self.cauid
+            if idCau is None:
+                idCau=self.dbdoc.id_tipdoc
+            if self.PrevedeStornoAcconto(idCau):        
                 self.FindWindowByName('butAcconti').Show()
             else:
                 self.FindWindowByName('butAcconti').Hide()
@@ -2353,13 +2366,11 @@ class MagazzPanel(aw.Panel,\
                 pass
         return retValue
         
-        
-        
+       
         
     def DocSave(self, doc=None):
         if doc is None:
             doc = self.dbdoc
-            
         retValue = self.BeforeDocSave()
         
         found=True
