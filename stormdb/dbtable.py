@@ -2869,6 +2869,10 @@ class DbTable(object):
         return out
 
     @classmethod
+    def SearchInTable(cls, table=None, searchInField=None, searchValue=None, returnField='id'):
+        return cls.tabinfo(table, searchValue, returnField, pk=searchInField)
+
+    @classmethod
     def sqlinfo(cls, sqlcmd, sqlpar=None):
         out = None
         sqlpar = sqlpar or []
