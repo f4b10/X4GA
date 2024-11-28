@@ -156,6 +156,11 @@ class SearchResultsGrid(dbglib.DbGridColoriAlternati):
         sz.SetSizeHints(parent)
 
         #self.Bind(gl.EVT_GRID_CELL_LEFT_DCLICK, self.OnDblClick)
+        self.Bind(gl.EVT_GRID_CMD_CELL_RIGHT_CLICK, self.OnContextMenu)
+
+
+    def OnContextMenu(self, evt):
+        pass
 
     def GetDbColumns(self):
         _STR = gl.GRID_VALUE_STRING
