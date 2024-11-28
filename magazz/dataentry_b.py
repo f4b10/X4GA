@@ -1381,7 +1381,7 @@ class GridBody(object):
                 if r.id_prod==None:
                     r.Delete()
                 else:
-                    print i, r.id_tipmov, r.id_prod, r.descriz
+                    print i, r.id_tipmov, r.id_prod, r.descriz.encode('ascii', 'ignore')
             self.gridbody.ResetView()
             self.MakeTotals()
         dlg.Destroy()
