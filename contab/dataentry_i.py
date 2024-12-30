@@ -551,7 +551,7 @@ class GeneraPartiteMixin(scad.Scadenze):
         return out
 
     def _GridEdit_Sca__Init__(self):
-
+        
         if hasattr(self, '_grid_sca'):
             if self._grid_sca:
 #                self._grid_sca.Destroy()
