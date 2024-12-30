@@ -1581,6 +1581,7 @@ class AziendaCopyPanel(aw.Panel):
                         bt.TABNAME_SCONTICC,)),
             ('confor', (bt.TABNAME_FORNIT,
                         bt.TABNAME_CATFOR,
+                        bt.TABNAME_CATACQ,
                         bt.TABNAME_STATFOR,)),
             ('concas', (bt.TABNAME_CASSE,)),
             ('conban', (bt.TABNAME_BANCHE,)),
