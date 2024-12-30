@@ -81,7 +81,8 @@ class ControllaPIVA(object):
         #        """s=%(stato)s&p=%(piva)s""" % {'stato': self.stato or 'IT',
         #                                        'piva':  self.piva}
         #=======================================================================
-        return """http://www1.agenziaentrate.it/servizi/vies"""
+        return """https://ec.europa.eu/taxation_customs/vies/#/vat-validation"""
+        #return """http://www1.agenziaentrate.it/servizi/vies"""
     
     def GetPIvaDateOpenWebPage(self):
         os.startfile(self.GetPIvaDateURL())
