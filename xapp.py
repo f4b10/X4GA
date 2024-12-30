@@ -22,7 +22,7 @@
 # ------------------------------------------------------------------------------
 
 import wx
-import os, sys
+import os, sys, shutil
 import glob
 
 import awc.controls.windows as aw
@@ -296,9 +296,32 @@ class XApp(wx.App):
                                     """del programma (%s)\nVuoi installarla ?"""\
                                     % dlver, style=wx.ICON_QUESTION|wx.YES_NO\
                                     |wx.YES_DEFAULT) == wx.ID_YES:
+                    self.CopyFileInLocal(name)
                     os.execl(name)
         
         self.InstallUpdatedZipFiles(path)
+    
+    def CopyFileInLocal(self, file):
+        if os.path.exists(file):
+            print file
+            dir, f = os.path.split(file)
+            newDir = "c:\X4GA_TMP"
+            if not os.path.exists(newDir):
+                os.mkdir(newDir)
+            else:
+                for filename in os.listdir(newDir):
+                    file_path = os.path.join(newDir, filename)
+                    try:
+                        if os.path.isfile(file_path) or os.path.islink(file_path):
+                            os.unlink(file_path)
+                        elif os.path.isdir(file_path):
+                            shutil.rmtree(file_path)
+                    except Exception,e:
+                        print 'Failed to delete %s. Reason: %s' % (file_path, e)                
+                
+            newFile = os.path.join(newDir, f)
+            shutil.copyfile(file, newFile)
+        return newFile
     
     def InstallUpdatedZipFiles(self, path, request=True):
         
