@@ -551,7 +551,16 @@ class LinkTableStatFor(LinkTable):
         from anag.statfor import StatForDialog
         self.cardclass = StatForDialog
 
+class LinkTableCatAcqFor(LinkTable):
 
+    def __init__(self, parent, id, name=None, **kwargs):
+        LinkTable.__init__(self, parent, id, **kwargs)
+        if name:
+            self.SetName(name)
+        self.db_name = Env.Azienda.BaseTab.TABNAME_CATACQ
+        self.db_alias = 'catacq'
+        from anag.catacq import CatAcqDialog
+        self.cardclass = CatAcqDialog
 # ------------------------------------------------------------------------------
 
 

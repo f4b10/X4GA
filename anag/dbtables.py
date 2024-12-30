@@ -336,6 +336,10 @@ class Fornit(Pdc):
             join=adb.JOIN_LEFT)
         
         fornit.AddJoin(\
+            bt.TABNAME_CATACQ, "catacq",  idLeft="id_catacq",\
+            join=adb.JOIN_LEFT)
+        
+        fornit.AddJoin(\
             bt.TABNAME_ALIQIVA, "aliqiva", idLeft="id_aliqiva",\
             join=adb.JOIN_LEFT)
 

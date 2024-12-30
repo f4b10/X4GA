@@ -567,6 +567,7 @@ class XFrame(aw.Frame):
             (self.OnGestStatCli,               ID_GESCLIENT_STATUS),
             (self.OnGestClienti,               ID_GESCLIENT),
             (self.OnGestCatFor,                ID_GESFORNIT_CATEGO),
+            (self.OnGestCatAcq,                ID_GESFORNIT_CATACQ),
             (self.OnGestStatFor,               ID_GESFORNIT_STATUS),
             (self.OnGestFornit,                ID_GESFORNIT),
             (self.OnGestProd,                  ID_GESPROD),
@@ -1253,6 +1254,10 @@ class XFrame(aw.Frame):
     def OnGestCatFor(self, event):
         from anag.catfor import CatForFrame
         self.LaunchFrame(CatForFrame)
+    
+    def OnGestCatAcq(self, event):
+        from anag.catacq import CatAcqFrame
+        self.LaunchFrame(CatAcqFrame)
     
     def OnGestStatFor(self, event):
         from anag.statfor import StatForFrame

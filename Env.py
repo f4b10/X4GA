@@ -1393,6 +1393,13 @@ class Azienda(object):
         TABVOICE_STATCLI = {1: ['status cliente', ['lo', 'uno', 'dello', 'dallo']],
                             2: ['status cliente', ['gli', 'degli', 'dagli']]}
 
+        TABNAME_CATACQ = "catacq"
+        TABDESC_CATACQ = "Categoria Acquisti"
+        TABSETUP_TABLE_CATACQ = numtab.next()
+        TABSETUP_CONSTR_CATACQ = []
+        TABVOICE_CATACQ = {1: ['categoria Acquisti', ['la', 'una', 'della', 'dalla']],
+                            2: ['categorie Acquisti', ['le', 'delle', 'dalle']]}
+
         TABNAME_STATFOR = "statfor"
         TABDESC_STATFOR = "Status fornitori"
         TABSETUP_TABLE_STATFOR = numtab.next()
@@ -2193,6 +2200,13 @@ class Azienda(object):
 
             cls.statcli_indexes = cls.std_indexes
 
+            cls.catacq =\
+              [ [ "id",         "INT",    idw, None, "ID Categoria", "AUTO_INCREMENT" ],
+                [ "codice",     "CHAR",    10, None, "Codice", None ],
+                [ "descriz",    "VARCHAR", 60, None, "Descrizione", None ], ]
+
+            cls.catacq_indexes = cls.std_indexes
+
 
             cls.statfor =\
               [ [ "id",           "INT",    idw, None, "ID Sottoconto", "AUTO_INCREMENT" ],
@@ -2237,6 +2251,7 @@ class Azienda(object):
 
             cls.clienti =\
               [ [ "id",             "INT",    idw, None, "ID Cliente", None ],
+                [ "rsextra",        "VARCHAR", 60, None, "Ragione Sociale extra", None ],
                 [ "indirizzo",      "VARCHAR", 60, None, "Indirizzo", None ],
                 [ "cap",            "CHAR",     8, None, "CAP", None ],
                 [ "citta",          "VARCHAR", 60, None, "Città", None ],
@@ -2468,6 +2483,7 @@ class Azienda(object):
                                  (cls.TABSETUP_CONSTR_SPEINC,  'id_speinc',   cls.TABCONSTRAINT_TYPE_NOACTION),
                                  (cls.TABSETUP_CONSTR_TRAVET,  'id_travet',   cls.TABCONSTRAINT_TYPE_NOACTION),
                                  (cls.TABSETUP_CONSTR_CATFOR,  'id_categ',    cls.TABCONSTRAINT_TYPE_NOACTION),
+                                 (cls.TABSETUP_CONSTR_CATACQ,  'id_catacq',   cls.TABCONSTRAINT_TYPE_NOACTION),
                                  (cls.TABSETUP_CONSTR_STATFOR, 'id_status',   cls.TABCONSTRAINT_TYPE_NOACTION),
                                  (cls.TABSETUP_CONSTR_ZONE,    'id_zona',     cls.TABCONSTRAINT_TYPE_NOACTION),
                                  (cls.TABSETUP_CONSTR_SCADGRP, 'id_scadgrp',  cls.TABCONSTRAINT_TYPE_NOACTION),
@@ -3957,6 +3973,7 @@ class Azienda(object):
                 (cls.TABNAME_CATCLI,    cls.TABDESC_CATCLI,    cls.catcli,    cls.catcli_indexes,    cls.TABSETUP_CONSTR_CATCLI,    cls.TABVOICE_CATCLI    ),
                 (cls.TABNAME_CATFOR,    cls.TABDESC_CATFOR,    cls.catfor,    cls.catfor_indexes,    cls.TABSETUP_CONSTR_CATFOR,    cls.TABVOICE_CATFOR    ),
                 (cls.TABNAME_STATCLI,   cls.TABDESC_STATCLI,   cls.statcli,   cls.statcli_indexes,   cls.TABSETUP_CONSTR_STATCLI,   cls.TABVOICE_STATCLI   ),
+                (cls.TABNAME_CATACQ,    cls.TABDESC_CATACQ,    cls.catacq,    cls.catacq_indexes,    cls.TABSETUP_CONSTR_CATACQ,    cls.TABVOICE_CATACQ   ),
                 (cls.TABNAME_STATFOR,   cls.TABDESC_STATFOR,   cls.statfor,   cls.statfor_indexes,   cls.TABSETUP_CONSTR_STATFOR,   cls.TABVOICE_STATFOR   ),
                 (cls.TABNAME_PDC,       cls.TABDESC_PDC,       cls.pdc,       cls.pdc_indexes,       cls.TABSETUP_CONSTR_PDC,       cls.TABVOICE_PDC       ),
                 (cls.TABNAME_CLIENTI,   cls.TABDESC_CLIENTI,   cls.clienti,   cls.clienti_indexes,   cls.TABSETUP_CONSTR_CLIENTI,   cls.TABVOICE_CLIENTI   ),
@@ -4324,6 +4341,14 @@ class Azienda(object):
                 smtp.SetAUTH_Pswd(e.GetAuthPassword())
                 smtp.SetAUTH_TLS(e.authtls)
                 smtp.SetSender(e.sender)
+                smtp.SetCMAILEXE(e.cmailexe)
+                smtp.SetCMAILCFG(e.cmailcfg )
+                
+                
+                
+                
+                
+                
             except:
                 pass
 
