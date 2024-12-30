@@ -151,7 +151,7 @@ def GetCursor(dbName=None):
     curs = dba._dbCon.cursor()    
     return curs
 
-
+   
 class DbInfo(object):
     def __init__(self):
         object.__init__(self)
@@ -2917,6 +2917,17 @@ class DbTable(object):
                 out.append(getattr(dbe, outcol))
             out = tuple(out)
         return out
+
+    @classmethod
+    def acapo(cls, s1,s2):
+        output = '%s\n%s' % (s1,s2)
+        return output
+
+    @classmethod
+    def removeSpecialChar(cls, s):
+        output = s.encode('ascii', 'ignore')
+        return output
+
 
     # metodi proxy per DbInfo
 

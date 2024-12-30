@@ -28,8 +28,16 @@ Database Wrapper
 
 
 import stormdb
-from stormdb import DateTime, MySQLdb, pyodbc,\
+from stormdb import DateTime, MySQLdb, \
      OPENMODE_READONLY, OPENMODE_WRITE, OPENMODE_STANDARD
+     
+try:
+    from stormdb import pyodbc
+except:
+    pass
+
+     
+     
 adodb = None
 
 import re
