@@ -317,6 +317,7 @@ class MagazzPanel(aw.Panel,\
     _fidoAlreadyView = None
     _isReadOnly = None
     _isAcconti = False
+    dLinkAccontiPresenti = {}
 
     def __init__(self, *args, **kwargs):
         postinit=True
@@ -1810,9 +1811,17 @@ class MagazzPanel(aw.Panel,\
             if self._isAcconti:
                 if self.PrevedeStornoAcconto(self.dbdoc.id_tipdoc):
                     self.FindWindowByName('butAcconti').Show()
+                    self.GetLinkAcconti()
                 else:
                     self.FindWindowByName('butAcconti').Hide()
         self.Layout()
+
+    def GetLinkAcconti(self):
+        self.dLinkAccontiPresenti = {}
+        for r in self.dbdoc.mov:
+            if r.id_movacc:
+                self.dLinkAccontiPresenti[r.id_movacc]=r.importo
+        
 
     def UpdateHeadDest(self, initAll=True, update_nocodedes=True):
 
@@ -3412,6 +3421,7 @@ class MagazzPanel(aw.Panel,\
         return contab.GetInterrPdcFrameClass(tipo)
 
     def MakeTotals(self, *args, **kwargs):
+        print 'MakeTotals in dataentry'
         self.dbdoc.MakeTotals(*args, **kwargs)
         self.dbdoc.regcon._info.id_effbap =\
             self.FindWindowByName("id_bancf").GetValue()

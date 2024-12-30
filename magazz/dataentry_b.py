@@ -27,6 +27,8 @@ import magazz.dataentry_wdr as wdr
 import wx.grid as gridlib
 
 import Env
+from __builtin__ import True
+from pickle import TRUE
 bt = Env.Azienda.BaseTab
 stdcolor = Env.Azienda.Colours
 
@@ -49,7 +51,7 @@ import copy
 import time
 
 _DEBUG=False
-
+_CODICI_STORNI = "62|82"
 def ElapsedTime(msg='', reset = False):
     if _DEBUG:
         global start_time
@@ -253,7 +255,7 @@ class LongDescrizDialog(aw.Dialog):
 
 class SelezionaMovimentoAccontoGrid(dbglib.ADB_Grid):
 
-    def __init__(self, parent, dbacc):
+    def __init__(self, parent, dbacc, mainPanel=None):
 
         def CalcolaIva(row, col):
             d = self.dbacc
@@ -263,40 +265,203 @@ class SelezionaMovimentoAccontoGrid(dbglib.ADB_Grid):
             except:
                 importo=0
             return importo
+        
+        def UsatoLordo(row, col):
+            d = self.dbacc
+            try:
+                d.MoveRow(row)
+                disponibileLordo = round(d.acconto_disponib * (100+d.accoiva_perciva)/100,2)
+                utilizzoLordo =d.accomov_lordo - disponibileLordo
+            except:
+                utilizzoLordo=0
+            return utilizzoLordo
+        
 
-
+        self.mainPanel = mainPanel
 
         dbglib.ADB_Grid.__init__(self, parent, db_table=dbacc,
-                                 can_edit=False, can_insert=False,
-                                 on_menu_select='row',
-                                 idGrid="eleacc1")    
+                                 can_edit=True, can_insert=False,
+                                 on_menu_select='cell',
+                                 idGrid="eleacc1")
+            
+
 
         acc = self.dbacc = dbacc
 
         AC = self.AddColumn
-        AC(acc, 'accotpd_codice',    "Cod.",        col_width=30)
-        AC(acc, 'accotpd_descriz',   "Causale",     col_width=120, is_fittable=True)
-        AC(acc, 'accodoc_numdoc',    "Num.",        col_width=40)
-        AC(acc, 'accodoc_datdoc',    "Data",        col_type=self.TypeDate())
-        AC(acc, 'accomov_importo',   "Acconto\nNetto",     col_type=self.TypeFloat(8,2))
-        AC(acc, 'accoiva_codice',    "IVA",         col_width=30)
-        AC(acc, 'acconto_disponib',  "Disponibile\nNetto", col_type=self.TypeFloat(8,2))
-        AC(acc, 'accontoiva_disponib',"Disponibile\nIvato", col_type=self.TypeFloat(8,2))
-        AC(acc, 'accomov_descriz',   "Descrizione", col_width=150)
+        AC(acc, 'accotpd_codice',    "Cod.",        col_width=30, is_editable=False)
+        AC(acc, 'accotpd_descriz',   "Causale",     col_width=120, is_editable=False)
+        AC(acc, 'accodoc_numdoc',    "Num.",        col_width=40, is_editable=False)
+        AC(acc, 'accodoc_datdoc',    "Data",        col_type=self.TypeDate(), is_editable=False)
+        AC(acc, 'accomov_lordo',     "Acconto\nLordo",     col_type=self.TypeFloat(8,2), is_editable=False)
+        AC(acc, 'accontoiva_usato',  "Acconto Lordo\nCompensato",     col_type=self.TypeFloat(8,2), is_editable=False)
+        AC(acc, 'accontoiva_disponib',"Disponibile\nLordo", col_type=self.TypeFloat(8,2), is_editable=False)
+        #AC(acc, 'accomov_importo',   "Acconto\nNetto",     col_type=self.TypeFloat(8,2))
+        AC(acc, 'accoiva_codice',    "IVA",         col_width=30, is_editable=False)
+        if self.mainPanel:
+            self.EDITCOL = AC(acc, 'acconto_edit',      "Utilizzo",     col_type=self.TypeFloat(8,2), is_editable=True)
+        AC(acc, 'acconto_disponib',  "Disponibile\nNetto", col_type=self.TypeFloat(8,2), is_editable=False)
+        AC(acc, 'accomov_descriz',   "Descrizione", col_width=150, is_editable=False, is_fittable=True)
         AC(acc, 'accomov_id',        "#idMov",      col_width=1)
         
         self.CreateGrid()
-        self.SetColLabelSize(35)        
         
+        
+        self.SetColLabelSize(35)        
         
         def cn(col):
             return dbacc._GetFieldIndex(col, inline=True)
         
-        self.AddTotalsRow(1, 'Totali', [cn('acconto_disponib'),
+        self.AddTotalsRow(1, 'Totali', [cn('accomov_lordo'),
+                                        cn('acconto_disponib'),
                                         cn('accontoiva_disponib'),
+                                        cn('accontoiva_usato'),
+                                        cn('acconto_edit'),
                                         ])
 
 
+
+        
+    #===========================================================================
+    # def DrawLines(self, focused=False):
+    #     tx = 'white'#self._textcolor_sel_off #pare che senza focus la riga di selezione abbia sempre background grigio
+    #     cb = 'white'
+    #     cl = self._gridcolor_off
+    #     self.SetSelectionForeground(tx)
+    #     self.SetSelectionBackground(cb)
+    #     self.SetGridLineColour(cl)
+    #     pass
+    #===========================================================================
+
+
+    def GetAttr(self, row, col, rscol, attr):
+        attr = dbglib.ADB_Grid.GetAttr(self, row, col, rscol, attr)
+        if self.mainPanel:
+            fg, bg='black white'.split()
+            
+            try:
+                if col==self.EDITCOL and not row==self.db_table.LastRow()+1:
+                    fg, bg='red yellow'.split()
+                    attr.SetBackgroundColour(bg)
+                    attr.SetTextColour(fg)
+            except:
+                pass
+            attr.SetBackgroundColour(bg)
+            attr.SetTextColour(fg)            
+        return attr
+
+    def GetTotaleAcconti(self):
+        idxUtilizzo = self.db_table._GetFieldIndex("acconto_edit", inline=True)            
+        totale = 0 
+        for r in self.db_table.GetRecordset():
+            editato = r[idxUtilizzo] or 0
+            print editato
+            totale = totale + editato
+        print 'totale:%s' % totale
+        return totale
+        
+    
+    def CheckCapacita(self, idAcconto, value):
+        codiceTipoDoc = self.mainPanel.dbdoc.cfgdoc.codice
+        print 'codiceTipoDoc = %s' % codiceTipoDoc
+        idMovAcc = self.mainPanel.GetIdMovStornoAcconto(self.mainPanel.dbdoc.id_tipdoc)
+        totImponib = 0
+        totAcconti = 0
+        for r in self.mainPanel.dbdoc.mov:
+            if r.id_tipmov == idMovAcc:
+                if not r.id_movacc == idAcconto:
+                    totAcconti = totAcconti + r.importo
+            else:
+                totImponib = totImponib + r.importo
+        print totImponib
+        print totAcconti
+        print value
+        if totImponib >= value-totAcconti or codiceTipoDoc in _CODICI_STORNI:
+            esito = True
+        else:
+            esito = False
+        return esito
+
+    def SearchRowAcconto(self, idAcconto):
+        nRow = -1
+        for i, r in enumerate(self.mainPanel.dbdoc.mov):
+            if r.id_movacc==idAcconto:
+                nRow=i
+                break
+        return nRow
+        
+        
+
+    def CellEditAfterUpdate(self, row, gridcol, col, value):
+        if self.mainPanel:
+            idxIdAcconto = self.db_table._GetFieldIndex("accomov_id", inline=True)
+            idxPercIva   = self.db_table._GetFieldIndex("accoiva_perciva", inline=True)
+            idxIdIva   = self.db_table._GetFieldIndex("accoiva_id", inline=True)
+            idAcconto    = self.db_table.GetRecordset()[row][idxIdAcconto]
+            percIva      = self.db_table.GetRecordset()[row][idxPercIva]
+            idAliqiva    = self.db_table.GetRecordset()[row][idxIdIva]
+            value = round(value * 100 /(100+percIva),2)
+            if self.CheckCapacita(idAcconto, value):
+                idxNumDoc    = self.db_table._GetFieldIndex("accodoc_numdoc", inline=True)
+                idxDatDoc    = self.db_table._GetFieldIndex("accodoc_datdoc", inline=True)
+                idxDisponib  = self.db_table._GetFieldIndex("acconto_disponib", inline=True)
+                idxEdit      = self.db_table._GetFieldIndex("acconto_edit", inline=True)
+                idxIva       = self.db_table._GetFieldIndex("accoiva_id", inline=True)
+                Disponib  = self.db_table.GetRecordset()[row][idxDisponib]
+                if value > Disponib:
+                    msg = "Dall'acconto è possibile attingere per un massimo di € %s" % self.db_table.sepn(Disponib, dec=2)
+                    msg = "%s\nSi desidera utilizzarlo interamente?" % msg
+                    if aw.awu.MsgDialog(self, message=msg, style=wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT) == wx.ID_YES:
+                        value = Disponib
+                    else:
+                        value = 0
+                    self.db_table.GetRecordset()[row][idxEdit]=value
+                nRow = self.SearchRowAcconto(idAcconto)
+                if nRow<0:
+                    NumDoc    = self.db_table.GetRecordset()[row][idxNumDoc]
+                    DatDoc    = self.db_table.GetRecordset()[row][idxDatDoc]
+                    Disponib  = self.db_table.GetRecordset()[row][idxDisponib]
+                    des       = "ACCONTO FT. N. %s DEL %s" % (NumDoc, DatDoc.strftime('%d/%m/%Y'))
+                    importo   = -value
+                    idMovStorno = self.mainPanel.GetIdMovStornoAcconto(self.mainPanel.dbdoc.id_tipdoc)
+                    #===========================================================
+                    # idAliqiva = idAliqiva
+                    # idAliqiva = self.mainPanel.dbdoc.mov.iva.id
+                    # if idAliqiva is None:
+                    #     idAliqiva = self.db_table.GetRecordset()[row][idxIva]
+                    #===========================================================
+                    self.mainPanel.GridBodyAddNewRow()
+                    self.mainPanel.dbdoc.mov.MoveLast()
+                    if len(self.mainPanel.dbdoc.mov.descriz)>0:
+                        self.mainPanel.GridBodyAddNewRow()
+                        self.mainPanel.dbdoc.mov.MoveLast()
+                    self.mainPanel.dbdoc.mov.id_tipmov = idMovStorno
+                    self.mainPanel.dbdoc.mov.descriz   = des
+                    self.mainPanel.dbdoc.mov.id_aliqiva= idAliqiva
+                    self.mainPanel.dbdoc.mov.importo   = importo
+                    self.mainPanel.dbdoc.mov.id_movacc = idAcconto
+                else:
+                    for i, r in enumerate(self.mainPanel.dbdoc.mov):
+                        if i==nRow:
+                            if value==0:
+                                r.importo = -value
+                                r.Delete()
+                            else:
+                                r.id_aliqiva = idAliqiva
+                                r.importo = -value
+                            break
+                                
+                self.ViewResiduo()
+                self.mainPanel.gridbody.ResetView()
+                self.mainPanel.gridbody.ForceRefresh()
+                self.mainPanel.MakeTotals()
+            else:
+                aw.awu.MsgDialog(self, message="Gli acconti superano l'importo della fattura.")
+        
+    def ViewResiduo(self):
+        residuo = self.mainPanel.dbdoc.totimponib
+        self.GetParent().GetParent().labelResiduo.SetLabel(('RESIDUO DA COMPENSARE:%s' % self.mainPanel.dbdoc.sepn(residuo,2)))
+            
 
 class ___SelezionaMovimentoAccontoGrid(dbglib.DbGridColoriAlternati):
 
@@ -346,8 +511,11 @@ class ___SelezionaMovimentoAccontoGrid(dbglib.DbGridColoriAlternati):
         parent.SetSizer(sz)
         sz.SetSizeHints(parent)
 
-        self.AddTotalsRow(1, 'Totali', [cn('accomov_importo'),
-                                        cn('acconto_disponib')])
+        #=======================================================================
+        # self.AddTotalsRow(1, 'Totali', [cn('accomov_importo'),
+        #                                 cn('acconto_disponib')])
+        #=======================================================================
+        self.AddTotalsRow(1, 'Totali', [cn('acconto_disponib')])
 
 
 
@@ -371,16 +539,17 @@ class SelezionaMovimentoAccontoStorniGrid(dbglib.ADB_Grid):
         tpd = doc.tipdoc
 
         AC = self.AddColumn
-        AC(tpd, 'codice'          , "Cod."        ,  col_width=30)
-        AC(tpd, 'descriz'         , "Causale"     , col_width=120, is_fittable=True)
-        AC(doc, 'numdoc'          , "Num."        , col_width=40)
-        AC(doc, 'datdoc'          , "Data"        , col_type=self.TypeDate())
-        AC(mov, 'lordo'           , "Acconto\nUtilizzato"      , col_type=self.TypeFloat(8,2))
-        AC(mov, 'accredito'       , "Acconto\nReso"      , col_type=self.TypeFloat(8,2))
-        AC(iva, 'codice'          , "IVA"         , col_width=30)
-        AC(mov, 'acconto_disponib', "Disponibile\nNetto" , col_type=self.TypeFloat(8,2))
-        AC(mov, 'descriz'         , "Descrizione" , col_width=130)
-        AC(mov, 'id'              , "#id"         , col_width=1)
+        AC(tpd, 'codice'          , "Cod."                  ,  col_width=30)
+        AC(tpd, 'descriz'         , "Causale"               , col_width=120)
+        AC(doc, 'numdoc'          , "Num."                  , col_width=40)
+        AC(doc, 'datdoc'          , "Data"                  , col_type=self.TypeDate())
+        AC(mov, 'lordo'           , "Acconto Lordo\nCompensato"   , col_type=self.TypeFloat(8,2))
+        AC(mov, 'accredito'       , "Acconto Lordo\nReso"         , col_type=self.TypeFloat(8,2))
+        AC(mov, 'accontoiva_disponib', "Disponibile\nLordo" , col_type=self.TypeFloat(8,2))
+        AC(iva, 'codice'          , "IVA"                   , col_width=30)
+        AC(mov, 'acconto_disponib', "Disponibile\nNetto"    , col_type=self.TypeFloat(8,2))
+        AC(mov, 'descriz'         , "Descrizione"           , col_width=130, is_fittable=True)
+        AC(mov, 'id'              , "#id"                   , col_width=1)
         
         self.CreateGrid()
         self.SetColLabelSize(35)        
@@ -457,16 +626,34 @@ class SelezionaMovimentoAccontoPanel(wx.Panel):
 
     def __init__(self, *args, **kwargs):
 
+        try:
+            self.accontiUsati = kwargs.pop('accontiUsati')
+        except:
+            self.accontiUsati = {}
+        try:
+            self.accontiAttuali = kwargs.pop('accontiAttuali')
+        except:
+            self.accontiAttuali = {}
+        try:
+            self.mainPanel =  kwargs.pop('mainPanel')
+        except:
+            self.mainPanel=None
+            
         wx.Panel.__init__(self, *args, **kwargs)
         self.SetName('accontipanel')
         self.pdcid = None
         self.lastmovaccid = None
         wdr.SelezionaMovimentoAccontoFunc(self)
-        cn = self.FindWindowByName
 
+        cn = self.FindWindowByName
+        self.labelResiduo = cn('labelResiduo')
+        if self.mainPanel==None:
+            self.labelResiduo.Hide()
+        else:
+            self.ViewResiduo()
         self.dbacc = dbm.PdcSituazioneAcconti()
         self.dbacc.VediSoloAperti()
-        self.gridacc = SelezionaMovimentoAccontoGrid(cn('pangridacc'), self.dbacc)
+        self.gridacc = SelezionaMovimentoAccontoGrid(cn('pangridacc'), self.dbacc, mainPanel=self.mainPanel)
 
         self.dbsto = dbm.PdcSituazioneStorniAcconto()
         self.gridsto = SelezionaMovimentoAccontoStorniGrid(cn('pangridsto'), self.dbsto)
@@ -474,6 +661,11 @@ class SelezionaMovimentoAccontoPanel(wx.Panel):
         self.Bind(wx.EVT_CHECKBOX, self.OnChiusi, cn('anchechiusi'))
         self.Bind(gl.EVT_GRID_CMD_SELECT_CELL, self.OnCellSelected, self.gridacc)
         self.Bind(gl.EVT_GRID_CELL_LEFT_DCLICK, self.OnSelectRow, self.gridacc)
+
+    def ViewResiduo(self):
+        residuo = self.mainPanel.dbdoc.totimponib 
+        self.labelResiduo.SetLabel('RESIDUO DA COMPENSARE:%s' % self.mainPanel.dbdoc.sepn(residuo,2))
+
 
     def OnCellSelected(self, event):
         row = event.GetRow()
@@ -483,39 +675,115 @@ class SelezionaMovimentoAccontoPanel(wx.Panel):
             self.UpdateAnag()
             if acc.accomov_id != self.lastmovaccid:
                 acc.MoveRow(row)
-                self.UpdateStorni(acc.accomov_id, acc.accomov_importo)
+                self.UpdateStorni(acc.accomov_id, acc.accomov_lordo)
                 event.Skip()
 
     def UpdateAnag(self):
-        self.FindWindowByName('rsanag').SetLabel(self.dbacc.pdc_descriz)
+        try:
+            self.FindWindowByName('rsanag').SetLabel(self.dbacc.pdc_descriz)
+        except:
+            pass
 
     def OnChiusi(self, event):
         self.UpdateData()
         event.Skip()
 
     def OnSelectRow(self, event):
-        self.dbacc.MoveRow(event.GetRow())
-        if (self.dbacc.acconto_disponib or 0) > 0:
-            event.Skip()
+        try:
+            self.dbacc.MoveRow(event.GetRow())
+            if (self.dbacc.acconto_disponib or 0) > 0:
+                event.Skip()
+        except:
+            pass
 
     def SetPdcId(self, pdcid):
         self.pdcid = pdcid
         self.UpdateData()
 
     def UpdateData(self):
+        print self.accontiUsati
+        print self.accontiAttuali
+        
         dbacc = self.dbacc
         if self.FindWindowByName('anchechiusi').IsChecked():
             dbacc.VediTutti()
         else:
             dbacc.VediSoloAperti()
+            dbacc.VediTutti()
         dbacc.GetForPdc(self.pdcid)
+        if len(self.accontiUsati.keys())>0:
+            # Acconti già memorizzati
+            print "Acconti gia memorizzati"
+            for k in self.accontiUsati.keys():
+                idAcconto = k
+                importo      = self.accontiUsati[k]
+                for i, r in enumerate(dbacc):
+                    if r.accomov_id==idAcconto:
+                        r.acconto_disponib    = r.acconto_disponib    - importo 
+                        r.accontoiva_disponib = r.accontoiva_disponib - round((importo*(100+r.accoiva_perciva)/100),2)
+                        #=======================================================
+                        # try:
+                        #     r.accontoiva_usato =r.accomov_lordo-r.accontoiva_disponib
+                        # except:
+                        #     pass
+                        #=======================================================
+                        break
+
+        if len(self.accontiAttuali.keys())>0:
+            # Acconti presenti nel documento attuale
+            for k in self.accontiAttuali.keys():
+                idAcconto = k
+                importo      = self.accontiAttuali[k]
+                for r in dbacc:
+                    if r.accomov_id==idAcconto:
+                        #=======================================================
+                        # r.acconto_disponib    = r.acconto_disponib    - importo
+                        # r.accontoiva_disponib = r.accontoiva_disponib - round((importo*(100+r.accoiva_perciva)/100),2)
+                        #=======================================================
+                        r.acconto_edit = -round(importo * (100+r.accoiva_perciva)/100,2)
+                        break
+
+        try:
+            r.accontoiva_usato =r.accomov_lordo-r.accontoiva_disponib
+        except:
+            pass
+
+
+
+                    
+        newRs = []
+        if not self.mainPanel==None and False:
+            newRs.append(self.AddRecordIniziale())
+        if not self.FindWindowByName('anchechiusi').IsChecked():
+            idxAccDisp   = dbacc._GetFieldIndex("acconto_disponib", inline=True)
+            idxIdAcconto = dbacc._GetFieldIndex("accomov_id", inline=True)
+            for r in dbacc.GetRecordset():
+                if not r[idxAccDisp]==0 or r[idxIdAcconto] in self.accontiAttuali.keys():
+                    newRs.append(r)
+            dbacc.SetRecordset(newRs)
+        self.gridacc.SetGridCursor(0,8)
+        self._last_selected_rc_col = 8        
         self.gridacc.ChangeData(dbacc.GetRecordset())
         if not dbacc.IsEmpty():
             self.gridacc.SelectRow(0)
-            self.UpdateStorni(dbacc.accomov_id, dbacc.accomov_importo)
+            #self.gridacc.DrawLines()
+            self.UpdateStorni(dbacc.accomov_id, dbacc.accomov_lordo)
         else:
             self.UpdateStorni(None, 0)
+            
+            
+        #self.gridacc.ForceRefresh()
 
+    def AddRecordIniziale(self):
+        rec=[]
+        for f in self.dbacc.GetFieldNames():
+            v=getattr(self.dbacc, f, None)
+            if type(v) in (str, unicode):
+                rec.append(v)
+            else:
+                rec.append(None)
+        return rec
+        
     def GetSegnoContabile(self, idCausale = None):
         db_conn = Env.Azienda.DB.connection
         curs = db_conn.cursor()
@@ -533,13 +801,21 @@ class SelezionaMovimentoAccontoPanel(wx.Panel):
         
 
     def UpdateStorni(self, accomov_id, accdisp):
+        try:
+            idDoc = self.mainPanel.dbdoc.id
+        except:
+            idDoc = -1
         mov = self.dbsto
         if accomov_id is None:
             mov.Reset()
         else:
             #mov.SetDebug()
-            mov.Retrieve("mov.id_movacc=%s", accomov_id)
-            for mov in mov:
+            if idDoc>0:
+                mov.Retrieve("mov.id_movacc=%s and not doc.id=%s" % (accomov_id, idDoc))
+            else:
+                mov.Retrieve("mov.id_movacc=%s", accomov_id)
+            for i, mov in enumerate(mov):
+                
                 #print mov.descriz
                 if mov.doc.tipdoc.id_caucg:
                     segno = self.GetSegnoContabile(idCausale = mov.doc.tipdoc.id_caucg)
@@ -549,14 +825,21 @@ class SelezionaMovimentoAccontoPanel(wx.Panel):
                 if not segno == 'D':
                     # FATTURA
                     accdisp -= (mov.lordo)
-                    mov.accredito =-abs(mov.lordo)
+                    mov.accredito =-abs(mov.lordo)   # con iva
                     mov.lordo = 0
                 else:
                     # NOTA DI CREDITO
-                    accdisp += (mov.lordo)
+                    accdisp += (mov.lordo)           # # con iva
                     mov.lordo = - abs(mov.lordo)
                     mov.accredito = 0
-                mov.acconto_disponib = accdisp
+                mov.acconto_disponib = round(accdisp * 100 / (100+(mov.iva.perciva or 0)),2)
+                mov.accontoiva_disponib = accdisp
+                
+                #mov.accontoiva_disponib = accdisp
+                #===============================================================
+                # for f in mov.GetFieldNames():
+                #     print '%s = %s' % (f, getattr(mov, f, None))
+                #===============================================================
                 
         self.lastmovaccid = accomov_id
         self.gridsto.ChangeData(mov.GetRecordset())
@@ -570,8 +853,24 @@ class SelezionaMovimentoAccontoDialog(aw.Dialog):
     def __init__(self, *args, **kwargs):
         if not 'title' in kwargs:
             kwargs['title'] = 'Situazione acconti cliente'
+        try:
+            accontiUsati = kwargs.pop('accontiUsati')
+        except:
+            accontiUsati = {}
+            
+        try:
+            accontiAttuali = kwargs.pop('accontiAttuali')
+        except:
+            accontiAttuali = {}
+            
+        try:
+            mainPanel = kwargs.pop('mainPanel')
+        except:
+            mainPanel = None
+            
+            
         aw.Dialog.__init__(self, *args, **kwargs)
-        self.panel = SelezionaMovimentoAccontoPanel(self)
+        self.panel = SelezionaMovimentoAccontoPanel(self, accontiUsati=accontiUsati, accontiAttuali=accontiAttuali, mainPanel=mainPanel)
         self.AddSizedPanel(self.panel)
         self.Bind(gl.EVT_GRID_CELL_LEFT_DCLICK, self.OnSelectRow)
 
@@ -590,6 +889,9 @@ class GridBody(object):
     Gestione griglia dataentry dettaglio magazzino
     """
     pangridbody = None
+    idIvaAcconto= None
+    
+    
     def __init__(self):
         object.__init__(self)
 
@@ -913,7 +1215,7 @@ class GridBody(object):
         elif key==wx.WXK_F7:
             if self.canedit:
                 if self.status==3:
-                    if self.dbdoc.mov.config.is_acconto==1:
+                    if self.dbdoc.mov.config.is_acconto==1 or self.dbdoc.mov.config.is_accstor==1:
                         importo = self.dbdoc.mov.importo
                         perciva = self.dbdoc.mov.iva.perciva
                         nrow = self.gridbody.GetGridCursorRow()
@@ -1239,51 +1541,80 @@ class GridBody(object):
                 isMerce=True
         return isMerce
 
+    def CheckAcconto(self, id_acconto=None):
+        print id_acconto
+        mov = self.dbdoc.mov
+        canContinue = True
+        for r in mov:
+            if r.id_movacc == id_acconto:
+                canContinue = False
+        return canContinue
+
     def OnLinkToAcconto(self, event):
         doc = self.dbdoc
         mov = doc.mov
+        dAccontiAttuali = {}
+        for r in mov:
+            if r.id_movacc:
+                dAccontiAttuali[r.id_movacc]=r.importo
+                #===============================================================
+                # # Rimuovo acconti presenti nel documento attuale
+                # if r.id_movacc in self.dLinkAccontiPresenti.keys():
+                #     self.dLinkAccontiPresenti.pop(r.id_movacc)
+                #===============================================================
+                
         a = dbm.PdcSituazioneAcconti()
         a.GetForPdc(doc.id_pdc)
-        dlg = SelezionaMovimentoAccontoDialog(self)
+        dlg = SelezionaMovimentoAccontoDialog(self, accontiUsati=self.dLinkAccontiPresenti, accontiAttuali=dAccontiAttuali, mainPanel=self)
         dlg.SetPdcId(doc.id_pdc)
         do = dlg.ShowModal() == wx.ID_OK
         dlg.Destroy()
         if do:
-            idTipMov = self.GetIdMovStornoAcconto(doc.id_tipdoc)
-            idAliqiva = mov.iva.id
-            perciva   = mov.iva.perciva
-            if idTipMov:
-                self.GridBodyAddNewRow()
-                mov.MoveLast()
-                dbacc = dlg.panel.dbacc
-                mov.id_tipmov = idTipMov
-                mov.id_aliqiva = idAliqiva
-                mov.descriz = "ACCONTO FT. N. %s DEL %s" % (dbacc.accodoc_numdoc,
-                                                                   doc.dita(dbacc.accodoc_datdoc))
-                #mov.importo = min(round(dbacc.acconto_disponib * 100 / (100+perciva),2) , doc.totimponib)
-                if doc.cfgdoc.caucon.pasegno == "D":
-                    mov.importo = min(dbacc.acconto_disponib , doc.totimponib)
-                else:
-                    if self.IsNotaCreditoMerce():
+            if self.CheckAcconto(id_acconto=dlg.panel.dbacc.accomov_id):
+                idTipMov = self.GetIdMovStornoAcconto(doc.id_tipdoc)
+                idAliqiva = mov.iva.id
+                perciva   = mov.iva.perciva
+                if idTipMov:
+                    self.GridBodyAddNewRow()
+                    mov.MoveLast()
+                    if len(mov.descriz)>0:
+                        self.GridBodyAddNewRow()
+                        mov.MoveLast()
+                    dbacc = dlg.panel.dbacc
+                    mov.id_tipmov = idTipMov
+                    #mov.id_aliqiva = idAliqiva
+                    mov.id_aliqiva = dbacc.accoiva_id
+                    
+                    
+                    
+                    mov.descriz = "ACCONTO FT. N. %s DEL %s" % (dbacc.accodoc_numdoc,
+                                                                       doc.dita(dbacc.accodoc_datdoc))
+                    #mov.importo = min(round(dbacc.acconto_disponib * 100 / (100+perciva),2) , doc.totimponib)
+                    if doc.cfgdoc.caucon.pasegno == "D":
                         mov.importo = min(dbacc.acconto_disponib , doc.totimponib)
                     else:
-                        mov.importo = dbacc.acconto_disponib
+                        if self.IsNotaCreditoMerce():
+                            mov.importo = min(dbacc.acconto_disponib , doc.totimponib)
+                        else:
+                            mov.importo = dbacc.acconto_disponib
+                        
+                    if doc.cfgdoc.caucon.pasegno != "A":
+                        mov.importo = -mov.importo
                     
-                if doc.cfgdoc.caucon.pasegno != "A":
-                    mov.importo = -mov.importo
-                
-                if not len(doc.cfgdoc.caucon.pasegno or '')==0:
-                    mov.importo = -abs(mov.importo)
+                    if not len(doc.cfgdoc.caucon.pasegno or '')==0:
+                        mov.importo = -abs(mov.importo)
+                    else:
+                        mov.importo = -mov.importo
+                    #mov.id_aliqiva = dbacc.accoiva_id
+                    mov.id_movacc = dbacc.accomov_id
+                    self.MakeTotals()
                 else:
-                    mov.importo = -mov.importo
-                #mov.id_aliqiva = dbacc.accoiva_id
-                mov.id_movacc = dbacc.accomov_id
-                self.MakeTotals()
+                    aw.awu.MsgDialog(self, 'Il tipo di documento non prevede nessun tipo di movimento di storno acconto.')
+                    
+                self.gridbody.ResetView()
+                self.gridbody.ForceRefresh()
             else:
-                aw.awu.MsgDialog(self, 'Il tipo di documento non prevede nessun tipo di movimento di storno acconto.')
-                
-            self.gridbody.ForceRefresh()
-        
+                aw.awu.MsgDialog(self, 'Acconto già utilizzato nel documento')
 
     def GridBodyOnLinkToAcconto(self, event):
         doc = self.dbdoc
@@ -1538,13 +1869,29 @@ class GridBody(object):
             if bt.MAGGESACC == 1 and mov.id_movacc is not None:
                 a = dbm.PdcSituazioneAcconti()
                 a.GetForPdc(doc.id_pdc, mov.id_movacc, doc.id)
-                if abs(value)>a.acconto_disponib:
-                    aw.awu.MsgDialog(self, "L'acconto disponibile è di %s" % a.sepnvi(a.acconto_disponib), style=wx.ICON_ERROR)
+                totAccontoDisponibile = a.acconto_disponib or 0
+                totAccontoInCorso = self.GetAccontoUsato(mov.id_movacc)
+                totAccontoDisponibile = totAccontoDisponibile - totAccontoInCorso
+                if abs(value)>totAccontoDisponibile:
+                    aw.awu.MsgDialog(self, "L'acconto disponibile è di %s" % a.sepnvi(totAccontoDisponibile), style=wx.ICON_ERROR)
                     return False
                 elif value>0 and not doc.cfgdoc.caucon.id==None:
                     aw.awu.MsgDialog(self, "L'acconto detratto deve essere negativo", style=wx.ICON_ERROR)
                     return False
         return True
+
+    def GetAccontoUsato(self, idMovAcc):
+        importoUsato = 0
+        try:
+            importoUsato = self.dLinkAccontiPresenti[idMovAcc]
+        except:
+            pass
+        return importoUsato
+        
+        
+        
+        
+        
 
     def GridBodyEditedValues(self, row, gridcol, col, value):
 
@@ -1978,7 +2325,12 @@ class GridBody(object):
         cfg = self.dbdoc.cfgdoc
         if cfg.visgiac or cfg.viscosto:
             bprc = 0
-            cstu = self.dbprod.costo or 0
+            try:
+                cstu = self.dbprod.cst_tot or 0
+                self.FindWindowByName('bodycost').SetValue(cstu)
+            except:
+                cstu = self.dbprod.costo or 0
+                
             qt   = self.dbdoc.mov.qta or 0
             pv   = self.dbdoc.mov.prezzo or 0
             im   = self.dbdoc.mov.importo or 0

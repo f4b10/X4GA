@@ -2520,7 +2520,7 @@ def BodyStatFunc( parent, call_fit = True, set_sizer = True ):
     item13 = wx.StaticText( parent, ID_TEXT, "%R.", wx.DefaultPosition, wx.DefaultSize, 0 )
     item6.Add( item13, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.TOP, 5 )
 
-    item14 = NumCtrl(parent, ID_BODYPRIC, name='bodypric', integerWidth=4, fractionWidth=1, allowNegative=True, groupDigits=False); item14.SetReadOnly()
+    item14 = NumCtrl(parent, ID_BODYPRIC, name='bodypric', integerWidth=4, fractionWidth=2, allowNegative=True, groupDigits=False); item14.SetReadOnly()
     item6.Add( item14, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.TOP, 5 )
 
     item6.AddGrowableCol( 1 )
@@ -3581,25 +3581,32 @@ def SelezionaMovimentoAccontoFunc( parent, call_fit = True, set_sizer = True ):
     item3.SetName( "rsanag" )
     item1.Add( item3, 0, wx.GROW|wx.ALIGN_BOTTOM|wx.LEFT|wx.TOP, 5 )
 
-    item4 = RCheckBox( parent, ID_ANCHECHIUSI, "Visualizza anche acconti non più disponibili", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item4.SetName( "anchechiusi" )
-    item1.Add( item4, 0, wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+    item4 = wx.StaticText( parent, ID_TEXT, "-residuo-", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
+    item4.SetFont( wx.Font( 10, wx.SWISS, wx.NORMAL, wx.BOLD ) )
+    item4.SetName( "labelResiduo" )
+    item1.Add( item4, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+
+    item5 = RCheckBox( parent, ID_ANCHECHIUSI, "anche acconti non più disponibili", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item5.SetName( "anchechiusi" )
+    item1.Add( item5, 0, wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
 
     item1.AddGrowableCol( 1 )
 
+    item1.AddGrowableCol( 2 )
+
     item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item5 = wx.Panel( parent, ID_PANGRIDACC, wx.DefaultPosition, [750,120], wx.SUNKEN_BORDER )
-    item5.SetName( "pangridacc" )
-    item0.Add( item5, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item6 = wx.Panel( parent, ID_PANGRIDACC, wx.DefaultPosition, [820,120], wx.SUNKEN_BORDER )
+    item6.SetName( "pangridacc" )
+    item0.Add( item6, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item6 = wx.StaticText( parent, ID_TEXT, "Utilizzi dell'acconto selezionato", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item6.SetForegroundColour( wx.BLUE )
-    item0.Add( item6, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+    item7 = wx.StaticText( parent, ID_TEXT, "Utilizzi dell'acconto selezionato", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item7.SetForegroundColour( wx.BLUE )
+    item0.Add( item7, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
 
-    item7 = wx.Panel( parent, ID_PANGRIDSTO, wx.DefaultPosition, [600,120], wx.SUNKEN_BORDER )
-    item7.SetName( "pangridsto" )
-    item0.Add( item7, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item8 = wx.Panel( parent, ID_PANGRIDSTO, wx.DefaultPosition, [600,120], wx.SUNKEN_BORDER )
+    item8.SetName( "pangridsto" )
+    item0.Add( item8, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item0.AddGrowableCol( 0 )
 

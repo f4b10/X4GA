@@ -1789,23 +1789,34 @@ class DocMag(adb.DbTable):
                     except IndexError:
                         add = True
                 if add:
+                    i=None
                     if isomagg:
                         aliqdes = "OMAGGI"
                     elif self.mov.config.is_accstor:
                         aliqdes = "STORNO ACCONTO"
-                    self._info.totiva.append(\
-                        [aliqid,   #RSIVA_ID
-                         aliqcod,  #RSIVA_codiva
-                         aliqdes,  #RSIVA_desiva
-                         0,        #RSIVA_IMPONIB
-                         0,        #RSIVA_IMPOSTA
-                         0,        #RSIVA_IMPORTO
-                         0,        #RSIVA_IMPOSCR
-                         isomagg,  #RSIVA_ISOMAGG
-                         aliqprc,  #RSIVA_perciva
-                         aliqind,  #RSIVA_percind
-                         aliqtip]) #RSIVA_tipoalq
-                    i = len(self._info.totiva)-1
+                        try:
+                            i = ListSearch(self._info.totiva,\
+                                           lambda x: x[m.RSIVA_desiva] == aliqdes)
+                            print 'trovato %s' % i
+                            #i = None
+                        except:
+                            i = None
+                            print 'non trovato'
+                            pass
+                    if i==None:    
+                        self._info.totiva.append(\
+                            [aliqid,   #RSIVA_ID
+                             aliqcod,  #RSIVA_codiva
+                             aliqdes,  #RSIVA_desiva
+                             0,        #RSIVA_IMPONIB
+                             0,        #RSIVA_IMPOSTA
+                             0,        #RSIVA_IMPORTO
+                             0,        #RSIVA_IMPOSCR
+                             isomagg,  #RSIVA_ISOMAGG
+                             aliqprc,  #RSIVA_perciva
+                             aliqind,  #RSIVA_percind
+                             aliqtip]) #RSIVA_tipoalq
+                        i = len(self._info.totiva)-1
                 return i
             def _TotPdcSearch(self, totpdc, pdcid, pdccod, pdcdes, tipriga, *dummy):
                 try:
@@ -2082,7 +2093,6 @@ class DocMag(adb.DbTable):
                 self.totomagg = RoundImp(self.totomagg+imp)
             elif tipo == "S":
                 totspese = RoundImp((totspese or 0) + imp)
-
         if 0 <= _curmov < self.mov.RowsCount():
             self.mov.MoveRow(_curmov)
 
@@ -2331,7 +2341,6 @@ class DocMag(adb.DbTable):
                     self.totimporto += mpr
 
             self.totdare = RoundImp(self.totimporto - (self.totritacc or 0))
-
         if self.is_split_payment():
             #adeguamento di totdare x split payment
             self.totdare = RoundImp(self.totdare - (self.totimposta or 0))
@@ -2355,6 +2364,33 @@ class DocMag(adb.DbTable):
 
         if scad and self.config.caucon.pcf == '1':
             self.CalcolaScadenze()
+        #=======================================================================
+        # print totiva
+        # totiva = self.RiduciRiepilogoIva(totiva)
+        #=======================================================================
+
+    #===========================================================================
+    # def RiduciRiepilogoIva(self, totiva):
+    #     pass
+    #     if len(totiva)>0:
+    #         dTotIva = {}
+    #         for i, rowIva in enumerate(totiva):
+    #             print rowIva
+    #             k='%s|%s|%s|%s|%s|%s|%s' % (rowIva[0], rowIva[1], rowIva[2], rowIva[7], rowIva[8], rowIva[9], rowIva[10] )
+    #             if not k in dTotIva.keys():
+    #                 dTotIva[k]=rowIva[:]
+    #             else:
+    #                 dTotIva[k][3] = dTotIva[k][3] + rowIva[3]
+    #                 dTotIva[k][4] = dTotIva[k][4] + rowIva[4]
+    #                 dTotIva[k][5] = dTotIva[k][5] + rowIva[5]
+    #                 dTotIva[k][6] = dTotIva[k][6] + rowIva[6]
+    #         totiva=[]                    
+    #         for k in dTotIva.keys():
+    #             totiva.append(dTotIva[k])
+    #     return totiva
+    #===========================================================================
+
+        
 
     def is_split_payment(self):
         for ti in self._info.totiva:
@@ -5423,10 +5459,10 @@ class SintesiMovimentiSenzaCostoMemTable(adb.DbMem):
 
 
 class PdcSituazioneAcconti(adb.DbMem):
-
+    #dbMem della situazione degli acconti
     def __init__(self):
 
-        adb.DbMem.__init__(self, 'pdc_id,pdc_codice,pdc_descriz,accomov_id,accotpd_id,accotpd_codice,accotpd_descriz,accotpd_scorpiva,accotpm_id,accotpm_codice,accotpm_descriz,accodoc_id,accodoc_numdoc,accodoc_datdoc,accomov_descriz,accomov_importo,accoiva_id,accoiva_codice,accoiva_descriz,accoiva_perciva,total_storno,acconto_disponib,accontoiva_disponib')
+        adb.DbMem.__init__(self, 'pdc_id,pdc_codice,pdc_descriz,accomov_id,accotpd_id,accotpd_codice,accotpd_descriz,accotpd_scorpiva,accotpm_id,accotpm_codice,accotpm_descriz,accodoc_id,accodoc_numdoc,accodoc_datdoc,accomov_descriz,accomov_importo,accomov_lordo,accoiva_id,accoiva_codice,accoiva_descriz,accoiva_perciva,total_storno,acconto_disponib,accontoiva_disponib,acconto_edit,accontoiva_usato')
         self.Reset()
 
         self._pdcid = None  #id cliente, None = tutti i clienti
@@ -5457,6 +5493,7 @@ class PdcSituazioneAcconti(adb.DbMem):
            accodoc.datdoc   as accodoc_datdoc,
            accomov.descriz  as accomov_descriz,
            accomov.importo  as accomov_importo,
+           round(accomov.importo*(100+accoiva.perciva)/100,2)  as accomov_lordo,           
            accoiva.id       as accoiva_id,
            accoiva.codice   as accoiva_codice,
            accoiva.descriz as accoiva_descriz, 
@@ -5591,7 +5628,13 @@ SELECT acconti.*,
                     self.accontoiva_disponib=round(self.acconto_disponib*(100+self.perciva)/100,2)
                 except:
                     self.accontoiva_disponib=0
-                    pass
+            
+            try:        
+                self.accontoiva_usato = self.accomov_lordo -self.accontoiva_disponib
+            except:
+                pass
+                    
+            pass
             
             
         
@@ -5716,14 +5759,16 @@ class PdcTotaleAcconti(PdcSituazioneAcconti):
 
 
 class PdcSituazioneStorniAcconto(ElencoMovim):
-
+    # dbMem del dettaglio dell'utilizo dell'acconto
     def __init__(self):
         ElencoMovim.__init__(self, writable=True)
         self.AddBaseFilter('(mov.f_ann IS NULL OR mov.f_ann<>1) AND (doc.f_ann IS NULL OR doc.f_ann<>1)')
         self.AddField('0.0', 'acconto_disponib')
-        #self.AddField('mov.importo * (100+iva.perciva)/100', 'lordo')
-        self.AddField('mov.importo', 'lordo')
-        self.AddField('mov.importo', 'accredito')
+        self.AddField('0.0', 'accontoiva_disponib')
+        self.AddField('round(mov.importo * (100+iva.perciva)/100,2)', 'lordo')
+        self.AddField('round(mov.importo * (100+iva.perciva)/100,2)', 'accredito')
+        #self.AddField('mov.importo', 'lordo')
+        #self.AddField('mov.importo', 'accredito')
         self.Reset()
 
 
