@@ -1345,13 +1345,13 @@ UPDATE `cfgsetup`
                         db.Execute(r"""UPDATE `x4`.`stati`
                         SET codunico=%s WHERE descriz=%s""", (cod_unico, stato_desc))
 
-            if oldver<'1.4.43' and ok:
-
-                #adeguamento struttura tabella stati per aggiunta codice stato
-                #nella codifica del modello unico di dichiarazione dei redditi
-                db.Execute(r"""ALTER TABLE `x4`.`cfgmail`
-                                    ADD COLUMN `authtls` TINYINT(1) AFTER `authpswd`""")
-
+            if oldver<'1.6.20' and ok:
+                #adeguamento struttura tabella configurazione mail per gestione invio
+                #mail con programma esterno
+                db.Execute(r"""ALTER TABLE `x4`.`cfgmail` ADD COLUMN `authtls`   TINYINT(1)   AFTER `authpswd`""")
+                db.Execute(r"""ALTER TABLE `x4`.`cfgmail` ADD COLUMN `internalmail`  TINYINT(1)   AFTER `authtls`""")
+                db.Execute(r"""ALTER TABLE `x4`.`cfgmail` ADD COLUMN `cmailexe`  VARCHAR(200) AFTER `internalmail`""")
+                db.Execute(r"""ALTER TABLE `x4`.`cfgmail` ADD COLUMN `cmailcfg` VARCHAR(200) AFTER `cmailexe`""")
 #            if oldver<'1.4.52' and ok:
 
             if oldver<'1.5.71' and ok:

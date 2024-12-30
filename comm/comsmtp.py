@@ -20,7 +20,7 @@
 # You should have received a copy of the GNU General Public License
 # along with X4GA.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
-
+import Env
 import smtplib
 
 import email
@@ -85,6 +85,23 @@ def SetSender(x):
     global SENDER
     SENDER = x
 
+
+INTERNALMAIL = ""
+def SetINTERNALMAIL(x):
+    global INTERNALMAIL
+    INTERNALMAIL = x
+
+
+CMAILEXE = ""
+def SetCMAILEXE(x):
+    global CMAILEXE
+    CMAILEXE = x
+
+CMAILCFG = ""
+def SetCMAILCFG(x):
+    global CMAILCFG
+    CMAILCFG = x
+    
 
 class AuthFailedException(Exception):
     pass
@@ -170,38 +187,64 @@ class SendMail(object):
         
         self.msg.attach(MIMEText(Message, _charset='utf-8'))
         
-        for attach in self.Attachments:
-            f = open(attach, 'rb')
-            part = MIMEBase('application', "octet-stream")
-            part.set_payload(f.read())
-            Encoders.encode_base64(part)
-            part.add_header('Content-Disposition', 'attachment; filename="%s"'
-                            % os.path.basename(attach))
-            f.close()
-            self.msg.attach(part)
-        
-        try:
-            smtp = smtplib.SMTP(self.smtpServer, int(self.SmtpPort or 0))
-            if self.AuthUser:
-                if self.AuthTLS:
-                    smtp.ehlo()
-                    smtp.starttls()
-                    smtp.ehlo()
-                if not smtp.login(self.AuthUser, self.AuthPswd):
-                    raise AuthFailedException, 'Autenticazione fallita'
-            smtp.sendmail(self.SendFrom, self.SendTo, self.msg.as_string() )
-            smtp.close()
-        except Exception, e:
-            print e
-            self.error = repr(e.args)
-            return False
+
+        if self.IsSendingInternalMail():
+            for attach in self.Attachments:
+                f = open(attach, 'rb')
+                part = MIMEBase('application', "octet-stream")
+                part.set_payload(f.read())
+                Encoders.encode_base64(part)
+                part.add_header('Content-Disposition', 'attachment; filename="%s"'
+                                % os.path.basename(attach))
+                f.close()
+                self.msg.attach(part)
+            try:
+                smtp = smtplib.SMTP(self.smtpServer, int(self.SmtpPort or 0))
+                if self.AuthUser:
+                    if self.AuthTLS:
+                        smtp.ehlo()
+                        smtp.starttls()
+                        smtp.ehlo()
+                    if not smtp.login(self.AuthUser, self.AuthPswd):
+                        raise AuthFailedException, 'Autenticazione fallita'
+                smtp.sendmail(self.SendFrom, self.SendTo, self.msg.as_string() )
+                smtp.close()
+            except Exception, e:
+                print e
+                self.error = repr(e.args)
+                return False
+        else:
+            from mx.cMailLib import SendByCmail
+            sendMail = SendByCmail(sendFrom=self.SendFrom, 
+                                   sendTo=self.SendTo, 
+                                   subject=self.Subject, 
+                                   message=self.Message, 
+                                   attachments=self.Attachments)
+            sendMail.Send()
         
         return True
     
     def get_error(self):
         return self.error
 
-
+    def IsSendingInternalMail(self):
+        self.db_conn = Env.Azienda.DB.connection
+        self.db_curs = self.db_conn.cursor() 
+        codAzi = Env.Azienda.codice
+        out = 1
+        try: 
+            cmd ='select internalmail from x4.cfgmail where azienda="%s"' % codAzi
+            self.db_curs.execute(cmd)
+            rs = self.db_curs.fetchone()
+            if rs:
+                out = rs[0]
+                if out==None:
+                    out=1
+        except:
+            out=1
+        return out
+    
+    
 # ------------------------------------------------------------------------------
 
 

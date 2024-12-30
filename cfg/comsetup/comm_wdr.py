@@ -17,9 +17,10 @@ from awc.util import GetParentFrame
 from awc.controls.textctrl import TextCtrl, TextCtrl_LC
 from awc.controls.numctrl import NumCtrl
 from awc.controls.linktable import LinkTable
-from awc.controls.checkbox import CheckBox
+from awc.controls.checkbox import CheckBox, UnoZeroCheckBox
 from awc.controls.radiobox import RadioBox
 from awc.controls.entries import MailEntryCtrl
+from awc.controls.entries import FullPathFileEntryCtrl, FolderEntryCtrl
 
 import Env
 bt = Env.Azienda.BaseTab
@@ -55,103 +56,147 @@ class UnoZeroCheckBox(CheckBox):
         CheckBox.__init__(self, *args, **kwargs)
         self.SetDataLink(values=[1,0])
 
+class FullPathFileEntryCtrlNoEvent(FullPathFileEntryCtrl):
 
+    def OnAction(self, event):
+        self.FileChoice()
+        #event.Skip()
 
 # Window functions
 
-ID_TEXT = 16000
-ID_SMTPADDR = 16001
-ID_SENDER = 16002
-ID_SMTPPORT = 16003
-ID_AUTHREQ = 16004
-ID_AUTHTLS = 16005
-ID_AUTHUSER = 16006
-ID_AUTHPSWD = 16007
-ID_BTNTEST = 16008
-ID_BTNOK = 16009
+ID_CHECKBOX = 16000
+ID_TEXT = 16001
+ID_SMTPADDR = 16002
+ID_SENDER = 16003
+ID_SMTPPORT = 16004
+ID_AUTHREQ = 16005
+ID_AUTHTLS = 16006
+ID_AUTHUSER = 16007
+ID_AUTHPSWD = 16008
+ID_BTNTEST = 16009
+ID_BTNOK = 16010
 
 def EmailConfigFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
-    item2 = wx.StaticBox( parent, -1, u"Parametri collegamento server posta elettronica" )
-    item1 = wx.StaticBoxSizer( item2, wx.VERTICAL )
+    item1 = wx.FlexGridSizer( 0, 2, 0, 0 )
     
-    item3 = wx.FlexGridSizer( 0, 2, 0, 0 )
-    
-    item4 = wx.StaticText( parent, ID_TEXT, u"Server SMTP:", wx.DefaultPosition, [100,-1], wx.ALIGN_RIGHT )
-    item3.Add( item4, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
-
-    item5 = TextCtrl_LC( parent, ID_SMTPADDR, "", wx.DefaultPosition, [300,-1], 0 )
-    item5.SetName( "smtpaddr" )
-    item3.Add( item5, 0, wx.GROW|wx.ALIGN_BOTTOM|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item6 = wx.StaticText( parent, ID_TEXT, u"Indirizzo mittente:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item3.Add( item6, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
-
-    item7 = TextCtrl_LC( parent, ID_SENDER, "", wx.DefaultPosition, [200,-1], 0 )
-    item7.SetName( "sender" )
-    item3.Add( item7, 0, wx.GROW|wx.ALIGN_BOTTOM|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item8 = wx.StaticText( parent, ID_TEXT, u"Porta (25):", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item3.Add( item8, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
-
-    item9 = wx.FlexGridSizer( 1, 0, 0, 0 )
-    
-    item10 = NumCtrl(parent, ID_SMTPPORT, integerWidth=4, allowNegative=False, groupDigits=False); item10.SetName("smtpport")
-    item9.Add( item10, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item11 = EmailAuthCheckBox( parent, ID_AUTHREQ, u"Effettua il login", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item11.SetName( "authreq" )
-    item9.Add( item11, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item12 = UnoZeroCheckBox( parent, ID_AUTHTLS, u"Usa TLS (porta=587)", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item12.SetName( "authtls" )
-    item9.Add( item12, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item3.Add( item9, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
-
-    item3.AddGrowableCol( 1 )
-
-    item1.Add( item3, 0, wx.GROW, 5 )
+    item2 = UnoZeroCheckBox( parent, ID_CHECKBOX, u"Invia mail in modalità nativa", wx.DefaultPosition, [600,-1], 0 )
+    item2.SetValue( True )
+    item2.SetName( "internalmail" )
+    item1.Add( item2, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
     item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item14 = wx.StaticBox( parent, -1, u"Parametri per l'autenticazione, se necessari" )
-    item13 = wx.StaticBoxSizer( item14, wx.VERTICAL )
+    item4 = wx.StaticBox( parent, -1, u"Setup invio main nativo" )
+    item3 = wx.StaticBoxSizer( item4, wx.VERTICAL )
     
-    item15 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    item6 = wx.StaticBox( parent, -1, u"Parametri collegamento server posta elettronica" )
+    item5 = wx.StaticBoxSizer( item6, wx.VERTICAL )
     
-    item16 = wx.StaticText( parent, ID_TEXT, u"Utente:", wx.DefaultPosition, [100,-1], wx.ALIGN_RIGHT )
-    item15.Add( item16, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
-
-    item17 = TextCtrl_LC( parent, ID_AUTHUSER, "", wx.DefaultPosition, [300,-1], 0 )
-    item17.SetName( "authuser" )
-    item15.Add( item17, 0, wx.GROW|wx.ALIGN_BOTTOM|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item18 = wx.StaticText( parent, ID_TEXT, u"Password:", wx.DefaultPosition, [100,-1], wx.ALIGN_RIGHT )
-    item15.Add( item18, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
-
-    item19 = TextCtrl_LC( parent, ID_AUTHPSWD, "", wx.DefaultPosition, [300,-1], wx.TE_PASSWORD )
-    item19.SetName( "authpswd" )
-    item15.Add( item19, 0, wx.GROW|wx.ALIGN_BOTTOM|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item15.AddGrowableCol( 1 )
-
-    item13.Add( item15, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
-
-    item0.Add( item13, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item20 = wx.BoxSizer( wx.HORIZONTAL )
+    item7 = wx.FlexGridSizer( 0, 2, 0, 0 )
     
-    item21 = wx.Button( parent, ID_BTNTEST, u"Test", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item21.SetName( "btntest" )
-    item20.Add( item21, 0, wx.ALIGN_CENTER|wx.LEFT|wx.BOTTOM, 5 )
+    item8 = wx.StaticText( parent, ID_TEXT, u"Server SMTP:", wx.DefaultPosition, [100,-1], wx.ALIGN_RIGHT )
+    item7.Add( item8, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
 
-    item22 = wx.Button( parent, ID_BTNOK, u"OK", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item22.SetName( "btnok" )
-    item20.Add( item22, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item9 = TextCtrl_LC( parent, ID_SMTPADDR, "", wx.DefaultPosition, [300,-1], 0 )
+    item9.SetName( "smtpaddr" )
+    item7.Add( item9, 0, wx.GROW|wx.ALIGN_BOTTOM|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item0.Add( item20, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item10 = wx.StaticText( parent, ID_TEXT, u"Indirizzo mittente:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item7.Add( item10, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+
+    item11 = TextCtrl_LC( parent, ID_SENDER, "", wx.DefaultPosition, [200,-1], 0 )
+    item11.SetName( "sender" )
+    item7.Add( item11, 0, wx.GROW|wx.ALIGN_BOTTOM|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item12 = wx.StaticText( parent, ID_TEXT, u"Porta (25):", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item7.Add( item12, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+
+    item13 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    
+    item14 = NumCtrl(parent, ID_SMTPPORT, integerWidth=4, allowNegative=False, groupDigits=False); item14.SetName("smtpport")
+    item13.Add( item14, 0, wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item15 = EmailAuthCheckBox( parent, ID_AUTHREQ, u"Effettua il login", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item15.SetName( "authreq" )
+    item13.Add( item15, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item16 = UnoZeroCheckBox( parent, ID_AUTHTLS, u"Usa TLS (porta=587)", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item16.SetName( "authtls" )
+    item13.Add( item16, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item7.Add( item13, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item7.AddGrowableCol( 1 )
+
+    item5.Add( item7, 0, wx.GROW, 5 )
+
+    item3.Add( item5, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item18 = wx.StaticBox( parent, -1, u"Parametri per l'autenticazione, se necessari" )
+    item17 = wx.StaticBoxSizer( item18, wx.VERTICAL )
+    
+    item19 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    
+    item20 = wx.StaticText( parent, ID_TEXT, u"Utente:", wx.DefaultPosition, [100,-1], wx.ALIGN_RIGHT )
+    item19.Add( item20, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+
+    item21 = TextCtrl_LC( parent, ID_AUTHUSER, "", wx.DefaultPosition, [300,-1], 0 )
+    item21.SetName( "authuser" )
+    item19.Add( item21, 0, wx.GROW|wx.ALIGN_BOTTOM|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item22 = wx.StaticText( parent, ID_TEXT, u"Password:", wx.DefaultPosition, [100,-1], wx.ALIGN_RIGHT )
+    item19.Add( item22, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+
+    item23 = TextCtrl_LC( parent, ID_AUTHPSWD, "", wx.DefaultPosition, [300,-1], wx.TE_PASSWORD )
+    item23.SetName( "authpswd" )
+    item19.Add( item23, 0, wx.GROW|wx.ALIGN_BOTTOM|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item19.AddGrowableCol( 1 )
+
+    item17.Add( item19, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item3.Add( item17, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item0.Add( item3, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item25 = wx.StaticBox( parent, -1, u"Setup invio mail con CMAIL" )
+    item24 = wx.StaticBoxSizer( item25, wx.VERTICAL )
+    
+    item26 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    
+    item27 = wx.StaticText( parent, ID_TEXT, u"Programma eseguibile CMail:", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
+    item26.Add( item27, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+
+    item28 = FullPathFileEntryCtrlNoEvent( parent, ID_SMTPADDR, "", wx.DefaultPosition, [300,-1], 0 )
+    item28.SetName( "cmailexe" )
+    item26.Add( item28, 0, wx.GROW|wx.ALIGN_BOTTOM|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item29 = wx.StaticText( parent, ID_TEXT, u"File configuraz. CMail", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item26.Add( item29, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+
+    item30 = FullPathFileEntryCtrlNoEvent( parent, ID_SMTPADDR, "", wx.DefaultPosition, [300,-1], 0 )
+    item30.SetName( "cmailcfg" )
+    item26.Add( item30, 0, wx.GROW|wx.ALIGN_BOTTOM|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item26.AddGrowableCol( 1 )
+
+    item24.Add( item26, 0, wx.GROW, 5 )
+
+    item0.Add( item24, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item31 = wx.BoxSizer( wx.HORIZONTAL )
+    
+    item32 = wx.Button( parent, ID_BTNTEST, u"Test", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item32.SetName( "btntest" )
+    item31.Add( item32, 0, wx.ALIGN_CENTER|wx.LEFT|wx.BOTTOM, 5 )
+
+    item33 = wx.Button( parent, ID_BTNOK, u"OK", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item33.SetName( "btnok" )
+    item31.Add( item33, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item0.Add( item31, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item0.AddGrowableCol( 0 )
 
@@ -162,9 +207,9 @@ def EmailConfigFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_XMPPADDR = 16010
-ID_XMPPPORT = 16011
-ID_ONLINEONLY = 16012
+ID_XMPPADDR = 16011
+ID_XMPPPORT = 16012
+ID_ONLINEONLY = 16013
 
 def XmppConfigFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )

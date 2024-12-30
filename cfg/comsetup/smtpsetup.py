@@ -23,6 +23,9 @@
 
 import wx
 import Env
+import os
+import subprocess
+
 bt = Env.Azienda.BaseTab
 
 import awc.controls.windows as aw
@@ -36,7 +39,7 @@ import lib
 import base64
 
 import comm.comsmtp as smtp
-
+from awc.util import MsgDialog
 
 FRAME_TITLE = "Setup Posta elettronica"
 
@@ -59,10 +62,13 @@ class _CommSetupPanel(_SetupPanel):
         db.Retrieve('setup.azienda=%s', Env.Azienda.codice)
         cn = lambda x: self.FindWindowByName(x)
         for name in db.GetFieldNames():
+            print name
             if name != 'id':
                 c = self.FindWindowByName(name)
                 if c:
                     v = self.DecodeValue(getattr(db, name), name)
+                    if name=='internalmail' and v==None:
+                        v=True
                     c.SetValue(v)
     
     def SetupWrite(self):
@@ -111,41 +117,113 @@ class EmailSetupPanel(_CommSetupPanel):
     
     tabname = 'x4.cfgmail'
     wdr_filler = wdr.EmailConfigFunc
+    NewStruDone = False
     
     def __init__(self, *args, **kwargs):
+        self.CheckStructure()
         _CommSetupPanel.__init__(self, *args, **kwargs)
         self.FindWindowByName('authreq').EnableUserPW()
+        self.internalMail = self.FindWindowByName('internalmail')
+        self.internalMail.Bind(wx.EVT_CHECKBOX, self.OnSetMode)
+        
         for name, func in (('btntest', self.OnTestSend),
-                           ('btnok', self.OnConfirm),):
+                           ('btnok', self.OnConfirm),
+                           ):
             self.Bind(wx.EVT_BUTTON, func, self.FindWindowByName(name))
+        self.SetMode()
+
+    def OnSetMode(self, evt):
+        self.SetMode()
+        evt.Skip()
+
+    def SetMode(self):
+        mode = self.internalMail.GetValue()
+        for key in 'smtpaddr smtpport sender authreq authuser authpswd authtls'.split():
+            self.FindWindowByName(key).Enable(mode)
+        for key in 'cmailexe cmailcfg'.split():
+            self.FindWindowByName(key).Enable(not mode)
+    
+    def CheckStructure(self):
+        cfgMail = adb.DbTable('cfgmail', 'cfgmail', dbName='X4')
+        cfgMail.Reset()
+        esito=True
+        if not 'internalmail' in cfgMail.GetFieldNames():
+            cmd = """
+            ALTER TABLE x4.cfgmail 
+            ADD COLUMN internalmail    TINYINT(1)   AFTER authtls,
+            ADD COLUMN cmailexe    VARCHAR(200) AFTER internalmail,
+            ADD COLUMN cmailcfg    VARCHAR(200) AFTER cmailexe
+            ;"""
+            try:
+                cfgMail._info.db.Execute(cmd)
+                self.NewStruDone = True
+            except:
+                esito=False
+        return esito
     
     def OnTestSend(self, event):
-        keys = {}
-        for key in 'smtpaddr smtpport sender authreq authuser authpswd authtls'.split():
-            keys[key] = self.FindWindowByName(key).GetValue()
-        miss = False
-        for key in keys:
-            miss = (key.startswith('auth') and keys['authreq'] and keys[key] is None) or keys[key] is None
+        if self.internalMail.GetValue():
+            keys = {}
+            for key in 'smtpaddr smtpport sender authreq authuser authpswd authtls'.split():
+                keys[key] = self.FindWindowByName(key).GetValue()
+            miss = False
+            for key in keys:
+                miss = (key.startswith('auth') and keys['authreq'] and keys[key] is None) or keys[key] is None
+                if miss:
+                    break
             if miss:
-                break
-        if miss:
-            aw.awu.MsgDialog(self, "Definire tutti i valori")
-            return
-        s = smtp.SendMail(keys['smtpaddr'], keys['smtpport'])
-        if keys['authreq']:
-            s.set_auth(keys['authuser'], keys['authpswd'], keys['authtls'])
-        p = aw.awu.WaitDialog(self, message='Invio messaggio in corso')
-        msg = "Messaggio inviato con successo"
-        try:
+                aw.awu.MsgDialog(self, "Definire tutti i valori")
+                return
+            s = smtp.SendMail(keys['smtpaddr'], keys['smtpport'])
+            if keys['authreq']:
+                s.set_auth(keys['authuser'], keys['authpswd'], keys['authtls'])
+            p = aw.awu.WaitDialog(self, message='Invio messaggio in corso')
+            msg = "Messaggio inviato con successo"
             try:
-                if not s.send(keys['sender'], 'Messaggio di prova', 'Messaggio di verifica', keys['sender']):
-                    msg = s.get_error()
-            except Exception, e:
-                msg = repr(e.args)
-        finally:
-            p.Destroy()
-        aw.awu.MsgDialog(self, msg)
+                try:
+                    if not s.send(keys['sender'], 'Messaggio di prova', 'Messaggio di verifica', keys['sender']):
+                        msg = s.get_error()
+                except Exception, e:
+                    msg = repr(e.args)
+            finally:
+                p.Destroy()
+            aw.awu.MsgDialog(self, msg)
+        else:
+            exe = self.FindWindowByName('cmailexe').GetValue()
+            cfg = self.FindWindowByName('cmailcfg').GetValue()
+            to  = self.GetSender(cfg)
+            if len(to.strip())==0:
+                aw.awu.MsgDialog(self, "Verificare il file %s.\nParametri incompleti." % cfg)
+            else:
+                cmd = '%s' % exe
+                cmd = '%s -config:"%s"' % (cmd, cfg)
+                cmd = '%s -to:%s' % (cmd, to)
+                cmd = '%s -subject:"Messaggio di prova (da pgm esterno cMail)"' % cmd
+                cmd = '%s -body:"Corpo del messaggio"' % cmd
+                FNULL = open(os.devnull, 'w')
+                process =subprocess.Popen(cmd, stdout=FNULL, stderr=FNULL, shell=True)
+                while process.poll()==None:
+                    wx.Sleep(1)
+                FNULL.close()
+                if process.returncode==0:
+                    msg = "Messaggio inviato con successo"
+                else:
+                    msg = "Errore nell'invio del Messaggio (%s)" % process.returncode
+                aw.awu.MsgDialog(self, msg)
         event.Skip()
+    
+    def GetSender(self, cfg):
+        m=''
+        config = open(cfg, 'r')
+        Lines = config.readlines()
+        for line in Lines:
+            if 'from:' in line:
+                c,m = line.split(':')
+                if '\n' in m:
+                    m= m.replace('\n', '')
+                break
+        config.close()
+        return m
     
     def SetFuncPar(self):
         cn = self.FindWindowByName
@@ -154,17 +232,33 @@ class EmailSetupPanel(_CommSetupPanel):
         smtp.SetAUTH_User(cn('authuser').GetValue())
         smtp.SetAUTH_Pswd(cn('authpswd').GetValue())
         smtp.SetAUTH_TLS(cn('authtls').GetValue())
+        smtp.SetINTERNALMAIL(cn('internalmail').GetValue() )
+        smtp.SetCMAILEXE(cn('cmailexe').GetValue() )
+        smtp.SetCMAILCFG(cn('cmailcfg').GetValue() )
     
     def Validate(self):
         out = True
-        for name in 'sender smtpaddr smtpport'.split():
-            ctr = self.FindWindowByName(name)
-            if ctr.GetValue():
-                ctr.SetBackgroundColour(None)
-            else:
-                ctr.SetBackgroundColour(Env.Azienda.Colours.VALERR_BACKGROUND)
-                out = False
-        self.Refresh()
+        if self.FindWindowByName('internalmail').GetValue():
+            for name in 'sender smtpaddr smtpport'.split():
+                ctr = self.FindWindowByName(name)
+                if ctr.GetValue():
+                    ctr.SetBackgroundColour(None)
+                else:
+                    ctr.SetBackgroundColour(Env.Azienda.Colours.VALERR_BACKGROUND)
+                    out = False
+            self.Refresh()
+        else:
+            for name in 'cmailexe cmailcfg'.split():
+                ctr = self.FindWindowByName(name)
+                if ctr.GetValue():
+                    ctr.SetBackgroundColour(None)
+                else:
+                    ctr.SetBackgroundColour(Env.Azienda.Colours.VALERR_BACKGROUND)
+                    out = False
+            self.Refresh()
+        if out and self.NewStruDone:
+            self.dbsetup = adb.DbTable(self.tabname, 'setup')            
+            MsgDialog(self, "Riavviare il pogramma perchè le modifiche abbiano effetto")
         return out
 
 
