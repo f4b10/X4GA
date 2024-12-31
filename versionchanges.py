@@ -29,6 +29,33 @@ import mx.DateTime as dt
 import mx.Odt
 
 history = (
+    ('1.6.20', dt.Date(2024,12, 30), (
+        ("BET162007",
+         """Miglioramenti alla gestione acconti."""
+        ),
+        ("BET162006",
+         """Introdotta la possibilità di inviare mail con il programma esterno cMail"""
+        ),
+        ("BET162005",
+         """Aggiunta delle funzioni acapo e removeSpecialChar richiamabili dalla definizione dei report"""
+        ),
+        ("BET162004",
+         """Aggiunta categoria acquisti per fornitori"""
+        ),
+        ("BET162003",
+         """Modificata la gestione degli aggiornamenti di X4 copiando il file di installazione in una cartella locale da cui avviarlo al fine di provare a rimuovere problemi di accesso al file eseguibile"""
+        ),
+        ("BET162002",
+         """Corretto link per il controllo delle partite iva intracomunitarie."""
+        ),
+        ("BET162001",
+         """Aggiunta la possibilità di gestire nelle personalizzazioni il richiamo del menu contestuale sull'elenco prodotti. Definendo nella classe derivata il metodo OnContextMenu."""
+        ),
+        ),),
+
+
+    
+    
     ('1.6.17', dt.Date(2024,10, 15), (
         ("BET161703",
          """Potenziata la gestione degli acconti."""

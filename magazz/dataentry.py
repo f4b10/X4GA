@@ -3491,6 +3491,7 @@ class MagazzPanel(aw.Panel,\
                 daq = dbm.DocMag()
                 daq.Get(acqdocid)
                 headfields = []
+                nocodefields = []
                 lField=[]
                 lField.append(('id_modpag',  'Mod.Pagamento'))
                 lField.append(('id_bancf',   'Banca')        )
@@ -3517,7 +3518,6 @@ class MagazzPanel(aw.Panel,\
                     lField.append(("nocodedes_prov",        'Prov'))
                     lField.append(("nocodedes_id_stato",    'Stato'))
                     
-                    
                 if bt.MAGNOCODEVET:
                     lField.append(("enable_nocodevet",     'Flag Vett.'))
                     lField.append(("nocodevet_descriz",    'Vettore'   ))
@@ -3533,31 +3533,7 @@ class MagazzPanel(aw.Panel,\
                         lField.append(("nocodevet_targa",   'Targa'        ))
                         lField.append(("nocodevet_autista", 'Autista'      ))
                         lField.append(("nocodevet_dichiar", 'Dichiarazione'))
-
-
-
-                    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                    
-                    
-                    
-                    
-                    
-                    
-                
+                existNoCodeValue = False
                 for field, desc in lField:
                     v_doc = x_doc = getattr(daq, field)
                     if field == 'id_bancf':
@@ -3569,6 +3545,11 @@ class MagazzPanel(aw.Panel,\
                                 break
                     else:
                         v_ana = x_ana = getattr(ana, field, None)
+                        
+                    if 'nocodedes' in field or 'nocodevet' in field:
+                        if not field=='enable_nocodevet':
+                            existNoCodeValue = True
+                        
                     if v_doc != v_ana and (bool(v_doc) or bool(v_ana)):
                         if field.startswith('id_'):
                             x_doc = x_ana = '<nulla>'
@@ -3580,10 +3561,17 @@ class MagazzPanel(aw.Panel,\
                                 t = getattr(ana, field[3:])
                                 if t.id:
                                     x_ana = '%s %s' % (t.codice, t.descriz)
-                        headfields.append([field,
-                                           desc,
-                                           {'doc': {'value': v_doc, 'display': x_doc},
-                                            'ana': {'value': v_ana, 'display': x_ana},}])
+                        if not 'nocodedes' in field and  not 'nocodevet' in field:
+                            headfields.append([field,
+                                               desc,
+                                               {'doc': {'value': v_doc, 'display': x_doc},
+                                                'ana': {'value': v_ana, 'display': x_ana},}])
+                        else:
+                            nocodefields.append([field,
+                                               desc,
+                                               {'doc': {'value': v_doc, 'display': x_doc},
+                                                'ana': {'value': v_ana, 'display': x_ana},}])
+                            
                 if headfields:
                     tit = "Copia dati di testata"
                     msg = "Ci sono alcune differenze tra le informazioni di testata e quelle dell'anagrafica:\n"
@@ -3598,6 +3586,12 @@ class MagazzPanel(aw.Panel,\
                             v_ana = v_dict['ana']
                             c = self.FindWindowByName(v_col)
                             c.SetValue(v_doc['value'])
+                if existNoCodeValue:
+                    for v_col, v_des, v_dict in nocodefields:
+                        v_doc = v_dict['doc']
+                        v_ana = v_dict['ana']
+                        c = self.FindWindowByName(v_col)
+                        c.SetValue(v_doc['value'])
             if doc.cfgdoc.tipmov.Locate(lambda x: x.askvalori == "D"):
                 movdesid = doc.cfgdoc.tipmov.id
             else:
