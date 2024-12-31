@@ -599,12 +599,7 @@ class CauMagazzPanel(ga.AnagPanel):
 
 
     def OnSelectAll(self, evt):
-        print evt
         self.FindWindowByName('catdoc').InvertiCheck()
-        
-        
-        
-        
         evt.Skip()
 
     def OnNewMov(self, event):

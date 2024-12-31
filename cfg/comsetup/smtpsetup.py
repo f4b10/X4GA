@@ -62,7 +62,6 @@ class _CommSetupPanel(_SetupPanel):
         db.Retrieve('setup.azienda=%s', Env.Azienda.codice)
         cn = lambda x: self.FindWindowByName(x)
         for name in db.GetFieldNames():
-            print name
             if name != 'id':
                 c = self.FindWindowByName(name)
                 if c:

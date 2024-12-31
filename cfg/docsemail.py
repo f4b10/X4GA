@@ -50,7 +50,6 @@ class DocsEmailSetupPanel(_SetupPanel):
         self.SetupRead()
         if not self.IsSendingInternalMail():
             sender = self.GetSenderFromCmailConfig()
-            print sender
             if len(sender)==0:
                 MsgDialog(self, "Provvedere alla corretta configurazione di cMail per l'invio delle mail.\nNon è stato indicato l'opzione from: nel file di configurazione")
                 self.GetParent().Close()
@@ -82,7 +81,7 @@ class DocsEmailSetupPanel(_SetupPanel):
         if os.path.exists(fileCfg):
             sender = self.GetSender(fileCfg)
         else:
-            print 'verificare parametri di setup posta'
+            MsgDialog(self, "Verificare i parametri nel file di configurazione.\nAssente riga from:")
             sender=''
         return sender
         
@@ -119,7 +118,6 @@ class DocsEmailSetupPanel(_SetupPanel):
                     out=1
         except:
             out=1
-        print out
         return out
         
         
