@@ -31,6 +31,9 @@ import mx.Odt
 history = (
     ('1.6.20', dt.Date(2024,12, 30), (
         ("BET162008",
+         """Gestioner del nuovo flag su testate documenti di magazzino per identificare documenti derivanti da acquisizione Mirage se presente"""
+        ),
+        ("BET162008",
          """Miglioramenti alla evasione dei documenti. Acquisizione automatica dei valori del vettore/destinazione non codificati"""
         ),
         ("BET162007",
