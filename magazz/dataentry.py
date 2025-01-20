@@ -3561,7 +3561,7 @@ class MagazzPanel(aw.Panel,\
                                 t = getattr(ana, field[3:])
                                 if t.id:
                                     x_ana = '%s %s' % (t.codice, t.descriz)
-                        if not 'nocodedes' in field and  not 'nocodevet' in field:
+                        if not 'nocodedes' in field and  not 'nocodevet' in field and not field in ['totpeso', 'totcolli', 'initrasp']:
                             headfields.append([field,
                                                desc,
                                                {'doc': {'value': v_doc, 'display': x_doc},

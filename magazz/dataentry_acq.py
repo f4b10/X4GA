@@ -88,16 +88,24 @@ class SelDocGrid(dbglib.DbGrid):
 
         canedit = False
         canins = False
+        self.fromMirage = dbacq.ExistFlagMirage()
 
         class GridTable(dbglib.DbGridTable):
+            fromMirage = False
             def GetValue(self, row, col):
                 rscol = self.rsColumns[col]
                 if rscol == -1: #stato evasione
                     doc = self.grid.dbacq
                     if row<doc.RowsCount():
                         doc.MoveRow(row)
+                        ACQ_MIRAGE=0
+                        if self.fromMirage:
+                            ACQ_MIRAGE=doc.doc_f_mirage
+                        
                         if (doc.total_qtaevas or 0) == (doc.total_qtaorig or 0):
                             out = "Chiuso"
+                        elif ACQ_MIRAGE==1:
+                            out = "Chiuso da MIRAGE"
                         elif (doc.total_qtaevas or 0) == 0:
                             out = "Mai evaso"
                         else:
@@ -112,6 +120,8 @@ class SelDocGrid(dbglib.DbGrid):
                 else:
                     out = dbglib.DbGridTable.GetValue(self, row, col)
                 return out
+
+        GridTable.fromMirage = self.fromMirage
 
         dbglib.DbGrid.__init__(self, parent, -1, size=size,\
                                tableClass=GridTable, idGrid='docmagacq')

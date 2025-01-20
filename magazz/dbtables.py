@@ -4545,19 +4545,25 @@ class RiepDocAcquis(adb.SubDbTable):
                                    totalmente evasi
     x.AddHaving("qtaevas=qtaorig") solo documenti completamente evasi
     """
-    def __init__(self):
 
+    def __init__(self):
+        
         mov = adb.DbTable(\
             bt.TABNAME_MOVMAG_B,  "mov", writable=False,
             fields='id,id_doc,qta,prezzo,sconto1,sconto2,sconto3,sconto4,sconto5,sconto6')
         #TODO: RIMOSSO FILTRO PER CONSENTIRE LA VISUALIZZAZIONE DEI DOCUMENTI ANNULLATI IN SEGUITO AD ACQUISIZIONE
         #mov.AddFilter("mov.f_ann IS NULL or mov.f_ann<>1")
 
-        doc = mov.AddJoin(\
-            bt.TABNAME_MOVMAG_H,  "doc", idLeft="id_doc", idRight="id",
-            fields='id_tipdoc,id_pdc,id_dest,datdoc,numdoc,datreg')
-        #TODO: RIMOSSO FILTRO PER CONSENTIRE LA VISUALIZZAZIONE DEI DOCUMENTI ACQUISITI E/O ANNULLATI
-        #mov.AddFilter("(doc.f_ann IS NULL or doc.f_ann<>1) AND (doc.f_acq IS NULL or doc.f_acq<>1)")
+        if self.ExistFlagMirage():
+            doc = mov.AddJoin(\
+                bt.TABNAME_MOVMAG_H,  "doc", idLeft="id_doc", idRight="id",
+                fields='id_tipdoc,id_pdc,id_dest,datdoc,numdoc,datreg,f_mirage')
+        else:
+            doc = mov.AddJoin(\
+                bt.TABNAME_MOVMAG_H,  "doc", idLeft="id_doc", idRight="id",
+                fields='id_tipdoc,id_pdc,id_dest,datdoc,numdoc,datreg')
+            #TODO: RIMOSSO FILTRO PER CONSENTIRE LA VISUALIZZAZIONE DEI DOCUMENTI ACQUISITI E/O ANNULLATI
+            #mov.AddFilter("(doc.f_ann IS NULL or doc.f_ann<>1) AND (doc.f_acq IS NULL or doc.f_acq<>1)")
 
         pdc = doc.AddJoin(\
             bt.TABNAME_PDC,       "pdc", fields='id,codice,descriz')
@@ -4605,18 +4611,45 @@ class RiepDocAcquis(adb.SubDbTable):
     def SetAcqStatus(self, aperti=True, parz=True, chiusi=True):
         self.ClearHavings()
         hav = ""
-        if aperti:
-            if hav: hav += " OR "
-            hav += "(total_qtaevas IS NULL OR total_qtaevas=0)"
-        if parz:
-            if hav: hav += " OR "
-            hav += "(total_qtaevas<total_qtaorig)"
-        if chiusi:
-            if hav: hav += " OR "
-            hav += "(total_qtaevas>=total_qtaorig)"
+        if self.ExistFlagMirage():
+            if aperti:
+                if hav: hav += " OR "
+                hav += "((total_qtaevas IS NULL OR total_qtaevas=0) and doc_f_mirage is null)"
+            if parz:
+                if hav: hav += " OR "
+                hav += "((total_qtaevas<total_qtaorig) and doc_f_mirage is null)"
+            if chiusi:
+                if hav: hav += " OR "
+                hav += "((total_qtaevas>=total_qtaorig) or doc_f_mirage=1)"
+            else:
+                if hav: hav += " OR "
+                hav += "(not (total_qtaevas>=total_qtaorig) and doc_f_mirage is null)"
+        else:
+            if aperti:
+                if hav: hav += " OR "
+                hav += "(total_qtaevas IS NULL OR total_qtaevas=0)"
+            if parz:
+                if hav: hav += " OR "
+                hav += "(total_qtaevas<total_qtaorig)"
+            if chiusi:
+                if hav: hav += " OR "
+                hav += "(total_qtaevas>=total_qtaorig)"
         if hav:
             self.AddHaving(hav)
 
+    def ExistFlagMirage(self):
+        dbName    = adb.db.__database__.database
+        dbTable   = 'movmag_h'
+        fieldName = 'f_mirage'
+        cursor = Env.Azienda.DB.connection.cursor()
+        sql = """
+select count(*)
+from information_schema.COLUMNS
+where TABLE_SCHEMA='%s' and TABLE_NAME = '%s' and COLUMN_NAME='%s' 
+""" % (dbName, dbTable, fieldName)
+        cursor.execute(sql)
+        rs = cursor.fetchone()
+        return rs[0]==1
 # ------------------------------------------------------------------------------
 
 
