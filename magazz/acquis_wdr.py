@@ -221,7 +221,6 @@ def AcqStd( parent, call_fit = True, set_sizer = True ):
     item13.Add( item16, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
     item17 = wx.CheckBox( parent, ID_ACQCHIUSI, "Chiusi", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item17.SetValue( True )
     item17.SetName( "acqchiusi" )
     item13.Add( item17, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
