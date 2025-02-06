@@ -1032,8 +1032,44 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
         self.destinPanel=pageDestinazioni.DestinPanel(nb,  mainPanel=self )
         nb.InsertPage(i, self.destinPanel, 'Destinazioni')
 
+        i = i + 1
+        if bt.MAGGESACC:
+            print 'Aggiungi scheda acconti'        
+            self.InitAcconti()
+            self.LoadAcconti()
+
         self.InitControls_PersonalPage()
 
+
+    def InitAcconti(self):
+        nb = self.FindWindowByName('workzone')
+        n = 0
+        found = False
+        for i in range(nb.GetPageCount()):
+            print nb.GetPageText(i)
+            
+             
+        while n < nb.GetPageCount():
+            if 'dati contabili' in nb.GetPageText(n).lower():
+                found = True
+                break
+            n += 1
+        if found:
+            from magazz.dataentry_b import SelezionaMovimentoAccontoPanel
+            p = SelezionaMovimentoAccontoPanel(nb, mainPanel=self)
+            rs = p.FindWindowByName('rsanag')
+            if rs is not None:
+                rs.Hide()
+            nb.InsertPage(n+1, p, 'Acconti')
+            self.panacconti = p
+
+    def LoadAcconti(self):
+        try:
+            if self.panacconti is not None:
+                self.panacconti.SetPdcId(self.db_recid)
+        except:
+            pass
+            
     def InitAnagToolbar(self, parent):
         out = ga.AnagToolbar(parent, -1, hide_ssv=False)
         self.Bind(wx.EVT_TOGGLEBUTTON, self.OnSSV)
@@ -1094,11 +1130,22 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
         event.Skip()
 
     def UpdateDataControls( self, recno ):
+        print 'recno=%s' % recno
         _PdcRelPanel.UpdateDataControls( self, recno )
         if self.loadrelated:
-            for panel in [self.banchePanel, self.destinPanel]:
+            if bt.MAGGESACC:
+                lPagine = [self.banchePanel, self.destinPanel, self.panacconti]
+            else:
+                lPagine = [self.banchePanel, self.destinPanel]
+            for panel in lPagine:
                 try:
-                    panel.UpdateDataControls()
+                    panel.UpdateDataControls()                    
+                    #===========================================================
+                    # if panel==self.panacconti:
+                    #     panel.UpdateDataControls()
+                    # else:
+                    #     panel.UpdateDataControls()
+                    #===========================================================
                 except:
                     pass
             self.UpdateDataControls_PersonalPage()

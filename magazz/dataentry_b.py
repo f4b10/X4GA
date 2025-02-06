@@ -663,8 +663,11 @@ class SelezionaMovimentoAccontoPanel(wx.Panel):
         self.Bind(gl.EVT_GRID_CELL_LEFT_DCLICK, self.OnSelectRow, self.gridacc)
 
     def ViewResiduo(self):
-        residuo = self.mainPanel.dbdoc.totimponib 
-        self.labelResiduo.SetLabel('RESIDUO DA COMPENSARE:%s' % self.mainPanel.dbdoc.sepn(residuo,2))
+        try:
+            residuo = self.mainPanel.dbdoc.totimponib 
+            self.labelResiduo.SetLabel('RESIDUO DA COMPENSARE:%s' % self.mainPanel.dbdoc.sepn(residuo,2))
+        except:
+            pass
 
 
     def OnCellSelected(self, event):
@@ -700,6 +703,9 @@ class SelezionaMovimentoAccontoPanel(wx.Panel):
         self.pdcid = pdcid
         self.UpdateData()
 
+    def UpdateDataControls(self):
+        self.SetPdcId(self.mainPanel.db_recid)
+        
     def UpdateData(self):
         print self.accontiUsati
         print self.accontiAttuali

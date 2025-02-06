@@ -1461,8 +1461,16 @@ class ClientiInterrPanel(anag.clienti.ClientiPanel, _PdcCliForInterrMixin):
         self.idTipoAnag=kwargs.pop('idTipana', None)
         
         
-        anag.clienti.ClientiPanel.__init__(self, *args, **kwargs)
-        _PdcCliForInterrMixin.__init__(self, anag.clienti.ClientiPanel)
+        #anag.clienti.ClientiPanel.__init__(self, *args, **kwargs)
+        #_PdcCliForInterrMixin.__init__(self, anag.clienti.ClientiPanel)
+        # bug intenti
+        try:
+            anag.clienti.ClientiPanel.__init__(self, *args, **kwargs)
+            _PdcCliForInterrMixin.__init__(self, anag.clienti.ClientiPanel)
+        except:
+            import intentianag
+            intentianag.clienti.ClientiPanel.__init__(self, *args, **kwargs)
+            _PdcCliForInterrMixin.__init__(self, intentianag.clienti.ClientiPanel)
         self.panacconti = None
 
     def InitControls(self, *args, **kwargs):
@@ -1516,13 +1524,13 @@ class ClientiInterrFrame(ga._AnagFrame, _PdcInterrFrameMixin):
             kwargs['title'] = FRAME_TITLE_CLI
         ga._AnagFrame.__init__(self, *args, **kwargs)
         _PdcInterrFrameMixin.__init__(self)
-        self.LoadAnagPanel(ClientiInterrPanel(self, -1))
+        try:
+            self.LoadAnagPanel(ClientiInterrPanel(self, -1))
+        except:
+            from intentianag.clienti import IntentiClientiPanel
+            self.LoadAnagPanel(IntentiClientiPanel(self, -1))
         TestInitialFrameSize(self)
-
-
 # ------------------------------------------------------------------------------
-
-
 class ClientiInterrDialog(ga._AnagDialog, _PdcInterrFrameMixin):
     """
     Dialog Interrogazione Clienti.
@@ -1532,18 +1540,13 @@ class ClientiInterrDialog(ga._AnagDialog, _PdcInterrFrameMixin):
             kwargs['title'] = FRAME_TITLE_CLI
         ga._AnagDialog.__init__(self, *args, **kwargs)
         _PdcInterrFrameMixin.__init__(self)
-
         #self.LoadAnagPanel(ClientiInterrPanel(self, -1))
-
         #TODO: INTRODURRE LOGICA PER INSERIMENTO ANAGRAFICA
-        
         idTipana=self.GetTipoAnagrafico()
         self.LoadAnagPanel(ClientiInterrPanel(self, -1, idTipana=idTipana))
         if idTipana:
             self.FindWindowByName('id_tipo').SetValue(idTipana)
-            
         TestInitialFrameSize(self)
-
 
     def GetTipoAnagrafico(self):
         idTipo=None
@@ -1560,15 +1563,7 @@ class ClientiInterrDialog(ga._AnagDialog, _PdcInterrFrameMixin):
         except:
             pass
         return idTipo
-
-
-
-
-
-
 # ------------------------------------------------------------------------------
-
-
 class FornitInterrPanel(anag.fornit.FornitPanel, _PdcCliForInterrMixin):
 
     def __init__(self, *args, **kwargs):
@@ -1580,11 +1575,7 @@ class FornitInterrPanel(anag.fornit.FornitPanel, _PdcCliForInterrMixin):
 
     def UpdateDataControls(self, *args, **kwargs):
         return _PdcCliForInterrMixin.UpdateDataControls(self, *args, **kwargs)
-
-
 # ------------------------------------------------------------------------------
-
-
 class FornitInterrFrame(ga._AnagFrame, _PdcInterrFrameMixin):
     """
     Frame Interrogazione Fornitori.
@@ -1596,11 +1587,7 @@ class FornitInterrFrame(ga._AnagFrame, _PdcInterrFrameMixin):
         _PdcInterrFrameMixin.__init__(self)
         self.LoadAnagPanel(FornitInterrPanel(self, -1))
         TestInitialFrameSize(self)
-
-
 # ------------------------------------------------------------------------------
-
-
 class FornitInterrDialog(ga._AnagDialog, _PdcInterrFrameMixin):
     """
     Dialog Interrogazione Fornitori.
@@ -1612,11 +1599,7 @@ class FornitInterrDialog(ga._AnagDialog, _PdcInterrFrameMixin):
         _PdcInterrFrameMixin.__init__(self)
         self.LoadAnagPanel(FornitInterrPanel(self, -1))
         TestInitialFrameSize(self)
-
-
 # ------------------------------------------------------------------------------
-
-
 class PdcInterrPanel(anag.pdc.PdcPanel, _PdcInterrMixin):
 
     def __init__(self, *args, **kwargs):
@@ -1628,11 +1611,7 @@ class PdcInterrPanel(anag.pdc.PdcPanel, _PdcInterrMixin):
 
     def UpdateDataControls(self, *args, **kwargs):
         return _PdcInterrMixin.UpdateDataControls(self, *args, **kwargs)
-
-
 # ------------------------------------------------------------------------------
-
-
 class PdcInterrFrame(ga._AnagFrame, _PdcInterrFrameMixin):
     """
     Frame Interrogazione Piano dei conti.
@@ -1644,11 +1623,7 @@ class PdcInterrFrame(ga._AnagFrame, _PdcInterrFrameMixin):
         _PdcInterrFrameMixin.__init__(self)
         self.LoadAnagPanel(PdcInterrPanel(self, -1))
         TestInitialFrameSize(self)
-
-
 # ------------------------------------------------------------------------------
-
-
 class PdcInterrDialog(ga._AnagDialog, _PdcInterrFrameMixin):
     """
     Dialog Interrogazione Piano dei conti.

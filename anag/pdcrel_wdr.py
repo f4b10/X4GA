@@ -342,6 +342,11 @@ def ClientiCardFunc( parent, call_fit = True, set_sizer = True ):
 
     item0.Add( item14, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
+    item21 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    parent.bottomCli = item21
+    
+    item0.Add( item21, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
     item0.AddGrowableCol( 0 )
 
     item0.AddGrowableRow( 2 )
@@ -3920,6 +3925,7 @@ def ClientiCommFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 2, 0, 0 )
     
     item1 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    parent.leftPanel = item1
     
     item3 = wx.StaticBox( parent, -1, "Condizioni di pagamento" )
     item2 = wx.StaticBoxSizer( item3, wx.VERTICAL )
