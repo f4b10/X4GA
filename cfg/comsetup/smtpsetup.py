@@ -143,7 +143,7 @@ class EmailSetupPanel(_CommSetupPanel):
             self.FindWindowByName(key).Enable(not mode)
     
     def CheckStructure(self):
-        cfgMail = adb.DbTable('cfgmail', 'cfgmail', dbName='X4')
+        cfgMail = adb.DbTable('cfgmail', 'cfgmail', dbName='x4')
         cfgMail.Reset()
         esito=True
         if not 'internalmail' in cfgMail.GetFieldNames():
