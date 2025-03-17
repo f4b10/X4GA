@@ -458,7 +458,6 @@ class ClientiPanel(pdcrel._CliForPanel):
         if self.db_recno == NEW_RECORD and self.pdctipo=='C':
             cn = self.FindWindowByName
             ue  = cn('id_stato').IsCee()
-            print '************in ue %s' % ue
             if not (cn('nazione').GetValue()==None or len(cn('nazione').GetValue().strip())==0):
                 if  cn('nazione').GetValue()=='IT':
                     self.SetClienteItaliano()
@@ -492,7 +491,10 @@ class ClientiPanel(pdcrel._CliForPanel):
         
     def SetClienteExtraUe(self):
         if self.db_recno == NEW_RECORD:
-            self.FindWindowByName('id_aliqiva').SetValue(adb.DbTable.SearchInTable(table='cfgautom', searchInField='codice', searchValue='magivaest', returnField='aut_id'))
+            if len(self.FindWindowByName('piva').GetValue().strip())>0:
+                self.FindWindowByName('id_aliqiva').SetValue(adb.DbTable.SearchInTable(table='cfgautom', searchInField='codice', searchValue='magivaest', returnField='aut_id'))
+            else:
+                self.FindWindowByName('id_aliqiva').SetValue(None)
             self.SetFlagFE()
         
     def SetFlagFE(self):
