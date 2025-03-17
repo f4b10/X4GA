@@ -191,8 +191,6 @@ class AutomatContabPanel(aw.Panel, _automatmixin):
             ('ivavensos', 'Sottoconto IVA per vendite in split payment '),
             ('ivaacqdif', 'Sottoconto IVA per acquisti a detraibilità differita '),\
             ('ivavendif', 'Sottoconto IVA per vendite a detraibilità differita '),\
-            ('ivaue',     'Aliquota Iva Vendite Ue '),\
-            ('ivaextraue','Aliquota Iva Vendite Extra Ue '),\
             ):
             self.auto[aut] = [None, des]
 

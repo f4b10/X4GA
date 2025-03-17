@@ -484,7 +484,7 @@ class ClientiPanel(pdcrel._CliForPanel):
     def SetClienteUe(self):
         if self.db_recno == NEW_RECORD:
             if len(self.FindWindowByName('piva').GetValue().strip())>0:
-                self.FindWindowByName('id_aliqiva').SetValue(adb.DbTable.SearchInTable(table='cfgautom', searchInField='codice', searchValue='ivaue', returnField='aut_id'))
+                self.FindWindowByName('id_aliqiva').SetValue(adb.DbTable.SearchInTable(table='cfgautom', searchInField='codice', searchValue='magivacee', returnField='aut_id'))
             else:
                 self.FindWindowByName('id_aliqiva').SetValue(None)
             self.SetFlagFE()
@@ -492,7 +492,7 @@ class ClientiPanel(pdcrel._CliForPanel):
         
     def SetClienteExtraUe(self):
         if self.db_recno == NEW_RECORD:
-            self.FindWindowByName('id_aliqiva').SetValue(adb.DbTable.SearchInTable(table='cfgautom', searchInField='codice', searchValue='ivaextraue', returnField='aut_id'))
+            self.FindWindowByName('id_aliqiva').SetValue(adb.DbTable.SearchInTable(table='cfgautom', searchInField='codice', searchValue='magivaest', returnField='aut_id'))
             self.SetFlagFE()
         
     def SetFlagFE(self):
