@@ -29,6 +29,11 @@ from awc.lib import ControllaPIVA, ControllaCodFisc
 import os, sys
 import subprocess
 from ZSI import FaultException
+import awc.controls.windows as aw
+import stormdb as adb
+import Env
+from __builtin__ import True
+MsgBox = aw.awu.MsgDialog
 
 
 class _EntryCtrlMixin(wx.Window, cmix.ControlsMixin):
@@ -139,6 +144,27 @@ class PartitaIvaEntryCtrl(_EntryCtrlMixin):
         self.Layout()
         self.ctrpiva = ControllaPIVA()
         self.Bind(wx.EVT_TEXT, self.OnCheckPIva, id=wdr.ID_ADDRESS)
+        self.objPiva = self.FindWindowByName('_piva')
+        self.objPiva.Bind(wx.EVT_KILL_FOCUS, self.ViewMsgIfNeed)
+        
+        self.NeedChkPiva = adb.DbTable.SearchInTable(table='cfgsetup', searchInField='chiave', searchValue='chkpiva', returnField='flag')
+        self.VincoloPiva = adb.DbTable.SearchInTable(table='cfgsetup', searchInField='chiave', searchValue='vicolopiva', returnField='flag')
+        
+        
+    def ViewMsgIfNeed(self, evt):
+        mainPanel = self.GetParent().GetParent().GetParent().GetParent().GetParent().GetParent()
+        if self.NeedChkPiva=='1':
+            if not self.CheckPIva():
+                if self.VincoloPiva=='1':
+                    MsgBox(self.GetParent(), 'Partita Iva Errata\nCORREGGERE', style=wx.ICON_ERROR)
+                    wx.CallAfter(self.GetParent().FindWindowByName('piva').SetFocus)
+                else:
+                    if MsgBox(self.GetParent(), 'Partita Iva Errata\nProsegui ugualmente?', style=wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT) == wx.ID_NO:
+                        wx.CallAfter(self.GetParent().FindWindowByName('piva').SetFocus)
+            mainPanel.SetAliquota()
+        else:
+            mainPanel.SetAliquota()
+        #evt.Skip()
 
     def SetAskForLink(cls, a):
         assert type(a) is bool
@@ -149,8 +175,45 @@ class PartitaIvaEntryCtrl(_EntryCtrlMixin):
         self.statectrl = stc
         def OnStateChanged(event):
             self.ctrpiva.stato = event.GetEventObject().GetValue()
-            event.Skip()
+            #if self.GetParent().pdctipo=='C':
+            mainPanel = self.GetParent().GetParent().GetParent().GetParent().GetParent().GetParent()
+            try:
+                insMode = mainPanel.db_recno == -1
+            except:
+                insMode = False
+            if insMode:
+                mainPanel.SetAliquota()
+                #===============================================================
+                # 
+                # 
+                # print '*********SetStateControl %s' % self.ctrpiva.stato
+                # objIva = self.GetParent().GetParent().GetParent().FindWindowByName('id_aliqiva')
+                # if len(self.ctrpiva.stato.strip())==0 or self.ctrpiva.stato=='IT':
+                #     objIva.SetValue(None)
+                # else:
+                #     if self.IsCee(self.ctrpiva.stato):
+                #         idIva=adb.DbTable.SearchInTable(table='cfgautom', searchInField='codice', searchValue='ivaue', returnField='aut_id')
+                #         print 'imposta esenzione per Cee'
+                #     else:
+                #         idIva=adb.DbTable.SearchInTable(table='cfgautom', searchInField='codice', searchValue='ivaextraue', returnField='aut_id')
+                #     objIva.SetValue(idIva)
+                #                     
+                #===============================================================
+            event.Skip()            
         stc.Bind(wx.EVT_TEXT, OnStateChanged)
+
+    def IsCee(self, sigla):
+        cursor = Env.Azienda.DB.connection.cursor()
+        sql = 'select is_cee from x4.stati where codice="%s"' % sigla  
+        cursor.execute(sql)
+        rs=cursor.fetchone()
+        try:  
+            retValue=rs[0]==1
+        except:
+            retValue=0
+        return retValue         
+
+
 
     def OnCheckPIva(self, event):
         self.CheckPIva()
@@ -165,8 +228,11 @@ class PartitaIvaEntryCtrl(_EntryCtrlMixin):
         if c.Analizza() not in (c.PIVA_MANCA, c.PIVA_OK):
             t.SetBackgroundColour(t._colors['invalidBackground'])
             t.Refresh()
+            esito=False
         else:
             t.AdjustBackgroundColor(focused=(t.FindFocus() == t))
+            esito=True
+        return esito
 
     def GetFiller(self):
         return wdr.PartitaIvaEntryFunc
@@ -263,6 +329,23 @@ class CodiceFiscaleEntryCtrl(_EntryCtrlMixin):
         self.ctrcf = ControllaCodFisc()
         self.Bind(wx.EVT_TEXT, self.OnCheckCodFisc, id=wdr.ID_ADDRESS)
 
+        self.objCf = self.FindWindowByName('_codfisc')
+        self.objCf.Bind(wx.EVT_KILL_FOCUS, self.ViewMsgIfNeed)
+        
+        self.NeedChkCf = adb.DbTable.SearchInTable(table='cfgsetup', searchInField='chiave', searchValue='chkcf', returnField='flag')
+        self.VincoloCf = adb.DbTable.SearchInTable(table='cfgsetup', searchInField='chiave', searchValue='vicolocf', returnField='flag')
+
+    def ViewMsgIfNeed(self, evt):
+        if self.NeedChkCf=='1':
+            if not self.CheckCodFisc():
+                if self.VincoloCf=='1':
+                    MsgBox(self.GetParent(), 'Codice Fiscale Errato\nCORREGGERE', style=wx.ICON_ERROR)
+                    wx.CallAfter(self.GetParent().FindWindowByName('codfisc').SetFocus)
+                else:
+                    if MsgBox(self.GetParent(), 'Codice Fiscale Errato\nProsegui ugualmente?', style=wx.ICON_QUESTION|wx.YES_NO|wx.NO_DEFAULT) == wx.ID_NO:
+                        wx.CallAfter(self.GetParent().FindWindowByName('codfisc').SetFocus)
+        evt.Skip()
+
     def OnCheckCodFisc(self, event):
         self.CheckCodFisc()
         event.Skip()
@@ -275,8 +358,11 @@ class CodiceFiscaleEntryCtrl(_EntryCtrlMixin):
         c.SetCodFisc(t.GetValue())
         if c.Analizza() not in (c.CFISC_MANCA, c.CFISC_OK):
             t.AdjustBackgroundColor(error=True)
+            esito = False
         else:
             t.AdjustBackgroundColor(focused=(t.FindFocus() == t))
+            esito = True
+        return esito
 
     def GetFiller(self):
         return wdr.CodiceFiscaleEntryFunc

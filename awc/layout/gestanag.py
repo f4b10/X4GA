@@ -1320,7 +1320,10 @@ class AnagPanel(aw.Panel):
         if self.db_recno == NEW_RECORD:
             if len(self.dDefaultValue.keys())>0:
                 for k in self.dDefaultValue.keys():
-                    self.FindWindowByName(k).SetValue(self.dDefaultValue[k])
+                    try:
+                        self.FindWindowByName(k).SetValue(self.dDefaultValue[k])
+                    except:
+                        pass
 
     def TestForChanges(self):
         """

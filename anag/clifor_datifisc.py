@@ -128,6 +128,7 @@ class _CliFor_DatiFiscaliGrid(dbgrid.ADB_Grid):
         
         elif col == cc(anag, 'piva') and len(value)>0:
             ctr = ControllaPIVA()
+            print 'ctr.SetPIva %s %s' % (value, anag.nazione or "IT")
             ctr.SetPIva(value, anag.nazione or "IT")
             valid = ctr.Controlla()
             if not valid:

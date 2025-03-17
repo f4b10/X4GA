@@ -53,7 +53,7 @@ import anag.dbtables as dba
 
 import report as rpt
 
-
+NEW_RECORD = -1
 FRAME_TITLE = "Clienti"
 
 
@@ -439,10 +439,6 @@ class ClientiPanel(pdcrel._CliForPanel):
         self.AbilitaFatturaElettronica(True)
         evt.Skip()
         
-        
-        
-        
-
     def OnStatoChanged(self, event):
         cn = self.FindWindowByName
         if cn('nazione').GetValue()==None or len(cn('nazione').GetValue().strip())==0:
@@ -451,7 +447,61 @@ class ClientiPanel(pdcrel._CliForPanel):
         cn('is_blacklisted').Enable(sbl)
         if not sbl:
             cn('is_blacklisted').SetValue(0)
+        self.SetAliquota()    
+        #=======================================================================
+        # if self.pdctipo=='C':
+        #     print 'imposta esenzione se necessario %s(%s)' % (cn('id_aliquota'), cn('id_aliquota'))
+        #=======================================================================
         event.Skip()
+        
+    def SetAliquota(self):
+        if self.db_recno == NEW_RECORD and self.pdctipo=='C':
+            cn = self.FindWindowByName
+            ue  = cn('id_stato').IsCee()
+            print '************in ue %s' % ue
+            if not (cn('nazione').GetValue()==None or len(cn('nazione').GetValue().strip())==0):
+                if  cn('nazione').GetValue()=='IT':
+                    self.SetClienteItaliano()
+                else:
+                    if ue:
+                        self.SetClienteUe()
+                    else:
+                        self.SetClienteExtraUe()
+            else:
+                if len(cn('nazione').GetValue() or '')==0:
+                    self.SetClienteItaliano()
+                else:
+                    self.FindWindowByName('id_aliqiva').SetValue(adb.DbTable.SearchInTable(table='cfgautom', searchInField='codice', searchValue='ivaextraue', returnField='aut_id'))
+
+
+        
+    def SetClienteItaliano(self):
+        if self.db_recno == NEW_RECORD:
+            self.FindWindowByName('id_aliqiva').SetValue(None)
+            self.SetFlagFE()
+            
+        
+    def SetClienteUe(self):
+        if self.db_recno == NEW_RECORD:
+            if len(self.FindWindowByName('piva').GetValue().strip())>0:
+                self.FindWindowByName('id_aliqiva').SetValue(adb.DbTable.SearchInTable(table='cfgautom', searchInField='codice', searchValue='ivaue', returnField='aut_id'))
+            else:
+                self.FindWindowByName('id_aliqiva').SetValue(None)
+            self.SetFlagFE()
+        
+        
+    def SetClienteExtraUe(self):
+        if self.db_recno == NEW_RECORD:
+            self.FindWindowByName('id_aliqiva').SetValue(adb.DbTable.SearchInTable(table='cfgautom', searchInField='codice', searchValue='ivaextraue', returnField='aut_id'))
+            self.SetFlagFE()
+        
+    def SetFlagFE(self):
+        self.FindWindowByName('ftel_flag').SetValue(True)
+        self.FindWindowByName('ftel_tipo').SetValue('P')
+        self.FindWindowByName('ftel_codsdi').Enable(True)
+        self.FindWindowByName('ftel_pec').Enable(True)
+        
+
 
     def OnPdcGrpChanged(self, event):
         self.LoadGriglia()

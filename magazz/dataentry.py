@@ -3603,8 +3603,16 @@ class MagazzPanel(aw.Panel,\
                 mov.CreateNewRow()
                 mov.id_tipmov = movdesid
                 acq = dlgacq.dbacq
-                mov.descriz = """Rif.to %s n. %s del %s"""\
-                   % (acq.doc.tipdoc.descriz, acq.doc.numdoc,\
+                suffix=''
+                try:
+                    if len(daq.cfgdoc.toolbarra or '')>0:
+                        suffix = '/%s' % daq.cfgdoc.toolbarra                
+                except:
+                    pass
+                
+                
+                mov.descriz = """Rif.to %s n. %s%s del %s"""\
+                   % (acq.doc.tipdoc.descriz, acq.doc.numdoc, suffix,\
                       lib.dtoc(acq.doc.datdoc))
                 mov.numriga = riga
                 riga += 1

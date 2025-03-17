@@ -582,11 +582,15 @@ def AutomatContabFunc( parent, call_fit = True, set_sizer = True ):
     AutomatContabAperturaChiusuraFunc(item6, False)
     item2.AddPage( item6, "Apertura/Chiusura" )
 
+    item7 = wx.Panel( item2, -1 )
+    AutomatContabAliquoteIvaFunc(item7, False)
+    item2.AddPage( item7, "Vendite Estero" )
+
     item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
 
-    item7 = wx.Button( parent, ID_BTNOK, "OK", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item7.SetDefault()
-    item0.Add( item7, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+    item8 = wx.Button( parent, ID_BTNOK, "OK", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item8.SetDefault()
+    item0.Add( item8, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
     item0.AddGrowableCol( 0 )
 
@@ -1156,6 +1160,49 @@ def AutomatContabSottocontiIVAFunc( parent, call_fit = True, set_sizer = True ):
     item1.Add( item3, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
     item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    if set_sizer == True:
+        parent.SetSizer( item0 )
+        if call_fit == True:
+            item0.SetSizeHints( parent )
+    
+    return item0
+
+
+def AutomatContabAliquoteIvaFunc( parent, call_fit = True, set_sizer = True ):
+    item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
+    
+    item1 = wx.FlexGridSizer( 0, 2, 0, 0 )
+    
+    item2 = wx.StaticText( parent, ID_TEXT, "", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
+    item1.Add( item2, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+
+    item3 = wx.StaticText( parent, ID_TEXT, "Aliquote Iva x Vendite Estero", wx.DefaultPosition, [160,-1], 0 )
+    item1.Add( item3, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+
+    item4 = wx.StaticLine( parent, ID_LINE, wx.DefaultPosition, [20,-1], wx.LI_HORIZONTAL )
+    item1.Add( item4, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 5 )
+
+    item5 = wx.StaticLine( parent, ID_LINE, wx.DefaultPosition, [20,-1], wx.LI_HORIZONTAL )
+    item1.Add( item5, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
+
+    item6 = wx.StaticText( parent, ID_TEXT, "Vendita in Ue:", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
+    item1.Add( item6, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+
+    item7 = LinkTable(parent, ID_CTRTIPCAS ); item7.SetDataLink( bt.TABNAME_ALIQIVA, None, None ); item7.SetName('ivaue')
+    item1.Add( item7, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item8 = wx.StaticText( parent, ID_TEXT, "Vendita extra ue:", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
+    item1.Add( item8, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+
+    item9 = LinkTable(parent, ID_CTRTIPBAN ); item9.SetDataLink( bt.TABNAME_ALIQIVA, None, None ); item9.SetName('ivaextraue')
+    item1.Add( item9, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item1.AddGrowableCol( 1 )
+
+    item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item0.AddGrowableCol( 0 )
 
     if set_sizer == True:
         parent.SetSizer( item0 )

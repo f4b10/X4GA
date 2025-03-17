@@ -987,162 +987,202 @@ def MagazzSetup( parent, call_fit = True, set_sizer = True ):
     return item0
 
 ID_OPTLINKINDEX = 15081
-ID_OPTNOTIFICHE = 15082
-ID_OPTTABSEARCH = 15083
-ID_OPTDIGSEARCH = 15084
-ID_OPTSPASEARCH = 15085
-ID_OPTLNKCRDPDC = 15086
-ID_OPTLNKGRDPDC = 15087
-ID_OPTLNKCRDCLI = 15088
-ID_OPTLNKGRDCLI = 15089
-ID_OPTLNKCRDFOR = 15090
-ID_OPTLNKGRDFOR = 15091
-ID_BACKUPDIR = 15092
-ID_GCP_USER = 15093
-ID_GCP_PSWD = 15094
-ID_GC_PRINT = 15095
+ID_CHECKPIVA = 15082
+ID_OPTNOTIFICHE = 15083
+ID_OPTTABSEARCH = 15084
+ID_OPTDIGSEARCH = 15085
+ID_OPTSPASEARCH = 15086
+ID_OPTLNKCRDPDC = 15087
+ID_OPTLNKGRDPDC = 15088
+ID_OPTLNKCRDCLI = 15089
+ID_OPTLNKGRDCLI = 15090
+ID_OPTLNKCRDFOR = 15091
+ID_OPTLNKGRDFOR = 15092
+ID_BACKUPDIR = 15093
+ID_GCP_USER = 15094
+ID_GCP_PSWD = 15095
+ID_GC_PRINT = 15096
 
 def OpzioniFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
     
-    item2 = wx.StaticBox( parent, -1, "MySql" )
-    item1 = wx.StaticBoxSizer( item2, wx.HORIZONTAL )
+    item1 = wx.FlexGridSizer( 0, 3, 0, 0 )
     
-    item3 = UnoZeroCheckBox( parent, ID_OPTLINKINDEX, "Attiva compatibilità SqlAlchemy (Engine INNODB)", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item3.SetName( "setup_optlinkindex" )
-    item1.Add( item3, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
+    item3 = wx.StaticBox( parent, -1, "MySql" )
+    item2 = wx.StaticBoxSizer( item3, wx.HORIZONTAL )
+    
+    item4 = UnoZeroCheckBox( parent, ID_OPTLINKINDEX, "Attiva compatibilità SqlAlchemy (Engine INNODB)", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item4.SetName( "setup_optlinkindex" )
+    item2.Add( item4, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
+
+    item1.Add( item2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item6 = wx.StaticBox( parent, -1, "Controllo Part.Iva" )
+    item5 = wx.StaticBoxSizer( item6, wx.HORIZONTAL )
+    
+    item7 = UnoZeroCheckBox( parent, ID_CHECKPIVA, "Check in uscita", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item7.SetName( "setup_chkpiva" )
+    item5.Add( item7, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
+
+    item8 = UnoZeroCheckBox( parent, ID_CHECKPIVA, "Vincolante", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item8.SetName( "setup_vicolopiva" )
+    item5.Add( item8, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
+
+    item1.Add( item5, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item10 = wx.StaticBox( parent, -1, "Controllo Cod.Fiscale" )
+    item9 = wx.StaticBoxSizer( item10, wx.HORIZONTAL )
+    
+    item11 = UnoZeroCheckBox( parent, ID_CHECKPIVA, "Check in uscita", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item11.SetName( "setup_chkcf" )
+    item9.Add( item11, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
+
+    item12 = UnoZeroCheckBox( parent, ID_CHECKPIVA, "Vincolante", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item12.SetName( "setup_vicolocf" )
+    item9.Add( item12, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
+
+    item1.Add( item9, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
     item0.Add( item1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item5 = wx.StaticBox( parent, -1, "Notifiche" )
-    item4 = wx.StaticBoxSizer( item5, wx.VERTICAL )
+    item14 = wx.StaticBox( parent, -1, "MySql" )
+    item13 = wx.StaticBoxSizer( item14, wx.HORIZONTAL )
     
-    item6 = UnoZeroCheckBox( parent, ID_OPTNOTIFICHE, "Attiva notifiche (Email, XMPP)", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item6.SetName( "setup_optnotifiche" )
-    item4.Add( item6, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
+    item15 = UnoZeroCheckBox( parent, ID_OPTLINKINDEX, "Attiva compatibilità SqlAlchemy (Engine INNODB)", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item15.SetName( "setup_optlinkindex" )
+    item13.Add( item15, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
 
-    item0.Add( item4, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+    item0.Add( item13, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item8 = wx.StaticBox( parent, -1, "Ricerche" )
-    item7 = wx.StaticBoxSizer( item8, wx.VERTICAL )
+    item17 = wx.StaticBox( parent, -1, "Notifiche" )
+    item16 = wx.StaticBoxSizer( item17, wx.VERTICAL )
     
-    item9 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    item18 = UnoZeroCheckBox( parent, ID_OPTNOTIFICHE, "Attiva notifiche (Email, XMPP)", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item18.SetName( "setup_optnotifiche" )
+    item16.Add( item18, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.TOP|wx.BOTTOM, 5 )
+
+    item0.Add( item16, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+    item20 = wx.StaticBox( parent, -1, "Ricerche" )
+    item19 = wx.StaticBoxSizer( item20, wx.VERTICAL )
     
-    item10 = UnoZeroCheckBox( parent, ID_OPTTABSEARCH, "Attiva la ricerca con il tasto Tab", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item10.SetName( "setup_opttabsearch" )
-    item9.Add( item10, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item11 = UnoZeroCheckBox( parent, ID_CHECKBOX, "Attiva la ricerca con il tasto Invio", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item11.SetName( "setup_optretsearch" )
-    item9.Add( item11, 0, wx.ALIGN_CENTER|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item12 = UnoZeroCheckBox( parent, ID_OPTDIGSEARCH, "Cerca durante la digitazione", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item12.SetName( "setup_optdigsearch" )
-    item9.Add( item12, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item13 = UnoZeroCheckBox( parent, ID_OPTSPASEARCH, "Cerca per contenuto con \" \" (spazio)", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item13.SetName( "setup_optspasearch" )
-    item9.Add( item13, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item7.Add( item9, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
-
-    item14 = wx.StaticLine( parent, ID_LINE, wx.DefaultPosition, [20,-1], wx.LI_HORIZONTAL )
-    item7.Add( item14, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
-
-    item15 = wx.StaticText( parent, ID_TEXT, "Alla ricezione del focus di tastiera, sui seguenti elementi di ricerca anagrafica imposta la priorità  sulla descrizione:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item7.Add( item15, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
-
-    item16 = wx.FlexGridSizer( 0, 3, 0, 0 )
+    item21 = wx.FlexGridSizer( 1, 0, 0, 0 )
     
-    item17 = wx.StaticText( parent, ID_TEXT, "", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item16.Add( item17, 0, wx.ALIGN_CENTER|wx.RIGHT|wx.TOP, 5 )
+    item22 = UnoZeroCheckBox( parent, ID_OPTTABSEARCH, "Attiva la ricerca con il tasto Tab", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item22.SetName( "setup_opttabsearch" )
+    item21.Add( item22, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item18 = wx.StaticText( parent, ID_TEXT, "In Scheda", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item16.Add( item18, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+    item23 = UnoZeroCheckBox( parent, ID_CHECKBOX, "Attiva la ricerca con il tasto Invio", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item23.SetName( "setup_optretsearch" )
+    item21.Add( item23, 0, wx.ALIGN_CENTER|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item19 = wx.StaticText( parent, ID_TEXT, "In griglia", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item16.Add( item19, 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+    item24 = UnoZeroCheckBox( parent, ID_OPTDIGSEARCH, "Cerca durante la digitazione", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item24.SetName( "setup_optdigsearch" )
+    item21.Add( item24, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item20 = wx.StaticText( parent, ID_TEXT, "Piano dei Conti:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item16.Add( item20, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item25 = UnoZeroCheckBox( parent, ID_OPTSPASEARCH, "Cerca per contenuto con \" \" (spazio)", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item25.SetName( "setup_optspasearch" )
+    item21.Add( item25, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.RIGHT|wx.BOTTOM, 5 )
 
-    item21 = UnoZeroCheckBox( parent, ID_OPTLNKCRDPDC, "", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item21.SetName( "setup_optlnkcrdpdc" )
-    item16.Add( item21, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item19.Add( item21, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item22 = UnoZeroCheckBox( parent, ID_OPTLNKGRDPDC, "", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item22.SetName( "setup_optlnkgrdpdc" )
-    item16.Add( item22, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item26 = wx.StaticLine( parent, ID_LINE, wx.DefaultPosition, [20,-1], wx.LI_HORIZONTAL )
+    item19.Add( item26, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item23 = wx.StaticText( parent, ID_TEXT, "Clienti:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item16.Add( item23, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+    item27 = wx.StaticText( parent, ID_TEXT, "Alla ricezione del focus di tastiera, sui seguenti elementi di ricerca anagrafica imposta la priorità  sulla descrizione:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item19.Add( item27, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item24 = UnoZeroCheckBox( parent, ID_OPTLNKCRDCLI, "", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item24.SetName( "setup_optlnkcrdcli" )
-    item16.Add( item24, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item25 = UnoZeroCheckBox( parent, ID_OPTLNKGRDCLI, "", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item25.SetName( "setup_optlnkgrdcli" )
-    item16.Add( item25, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item26 = wx.StaticText( parent, ID_TEXT, "Fornitori:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item16.Add( item26, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
-
-    item27 = UnoZeroCheckBox( parent, ID_OPTLNKCRDFOR, "", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item27.SetName( "setup_optlnkcrdfor" )
-    item16.Add( item27, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item28 = UnoZeroCheckBox( parent, ID_OPTLNKGRDFOR, "", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item28.SetName( "setup_optlnkgrdfor" )
-    item16.Add( item28, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item16.AddGrowableCol( 1 )
-
-    item16.AddGrowableCol( 2 )
-
-    item7.Add( item16, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
-
-    item0.Add( item7, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
-
-    item30 = wx.StaticBox( parent, -1, "Percorso backup azienda" )
-    item29 = wx.StaticBoxSizer( item30, wx.VERTICAL )
+    item28 = wx.FlexGridSizer( 0, 3, 0, 0 )
     
-    item31 = FolderEntryCtrl( parent, ID_BACKUPDIR, "", wx.DefaultPosition, [280,-1], 0 )
-    item31.SetName( "setup_optbackupdir" )
-    item29.Add( item31, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 5 )
+    item29 = wx.StaticText( parent, ID_TEXT, "", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item28.Add( item29, 0, wx.ALIGN_CENTER|wx.RIGHT|wx.TOP, 5 )
 
-    item0.Add( item29, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item30 = wx.StaticText( parent, ID_TEXT, "In Scheda", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item28.Add( item30, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
 
-    item33 = wx.StaticBox( parent, -1, "Google Account" )
-    item32 = wx.StaticBoxSizer( item33, wx.VERTICAL )
+    item31 = wx.StaticText( parent, ID_TEXT, "In griglia", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item28.Add( item31, 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+
+    item32 = wx.StaticText( parent, ID_TEXT, "Piano dei Conti:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item28.Add( item32, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+
+    item33 = UnoZeroCheckBox( parent, ID_OPTLNKCRDPDC, "", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item33.SetName( "setup_optlnkcrdpdc" )
+    item28.Add( item33, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item34 = UnoZeroCheckBox( parent, ID_OPTLNKGRDPDC, "", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item34.SetName( "setup_optlnkgrdpdc" )
+    item28.Add( item34, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item35 = wx.StaticText( parent, ID_TEXT, "Clienti:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item28.Add( item35, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+
+    item36 = UnoZeroCheckBox( parent, ID_OPTLNKCRDCLI, "", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item36.SetName( "setup_optlnkcrdcli" )
+    item28.Add( item36, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item37 = UnoZeroCheckBox( parent, ID_OPTLNKGRDCLI, "", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item37.SetName( "setup_optlnkgrdcli" )
+    item28.Add( item37, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item38 = wx.StaticText( parent, ID_TEXT, "Fornitori:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item28.Add( item38, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.BOTTOM, 5 )
+
+    item39 = UnoZeroCheckBox( parent, ID_OPTLNKCRDFOR, "", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item39.SetName( "setup_optlnkcrdfor" )
+    item28.Add( item39, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item40 = UnoZeroCheckBox( parent, ID_OPTLNKGRDFOR, "", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item40.SetName( "setup_optlnkgrdfor" )
+    item28.Add( item40, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item28.AddGrowableCol( 1 )
+
+    item28.AddGrowableCol( 2 )
+
+    item19.Add( item28, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+    item0.Add( item19, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item42 = wx.StaticBox( parent, -1, "Percorso backup azienda" )
+    item41 = wx.StaticBoxSizer( item42, wx.VERTICAL )
     
-    item34 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    item43 = FolderEntryCtrl( parent, ID_BACKUPDIR, "", wx.DefaultPosition, [280,-1], 0 )
+    item43.SetName( "setup_optbackupdir" )
+    item41.Add( item43, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 5 )
+
+    item0.Add( item41, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+
+    item45 = wx.StaticBox( parent, -1, "Google Account" )
+    item44 = wx.StaticBoxSizer( item45, wx.VERTICAL )
     
-    item35 = wx.StaticText( parent, ID_TEXT, "Username:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item34.Add( item35, 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+    item46 = wx.FlexGridSizer( 1, 0, 0, 0 )
+    
+    item47 = wx.StaticText( parent, ID_TEXT, "Username:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item46.Add( item47, 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
 
-    item36 = TextCtrl_LC( parent, ID_GCP_USER, "", wx.DefaultPosition, [80,-1], 0 )
-    item36.SetName( "setup_opt_gcp_user" )
-    item34.Add( item36, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+    item48 = TextCtrl_LC( parent, ID_GCP_USER, "", wx.DefaultPosition, [80,-1], 0 )
+    item48.SetName( "setup_opt_gcp_user" )
+    item46.Add( item48, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item37 = wx.StaticText( parent, ID_TEXT, "Password:", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item34.Add( item37, 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+    item49 = wx.StaticText( parent, ID_TEXT, "Password:", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item46.Add( item49, 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
 
-    item38 = TextCtrl_LC( parent, ID_GCP_PSWD, "", wx.DefaultPosition, [80,-1], wx.TE_PASSWORD )
-    item38.SetName( "setup_opt_gcp_pswd" )
-    item34.Add( item38, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+    item50 = TextCtrl_LC( parent, ID_GCP_PSWD, "", wx.DefaultPosition, [80,-1], wx.TE_PASSWORD )
+    item50.SetName( "setup_opt_gcp_pswd" )
+    item46.Add( item50, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item34.AddGrowableCol( 1 )
+    item46.AddGrowableCol( 1 )
 
-    item34.AddGrowableCol( 3 )
+    item46.AddGrowableCol( 3 )
 
-    item32.Add( item34, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+    item44.Add( item46, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-    item39 = UnoZeroCheckBox( parent, ID_GC_PRINT, "Abilita stampe su Google Cloud Print", wx.DefaultPosition, wx.DefaultSize, 0 )
-    item39.SetName( "setup_opt_gc_print" )
-    item32.Add( item39, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+    item51 = UnoZeroCheckBox( parent, ID_GC_PRINT, "Abilita stampe su Google Cloud Print", wx.DefaultPosition, wx.DefaultSize, 0 )
+    item51.SetName( "setup_opt_gc_print" )
+    item44.Add( item51, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-    item0.Add( item32, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
+    item0.Add( item44, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.RIGHT|wx.BOTTOM, 5 )
 
     item0.AddGrowableCol( 0 )
 
@@ -1153,8 +1193,8 @@ def OpzioniFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_TEXTCTRL = 15096
-ID_AZIENDA_LOGO = 15097
+ID_TEXTCTRL = 15097
+ID_AZIENDA_LOGO = 15098
 
 def DatiAziendaFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -1324,9 +1364,9 @@ def DatiAziendaFunc( parent, call_fit = True, set_sizer = True ):
     
     return item0
 
-ID_IMPORTFOLDER = 15098
-ID_LDEST = 15099
-ID_LTAB = 15100
+ID_IMPORTFOLDER = 15099
+ID_LDEST = 15100
+ID_LTAB = 15101
 
 def SyncFunc( parent, call_fit = True, set_sizer = True ):
     item0 = wx.FlexGridSizer( 0, 3, 0, 0 )

@@ -548,7 +548,7 @@ class FtDif(adb.DbTable):
 
             #creazione riga descrittiva rif.to doc. raggruppato
             if d.id_tipdoc in dr._movdes and not self.f_nodesrif:
-                lastrig = self.GeneraDesRif(num, lastrig, d, bodyfields)
+                lastrig = self.GeneraDesRif(num, lastrig, d, bodyfields, suffisso=dr.tipdoc.toolbarra)
 
             #copia dettaglio documento raggruppato
             for m in mr:
@@ -600,7 +600,7 @@ class FtDif(adb.DbTable):
     def BodyCopied(self, *args, **kwargs):
         pass
 
-    def GeneraDesRif(self, num, lastrig, doc, bodyfields):
+    def GeneraDesRif(self, num, lastrig, doc, bodyfields, suffisso=''):
         dr = self.docrag
         mg = self.movgen
         mg.CreateNewRow()
@@ -612,8 +612,10 @@ class FtDif(adb.DbTable):
 
         for field, value in bodyfields.iteritems():
             mg.__setattr__(field, value)
-        mg.__setattr__('descriz', "Rif.to %s n. %s del %s"\
-                  % (doc.tipdoc.descriz, doc.numdoc, Env.StrDate(doc.datdoc)))
+        if len(suffisso or '')>0:
+            suffisso = '/%s' % suffisso
+        mg.__setattr__('descriz', "Rif.to %s n. %s%s del %s"\
+                  % (doc.tipdoc.descriz, doc.numdoc, suffisso, Env.StrDate(doc.datdoc)))
 
         mg.original_id_doc=dr.id
         return lastrig

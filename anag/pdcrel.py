@@ -1034,9 +1034,9 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
 
         i = i + 1
         if bt.MAGGESACC:
-            print 'Aggiungi scheda acconti'        
-            self.InitAcconti()
-            self.LoadAcconti()
+            if self.pdctipo=='C':
+                self.InitAcconti()
+                self.LoadAcconti()
 
         self.InitControls_PersonalPage()
 
@@ -1133,7 +1133,7 @@ class _CliForPanel(_PdcRelPanel, DatiBancariMixin):
         print 'recno=%s' % recno
         _PdcRelPanel.UpdateDataControls( self, recno )
         if self.loadrelated:
-            if bt.MAGGESACC:
+            if bt.MAGGESACC and self.pdctipo=='C':
                 lPagine = [self.banchePanel, self.destinPanel, self.panacconti]
             else:
                 lPagine = [self.banchePanel, self.destinPanel]

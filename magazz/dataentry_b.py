@@ -370,9 +370,9 @@ class SelezionaMovimentoAccontoGrid(dbglib.ADB_Grid):
         for r in self.mainPanel.dbdoc.mov:
             if r.id_tipmov == idMovAcc:
                 if not r.id_movacc == idAcconto:
-                    totAcconti = totAcconti + r.importo
+                    totAcconti = totAcconti + (r.importo or 0)
             else:
-                totImponib = totImponib + r.importo
+                totImponib = totImponib + (r.importo or 0)
         print totImponib
         print totAcconti
         print value

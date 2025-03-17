@@ -29,6 +29,24 @@ import mx.DateTime as dt
 import mx.Odt
 
 history = (
+    ('1.6.21', dt.Date(2025,03, 17), (
+        ("BET162105",
+         """Aggiunta possibilità di controllare partita iva e codice fiscale in uscita dalla digitazione a seconda di quanto indicato nel la pagina opzioni del setup azienda"""
+        ),
+        ("BET162104",
+         """Aggiunta nella pagina opzioni del setup azienda la possibilità di indicare la modalità in cuiu deve essere o meno effettuato il controllo del codice fiscale e della partita iva."""
+        ),
+        ("BET162103",
+         """Impostazione flag invio fatture elettroniche all'immissione del cliente"""
+        ),
+        ("BET162102",
+         """Definizione in automatismi contabile delle aliquota iva per clienti ue e extra ue."""
+        ),
+        ("BET162001",
+         """Introdotto all'atto dell'inserimento del cliente impostazione della aliquota particolare se cliuente ue o extra ue."""
+        ),
+        ),),
+
     ('1.6.20', dt.Date(2024,12, 30), (
         ("BET162008",
          """Gestioner del nuovo flag su testate documenti di magazzino per identificare documenti derivanti da acquisizione Mirage se presente"""

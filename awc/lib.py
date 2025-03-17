@@ -43,6 +43,7 @@ class ControllaPIVA(object):
     
     def SetPIva(self, piva, stato=None):
         self.piva = piva
+        print 'SetPIva %s %s' % (piva, stato)
         if stato is not None:
             self.stato = stato
     
