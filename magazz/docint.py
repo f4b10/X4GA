@@ -74,7 +74,10 @@ class _DocIntGridMixin(object):
                     self.UpdateGrid()
                     if r == magazz.DOC_MODIFIED:
                         wx.CallAfter(lambda: self.SelectRow(row))
-                dlg.Destroy()
+                try:
+                    dlg.Destroy()
+                except:
+                    pass
         event.Skip()
 
 
