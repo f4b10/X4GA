@@ -175,7 +175,6 @@ class PartitaIvaEntryCtrl(_EntryCtrlMixin):
         self.statectrl = stc
         def OnStateChanged(event):
             self.ctrpiva.stato = event.GetEventObject().GetValue()
-            #if self.GetParent().pdctipo=='C':
             mainPanel = self.GetParent().GetParent().GetParent().GetParent().GetParent().GetParent()
             try:
                 insMode = mainPanel.db_recno == -1
@@ -183,22 +182,6 @@ class PartitaIvaEntryCtrl(_EntryCtrlMixin):
                 insMode = False
             if insMode:
                 mainPanel.SetAliquota()
-                #===============================================================
-                # 
-                # 
-                # print '*********SetStateControl %s' % self.ctrpiva.stato
-                # objIva = self.GetParent().GetParent().GetParent().FindWindowByName('id_aliqiva')
-                # if len(self.ctrpiva.stato.strip())==0 or self.ctrpiva.stato=='IT':
-                #     objIva.SetValue(None)
-                # else:
-                #     if self.IsCee(self.ctrpiva.stato):
-                #         idIva=adb.DbTable.SearchInTable(table='cfgautom', searchInField='codice', searchValue='ivaue', returnField='aut_id')
-                #         print 'imposta esenzione per Cee'
-                #     else:
-                #         idIva=adb.DbTable.SearchInTable(table='cfgautom', searchInField='codice', searchValue='ivaextraue', returnField='aut_id')
-                #     objIva.SetValue(idIva)
-                #                     
-                #===============================================================
             event.Skip()            
         stc.Bind(wx.EVT_TEXT, OnStateChanged)
 

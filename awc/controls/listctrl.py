@@ -88,39 +88,6 @@ class ListCtrl(wx.ListCtrl, cmix.ControlsMixin):
             tmpfile.close()
             os.startfile(tmpname)
 
-
-
-
-#===============================================================================
-#
-#             for r in self.dbdett:
-#                 if not _unisci(r.id_gruppo, r.id_centro, r.id_sezione, r.id_sezione1, r.id_sezione2) in cl:
-#                     row=[]
-#                     w=''
-#                     for field in ['centro', 'gruppo', 'sezione', 'sezione1', 'sezione2']:
-#                         v=getattr(r,field)
-#                         if v:
-#                             w='%s%s/' % (w, v)
-#                         else:
-#                             break
-#                     row.append(w[:-1])
-#                     row.append(r.datreg)
-#                     row.append(r.causale)
-#                     row.append(r.datdoc)
-#                     row.append(r.numdoc)
-#                     row.append(r.fornitore)
-#                     row.append(r.id_pdc)
-#                     row.append(r.sottoconto)
-#                     row.append(locale.format("%.2f", r.impdett, grouping=True))
-#                     csvrs.append(row)
-#
-#
-#
-#
-#
-#         pass
-#===============================================================================
-
 class CheckListCtrl(ListCtrl, CheckListCtrlMixin):
     listCheck = []
     
@@ -143,6 +110,10 @@ class CheckListCtrl(ListCtrl, CheckListCtrlMixin):
     def OnItemActivated(self, evt):
         self.ToggleItem(evt.m_itemIndex)
 
+    def DeleteAllItems(self):
+        self.listCheck = []
+        ListCtrl.DeleteAllItems(self)       
+        
 
     # this is called by the base class when an item is checked/unchecked
     def OnCheckItem(self, index, flag):
@@ -154,4 +125,5 @@ class CheckListCtrl(ListCtrl, CheckListCtrlMixin):
             self.listCheck.remove(index)
             what = "unchecked"
         print data, index, what, self.listCheck
+      
 

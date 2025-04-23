@@ -211,12 +211,16 @@ import xpaths
 def SetConfigBasePath(appdesc=None, pathprefix=''):
     global config_base_path
     config_base_path = xpaths.GetConfigPath(appdesc)
+    print 'config_base_path: %s' % config_base_path
     global custom_base_path
     custom_base_path = xpaths.GetCustomPath(appdesc, pathprefix+config_base_path)
+    print 'custom_base_path: %s' % custom_base_path
     global plugin_base_path
     plugin_base_path = xpaths.GetPluginPath(appdesc, pathprefix+config_base_path)
+    print 'plugin_base_path: %s' % plugin_base_path
     global logfile
     logfile = opj(config_base_path, 'log.txt')
+    print 'logfile : %s' % logfile
 
 
 from __builtin__ import round as round_bi

@@ -22,7 +22,7 @@
 # ------------------------------------------------------------------------------
 
 import wx
-import os, sys, shutil
+import os, sys, shutil, subprocess
 import glob
 
 import awc.controls.windows as aw
@@ -266,7 +266,7 @@ class XApp(wx.App):
     
     def TestUpdates(self):
         
-        if not hasattr(sys, 'frozen'):
+        if not hasattr(sys, 'frozen') and False:
             return
         
         #path aggiornamenti scaricati su percorso comune
@@ -296,7 +296,8 @@ class XApp(wx.App):
                                     """del programma (%s)\nVuoi installarla ?"""\
                                     % dlver, style=wx.ICON_QUESTION|wx.YES_NO\
                                     |wx.YES_DEFAULT) == wx.ID_YES:
-                    self.CopyFileInLocal(name)
+                    name = self.CopyFileInLocal(name)
+                    print name
                     os.execl(name)
         
         self.InstallUpdatedZipFiles(path)
@@ -320,8 +321,23 @@ class XApp(wx.App):
                         print 'Failed to delete %s. Reason: %s' % (file_path, e)                
                 
             newFile = os.path.join(newDir, f)
-            shutil.copyfile(file, newFile)
+            batchFile = self.CreateCopyBatch(file, newFile)
+            FNULL = open(os.devnull, 'w')
+            p =subprocess.Popen(batchFile , stdout=FNULL, stderr=FNULL, shell=True)
+            p.wait()
+            #shutil.copyfile(file, newFile)
         return newFile
+    
+    def CreateCopyBatch(self, oldFile, newFile):
+        wrkDir, _ = os.path.split(newFile)
+        fileBatch = os.path.join(wrkDir, 'x4_move.bat')
+        fb = open(fileBatch, 'w')
+        oldFile = oldFile.replace('/', '\\')
+        cmd = 'copy "%s" "%s"' % (oldFile, newFile)
+        fb.write('%s\n' % cmd)
+        fb.close()
+        return fileBatch   
+    
     
     def InstallUpdatedZipFiles(self, path, request=True):
         
